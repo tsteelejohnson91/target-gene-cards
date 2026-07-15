@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATCAY / Caytaxin — AD-Adjacent Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7ec7;
+    --light: #e8f0fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255, 180, 180, 0.45);
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: ta;
+    padding: 14px 0 14px 48px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.93rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(ta);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    border-radius: 12px;
+    padding: 38px 36px;
+    color: #e2e8f0;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ATCAY &nbsp;|&nbsp; Ataxia, Cayman Type / Caytaxin (BNIP-H)</span>
+    <span class="chip chip-danger">⚠ Loss-of-function causes severe neurological disease</span>
+  </div>
+  <h1>ATCAY &amp; Alzheimer's Disease<br>An AD-Adjacent Mechanistic Candidate</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> ATCAY loss-of-function causes Cayman cerebellar ataxia and severe neurological phenotypes in humans and rodents. Therapeutic strategies must preserve or normalize caytaxin function — broad inhibition is contraindicated. Nonspecific modulation risks disrupting glutamate, acetylcholine, mitochondrial distribution, and neuronal excitability.
+    </div>
+
+    <p>
+      <strong>ATCAY</strong> encodes caytaxin (also BNIP-H), a conserved, neuron-enriched presynaptic protein with roles in synaptic signaling, cholinergic machinery trafficking, glutamate metabolism, kinesin-mediated axonal transport, mitochondrial distribution, DAPK1 regulation, and hippocampal learning and memory. It is not an established Alzheimer's disease (AD) causal gene or validated drug target, but the literature provides several mechanistically compelling AD-adjacent links.
+    </p>
+    <p>
+      The direct AD evidence is biomarker-based: a 2025 integrative bioinformatics/machine-learning study identified ATCAY among 14 glutamine-metabolism-associated genes in an AD diagnostic signature, and a 2022 proteome-array/ELISA study found anti-ATCAY IgG autoantibodies elevated in mild cognitive impairment (MCI) and AD, correlating with worse cognitive scores. The stronger mechanistic data come from aging, ischemic stroke, neuronal differentiation, and cerebellar ataxia/dystonia models rather than AD-specific studies.
+    </p>
+    <p>
+      Nonetheless, caytaxin's involvement in DAPK1-mediated neuronal injury, presynaptic cholinergic enzyme trafficking, glutaminase regulation, and axonal/mitochondrial transport aligns with core AD pathophysiological mechanisms, making ATCAY a plausible — if currently unvalidated — neuroprotective candidate in the AD context.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — ATCAY / Caytaxin Pathway</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11" width="100%" style="display:block; min-width:640px;">
+
+        <!-- ==================== PANEL BACKGROUNDS ==================== -->
+        <!-- Panel A: Upstream / Inputs -->
+        <rect x="8" y="12" width="188" height="476" rx="10" fill="#e8f0fb" fill-opacity="0.55" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="102" y="30" text-anchor="middle" fill="#2d4a7a" font-size="9" font-weight="bold" letter-spacing="1">A · UPSTREAM CONTEXT</text>
+
+        <!-- Panel B: Caytaxin Core Functions (left-center) -->
+        <rect x="208" y="12" width="230" height="476" rx="10" fill="#e0f2fe" fill-opacity="0.45" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="323" y="30" text-anchor="middle" fill="#2d4a7a" font-size="9" font-weight="bold" letter-spacing="1">B · CAYTAXIN CORE FUNCTIONS</text>
+
+        <!-- Panel C: Downstream Branches -->
+        <rect x="450" y="12" width="240" height="476" rx="10" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="30" text-anchor="middle" fill="#0f766e" font-size="9" font-weight="bold" letter-spacing="1">C · DOWNSTREAM OUTCOMES</text>
+
+        <!-- Panel D: AD Relevance -->
+        <rect x="702" y="12" width="210" height="476" rx="10" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="30" text-anchor="middle" fill="#9b1c1c" font-size="9" font-weight="bold" letter-spacing="1">D · AD RELEVANCE</text>
+
+        <!-- ==================== PANEL A NODES ==================== -->
+        <!-- A1: ATCAY Gene -->
+        <rect x="22" y="48" width="160" height="42" rx="6" fill="#2d4a7a" stroke="#1e3a6e" stroke-width="1"/>
+        <text x="102" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">ATCAY Gene</text>
+        <text x="102" y="80" text-anchor="middle" fill="#bfdbfe" font-size="9.5">encodes Caytaxin/BNIP-H</text>
+
+        <!-- A2: Neuron-enriched expression -->
+        <rect x="22" y="112" width="160" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="102" y="128" text-anchor="middle" fill="#1e293b" font-size="10">Neuron-enriched</text>
+        <text x="102" y="141" text-anchor="middle" fill="#1e293b" font-size="10">presynaptic expression</text>
+
+        <!-- A3: Loss-of-function -->
+        <rect x="22" y="174" width="160" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="102" y="190" text-anchor="middle" fill="#9b1c1c" font-size="10">Loss-of-function →</text>
+        <text x="102" y="203" text-anchor="middle" fill="#9b1c1c" font-size="10">Cayman Cerebellar Ataxia</text>
+
+        <!-- A4: DAPK1 (aging/stress activator) -->
+        <rect x="22" y="236" width="160" height="40" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="102" y="253" text-anchor="middle" fill="#78350f" font-size="10">DAPK1 Activation</text>
+        <text x="102" y="266" text-anchor="middle" fill="#78350f" font-size="10">(aging / ischemia)</text>
+
+        <!-- A5: Kinesin-1 / KLC1 -->
+        <rect x="22" y="298" width="160" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="102" y="315" text-anchor="middle" fill="#1e293b" font-size="10">Kinesin-1 / KLC1</text>
+        <text x="102" y="328" text-anchor="middle" fill="#1e293b" font-size="10">microtubule transport</text>
+
+        <!-- A6: AD Biomarker Studies -->
+        <rect x="22" y="360" width="160" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="102" y="377" text-anchor="middle" fill="#9b1c1c" font-size="10">AD Biomarker Studies</text>
+        <text x="102" y="390" text-anchor="middle" fill="#9b1c1c" font-size="10">2022 · 2025</text>
+
+        <!-- ==================== PANEL B NODES ==================== -->
+        <!-- B1: Caytaxin (central hub) -->
+        <rect x="228" y="48" width="190" height="42" rx="6" fill="#4a7ec7" stroke="#2d4a7a" stroke-width="1.3"/>
+        <text x="323" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">Caytaxin Protein</text>
+        <text x="323" y="80" text-anchor="middle" fill="#dbeafe" font-size="9.5">presynaptic scaffold / adaptor</text>
+
+        <!-- B2: Binds KLC1 → transport -->
+        <rect x="228" y="118" width="190" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="323" y="135" text-anchor="middle" fill="#1e293b" font-size="10">Binds KLC1 → transports</text>
+        <text x="323" y="148" text-anchor="middle" fill="#1e293b" font-size="10">ACh-synthesis machinery</text>
+
+        <!-- B3: Binds Glutaminase -->
+        <rect x="228" y="180" width="190" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="323" y="197" text-anchor="middle" fill="#1e293b" font-size="10">Binds kidney-type</text>
+        <text x="323" y="210" text-anchor="middle" fill="#1e293b" font-size="10">glutaminase (GLS)</text>
+
+        <!-- B4: Inhibits DAPK1 -->
+        <rect x="228" y="242" width="190" height="40" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="323" y="259" text-anchor="middle" fill="#78350f" font-size="10">Binds presynaptic DAPK1</text>
+        <text x="323" y="272" text-anchor="middle" fill="#78350f" font-size="10">→ inhibits catalytic activity</text>
+
+        <!-- B5: Mitochondrial distribution -->
+        <rect x="228" y="304" width="190" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="323" y="321" text-anchor="middle" fill="#1e293b" font-size="10">Mitochondrial distribution</text>
+        <text x="323" y="334" text-anchor="middle" fill="#1e293b" font-size="10">to distal neurites</text>
+
+        <!-- B6: Growth cone accumulation -->
+        <rect x="228" y="366" width="190" height="40" rx="6" fill="#ffffff" stroke="#4a7ec7" stroke-width="1.2"/>
+        <text x="323" y="383" text-anchor="middle" fill="#1e293b" font-size="10">Accumulates in growth cones</text>
+        <text x="323" y="396" text-anchor="middle" fill="#1e293b" font-size="10">supports neurite outgrowth</text>
+
+        <!-- ==================== PANEL C NODES ==================== -->
+        <!-- C1: Cholinergic Output -->
+        <rect x="468" y="118" width="204" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="135" text-anchor="middle" fill="#0f766e" font-size="10">ChAT recruitment + ACh</text>
+        <text x="570" y="148" text-anchor="middle" fill="#0f766e" font-size="10">secretion at terminals</text>
+
+        <!-- C2: Glutamate regulation -->
+        <rect x="468" y="180" width="204" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="197" text-anchor="middle" fill="#0f766e" font-size="10">Glutamate level regulation</text>
+        <text x="570" y="210" text-anchor="middle" fill="#0f766e" font-size="10">GLS relocalization → terminals</text>
+
+        <!-- C3: Reduced apoptosis -->
+        <rect x="468" y="242" width="204" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="259" text-anchor="middle" fill="#0f766e" font-size="10">Reduced neuronal apoptosis</text>
+        <text x="570" y="272" text-anchor="middle" fill="#0f766e" font-size="10">(ischemia / aging models)</text>
+
+        <!-- C4: Axonal transport integrity -->
+        <rect x="468" y="304" width="204" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="321" text-anchor="middle" fill="#0f766e" font-size="10">Axonal transport integrity</text>
+        <text x="570" y="334" text-anchor="middle" fill="#0f766e" font-size="10">+ synaptic energy supply</text>
+
+        <!-- C5: Hippocampal memory -->
+        <rect x="468" y="366" width="204" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="570" y="383" text-anchor="middle" fill="#0f766e" font-size="10">Hippocampal learning</text>
+        <text x="570" y="396" text-anchor="middle" fill="#0f766e" font-size="10">and memory maintenance</text>
+
+        <!-- ==================== PANEL D NODES ==================== -->
+        <!-- D1: Anti-ATCAY IgG biomarker -->
+        <rect x="720" y="48" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="65" text-anchor="middle" fill="#9b1c1c" font-size="10">Anti-ATCAY IgG ↑</text>
+        <text x="807" y="78" text-anchor="middle" fill="#9b1c1c" font-size="10">in MCI &amp; AD (MMSE ↓)</text>
+
+        <!-- D2: Glutamine-metabolism gene signature -->
+        <rect x="720" y="110" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="127" text-anchor="middle" fill="#9b1c1c" font-size="10">14-gene Gln-metabolism</text>
+        <text x="807" y="140" text-anchor="middle" fill="#9b1c1c" font-size="10">AD biomarker signature</text>
+
+        <!-- D3: Cholinergic impairment overlap -->
+        <rect x="720" y="200" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="217" text-anchor="middle" fill="#9b1c1c" font-size="10">Cholinergic impairment</text>
+        <text x="807" y="230" text-anchor="middle" fill="#9b1c1c" font-size="10">overlap with AD</text>
+
+        <!-- D4: Excitotoxicity / memantine target -->
+        <rect x="720" y="262" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="279" text-anchor="middle" fill="#9b1c1c" font-size="10">Excitotoxicity risk /</text>
+        <text x="807" y="292" text-anchor="middle" fill="#9b1c1c" font-size="10">memantine target overlap</text>
+
+        <!-- D5: Impaired axonal transport in AD -->
+        <rect x="720" y="324" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="341" text-anchor="middle" fill="#9b1c1c" font-size="10">Impaired axonal transport</text>
+        <text x="807" y="354" text-anchor="middle" fill="#9b1c1c" font-size="10">in AD pathophysiology</text>
+
+        <!-- D6: Hippocampal dysfunction in AD -->
+        <rect x="720" y="386" width="174" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="403" text-anchor="middle" fill="#9b1c1c" font-size="10">Hippocampal dysfunction</text>
+        <text x="807" y="416" text-anchor="middle" fill="#9b1c1c" font-size="10">central to AD</text>
+
+        <!-- ==================== ARROWS ==================== -->
+        <defs>
+          <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#4a7ec7"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#2d4a7a"/>
+          </marker>
+          <marker id="arr-green" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-red" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+        </defs>
+
+        <!-- A1 → B1 (ATCAY gene → Caytaxin protein) -->
+        <line x1="182" y1="69" x2="227" y2="69" stroke="#2d4a7a" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+
+        <!-- A1 → A2 vertical (gene → expression) -->
+        <line x1="102" y1="90" x2="102" y2="111" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- A2 → A3 vertical -->
+        <line x1="102" y1="152" x2="102" y2="173" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- A4 → B4 (DAPK1 → caytaxin inhibits it) -->
+        <line x1="182" y1="256" x2="227" y2="262" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- A5 → B1 (KLC1 → caytaxin via elbow) -->
+        <path d="M 102 298 L 102 450 L 218 450 L 218 90 L 227 90" fill="none" stroke="#4a7ec7" stroke-width="1.3" marker-end="url(#arr-blue)" stroke-dasharray="4,3"/>
+
+        <!-- B1 → B2 vertical -->
+        <line x1="323" y1="90" x2="323" y2="117" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- B2 → B3 vertical -->
+        <line x1="323" y1="158" x2="323" y2="179" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- B3 → B4 vertical -->
+        <line x1="323" y1="220" x2="323" y2="241" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- B4 → B5 vertical -->
+        <line x1="323" y1="282" x2="323" y2="303" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- B5 → B6 vertical -->
+        <line x1="323" y1="344" x2="323" y2="365" stroke="#4a7ec7" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- B2 → C1 (cholinergic trafficking → ACh output) -->
+        <line x1="418" y1="138" x2="467" y2="138" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- B3 → C2 (glutaminase → glutamate reg) -->
+        <line x1="418" y1="200" x2="467" y2="200" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- B4 → C3 (inhibits DAPK1 → reduces apoptosis) -->
+        <line x1="418" y1="262" x2="467" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- B5 → C4 (mito distribution → transport integrity) -->
+        <line x1="418" y1="324" x2="467" y2="324" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- B6 → C5 (growth cones → memory) -->
+        <line x1="418" y1="386" x2="467" y2="386" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- A6 → D1 (biomarker studies → anti-IgG) via elbow through right gutter -->
+        <path d="M 182 380 L 196 380 L 196 468 L 710 468 L 710 68 L 719 68" fill="none" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- C1 → D3 (cholinergic → AD cholinergic overlap) via elbow -->
+        <path d="M 672" y1="138" y1="138" d="M 672 138 L 692 138 L 692 220 L 719 220" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- Redrawn C→D connectors using path elements -->
+        <!-- C1 → D3 -->
+        <path d="M 672 138 L 692 138 L 692 220 L 719 220" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- C2 → D4 -->
+        <path d="M 672 200 L 686 200 L 686 282 L 719 282" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- C4 → D5 -->
+        <path d="M 672 324 L 686 324 L 686 344 L 719 344" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- C5 → D6 -->
+        <path d="M 672 386 L 686 386 L 686 406 L 719 406" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- A6 → D2 (biomarker → Gln signature) via bottom gutter -->
+        <path d="M 182 390 L 196 390 L 196 456 L 698 456 L 698 130 L 719 130" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Context):</strong> ATCAY gene, neuron-enriched expression, loss-of-function ataxia phenotype, DAPK1 activating stressors, kinesin-1/KLC1 transport machinery, and biomarker studies feeding into the pathway.
+      <strong>Panel B (Caytaxin Core Functions):</strong> Caytaxin acts as a central presynaptic scaffold, branching into kinesin-mediated cholinergic trafficking, glutaminase binding, DAPK1 inhibition, mitochondrial distribution, and growth-cone accumulation.
+      <strong>Panel C (Downstream Outcomes):</strong> Each caytaxin function converges on protective outputs — cholinergic secretion, glutamate regulation, apoptosis reduction, axonal transport integrity, and hippocampal memory support.
+      <strong>Panel D (AD Relevance):</strong> Downstream outcomes and biomarker findings map onto established AD disease mechanisms; dashed lines indicate associative/parallel evidence rather than proven causal links in AD models.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Biomarker Evidence — Diagnostic, Not Causal</h3>
+        <p>ATCAY was identified among 14 glutamine-metabolism-associated genes in an AD biomarker signature built with LASSO, SVM-RFE, GSEA/GSVA, and validation across multiple AD cohorts. This suggests diagnostic/prognostic relevance, but does not establish ATCAY's individual effect size, direction of expression, brain-region specificity, or standalone utility as a biomarker.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Anti-ATCAY Autoantibodies Track Cognitive Decline</h3>
+        <p>Anti-ATCAY IgG was significantly elevated in AD versus controls and MCI versus controls. Levels correlated negatively with MMSE and K-MoCA and positively with CDR, linking anti-ATCAY immune reactivity to cognitive decline severity. This supports ATCAY as a possible immune-recognized synaptic antigen in MCI/AD but does not establish pathogenicity.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Caytaxin May Protect Against DAPK1-Mediated Neuronal Injury</h3>
+        <p>In aging studies, DAPK1 activation in hippocampus associated with caytaxin degradation and memory decline; DAPK1 kinase-domain deletion preserved caytaxin and cognition. In ischemic stroke models, caytaxin bound and inhibited presynaptic DAPK1, reducing apoptosis. DAPK1 activation, hippocampal dysfunction, and synaptic degeneration are also central to AD biology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Cholinergic Trafficking — An Upstream ACh Mechanism</h3>
+        <p>Caytaxin/BNIP-H connects kinesin-1 light chain KLC1 to ATP citrate lyase, transporting acetylcholine-synthesis machinery toward neurite terminals and supporting ChAT recruitment and ACh secretion. Because AD involves cholinergic impairment and current symptomatic drugs target acetylcholinesterase, ATCAY may represent a more upstream presynaptic mechanism affecting ACh production and neurite maintenance.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Glutaminase Regulation and Excitatory Synaptic Vulnerability</h3>
+        <p>BNIP-H/caytaxin binds kidney-type glutaminase, relocalizes it toward neurite terminals, and can inhibit its activity, affecting glutamate levels. Since glutamate dysregulation and excitotoxicity are relevant to AD and memantine targets pathological glutamatergic signaling, ATCAY could theoretically influence AD-relevant excitatory synaptic vulnerability.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Important Limitations — No AD-Specific Mechanistic Evidence</h3>
+        <p>No supplied study shows that ATCAY manipulation modifies amyloid-beta pathology, tau pathology, neuroinflammation, synapse loss, or cognitive decline in any AD model or human trial. The strongest mechanistic data come from aging, stroke, neuronal differentiation, and cerebellar ataxia/dystonia models — not AD-specific contexts. Therapeutic potential remains plausible but entirely unvalidated in AD.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <strong>Treat ATCAY as an emerging AD-adjacent candidate, not an established target.</strong> The current evidence places ATCAY in a mechanistically plausible but unvalidated position relative to AD — biomarker associations and pathway overlaps do not substitute for functional evidence in AD models.
+      </li>
+      <li>
+        <strong>Prioritize validation in AD-relevant experimental systems.</strong> Human AD brain tissue, iPSC-derived neurons, amyloid/tau models, and AD animal models should be used to test whether ATCAY expression, caytaxin protein levels, localization, cleavage, or degradation are specifically altered in AD-like pathological states.
+      </li>
+      <li>
+        <strong>Test whether preserving caytaxin reduces AD-like neuronal injury.</strong> Key experiments would assess whether caytaxin stabilization or overexpression reduces DAPK1 activation, synapse loss, apoptosis, tau-related toxicity, amyloid-beta-induced synaptic dysfunction, or hippocampal memory impairment in relevant models.
+      </li>
+      <li>
+        <strong>Explore ATCAY within multimarker biomarker panels.</strong> Anti-ATCAY IgG and ATCAY expression may be useful alongside other biomarkers for MCI/AD risk stratification or immune/synaptic subtyping rather than as standalone diagnostic markers.
+      </li>
+      <li>
+        <strong>Avoid broad ATCAY inhibition — loss-of-function is harmful.</strong> Human ATCAY variants cause Cayman cerebellar ataxia; rodent models show ataxia, dystonia, and circuit dysfunction. All therapeutic approaches should aim to preserve or normalize caytaxin function rather than suppress it.
+      </li>
+      <li>
+        <strong>Define safety and dosing windows carefully given caytaxin's broad neuronal roles.</strong> Because caytaxin influences glutamate levels, acetylcholine synthesis and trafficking, mitochondrial localization, and neuronal excitability, excessive or nonspecific modulation could disrupt neurotransmission in unpredictable ways. Potential therapeutic strategies — including preventing DAPK1-associated caytaxin degradation, stabilizing caytaxin-DAPK1 interactions, or preserving caytaxin-glutaminase regulation — should be developed with careful titration and circuit-level safety assessments.
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — ATCAY / Caytaxin in Alzheimer's Disease</span>
+      <p>
+        The available evidence positions ATCAY as a <strong>mechanistically interesting but unvalidated AD-adjacent candidate</strong>. Its strongest AD-specific findings are biomarker studies — an autoantibody signature correlating with cognitive decline and membership in a multi-gene glutamine-metabolism diagnostic signature — neither of which establishes causal involvement. The <strong>most compelling mechanistic hypothesis</strong> emerging from the literature is that caytaxin may be <strong>neuroprotective and synapse-supportive</strong> in contexts relevant to AD by limiting DAPK1-mediated neuronal injury, supporting presynaptic cholinergic enzyme trafficking, regulating glutaminase activity and glutamate levels, and maintaining axonal and mitochondrial transport to distal neurites. Each of these functions overlaps with pathways disrupted in AD. However, <strong>no study has demonstrated that manipulating ATCAY alters amyloid-beta pathology, tau pathology, AD-specific neuroinflammation, or cognitive decline in an AD model</strong>. The field should pursue carefully designed validation studies in AD-relevant systems before considering ATCAY a viable therapeutic target, while recognizing that loss-of-function approaches are contraindicated given the severe neurological consequences of caytaxin deficiency.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ATCAY / Caytaxin–Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

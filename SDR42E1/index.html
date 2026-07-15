@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDR42E1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d4a3e;
+    --mid: #3d7a62;
+    --light: #e8f4ef;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #111f1a 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.76rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f0fdf4;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-warning {
+    background: rgba(180, 83, 9, 0.25);
+    border: 1px solid rgba(255,200,100,0.35);
+    color: #fde68a;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.02rem;
+    color: #d1fae5;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: var(--slate-dark);
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.83rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.86rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.blue {
+    border-left-color: var(--blue);
+    background: var(--blue-light);
+  }
+
+  .card.slate {
+    border-left-color: #94a3b8;
+    background: var(--neutral-bg);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    color: var(--slate-dark);
+  }
+
+  .card p {
+    font-size: 0.91rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 56px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.97rem;
+  }
+
+  .takeaways li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #111f1a 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 38px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #6ee7b7;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    color: #e2faf3;
+    font-size: 1.02rem;
+    margin-bottom: 0;
+  }
+
+  .verdict-banner strong {
+    color: #a7f3d0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: SDR42E1 &nbsp;|&nbsp; Short-Chain Dehydrogenase/Reductase Family 42E Member 1</span>
+    <span class="chip chip-warning">⚠ Indirect AD Relevance — No Direct Evidence</span>
+  </div>
+  <h1>SDR42E1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Epistemic Caution</span>
+      SDR42E1 has <strong>no direct cited evidence</strong> linking it to amyloid-β, tau pathology, synaptic loss, microglial activation, neuronal degeneration, or cognition. Its Alzheimer's relevance is entirely <strong>indirect and hypothesis-generating</strong>, mediated through vitamin D biosynthesis and sterol/cholesterol metabolism.
+    </div>
+
+    <p>SDR42E1 is a short-chain dehydrogenase/reductase-family enzyme involved in vitamin D, sterol, cholesterol, and steroid metabolism. It has not been directly studied in Alzheimer's disease. Its mechanistic relevance rests on the biological overlap between its enzymatic substrates — vitamin D precursors and sterols — and processes repeatedly implicated in Alzheimer's pathophysiology, including neuroinflammation, oxidative stress, calcium regulation, blood–brain barrier integrity, amyloid processing, APOE-linked lipid metabolism, synaptic function, and neurosteroid signaling.</p>
+
+    <p>Functional experiments in HaCaT keratinocytes showed that SDR42E1 depletion disrupted steroid biosynthesis, caused 7-dehydrocholesterol accumulation, and reduced vitamin D3 production. A human homozygous missense mutation (p.Arg154Gln) was associated with low cholesterol and endocrine/connective-tissue abnormalities. SDR42E1 deficiency in HCT116 colorectal cells dysregulated sterol absorption and reduced cell viability, with overexpression rescuing viability and restoring ABCC2 expression. As a therapeutic target in Alzheimer's disease, SDR42E1 remains entirely preliminary.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 880 500" width="860" height="490" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#3d7a62"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: SDR42E1 Enzyme Function -->
+          <rect x="10" y="10" width="250" height="280" rx="12" fill="#e8f4ef" fill-opacity="0.6" stroke="#3d7a62" stroke-width="1.5"/>
+          <text x="135" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#2d4a3e" letter-spacing="0.08em" text-decoration="none">PANEL A · ENZYME FUNCTION</text>
+
+          <!-- Node 1: SDR42E1 -->
+          <rect x="60" y="46" width="150" height="42" rx="8" fill="#2d4a3e" stroke="#1a2e27" stroke-width="1.5"/>
+          <text x="135" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">SDR42E1</text>
+          <text x="135" y="79" text-anchor="middle" font-size="9.5" fill="#a7f3d0">SDR-family enzyme</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="135" y1="88" x2="135" y2="106" stroke="#3d7a62" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 2: Substrates -->
+          <rect x="48" y="107" width="174" height="42" rx="8" fill="#3d7a62" stroke="#2d4a3e" stroke-width="1.2"/>
+          <text x="135" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">Vitamin D Precursors</text>
+          <text x="135" y="140" text-anchor="middle" font-size="9" fill="#d1fae5">7-DHC · 8-DHC · 25-OH VitD</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="135" y1="149" x2="135" y2="167" stroke="#3d7a62" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Products -->
+          <rect x="56" y="168" width="158" height="42" rx="8" fill="#0f766e" stroke="#065f52" stroke-width="1.2"/>
+          <text x="135" y="186" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">Vitamin D3 Production</text>
+          <text x="135" y="201" text-anchor="middle" font-size="9" fill="#ccfbf1">&amp; Sterol/Cholesterol Balance</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="135" y1="210" x2="135" y2="228" stroke="#3d7a62" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 4: Loss-of-function -->
+          <rect x="38" y="229" width="194" height="42" rx="8" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="135" y="247" text-anchor="middle" font-size="10" font-weight="700" fill="#8b1a1a">Loss-of-Function</text>
+          <text x="135" y="262" text-anchor="middle" font-size="9" fill="#7f1d1d">p.Arg154Gln · depletion models</text>
+
+          <!-- PANEL B: Downstream cellular effects -->
+          <rect x="278" y="10" width="270" height="280" rx="12" fill="#eff6ff" fill-opacity="0.55" stroke="#1d4ed8" stroke-width="1.5"/>
+          <text x="413" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="0.08em">PANEL B · CELLULAR EFFECTS</text>
+
+          <!-- Node 5: HaCaT branch label -->
+          <rect x="285" y="46" width="110" height="38" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="340" y="61" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a8a">HaCaT Cells</text>
+          <text x="340" y="76" text-anchor="middle" font-size="8.5" fill="#1d4ed8">Knockdown ↓</text>
+
+          <!-- Node 6: HCT116 branch label -->
+          <rect x="433" y="46" width="108" height="38" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="487" y="61" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a8a">HCT116 Cells</text>
+          <text x="487" y="76" text-anchor="middle" font-size="8.5" fill="#1d4ed8">Edited ↓</text>
+
+          <!-- Arrows from LoF to each branch — routed via gutters -->
+          <!-- LoF node bottom-right corner → panel B Node5 -->
+          <path d="M232 250 Q262 250 262 65 Q268 65 285 65" fill="none" stroke="#8b1a1a" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Node 7: HaCaT effects -->
+          <rect x="285" y="104" width="110" height="60" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="340" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af">SERPINB2↑</text>
+          <text x="340" y="136" text-anchor="middle" font-size="9" fill="#1d4ed8">EBP↑ · DHCR7↑</text>
+          <text x="340" y="150" text-anchor="middle" font-size="9" fill="#1d4ed8">7-DHC accumulation</text>
+
+          <!-- Node 8: HCT116 effects -->
+          <rect x="433" y="104" width="108" height="60" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="487" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af">LRP1B · ABCC2</text>
+          <text x="487" y="136" text-anchor="middle" font-size="9" fill="#1d4ed8">WNT16 · SLC7A5</text>
+          <text x="487" y="150" text-anchor="middle" font-size="9" fill="#1d4ed8">ALDOA↓ · viability↓</text>
+
+          <!-- Arrows Node5→Node7 and Node6→Node8 -->
+          <line x1="340" y1="84" x2="340" y2="104" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+          <line x1="487" y1="84" x2="487" y2="104" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- Node 9: Shared outcome — VitD deficiency / sterol imbalance -->
+          <rect x="305" y="200" width="216" height="44" rx="8" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.5"/>
+          <text x="413" y="218" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">VitD Insufficiency &amp;</text>
+          <text x="413" y="232" text-anchor="middle" font-size="10" fill="#bfdbfe">Sterol/Cholesterol Imbalance</text>
+
+          <!-- Arrows from HaCaT effects and HCT116 effects to shared outcome -->
+          <line x1="340" y1="164" x2="340" y2="200" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+          <line x1="487" y1="164" x2="487" y2="200" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- Rescue note node -->
+          <rect x="315" y="252" width="196" height="36" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="413" y="268" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0f766e">Overexpression Rescue</text>
+          <text x="413" y="282" text-anchor="middle" font-size="8.5" fill="#0f766e">Viability ↑ · ABCC2 restored</text>
+
+          <line x1="413" y1="244" x2="413" y2="252" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- PANEL C: AD-relevant downstream biology -->
+          <rect x="566" y="10" width="304" height="480" rx="12" fill="#fff7ed" fill-opacity="0.55" stroke="#b45309" stroke-width="1.5"/>
+          <text x="718" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e" letter-spacing="0.08em">PANEL C · AD-RELEVANT BIOLOGY</text>
+
+          <!-- Node 11: Neuroimmune -->
+          <rect x="580" y="46" width="132" height="40" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+          <text x="646" y="63" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">Neuroimmune</text>
+          <text x="646" y="77" text-anchor="middle" font-size="9" fill="#b45309">Regulation</text>
+
+          <!-- Node 12: Oxidative stress -->
+          <rect x="724" y="46" width="132" height="40" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+          <text x="790" y="63" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">Oxidative Stress</text>
+          <text x="790" y="77" text-anchor="middle" font-size="9" fill="#b45309">&amp; Ca²⁺ Homeostasis</text>
+
+          <!-- Node 13: BBB / Amyloid -->
+          <rect x="580" y="122" width="132" height="40" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+          <text x="646" y="139" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">BBB Integrity &amp;</text>
+          <text x="646" y="153" text-anchor="middle" font-size="9" fill="#b45309">Amyloid Biology</text>
+
+          <!-- Node 14: APOE / Lipid rafts -->
+          <rect x="724" y="122" width="132" height="40" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+          <text x="790" y="139" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">APOE / Lipid Rafts</text>
+          <text x="790" y="153" text-anchor="middle" font-size="9" fill="#b45309">&amp; APP Processing</text>
+
+          <!-- Node 15: Neurosteroids / Synaptic -->
+          <rect x="624" y="198" width="188" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="718" y="215" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">Neurosteroids &amp; Synaptic</text>
+          <text x="718" y="229" text-anchor="middle" font-size="9" fill="#b45309">Plasticity · Mitochondrial Fn</text>
+
+          <!-- Node 16: AD phenotypes -->
+          <rect x="612" y="396" width="212" height="44" rx="8" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+          <text x="718" y="414" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">Alzheimer's Phenotypes</text>
+          <text x="718" y="429" text-anchor="middle" font-size="9" fill="#fde68a">Indirect · Unvalidated Link</text>
+
+          <!-- Connectors Panel B → Panel C (VitD outcome to Panel C nodes) -->
+          <path d="M521 222 Q548 222 548 65 Q562 65 580 65" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+          <path d="M521 222 Q548 222 548 142 Q562 142 580 142" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel C internal arrows -->
+          <line x1="646" y1="86" x2="646" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="790" y1="86" x2="790" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="646" y1="162" x2="680" y2="198" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="790" y1="162" x2="756" y2="198" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="718" y1="238" x2="718" y2="396" stroke="#b45309" stroke-width="1.6" stroke-dasharray="6,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Hypothesis label -->
+          <text x="718" y="305" text-anchor="middle" font-size="9" fill="#92400e" font-style="italic">← hypothesis only →</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> traces SDR42E1's enzymatic role: acting on vitamin D precursors (7-DHC, 8-DHC, 25-OH VitD) to sustain vitamin D3 and sterol balance, with loss-of-function variants as the perturbation entry point.
+        <strong>Panel B</strong> shows two parallel experimental branches — HaCaT keratinocyte knockdown (revealing SERPINB2↑, EBP↑, DHCR7↑, 7-DHC accumulation) and HCT116 colorectal cell editing (dysregulating LRP1B, ABCC2, WNT16, SLC7A5, and reducing ALDOA and viability) — converging on a shared outcome of VitD insufficiency and sterol imbalance; overexpression rescued viability and ABCC2.
+        <strong>Panel C</strong> maps the AD-relevant biological consequences of VitD/sterol disruption across four parallel domains (neuroimmune regulation, oxidative stress &amp; calcium, BBB/amyloid biology, APOE/lipid rafts), converging on neurosteroid and synaptic plasticity effects, and ultimately pointing toward Alzheimer's phenotypes — a connection that remains indirect and unvalidated.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>🔬 Vitamin D Metabolism — Primary Link</h3>
+        <p>Computational studies predicted SDR42E1 binding to vitamin D3, 8-dehydrocholesterol, 7-dehydrocholesterol, and 25-hydroxyvitamin D. SDR42E1 depletion in HaCaT keratinocytes reduced vitamin D3 production and accumulated 7-DHC, supporting a mechanistic role in vitamin D biosynthesis.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧫 Sterol Biosynthesis Dysregulation</h3>
+        <p>SDR42E1 knockdown in HaCaT cells increased SERPINB2, EBP, and DHCR7 and decreased ALPP, SLC7A5, and CYP26A1. In HCT116 cells, SDR42E1 deficiency dysregulated sterol absorption genes including LRP1B, ABCC2, WNT16, and SLC7A5, and reduced ALDOA protein expression and cell viability.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>✅ Rescue by Overexpression</h3>
+        <p>Transient SDR42E1 overexpression in deficient HCT116 cells rescued the viability defect and restored ABCC2 expression, suggesting that at least some SDR42E1-deficiency phenotypes are pharmacologically reversible. This provides a proof-of-concept for function restoration, though AD-specific rescue is unproven.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>⚠ Human Mutation — Cholesterol &amp; Endocrine</h3>
+        <p>A homozygous human SDR42E1 missense variant (p.Arg154Gln) was associated with low cholesterol and endocrine/connective-tissue abnormalities, confirming an in vivo role in cholesterol and steroid hormone regulation. Cholesterol biology is directly relevant to membrane organization, lipid rafts, APP processing, and APOE-linked AD risk.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>🧠 Indirect Alzheimer's Relevance</h3>
+        <p>No direct evidence links SDR42E1 to amyloid-β, tau, synaptic loss, microglial activation, or cognition. Its AD relevance is entirely mediated through vitamin D signaling (neuroimmune regulation, oxidative defense, calcium homeostasis, BBB integrity, amyloid biology) and cholesterol/neurosteroid pathways.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>🌿 Broader Biological Responsiveness</h3>
+        <p>SDR42E1 (Sdr42e1) was identified as an early liver transcriptional responder to an organophosphate flame retardant, alongside circadian and thyroid hormone response pathway changes. Differential expression and methylation across developmental and immune contexts suggest broad metabolic and cell-state regulatory roles beyond any single pathway.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <strong>Frame SDR42E1 correctly:</strong> Treat it as an indirect Alzheimer's-relevant metabolic/endocrine candidate, not as a validated Alzheimer's disease target. Overstating its role risks misallocating research resources.
+      </li>
+      <li>
+        <strong>Prioritize metabolic endpoint experiments:</strong> Test whether SDR42E1 manipulation changes vitamin D3 production, 25-hydroxyvitamin D biology, cholesterol/sterol balance, and neurosteroid profiles specifically in brain-relevant cellular systems.
+      </li>
+      <li>
+        <strong>Move into Alzheimer's-relevant models:</strong> Evaluate SDR42E1 in neurons, astrocytes, microglia, blood–brain barrier co-cultures, choroid plexus models, and Alzheimer's animal models — settings not yet tested.
+      </li>
+      <li>
+        <strong>Measure direct AD endpoints:</strong> After SDR42E1 perturbation, quantify amyloid-β production/clearance, tau phosphorylation, synaptic markers, neuronal survival, microglial activation states, oxidative stress, calcium handling, and cognition.
+      </li>
+      <li>
+        <strong>Stratify by metabolic context:</strong> Future studies should stratify by vitamin D status, cholesterol metabolism, APOE genotype, and SDR42E1 genetic variation, as SDR42E1 may be most relevant in metabolically defined subgroups.
+      </li>
+      <li>
+        <strong>Explore rescue cautiously:</strong> Existing evidence that SDR42E1 overexpression rescued cell viability and ABCC2 expression in deficient HCT116 cells is encouraging but limited. Alzheimer's-specific rescue remains entirely unproven and requires dedicated experiments.
+      </li>
+      <li>
+        <strong>Consider precision-medicine framing:</strong> Position SDR42E1 activation or restoration as a hypothesis for vitamin D deficiency or sterol imbalance with potential downstream AD relevance — but only once disease-modifying effects are actually demonstrated.
+      </li>
+      <li>
+        <strong>Avoid premature target designation:</strong> Do not characterize SDR42E1 as an Alzheimer's drug target until direct evidence demonstrates that modifying SDR42E1 improves neurodegenerative phenotypes or validated Alzheimer's biomarkers.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="lead">Overall Assessment — SDR42E1 in Alzheimer's Disease</span>
+      <p>
+        SDR42E1 is a <strong>metabolically active short-chain dehydrogenase/reductase</strong> with a well-supported enzymatic role in <strong>vitamin D biosynthesis, sterol processing, and cholesterol/steroid hormone regulation</strong>. Its Alzheimer's disease relevance is <strong>entirely indirect</strong>: no published evidence directly connects SDR42E1 to amyloid-β, tau pathology, neurodegeneration, or cognitive decline. The mechanistic bridge — running through <strong>vitamin D signaling, cholesterol homeostasis, lipid raft organization, APOE-linked lipid metabolism, and neurosteroid biology</strong> — is plausible and biologically coherent, but remains wholly hypothetical in the Alzheimer's context. The most actionable near-term finding is that <strong>SDR42E1 loss-of-function disrupts sterol and vitamin D pathways in non-neuronal cells</strong>, and that these disruptions are at least partially reversible by overexpression. Whether any of this translates into <strong>meaningful modulation of Alzheimer's phenotypes</strong> is an open and unanswered question that requires systematic investigation in brain-relevant models before SDR42E1 can be considered a serious therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SDR42E1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

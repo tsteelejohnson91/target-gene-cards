@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STXBP1 / Munc18-1 — AD-Relevant Synaptic Vulnerability · TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.neutral { border-left-color: var(--neutral); background: var(--neutral-light); }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: var(--neutral); }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+
+  .takeaways li {
+    margin-bottom: 16px;
+    font-size: 0.93rem;
+    line-height: 1.7;
+  }
+
+  .takeaways li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+
+  .verdict b {
+    color: #bfdbfe;
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 16px 28px;
+    margin-top: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: STXBP1 &nbsp;|&nbsp; Syntaxin Binding Protein 1 (Munc18-1)</span>
+    <span class="chip chip-danger">⚠ Safety: broad modulation risk — seizure, E/I imbalance</span>
+  </div>
+  <h1>STXBP1 / Munc18-1 &amp; Alzheimer's-Relevant Synaptic Vulnerability</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Therapeutic Caution</span>
+      STXBP1 is essential for neurotransmission and regulated secretion. Broad modulation carries risk of disrupting excitation/inhibition balance, provoking seizures, impairing cognition, or affecting peripheral secretion in endocrine, vascular, or immune compartments. Approaches must aim for physiological normalization, not simple up- or down-regulation.
+    </div>
+
+    <p>
+      STXBP1, also known as Munc18-1, is a core presynaptic Sec1/Munc18-family protein that binds syntaxin-1 and regulates SNARE-mediated synaptic vesicle docking, priming, fusion, and neurotransmitter release. Its strongest and most consistent disease association is with <em>STXBP1-related developmental and epileptic encephalopathy</em>, not Alzheimer's disease (AD).
+    </p>
+    <p>
+      Alzheimer's disease relevance is partly direct and partly mechanistic. Direct AD-related evidence includes reports that STXBP1/Munc18-1 is altered or enriched in AD-relevant proteomic contexts — human AD frontal cortex membrane-enriched fractions, APP/PS1 mouse olfactory bulb STXBP1a abundance, AD vascular-dysfunction proteomic signatures, and presynaptic SNARE-interactome studies linking a GABAergic STXBP1 variant with better cognition and cognitive reserve.
+    </p>
+    <p>
+      Broader mechanistic evidence links STXBP1 loss to Alzheimer's-like neurodegenerative features in mice — altered tau phosphorylation, neurofibrillary tangles, and insoluble plaque-like protein accumulation — as well as to synaptic failure, network hyperexcitability, GABAergic dysfunction, BDNF secretion, proteostasis, α-synuclein chaperoning, and Cdk5/p25 neurodegenerative signaling. These processes overlap with major AD mechanisms, but STXBP1 is not established as a causal AD gene or validated AD therapeutic target in the supplied evidence.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 4 panels, 16 nodes max, branching cascade -->
+        <svg viewBox="0 0 900 500" width="860" height="478" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- === PANEL BACKGROUNDS === -->
+          <!-- Panel A: Upstream / Presynaptic Core -->
+          <rect x="10" y="10" width="200" height="478" rx="10" ry="10"
+                fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2" stroke-opacity="0.5"/>
+          <text x="110" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.2" text-decoration="none">A · PRESYNAPTIC CORE</text>
+
+          <!-- Panel B: Downstream Synaptic Branches -->
+          <rect x="222" y="10" width="236" height="478" rx="10" ry="10"
+                fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2" stroke-opacity="0.5"/>
+          <text x="340" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">B · DOWNSTREAM BRANCHES</text>
+
+          <!-- Panel C: AD-Relevant Pathology -->
+          <rect x="470" y="10" width="210" height="478" rx="10" ry="10"
+                fill="#fff7ed" fill-opacity="0.60" stroke="#b45309" stroke-width="1.2" stroke-opacity="0.5"/>
+          <text x="575" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.2">C · AD-RELEVANT PATHOLOGY</text>
+
+          <!-- Panel D: Outcomes & Therapeutic -->
+          <rect x="692" y="10" width="200" height="478" rx="10" ry="10"
+                fill="#fef2f2" fill-opacity="0.50" stroke="#9b1c1c" stroke-width="1.2" stroke-opacity="0.5"/>
+          <text x="792" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1.2">D · OUTCOMES / THERAPY</text>
+
+          <!-- === PANEL A NODES === -->
+          <!-- A1: Syntaxin-1 binding -->
+          <rect x="28" y="44" width="164" height="44" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="110" y="61" text-anchor="middle" fill="white" font-weight="700" font-size="11">STXBP1 / Munc18-1</text>
+          <text x="110" y="75" text-anchor="middle" fill="#bfdbfe" font-size="10">Syntaxin-1 Binding</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="110" y1="88" x2="110" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- A2: SNARE assembly / vesicle priming -->
+          <rect x="28" y="108" width="164" height="44" rx="7" fill="#2e6da4" stroke="#2e6da4" stroke-width="1"/>
+          <text x="110" y="125" text-anchor="middle" fill="white" font-size="11">SNARE Assembly</text>
+          <text x="110" y="139" text-anchor="middle" fill="#e0f0ff" font-size="10">Vesicle Docking/Priming</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="110" y1="152" x2="110" y2="172" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- A3: Fusion pore / NT release -->
+          <rect x="28" y="172" width="164" height="44" rx="7" fill="#3b82c4" stroke="#2e6da4" stroke-width="1"/>
+          <text x="110" y="189" text-anchor="middle" fill="white" font-size="11">Fusion Pore</text>
+          <text x="110" y="203" text-anchor="middle" fill="#e0f0ff" font-size="10">Neurotransmitter Release</text>
+
+          <!-- === ARROWS: Panel A → Panel B (branching from A3) === -->
+          <!-- To B-upper branch: Glutamatergic -->
+          <path d="M192 194 Q210 194 222 160" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- To B-lower branch: GABAergic -->
+          <path d="M192 194 Q210 194 222 310" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- A4: Dense-core vesicle / BDNF -->
+          <rect x="28" y="330" width="164" height="44" rx="7" fill="#4a7fb5" stroke="#2e6da4" stroke-width="1"/>
+          <text x="110" y="347" text-anchor="middle" fill="white" font-size="11">Dense-Core Vesicles</text>
+          <text x="110" y="361" text-anchor="middle" fill="#e0f0ff" font-size="10">BDNF Secretion</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="110" y1="216" x2="110" y2="330" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-blue)"/>
+
+          <!-- === PANEL B NODES (two branches) === -->
+          <!-- B-upper branch: Glutamatergic / excitatory -->
+          <!-- B1 -->
+          <rect x="232" y="44" width="148" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1"/>
+          <text x="306" y="61" text-anchor="middle" fill="white" font-size="11">Excitatory Synapses</text>
+          <text x="306" y="75" text-anchor="middle" fill="#ccfbf1" font-size="10">Glutamatergic Release</text>
+
+          <!-- Arrow B1→B2 -->
+          <line x1="306" y1="88" x2="306" y2="108" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- B2 -->
+          <rect x="232" y="108" width="148" height="44" rx="7" fill="#14806a" stroke="#0f766e" stroke-width="1"/>
+          <text x="306" y="126" text-anchor="middle" fill="white" font-size="11">LTP / Memory</text>
+          <text x="306" y="140" text-anchor="middle" fill="#ccfbf1" font-size="10">Hippocampal Learning</text>
+
+          <!-- B-lower branch: GABAergic / inhibitory -->
+          <!-- B3 -->
+          <rect x="232" y="288" width="148" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1"/>
+          <text x="306" y="305" text-anchor="middle" fill="white" font-size="11">Inhibitory Synapses</text>
+          <text x="306" y="319" text-anchor="middle" fill="#ccfbf1" font-size="10">GABAergic Release</text>
+
+          <!-- Arrow B3→B4 -->
+          <line x1="306" y1="332" x2="306" y2="352" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- B4 -->
+          <rect x="232" y="352" width="148" height="44" rx="7" fill="#14806a" stroke="#0f766e" stroke-width="1"/>
+          <text x="306" y="369" text-anchor="middle" fill="white" font-size="11">E/I Balance</text>
+          <text x="306" y="383" text-anchor="middle" fill="#ccfbf1" font-size="10">Interneuron Recruitment</text>
+
+          <!-- Converging arrows B2 and B4 → Panel C node C1 -->
+          <path d="M380 130 Q430 130 470 200" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+          <path d="M380 374 Q430 374 470 300" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- === PANEL C NODES === -->
+          <!-- C1: Shared convergence: Network Activity -->
+          <rect x="480" y="180" width="160" height="44" rx="7" fill="#b45309" stroke="#b45309" stroke-width="1"/>
+          <text x="560" y="197" text-anchor="middle" fill="white" font-size="11">Network Activity</text>
+          <text x="560" y="211" text-anchor="middle" fill="#fde68a" font-size="10">Oscillations / Synchrony</text>
+
+          <!-- Arrow C1→C2 -->
+          <line x1="560" y1="224" x2="560" y2="254" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- C2: Tau / Cdk5 pathology -->
+          <rect x="480" y="254" width="160" height="44" rx="7" fill="#92400e" stroke="#b45309" stroke-width="1"/>
+          <text x="560" y="271" text-anchor="middle" fill="white" font-size="11">Tau Phosphorylation</text>
+          <text x="560" y="285" text-anchor="middle" fill="#fde68a" font-size="10">Cdk5/p25 Signaling</text>
+
+          <!-- C3: α-synuclein / proteostasis -->
+          <rect x="480" y="80" width="160" height="44" rx="7" fill="#a16207" stroke="#b45309" stroke-width="1"/>
+          <text x="560" y="97" text-anchor="middle" fill="white" font-size="11">α-Synuclein Biology</text>
+          <text x="560" y="111" text-anchor="middle" fill="#fde68a" font-size="10">Chaperone / Aggregation</text>
+
+          <!-- Arrow C3→C1 -->
+          <line x1="560" y1="124" x2="560" y2="180" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+          <!-- C4: AD Proteomic context -->
+          <rect x="480" y="380" width="160" height="44" rx="7" fill="#a16207" stroke="#b45309" stroke-width="1"/>
+          <text x="560" y="397" text-anchor="middle" fill="white" font-size="11">AD Proteomics</text>
+          <text x="560" y="411" text-anchor="middle" fill="#fde68a" font-size="10">Frontal Ctx / APP/PS1</text>
+
+          <!-- Arrow C2→C4 -->
+          <line x1="560" y1="298" x2="560" y2="380" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Arrow C1→D1 -->
+          <line x1="640" y1="202" x2="692" y2="202" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Arrow C4→D2 -->
+          <line x1="640" y1="402" x2="692" y2="402" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- === PANEL D NODES === -->
+          <!-- D1: Cognitive decline / hyperexcitability -->
+          <rect x="702" y="180" width="168" height="44" rx="7" fill="#9b1c1c" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="786" y="197" text-anchor="middle" fill="white" font-size="11">Network Dysfunction</text>
+          <text x="786" y="211" text-anchor="middle" fill="#fecaca" font-size="10">Hyperexcitability / EEG ↓</text>
+
+          <!-- Arrow D1→D3 -->
+          <line x1="786" y1="224" x2="786" y2="254" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- D3: Cognitive decline -->
+          <rect x="702" y="254" width="168" height="44" rx="7" fill="#7f1d1d" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="786" y="271" text-anchor="middle" fill="white" font-size="11">Cognitive Decline</text>
+          <text x="786" y="285" text-anchor="middle" fill="#fecaca" font-size="10">Memory / Reserve ↓</text>
+
+          <!-- D2: Therapeutic node -->
+          <rect x="702" y="380" width="168" height="44" rx="7" fill="#991b1b" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="786" y="397" text-anchor="middle" fill="white" font-size="11">Therapeutic Target?</text>
+          <text x="786" y="411" text-anchor="middle" fill="#fecaca" font-size="10">AAV / Chaperone / Biomarker</text>
+
+          <!-- Arrow D3→D2 -->
+          <line x1="786" y1="298" x2="786" y2="380" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- A4 (BDNF) → D3 cross-panel (route via bottom gutter, below all boxes) -->
+          <path d="M110 374 Q110 460 786 460 Q786 430 786 298" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+          <!-- === ARROWHEAD MARKERS === -->
+          <defs>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+          </defs>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — Presynaptic Core:</strong> STXBP1/Munc18-1 binds Syntaxin-1, drives SNARE assembly and vesicle docking/priming, regulates the fusion pore and neurotransmitter release, and supports dense-core vesicle / BDNF secretion (dashed).
+        <strong>Panel B (teal) — Downstream Branches:</strong> From the shared fusion-pore node, the pathway fans into two parallel sub-cascades — excitatory (glutamatergic → LTP/hippocampal memory) and inhibitory (GABAergic → E/I balance/interneuron recruitment) — both converging into Panel C.
+        <strong>Panel C (amber) — AD-Relevant Pathology:</strong> Convergent synaptic signals feed network oscillatory activity, which connects to tau/Cdk5 pathology and is contextualized by α-synuclein chaperone biology and direct AD proteomic observations (frontal cortex, APP/PS1 olfactory bulb).
+        <strong>Panel D (red) — Outcomes &amp; Therapeutic Readiness:</strong> Network dysfunction drives cognitive decline; therapeutic tractability (AAV, chaperones, biomarkers) is plausible but not yet AD-validated. BDNF secretion (bottom dashed arc) feeds back into cognitive outcomes.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS CARDS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Central Presynaptic Release Regulator</h3>
+        <p>STXBP1 supports syntaxin-1 trafficking, SNARE-complex assembly, vesicle priming, readily releasable vesicle pool formation, fusion pore regulation, neurotransmitter release, and dense-core vesicle secretion — making it a master coordinator of presynaptic output.</p>
+      </div>
+
+      <div class="card">
+        <h3>Synaptic Dysfunction — Strongest AD-Relevant Link</h3>
+        <p>Because synapse loss and impaired neurotransmission are among the earliest and best correlates of cognitive decline in AD, STXBP1's role in vesicle release makes it a plausible synaptic-resilience or synaptic-vulnerability factor, even without a direct causal role established.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Direct AD Evidence: Present but Not Definitive</h3>
+        <p>STXBP1/Munc18-1 was enriched in human AD frontal cortex membrane proteomics; appeared alongside SEPT5 and SNAP25 as a candidate AD vascular-dysfunction biomarker; STXBP1a was increased in APP/PS1 olfactory bulb; and a GABAergic STXBP1 variant was associated with better cognition and cognitive reserve in individuals with AD pathology.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Munc18-1 Loss Produces AD-Like Neurodegeneration</h3>
+        <p>Neurons lacking Munc18-1 showed cell-autonomous neurodegeneration, impaired trafficking of syntaxin-1a, PSD-95, TrkB, and DCC, plus Alzheimer's-like changes: altered tau phosphorylation, neurofibrillary tangles, and insoluble protein plaque accumulation. STXBP1 may also modulate APP processing and Cdk5/p25 — a pathway implicated in AD neurodegeneration.</p>
+      </div>
+
+      <div class="card">
+        <h3>Network Hyperexcitability &amp; GABAergic Dysfunction</h3>
+        <p>Human cortical organotypic cultures, iPSC-derived neurons, mouse and zebrafish models, and qEEG studies show disrupted network bursting, cortical hyperexcitability, abnormal oscillatory power, increased delta activity, and E/I imbalance. STXBP1 haploinsufficiency impairs inhibitory interneuron recruitment — overlapping with AD-associated network instability and epileptiform activity.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Therapeutic Readiness &amp; Safety Constraints</h3>
+        <p>AAV-STXBP1 supplementation rescues phenotypes in Stxbp1+/− mice with durable expression; iPSC studies confirm dose-dependent synaptic rescue; pharmacological chaperones show inconsistent results across species. Critically, STXBP1 is essential for neurotransmission — broad modulation risks seizures, E/I disruption, impaired cognition, or peripheral secretory effects. AD-specific validation is absent.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><b>Treat STXBP1 as an emerging AD-relevant synaptic mechanism, not a validated AD target.</b> The evidence supports further investigation in synaptic failure, network dysfunction, and cognitive reserve — but not clinical prioritization as a proven AD therapeutic target.</li>
+
+      <li><b>Validate STXBP1 changes directly in AD systems.</b> Key studies should measure STXBP1 total protein, STXBP1a isoform abundance, phosphorylation, crotonylation, localization, syntaxin-1 binding, SNARE-complex assembly, and cell-type-specific expression in human AD brain across disease stages and regions.</li>
+
+      <li><b>Clarify whether STXBP1 changes are causal, compensatory, or injury markers.</b> AD proteomic enrichment or increased STXBP1a may reflect synaptic compensation, pathological aggregation/proteostasis stress, altered membrane trafficking, or selective survival of certain synaptic compartments.</li>
+
+      <li><b>Test STXBP1 modulation in AD models.</b> APP/PS1, tauopathy, amyloid-β oligomer, human iPSC-derived AD neuron, and mixed AD/Lewy models should determine whether restoring, stabilizing, or isoform-normalizing STXBP1 improves synaptic transmission, LTP, network activity, cognition, tau phosphorylation, amyloid burden, or inflammatory readouts.</li>
+
+      <li><b>Avoid simplistic "increase STXBP1" strategies.</b> Both reduced and potentially excessive or mislocalized STXBP1 may be harmful. Therapeutic development should aim for physiological normalization, isoform-specific correction, or restoration of proper STXBP1–syntaxin/SNARE interactions.</li>
+
+      <li><b>Explore STXBP1 as a biomarker of synaptic integrity.</b> CSF, extracellular vesicles, membrane-enriched proteomics, and targeted mass spectrometry for STXBP1, syntaxin-1, SNAP25, and related SNARE proteins may help assess synaptic damage, cognitive reserve, or pharmacodynamic response to intervention.</li>
+
+      <li><b>Investigate isoform-specific biology.</b> STXBP1a elevation in APP/PS1 olfactory bulb and possible amyloid-like aggregate involvement suggest that total STXBP1 and specific splice/protein isoforms may have meaningfully different implications for AD.</li>
+
+      <li><b>Consider network-stabilizing downstream interventions.</b> If STXBP1-related dysfunction contributes to AD hyperexcitability, approaches such as vesicle-release normalization, inhibitory circuit support, BDNF pathway enhancement, or carefully selected anti-hyperexcitability therapies may be more practical than direct STXBP1 manipulation.</li>
+
+      <li><b>Position STXBP1 within a broader SNARE/synaptic module.</b> AD studies should assess STXBP1 together with STX1A, SNAP25, VAMP2, SYT1/SYT12, Munc13, complexins, Rab3a, synapsins, Doc2A/B, and BDNF-related secretion pathways rather than as an isolated target.</li>
+
+      <li><b>Account for safety risks throughout development.</b> STXBP1 is essential for neurotransmission and regulated secretion; broad modulation could alter excitation/inhibition balance, provoke seizures, impair cognition, or affect peripheral secretion in endocrine, vascular, or immune systems.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — STXBP1 / Munc18-1 in Alzheimer's Disease</span>
+      <p>
+        <b>STXBP1/Munc18-1 is a biologically compelling candidate modifier of AD-relevant synaptic vulnerability, cognitive reserve, network dysfunction, and possibly proteostasis-linked neurodegeneration.</b> Its central role in SNARE-mediated vesicle release, BDNF secretion, GABAergic circuit stability, and α-synuclein chaperoning places it at the intersection of multiple AD-relevant mechanisms. <b>Direct AD-related proteomic and genetic evidence exists</b> — including enrichment in human AD frontal cortex membrane fractions, elevated STXBP1a in APP/PS1 mice, and a GABAergic variant associated with better cognitive reserve — but none of this evidence establishes causality or therapeutic efficacy in AD. <b>Loss of Munc18-1 produces Alzheimer's-like neurodegeneration in mouse neurons</b>, reinforcing plausibility, yet the directionality of STXBP1 changes in AD remains unresolved. Therapeutic tractability has been demonstrated in STXBP1-encephalopathy models through AAV-mediated supplementation and pharmacological chaperones, but <b>AD-specific validation is entirely absent</b>. Any therapeutic strategy must prioritize physiological normalization over simple augmentation or inhibition, given the essential and dose-sensitive nature of STXBP1 in neurotransmission. The most defensible conclusion is that <b>STXBP1 merits direct investigation as a synaptic-resilience and network-stability factor in AD</b>, with immediate priorities being isoform-resolved human AD proteomics, functional modulation in AD mouse and iPSC models, and development as a biomarker of presynaptic integrity.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  STXBP1 / Munc18-1 · Alzheimer's Disease Synaptic Vulnerability TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

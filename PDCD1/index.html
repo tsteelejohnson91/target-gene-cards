@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDCD1 / PD-1 — Alzheimer's Disease Immune Checkpoint Target</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2ecf7;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { border-color: var(--mid); background: var(--light); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { border-color: var(--danger); background: var(--danger-light); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { border-color: var(--positive); background: var(--positive-light); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { border-color: var(--warning); background: var(--warning-light); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate { border-color: #94a3b8; background: var(--neutral-bg); }
+  .card-slate h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #fff;
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaway-list li .lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    border-radius: 12px;
+    color: #ffffff;
+    padding: 36px 36px;
+    line-height: 1.8;
+    font-size: 0.96rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .verdict-banner b {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PDCD1 &nbsp;|&nbsp; Programmed Cell Death Protein 1 (PD-1)</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Immune-Related Adverse Events</span>
+  </div>
+  <h1>PDCD1 / PD-1 &amp; Alzheimer's Disease<br>Immune Checkpoint Immunomodulation</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Caveat:</span> PD-1/PD-L1 inhibitors are associated with immune-related adverse events including neurological toxicities, myocarditis, endocrine disruption, pneumonitis, hepatitis, nephritis, and autoimmune-like inflammatory syndromes — of particular concern in elderly Alzheimer's disease patients.
+    </div>
+
+    <div class="overview-text">
+      <p>PDCD1 encodes PD-1, an inhibitory immune-checkpoint receptor that regulates immune activation, T-cell exhaustion, immune tolerance, cytotoxic function, and inflammatory tissue responses. In the supplied evidence, PDCD1/PD-1 is discussed primarily in contexts of oncology, infection, autoimmunity, systemic inflammation, and a limited number of CNS-adjacent immune settings.</p>
+      <p>Most supplied records do not provide Alzheimer's disease-specific evidence and do not directly show PDCD1 effects on amyloid-β, tau, microglia, synaptic loss, or AD clinical outcomes. However, one AD-focused systematic review/meta-analysis describes that PD-1/PD-L1 blockade in AD models reduced amyloid-β plaque burden, reduced tau phosphorylation, reduced astrocyte reactivity, and improved cognitive performance. Human evidence in that review was indirect, drawn from cancer patients receiving PD-1 signaling inhibitors with reported cognitive benefit.</p>
+      <p>Overall, PDCD1 should be viewed as a <em>plausible but not fully validated</em> Alzheimer's disease immunomodulatory target. Its relevance is most likely through neuroinflammation, peripheral–CNS immune communication, T-cell exhaustion or activation, macrophage/microglial-like phagocytic function, cytokine signaling, astrocyte reactivity, and immune checkpoint control — rather than through a neuron-intrinsic AD mechanism established by the supplied text.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11.5">
+
+        <!-- Panel A: Upstream Signaling -->
+        <rect x="10" y="10" width="270" height="478" rx="12" fill="#e8f1f9" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="32" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e3a5f" letter-spacing="1.5">UPSTREAM CHECKPOINT</text>
+
+        <!-- Node 1: PD-L1/PD-L2 -->
+        <rect x="62" y="44" width="168" height="40" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="146" y="61" text-anchor="middle" fill="white" font-weight="bold">PD-L1 / PD-L2</text>
+        <text x="146" y="77" text-anchor="middle" fill="#bfdbfe" font-size="10">Ligand Engagement</text>
+
+        <!-- Arrow down -->
+        <line x1="146" y1="84" x2="146" y2="108" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 2: PD-1 Receptor -->
+        <rect x="62" y="108" width="168" height="40" rx="7" fill="#1e3a5f" stroke="#0d1f35" stroke-width="1"/>
+        <text x="146" y="125" text-anchor="middle" fill="white" font-weight="bold">PDCD1 / PD-1</text>
+        <text x="146" y="141" text-anchor="middle" fill="#93c5fd" font-size="10">Inhibitory Receptor</text>
+
+        <!-- Arrow down -->
+        <line x1="146" y1="148" x2="146" y2="172" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 3: SHP2 -->
+        <rect x="62" y="172" width="168" height="40" rx="7" fill="#3b82f6" fill-opacity="0.8" stroke="#2e6da4" stroke-width="1"/>
+        <text x="146" y="188" text-anchor="middle" fill="white" font-weight="bold">SHP2 Phosphatase</text>
+        <text x="146" y="204" text-anchor="middle" fill="#dbeafe" font-size="10">Inhibitory Signaling</text>
+
+        <!-- Arrow down -->
+        <line x1="146" y1="212" x2="146" y2="236" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 4: TCR/CD28 suppression -->
+        <rect x="62" y="236" width="168" height="40" rx="7" fill="#60a5fa" fill-opacity="0.7" stroke="#2e6da4" stroke-width="1"/>
+        <text x="146" y="253" text-anchor="middle" fill="#1e293b" font-weight="bold">TCR / CD28</text>
+        <text x="146" y="269" text-anchor="middle" fill="#1e3a5f" font-size="10">Signaling Suppressed</text>
+
+        <!-- Arrow down -->
+        <line x1="146" y1="276" x2="146" y2="300" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 5: T-cell exhaustion -->
+        <rect x="62" y="300" width="168" height="44" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="146" y="318" text-anchor="middle" fill="#1e3a5f" font-weight="bold">T-Cell Exhaustion</text>
+        <text x="146" y="334" text-anchor="middle" fill="#475569" font-size="10">CD8⁺ / CD4⁺ Dysfunction</text>
+
+        <!-- Node 6: PFKM-p53-PDCD1 axis (bottom) -->
+        <rect x="62" y="400" width="168" height="44" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="146" y="418" text-anchor="middle" fill="#1e3a5f" font-weight="bold">PFKM–p53–PDCD1</text>
+        <text x="146" y="434" text-anchor="middle" fill="#475569" font-size="10">Macrophage PD-1 Axis</text>
+
+        <!-- Arrow: exhaustion to PFKM -->
+        <line x1="146" y1="344" x2="146" y2="400" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+
+        <!-- Panel B: Downstream Branches -->
+        <rect x="296" y="10" width="330" height="478" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="461" y="32" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1.5">DOWNSTREAM BRANCHES</text>
+
+        <!-- Node 7: Shared branch origin — PD-1 Blockade -->
+        <rect x="348" y="44" width="226" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="461" y="61" text-anchor="middle" fill="white" font-weight="bold">PD-1 / PD-L1 Blockade</text>
+        <text x="461" y="77" text-anchor="middle" fill="#a7f3d0" font-size="10">Preclinical AD Intervention</text>
+
+        <!-- Fork left arrow -->
+        <line x1="395" y1="84" x2="380" y2="120" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <!-- Fork right arrow -->
+        <line x1="527" y1="84" x2="542" y2="120" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Left sub-branch: Amyloid/Tau -->
+        <!-- Node 8 -->
+        <rect x="322" y="120" width="148" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="396" y="137" text-anchor="middle" fill="#065f46" font-weight="bold">↓ Amyloid-β Plaques</text>
+        <text x="396" y="153" text-anchor="middle" fill="#047857" font-size="10">Plaque Burden Reduced</text>
+
+        <!-- Arrow left branch cont. -->
+        <line x1="396" y1="160" x2="396" y2="184" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 9 -->
+        <rect x="322" y="184" width="148" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="396" y="201" text-anchor="middle" fill="#065f46" font-weight="bold">↓ Tau Phosphorylation</text>
+        <text x="396" y="217" text-anchor="middle" fill="#047857" font-size="10">Tau Pathology Reduced</text>
+
+        <!-- Right sub-branch: Neuroinflammation -->
+        <!-- Node 10 -->
+        <rect x="482" y="120" width="126" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="545" y="136" text-anchor="middle" fill="#065f46" font-weight="bold">↓ Astrocyte</text>
+        <text x="545" y="152" text-anchor="middle" fill="#047857" font-size="10">Reactivity Reduced</text>
+
+        <!-- Arrow right branch cont. -->
+        <line x1="545" y1="160" x2="545" y2="184" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 11 -->
+        <rect x="482" y="184" width="126" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="545" y="200" text-anchor="middle" fill="#065f46" font-weight="bold">Neuroinflammation</text>
+        <text x="545" y="216" text-anchor="middle" fill="#047857" font-size="10">Cytokines Modulated</text>
+
+        <!-- Converge arrows both to shared outcome -->
+        <line x1="396" y1="224" x2="396" y2="272" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="545" y1="224" x2="545" y2="272" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 12: Shared outcome -->
+        <rect x="348" y="272" width="226" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="461" y="289" text-anchor="middle" fill="white" font-weight="bold">↑ Cognitive Performance</text>
+        <text x="461" y="305" text-anchor="middle" fill="#a7f3d0" font-size="10">Preclinical AD Models</text>
+
+        <!-- Arrow to macrophage phagocytosis -->
+        <line x1="461" y1="312" x2="461" y2="356" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 13: Macrophage/Microglial Clearance -->
+        <rect x="348" y="356" width="226" height="44" rx="7" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="461" y="374" text-anchor="middle" fill="#065f46" font-weight="bold">Macrophage / Microglial</text>
+        <text x="461" y="390" text-anchor="middle" fill="#047857" font-size="10">Phagocytic Clearance</text>
+
+        <!-- Panel C: Safety/Context -->
+        <rect x="642" y="10" width="268" height="478" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="776" y="32" text-anchor="middle" font-size="9" font-weight="bold" fill="#9b1c1c" letter-spacing="1.5">SAFETY &amp; CONTEXT</text>
+
+        <!-- Node 14: irAEs -->
+        <rect x="668" y="44" width="216" height="52" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="776" y="64" text-anchor="middle" fill="white" font-weight="bold">Immune-Related</text>
+        <text x="776" y="79" text-anchor="middle" fill="white" font-weight="bold">Adverse Events (irAEs)</text>
+        <text x="776" y="93" text-anchor="middle" fill="#fca5a5" font-size="9.5">Neuro / Cardiac / Endocrine</text>
+
+        <!-- Arrow down -->
+        <line x1="776" y1="96" x2="776" y2="130" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node 15: Protective brake -->
+        <rect x="668" y="130" width="216" height="52" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="776" y="150" text-anchor="middle" fill="#7f1d1d" font-weight="bold">PD-1 as Protective</text>
+        <text x="776" y="166" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Brake</text>
+        <text x="776" y="180" text-anchor="middle" fill="#991b1b" font-size="9.5">Blockade may worsen CNS</text>
+
+        <!-- Arrow down -->
+        <line x1="776" y1="182" x2="776" y2="218" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node 16: Biomarker panel -->
+        <rect x="668" y="218" width="216" height="64" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="776" y="238" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Biomarker Strategy</text>
+        <text x="776" y="254" text-anchor="middle" fill="#991b1b" font-size="10">sPD-1 · PD-L1 on myeloid</text>
+        <text x="776" y="270" text-anchor="middle" fill="#991b1b" font-size="10">LAG3 / TIM3 / TIGIT co-expr.</text>
+        <text x="776" y="283" text-anchor="middle" fill="#991b1b" font-size="9.5">IFN-γ / TNF-α / IL-6 / IL-10</text>
+
+        <!-- Defs -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (blue, left):</strong> Upstream checkpoint cascade — PD-L1/PD-L2 ligand engagement activates PDCD1/PD-1, triggering SHP2-mediated suppression of TCR/CD28 signaling, producing T-cell exhaustion (CD8⁺/CD4⁺) and macrophage dysfunction via the PFKM–p53–PDCD1 axis. &nbsp;|&nbsp;
+        <strong>Panel B (teal, centre):</strong> Downstream branches of PD-1/PD-L1 blockade in preclinical AD models — diverging from the blockade node into an amyloid/tau arm (reduced plaque burden, reduced tau phosphorylation) and a neuroimmune arm (reduced astrocyte reactivity, cytokine modulation), both converging onto improved cognitive performance and enhanced macrophage/microglial phagocytic clearance. &nbsp;|&nbsp;
+        <strong>Panel C (red, right):</strong> Safety and contextual constraints — immune-related adverse events, the protective-brake role of PD-1 (blockade can worsen CNS inflammation in some contexts), and recommended biomarker strategy for patient stratification.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Checkpoint Mechanism</h3>
+        <p>PD-1 restrains T-cell receptor and CD28 signaling via PD-L1/PD-L2 binding and downstream SHP2-mediated inhibitory pathways. Chronic engagement drives T-cell exhaustion and impaired cytotoxicity across CD8⁺ and CD4⁺ compartments, relevant to immune surveillance failure in neurodegeneration.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Preclinical AD Evidence</h3>
+        <p>A 2026 systematic review/meta-analysis reported that PD-1/PD-L1 blockade in AD models reduced amyloid-β plaque burden, reduced tau phosphorylation, decreased astrocyte reactivity, and improved cognitive performance. Wild-type mice showed no significant cognitive changes. This is the primary AD-supportive evidence in the supplied text.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Context-Dependent Expression</h3>
+        <p>PD-1 expression is not a simple marker of dysfunction. It can indicate exhausted, dysfunctional immune cells, but also activated, antigen-experienced, tissue-resident, or protective immune populations. Therefore PDCD1 expression alone is insufficient to determine whether blockade or agonism would benefit AD patients.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Macrophage / Myeloid Relevance</h3>
+        <p>A sepsis study linked increased macrophage PD-1 to suppressed phagocytosis through a PFKM–p53–PDCD1 axis; restoring phagocytosis improved disease outcomes. This is indirectly relevant to AD, where impaired microglial/macrophage clearance of amyloid-β is central to pathology progression.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety Concern</h3>
+        <p>PD-1/PD-L1 inhibitors are associated with a broad spectrum of immune-related adverse events: neurological toxicities, myocarditis, endocrine disruption, pneumonitis, dermatitis, liver injury, nephritis, and autoimmune-like inflammatory syndromes. These risks are especially concerning in older AD patient populations with comorbidities.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Biomarker Utility</h3>
+        <p>PDCD1 may be more immediately useful as an immune-state biomarker than as a standalone therapeutic target. Relevant measurements include sPD-1, PD-L1 on myeloid cells, checkpoint co-expression with LAG3/TIM3/TIGIT/CTLA4, cytokine signatures (IFN-γ, TNF-α, IL-6, IL-10), and microglial/myeloid activation markers in blood, CSF, and tissue compartments.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><span class="lead">Treat as hypothesis-generating:</span> PDCD1/PD-1 is a plausible but not established Alzheimer's disease therapeutic target based on the supplied evidence. It should drive mechanistic investigation, not immediate clinical translation.</div>
+      </li>
+      <li>
+        <div><span class="lead">Prioritize AD-specific validation:</span> Determine whether PDCD1/PD-1 is altered in AD blood, CSF, meninges, brain-infiltrating lymphocytes, microglia/macrophages, astrocyte-associated niches, and disease-stage-specific immune compartments before advancing toward therapeutic use.</div>
+      </li>
+      <li>
+        <div><span class="lead">Clarify therapeutic direction first:</span> AD studies must rigorously determine whether PD-1 signaling is suppressing beneficial clearance responses or restraining harmful neuroinflammation — the optimal intervention direction is currently unresolved.</div>
+      </li>
+      <li>
+        <div><span class="lead">Evaluate both blockade and agonism:</span> PD-1 blockade may be relevant if immune exhaustion limits pathological clearance; PD-1 agonism or pathway enhancement may be relevant if chronic inflammatory damage predominates. Both strategies require independent evaluation.</div>
+      </li>
+      <li>
+        <div><span class="lead">Apply cell-type-specific profiling:</span> PDCD1 effects must be mapped across CD8⁺ T cells, CD4⁺ T cells, Tregs, NK cells, monocytes/macrophages, microglia-like populations, and possibly neuronal or glial compartments where relevant to AD biology.</div>
+      </li>
+      <li>
+        <div><span class="lead">Measure AD-relevant endpoints directly:</span> Amyloid-β burden, tau phosphorylation and spread, synaptic integrity, astrocyte reactivity, microglial phenotype, cytokine signatures, blood-brain barrier changes, cognition, and neurodegeneration must all be assessed in any PDCD1-focused AD study.</div>
+      </li>
+      <li>
+        <div><span class="lead">Avoid broad systemic PD-1 blockade without strong safety rationale:</span> The supplied evidence repeatedly demonstrates that PD-1 pathway inhibition can unleash inflammatory and autoimmune toxicity, making indiscriminate blockade especially hazardous in the elderly AD population.</div>
+      </li>
+      <li>
+        <div><span class="lead">Adopt biomarker-guided approaches:</span> PDCD1 should be interpreted alongside PD-L1/PD-L2, CTLA4, LAG3, HAVCR2/TIM3, TIGIT, T-cell activation and exhaustion markers, cytokines, macrophage/microglial markers, and patient inflammatory phenotype to enable precision stratification.</div>
+      </li>
+      <li>
+        <div><span class="lead">Explore targeted, lower-risk modulation strategies:</span> If AD evidence strengthens, consider intermittent dosing, low-dose immune modulation, CNS- or cell-targeted delivery, upstream PDCD1 regulatory modulation, or combination strategies designed to avoid excessive systemic immune activation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment —</span>
+      PDCD1/PD-1 has <b>plausible mechanistic relevance</b> to Alzheimer's disease through immune checkpoint control of neuroinflammation and pathological clearance biology. The most supportive described evidence — a systematic review/meta-analysis of preclinical AD models — reports that <b>PD-1/PD-L1 blockade reduces amyloid-β burden, tau phosphorylation, and astrocyte reactivity while improving cognition</b>, providing a coherent but preliminary mechanistic framework. However, the precise cell types, signaling routes, and therapeutic windows remain unresolved. <b>Safety concerns are substantial</b>: immune-related adverse events associated with PD-1 inhibitors are broad-spectrum and particularly hazardous in elderly patients. The gene may offer <b>immediate value as an immune-state biomarker</b> for stratifying neuroinflammatory phenotypes in AD cohorts. <b>Therapeutic intervention requires rigorous AD-specific validation</b> of target alteration, direction of effect, and an acceptable safety profile before clinical translation can be responsibly pursued.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PDCD1 / PD-1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

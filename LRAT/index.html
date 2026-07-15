@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LRAT — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a2060;
+    --mid: #7c3aad;
+    --light: #f3eafc;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0830 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f1e9fb;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.30);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e9d5ff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: var(--danger);
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    font-size: 0.92rem;
+    margin-bottom: 0;
+    color: #7f1d1d;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 20px 14px 20px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate { background: var(--neutral-bg); border-color: var(--neutral-text); }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 1.4rem;
+  }
+
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.96rem;
+    line-height: 1.75;
+  }
+
+  ol.takeaways li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0830 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #f3eafc;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #ede9fe;
+    margin-bottom: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LRAT &nbsp;|&nbsp; Lecithin:Retinol Acyltransferase</span>
+    <span class="chip chip-danger">⚠ Safety: Retinal &amp; Systemic Risk</span>
+  </div>
+  <h1>LRAT &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Safety Caveat</div>
+      <p>Loss-of-function LRAT mutations cause severe retinal disease (Leber congenital amaurosis). Systemic LRAT inhibition or activation could adversely affect retina, liver, intestine, immune function, reproduction, and vitamin A reserves. Safety assessment must be built into any AD-directed strategy from the outset.</p>
+    </div>
+
+    <p>LRAT (lecithin:retinol acyltransferase) is a central enzyme in vitamin A/retinoid metabolism that esterifies retinol into retinyl esters for storage, thereby regulating retinoid flux toward bioactive retinoic acid and its downstream RAR/RXR transcriptional signaling. The supplied evidence does <em>not</em> establish LRAT as a validated Alzheimer's disease (AD) therapeutic target. The preponderance of experimental data derives from retinal disease, liver fibrosis, cancer, skin biology, diabetes, and toxicology rather than from AD brain models or human AD neuropathology studies.</p>
+
+    <p>The strongest direct AD-related material is limited and mixed. One genome-wide association study nominated LRAT as a possible late-onset AD candidate locus, but later follow-up studies reported significant associations for <em>APOE</em>, <em>PICALM</em>, <em>CR1</em>, and <em>ABCA7</em> rather than LRAT. A separate Aβ1-42 retinal pigment epithelial/AMD model showed dysregulation of visual-cycle genes including LRAT in response to amyloid stress — but this was an ocular, not a brain, model. Mechanistically, LRAT may connect to AD only indirectly through retinoid homeostasis, retinoic acid/RAR/RXR signaling, lipid metabolism, oxidative stress, redox buffering, inflammation, insulin/metabolic signaling, and mitochondrial–organelle interactions.</p>
+
+    <p>Note also that many mentions of "LRAT" in the broader literature refer to unrelated acronyms — long-range atmospheric transport, late recurrence of atrial tachyarrhythmia, lesion-relation aware transformer, and lifestyle-routine activities theory — and should be excluded from any biological interpretation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Arial,Helvetica,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aad"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Retinoid Metabolism Core -->
+        <rect x="10" y="10" width="270" height="480" rx="14" fill="#f3eafc" stroke="#7c3aad" stroke-width="1.2" opacity="0.55"/>
+        <text x="145" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#4a2060" letter-spacing="1.5">A · RETINOID METABOLISM</text>
+
+        <!-- Node: Dietary Retinol -->
+        <rect x="60" y="42" width="170" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="145" y="58" text-anchor="middle" font-size="11" fill="#1e293b">Dietary Retinol</text>
+        <text x="145" y="72" text-anchor="middle" font-size="10" fill="#4a2060">(Vitamin A)</text>
+
+        <!-- Arrow down -->
+        <line x1="145" y1="82" x2="145" y2="105" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node: LRAT -->
+        <rect x="50" y="106" width="190" height="42" rx="7" fill="#7c3aad" stroke="#4a2060" stroke-width="1.5"/>
+        <text x="145" y="122" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">LRAT</text>
+        <text x="145" y="138" text-anchor="middle" font-size="10" fill="#e9d5ff">Retinol → Retinyl Esters</text>
+
+        <!-- Arrow down to Retinyl Esters -->
+        <line x1="145" y1="148" x2="145" y2="174" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node: Retinyl Ester Storage -->
+        <rect x="55" y="175" width="180" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="145" y="191" text-anchor="middle" font-size="11" fill="#1e293b">Retinyl Ester Storage</text>
+        <text x="145" y="205" text-anchor="middle" font-size="10" fill="#4a2060">(Liver, RPE, tissue)</text>
+
+        <!-- Arrow down -->
+        <line x1="145" y1="215" x2="145" y2="240" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node: Retinaldehyde -->
+        <rect x="60" y="241" width="170" height="38" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="145" y="257" text-anchor="middle" font-size="11" fill="#1e293b">Retinaldehyde</text>
+        <text x="145" y="271" text-anchor="middle" font-size="10" fill="#4a2060">(RDH/RALDH)</text>
+
+        <!-- Arrow down -->
+        <line x1="145" y1="279" x2="145" y2="303" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node: Retinoic Acid -->
+        <rect x="55" y="304" width="180" height="40" rx="7" fill="#4a2060" stroke="#4a2060" stroke-width="1.2"/>
+        <text x="145" y="320" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">Retinoic Acid</text>
+        <text x="145" y="334" text-anchor="middle" font-size="10" fill="#e9d5ff">(atRA / 9-cis-RA)</text>
+
+        <!-- Arrow down -->
+        <line x1="145" y1="344" x2="145" y2="368" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node: RAR/RXR Signaling -->
+        <rect x="55" y="369" width="180" height="38" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="145" y="385" text-anchor="middle" font-size="11" fill="#1e293b">RAR / RXR Signaling</text>
+        <text x="145" y="399" text-anchor="middle" font-size="10" fill="#4a2060">Transcription regulation</text>
+
+        <!-- Panel B: Upstream Inputs -->
+        <rect x="295" y="10" width="210" height="225" rx="14" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2" opacity="0.55"/>
+        <text x="400" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#1d4ed8" letter-spacing="1.5">B · UPSTREAM INPUTS</text>
+
+        <!-- Node: STRA6/RBP -->
+        <rect x="315" y="42" width="170" height="38" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="400" y="58" text-anchor="middle" font-size="11" fill="#1e293b">STRA6 / RBP4</text>
+        <text x="400" y="72" text-anchor="middle" font-size="10" fill="#1d4ed8">Retinol uptake receptor</text>
+
+        <!-- Arrow from STRA6 down -->
+        <line x1="400" y1="80" x2="400" y2="104" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: IL-1 / TNF-α -->
+        <rect x="315" y="105" width="170" height="38" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="400" y="121" text-anchor="middle" font-size="11" fill="#1e293b">IL-1 / TNF-α</text>
+        <text x="400" y="135" text-anchor="middle" font-size="10" fill="#1d4ed8">Cytokines ↓ LRAT</text>
+
+        <!-- Arrow from IL-1 down -->
+        <line x1="400" y1="143" x2="400" y2="168" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: CYP26 Degradation -->
+        <rect x="315" y="169" width="170" height="38" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="400" y="185" text-anchor="middle" font-size="11" fill="#1e293b">CYP26 Enzymes</text>
+        <text x="400" y="199" text-anchor="middle" font-size="10" fill="#1d4ed8">Retinoic acid catabolism</text>
+
+        <!-- Connector: B panel feeds into LRAT (Panel A) -->
+        <!-- Route: from STRA6 right edge to Panel A LRAT node left edge via horizontal then down -->
+        <!-- STRA6 left edge x=315, LRAT right edge x=240, LRAT center y=127 -->
+        <line x1="315" y1="61" x2="243" y2="127" stroke="#1d4ed8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-blue)"/>
+
+        <!-- Panel C: Downstream / AD-Relevant Branches -->
+        <rect x="295" y="248" width="210" height="242" rx="14" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2" opacity="0.55"/>
+        <text x="400" y="268" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1.5">C · AD-RELEVANT OUTPUTS</text>
+
+        <!-- Node: Neuronal Differentiation -->
+        <rect x="310" y="278" width="175" height="38" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="397" y="294" text-anchor="middle" font-size="11" fill="#1e293b">Neuronal Differentiation</text>
+        <text x="397" y="308" text-anchor="middle" font-size="10" fill="#0f766e">Synaptic maintenance</text>
+
+        <!-- Arrow down -->
+        <line x1="397" y1="316" x2="397" y2="340" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Inflammation Control -->
+        <rect x="310" y="341" width="175" height="38" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="397" y="357" text-anchor="middle" font-size="11" fill="#1e293b">Inflammation Control</text>
+        <text x="397" y="371" text-anchor="middle" font-size="10" fill="#0f766e">IL-6 / CXCL suppression</text>
+
+        <!-- Arrow down -->
+        <line x1="397" y1="379" x2="397" y2="403" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Redox / Mitochondria -->
+        <rect x="310" y="404" width="175" height="40" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="397" y="420" text-anchor="middle" font-size="11" fill="#1e293b">Redox / Mitochondria</text>
+        <text x="397" y="434" text-anchor="middle" font-size="10" fill="#0f766e">NADPH buffering, ER–LD</text>
+
+        <!-- Connector from RAR/RXR (Panel A) to Downstream nodes (Panel C) -->
+        <!-- RAR/RXR right edge x=235, center y=388; Panel C left edge x=295 -->
+        <!-- Route horizontally at y=388 from x=235 to x=310 -->
+        <line x1="235" y1="388" x2="310" y2="388" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel D: Safety & Risk -->
+        <rect x="520" y="10" width="390" height="480" rx="14" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" opacity="0.55"/>
+        <text x="715" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#991b1b" letter-spacing="1.5">D · SAFETY / EVIDENCE GAPS</text>
+
+        <!-- Node: GWAS Signal (weak) -->
+        <rect x="538" y="42" width="170" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="623" y="58" text-anchor="middle" font-size="11" fill="#1e293b">GWAS Signal (weak)</text>
+        <text x="623" y="72" text-anchor="middle" font-size="10" fill="#991b1b">LOAD locus — not replicated</text>
+
+        <!-- Node: Aβ RPE Model -->
+        <rect x="722" y="42" width="170" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="807" y="58" text-anchor="middle" font-size="11" fill="#1e293b">Aβ RPE Model</text>
+        <text x="807" y="72" text-anchor="middle" font-size="10" fill="#991b1b">Ocular only — not brain</text>
+
+        <!-- Arrow from GWAS down -->
+        <line x1="623" y1="82" x2="623" y2="106" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow from Aβ RPE down -->
+        <line x1="807" y1="82" x2="807" y2="106" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Node: No Brain AD Evidence -->
+        <rect x="613" y="107" width="190" height="40" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="708" y="123" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">No Direct Brain</text>
+        <text x="708" y="137" text-anchor="middle" font-size="10" fill="#fecaca">AD Evidence Available</text>
+
+        <!-- Arrow down -->
+        <line x1="708" y1="147" x2="708" y2="175" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Safety — Retinal -->
+        <rect x="538" y="176" width="165" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="620" y="192" text-anchor="middle" font-size="11" fill="#1e293b">Retinal Safety Risk</text>
+        <text x="620" y="206" text-anchor="middle" font-size="10" fill="#991b1b">LCA, night blindness</text>
+
+        <!-- Node: Safety — Systemic -->
+        <rect x="717" y="176" width="175" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="804" y="192" text-anchor="middle" font-size="11" fill="#1e293b">Systemic Safety Risk</text>
+        <text x="804" y="206" text-anchor="middle" font-size="10" fill="#991b1b">Liver, immune, vit A</text>
+
+        <!-- Connector from No Brain AD node to both safety nodes -->
+        <line x1="685" y1="147" x2="620" y2="176" stroke="#991b1b" stroke-width="1.2" marker-end="url(#arr-red)"/>
+        <line x1="730" y1="147" x2="804" y2="176" stroke="#991b1b" stroke-width="1.2" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow from Retinal Safety down -->
+        <line x1="620" y1="216" x2="620" y2="244" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow from Systemic Safety down -->
+        <line x1="804" y1="216" x2="804" y2="244" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Druggable in Retinal Dx -->
+        <rect x="538" y="245" width="165" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="620" y="261" text-anchor="middle" font-size="11" fill="#1e293b">Druggable in Retinal Dx</text>
+        <text x="620" y="275" text-anchor="middle" font-size="10" fill="#991b1b">Gene therapy / 9-cis-RA</text>
+
+        <!-- Node: Bidirectional Risk -->
+        <rect x="717" y="245" width="175" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="804" y="261" text-anchor="middle" font-size="11" fill="#1e293b">Bidirectional Risk</text>
+        <text x="804" y="275" text-anchor="middle" font-size="10" fill="#991b1b">↑ or ↓ LRAT both harmful</text>
+
+        <!-- Arrow from both down to Unvalidated -->
+        <line x1="620" y1="285" x2="620" y2="317" stroke="#991b1b" stroke-width="1.2" marker-end="url(#arr-red)"/>
+        <line x1="804" y1="285" x2="804" y2="317" stroke="#991b1b" stroke-width="1.2" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Unvalidated AD Target -->
+        <rect x="600" y="318" width="215" height="42" rx="7" fill="#7f1d1d" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="707" y="336" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">Unvalidated AD Target</text>
+        <text x="707" y="350" text-anchor="middle" font-size="10" fill="#fecaca">Hypothesis-generating only</text>
+
+        <!-- Arrow down to Next Steps -->
+        <line x1="707" y1="360" x2="707" y2="385" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Next Steps -->
+        <rect x="590" y="386" width="235" height="40" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="707" y="402" text-anchor="middle" font-size="11" fill="#1e293b">Brain Models Needed</text>
+        <text x="707" y="416" text-anchor="middle" font-size="10" fill="#991b1b">Neurons, glia, organoids, mice</text>
+
+        <!-- Node: Insulin/Metabolic -->
+        <rect x="538" y="440" width="165" height="38" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="620" y="456" text-anchor="middle" font-size="11" fill="#1e293b">Insulin / Metabolic</text>
+        <text x="620" y="470" text-anchor="middle" font-size="10" fill="#991b1b">STRA6/JAK2/STAT axis</text>
+
+        <!-- Node: Acronym Collision Warning -->
+        <rect x="717" y="440" width="175" height="38" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="804" y="456" text-anchor="middle" font-size="11" fill="#1e293b">Acronym Collisions</text>
+        <text x="804" y="470" text-anchor="middle" font-size="10" fill="#991b1b">Exclude non-bio LRAT</text>
+
+        <!-- RAR/RXR (Panel A) feeds into Panel D via gutter -->
+        <!-- RAR/RXR right x=235 y=388; Panel D left x=520; but Panel C occupies 295–505 -->
+        <!-- Route: from RAR/RXR right edge travel right to x=520, then up to Unvalidated y=339 -->
+        <!-- Actually Panel C bottom is ~490, Panel D connects at y=339 -->
+        <!-- Draw safe elbow: right from x=235 y=388 to x=280 y=388, then up to y=339, then right to x=600 -->
+        <!-- But check: Panel C left=295, so x=280 is in gutter. Panel D left=520. -->
+        <!-- Route the elbow through the gutter between A(right=280) and C(left=295) and B panels -->
+        <!-- Gutter between Panel C right(505) and Panel D left(520): x=505 to 520 -->
+        <!-- From RAR/RXR (x=235, y=388) right along y=450 (below Panel C) to x=570 then up to y=360 to Unvalidated -->
+        <!-- Actually Panel C bottom = 490, RAR/RXR is at y=388 which is inside Panel C's range (248-490) -->
+        <!-- Instead draw from RAR/RXR right edge (x=235) horizontally to Panel D via y=450 below Panel C -->
+        <!-- But RAR/RXR center y=388, Panel A bottom = 490, Panel C bottom = 490 -->
+        <!-- Best safe route: gutter x=283 (between A right=280 and C left=295): go from A's LRAT right edge up to gutter, travel up, enter Panel D top -->
+        <!-- Keep it simple: just use the connection from Panel C output to Panel D — already shown conceptually, don't add more crossing lines -->
+        <!-- Remove the RAR→D line to avoid crossing; C panel shows the outputs -->
+
+        <!-- Panel labels summary -->
+        <text x="145" y="470" text-anchor="middle" font-size="9" fill="#7c3aad" font-style="italic">Core pathway</text>
+        <text x="400" y="470" text-anchor="middle" font-size="9" fill="#0f766e" font-style="italic">AD-relevant outputs</text>
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (purple) — Core Retinoid Metabolism:</strong> LRAT esterifies retinol into retinyl ester storage pools; downstream hydrolysis releases retinol for conversion via RDH/RALDH to retinaldehyde and then bioactive retinoic acid, activating RAR/RXR transcriptional programs.
+        <strong>Panel B (blue) — Upstream Inputs:</strong> STRA6/RBP4 controls retinol uptake; inflammatory cytokines (IL-1, TNF-α) can suppress LRAT; CYP26 enzymes catabolize retinoic acid, modulating the overall flux.
+        <strong>Panel C (teal) — AD-Relevant Outputs:</strong> Retinoic acid/RAR/RXR signaling feeds downstream into neuronal differentiation and synaptic maintenance, inflammation control (IL-6/CXCL suppression), and redox/mitochondrial homeostasis (NADPH buffering, ER–lipid-droplet contacts) — all AD-relevant but none directly demonstrated in AD brain.
+        <strong>Panel D (red) — Safety &amp; Evidence Gaps:</strong> The only direct AD evidence is a weak, unreplicated GWAS signal and an ocular Aβ model. Bidirectional LRAT modulation carries retinal and systemic safety risks. Brain-specific validation studies (neurons, glia, organoids, animal models) remain absent.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Function: Retinoid Storage Control</h3>
+        <p>LRAT converts retinol into retinyl esters, acting as the primary gatekeeper determining whether vitamin A is stored or remains available for conversion into bioactive retinoic acid. This positions LRAT at the top of a cascade with broad transcriptional consequences via RAR/RXR nuclear receptors.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Retinoic Acid as the AD Mechanistic Bridge</h3>
+        <p>Retinoic acid regulates gene transcription, neuronal differentiation, synaptic maintenance, immune modulation, lipid metabolism, and tissue repair — all relevant to AD biology. LRAT could theoretically influence AD by shifting retinoid availability, but this mechanism has not been tested in AD-specific systems.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Inflammation: LRAT Knockdown ↑ IL-6/CXCL</h3>
+        <p>In retinal inflammatory models, LRAT knockdown increased inflammatory mediators including IL-6 and CXCL chemokines, while LRAT overexpression suppressed them. In liver and other systems, IL-1 and TNF-α downregulate LRAT, mobilizing retinoid stores. This bidirectional LRAT–inflammation crosstalk is directly relevant to AD neuroinflammation mechanisms.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Oxidative Stress &amp; Organelle Homeostasis</h3>
+        <p>A cancer radiobiology study described a YTHDF2–DHRS3–LRAT axis operating at ER–lipid-droplet–mitochondria interfaces, where LRAT helped maintain retinoid/NADPH buffering and limit oxidative stress. These features — mitochondria, ER contacts, lipid droplets, redox buffering — overlap strongly with established AD cellular pathology.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Weak &amp; Unreplicated AD Genetic Evidence</h3>
+        <p>One older late-onset AD GWAS nominated the LRAT chromosomal region as a candidate locus, but subsequent corrected analyses identified other genes (<em>APOE</em>, <em>PICALM</em>, <em>CR1</em>, <em>ABCA7</em>) as significant. The Aβ1-42 retinal pigment epithelial model showing LRAT dysregulation is an ocular AMD-like context, not a brain AD model. Causality remains unestablished.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Substantial Safety Liabilities</h3>
+        <p>Loss-of-function LRAT mutations cause Leber congenital amaurosis and severe retinal degeneration. Visual-cycle manipulation can produce night blindness, delayed dark adaptation, and color-vision disturbances. Broad systemic LRAT modulation for AD could adversely affect retina, liver, intestine, immune function, reproduction, and systemic vitamin A homeostasis.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Treat LRAT as a hypothesis-generating candidate, not a validated target.</b> The current evidence base does not support LRAT as an actionable Alzheimer's disease therapeutic target; it should be classified at the exploratory/hypothesis stage of the target development pipeline.</li>
+      <li><b>Prioritize pathway-level investigation over simple activation or inhibition.</b> The key scientific question is whether AD involves disrupted retinol storage, retinyl ester pools, retinoic acid synthesis, retinoic acid degradation, or RAR/RXR signaling in relevant brain or peripheral compartments — not whether LRAT itself should be turned up or down.</li>
+      <li><b>Measure LRAT directly in AD-relevant cellular and tissue systems.</b> Studies should examine vulnerable brain regions, neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, choroid plexus, retina, CSF, and peripheral metabolic tissues — none of which have been adequately characterized for LRAT biology in AD context.</li>
+      <li><b>Pair LRAT expression data with functional retinoid metabolomics.</b> LRAT mRNA alone is insufficient. Studies should quantify retinol, retinyl esters, retinaldehyde, all-trans-retinoic acid, 9-cis-retinoic acid, CYP26 activity, RAR/RXR target gene panels, and retinyl ester hydrolase activity to characterize true pathway flux.</li>
+      <li><b>Test causality rigorously in AD models.</b> LRAT gain-of-function, loss-of-function, or pharmacologic modulation should be evaluated for effects on amyloid processing, plaque burden, tau phosphorylation/aggregation, synaptic markers, neuronal survival, microglial activation, astrocyte reactivity, oxidative stress, mitochondrial function, blood–brain barrier integrity, and cognition.</li>
+      <li><b>Extend the Aβ-stress connection to neural systems.</b> The Aβ1-42 retinal model suggests LRAT-containing retinoid pathways respond to amyloid-associated cellular stress; comparable studies should be conducted in primary neurons, glia, iPSC-derived brain organoids, and AD animal models.</li>
+      <li><b>Evaluate LRAT's role in microglial and astrocytic neuroinflammation.</b> Given evidence that LRAT suppresses IL-6 and CXCL inflammatory mediators in retinal systems, AD studies should test whether LRAT modulates microglial or astrocytic cytokine and chemokine programs relevant to disease progression.</li>
+      <li><b>Investigate redox and organelle biology in neural cells.</b> LRAT's role in retinoid/NADPH buffering and ER–lipid-droplet–mitochondria interfaces should be tested in neural cells under oxidative, amyloid, tau, and metabolic stress conditions.</li>
+      <li><b>Frame therapeutic strategies as retinoid-homeostasis normalization.</b> Potential approaches include correcting vitamin A deficiency, stabilizing retinyl ester reservoirs, modulating retinoic acid signaling, using retinoid analogs, or targeting upstream/downstream pathway components such as STRA6, RBP4, CYP26, RAR/RXR, RDH/RALDH enzymes, or retinyl ester hydrolases rather than LRAT directly.</li>
+      <li><b>Build in safety constraints from the outset.</b> Any AD-directed LRAT strategy must assess retinal function, dark adaptation, liver vitamin A stores, systemic retinoid levels, lipid metabolism, immune effects, and toxicity from either excess or deficient retinoic acid signaling before advancing.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — LRAT in Alzheimer's Disease</div>
+      <p>
+        <strong>LRAT is a biologically credible retinoid-homeostasis node with indirect, plausible relevance to Alzheimer's disease mechanisms</strong> — particularly retinoid signaling, neuroinflammation, oxidative stress, lipid metabolism, and metabolic dysfunction. However, based strictly on the supplied evidence, <strong>it remains unvalidated as an Alzheimer's disease therapeutic target</strong>. Direct AD evidence is limited to a weak, unreplicated GWAS signal and a single ocular amyloid model; no studies have demonstrated LRAT modulation of amyloid burden, tau pathology, synaptic integrity, neuronal survival, or cognition in AD-relevant systems. <strong>Substantial safety liabilities</strong> — including severe retinal disease from LRAT loss-of-function and systemic vitamin A disruption risk — demand early integration of safety monitoring into any research program. The most scientifically productive path forward is <strong>systematic characterization of retinoid pathway flux across AD-relevant tissues</strong>, paired with functional causal studies in neurons, glia, organoids, and animal models, before any consideration of therapeutic advancement.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  LRAT / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

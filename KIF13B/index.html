@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIF13B — AD Mechanistic Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header h1 em {
+    font-style: normal;
+    color: #93c5fd;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2eaf4;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW TEXT */
+  .overview-text p { margin-bottom: 14px; font-size: 0.97rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.81rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.90rem;
+    line-height: 1.65;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .card-accent  { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3  { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3  { color: var(--danger); }
+  .card-positive{ background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate   { background: var(--slate-light);   border-left: 4px solid var(--slate);    }
+  .card-slate h3   { color: var(--slate); }
+  .card-blue    { background: #eff6ff;               border-left: 4px solid #3b82f6;         }
+  .card-blue h3    { color: #1d4ed8; }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: ta-counter; }
+  .takeaways ol li {
+    counter-increment: ta-counter;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.94rem;
+    align-items: flex-start;
+  }
+  .takeaways ol li::before {
+    content: counter(ta-counter);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+  .verdict strong { color: #93c5fd; }
+  .verdict .verdict-lead {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    margin-bottom: 14px;
+  }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.74rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: KIF13B &nbsp;|&nbsp; Kinesin Family Member 13B</span>
+    <span class="chip chip-danger">⚠ No direct AD validation — indirect evidence only</span>
+  </div>
+  <h1><em>KIF13B</em> &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> KIF13B is <em>not directly established</em> as an Alzheimer's disease gene, biomarker, or validated therapeutic target. All AD relevance is indirect and mechanistic. No studies in this source demonstrate KIF13B alterations in AD brain, AD genetics, amyloid burden, tau phosphorylation, cognitive rescue, or clinical AD association.
+    </div>
+    <div class="overview-text">
+      <p>KIF13B is a kinesin-3 microtubule motor and trafficking/scaffolding protein involved in neuronal cargo transport, endosomal recycling, receptor localization, lipid handling, lysosomal/proteasomal regulation, vascular permeability, myeloid inflammation, ciliary signaling, mitochondrial homeostasis, and neuronal polarity.</p>
+      <p>Its strongest AD relevance arises from mechanistic overlap with core AD pathways: impaired axonal and dendritic transport, early endosomal dysfunction, synaptic failure, amyloid-β/lipid receptor trafficking through LRP1, neuroinflammation and microglia-like clearance functions, lysosomal/autophagy regulation through TFEB, neurovascular/blood–brain barrier dysfunction through VEGFR2 trafficking, myelin and glial signaling, phosphoinositide/PI3K/PIP3 pathways, and tauopathy-adjacent genetic signals near <em>lnc-KIF13B-1</em>.</p>
+      <p>KIF13B should be viewed as a <strong>plausible AD-relevant mechanistic node</strong>, not a proven AD target, warranting further investigation especially in microglia, neurons, endothelial cells, oligodendrocytes, and endosomal/lysosomal pathways.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL LAYOUT (4 panels, left-to-right across 960px wide viewBox):
+          Panel A (Upstream motor/trafficking): x=10, w=220
+          Panel B (Neuronal/synaptic branch): x=245, w=215
+          Panel C (Immune/lysosomal branch): x=475, w=215
+          Panel D (Neurovascular/outcome): x=705, w=245
+
+          NODE COUNT (targeting 14-16):
+           A: KIF13B Motor (shared root) = 1
+              Endosomal Trafficking = 2
+              LRP1–DLG1 Complex = 3
+           B: Axonal Transport = 4
+              PIP3/ARF6 Signaling = 5
+              Synaptic Cargo = 6
+              AD Synaptic Risk = 7
+           C: MERTK Efferocytosis = 8
+              USP9X–TFEB Axis = 9
+              Lysosomal Function = 10
+              Neuroinflamm. Risk = 11
+           D: VEGFR2 Recycling = 12
+              BBB Integrity = 13
+              AMPKα1/Lipid = 14
+              AD Neurovasc. Risk = 15
+
+          TOTAL = 15 nodes ✓ (≤16)
+        -->
+        <svg viewBox="0 0 960 480" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:960px;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-d" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- ── PANEL A: Upstream KIF13B Core ── -->
+          <rect x="10" y="10" width="220" height="460" rx="14" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="120" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#1a3a5c" text-decoration="none">A · KIF13B CORE</text>
+
+          <!-- A1: KIF13B Motor (shared root) -->
+          <rect x="30" y="44" width="180" height="50" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="120" y="64" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">KIF13B</text>
+          <text x="120" y="80" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#bfd4ea">Kinesin-3 Motor Protein</text>
+
+          <!-- A2: Endosomal Trafficking -->
+          <rect x="30" y="148" width="180" height="48" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="120" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c">Endosomal Trafficking</text>
+          <text x="120" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Rab6 / Rab10 / AP-1</text>
+
+          <!-- A1→A2 arrow -->
+          <line x1="120" y1="94" x2="120" y2="143" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A3: LRP1–DLG1 Complex -->
+          <rect x="30" y="255" width="180" height="48" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="120" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c">LRP1–DLG1 Complex</text>
+          <text x="120" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Lipoprotein / Aβ clearance</text>
+
+          <!-- A2→A3 arrow -->
+          <line x1="120" y1="196" x2="120" y2="250" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Branch label badge between A and B panels -->
+          <!-- Removed to avoid overlap -->
+
+          <!-- ── PANEL B: Neuronal / Synaptic Branch ── -->
+          <rect x="245" y="10" width="215" height="460" rx="14" fill="#eff6ff" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.4"/>
+          <text x="352" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#1d4ed8">B · NEURONAL / SYNAPTIC</text>
+
+          <!-- B1: Axonal Transport -->
+          <rect x="265" y="44" width="175" height="48" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.4"/>
+          <text x="352" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">Axonal Transport</text>
+          <text x="352" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Dendrite / polarity / Golgi</text>
+
+          <!-- B2: PIP3/ARF6 Signaling -->
+          <rect x="265" y="148" width="175" height="48" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.4"/>
+          <text x="352" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">PIP3 / ARF6 Signaling</text>
+          <text x="352" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">ADAP1 / centaurin-α1</text>
+
+          <!-- B1→B2 -->
+          <line x1="352" y1="92" x2="352" y2="143" stroke="#3b82f6" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- B3: Synaptic Cargo -->
+          <rect x="265" y="255" width="175" height="48" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.4"/>
+          <text x="352" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">Synaptic Cargo Delivery</text>
+          <text x="352" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Presynaptic / BMP retrograde</text>
+
+          <!-- B2→B3 -->
+          <line x1="352" y1="196" x2="352" y2="250" stroke="#3b82f6" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- B4: AD Synaptic Risk -->
+          <rect x="265" y="370" width="175" height="48" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="352" y="391" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#9b1c1c">AD Synaptic Risk</text>
+          <text x="352" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Transport failure / synapse loss</text>
+
+          <!-- B3→B4 -->
+          <line x1="352" y1="303" x2="352" y2="365" stroke="#9b1c1c" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+
+          <!-- A1 → B1 connector (horizontal, clear path between panels) -->
+          <line x1="210" y1="69" x2="263" y2="69" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A3 → B3 connector (horizontal through gutter) -->
+          <line x1="210" y1="279" x2="263" y2="279" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ── PANEL C: Immune / Lysosomal Branch ── -->
+          <rect x="475" y="10" width="215" height="460" rx="14" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="582" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#0f766e">C · IMMUNE / LYSOSOMAL</text>
+
+          <!-- C1: MERTK Efferocytosis -->
+          <rect x="495" y="44" width="175" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="582" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">MERTK Efferocytosis</text>
+          <text x="582" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Apoptotic debris clearance</text>
+
+          <!-- C2: USP9X–TFEB Axis -->
+          <rect x="495" y="148" width="175" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="582" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">USP9X–TFEB Axis</text>
+          <text x="582" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">TFEB stabilization</text>
+
+          <!-- C1→C2 -->
+          <line x1="582" y1="92" x2="582" y2="143" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-g)"/>
+
+          <!-- C3: Lysosomal Function -->
+          <rect x="495" y="255" width="175" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="582" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">Lysosomal Function</text>
+          <text x="582" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Autophagy / aggregate clearance</text>
+
+          <!-- C2→C3 -->
+          <line x1="582" y1="196" x2="582" y2="250" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-g)"/>
+
+          <!-- C4: Neuroinflammation Risk -->
+          <rect x="495" y="370" width="175" height="48" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="582" y="391" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#9b1c1c">Neuroinflamm. Risk</text>
+          <text x="582" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">KIF13B loss → impaired microglia</text>
+
+          <!-- C3→C4 -->
+          <line x1="582" y1="303" x2="582" y2="365" stroke="#9b1c1c" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+
+          <!-- A1 → C1 connector: route through top gutter -->
+          <!-- From A1 right edge (210,69), across B panel top (above B nodes), into C1 left (493,69) -->
+          <!-- B1 box is at y=44-92, so a horizontal line at y=69 would pass through B1. -->
+          <!-- Route: go right from A1 to x=230, up to y=20 (above all panels), across to x=493, down to y=69 -->
+          <polyline points="210,69 230,69 230,22 493,22 493,69" fill="none" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- A3 → C3 connector: horizontal through gutters at y=279 -->
+          <!-- A3 right=210,279; B3 is at x=265-440, y=255-303 — y=279 passes through B3 box -->
+          <!-- Route: go right to x=230, down to y=320 (below B3 bottom=303), across to x=493, up to y=279 -->
+          <polyline points="210,279 230,279 230,320 493,320 493,279" fill="none" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- ── PANEL D: Neurovascular / Metabolic / Outcome ── -->
+          <rect x="705" y="10" width="245" height="460" rx="14" fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.4"/>
+          <text x="827" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#b45309">D · NEUROVASCULAR / OUTCOME</text>
+
+          <!-- D1: VEGFR2 Recycling -->
+          <rect x="722" y="44" width="207" height="48" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="825" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">VEGFR2 Recycling</text>
+          <text x="825" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Endothelial surface delivery</text>
+
+          <!-- D2: BBB Integrity -->
+          <rect x="722" y="148" width="207" height="48" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="825" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">BBB Integrity</text>
+          <text x="825" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Vascular permeability control</text>
+
+          <!-- D1→D2 -->
+          <line x1="825" y1="92" x2="825" y2="143" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- D3: AMPKα1/Lipid Homeostasis -->
+          <rect x="722" y="255" width="207" height="48" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="825" y="271" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1e293b">AMPKα1 / Lipid</text>
+          <text x="825" y="287" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Homeostasis · PLIN5 · Mito.</text>
+
+          <!-- D2→D3 (via elbow to avoid any overlap) -->
+          <line x1="825" y1="196" x2="825" y2="250" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- D4: AD Neurovascular Risk -->
+          <rect x="722" y="370" width="207" height="48" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="825" y="391" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#9b1c1c">AD Neurovascular Risk</text>
+          <text x="825" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">BBB leak / lipid dysregulation</text>
+
+          <!-- D3→D4 -->
+          <line x1="825" y1="303" x2="825" y2="365" stroke="#9b1c1c" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+
+          <!-- A1 → D1 connector: route along top gutter -->
+          <!-- From A1 right (210,69) → need to cross B and C panels. Route along y=22 top gutter. -->
+          <!-- Already have A→C connector using this gutter; extend from C1 to D1 at y=69? -->
+          <!-- C1 right = 670, D1 left = 722 -->
+          <line x1="670" y1="69" x2="720" y2="69" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- C3 → D3 connector at y=279: C3 right = 670, D3 left = 722. C3 y range = 255-303 so 279 is fine -->
+          <line x1="670" y1="279" x2="720" y2="279" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Convergence connectors: all D4 / B4 / C4 outcomes share a bottom risk row, linked by a horizontal connector line at y=394 -->
+          <!-- B4 right edge = 440, C4 left = 493 -->
+          <line x1="440" y1="394" x2="493" y2="394" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="3,3"/>
+          <!-- C4 right edge = 670, D4 left = 722 -->
+          <line x1="670" y1="394" x2="720" y2="394" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="3,3"/>
+
+          <!-- "Loss of KIF13B" badge only if clean empty space. Place at very bottom center between outcome boxes. -->
+          <!-- Row at y=450: centered in the full SVG -->
+          <rect x="360" y="444" width="240" height="24" rx="12" fill="#9b1c1c" fill-opacity="0.12" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="480" y="461" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#9b1c1c" font-weight="700">↓ KIF13B → converging AD-relevant risk</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Fig. 1 — KIF13B Mechanistic Pathway Map.</strong>
+        <strong>Panel A (blue, left)</strong> shows the KIF13B kinesin-3 core driving endosomal trafficking and LRP1–DLG1 scaffolding complexes relevant to Aβ clearance.
+        <strong>Panel B (cobalt, centre-left)</strong> traces the neuronal branch: axonal/dendritic transport and PIP3/ARF6/ADAP1 signalling converge on synaptic cargo delivery; dashed red arrows indicate AD synaptic risk if KIF13B is lost.
+        <strong>Panel C (teal, centre-right)</strong> shows the immune/lysosomal branch: MERTK-mediated efferocytosis and the USP9X–TFEB stabilisation axis support lysosomal/autophagic competence; loss of KIF13B is predicted to impair microglial clearance.
+        <strong>Panel D (amber, right)</strong> covers neurovascular and metabolic outputs: VEGFR2 recycling governs BBB integrity, while AMPKα1/lipid homeostasis overlaps with APOE/AD metabolic stress. All three branches converge (dashed red, bottom row) on a shared AD-relevant risk signature. Dashed cross-panel connectors (dark navy) indicate shared upstream KIF13B motor activity feeding multiple downstream pathways.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Validation</h3>
+        No supplied studies demonstrate KIF13B alterations in AD brain, AD genetics, amyloid plaque burden, tau phosphorylation, synaptic loss in AD models, cognitive rescue, or clinical AD association. All mechanistic links are inferential.
+      </div>
+
+      <div class="card card-accent">
+        <h3>LRP1–DLG1 Axis: Strongest AD Bridge</h3>
+        KIF13B, DLG1, and LRP1 form trafficking/scaffolding complexes essential for proper LRP1 localisation and LRP1-mediated lipoprotein/Aβ clearance. Because LRP1 is strongly implicated in lipid metabolism and amyloid-β transport, this axis represents the most plausible mechanistic link between KIF13B biology and AD.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Lysosomal / TFEB Axis in Myeloid Cells</h3>
+        KIF13B stabilises TFEB via USP9X in macrophage contexts, supporting lysosomal competence, MERTK-mediated efferocytosis, and anti-inflammatory states. By analogy, reduced KIF13B in microglia could impair debris clearance and exacerbate AD neuroinflammation — though this remains untested in brain.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Neurovascular &amp; BBB Relevance</h3>
+        KIF13B transports and recycles VEGFR2 to the endothelial surface. Disrupting KIF13B–VEGFR2 interactions reduces pathological vascular leakage in eye/cancer models. Blood–brain barrier dysfunction contributes to AD progression, making KIF13B-dependent VEGFR2 trafficking a candidate BBB mechanism, though direct brain/AD data are absent.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Therapeutic Direction</h3>
+        In inflammatory, metabolic, macrophage, cardiac, and lysosomal contexts KIF13B preservation is protective. In pathological VEGFR2-driven vascular leakage, selective inhibition is beneficial. AD strategies must therefore be cell-type- and cargo-specific — not based on global KIF13B activation or inhibition.
+      </div>
+
+      <div class="card card-slate">
+        <h3>Tauopathy-Adjacent Genetics</h3>
+        A corticobasal degeneration GWAS identified a significant association near <em>lnc-KIF13B-1</em>. This is not AD-specific and does not prove coding KIF13B involvement, but suggests the KIF13B genomic region may be relevant to tau-related neurodegeneration more broadly.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat KIF13B as a candidate mechanism, not a validated target.</strong> No proof-of-concept AD data currently exist; all prioritisation decisions should await direct experimental evidence in AD-relevant models.</div>
+      </li>
+      <li>
+        <div><strong>Prioritise direct AD-model testing across four cell types:</strong> microglia/myeloid cells (neuroinflammation, efferocytosis, TFEB-dependent lysosomal function), neurons (axonal/dendritic trafficking, endosomal morphology, synaptic cargo, APP processing, tau transport), brain endothelial cells (VEGFR2 trafficking, vascular permeability, BBB integrity), and oligodendrocytes (DLG1/PI3K/AKT-linked myelin maintenance).</div>
+      </li>
+      <li>
+        <div><strong>Investigate the KIF13B–DLG1–LRP1 axis as a high-priority pathway</strong> given LRP1's established roles in lipid metabolism and amyloid-β clearance/transport — this is the mechanistically best-supported link between KIF13B biology and AD.</div>
+      </li>
+      <li>
+        <div><strong>Investigate the KIF13B–USP9X–TFEB axis in microglia-like systems</strong> to determine whether KIF13B enhancement improves lysosomal/autophagic capacity and inflammatory resolution in AD-relevant contexts.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate KIF13B-dependent endosomal trafficking with AD readouts,</strong> including APP localisation/processing, Aβ production or clearance, Rab10/tubular endosome dynamics, receptor recycling, and synaptic receptor distribution.</div>
+      </li>
+      <li>
+        <div><strong>Avoid broad systemic KIF13B inhibition</strong> as an initial AD strategy because KIF13B supports essential neuronal, vascular, metabolic, immune, and glial functions across multiple tissues.</div>
+      </li>
+      <li>
+        <div><strong>Prefer cargo-specific or pathway-specific modulation,</strong> targeting KIF13B–VEGFR2, KIF13B–DLG1–LRP1, KIF13B–ADAP1/centaurin-alpha1, KIF13B–MERTK regulatory pathways, or phosphorylation-dependent motor-cargo interactions.</div>
+      </li>
+      <li>
+        <div><strong>Consider two opposing therapeutic hypotheses by cell type and stage:</strong> enhance/preserve KIF13B in microglia and neurons to support clearance, lysosomal function, synaptic trafficking, and resilience; selectively inhibit KIF13B-mediated VEGFR2 trafficking only if pathological vascular permeability is shown to worsen AD neurovascular dysfunction.</div>
+      </li>
+      <li>
+        <div><strong>Require proof-of-concept AD studies before therapeutic prioritisation,</strong> including demonstrated effects on amyloid-β, tau pathology, synaptic function, neuroinflammation, BBB integrity, neurodegeneration, and cognition.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — KIF13B in Alzheimer's Disease</span>
+      KIF13B represents a <strong>plausible but entirely unvalidated mechanistic node</strong> in Alzheimer's disease biology. Its strongest credentials rest on deep functional overlap with established AD mechanisms: <strong>endosomal and axonal trafficking failure, LRP1-mediated amyloid-β clearance through the KIF13B–DLG1–LRP1 axis, TFEB-driven lysosomal competence in myeloid/microglial systems, VEGFR2-dependent blood–brain barrier integrity, and PIP3/ADAP1/ARF6 phosphoinositide signalling</strong> linked elsewhere to Aβ-induced toxicity. A tauopathy-adjacent GWAS signal near <em>lnc-KIF13B-1</em> adds modest genetic circumstantial interest. However, <strong>no study has yet demonstrated KIF13B dysregulation in AD brain tissue, patient-derived cells, or animal models, nor any KIF13B manipulation that alters Aβ burden, tau pathology, synaptic function, neuroinflammation, or cognition.</strong> Therapeutic translation is further complicated by the context-dependence of KIF13B's role: preservation is generally protective in neurons, microglia, and metabolic/cardiac systems, whereas selective inhibition of VEGFR2 trafficking may be beneficial in pathological vascular leakage settings. The field's next step is rigorous, direct experimental interrogation of KIF13B in AD-relevant cellular and animal systems before any therapeutic prioritisation is warranted.
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  KIF13B · Alzheimer's Disease TEP Evidence Summary — AI-generated mechanistic analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical application
+</footer>
+
+</body>
+</html>

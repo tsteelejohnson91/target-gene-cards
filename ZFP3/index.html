@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZFP3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1628 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.98rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.97rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px 20px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.94rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--mid); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    padding-left: 0;
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway-counter);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1628 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: ZFP3 &nbsp;|&nbsp; Zinc Finger Protein 3</span>
+    <span class="chip chip-danger">⚠ No AD validation — evidence gap</span>
+  </div>
+  <h1>ZFP3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Limitation:</strong> ZFP3 has no direct validated connection to Alzheimer's disease. The evidence below represents an exploratory, hypothesis-generating summary; ZFP3 should not be classified as an established AD mechanism gene or therapeutic target on the basis of available data.
+    </div>
+
+    <p>ZFP3 is a C2H2/Krüppel-type zinc finger gene that is <strong>not directly linked to Alzheimer's disease</strong> in the available evidence. No ZFP3 involvement in amyloid-β processing, tau pathology, neurofibrillary tangles, synaptic dysfunction, APOE biology, AD neuroinflammation, blood–brain barrier dysfunction, or clinical AD outcomes has been demonstrated.</p>
+
+    <p>Most evidence positions ZFP3 as a member of multi-gene biomarker or prognostic signatures, primarily in cancer, and in plant stress and development studies. Its zinc finger identity suggests potential transcriptional regulatory activity, and studies in non-AD systems associate ZFP3 or ZFP3-like genes with stress-response programs, cellular differentiation, immune-context signatures, and chromosomal regions near neuro-glial genes. None of these findings establish ZFP3 as an AD mechanism gene or validated therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Landscape &amp; Evidence Map</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: ZFP3 Identity -->
+          <rect x="10" y="10" width="260" height="460" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#2e6da4" letter-spacing="1">PANEL A · ZFP3 IDENTITY</text>
+
+          <!-- Node 1: ZFP3 Gene -->
+          <rect x="60" y="46" width="160" height="44" rx="8" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="140" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="white">ZFP3 Gene</text>
+          <text x="140" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">C2H2 / Krüppel-type ZNF</text>
+
+          <!-- Arrow down -->
+          <line x1="140" y1="90" x2="140" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 2: TF Activity -->
+          <rect x="60" y="120" width="160" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Putative Transcription</text>
+          <text x="140" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Factor Activity</text>
+
+          <!-- Arrow down -->
+          <line x1="140" y1="164" x2="140" y2="192" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Stress Programs -->
+          <rect x="60" y="194" width="160" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Stress-Response</text>
+          <text x="140" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Gene Programs</text>
+
+          <!-- Arrow down -->
+          <line x1="140" y1="238" x2="140" y2="266" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 4: Differentiation -->
+          <rect x="60" y="268" width="160" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="287" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Differentiation &amp;</text>
+          <text x="140" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Development (non-CNS)</text>
+
+          <!-- Arrow down -->
+          <line x1="140" y1="312" x2="140" y2="340" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 5: Cancer Signatures -->
+          <rect x="60" y="342" width="160" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="361" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Multi-gene Cancer</text>
+          <text x="140" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a5f">Prognostic Signatures</text>
+
+          <!-- PANEL B: Indirect / Speculative AD Links -->
+          <rect x="290" y="10" width="290" height="460" rx="12" fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+          <text x="435" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">PANEL B · SPECULATIVE AD LINKS</text>
+
+          <!-- Node 6: Near AMOG locus -->
+          <rect x="320" y="46" width="160" height="44" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="400" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Zfp-3 Locus Near</text>
+          <text x="400" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">AMOG (neuron-astrocyte)</text>
+
+          <!-- Arrow -->
+          <line x1="400" y1="90" x2="400" y2="118" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 7: Positional only -->
+          <rect x="320" y="120" width="160" height="44" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="400" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Positional Proximity</text>
+          <text x="400" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Only — Not Functional</text>
+
+          <!-- Branch split at y=194 -->
+          <line x1="400" y1="164" x2="400" y2="185" stroke="#b45309" stroke-width="1.5"/>
+          <!-- left branch -->
+          <line x1="400" y1="185" x2="345" y2="185" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="345" y1="185" x2="345" y2="194" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+          <!-- right branch -->
+          <line x1="400" y1="185" x2="455" y2="185" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="455" y1="185" x2="455" y2="194" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 8: Glial state -->
+          <rect x="308" y="194" width="118" height="44" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="367" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">Glial State</text>
+          <text x="367" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">Changes (indirect)</text>
+
+          <!-- Node 9: Immune context -->
+          <rect x="434" y="194" width="118" height="44" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="493" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">Cancer Immune /</text>
+          <text x="493" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">Immunotherapy Sigs</text>
+
+          <!-- converge arrows back down -->
+          <line x1="367" y1="238" x2="367" y2="260" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="367" y1="260" x2="400" y2="260" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="493" y1="238" x2="493" y2="260" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="493" y1="260" x2="400" y2="260" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="400" y1="260" x2="400" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 10: Speculative CNS relevance -->
+          <rect x="320" y="268" width="160" height="44" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="400" y="287" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Speculative CNS</text>
+          <text x="400" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Relevance — No Data</text>
+
+          <!-- PANEL C: AD Evidence Gap -->
+          <rect x="600" y="10" width="290" height="460" rx="12" fill="#fef2f2" fill-opacity="0.65" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="745" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">PANEL C · AD EVIDENCE GAP</text>
+
+          <!-- Node 11: No AD brain expr -->
+          <rect x="630" y="46" width="160" height="44" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="710" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">No ZFP3 Expression</text>
+          <text x="710" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Data in AD Brain</text>
+
+          <!-- Arrow -->
+          <line x1="710" y1="90" x2="710" y2="118" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 12: No amyloid/tau -->
+          <rect x="630" y="120" width="160" height="44" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="710" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">No Amyloid / Tau</text>
+          <text x="710" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Pathway Evidence</text>
+
+          <!-- Arrow -->
+          <line x1="710" y1="164" x2="710" y2="192" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 13: No synaptic/neuro data -->
+          <rect x="630" y="194" width="160" height="44" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="710" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">No Synaptic /</text>
+          <text x="710" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Neuronal Findings</text>
+
+          <!-- Arrow -->
+          <line x1="710" y1="238" x2="710" y2="266" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 14: No therapeutic evidence -->
+          <rect x="630" y="268" width="160" height="44" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="710" y="287" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">No Therapeutic</text>
+          <text x="710" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Intervention Data</text>
+
+          <!-- Arrow -->
+          <line x1="710" y1="312" x2="710" y2="340" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 15: Verdict -->
+          <rect x="620" y="342" width="180" height="52" rx="8" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.5"/>
+          <text x="710" y="363" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="white">Low-Confidence</text>
+          <text x="710" y="378" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#fca5a5">Exploratory Candidate</text>
+
+          <!-- Cross-panel connector: Panel A Node5 → Panel B speculative (elbow route through gutter) -->
+          <line x1="220" y1="364" x2="270" y2="364" stroke="#64748b" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+          <!-- Cross-panel connector: Panel B Node10 → Panel C verdict (elbow route) -->
+          <line x1="480" y1="290" x2="580" y2="290" stroke="#64748b" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B bottom research nodes -->
+          <line x1="400" y1="312" x2="400" y2="340" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 16: Required AD validation -->
+          <rect x="310" y="342" width="180" height="52" rx="8" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+          <text x="400" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="white">Requires AD-Specific</text>
+          <text x="400" y="378" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#fde68a">Validation Studies</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> (blue): ZFP3's known identity as a C2H2/Krüppel-type zinc finger gene, with inferred putative transcription factor activity, stress-response gene programs, cellular differentiation associations, and a role as a feature in multi-gene cancer prognostic signatures.
+        <strong>Panel B</strong> (amber): Speculative, indirect links to AD biology — positional proximity of Zfp-3 to the AMOG neuron–astrocyte gene, which branches into potential but unvalidated glial-state and cancer immune-signature associations, converging on a node indicating only speculative CNS relevance. Dashed arrows denote hypothetical connections unsupported by direct evidence.
+        <strong>Panel C</strong> (red): The AD evidence gap — ZFP3 lacks expression data in AD brain, amyloid/tau pathway evidence, synaptic or neuronal findings, and any therapeutic intervention data, culminating in a verdict of "low-confidence exploratory candidate."
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No AD-Specific Validation</h3>
+        <p>The evidence does not demonstrate altered ZFP3 expression in AD brain, association with AD risk or progression, or causal effects on amyloid, tau, synapses, neurons, astrocytes, microglia, or cognition.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Transcription / Stress Relevance Is Speculative</h3>
+        <p>Plant studies show ZFP3 can regulate stress- and development-related gene programs, but these pathways are not directly transferable to human Alzheimer's mechanisms without CNS-specific validation.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Differentiation &amp; Development Links Are Indirect</h3>
+        <p>ZFP3-like genes are associated with cellular differentiation and developmental regulation, which could conceptually relate to neuronal maintenance or glial state changes, but no supplied evidence connects ZFP3 to these processes in AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Immune Relevance Is Weak</h3>
+        <p>ZFP3 appears in cancer immune or immunotherapy-associated signatures, but the evidence does not show that ZFP3 directly regulates immune function or neuroinflammation in any context relevant to AD.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Cancer Biomarker Role Dominates</h3>
+        <p>ZFP3 is repeatedly included in prognostic or diagnostic multi-gene cancer models, but usually as a classifier feature rather than an experimentally validated disease driver, limiting translational inference.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Neuro-Glial Connection Is Only Positional</h3>
+        <p>Zfp-3 maps near AMOG, a gene involved in neuron–astrocyte interaction, but chromosomal proximity does not demonstrate ZFP3 function in neuron–astrocyte signaling or in any AD-related CNS process.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Do not classify ZFP3 as an established AD gene.</strong> Based on available evidence, ZFP3 has no validated role in Alzheimer's disease mechanisms and should not be categorized as an established AD mechanism gene.</div>
+      </li>
+      <li>
+        <div><strong>Do not prioritize as a validated therapeutic target.</strong> ZFP3 should not be prioritized as a validated AD therapeutic target without direct AD-specific functional data demonstrating modulation of disease-relevant pathology.</div>
+      </li>
+      <li>
+        <div><strong>Treat as a low-confidence exploratory candidate.</strong> ZFP3 may be considered as a low-confidence, exploratory candidate for research into transcriptional regulation, cellular stress responses, differentiation, or CNS immune biology — with appropriately limited resource allocation.</div>
+      </li>
+      <li>
+        <div><strong>Begin with expression profiling in AD tissue.</strong> Initial validation should test ZFP3 expression in AD versus control brain tissue and identify cell-type specificity across neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and other CNS populations.</div>
+      </li>
+      <li>
+        <div><strong>Assess correlations with AD pathological markers.</strong> Correlational studies should determine whether ZFP3 expression relates to Braak stage, amyloid burden, tau burden, cognitive decline, synaptic markers, or neuroinflammatory markers.</div>
+      </li>
+      <li>
+        <div><strong>Conduct mechanistic perturbation studies in AD-relevant models.</strong> Map ZFP3 target genes in human CNS-relevant cells and perturb ZFP3 in AD models to test effects on amyloid processing, tau phosphorylation, synaptic integrity, mitochondrial function, oxidative stress, cytokine signaling, and neuronal survival.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — ZFP3 in Alzheimer's Disease</span>
+      <p>
+        ZFP3 is best viewed as a <strong>biomarker-feature candidate and possible transcriptional regulator in non-AD systems</strong>, not as a demonstrated Alzheimer's disease therapeutic target. The totality of available evidence positions ZFP3 as a <strong>zinc finger transcription factor with roles in cancer prognostic signatures, plant stress programs, and cellular differentiation</strong> — none of which establish a direct mechanistic link to AD pathology. Its sole neuro-glial proximity (near the AMOG locus) is positional only. <strong>No AD brain expression data, no amyloid or tau pathway evidence, and no therapeutic perturbation data</strong> exist in the supplied literature. Any further investigation of ZFP3 in the context of Alzheimer's disease must begin with foundational expression and correlational studies before mechanistic or therapeutic claims can be entertained.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ZFP3 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

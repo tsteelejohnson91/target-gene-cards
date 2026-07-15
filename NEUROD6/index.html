@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEUROD6 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0820 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--white);
+    padding: 5px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,160,160,0.38);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: var(--white);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); }
+  /* PROSE */
+  p { margin-bottom: 14px; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 18px 16px 12px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+  .takeaways li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+  .takeaways li::before {
+    content: counter(ta);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: var(--white);
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0820 100%);
+    color: var(--white);
+    border-radius: 14px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .lead { font-size: 1.15rem; font-weight: 700; color: #c4b5fd; display: block; margin-bottom: 12px; }
+  .verdict strong { color: #ddd6fe; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NEUROD6 &nbsp;|&nbsp; Neuronal Differentiation Factor 6 (NEX / MATH-2 / BHF1)</span>
+    <span class="chip chip-danger">⚠ Causal AD role unvalidated</span>
+  </div>
+  <h1>NEUROD6 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Important Caveat:</strong> The evidence base for NEUROD6 in Alzheimer's disease is predominantly <strong>transcriptomic and computational</strong>. No published study has demonstrated that manipulating NEUROD6 alters amyloid-β pathology, tau pathology, synapse loss, neuroinflammation, cognition, or neuronal survival in an AD model. All mechanistic links remain biologically plausible but functionally unproven in AD contexts.
+    </div>
+
+    <p>NEUROD6 is a neuron-enriched basic helix-loop-helix (bHLH) transcription factor — also known as NEX, Nex1, MATH-2, HATH-2, and BHF1 — with well-established roles in cortical and hippocampal excitatory neuron development. Its documented functions include neuronal differentiation and maturation, neurite and dendrite outgrowth, synaptic organization, mitochondrial maintenance, oxidative-stress resistance, and support of postmitotic neuronal identity and survival.</p>
+
+    <p>In Alzheimer's disease (AD), NEUROD6 has been reported as downregulated across multiple independent RNA-seq and microarray datasets, identified as a candidate gene in late-onset AD (LOAD) analyses, located within AD-associated genetic regions, linked to AD risk in APOE4-positive female patient subsets, and included as one of five disulfidptosis-related hub genes in a 2024 biomarker and drug-prediction model. The mechanistic plausibility of NEUROD6 in AD is strong — it maps onto hippocampal and cortical neuronal vulnerability, synaptic degeneration, mitochondrial dysfunction, oxidative stress, calcium signaling, and loss of mature neuronal identity — but causal evidence and functional intervention data in AD systems are absent.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" aria-label="NEUROD6 pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream inputs -->
+          <rect x="10" y="10" width="200" height="480" rx="12" fill="#ede8f8" fill-opacity="0.5" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="110" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">UPSTREAM / CONTEXT</text>
+
+          <!-- Node 1: AD Brain -->
+          <rect x="30" y="46" width="160" height="44" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.4"/>
+          <text x="110" y="64" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">AD Brain</text>
+          <text x="110" y="79" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(Hippocampus / Cortex)</text>
+
+          <!-- Node 2: NEUROD6 Downreg -->
+          <rect x="30" y="116" width="160" height="44" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="110" y="134" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#991b1b">NEUROD6 ↓</text>
+          <text x="110" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">RNA-seq &amp; microarray</text>
+
+          <!-- arrow 1->2 -->
+          <line x1="110" y1="90" x2="110" y2="114" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Genetic / APOE4 -->
+          <rect x="30" y="186" width="160" height="44" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.4"/>
+          <text x="110" y="204" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Genetic Risk Loci</text>
+          <text x="110" y="219" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">APOE4+ female subsets</text>
+
+          <!-- arrow 2->3 -->
+          <line x1="110" y1="160" x2="110" y2="184" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 4: Disulfidptosis hub -->
+          <rect x="30" y="256" width="160" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="110" y="274" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#78350f">Disulfidptosis Hub</text>
+          <text x="110" y="289" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">2024 AUC model</text>
+
+          <!-- arrow 3->4 -->
+          <line x1="110" y1="230" x2="110" y2="254" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Panel B: Core NEUROD6 functions -->
+          <rect x="228" y="10" width="230" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="343" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">CORE NEUROD6 FUNCTIONS</text>
+
+          <!-- Node 5: NEUROD6 TF (central) -->
+          <rect x="253" y="46" width="180" height="48" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.4"/>
+          <text x="343" y="67" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#fff">NEUROD6</text>
+          <text x="343" y="83" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c4b5fd">bHLH Transcription Factor</text>
+
+          <!-- arrow panel A -> panel B (node 2 -> node 5) -->
+          <line x1="190" y1="138" x2="251" y2="72" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Branch label: two branches -->
+          <!-- Branch 1: Neuronal Identity / Differentiation -->
+          <!-- Node 6 -->
+          <rect x="248" y="124" width="175" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="335" y="142" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Neuronal Differentiation</text>
+          <text x="335" y="157" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">&amp; Mature Identity</text>
+
+          <line x1="343" y1="94" x2="335" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node 7 -->
+          <rect x="248" y="194" width="175" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="335" y="212" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Neurite &amp; Dendrite</text>
+          <text x="335" y="227" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Outgrowth / GAP-43</text>
+
+          <line x1="335" y1="168" x2="335" y2="192" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node 8 -->
+          <rect x="248" y="264" width="175" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="335" y="282" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Synaptic Organization</text>
+          <text x="335" y="297" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">&amp; Circuit Integrity</text>
+
+          <line x1="335" y1="238" x2="335" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node 9: Retromer / VPS35 -->
+          <rect x="248" y="334" width="175" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="335" y="352" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#78350f">Retromer / VPS35</text>
+          <text x="335" y="367" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Trafficking &amp; Survival</text>
+
+          <line x1="335" y1="308" x2="335" y2="332" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Panel C: Mitochondrial / Stress pathway -->
+          <rect x="476" y="10" width="230" height="480" rx="12" fill="#fef9ee" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="591" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">MITO &amp; STRESS RESPONSE</text>
+
+          <!-- Node 10: PGC-1α / TFAM -->
+          <rect x="496" y="46" width="190" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="591" y="64" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">PGC-1α / TFAM / NRF-1</text>
+          <text x="591" y="79" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Mitochondrial Biogenesis</text>
+
+          <!-- connector node5 -> node10 (horizontal, clear path) -->
+          <line x1="433" y1="68" x2="494" y2="68" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 11: OXPHOS / ATP -->
+          <rect x="496" y="116" width="190" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="591" y="134" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">OXPHOS / ATP Preservation</text>
+          <text x="591" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Mitochondrial membrane Δψ</text>
+
+          <line x1="591" y1="90" x2="591" y2="114" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 12: Antioxidant -->
+          <rect x="496" y="186" width="190" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="591" y="204" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">SIRT1 / SOD2 / GPx / PRDX5</text>
+          <text x="591" y="219" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Antioxidant Defense</text>
+
+          <line x1="591" y1="160" x2="591" y2="184" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Panel D: AD-Relevant outcomes -->
+          <rect x="724" y="10" width="206" height="480" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="827" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">AD-RELEVANT OUTCOMES</text>
+
+          <!-- Node 13: Proteostasis / HSP -->
+          <rect x="740" y="46" width="172" height="44" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="826" y="64" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">HSP27 / HSP70</text>
+          <text x="826" y="79" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Proteostasis / Chaperones</text>
+
+          <!-- connector node10 -> node13 -->
+          <line x1="686" y1="68" x2="738" y2="68" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 14: Bcl-w survival -->
+          <rect x="740" y="116" width="172" height="44" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="826" y="134" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Bcl-w Anti-apoptotic</text>
+          <text x="826" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Mito / ER protection</text>
+
+          <!-- connector node12 -> node14 (route through gutter, avoid overlap) -->
+          <polyline points="591,230 591,248 706,248 706,138 738,138" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node 15: Neuronal Vulnerability -->
+          <rect x="740" y="256" width="172" height="44" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="826" y="274" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#991b1b">Selective Neuronal</text>
+          <text x="826" y="289" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Vulnerability in AD</text>
+
+          <!-- connector node8 -> node15 (route through gutter below panel B at y~308, avoiding node9) -->
+          <polyline points="335,308 335,320 706,320 706,278 738,278" fill="none" stroke="#6d3fc0" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Node 16: AD Biomarker / Therapeutic Node -->
+          <rect x="740" y="380" width="172" height="52" rx="7" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.4"/>
+          <text x="826" y="401" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#fff">AD Biomarker /</text>
+          <text x="826" y="418" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#c4b5fd">Exploratory Target</text>
+          <text x="826" y="433" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#a78bfa">(validation required)</text>
+
+          <!-- connector node15 -> node16 -->
+          <line x1="826" y1="300" x2="826" y2="378" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- connector node9 -> node16 (route right via gutter x~706) -->
+          <polyline points="423,356 706,356 706,406 738,406" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+          <!-- connector node14 -> node16 -->
+          <line x1="826" y1="160" x2="826" y2="162" stroke="none"/>
+          <polyline points="826,160 826,258 826,258" fill="none" stroke="none"/>
+          <!-- simple connector node14 -> node15 via empty space -->
+          <line x1="826" y1="160" x2="826" y2="254" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (purple, left) — Upstream/Context:</strong> AD brain transcriptomic evidence shows NEUROD6 downregulation across RNA-seq and microarray cohorts; genetic risk loci implicate APOE4-positive females; a 2024 disulfidptosis hub model provides computational biomarker support.
+        <strong>Panel B (teal, center-left) — Core NEUROD6 Functions:</strong> NEUROD6 as bHLH transcription factor drives a cascade from neuronal differentiation and mature identity → neurite/dendritic outgrowth (GAP-43) → synaptic organization → retromer/VPS35-sensitive trafficking and survival.
+        <strong>Panel C (amber, center-right) — Mitochondrial &amp; Stress Response:</strong> NEUROD6 activates PGC-1α/TFAM/NRF-1-driven mitochondrial biogenesis → OXPHOS/ATP preservation → antioxidant defense (SIRT1, SOD2, GPx, PRDX5).
+        <strong>Panel D (red, right) — AD-Relevant Outcomes:</strong> Downstream effectors converge on HSP27/HSP70 proteostasis, Bcl-w anti-apoptotic signaling, and selective neuronal vulnerability, ultimately framing NEUROD6 as an AD biomarker and exploratory therapeutic node pending functional validation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Biomarker Evidence: Transcriptomic &amp; Computational</h3>
+        <p>NEUROD6 is downregulated in AD brains across independent RNA-seq and microarray cohorts, making it a candidate AD brain biomarker. A 2024 disulfidptosis-related model (alongside PPEF1, VIP, NUPR1, and GEM) reported strong AUC diagnostic performance. SNPs near NEUROD6 associate with AD risk in APOE4-positive female subsets, suggesting patient-subgroup relevance.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitochondrial Resilience: Strongest Mechanistic Rationale</h3>
+        <p>NEUROD6-expressing neuronal models show increased mitochondrial biomass, mtDNA, TFAM, PGC-1α, NRF-1, OXPHOS capacity, membrane potential, and ATP preservation. It activates antioxidant effectors including SIRT1, PINK1, SOD2, GPx1, PRDX5, GPx3, and thioredoxin-like 1 — directly relevant to mitochondrial failure and ROS accumulation in AD.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neuronal Identity &amp; Circuit Integrity</h3>
+        <p>NEUROD6 supports postmitotic neuronal identity, neuritogenesis, dendritic arborization, axonal development, mitochondrial trafficking into neurites, and expression of plasticity genes (GAP-43, Prg1). Neocortical and hippocampal excitatory circuits — central to AD-related memory loss — are its primary domain of action.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Retromer / VPS35 Neurodegeneration Link</h3>
+        <p>VPS35 knockout in Neurod6-Cre-positive pyramidal neurons caused dendritic/axonal deficits, elevated P62 and TDP-43, reactive gliosis, and neonatal death. Low-level VPS35 rescue reduced early deficits but adult neurodegeneration persisted. This implicates Neurod6-positive neurons as highly sensitive to retromer disruption — an established AD trafficking pathway — though the therapeutic implication favors restoring VPS35 in these neurons over targeting NEUROD6 directly.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Anti-Apoptotic &amp; Proteostasis Support</h3>
+        <p>NEUROD6 activates Bcl-w-mediated mitochondrial and ER protection alongside heat-shock/chaperone networks (HSP27, HSP70). These programs support proteostasis, cytoskeletal integrity, and mitochondrial stress resistance — relevant to tau pathology, amyloid-associated stress, and chronic neuronal injury in AD, though direct AD testing is lacking.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Critical Limitation: No AD Functional Validation</h3>
+        <p>No study has demonstrated that manipulating NEUROD6 improves amyloid-β pathology, tau pathology, plaque or tangle burden, synapse loss, neuroinflammation, cognition, or neuronal survival in an AD model. Causality of NEUROD6 downregulation — whether reflecting neuronal loss, impaired identity, or active disease mechanism — remains unresolved. Possible redundancy with NeuroD and NeuroD2, developmental effects, and unknown directionality in AD contexts are additional uncertainties.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Frame NEUROD6 as a biomarker candidate, not a validated target.</strong> Treat it as a high-priority AD biomarker and neuronal-state indicator while deferring therapeutic claims until functional data exist.</li>
+      <li><strong>Validate expression directionality across regions, stages, and cell types.</strong> Systematically characterize NEUROD6 levels in hippocampal CA fields, dentate gyrus, entorhinal cortex, and neocortical excitatory neurons across AD progression stages.</li>
+      <li><strong>Resolve the mechanism of downregulation.</strong> Determine whether NEUROD6 reduction in AD reflects neuronal loss, loss of mature excitatory-neuron identity, selective vulnerability, or an active disease-driving mechanism.</li>
+      <li><strong>Conduct functional AD-model interventions.</strong> Manipulate NEUROD6 in human iPSC-derived excitatory neurons, tau and amyloid models, organoids, and mouse AD models to assess effects on synapse density, mitochondrial function, oxidative stress, tau phosphorylation, amyloid response, and cognition.</li>
+      <li><strong>Investigate Neurod6-positive neurons as a vulnerable/resilient compartment.</strong> Map selective vulnerability and resilience of cortical and hippocampal excitatory neurons defined by Neurod6 expression throughout AD progression.</li>
+      <li><strong>Evaluate APOE4-positive and familial LOAD patient stratification.</strong> Test whether NEUROD6 status differentiates AD subgroups, particularly LOAD patients, APOE4-positive females, and familial LOAD populations with linkage near the NEUROD6 region.</li>
+      <li><strong>Prioritize downstream pathway testing before direct TF targeting.</strong> Focus on mitochondrial biogenesis (PGC-1α/SIRT1/TFAM), antioxidant defense (GPx/PRDX5/thioredoxin), chaperone/proteostasis signaling (HSP27/HSP70), neurite plasticity (GAP-43/Prg1), Bcl-w survival, and disulfidptosis biology as tractable pathway entry points.</li>
+      <li><strong>Use Neurod6/NEX-Cre tools with caution.</strong> The driver line itself affects behavior, locomotion, dendritic spine density, and circuit phenotypes; appropriate littermate controls are essential in AD model experiments.</li>
+      <li><strong>Favor restoration of protective programs over broad NEUROD6 overexpression.</strong> Developmental and cell-identity functions of NEUROD6 may produce region- or cell-type-specific adverse effects; targeted downstream pathway restoration is a safer therapeutic strategy.</li>
+      <li><strong>Establish a clear functional validation milestone.</strong> The primary evidentiary gate should be demonstration that modulating NEUROD6 or its downstream transcriptional program improves AD-relevant pathology or function in a controlled experimental system.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — Biologically Plausible Biomarker; Exploratory Therapeutic Candidate</span>
+      <p>NEUROD6 is a <strong>biologically compelling but functionally unvalidated</strong> node in Alzheimer's disease research. The evidence base is built on consistent transcriptomic downregulation in AD brains, genetic association signals in APOE4-positive female subsets, and computational biomarker models — none of which establish causality. Its mechanistic relevance is substantial: NEUROD6 governs the mitochondrial biogenesis, antioxidant defense, neuronal identity, synaptic maintenance, and retromer-sensitive trafficking programs that AD selectively disrupts in hippocampal and cortical excitatory neurons. <strong>The strongest near-term value of NEUROD6 lies in its role as a biomarker of mature excitatory-neuron state and a proxy for neuronal resilience programs.</strong> For therapeutic development, the more tractable strategy is to restore <strong>NEUROD6-associated downstream programs</strong> — particularly PGC-1α/SIRT1 mitochondrial biogenesis and GPx/PRDX5 antioxidant signaling — rather than directly overexpressing this transcription factor. NEUROD6 should be elevated to a higher evidentiary tier only once functional intervention studies in AD-relevant models demonstrate measurable effects on amyloid, tau, synaptic, or cognitive outcomes.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>NEUROD6 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only · No clinical or therapeutic claims are made or implied.</p>
+</footer>
+
+</body>
+</html>

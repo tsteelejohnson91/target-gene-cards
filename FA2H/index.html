@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FA2H — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d41b8;
+    --light: #f0eafa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12.5px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e8e0f8;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.32);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1rem;
+    color: #ddd6f3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    color: #78350f;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-color: var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-gray {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+  .card-gray h3 { color: #475569; }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #f59e0b;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway-counter;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.96rem;
+    line-height: 1.75;
+  }
+
+  .takeaway-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway-counter);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0520 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    color: #e9e4f8;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 16px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: FA2H &nbsp;|&nbsp; Fatty Acid 2-Hydroxylase</span>
+    <span class="chip chip-danger">⚠ CNS Inhibition Risk</span>
+  </div>
+  <h1>FA2H &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<main>
+
+  <!-- ─── OVERVIEW ─── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> FA2H loss-of-function causes severe progressive neurodegeneration in humans (FAHN/SPG35). CNS FA2H inhibition therefore carries significant safety risk; restorative or normalizing strategies are preferred over systemic suppression.
+    </div>
+
+    <p>FA2H encodes <strong>fatty acid 2-hydroxylase</strong>, an enzyme that generates 2-hydroxylated fatty acids incorporated into sphingolipids — including 2-hydroxy ceramides, galactosylceramides, sulfatides, and myelin-associated glycolipids. In the supplied literature, FA2H is <em>not</em> established as a direct Alzheimer's disease (AD) gene, biomarker, or validated therapeutic target. Its AD relevance is mechanistic and indirect.</p>
+
+    <p>The strongest evidence links FA2H to neurodegeneration through myelin and white-matter integrity, sphingolipid remodeling, axonal maintenance, autophagy/lysosomal function, mitochondrial stress, iron biology, endosomal calcium regulation, and inflammatory/metabolic pathways. These mechanisms overlap with AD pathophysiology, especially in subtypes or stages involving white-matter degeneration, oligodendrocyte dysfunction, lipid dyshomeostasis, impaired proteostasis, endolysosomal dysfunction, oxidative stress, and neuroinflammation.</p>
+
+    <p>Loss-of-function FA2H mutations cause <strong>fatty acid hydroxylase-associated neurodegeneration (FAHN)</strong>, hereditary spastic paraplegia type 35 (SPG35), leukodystrophy-like phenotypes, and are sometimes included in neurodegeneration with brain iron accumulation (NBIA). These disorders are distinct from AD, but demonstrate that impaired FA2H-dependent lipid hydroxylation is sufficient to cause progressive human neurodegeneration frequently involving white matter, thin corpus callosum, cerebellar atrophy, spasticity, dystonia, ataxia, cognitive impairment, and axonal degeneration.</p>
+  </section>
+
+  <!-- ─── FIGURE ─── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): FA2H Enzyme & Lipid Products  — 4 nodes
+        PANEL B (centre): Downstream CNS Mechanisms   — 6 nodes (branching)
+        PANEL C (right): AD-Relevant Consequences     — 4 nodes
+        Total: 14 nodes — within 16-node limit
+        Layout: 3 panels side by side in viewBox 960 × 480
+      -->
+      <svg viewBox="0 0 960 490" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FA2H mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#6d41b8"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL A: FA2H Enzyme & Products ── -->
+        <rect x="14" y="14" width="240" height="462" rx="12" fill="#f0eafa" stroke="#6d41b8" stroke-width="1.5" opacity="0.55"/>
+        <text x="134" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">PANEL A · FA2H ENZYME</text>
+
+        <!-- Node A1: FA2H -->
+        <rect x="42" y="50" width="164" height="52" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1"/>
+        <text x="124" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff">FA2H Enzyme</text>
+        <text x="124" y="89" text-anchor="middle" font-family="Arial" font-size="10" fill="#d8b4fe">Fatty Acid 2-Hydroxylase</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="124" y1="102" x2="124" y2="128" stroke="#6d41b8" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A2: 2-OH Ceramides -->
+        <rect x="42" y="128" width="164" height="48" rx="8" fill="#ffffff" stroke="#6d41b8" stroke-width="1.5"/>
+        <text x="124" y="149" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3b1f6e">2-OH Ceramides</text>
+        <text x="124" y="165" text-anchor="middle" font-family="Arial" font-size="10" fill="#64748b">hydroxylated lipid base</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="124" y1="176" x2="124" y2="202" stroke="#6d41b8" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A3: Galactosylceramide & Sulfatide -->
+        <rect x="42" y="202" width="164" height="52" rx="8" fill="#ffffff" stroke="#6d41b8" stroke-width="1.5"/>
+        <text x="124" y="222" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3b1f6e">Galactosylceramide</text>
+        <text x="124" y="237" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3b1f6e">&amp; Sulfatide</text>
+        <text x="124" y="251" text-anchor="middle" font-family="Arial" font-size="10" fill="#64748b">myelin glycolipids</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="124" y1="254" x2="124" y2="282" stroke="#6d41b8" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Myelin-Assoc. Glycolipids -->
+        <rect x="42" y="282" width="164" height="48" rx="8" fill="#ffffff" stroke="#6d41b8" stroke-width="1.5"/>
+        <text x="124" y="302" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3b1f6e">Myelin-Associated</text>
+        <text x="124" y="317" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3b1f6e">Glycolipids</text>
+
+        <!-- ── PANEL B: Downstream CNS Mechanisms ── -->
+        <rect x="268" y="14" width="418" height="462" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5" opacity="0.45"/>
+        <text x="477" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="1">PANEL B · CNS MECHANISMS</text>
+
+        <!-- Node B0: Shared entry — Myelin / WM Integrity -->
+        <rect x="342" y="50" width="170" height="48" rx="8" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1"/>
+        <text x="427" y="71" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">Myelin / White-Matter</text>
+        <text x="427" y="87" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#bfdbfe">Integrity</text>
+
+        <!-- Branch left arrow B0→B1 -->
+        <path d="M380,98 L380,130 L334,130 L334,158" stroke="#1d4ed8" stroke-width="1.8" fill="none" marker-end="url(#arr-blue)"/>
+
+        <!-- Branch right arrow B0→B2 -->
+        <path d="M474,98 L474,130 L524,130 L524,158" stroke="#1d4ed8" stroke-width="1.8" fill="none" marker-end="url(#arr-blue)"/>
+
+        <!-- Node B1: Axonal Maintenance (left branch) -->
+        <rect x="290" y="158" width="152" height="48" rx="8" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="366" y="179" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#1e3a8a">Axonal</text>
+        <text x="366" y="194" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#1e3a8a">Maintenance</text>
+
+        <!-- Node B2: Autophagy / Lysosomal (right branch) -->
+        <rect x="450" y="158" width="152" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="526" y="179" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#0f766e">Autophagy /</text>
+        <text x="526" y="194" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#0f766e">Lysosomal Flux</text>
+
+        <!-- Arrow B1→B3 -->
+        <line x1="366" y1="206" x2="366" y2="286" stroke="#1d4ed8" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- Arrow B2→B4 -->
+        <line x1="526" y1="206" x2="526" y2="286" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: Iron / Ox. Stress (left branch step 2) -->
+        <rect x="290" y="286" width="152" height="48" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="366" y="307" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Iron &amp; Oxidative</text>
+        <text x="366" y="322" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Stress</text>
+
+        <!-- Node B4: Ca²⁺ / Lipid-Raft Signaling (right branch step 2) -->
+        <rect x="450" y="286" width="152" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="526" y="307" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#0f766e">Ca²⁺ / Lipid-Raft</text>
+        <text x="526" y="322" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#0f766e">Signaling</text>
+
+        <!-- Convergence arrows B3→B5 -->
+        <path d="M366,334 L366,384 L408,384 L408,402" stroke="#6d41b8" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Convergence arrows B4→B5 -->
+        <path d="M526,334 L526,384 L456,384 L456,402" stroke="#6d41b8" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Node B5: Neuroinflammation (convergence) -->
+        <rect x="342" y="402" width="170" height="48" rx="8" fill="#6d41b8" stroke="#3b1f6e" stroke-width="1"/>
+        <text x="427" y="423" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">Neuroinflammation &amp;</text>
+        <text x="427" y="439" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ddd6f3">Metabolic Stress</text>
+
+        <!-- ── PANEL C: AD-Relevant Consequences ── -->
+        <rect x="700" y="14" width="246" height="462" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5" opacity="0.5"/>
+        <text x="823" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1">PANEL C · AD RELEVANCE</text>
+
+        <!-- Node C1: WM Degeneration / OL Dysfunction -->
+        <rect x="722" y="50" width="202" height="52" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="823" y="71" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">WM Degeneration /</text>
+        <text x="823" y="87" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">OL Dysfunction</text>
+
+        <!-- Node C2: Lipid Dyshomeostasis -->
+        <rect x="722" y="154" width="202" height="52" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="823" y="175" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Lipid</text>
+        <text x="823" y="191" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Dyshomeostasis</text>
+
+        <!-- Node C3: Endolysosomal / Proteostasis -->
+        <rect x="722" y="258" width="202" height="52" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="823" y="278" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Endolysosomal /</text>
+        <text x="823" y="294" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#991b1b">Proteostasis Failure</text>
+
+        <!-- Node C4: AD Brain Resilience Modifier -->
+        <rect x="722" y="362" width="202" height="52" rx="8" fill="#7f1d1d" stroke="#991b1b" stroke-width="1"/>
+        <text x="823" y="383" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">AD Resilience</text>
+        <text x="823" y="399" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fca5a5">Modifier (indirect)</text>
+
+        <!-- Vertical connector arrows C1→C2→C3→C4 -->
+        <line x1="823" y1="102" x2="823" y2="154" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <line x1="823" y1="206" x2="823" y2="258" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <line x1="823" y1="310" x2="823" y2="362" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connectors: Panel A → Panel B (A4→B0) through gutter, vertical-aligned -->
+        <!-- A4 right edge x=206, B0 left edge x=342; midpoint gutter x=274 -->
+        <path d="M206,306 L254,306 L254,74 L342,74" stroke="#6d41b8" stroke-width="1.6" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connectors: Panel B → Panel C -->
+        <!-- B0 (WM) → C1 -->
+        <path d="M512,74 L686,74 L686,76 L722,76" stroke="#991b1b" stroke-width="1.6" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+        <!-- B5 (Neuroinflam) → C4 -->
+        <path d="M512,426 L686,426 L686,388 L722,388" stroke="#991b1b" stroke-width="1.6" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+        <!-- B2 (Autophagy) → C3 -->
+        <path d="M602,182 L686,182 L686,284 L722,284" stroke="#0f766e" stroke-width="1.6" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> traces the FA2H enzyme cascade from the hydroxylase itself through 2-hydroxy ceramides, galactosylceramide/sulfatide, and myelin-associated glycolipids.
+      <strong>Panel B</strong> maps downstream CNS mechanisms: from a shared myelin/white-matter integrity node, the pathway branches into (left) axonal maintenance → iron &amp; oxidative stress, and (right) autophagy/lysosomal flux → Ca²⁺/lipid-raft signaling, both converging on neuroinflammation &amp; metabolic stress.
+      <strong>Panel C</strong> connects these mechanisms to AD-relevant consequences — WM/oligodendrocyte dysfunction, lipid dyshomeostasis, endolysosomal/proteostasis failure — ultimately positioning FA2H as an indirect AD resilience modifier.
+      Dashed cross-panel arrows indicate mechanistic linkages between panels; solid arrows indicate direct biochemical steps.
+    </p>
+  </section>
+
+  <!-- ─── KEY INSIGHTS ─── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Myelin Sphingolipid Biology</h3>
+        <p>FA2H's most AD-relevant role is in myelin galactosylceramide and sulfatide — lipids with high proportions of FA2H-dependent 2-hydroxylated fatty acids. These stabilize myelin long-term and support axonal integrity, making FA2H a potential modifier of AD-related brain resilience rather than a canonical amyloid/tau gene.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Loss-of-Function Causes Human Neurodegeneration</h3>
+        <p>FAHN/SPG35 patients exhibit spastic paraparesis, dystonia, ataxia, leukodystrophy, callosal thinning, cerebellar atrophy, and cognitive changes. <em>Fa2h</em>-deficient mice show demyelination, axonal loss, and spatial learning/memory deficits — confirming that FA2H loss is sufficient for progressive CNS decline.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Autophagy &amp; Lysosomal Biology</h3>
+        <p>FA2H-deficient models exhibit impaired autophagy markers and defective autophagosome–lysosome fusion. Hydroxylated sulfatide regulates lysosomal turnover of myelin proteins such as Opalin. These mechanisms overlap directly with AD's endolysosomal dysfunction and impaired proteostasis.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Sphingolipid Network &amp; Membrane Signaling</h3>
+        <p>FA2H-dependent products — 2-hydroxy ceramides, hydroxylated sulfatides, and glycosphingolipids — influence membrane organization, lipid rafts, receptor signaling, calcium regulation, and APP-processing compartments. One AD imaging study noted decreased cortical sulfatides in AD, though no clear hydroxylated-vs.-non-hydroxylated redistribution was established.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Iron &amp; Oxidative Stress Links Are Inconsistent</h3>
+        <p>FA2H is listed among NBIA genes and some FAHN/SPG35 patients show brain iron accumulation. However, several FA2H cohorts lack detectable iron deposition, so this is not a reliable feature. AD relevance remains pathway-level: possible intersection with lipid peroxidation, mitochondrial dysfunction, and iron dyshomeostasis — but unproven in AD.</p>
+      </div>
+
+      <div class="card card-gray">
+        <h3>Therapeutic Direction Is Uncertain</h3>
+        <p>Restoring FA2H activity or downstream hydroxylated sphingolipids is the most logical approach in FA2H loss-of-function disease. For AD, the same restorative concept may apply if these lipid species are regionally deficient. Critically, some contexts show FA2H activity can promote apoptosis, cell migration, or viral endosomal escape, arguing against nonspecific systemic activation or inhibition.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── ACTIONABLE TAKEAWAYS ─── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Treat FA2H as an exploratory pathway node, not a validated AD target.</strong> Current evidence supports biological plausibility through lipid/myelin/neurodegeneration mechanisms, but not direct efficacy against amyloid-β, tau, synaptic failure, cognition, or AD progression.</li>
+      <li><strong>Prioritize AD-specific validation studies.</strong> Measure FA2H expression, activity, genetic variation, and FA2H-dependent 2-hydroxylated sphingolipids in AD brain regions, white matter, CSF, plasma, and iPSC-derived neurons, oligodendrocytes, astrocytes, and microglia.</li>
+      <li><strong>Correlate FA2H-linked lipid species with AD phenotypes.</strong> Relevant endpoints include amyloid burden, tau pathology, APOE genotype, white-matter injury, myelin integrity, oligodendrocyte markers, neuroinflammation, cognition, endolysosomal dysfunction, and iron/oxidative-stress markers.</li>
+      <li><strong>Test FA2H modulation in AD-relevant models.</strong> Determine whether restoring FA2H activity or 2-hydroxy sphingolipids improves myelin stability, axonal integrity, autophagy–lysosomal flux, endosomal trafficking, calcium homeostasis, synaptic function, and cognition.</li>
+      <li><strong>Focus on cell-type specificity.</strong> FA2H biology differs substantially in oligodendrocytes, neurons, astrocytes, microglia, Schwann cells, and peripheral tissues. Avoid broad systemic modulation until CNS cell-type-specific effects are established.</li>
+      <li><strong>Favor restorative rather than inhibitory strategies.</strong> Because FA2H loss causes severe neurodegeneration, CNS FA2H inhibition would be risky. More plausible approaches include restoring deficient FA2H function, supplementing downstream hydroxylated sphingolipids, stabilizing sulfatide/galactolipid pools, or modulating upstream regulators such as PAR1, PPAR-linked pathways, or PGRMC1.</li>
+      <li><strong>Use lipidomics as a required target-engagement readout.</strong> Any FA2H-directed intervention must verify changes in 2-hydroxy ceramides, hydroxylated sulfatides, hydroxylated galactosylceramides, and related glycosphingolipids. Stereochemistry and chain-length specificity may be critical.</li>
+      <li><strong>Evaluate safety carefully before clinical translation.</strong> FA2H-dependent lipids influence apoptosis, membrane fluidity, cell migration, viral/endosomal entry, insulin signaling, and cancer-related phenotypes. Therapeutic development must define disease stage, target cell type, lipid species, dose, and CNS selectivity.</li>
+    </ol>
+  </section>
+
+  <!-- ─── VERDICT ─── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — FA2H in Alzheimer's Disease</span>
+      <p>
+        FA2H is best framed as a <strong>mechanistically credible modifier of AD-relevant lipid, myelin, white-matter, endolysosomal, and oxidative-stress biology</strong>. Its loss-of-function phenotype in humans and animals unambiguously demonstrates that impaired 2-hydroxylated sphingolipid metabolism causes progressive neurodegeneration — a powerful proof of biological importance. However, <strong>no direct evidence links FA2H to amyloid-β, tau, synaptic dysfunction, or AD progression</strong>, and no FA2H-directed intervention has been validated in an AD model. The most defensible short-term strategy is <strong>exploratory validation</strong>: mapping FA2H-dependent lipid species across AD brain regions and disease stages, testing restorative approaches in oligodendrocyte- and neuron-centric AD models, and building a lipidomic target-engagement framework before any therapeutic commitment. <strong>CNS inhibition of FA2H should be avoided</strong> given the severity of its loss-of-function neurodegenerative phenotype in humans.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer>
+  FA2H / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

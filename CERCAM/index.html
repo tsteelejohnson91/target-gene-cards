@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CERCAM — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e4d6b;
+    --mid: #2e7da6;
+    --light: #e8f4fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef9ed;
+    --positive: #0f766e;
+    --positive-light: #f0fdfb;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2b3e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(255,150,150,0.4);
+    color: #ffc8c8;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 26px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.97rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 18px 16px;
+    margin-bottom: 14px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { font-size: 0.93rem; line-height: 1.65; }
+
+  .card-accent  { background: var(--light);        border-left: 4px solid var(--mid);      }
+  .card-accent h3  { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3  { color: var(--danger); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid #f59e0b;         }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-positive{ background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaways-list li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2b3e 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.92);
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.08rem;
+    color: #7dd3f5;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px 28px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HEADER ══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CERCAM &nbsp;|&nbsp; Cerebral Endothelial Cell Adhesion Molecule</span>
+    <span class="chip chip-danger">⚠ No validated AD evidence</span>
+  </div>
+  <h1>CERCAM &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Important Caveat:</span>
+      CERCAM is <em>not</em> supported by the supplied literature as an established Alzheimer's disease mechanism gene or validated therapeutic target. All AD-relevant connections discussed below are indirect and remain untested in AD-specific models.
+    </div>
+
+    <div class="overview-text">
+      <p>CERCAM (Cerebral Endothelial Cell Adhesion Molecule) is not represented in the supplied text as an established Alzheimer's disease mechanism gene or validated Alzheimer's therapeutic target. No supplied literature reports direct CERCAM studies in Alzheimer's disease models, AD brain tissue, cognition, amyloid-β production or clearance, tau phosphorylation or aggregation, synaptic dysfunction, neuronal loss, or microglial activation in AD.</p>
+
+      <p>The strongest AD-relevant connection is indirect: CERCAM is described as a cerebral endothelial cell adhesion molecule linked to endothelial barrier biology, inflammatory adhesion responses, immune-cell retention and infiltration, stromal remodeling, aging-related nitrosative modification, and PI3K/AKT signaling — all in non-AD contexts. These processes overlap conceptually with recognized AD-relevant domains such as blood–brain barrier dysfunction, vascular inflammation, leukocyte trafficking, aging biology, and neuroinflammatory signaling, but no supplied evidence demonstrates that CERCAM drives these processes specifically in Alzheimer's disease.</p>
+
+      <p>A separate cited passage mentions CERCAM only as a prioritized candidate gene in a familial idiopathic scoliosis linkage/association study on chromosome 9. That study addresses neither dementia, neurodegeneration, Alzheimer's pathology, nor therapeutic targeting.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Landscape</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 920 wide × 480 tall viewBox
+             Panel A (left):  Endothelial / BBB biology   x=10..450
+             Panel B (right): Systemic biology clues      x=460..910
+             Rows at y: 55(panel label), 90(row1), 170(row2), 260(row3), 350(row4), 420(shared outcome)
+             Node count plan:
+               A: CERCAM(1), BBB Barrier(2), Leukocyte Adhesion(3), Inflammatory Activation(4), BBB Disruption(5)
+               B: PI3K/AKT Signaling(6), Aging Nitrosative Stress(7), Immune Infiltration(8), ECM Remodeling(9)
+               Shared outcome: AD Vascular Relevance (10)
+               Indirect link badge: "Indirect only"(11)
+             Total = 11 nodes  ✓ ≤16
+        -->
+        <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" aria-label="CERCAM mechanistic landscape diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e7da6"/>
+            </marker>
+            <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+            <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: Endothelial / BBB Biology ═══ -->
+          <rect x="10" y="18" width="438" height="420" rx="12"
+                fill="#e8f4fb" fill-opacity="0.45" stroke="#2e7da6" stroke-width="1.4"/>
+          <text x="26" y="40" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+                fill="#1e4d6b" letter-spacing="1.2" text-anchor="start">PANEL A — ENDOTHELIAL &amp; BBB BIOLOGY</text>
+
+          <!-- Node 1: CERCAM (shared root, centred in Panel A) -->
+          <rect x="148" y="60" width="162" height="52" rx="8"
+                fill="#1e4d6b" stroke="#0d2b3e" stroke-width="1.5"/>
+          <text x="229" y="82" font-family="Arial,sans-serif" font-size="12" font-weight="700"
+                fill="white" text-anchor="middle">CERCAM</text>
+          <text x="229" y="99" font-family="Georgia,serif" font-size="10"
+                fill="rgba(255,255,255,0.82)" text-anchor="middle">Cerebral Endothelial</text>
+
+          <!-- Arrow from Node1 → Node2 (left branch) -->
+          <line x1="199" y1="112" x2="110" y2="162" stroke="#2e7da6" stroke-width="1.6"
+                marker-end="url(#arr)"/>
+
+          <!-- Arrow from Node1 → Node3 (right branch) -->
+          <line x1="259" y1="112" x2="346" y2="162" stroke="#2e7da6" stroke-width="1.6"
+                marker-end="url(#arr)"/>
+
+          <!-- Node 2: BBB Barrier Integrity (left branch) -->
+          <rect x="30" y="162" width="158" height="52" rx="8"
+                fill="white" stroke="#2e7da6" stroke-width="1.4"/>
+          <text x="109" y="182" font-family="Arial,sans-serif" font-size="11"
+                fill="#1e4d6b" text-anchor="middle" font-weight="700">BBB Barrier Integrity</text>
+          <text x="109" y="199" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">vascular permeability</text>
+
+          <!-- Node 3: Inflammatory Adhesion (right branch) -->
+          <rect x="270" y="162" width="158" height="52" rx="8"
+                fill="white" stroke="#2e7da6" stroke-width="1.4"/>
+          <text x="349" y="182" font-family="Arial,sans-serif" font-size="11"
+                fill="#1e4d6b" text-anchor="middle" font-weight="700">Inflammatory Adhesion</text>
+          <text x="349" y="199" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">Zika BMVEC study</text>
+
+          <!-- Arrow Node2 → Node4 -->
+          <line x1="109" y1="214" x2="109" y2="262" stroke="#8b1a1a" stroke-width="1.6"
+                marker-end="url(#arr-danger)"/>
+
+          <!-- Arrow Node3 → Node5 -->
+          <line x1="349" y1="214" x2="349" y2="262" stroke="#8b1a1a" stroke-width="1.6"
+                marker-end="url(#arr-danger)"/>
+
+          <!-- Node 4: BBB Disruption (left sub-outcome) -->
+          <rect x="30" y="262" width="158" height="52" rx="8"
+                fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="109" y="282" font-family="Arial,sans-serif" font-size="11"
+                fill="#8b1a1a" text-anchor="middle" font-weight="700">BBB Disruption</text>
+          <text x="109" y="299" font-family="Georgia,serif" font-size="10"
+                fill="#8b1a1a" text-anchor="middle">vascular leakage</text>
+
+          <!-- Node 5: Leukocyte Retention (right sub-outcome) -->
+          <rect x="270" y="262" width="158" height="52" rx="8"
+                fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="349" y="282" font-family="Arial,sans-serif" font-size="11"
+                fill="#8b1a1a" text-anchor="middle" font-weight="700">Leukocyte Retention</text>
+          <text x="349" y="299" font-family="Georgia,serif" font-size="10"
+                fill="#8b1a1a" text-anchor="middle">immune infiltration</text>
+
+          <!-- Converge arrows Node4 → Node10, Node5 → Node10 handled below after Node10 defined -->
+
+          <!-- ═══ PANEL B: Systemic Biology Clues ═══ -->
+          <rect x="462" y="18" width="448" height="350" rx="12"
+                fill="#fef9ed" fill-opacity="0.55" stroke="#b45309" stroke-width="1.4"/>
+          <text x="478" y="40" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+                fill="#92400e" letter-spacing="1.2" text-anchor="start">PANEL B — SYSTEMIC BIOLOGY CLUES (NON-AD CONTEXTS)</text>
+
+          <!-- Node 6: PI3K/AKT Signaling -->
+          <rect x="478" y="60" width="168" height="52" rx="8"
+                fill="white" stroke="#b45309" stroke-width="1.4"/>
+          <text x="562" y="80" font-family="Arial,sans-serif" font-size="11"
+                fill="#92400e" text-anchor="middle" font-weight="700">PI3K/AKT Signaling</text>
+          <text x="562" y="97" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">bladder cancer study</text>
+
+          <!-- Node 7: Aging Nitrosative Stress -->
+          <rect x="674" y="60" width="168" height="52" rx="8"
+                fill="white" stroke="#b45309" stroke-width="1.4"/>
+          <text x="758" y="80" font-family="Arial,sans-serif" font-size="11"
+                fill="#92400e" text-anchor="middle" font-weight="700">Aging / Nitrosative</text>
+          <text x="758" y="97" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">serum nitro-proteoforms</text>
+
+          <!-- Arrow Node6 → Node8 -->
+          <line x1="562" y1="112" x2="562" y2="162" stroke="#b45309" stroke-width="1.6"
+                marker-end="url(#arr-warn)"/>
+
+          <!-- Arrow Node7 → Node9 -->
+          <line x1="758" y1="112" x2="758" y2="162" stroke="#b45309" stroke-width="1.6"
+                marker-end="url(#arr-warn)"/>
+
+          <!-- Node 8: Immune Infiltration / Macrophage -->
+          <rect x="478" y="162" width="168" height="52" rx="8"
+                fill="white" stroke="#b45309" stroke-width="1.4"/>
+          <text x="562" y="182" font-family="Arial,sans-serif" font-size="11"
+                fill="#92400e" text-anchor="middle" font-weight="700">Immune Infiltration</text>
+          <text x="562" y="199" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">macrophage polarization</text>
+
+          <!-- Node 9: ECM / Stromal Remodeling -->
+          <rect x="674" y="162" width="168" height="52" rx="8"
+                fill="white" stroke="#b45309" stroke-width="1.4"/>
+          <text x="758" y="182" font-family="Arial,sans-serif" font-size="11"
+                fill="#92400e" text-anchor="middle" font-weight="700">ECM / Stromal</text>
+          <text x="758" y="199" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">remodeling, TME</text>
+
+          <!-- Node 8 → Panel B funnel note (arrows converge downward toward label) -->
+          <line x1="562" y1="214" x2="616" y2="262" stroke="#b45309" stroke-width="1.6"
+                marker-end="url(#arr-warn)"/>
+          <line x1="758" y1="214" x2="706" y2="262" stroke="#b45309" stroke-width="1.6"
+                marker-end="url(#arr-warn)"/>
+
+          <!-- Node 10 (interim Panel B): Speculative AD Overlap -->
+          <rect x="566" y="262" width="180" height="52" rx="8"
+                fill="#fef9ed" stroke="#b45309" stroke-width="1.4"/>
+          <text x="656" y="282" font-family="Arial,sans-serif" font-size="11"
+                fill="#92400e" text-anchor="middle" font-weight="700">Speculative AD Overlap</text>
+          <text x="656" y="299" font-family="Georgia,serif" font-size="10"
+                fill="#64748b" text-anchor="middle">vascular / neuroinflammation</text>
+
+          <!-- ═══ SHARED OUTCOME (bottom) ═══ -->
+          <!-- Node 11: AD Vascular Relevance — centred across full width at y=400 -->
+          <rect x="310" y="400" width="300" height="52" rx="8"
+                fill="#0f766e" stroke="#0c5a54" stroke-width="1.5"/>
+          <text x="460" y="422" font-family="Arial,sans-serif" font-size="12" font-weight="700"
+                fill="white" text-anchor="middle">AD Vascular Relevance?</text>
+          <text x="460" y="440" font-family="Georgia,serif" font-size="10"
+                fill="rgba(255,255,255,0.85)" text-anchor="middle">Untested — indirect only</text>
+
+          <!-- Arrows from Panel A outcomes → Node11 -->
+          <!-- Node4 bottom → Node11: elbow through gutter -->
+          <polyline points="109,314 109,376 310,376 310,410"
+                    fill="none" stroke="#8b1a1a" stroke-width="1.6"
+                    marker-end="url(#arr-danger)"/>
+          <!-- Node5 bottom → Node11: elbow -->
+          <polyline points="349,314 349,376 380,376 380,410"
+                    fill="none" stroke="#8b1a1a" stroke-width="1.6"
+                    marker-end="url(#arr-danger)"/>
+
+          <!-- Arrow from Panel B Node10 → Node11 -->
+          <polyline points="656,314 656,376 560,376 560,410"
+                    fill="none" stroke="#0f766e" stroke-width="1.6"
+                    marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue tint) — Endothelial &amp; BBB Biology:</strong> CERCAM acts as a cerebral endothelial adhesion molecule, branching into two parallel lines of evidence — BBB barrier integrity (left) and inflammatory adhesion responses (right, from a Zika BMVEC study) — each converging on downstream risk outcomes of BBB disruption and leukocyte retention.
+        <strong>Panel B (amber tint) — Systemic Biology Clues (non-AD):</strong> Evidence from non-AD contexts (bladder cancer and aging proteomics) implicates CERCAM in PI3K/AKT signaling and aging-related nitrosative stress (top row), which feed into immune infiltration/macrophage polarization and ECM/stromal remodeling (middle row), converging on a speculative AD overlap node.
+        Both panels funnel into a shared outcome node (teal) — <em>AD Vascular Relevance?</em> — which remains entirely untested and indirect as of the supplied evidence.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        <p>The supplied text provides no evidence that CERCAM affects amyloid-β, tau, synaptic integrity, neuronal survival, cognition, or AD-specific neuroinflammation. It cannot be positioned as a validated Alzheimer's target on current data.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Most Plausible Indirect Link: BBB Biology</h3>
+        <p>CERCAM's identity as a brain endothelial adhesion molecule and its association with vascular leakage and inflammatory adhesion responses — observed in a Zika virus brain microvascular endothelial cell study — suggest possible relevance to blood–brain barrier disturbance and endothelial activation in AD.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Immune Trafficking Hypothesis</h3>
+        <p>Cancer and psoriasis data associate CERCAM with immune infiltration, macrophage polarization, immune-cell retention, and inflammatory tissue localization — processes conceptually relevant to AD vascular and perivascular inflammation, but untested in AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>PI3K/AKT: Indirect Connection</h3>
+        <p>A bladder cancer study suggests CERCAM can influence PI3K/AKT signaling, proliferation, invasion, and EMT-like markers. While PI3K/AKT is relevant to neuronal survival and tau-related pathways, no evidence shows CERCAM regulates this pathway in AD-relevant brain cells.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Aging &amp; Nitrosative Stress Clue</h3>
+        <p>Serum nitro-proteoforms of CERCAM increased in aged women compared with young and centenarian groups, suggesting association with aging-related reactive nitrogen biology. This finding is only indirectly relevant to AD risk and was not an AD study.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Direction Is Uncertain</h3>
+        <p>Psoriasis knockout data suggest loss of CERCAM can <em>worsen</em> inflammation and increase T-cell retention, meaning simple inhibition could be harmful. Both CERCAM inhibition and enhancement may have context-dependent effects, making therapeutic direction unclear without AD-specific data.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><b>Treat CERCAM as a speculative, indirect candidate:</b> Do not position it as a validated Alzheimer's disease target without new AD-specific evidence from expression, genetics, biomarker, mechanistic, or intervention studies.</li>
+      <li><b>Prioritize vascular and immune hypotheses:</b> If investigating CERCAM in AD, focus on endothelial biology, BBB permeability, and leukocyte trafficking rather than amyloid- or tau-directed mechanisms, which have no current evidential basis.</li>
+      <li><b>Map CERCAM expression in AD-relevant cell types:</b> Test whether CERCAM expression is altered in AD brain endothelium, pericytes, astrocytes, microglia, neurons, choroid plexus, CSF, or blood — no such data exist in the supplied literature.</li>
+      <li><b>Assess spatial localization relative to AD pathology:</b> Examine CERCAM distribution relative to BBB leakage sites, cerebral amyloid angiopathy, plaques, tangles, inflamed vessels, and perivascular immune cells.</li>
+      <li><b>Perform functional studies in AD-relevant systems:</b> Determine experimentally whether CERCAM affects BBB permeability, leukocyte adhesion and transmigration, amyloid-β transport or clearance, tau pathology, neuroinflammation, synaptic loss, or cognition.</li>
+      <li><b>Clarify therapeutic direction before any intervention planning:</b> Because both inhibition and enhancement of CERCAM could have opposing context-dependent effects on inflammation, adhesion, and tissue immune retention, the direction of any therapeutic strategy must be established empirically in AD-relevant models first.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment —</span>
+      <p>
+        CERCAM is a <strong>speculative, indirectly AD-relevant candidate gene</strong> that currently lacks any direct supporting evidence in Alzheimer's disease models, brain tissue, biomarker studies, or clinical data. Its biological identity as a <strong>cerebral endothelial cell adhesion molecule</strong> with roles in endothelial barrier function, inflammatory adhesion, immune-cell trafficking, ECM remodeling, PI3K/AKT signaling, and aging-related nitrosative modification creates plausible — but entirely hypothetical — connections to recognized AD-relevant processes such as <strong>blood–brain barrier dysfunction, vascular neuroinflammation, and leukocyte infiltration</strong>. The additional citation in a familial idiopathic scoliosis linkage study adds no AD-relevant insight. Critically, <strong>psoriasis knockout data raise a therapeutic caution</strong>: loss of CERCAM function may worsen inflammation, making the direction of any future therapeutic intervention uncertain and requiring careful empirical validation before any targeting strategy is pursued.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer>
+  CERCAM / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

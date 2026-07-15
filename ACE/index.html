@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACE — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.95rem;
+    color: #cde0f5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #e2eaf4;
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #bfdbfe;
+    display: block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ACE &nbsp;|&nbsp; Angiotensin-Converting Enzyme</span>
+    <span class="chip chip-danger">⚠ Caution: ACE inhibition may reduce protective Aβ clearance</span>
+  </div>
+  <h1>ACE &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> ACE is not simply an "inhibit for AD" target.
+      AD-specific amyloid evidence suggests ACE activity may be <em>protective</em> — inhibiting
+      ACE could theoretically reduce a beneficial Aβ-clearing mechanism, contrary to the logic of
+      conventional cardiovascular ACE-inhibitor use.
+    </div>
+
+    <p>
+      ACE is presented as a biologically plausible but not uniformly established Alzheimer's disease
+      (AD) target. The strongest AD-relevant evidence points in two partly divergent directions:
+      some studies suggest ACE activity may be <strong>protective</strong> by reducing amyloid-β
+      (Aβ) burden or supporting immune-cell Aβ clearance, while other RAS-focused evidence suggests
+      that excessive ACE/Ang II/AT1R signaling may contribute indirectly to cognitive decline
+      through vascular dysfunction, inflammation, oxidative stress, and metabolic injury.
+    </p>
+
+    <p>
+      The most direct AD-mechanistic evidence supports ACE as a <strong>protective modifier of
+      amyloid pathology</strong>. A Mendelian-randomization druggable-genome study found genetically
+      predicted higher ACE expression associated with lower Aβ PET uptake. A mouse study showed
+      that neutrophil-specific ACE overexpression in 3xTg-AD mice improved cognition, lowered
+      cortical and hippocampal Aβ, and enhanced neutrophil Aβ phagocytosis/clearance. A Zuo Gui Wan
+      AD-model study also prioritized ACE among AD-related targets and found that treatment increased
+      ACE expression in Aβ25–35-injured SH-SY5Y cells while improving viability and reducing ERK1/2
+      and STAT1 phosphorylation.
+    </p>
+
+    <p>
+      The broader RAS literature frames ACE as converting angiotensin I to angiotensin II, a pathway
+      linked to vasoconstriction, hypertension, inflammation, oxidative stress, fibrosis, endothelial
+      dysfunction, and tissue remodeling. ACE2 counterbalances this axis by promoting
+      angiotensin-(1–7)/Mas signaling, generally described as vasodilatory, anti-inflammatory,
+      antifibrotic, and protective. Human clinical trial evidence showing that ACE activation,
+      inhibition, or ACE2-axis modulation slows AD progression is absent from the supplied text.
+    </p>
+  </section>
+
+  <!-- ── MECHANISM FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="12" aria-label="ACE pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: RAS Core -->
+        <rect x="14" y="14" width="270" height="472" rx="12" fill="#e8f1f9" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="24" y="34" font-size="9" font-weight="bold" fill="#1a3a5c" text-anchor="start" letter-spacing="1">PANEL A · RAS CORE AXIS</text>
+
+        <!-- Ang I node -->
+        <rect x="72" y="46" width="130" height="40" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="137" y="63" text-anchor="middle" fill="#1a3a5c" font-size="11">Angiotensin I</text>
+        <text x="137" y="79" text-anchor="middle" fill="#2e6da4" font-size="10">(substrate)</text>
+
+        <!-- Arrow down to ACE -->
+        <line x1="137" y1="86" x2="137" y2="112" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- ACE node -->
+        <rect x="62" y="112" width="150" height="40" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="137" y="129" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ACE</text>
+        <text x="137" y="145" text-anchor="middle" fill="#93c5fd" font-size="9">angiotensin-converting enzyme</text>
+
+        <!-- Arrow to Ang II -->
+        <line x1="137" y1="152" x2="137" y2="178" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Ang II node -->
+        <rect x="62" y="178" width="150" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="137" y="195" text-anchor="middle" fill="#9b1c1c" font-size="11" font-weight="bold">Angiotensin II</text>
+        <text x="137" y="211" text-anchor="middle" fill="#9b1c1c" font-size="9">via ACE cleavage</text>
+
+        <!-- Arrow to AT1R -->
+        <line x1="137" y1="218" x2="137" y2="244" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- AT1R node -->
+        <rect x="62" y="244" width="150" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="137" y="261" text-anchor="middle" fill="#9b1c1c" font-size="11">AT1R signaling</text>
+        <text x="137" y="277" text-anchor="middle" fill="#9b1c1c" font-size="9">vasoconstriction · HT</text>
+
+        <!-- Arrow to Vascular Harm -->
+        <line x1="137" y1="284" x2="137" y2="310" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Vascular harm node -->
+        <rect x="30" y="310" width="214" height="48" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="137" y="329" text-anchor="middle" fill="#9b1c1c" font-size="10.5">Vascular / Inflammatory</text>
+        <text x="137" y="345" text-anchor="middle" fill="#9b1c1c" font-size="9">dysfunction · oxidative stress</text>
+
+        <!-- Arrow to indirect AD risk -->
+        <line x1="137" y1="358" x2="137" y2="384" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+
+        <!-- Indirect AD risk node -->
+        <rect x="30" y="384" width="214" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="137" y="401" text-anchor="middle" fill="#b45309" font-size="10.5">Indirect AD risk ↑</text>
+        <text x="137" y="416" text-anchor="middle" fill="#b45309" font-size="9">vascular contributions</text>
+
+        <!-- Panel B: ACE2 Counter-axis -->
+        <rect x="298" y="14" width="270" height="340" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="308" y="34" font-size="9" font-weight="bold" fill="#0f766e" text-anchor="start" letter-spacing="1">PANEL B · ACE2 COUNTER-AXIS</text>
+
+        <!-- ACE2 node -->
+        <rect x="358" y="46" width="150" height="40" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="433" y="63" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ACE2</text>
+        <text x="433" y="79" text-anchor="middle" fill="#a7f3d0" font-size="9">counter-regulatory enzyme</text>
+
+        <!-- Arrow to Ang1-7 -->
+        <line x1="433" y1="86" x2="433" y2="112" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Ang1-7 node -->
+        <rect x="348" y="112" width="170" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="433" y="129" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="bold">Ang-(1–7)</text>
+        <text x="433" y="145" text-anchor="middle" fill="#0f766e" font-size="9">protective peptide</text>
+
+        <!-- Arrow to Mas -->
+        <line x1="433" y1="152" x2="433" y2="178" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Mas receptor node -->
+        <rect x="348" y="178" width="170" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="433" y="195" text-anchor="middle" fill="#0f766e" font-size="11">Mas Receptor</text>
+        <text x="433" y="211" text-anchor="middle" fill="#0f766e" font-size="9">vasodilatory · antifibrotic</text>
+
+        <!-- Arrow to Cognitive Protection -->
+        <line x1="433" y1="218" x2="433" y2="244" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Cognitive protection node -->
+        <rect x="318" y="244" width="230" height="48" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="433" y="263" text-anchor="middle" fill="#0f766e" font-size="10.5">Cognitive protection</text>
+        <text x="433" y="279" text-anchor="middle" fill="#0f766e" font-size="9">lower odds impairment (15-yr data)</text>
+
+        <!-- Panel C: AD-Specific Immune Clearance -->
+        <rect x="582" y="14" width="344" height="472" rx="12" fill="#e8f1f9" fill-opacity="0.45" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="592" y="34" font-size="9" font-weight="bold" fill="#1a3a5c" text-anchor="start" letter-spacing="1">PANEL C · AD-SPECIFIC EVIDENCE</text>
+
+        <!-- Genetic evidence node -->
+        <rect x="622" y="46" width="264" height="40" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="754" y="63" text-anchor="middle" fill="#fff" font-size="11">MR Study: ACE↑ → Aβ PET↓</text>
+        <text x="754" y="79" text-anchor="middle" fill="#93c5fd" font-size="9">genetic evidence, protective association</text>
+
+        <!-- Arrows branching to two sub-paths -->
+        <!-- Left branch to Neutrophil ACE -->
+        <line x1="700" y1="86" x2="670" y2="112" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Right branch to ZGW model -->
+        <line x1="810" y1="86" x2="840" y2="112" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Left sub-branch: Neutrophil ACE -->
+        <rect x="608" y="112" width="128" height="44" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="672" y="130" text-anchor="middle" fill="#1a3a5c" font-size="10.5">Neutrophil ACE</text>
+        <text x="672" y="146" text-anchor="middle" fill="#2e6da4" font-size="9">overexpression model</text>
+
+        <!-- Right sub-branch: ZGW model -->
+        <rect x="766" y="112" width="136" height="44" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="834" y="130" text-anchor="middle" fill="#1a3a5c" font-size="10.5">Zuo Gui Wan</text>
+        <text x="834" y="146" text-anchor="middle" fill="#2e6da4" font-size="9">SH-SY5Y injury model</text>
+
+        <!-- Left sub-branch arrows: Neutrophil → Phagocytosis -->
+        <line x1="672" y1="156" x2="672" y2="184" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Phagocytosis node -->
+        <rect x="608" y="184" width="128" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="672" y="202" text-anchor="middle" fill="#1a3a5c" font-size="10.5">Aβ Phagocytosis</text>
+        <text x="672" y="218" text-anchor="middle" fill="#2e6da4" font-size="9">↑ clearance in vitro</text>
+
+        <!-- Right sub-branch arrows: ZGW → ERK/STAT1 -->
+        <line x1="834" y1="156" x2="834" y2="184" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ERK/STAT1 node -->
+        <rect x="756" y="184" width="156" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="834" y="202" text-anchor="middle" fill="#1a3a5c" font-size="10.5">ERK1/2 · STAT1↓</text>
+        <text x="834" y="218" text-anchor="middle" fill="#2e6da4" font-size="9">phosphorylation reduced</text>
+
+        <!-- Both sub-branches converge to shared outcome -->
+        <!-- Left converge line -->
+        <line x1="672" y1="228" x2="672" y2="264" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="672" y1="264" x2="754" y2="264" stroke="#2e6da4" stroke-width="1.5"/>
+        <!-- Right converge line -->
+        <line x1="834" y1="228" x2="834" y2="264" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="834" y1="264" x2="754" y2="264" stroke="#2e6da4" stroke-width="1.5"/>
+        <!-- Down to shared outcome -->
+        <line x1="754" y1="264" x2="754" y2="280" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Shared outcome: Aβ Burden Reduced -->
+        <rect x="622" y="280" width="264" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="754" y="299" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Aβ Burden ↓</text>
+        <text x="754" y="315" text-anchor="middle" fill="#93c5fd" font-size="9">cortex · hippocampus · cognition improved</text>
+
+        <!-- Arrow to Evidence gaps node -->
+        <line x1="754" y1="324" x2="754" y2="352" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Evidence gap node -->
+        <rect x="622" y="352" width="264" height="48" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="754" y="371" text-anchor="middle" fill="#b45309" font-size="10.5">No human RCT evidence</text>
+        <text x="754" y="387" text-anchor="middle" fill="#b45309" font-size="9">genetics · cell · mouse models only</text>
+
+        <!-- Arrow to Clinical uncertainty -->
+        <line x1="754" y1="400" x2="754" y2="428" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Clinical uncertainty -->
+        <rect x="622" y="428" width="264" height="46" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="754" y="447" text-anchor="middle" fill="#b45309" font-size="10.5">Central vs. peripheral ACE</text>
+        <text x="754" y="463" text-anchor="middle" fill="#b45309" font-size="9">heterogeneous clinical data</text>
+
+      </svg>
+    </div>
+
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> The canonical RAS axis — ACE converts Angiotensin I to
+      Angiotensin II, which activates AT1R signaling, driving vasoconstriction, inflammation, and
+      oxidative stress, contributing indirectly to elevated AD risk through vascular pathways.
+      <strong>Panel B (teal, center):</strong> The counter-regulatory ACE2 arm, which generates
+      Ang-(1–7) and activates Mas receptors for vasodilatory and anti-inflammatory signaling;
+      epidemiological data link higher ANG1–7 to lower cognitive impairment odds at 15 years.
+      <strong>Panel C (dark blue, right):</strong> AD-specific evidence branches into a neutrophil
+      ACE overexpression model (showing enhanced Aβ phagocytosis) and a Zuo Gui Wan cell-injury
+      model (showing ERK1/2 and STAT1 phosphorylation reduction), both converging on reduced Aβ
+      burden and improved cognition — though all evidence remains preclinical, with no human RCT
+      data and unresolved central versus peripheral ACE effects.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Evidence: Protective Association</h3>
+        <p>A Mendelian-randomization druggable-genome study found genetically predicted higher ACE
+        expression/protein levels associated with lower Aβ PET uptake — implying ACE activity may
+        correspond to reduced amyloid burden, not increased risk.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Myeloid-Cell ACE &amp; Aβ Clearance</h3>
+        <p>In 3xTg-AD mice, neutrophil-specific ACE overexpression improved maze performance,
+        reduced Aβ in cortex and hippocampus, and enhanced phagocytosis/clearance in vitro.
+        Prior macrophage ACE-overexpression findings are consistent with a broader myeloid-cell
+        amyloid-clearance model.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Caution: Inhibition May Be Counterproductive</h3>
+        <p>ACE is not simply an "inhibit for AD" target. AD-specific amyloid evidence suggests ACE
+        activity may be protective. Inhibiting ACE — the conventional cardiovascular strategy —
+        could theoretically reduce a beneficial Aβ-clearing mechanism in the brain.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>ACE2/Ang-(1–7) Axis: Cognitively Protective</h3>
+        <p>Higher ANG1–7 was associated with lower odds of cognitive impairment 15 years later.
+        The ACE/ACE2 balance — not ACE alone — may be the key determinant of vascular and
+        cognitive outcome. Promoting the ACE2/Ang-(1–7)/Mas arm may be independently beneficial.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Vascular &amp; Inflammatory Indirect Contributions</h3>
+        <p>Hypertension, endothelial dysfunction, arterial stiffness, cerebral small vessel disease,
+        kidney disease, metabolic dysfunction, and oxidative stress all intersect with dementia
+        risk. ACE/RAS modulation could affect these upstream contributors even without directly
+        targeting amyloid or tau.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Evidence Quality &amp; Acronym Collisions</h3>
+        <p>The strongest mechanistic AD evidence includes genetics, cell models, and mouse models
+        only — no human clinical trial evidence is present. Many "ACE" mentions in the literature
+        refer to adverse childhood experiences, cognitive examinations, or institutional names, and
+        must be excluded from angiotensin-converting enzyme interpretation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+
+    <ol class="takeaways">
+      <li>
+        <div><strong>Treat ACE as a candidate mechanism, not a validated target.</strong>
+        The supplied evidence supports further study of ACE in amyloid clearance, immune-cell
+        function, RAS balance, and vascular-inflammatory cognitive risk, but does not establish
+        an approved or proven ACE-based AD therapy.</div>
+      </li>
+      <li>
+        <div><strong>Distinguish ACE activation from ACE inhibition.</strong>
+        AD-specific amyloid evidence suggests ACE activity may be protective, while cardiovascular
+        logic favors inhibition. Future work should test whether increasing ACE activity or
+        preserving function — particularly in specific cell types — is beneficial or harmful
+        in AD contexts.</div>
+      </li>
+      <li>
+        <div><strong>Investigate cell-specific ACE enhancement.</strong>
+        Neutrophil and macrophage ACE-overexpression findings suggest that targeted myeloid-cell
+        ACE augmentation could be a more precise therapeutic concept than systemic ACE manipulation.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate RAS pathway modulation broadly.</strong>
+        Research should compare ACE inhibitors, ARBs, ACE2/Ang-(1–7)/Mas enhancement, and
+        centrally active RAS modulators rather than assuming all RAS interventions have equivalent
+        cognitive effects.</div>
+      </li>
+      <li>
+        <div><strong>Use AD-relevant endpoints.</strong>
+        Future studies should measure Aβ, tau, neurodegeneration, synaptic function, microglial
+        activation, blood–brain barrier integrity, cognition, dementia conversion, and clinical
+        AD progression — not only cardiovascular or renal endpoints.</div>
+      </li>
+      <li>
+        <div><strong>Consider patient stratification carefully.</strong>
+        Potential benefit or harm may depend on hypertension status, vascular disease, metabolic
+        disease, kidney function, APOE genotype, ACE genotype, baseline amyloid status, disease
+        stage, and central nervous system drug availability.</div>
+      </li>
+      <li>
+        <div><strong>Avoid overinterpreting peripheral or non-AD evidence.</strong>
+        Cardiovascular, renal, anti-inflammatory, and food-derived ACE-inhibitory studies support
+        ACE druggability and systemic relevance, but do not prove AD disease modification.</div>
+      </li>
+      <li>
+        <div><strong>Separate acronym collisions from enzyme biology.</strong>
+        ACE-III/ACE-R (cognitive examination), adverse childhood experiences, GR@ACE, ACE richness
+        index, and institutional names are not evidence about angiotensin-converting enzyme as an
+        AD mechanism and must not be conflated with it.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment —</span>
+      ACE is a <strong>biologically plausible but mechanistically complex</strong> Alzheimer's disease
+      candidate whose evidence base points in competing directions. The most compelling AD-specific
+      data — Mendelian-randomization genetics and myeloid-cell overexpression models — suggest that
+      <strong>ACE activity is protective against amyloid accumulation</strong>, particularly when
+      expressed in neutrophils and macrophages engaged in Aβ phagocytosis. This stands in tension
+      with the broader cardiovascular literature, where ACE inhibition is beneficial for vascular
+      health. The <strong>ACE/ACE2 balance</strong> may ultimately matter more than ACE activity
+      alone, given that the ACE2/Ang-(1–7)/Mas arm appears independently cognitively protective.
+      <strong>No human clinical trial evidence</strong> demonstrates that any form of ACE
+      modulation slows AD progression. The field requires controlled studies that test
+      <strong>cell-type-specific ACE augmentation</strong>, carefully distinguish central from
+      peripheral effects, and use validated AD endpoints rather than surrogate cardiovascular
+      or renal measures.
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  ACE / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

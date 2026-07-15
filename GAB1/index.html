@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GAB1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #f0eafb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2e8f0;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.68;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  p { margin-bottom: 1rem; }
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--danger); }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card-accent  { background: var(--light);          border-color: var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+  .card-teal    { background: var(--positive-light); border-color: var(--positive); }
+  .card-teal    h3 { color: var(--positive); }
+  .card-warn    { background: var(--warning-light);  border-color: var(--warning);  }
+  .card-warn    h3 { color: var(--warning); }
+  .card-slate   { background: var(--slate-light);    border-color: var(--slate);    }
+  .card-slate   h3 { color: var(--slate); }
+  .card-blue    { background: #eff6ff;               border-color: #2563eb;         }
+  .card-blue    h3 { color: #1d4ed8; }
+  /* TAKEAWAYS */
+  ol.takeaways { padding-left: 0; list-style: none; counter-reset: taw; }
+  ol.takeaways li {
+    counter-increment: taw;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+  ol.takeaways li::before {
+    content: counter(taw);
+    min-width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 32px;
+  }
+  .verdict p { color: #e2e8f0; margin-bottom: 0; font-size: 0.97rem; }
+  .verdict strong { color: #c4b5fd; }
+  .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: GAB1 &nbsp;|&nbsp; GRB2-Associated Binding Protein 1</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Oncogenic Risk</span>
+  </div>
+  <h1>GAB1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Warning:</strong> GAB1 repeatedly supports proliferation, migration, invasion, angiogenesis, fibrosis, tumor progression, and drug resistance in cancer and remodeling contexts. Broad systemic activation or inhibition carries substantial oncogenic, pro-proliferative, or homeostatic risks that must be screened early in any AD-directed program.
+    </div>
+
+    <p>GAB1 is a context-dependent signaling adaptor and scaffold with multiple Alzheimer's disease (AD)-relevant mechanisms. The strongest direct AD-related evidence links GAB1 to amyloid-β-driven behavioral pathology, cholinergic dysfunction, AD-like cognitive impairment, and shared AD/vascular disease networks.</p>
+
+    <p>In the most mechanistically detailed AD study, GAB1 was upregulated in dorsal hippocampal CA3 tissue of 5xFAD mice and acted as a mediator of amyloid-β-driven aggression. Aβ accumulation increased excitability in the dorsal CA3–dorsal lateral septum circuit, and elevated Gab1 was linked to impaired autophagic flux, increased Aβ plaque burden, circuit hyperactivity, and aggressive behavior. Ursolic acid normalized Gab1 levels and restored beneficial outcomes; Gab1 knockdown mimicked ursolic acid while Gab1 overexpression blocked its benefits, supporting a causal functional role.</p>
+
+    <p>A separate cholinergic study reported reduced GAB1 in cholinergic neurons from AD patients and AD mice. Selective Gab1 ablation in medial septal cholinergic neurons impaired learning, memory, and hippocampal LTP, while overexpression improved cognition and restored hippocampal CaMKII autophosphorylation — supporting GAB1 as a functional regulator of cholinergic circuit plasticity.</p>
+
+    <p>An AD-like dementia study in SAMP8 mice reported reduced brain Gab1 protein, impaired learning and memory, and reduced AKT phosphorylation. Qingkailing treatment improved cognition alongside increased Gab1 and phosphorylated AKT, suggesting a Gab1–PI3K/AKT-linked cognitive rescue mechanism.</p>
+
+    <p>Beyond direct AD findings, GAB1 functions as a receptor-proximal signaling hub downstream of EGFR, MET/HGF, IGF1R, ErbB/neuregulin, VEGFR2, Trk/neurotrophin, IL-6/gp130, TLR/CD14, and other pathways. Its downstream outputs include PI3K/AKT, MAPK/ERK, SHP2, mTOR, NF-κB, GSK3β/β-catenin, Src, Rac1, eNOS/NO, and apoptosis/autophagy regulation — all overlapping with AD mechanisms.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:Arial,sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-t" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-s" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream Receptors -->
+          <rect x="10" y="10" width="200" height="480" rx="12" fill="#f0eafb" stroke="#6d3fc0" stroke-width="1.4" opacity="0.55"/>
+          <text x="110" y="30" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#3b1f6e" text-decoration="none">A · UPSTREAM RECEPTORS</text>
+
+          <!-- Receptor nodes -->
+          <rect x="30" y="42" width="160" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="110" y="57" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">EGFR / MET / IGF1R</text>
+          <text x="110" y="70" text-anchor="middle" font-size="9" fill="#475569">RTK upstream signals</text>
+
+          <rect x="30" y="108" width="160" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="110" y="123" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">TrkB / ErbB / VEGFR2</text>
+          <text x="110" y="136" text-anchor="middle" font-size="9" fill="#475569">Neurotrophin / vascular</text>
+
+          <rect x="30" y="174" width="160" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="110" y="189" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">IL-6/gp130 / TLR</text>
+          <text x="110" y="202" text-anchor="middle" font-size="9" fill="#475569">Inflammatory receptors</text>
+
+          <!-- Panel A arrows -->
+          <line x1="110" y1="78" x2="110" y2="106" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="110" y1="144" x2="110" y2="172" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- GAB1 hub node in Panel A -->
+          <rect x="30" y="238" width="160" height="44" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.5"/>
+          <text x="110" y="257" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">GAB1</text>
+          <text x="110" y="272" text-anchor="middle" font-size="9" fill="#c4b5fd">Scaffold / Adaptor Hub</text>
+
+          <line x1="110" y1="210" x2="110" y2="236" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- PANEL B: AD Circuit Mechanisms -->
+          <rect x="225" y="10" width="220" height="480" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.4" opacity="0.55"/>
+          <text x="335" y="30" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#991b1b">B · AD CIRCUIT MECHANISMS</text>
+
+          <!-- 5xFAD branch -->
+          <rect x="240" y="42" width="190" height="38" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="335" y="58" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Aβ Accumulation</text>
+          <text x="335" y="71" text-anchor="middle" font-size="9" fill="#475569">5xFAD dorsal CA3</text>
+
+          <line x1="335" y1="80" x2="335" y2="104" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <rect x="240" y="106" width="190" height="36" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="335" y="121" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="600">↑ GAB1 (CA3)</text>
+          <text x="335" y="134" text-anchor="middle" font-size="9" fill="#475569">Impaired autophagic flux</text>
+
+          <line x1="335" y1="142" x2="335" y2="166" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <rect x="240" y="168" width="190" height="36" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="335" y="183" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">dCA3–dLS Hyperactivity</text>
+          <text x="335" y="196" text-anchor="middle" font-size="9" fill="#475569">↑ Aβ plaques · Aggression</text>
+
+          <line x1="335" y1="204" x2="335" y2="228" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- Cholinergic branch -->
+          <rect x="240" y="230" width="190" height="38" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="335" y="246" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">↓ GAB1 (Cholinergic)</text>
+          <text x="335" y="260" text-anchor="middle" font-size="9" fill="#475569">AD patients &amp; mice</text>
+
+          <line x1="335" y1="268" x2="335" y2="292" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <rect x="240" y="294" width="190" height="38" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="335" y="310" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Impaired LTP &amp; Memory</text>
+          <text x="335" y="323" text-anchor="middle" font-size="9" fill="#475569">↓ CaMKII autophosphorylation</text>
+
+          <!-- SAMP8 node -->
+          <rect x="240" y="358" width="190" height="38" rx="6" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="335" y="374" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">SAMP8: ↓ GAB1</text>
+          <text x="335" y="387" text-anchor="middle" font-size="9" fill="#475569">↓ ACh · ↓ AKT · ↓ Cognition</text>
+
+          <!-- PANEL C: Downstream Signaling -->
+          <rect x="460" y="10" width="210" height="480" rx="12" fill="#f0eafb" stroke="#6d3fc0" stroke-width="1.4" opacity="0.45"/>
+          <text x="565" y="30" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#3b1f6e">C · DOWNSTREAM SIGNALING</text>
+
+          <!-- PI3K/AKT branch -->
+          <rect x="474" y="42" width="182" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="565" y="57" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">PI3K / AKT</text>
+          <text x="565" y="70" text-anchor="middle" font-size="9" fill="#475569">Survival · Plasticity</text>
+
+          <line x1="565" y1="78" x2="565" y2="104" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="474" y="106" width="182" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="565" y="121" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">mTOR / Autophagy</text>
+          <text x="565" y="134" text-anchor="middle" font-size="9" fill="#475569">LC3B-II · p62 · Aβ clearance</text>
+
+          <line x1="565" y1="142" x2="565" y2="166" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- ERK/MAPK branch parallel -->
+          <rect x="474" y="168" width="182" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="565" y="183" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">MAPK / ERK</text>
+          <text x="565" y="196" text-anchor="middle" font-size="9" fill="#475569">Plasticity · Tau kinase</text>
+
+          <line x1="565" y1="204" x2="565" y2="228" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="474" y="230" width="182" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="565" y="245" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">SHP2 / GSK3β</text>
+          <text x="565" y="258" text-anchor="middle" font-size="9" fill="#475569">NF-κB · β-catenin · Src</text>
+
+          <line x1="565" y1="266" x2="565" y2="290" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="474" y="292" width="182" height="36" rx="6" fill="#fff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="565" y="307" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">eNOS / NO / VEGF</text>
+          <text x="565" y="320" text-anchor="middle" font-size="9" fill="#475569">BBB · Vascular homeostasis</text>
+
+          <!-- PANEL D: Therapeutic Outcomes -->
+          <rect x="685" y="10" width="225" height="480" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" opacity="0.55"/>
+          <text x="797" y="30" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#0f766e">D · THERAPEUTIC OUTCOMES</text>
+
+          <!-- Ursolic acid -->
+          <rect x="698" y="42" width="198" height="38" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="797" y="58" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Ursolic Acid</text>
+          <text x="797" y="71" text-anchor="middle" font-size="9" fill="#475569">↓ GAB1 → ↑ Autophagy</text>
+
+          <line x1="797" y1="80" x2="797" y2="106" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <rect x="698" y="108" width="198" height="38" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="797" y="124" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">↓ Aβ Plaques</text>
+          <text x="797" y="137" text-anchor="middle" font-size="9" fill="#475569">↓ dCA3–dLS excitability</text>
+
+          <line x1="797" y1="146" x2="797" y2="170" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <!-- GAB1 OE node -->
+          <rect x="698" y="172" width="198" height="36" rx="6" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="797" y="187" text-anchor="middle" font-size="10" fill="#b45309" font-weight="600">GAB1 OE blocks benefit</text>
+          <text x="797" y="200" text-anchor="middle" font-size="9" fill="#475569">Causal role confirmed</text>
+
+          <line x1="797" y1="208" x2="797" y2="232" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <!-- Qingkailing node -->
+          <rect x="698" y="234" width="198" height="38" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="797" y="250" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Qingkailing</text>
+          <text x="797" y="263" text-anchor="middle" font-size="9" fill="#475569">↑ GAB1 · ↑ pAKT · ↑ Cognition</text>
+
+          <line x1="797" y1="272" x2="797" y2="296" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <!-- Cholinergic OE -->
+          <rect x="698" y="298" width="198" height="38" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="797" y="314" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">GAB1 OE (Cholinergic)</text>
+          <text x="797" y="327" text-anchor="middle" font-size="9" fill="#475569">↑ LTP · ↑ CaMKII · ↑ Memory</text>
+
+          <line x1="797" y1="336" x2="797" y2="360" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <!-- Shared outcome node -->
+          <rect x="698" y="362" width="198" height="44" rx="8" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="797" y="381" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Cognitive &amp; Circuit</text>
+          <text x="797" y="396" text-anchor="middle" font-size="10" fill="#ccfbf1">Rescue Outcomes</text>
+
+          <!-- Cross-panel connectors: GAB1 hub → Panel B upstream -->
+          <!-- GAB1 hub (Panel A) at x=190,y=260 → Panel B Aβ node top-left at x=240,y=61 -->
+          <!-- Route: elbow through gutter between panels -->
+          <polyline points="190,260 212,260 212,61 240,61" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+          <!-- GAB1 hub → Panel C PI3K top -->
+          <polyline points="190,268 445,268 445,60 474,60" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+          <!-- Panel C eNOS → Panel D (vascular) — route through gutter -->
+          <polyline points="656,310 670,310 670,252 698,252" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)" stroke-dasharray="4,3"/>
+
+          <!-- Panel B SAMP8 → Panel D Qingkailing via gutter between B and C panels -->
+          <!-- SAMP8 at x=430,y=377 → Qingkailing at x=698,y=253. Route: down B right edge then across below panel C -->
+          <polyline points="430,377 450,377 450,440 680,440 680,253 698,253" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-t)" stroke-dasharray="4,3"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (purple, left):</strong> Upstream receptor inputs to GAB1, including RTKs (EGFR, MET, IGF1R), neurotrophin/vascular receptors (TrkB, ErbB, VEGFR2), and inflammatory receptors (IL-6/gp130, TLR), converging on the central GAB1 scaffold node (dark purple).
+        <strong>Panel B (red, centre-left):</strong> AD circuit mechanisms — the upper branch shows elevated GAB1 in 5xFAD dorsal CA3 driving impaired autophagy, Aβ burden, and dCA3–dLS hyperactivity/aggression; the middle branch shows reduced GAB1 in cholinergic neurons impairing LTP and memory; the lower node shows SAMP8 AD-like dementia with reduced GAB1 and AKT.
+        <strong>Panel C (purple, centre-right):</strong> Downstream signaling cascade branching from GAB1 through PI3K/AKT → mTOR/autophagy, and in parallel through MAPK/ERK → SHP2/GSK3β → eNOS/NO/VEGF, connecting to vascular and BBB-relevant outputs.
+        <strong>Panel D (teal, right):</strong> Therapeutic outcomes — ursolic acid and Gab1 knockdown restore autophagy and reduce Aβ/aggression (causal role confirmed by GAB1 OE blocking effect); Qingkailing raises GAB1 and pAKT to rescue SAMP8 cognition; cholinergic GAB1 overexpression restores LTP, CaMKII, and memory — all converging on a shared cognitive and circuit rescue outcome.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>Aβ–Autophagy–Circuit Axis</h3>
+        <p>In 5xFAD mice, elevated GAB1 in dorsal CA3 impairs autophagic flux (↑p62, ↓LC3B-II), raises Aβ plaque burden, and drives dCA3–dLS circuit hyperactivity and aggression. Gab1 knockdown reverses all these phenotypes; overexpression blocks ursolic acid's therapeutic rescue, establishing GAB1 as a <em>causal mediator</em>, not merely a biomarker.</p>
+      </div>
+
+      <div class="card card-teal">
+        <h3>Cholinergic Memory Circuitry</h3>
+        <p>GAB1 is reduced in cholinergic neurons of AD patients and AD mice. Loss in medial septal cholinergic neurons impairs cognition and hippocampal LTP; GAB1 overexpression improves cognition and restores CaMKII autophosphorylation. GAB1 appears to be a functional support for septo-hippocampal plasticity and memory consolidation.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>PI3K / AKT Cognitive Mechanism</h3>
+        <p>In SAMP8 AD-like dementia, brain Gab1 and phosphorylated AKT are both reduced alongside impaired cognition, acetylcholine, and serotonin. Qingkailing treatment co-increases all four, suggesting a Gab1-dependent or Gab1-associated PI3K/AKT activation as a plausible pro-cognitive and pro-survival mechanism.</p>
+      </div>
+
+      <div class="card card-warn">
+        <h3>Context-Dependent, Bidirectional Role</h3>
+        <p>GAB1 is not globally beneficial or detrimental in AD. Reducing GAB1 in dorsal CA3 restores autophagy and reduces aggression, while restoring GAB1 in cholinergic neurons improves plasticity and cognition. Therapeutic modulation must be brain-region-, cell-type-, and pathway-specific to avoid adverse off-target effects.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Vascular &amp; Neurotrophic Plausibility</h3>
+        <p>GAB1 links to endothelial survival, eNOS/NO, VEGF signaling, angiogenesis, and BBB-relevant pathways (including MSP/RON → GAB1/Src/β-catenin in brain injury). It also connects to BDNF/TrkB, neuregulin/ErbB, and GM1/Trk/PI3K signaling, overlapping with AD-relevant synaptic maintenance, trophic support, and neurovascular resilience.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Oncogenic &amp; Homeostatic Safety Risk</h3>
+        <p>GAB1 repeatedly supports tumor proliferation, migration, invasion, angiogenesis, fibrosis, and drug resistance in cancer contexts. In neuroinflammatory settings it can amplify TLR, NF-κB, IL-6, and macrophage polarization pathways. Broad systemic activation or inhibition carries substantial risks that require early safety screening in any AD-directed program.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div><strong>Prioritize cell-type and region-specific validation.</strong> Study dorsal hippocampal CA3 neurons, medial septal cholinergic neurons, hippocampal circuits, microglia, astrocytes, oligodendrocyte lineage cells, pericytes, and brain endothelial cells as distinct experimental units rather than treating the brain as a single compartment.</div>
+      </li>
+
+      <li>
+        <div><strong>Measure GAB1 expression, phosphorylation, and binding partners comprehensively.</strong> Key readouts include total GAB1, phospho-GAB1 sites mediating SHP2 or PI3K binding, membrane recruitment via the PH domain, GAB1–SHP2, GAB1–PI3K p85, and GAB1–GRB2 complex formation across CA3, medial septum, hippocampus, cortex, and neurovascular compartments.</div>
+      </li>
+
+      <li>
+        <div><strong>Test GAB1 modulation against core AD phenotypes.</strong> Required outcomes include Aβ plaque burden, autophagic flux (LC3B-II, p62, lysosomal function), tau phosphorylation, synaptic markers, LTP, neuronal excitability, cholinergic signaling, CaMKII autophosphorylation, microglial activation, neuroinflammatory cytokines, BBB integrity, and cognition.</div>
+      </li>
+
+      <li>
+        <div><strong>Separate therapeutic strategies by phenotype.</strong> For Aβ-driven aggression and dCA3–dLS hyperactivity, Gab1 inhibition or knockdown in dorsal CA3 is supported by 5xFAD/ursolic acid evidence. For cholinergic cognitive dysfunction, Gab1 restoration in medial septal cholinergic neurons is supported by the cholinergic AD study. For AD-like SAMP8 cognitive impairment, Gab1–PI3K/AKT restoration is the plausible target mechanism.</div>
+      </li>
+
+      <li>
+        <div><strong>Investigate ursolic acid as a Gab1-dependent intervention.</strong> The strongest direct mechanistic evidence involves ursolic acid reducing Aβ burden, restoring autophagy, normalizing Gab1, suppressing dCA3–dLS hyperactivity, and reducing aggression — with Gab1 overexpression blocking all these effects, confirming functional dependence.</div>
+      </li>
+
+      <li>
+        <div><strong>Develop pathway-selective approaches targeting specific GAB1 interactions.</strong> Candidate strategies include modulating GAB1–SHP2, GAB1–PI3K p85, GAB1–GRB2, PH-domain-mediated membrane recruitment, and upstream MET/HGF, EGFR, TrkB/BDNF, ErbB/neuregulin, VEGF, IL-6/gp130, or TLR-related pathways. The goal is biasing signaling toward protective autophagy, synaptic plasticity, trophic support, or vascular stability while avoiding oncogenic ERK/AKT/mTOR overactivation.</div>
+      </li>
+
+      <li>
+        <div><strong>Integrate safety screens from the earliest stages.</strong> Because GAB1 participates in tumor growth, angiogenesis, fibrosis, migration, immune activation, and tissue repair, AD-directed programs must assess cancer risk, abnormal proliferation, vascular remodeling, immune dysregulation, fibrosis, and effects on cardiac, hepatic, endothelial, and epithelial homeostasis before advancing any compound.</div>
+      </li>
+
+      <li>
+        <div><strong>Use GAB1 as both a mechanistic target and a biomarker candidate.</strong> In AD models, GAB1 levels or phosphorylation state could serve as readouts of autophagy impairment, cholinergic circuit dysfunction, growth-factor signaling status, PI3K/AKT activity, SHP2/ERK signaling, or pharmacodynamic response to compounds such as ursolic acid and Qingkailing.</div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — GAB1 in Alzheimer's Disease</div>
+      <p>
+        GAB1 is a <strong>promising but context-dependent AD-relevant signaling node</strong>. Direct experimental evidence supports causal roles in <strong>Aβ-driven aggression through impaired autophagy and hippocampal-septal circuit hyperactivity</strong>, and in <strong>cholinergic memory circuitry through effects on LTP, neuronal excitability, CaMKII autophosphorylation, and cognition</strong>. Critically, these two roles point in <strong>opposite therapeutic directions</strong> — GAB1 reduction is beneficial in dorsal CA3, while GAB1 restoration is beneficial in medial septal cholinergic neurons — making nonspecific systemic targeting unjustifiable. Broader literature strongly supports biological plausibility through <strong>PI3K/AKT, ERK/MAPK, SHP2, mTOR/autophagy, inflammatory, neurotrophic, and vascular pathways</strong>, but this remains hypothesis-generating rather than experimentally validated AD evidence. <strong>Safety is a primary constraint</strong>: GAB1's established roles in oncogenesis, angiogenesis, fibrosis, and immune activation require systematic early screening. Therapeutic development should pursue <strong>precise, cell-specific, pathway-selective modulation</strong> rather than broad activation or inhibition, with ursolic acid representing the strongest existing mechanistic anchor for an AD-directed program.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GAB1 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

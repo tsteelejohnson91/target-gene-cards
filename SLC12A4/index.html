@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLC12A4 / KCC1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2e7fab;
+    --light: #e8f4fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f2e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 26px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 2px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f2e 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    opacity: 0.65;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 0.98rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #7dd3f8;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SLC12A4 &nbsp;|&nbsp; Potassium-Chloride Cotransporter KCC1</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unresolved</span>
+  </div>
+  <h1>SLC12A4 / KCC1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Unresolved Therapeutic Direction:</strong> Whether SLC12A4 should be activated or inhibited is context-dependent. Immune-clearance data favour activation; vascular/barrier and osmotic-stress contexts raise caution. Cell type and disease context must be defined before a therapeutic strategy can be adopted.
+    </div>
+
+    <p>SLC12A4, also known as KCC1, is a potassium-chloride cotransporter belonging to the SLC12 family. The available evidence does <em>not</em> provide direct demonstration that SLC12A4 participates in Alzheimer's disease (AD) mechanisms such as amyloid-β accumulation, tau pathology, synaptic degeneration, cognitive decline, or AD-specific microglial dysfunction. Its relevance to AD is therefore <strong>indirect and hypothesis-generating</strong>.</p>
+
+    <p>SLC12A4 is linked to chloride and potassium transport, intracellular chloride regulation, osmotic balance, cell-volume control, phagocytosis and efferocytosis, inflammatory programming, insulin-responsive membrane trafficking, vascular and barrier biology, and cellular metabolism. These processes overlap substantially with major AD mechanisms — particularly neuroinflammation, impaired debris clearance, metabolic dysfunction, and vascular injury — but the supplied text does not validate SLC12A4 as an AD mechanism or therapeutic target.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (viewBox 0 0 960 500):
+        Panel A: Upstream Kinase Cascade  x=10  w=280
+        Panel B: Core Biology / Branching  x=310  w=360
+        Panel C: AD-Relevant Outputs       x=690  w=260
+
+        NODE COUNT (max 16):
+        Panel A: 3 nodes (WNK1, OSR1/SPAK, SLC12A4 node)
+        Panel B: 6 nodes (SLC12A4 hub, L-rhamnose badge, Rac1/Cdc42, Efferocytosis, Cl⁻ Flux, PI3K-AKT)
+        Panel C: 5 nodes (Amyloid/Debris Clearance, Inflammatory Tone, Glucose Transport, Vascular Barrier, Osmotic Balance)
+        TOTAL = 14 ✓ (≤16)
+      -->
+      <svg viewBox="0 0 960 500" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SLC12A4 pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e7fab"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a4a6b"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: Upstream Kinase Cascade ═══ -->
+        <rect x="10" y="18" width="272" height="464" rx="12"
+              fill="rgba(26,74,107,0.06)" stroke="#1a4a6b" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="22" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#1a4a6b" letter-spacing="1.5">UPSTREAM KINASE CASCADE</text>
+
+        <!-- A1: WNK1 -->
+        <rect x="76" y="58" width="120" height="48" rx="7" fill="#dbeafe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="136" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="700" fill="#1a4a6b">WNK1</text>
+        <text x="136" y="94" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Osmosensor kinase</text>
+
+        <!-- arrow A1→A2 -->
+        <line x1="136" y1="106" x2="136" y2="148" stroke="#2e7fab" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- A2: OSR1/SPAK -->
+        <rect x="66" y="148" width="140" height="48" rx="7" fill="#dbeafe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="136" y="167" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="700" fill="#1a4a6b">OSR1 / SPAK</text>
+        <text x="136" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Downstream kinases</text>
+
+        <!-- arrow A2→A3 -->
+        <line x1="136" y1="196" x2="136" y2="240" stroke="#2e7fab" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- A3: Chloride Sensing -->
+        <rect x="56" y="240" width="160" height="48" rx="7" fill="#bfdbfe" stroke="#1a4a6b" stroke-width="1.6"/>
+        <text x="136" y="259" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="700" fill="#1a4a6b">Cl⁻ Sensing</text>
+        <text x="136" y="275" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Phospho-regulation of SLC12</text>
+
+        <!-- A4: PI3K-AKT (insulin) -->
+        <rect x="56" y="370" width="160" height="48" rx="7" fill="#dbeafe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="136" y="389" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="700" fill="#1a4a6b">PI3K–AKT</text>
+        <text x="136" y="405" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Insulin signalling</text>
+
+        <!-- ═══ PANEL B: Core SLC12A4 Biology ═══ -->
+        <rect x="298" y="18" width="358" height="464" rx="12"
+              fill="rgba(46,127,171,0.06)" stroke="#2e7fab" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="312" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#2e7fab" letter-spacing="1.5">CORE SLC12A4 BIOLOGY</text>
+
+        <!-- B1: SLC12A4/KCC1 hub -->
+        <rect x="364" y="58" width="160" height="52" rx="8" fill="#1a4a6b" stroke="#0a1f2e" stroke-width="1.8"/>
+        <text x="444" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#ffffff">SLC12A4 / KCC1</text>
+        <text x="444" y="98" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">K⁺–Cl⁻ cotransporter</text>
+
+        <!-- connector Cl⁻ Sensing → SLC12A4 hub (elbow through gutter) -->
+        <polyline points="216,264 282,264 282,84 364,84"
+                  fill="none" stroke="#1a4a6b" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+
+        <!-- connector PI3K-AKT → SLC12A4 hub (elbow through gutter) -->
+        <polyline points="216,394 282,394 282,102 364,102"
+                  fill="none" stroke="#2e7fab" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+
+        <!-- Branch 1: L-rhamnose → Rac1/Cdc42 → Phagocytosis/Efferocytosis -->
+        <!-- B2: L-Rhamnose activation -->
+        <rect x="308" y="158" width="126" height="44" rx="7" fill="#e0f2fe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="371" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0369a1">L-Rhamnose</text>
+        <text x="371" y="193" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Direct activator</text>
+
+        <!-- arrow B1 → B2 -->
+        <line x1="404" y1="110" x2="371" y2="158" stroke="#2e7fab" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B3: Rac1 / Cdc42 -->
+        <rect x="308" y="242" width="126" height="44" rx="7" fill="#dbeafe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="371" y="261" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1a4a6b">Rac1 / Cdc42</text>
+        <text x="371" y="277" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">GTPase activation</text>
+
+        <!-- arrow B2 → B3 -->
+        <line x1="371" y1="202" x2="371" y2="242" stroke="#2e7fab" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B4: Efferocytosis -->
+        <rect x="302" y="332" width="138" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="371" y="351" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0f766e">Efferocytosis</text>
+        <text x="371" y="367" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Apoptotic corpse uptake</text>
+
+        <!-- arrow B3 → B4 -->
+        <line x1="371" y1="286" x2="371" y2="332" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch 2: Cl⁻ Flux → Inflammatory State -->
+        <!-- B5: Cl⁻ / Osmotic Flux -->
+        <rect x="462" y="158" width="160" height="44" rx="7" fill="#e0f2fe" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="542" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0369a1">Cl⁻ / Osmotic Flux</text>
+        <text x="542" y="193" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Cell-volume regulation</text>
+
+        <!-- arrow B1 → B5 -->
+        <line x1="484" y1="110" x2="542" y2="158" stroke="#2e7fab" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B6: Inflammatory Programming -->
+        <rect x="458" y="242" width="168" height="44" rx="7" fill="#fef9c3" stroke="#b45309" stroke-width="1.4"/>
+        <text x="542" y="261" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#92400e">Inflammatory</text>
+        <text x="542" y="277" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Programming</text>
+
+        <!-- arrow B5 → B6 -->
+        <line x1="542" y1="202" x2="542" y2="242" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+        <!-- converging arrow B4 → shared zone (handled by panel C connector) -->
+        <!-- converging arrow B6 → shared zone (handled by panel C connector) -->
+
+        <!-- ═══ PANEL C: AD-Relevant Outputs ═══ -->
+        <rect x="672" y="18" width="278" height="464" rx="12"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="686" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#0f766e" letter-spacing="1.5">AD-RELEVANT OUTPUTS</text>
+
+        <!-- C1: Amyloid / Debris Clearance -->
+        <rect x="692" y="58" width="236" height="50" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="810" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0f766e">Amyloid / Debris Clearance</text>
+        <text x="810" y="96" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">(microglial efferocytosis — hypothetical)</text>
+
+        <!-- connector B4 → C1 (elbow through gutter) -->
+        <polyline points="440,354 656,354 656,83 692,83"
+                  fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- C2: Neuroinflammatory Tone -->
+        <rect x="692" y="162" width="236" height="50" rx="7" fill="#fef9c3" stroke="#b45309" stroke-width="1.4"/>
+        <text x="810" y="182" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#92400e">Neuroinflammatory Tone</text>
+        <text x="810" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#78350f">Pro- vs. anti-inflam. balance</text>
+
+        <!-- connector B6 → C2 -->
+        <polyline points="626,264 656,264 656,187 692,187"
+                  fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+        <!-- C3: Glucose Transport -->
+        <rect x="692" y="266" width="236" height="50" rx="7" fill="#e8f4fb" stroke="#2e7fab" stroke-width="1.4"/>
+        <text x="810" y="286" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1a4a6b">Glucose Transport</text>
+        <text x="810" y="304" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Insulin-responsive trafficking</text>
+
+        <!-- connector PI3K-AKT → C3 (elbow) -->
+        <polyline points="216,394 656,394 656,291 692,291"
+                  fill="none" stroke="#2e7fab" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+
+        <!-- C4: Vascular Barrier -->
+        <rect x="692" y="372" width="236" height="50" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="810" y="392" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#9b1c1c">Vascular Barrier</text>
+        <text x="810" y="410" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Tight-junction / VEGF (indirect)</text>
+
+        <!-- connector from B6 → C4 (elbow through gutter, clear path) -->
+        <polyline points="542,286 542,320 656,320 656,397 692,397"
+                  fill="none" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-warn)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Kinase Cascade:</strong> WNK1 senses osmotic stress and phosphorylates OSR1/SPAK, which in turn regulates SLC12 chloride sensing; insulin activates PI3K–AKT, recruiting SLC12A4 to the plasma membrane.
+      <strong>Panel B — Core SLC12A4 Biology (branching):</strong> SLC12A4/KCC1 is the central hub. <em>Left branch:</em> L-rhamnose directly activates SLC12A4, engaging Rac1/Cdc42 GTPases to drive efferocytosis. <em>Right branch:</em> Cl⁻/osmotic flux modulates inflammatory programming.
+      <strong>Panel C — AD-Relevant Outputs:</strong> Downstream readouts with AD relevance — amyloid/debris clearance (microglial hypothesis), neuroinflammatory tone, insulin-responsive glucose transport, and vascular barrier integrity. Dashed connectors indicate indirect or unvalidated links.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Immune Clearance Biology — Strongest AD Signal</h3>
+        <p>A WNK1–OSR1–SPAK–SLC12A2/SLC12A4 chloride-sensing pathway governs phagocyte responses to apoptotic corpses. Loss of SLC12A4 impaired apoptotic corpse uptake. If similar mechanisms operate in microglia, SLC12A4 could influence clearance of amyloid-β, apoptotic cells, and synaptic debris in AD.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>L-Rhamnose Activation Enhances Phagocytosis</h3>
+        <p>L-rhamnose directly bound and activated SLC12A4 in macrophages, increasing phagocytosis through Rac1 and Cdc42 activation and improving outcomes in sepsis models. This supports a therapeutic concept of SLC12A4 activation to enhance innate immune clearance, though this has not been tested in AD models or microglia.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ion Transport Links to Inflammatory State</h3>
+        <p>Chloride flux via SLC12A4 appears to shape not only phagocyte uptake capacity but also the inflammatory interpretation of cleared material. In AD, beneficial microglial clearance must avoid triggering chronic pro-inflammatory activation — making the relationship between Cl⁻ transport and inflammatory programming a critical variable.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Insulin-Responsive Trafficking &amp; Metabolic Relevance</h3>
+        <p>Insulin recruits SLC12A4/KCC1 to the plasma membrane via PI3K–AKT signalling, and KCC1 knockdown impairs insulin-stimulated glucose transport in adipocytes. This may be relevant to AD-associated insulin resistance if similar trafficking occurs in neurons, astrocytes, or microglia — but no such brain-cell evidence is currently provided.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Vascular &amp; Barrier Relevance — Indirect</h3>
+        <p>In diabetic retinopathy, bumetanide-sensitive SLC12A2/SLC12A4 pathways were associated with reduced VEGF, adhesion molecules, MMPs, apoptosis, and improved tight-junction integrity. However, SLC12A2 was the emphasized causal endothelial target; SLC12A4's independent vascular role remains unclear.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Direction Unresolved &amp; Context-Dependent</h3>
+        <p>Activation enhanced macrophage phagocytosis; loss impaired efferocytosis. Conversely, suppression of SLC12A2/SLC12A4 was protective in diabetic retinopathy, and KCC1 activation worsened sickle-cell pathology through cell-volume effects. Existing agents (bumetanide, DIOA) lack SLC12A4 selectivity; CNS-penetrant, isoform-selective modulators would be essential for AD development.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><span><strong>Do not classify SLC12A4 as an established AD target.</strong> Based on current evidence it is best described as an unvalidated candidate linked to mechanisms that overlap with AD biology, not a validated mechanism or therapeutic entry point.</span></li>
+      <li><span><strong>Prioritize testing in AD-relevant immune models.</strong> The most compelling hypothesis is that SLC12A4 modulation in microglia or CNS macrophage-like cells could alter amyloid/debris clearance and inflammatory tone — these experiments should be the first-line priority.</span></li>
+      <li><span><strong>Evaluate whether activation improves clearance without inducing neuroinflammation.</strong> Key assays should include amyloid-β uptake, apoptotic-cell efferocytosis, synaptic debris clearance, cytokine profiling, oxidative-stress markers, and microglial state transitions.</span></li>
+      <li><span><strong>Investigate SLC12A4 expression in human AD brain datasets.</strong> Single-cell or spatial transcriptomics across microglia, astrocytes, neurons, endothelial cells, pericytes, and infiltrating immune cells would clarify cell-type-specific expression and regulation.</span></li>
+      <li><span><strong>Test in amyloid and tau models before considering therapeutic action.</strong> Current evidence shows no effects on amyloid deposition, tau phosphorylation or aggregation, synaptic loss, neurodegeneration, or cognition. These gaps must be addressed experimentally.</span></li>
+      <li><span><strong>Clarify the activation-versus-inhibition question early.</strong> Immune-clearance data support possible activation; vascular/barrier and osmotic-stress contexts raise caution. A cell-type- and context-resolved pharmacological strategy must be defined before investment in drug development.</span></li>
+      <li><span><strong>Treat existing pharmacological tools with caution.</strong> Bumetanide and DIOA are not isoform-selective and carry significant off-target liabilities. CNS-penetrant, SLC12A4-selective chemical probes are a prerequisite for credible AD therapeutic development.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="verdict-label">Synthesis</p>
+      <p>
+        <strong>Overall Assessment —</strong> SLC12A4/KCC1 is a biologically plausible but <strong>entirely unvalidated</strong> candidate in the context of Alzheimer's disease. Its strongest AD-relevant signal resides in <strong>immune clearance biology</strong>: a WNK1–OSR1–SPAK–SLC12A4 axis regulates efferocytosis, and pharmacological activation via L-rhamnose enhances macrophage phagocytosis through Rac1/Cdc42. If analogous mechanisms operate in microglia, SLC12A4 could influence amyloid-β clearance, apoptotic-cell removal, and inflammatory tone in the AD brain. Secondary overlaps with <strong>insulin-responsive membrane trafficking</strong>, <strong>vascular barrier biology</strong>, and <strong>chloride-dependent osmotic homeostasis</strong> add biological breadth but do not narrow the therapeutic question. Critically, the <strong>direction of modulation</strong> — activation versus inhibition — is unresolved and context-dependent, existing pharmacological tools lack the selectivity required for CNS use, and <strong>no evidence links SLC12A4 directly to amyloid, tau, synaptic loss, or cognitive outcomes</strong>. Substantial target validation work — including microglial functional assays, human AD transcriptomic profiling, and in vivo amyloid/tau model studies — is required before SLC12A4 can be considered a serious therapeutic entry point for Alzheimer's disease.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  SLC12A4 / KCC1 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

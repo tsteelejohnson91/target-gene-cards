@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISYNA1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fc;
+    --danger-dark: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.38);
+    border: 1px solid rgba(255,160,160,0.38);
+    color: #ffc8c8;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.05rem;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 0;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: var(--slate);
+  }
+  .callout strong { color: var(--warning); }
+  p { margin-bottom: 16px; }
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .figure-caption {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    text-align: center;
+    line-height: 1.55;
+    padding: 0 8px;
+    margin-bottom: 0;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card-accent { border-color: var(--mid); background: var(--light); }
+  .card-danger { border-color: var(--danger-dark); background: var(--danger-light); }
+  .card-positive { border-color: var(--positive); background: var(--positive-light); }
+  .card-warning { border-color: var(--warning); background: var(--warning-light); }
+  .card-slate { border-color: var(--neutral-text); background: var(--neutral-bg); }
+  .card-blue { border-color: #3b82f6; background: #eff6ff; }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger-dark); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate h3 { color: var(--neutral-text); }
+  .card-blue h3 { color: #1d4ed8; }
+  .card p { font-size: 0.91rem; margin-bottom: 0; }
+  ol.takeaways { padding-left: 0; list-style: none; counter-reset: take; }
+  ol.takeaways li {
+    counter-increment: take;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.97rem;
+  }
+  ol.takeaways li:last-child { border-bottom: none; }
+  ol.takeaways li::before {
+    content: counter(take);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 56px;
+    line-height: 1.75;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #90bde0;
+    margin-bottom: 12px;
+  }
+  .verdict-banner p {
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+  }
+  .verdict-banner strong { color: #ffffff; }
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ISYNA1 &nbsp;|&nbsp; Inositol-3-Phosphate Synthase 1</span>
+    <span class="chip chip-danger">⚠ Unvalidated Target — Therapeutic Direction Unresolved</span>
+  </div>
+  <h1>ISYNA1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Caution — Unresolved Therapeutic Direction:</strong> ISYNA1 is a
+      <em>hypothesis-generating</em> candidate, not a validated AD target. The optimal
+      intervention direction (activation, inhibition, isoform correction, or no targeting)
+      remains unknown. Indiscriminate modulation could disrupt neuronal survival, immune
+      function, or phospholipid homeostasis.
+    </div>
+    <p>
+      ISYNA1 encodes myo-inositol-1-phosphate synthase, the <strong>rate-limiting enzyme for
+      de novo myo-inositol biosynthesis</strong> from glucose-6-phosphate. Its relevance to
+      Alzheimer's disease is primarily indirect, centering on myo-inositol availability,
+      phosphoinositide signaling, IP3-calcium signaling, phospholipid metabolism,
+      immune-cell regulation, brain aging networks, glucose-metabolic stress, and
+      epigenetic regulation.
+    </p>
+    <p>
+      The strongest AD-specific genetic evidence comes from a 2026 PRISM-xQTL study
+      integrating pleiotropy, co-localization, Mendelian randomization, mediation, and
+      multiple QTL layers across AD and immune-mediated disease loci. ISYNA1 was prioritized
+      near AD/immune pleiotropic variants with splicing and single-cell associations.
+      Notably, <strong>FCER1G received stronger validation</strong> in that same study, and
+      ISYNA1 was not established as the leading causal target.
+    </p>
+    <p>
+      The available evidence does <em>not</em> prove that ISYNA1 expression, splicing,
+      methylation, or activity is altered in AD brain, nor that manipulating ISYNA1 affects
+      amyloid-β, tau, synaptic loss, microglial activation, cognition, or neurodegeneration.
+      ISYNA1 is best viewed as a candidate metabolic/regulatory gene linking noncoding
+      genetic risk, immune biology, and neuronal/glial inositol-phosphoinositide metabolism.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (left→right):
+        Panel A (Upstream Inputs):  ~x=18, w=200
+        Panel B (Core Enzyme & Isoforms): ~x=240, w=210
+        Panel C (Downstream Signaling Branches): ~x=472, w=240
+        Panel D (AD-Relevant Outcomes): ~x=734, w=150
+
+        NODE COUNT PLAN (max 16):
+        1. Glucose-6-P (A)
+        2. ISYNA1 α (B)
+        3. ISYNA1 γ (B) — badge only, not a node → counted as annotation
+        4. myo-Inositol (B)
+        5. PI / Phosphoinositides (C-top)
+        6. IP3 / Ca²⁺ (C-top)
+        7. Endolys / Autophagy (C-mid)
+        8. Innate Immune (C-bottom)
+        9. AD Genetic Risk (A)
+        10. Epigenetic / Splicing (A)
+        11. ER Stress / ERK (C-mid)
+        12. Phospholipid Remodel (C-bottom2)
+        13. Neuroinflammation (D)
+        14. Synaptic / Cognitive (D)
+        15. Brain Aging Network (D)
+
+        That is 15 nodes. One annotation badge. Total nodes = 15 ✓
+
+        Row positions (cy):
+          Row1: y=90  (top row in panel)
+          Row2: y=175
+          Row3: y=260
+          Row4: y=340
+          Row5: y=415
+
+        Panel A: x=18-238
+          Node1 (Glucose-6-P):   cx=128, cy=90,  w=150, h=42
+          Node9 (AD Genetic Risk): cx=128, cy=210, w=150, h=42
+          Node10 (Epigenetic/Splicing): cx=128, cy=330, w=150, h=42
+
+        Panel B: x=250-450
+          Node2 (ISYNA1 α): cx=350, cy=175, w=150, h=42
+          Node4 (myo-Inositol): cx=350, cy=310, w=150, h=42
+
+        Panel C: x=462-694
+          Node5 (PI/Phosphoinositides): cx=578, cy=90,  w=168, h=42
+          Node6 (IP3/Ca²⁺ Signaling):  cx=578, cy=175, w=168, h=42
+          Node7 (Endolys/Autophagy):   cx=578, cy=260, w=168, h=42
+          Node8 (Innate Immune):       cx=578, cy=345, w=168, h=42
+          Node11 (ER Stress/ERK):      cx=578, cy=430, w=168, h=42
+
+        Panel D: x=706-880
+          Node13 (Neuroinflammation): cx=793, cy=175, w=150, h=42
+          Node14 (Synaptic/Cognitive): cx=793, cy=280, w=150, h=42
+          Node15 (Brain Aging Network):cx=793, cy=385, w=150, h=42
+
+        ARROWS (checking paths):
+        A→B:
+          Node1→Node2: (128,111)→(275,175): right/angled — passes through Panel A/B gutter. Check: gutter is x=239-249, clear. ✓
+          Node9→Node2: (128,231)→(275,175): angled upward through gutter. ✓
+          Node10→Node2: (128,351)→(275,175): angled upward — check no box at midpath. Goes through gutter x=238-250. ✓ 
+        B:
+          Node2→Node4: (350,196)→(350,289): vertical, clear ✓
+        B→C:
+          Node4→Node5: (425,310)→(494,90): diagonal goes upward steeply — risk of hitting Node6 (578,175). 
+            Better: route via elbow: right from Node4 (425,310) to x=455, then up to y=90, then right to Node5 (494,90). Actually Node5 left edge = 494. Safer: straight line from (425,310) → let me check if line passes through any node.
+            Line from (425,310) to (494,90): parametric at Node6 (578,175) — that point is NOT on this line (x would be much larger at y=175). Safe ✓
+          Node4→Node6: from (425,310)→(494,175): check against Node5 box (578±84, 90±21) → line passes at x≈459 when y=175, not near Node5. ✓
+          Node4→Node7: (425,310)→(494,260): short hop right ✓
+          Node4→Node8: (425,310)→(494,345): slight right-down ✓
+          Node4→Node11: (425,310)→(494,430): right-down, clear ✓
+        C→D:
+          Node6→Node13: (662,175)→(718,175): horizontal ✓
+          Node8→Node13: (662,345)→elbow up to (700,175)→(718,175): check against Node14 box (793±75, 280±21). Elbow at x=700 is left of Node13. Better: Node8→Node14 direct: (662,345)→(718,280): check if passes through Node13 (793±75, 175±21) — at x=718, y≈280, Node13 bottom is 196 — safe ✓
+          Node7→Node14: (662,260)→(718,280): slight right-down ✓
+          Node11→Node14: (662,430)→elbow: go right to x=700, up to y=280, right to (718,280). Passes through Panel D region, check Node15 (793,385±21). At x=700, y goes from 430 to 280 — left of all D nodes. ✓
+
+        Let me simplify connections to ensure clarity and no path violations.
+      -->
+      <svg viewBox="0 0 900 490" width="860" height="460" xmlns="http://www.w3.org/2000/svg" aria-label="ISYNA1 pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-dk" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Inputs -->
+        <rect x="12" y="18" width="206" height="448" rx="10" fill="#e8f2fc" fill-opacity="0.45" stroke="#2e6da4" stroke-width="1" stroke-opacity="0.5"/>
+        <text x="115" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A — UPSTREAM INPUTS</text>
+
+        <!-- Panel B: Core Enzyme -->
+        <rect x="232" y="18" width="214" height="448" rx="10" fill="#dbeafe" fill-opacity="0.35" stroke="#2e6da4" stroke-width="1" stroke-opacity="0.5"/>
+        <text x="339" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">B — CORE ENZYME</text>
+
+        <!-- Panel C: Downstream Signaling -->
+        <rect x="460" y="18" width="224" height="448" rx="10" fill="#ecfdf5" fill-opacity="0.45" stroke="#0f766e" stroke-width="1" stroke-opacity="0.5"/>
+        <text x="572" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#0f766e" letter-spacing="0.1em">C — DOWNSTREAM PATHWAYS</text>
+
+        <!-- Panel D: AD-Relevant Outcomes -->
+        <rect x="698" y="18" width="192" height="448" rx="10" fill="#fff7ed" fill-opacity="0.55" stroke="#b45309" stroke-width="1" stroke-opacity="0.5"/>
+        <text x="794" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#b45309" letter-spacing="0.1em">D — AD-RELEVANT OUTCOMES</text>
+
+        <!-- ===================== NODES ===================== -->
+
+        <!-- A1: Glucose-6-Phosphate -->
+        <rect x="40" y="68" width="152" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="116" y="85" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Glucose-6-Phosphate</text>
+        <text x="116" y="100" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#bfdbfe">(substrate)</text>
+
+        <!-- A2: AD Genetic Risk -->
+        <rect x="40" y="198" width="152" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="116" y="215" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1a3a5c">AD/Immune Genetic</text>
+        <text x="116" y="230" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#2e6da4">Risk Loci (xQTL)</text>
+
+        <!-- A3: Epigenetic / Splicing Regulation -->
+        <rect x="40" y="328" width="152" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="116" y="345" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1a3a5c">Epigenetic &amp; Splicing</text>
+        <text x="116" y="360" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#2e6da4">Regulation</text>
+
+        <!-- B1: ISYNA1 α (canonical enzyme) -->
+        <rect x="252" y="158" width="172" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="338" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#ffffff" font-weight="bold">ISYNA1 α</text>
+        <text x="338" y="191" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#bfdbfe">Myo-inositol synthase</text>
+
+        <!-- B2: myo-Inositol pool -->
+        <rect x="252" y="298" width="172" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="338" y="315" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#ffffff">Myo-Inositol Pool</text>
+        <text x="338" y="331" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#bfdbfe">(intracellular)</text>
+
+        <!-- C1: PI / Phosphoinositides -->
+        <rect x="476" y="68" width="190" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="571" y="85" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">PI / Phosphoinositides</text>
+        <text x="571" y="100" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Membrane signaling lipids</text>
+
+        <!-- C2: IP3 / Ca2+ Signaling -->
+        <rect x="476" y="158" width="190" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="571" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">IP3 / Ca²⁺ Signaling</text>
+        <text x="571" y="191" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Calcium dynamics</text>
+
+        <!-- C3: Endolysosomal / Autophagy -->
+        <rect x="476" y="248" width="190" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="571" y="265" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">Endolys. / Autophagy</text>
+        <text x="571" y="281" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Protein clearance</text>
+
+        <!-- C4: Innate Immune Function -->
+        <rect x="476" y="338" width="190" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="571" y="355" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">Innate Immune Function</text>
+        <text x="571" y="371" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Phagocytosis / resp. burst</text>
+
+        <!-- C5: ER Stress / ERK Signaling -->
+        <rect x="476" y="428" width="190" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="571" y="445" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">ER Stress / ERK–MAPK</text>
+        <text x="571" y="461" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Inositol deprivation response</text>
+
+        <!-- D1: Neuroinflammation -->
+        <rect x="714" y="113" width="162" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.5"/>
+        <text x="795" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Neuroinflammation</text>
+        <text x="795" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#b45309">Microglia / amyloid</text>
+
+        <!-- D2: Synaptic / Cognitive -->
+        <rect x="714" y="243" width="162" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.5"/>
+        <text x="795" y="260" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Synaptic &amp; Cognitive</text>
+        <text x="795" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#b45309">Ca²⁺-dependent function</text>
+
+        <!-- D3: Brain Aging Network -->
+        <rect x="714" y="373" width="162" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.5"/>
+        <text x="795" y="390" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Brain Aging Network</text>
+        <text x="795" y="406" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#b45309">AKT1, PIK3R3, IMPA2…</text>
+
+        <!-- ===================== ARROWS ===================== -->
+        <!-- A1 Glucose-6-P → B1 ISYNA1 α: route right through gutter, slight angle -->
+        <!-- from right edge of A1 (192,90) to left edge of B1 (252,180): elbow at x=222 -->
+        <polyline points="192,90 222,90 222,180 252,180" fill="none" stroke="#1a3a5c" stroke-width="1.6" marker-end="url(#arr-dk)"/>
+
+        <!-- A2 AD Genetic Risk → B1 ISYNA1 α: right edge (192,220) to left edge (252,180) -->
+        <!-- straight diagonal through gutter x=192-252, no node there -->
+        <line x1="192" y1="220" x2="252" y2="180" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- A3 Epigenetic → B1 ISYNA1 α: (192,350)→ elbow at x=222,y=350 → up to y=202 → (252,202) -->
+        <polyline points="192,350 222,350 222,202 252,202" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- B1 ISYNA1 α → B2 myo-Inositol: vertical (338,202)→(338,298) -->
+        <line x1="338" y1="202" x2="338" y2="298" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arr-dk)"/>
+
+        <!-- B2 myo-Inositol → C1 PI/Phosphoinositides: (424,308)→(476,90): elbow at x=448, up then right -->
+        <polyline points="424,308 448,308 448,90 476,90" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-pos)"/>
+
+        <!-- B2 myo-Inositol → C2 IP3/Ca2+: (424,320)→(476,180) diagonal through gutter -->
+        <line x1="424" y1="320" x2="476" y2="180" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B2 myo-Inositol → C3 Endolys: (424,320)→(476,270) slight diagonal -->
+        <line x1="424" y1="320" x2="476" y2="270" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B2 myo-Inositol → C4 Innate Immune: (424,330)→(476,360) -->
+        <line x1="424" y1="330" x2="476" y2="360" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B2 myo-Inositol → C5 ER Stress: (424,335)→(476,450) elbow -->
+        <polyline points="424,335 448,335 448,450 476,450" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- C2 IP3/Ca2+ → D2 Synaptic: (666,175)→(714,265) diagonal — check no node in path -->
+        <!-- path goes x=666→714, y=175→265. D1 box is y=113-157, at x=714 we arrive at 265. 
+             At x=666, y=175; D1 left edge is x=714. No overlap. ✓ -->
+        <line x1="666" y1="180" x2="714" y2="260" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C4 Innate Immune → D1 Neuroinflammation: (666,355)→ elbow up to y=135 → (714,135) -->
+        <polyline points="666,355 690,355 690,135 714,135" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C1 PI → D1 Neuroinflammation: (666,90)→(714,120) -->
+        <line x1="666" y1="90" x2="714" y2="120" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C5 ER Stress → D3 Brain Aging: (666,450)→(714,390) diagonal -->
+        <line x1="666" y1="450" x2="714" y2="395" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C3 Endolys → D2 Synaptic: (666,270)→(714,265) horizontal-ish -->
+        <line x1="666" y1="265" x2="714" y2="265" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Small annotation badge in Panel B — γ isoform note, placed at bottom of panel B, clear of all nodes -->
+        <!-- B nodes: B1 y=158-202, B2 y=298-342. Space at y=420-460 in panel B is clear. -->
+        <rect x="256" y="420" width="168" height="34" rx="6" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+        <text x="340" y="434" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1a3a5c" font-style="italic">γ isoform: lacks catalytic</text>
+        <text x="340" y="447" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1a3a5c" font-style="italic">domain → inhibits α via NAD⁺</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Inputs:</strong> Glucose-6-phosphate is the biosynthetic substrate; AD/immune genetic risk loci (PRISM-xQTL) and epigenetic/splicing regulation converge on ISYNA1. &nbsp;|&nbsp;
+      <strong>Panel B — Core Enzyme:</strong> ISYNA1 α (canonical isoform) converts substrate into the intracellular myo-inositol pool; the γ isoform (annotation badge) lacks the catalytic domain and may inhibit α via NAD⁺ competition. &nbsp;|&nbsp;
+      <strong>Panel C — Downstream Pathways:</strong> The myo-inositol pool branches into five parallel downstream arms: phosphoinositide membrane lipids, IP3/Ca²⁺ signaling, endolysosomal/autophagy function, innate immune activation, and ER stress/ERK–MAPK responses. &nbsp;|&nbsp;
+      <strong>Panel D — AD-Relevant Outcomes:</strong> These branches converge on three AD-relevant outcome domains: neuroinflammation (microglia/amyloid handling), synaptic and cognitive function (calcium-dependent), and brain aging gene-network co-regulation (AKT1, PIK3R3, IMPA2, and related genes).
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Rate-Limiting Biosynthetic Role</h3>
+        <p>ISYNA1 controls de novo myo-inositol synthesis from glucose-6-phosphate, making it the upstream determinant of intracellular inositol pools and a gatekeeper for phosphoinositide-cycle substrate availability across neurons, glia, and immune cells.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Phosphoinositide &amp; Calcium Signaling Hub</h3>
+        <p>Myo-inositol is the precursor for phosphatidylinositol, phosphoinositides, and IP3, linking ISYNA1 to membrane signaling, calcium release, phospholipid remodeling, autophagy/endolysosomal biology, and cellular stress pathways that overlap with AD mechanisms.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Preliminary Genetic Evidence Only</h3>
+        <p>The 2026 PRISM-xQTL study placed ISYNA1 near AD/immune pleiotropic variants with splicing and single-cell signals, but did not specify the causal variant, tissue, direction of effect, or whether ISYNA1 passed Mendelian randomization criteria. FCER1G received stronger validation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Immune &amp; Microglial Relevance</h3>
+        <p>Macrophage studies show that ISYNA1-linked myo-inositol synthesis influences innate immune functions including respiratory burst and phagocytosis — processes directly relevant to microglial neuroinflammation, amyloid handling, and synaptic pruning in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Brain Aging Gene Network</h3>
+        <p>Brain-aging datasets place ISYNA1 within a coordinated phosphoinositide metabolic gene network in human dorsolateral prefrontal cortex, co-clustering with AKT1, PIK3R3, PLCD1, ITPKB, IMPA2, INPPL1, and PI4KB — supporting aging-related signaling relevance, though not AD causality.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Complex Isoform &amp; Regulatory Architecture</h3>
+        <p>ISYNA1 is regulated by epigenetic methylation, IP6K1-linked transcriptional control, p53 stress responses, E2F1/Rb promoter control, and alternative splicing. A shorter γ isoform lacking the catalytic domain can negatively modulate the canonical α isoform, potentially through NAD⁺ competition — meaning total expression may not reflect enzymatic output.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <strong>Treat as hypothesis-generating, not validated.</strong> ISYNA1 is a plausible mechanistic candidate linking AD/immune genetic regulation, innate immune function, brain aging, and phosphoinositide signaling — but it is not yet a clinically actionable Alzheimer's disease target.
+      </li>
+      <li>
+        <strong>Prioritize human AD-tissue validation.</strong> Obtain brain-region expression, splicing, methylation, and proteomics data, and establish genotype-QTL links across neurons, astrocytes, oligodendrocytes, endothelial cells, microglia, and peripheral immune cells using single-cell and single-nucleus datasets.
+      </li>
+      <li>
+        <strong>Correlate with core AD phenotypes.</strong> Determine whether ISYNA1 changes co-vary with amyloid-β burden, tau pathology, synaptic markers, neuroinflammation, cognitive decline, and disease stage before investing in mechanistic follow-up.
+      </li>
+      <li>
+        <strong>Test causality in AD-relevant models.</strong> Modulate ISYNA1 expression, enzyme activity, or isoform balance in neurons and microglia; measure phosphoinositide signaling, IP3-calcium dynamics, endolysosomal/autophagy function, inflammatory activation, amyloid handling, tau biology, and cell viability.
+      </li>
+      <li>
+        <strong>Evaluate the broader myo-inositol axis.</strong> Study the full network — inositol supplementation, SMIT1/SLC5A3, SMIT2, HMIT, IMPA enzymes, IP6K1, and phosphoinositide-cycle enzymes — rather than ISYNA1 in isolation.
+      </li>
+      <li>
+        <strong>Investigate cell-type and disease-stage specificity.</strong> Microglia may show immune-related effects; neurons may show phosphoinositide/calcium effects; astrocytes may show osmolyte or metabolic effects. Effects may differ by disease stage.
+      </li>
+      <li>
+        <strong>Use MRS brain myo-inositol measurements</strong> alongside molecular ISYNA1 data to determine whether ISYNA1 expression or splicing actually contributes to altered tissue inositol levels in living AD brain.
+      </li>
+      <li>
+        <strong>Avoid premature therapeutic commitment.</strong> The optimal direction — activation, inhibition, isoform correction, transporter modulation, or no direct targeting — is unresolved. Establish causality versus compensation before drug development; indiscriminate modulation risks disrupting neuronal survival and membrane homeostasis.
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <p class="verdict-lead">Overall Assessment — ISYNA1 in Alzheimer's Disease</p>
+      <p>
+        ISYNA1 represents a <strong>biologically plausible but insufficiently validated</strong>
+        Alzheimer's disease candidate. Its role as the rate-limiting enzyme in de novo myo-inositol
+        biosynthesis connects it to a rich network of AD-relevant biology — including
+        <strong>phosphoinositide and IP3-calcium signaling, immune and microglial function,
+        endolysosomal/autophagy pathways, and brain aging gene networks</strong> — but these
+        connections are largely mechanistic inferences rather than direct AD evidence. The strongest
+        genetic support, from the 2026 PRISM-xQTL study, is <strong>preliminary and indirect</strong>,
+        identifying splicing and single-cell regulatory signals near pleiotropic loci without
+        establishing ISYNA1 as causal. Compounding uncertainty, <strong>complex isoform biology
+        (γ vs. α), epigenetic and transcriptional regulation, and glucose-metabolic context-dependence</strong>
+        mean that expression levels alone are poor proxies for enzymatic function. The field
+        should invest in rigorous human-tissue validation and causal modelling in AD models
+        before considering ISYNA1 a tractable therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ISYNA1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

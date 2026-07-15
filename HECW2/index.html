@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HECW2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6c3fbf;
+    --light: #ede8f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chips {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2d9f3;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.7;
+    color: #e2d9f3;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 28px 40px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* BODY TEXT */
+  p { margin-bottom: 1em; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 14px 12px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid transparent;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-neutral { background: var(--neutral-bg); border-left-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-warning { background: var(--warning-light); border-left-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  /* TAKEAWAYS */
+  ol.takeaways { padding-left: 0; list-style: none; counter-reset: takeaway; }
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.96rem;
+  }
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0520 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+  .verdict p { color: #e2d9f3; line-height: 1.8; font-size: 0.98rem; }
+  .verdict strong { color: #d8b4fe; }
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 24px;
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: HECW2 &nbsp;|&nbsp; HECT, C2 and WW Domain Containing E3 Ubiquitin Ligase 2</span>
+    <span class="chip chip-danger">⚠ Therapeutic directionality unresolved</span>
+  </div>
+  <h1>HECW2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety / Interpretive Caution:</strong> Global HECW2 inhibition carries significant risk. Loss-of-function variants cause severe neurodevelopmental disease; HECW2 protein stabilises endothelial junctions; and context-dependent effects mean that knockdown is beneficial in some models yet harmful in others. Therapeutic directionality must be resolved before any intervention is designed.
+    </div>
+
+    <p>HECW2 is best supported as a <em>hypothesis-generating Alzheimer's disease (AD) candidate</em> rather than an established AD gene, biomarker, or therapeutic target. One AD-focused transcriptomic study identified HECW2 as a ubiquitin–proteasome system (UPS)-related hub gene associated with AD clinical features and included it in a multi-gene diagnostic/severity-prediction model, while much of the remaining literature links HECW2 indirectly to AD-relevant mechanisms without direct AD validation.</p>
+
+    <p>HECW2 encodes a HECT-, C2-, and WW-domain-containing E3 ubiquitin protein ligase (also called NEDL2/Nedd4-like ligase 2). Its strongest mechanistic relevance to AD is its role in ubiquitination-dependent protein turnover, proteasomal degradation, and protein homeostasis — processes central to AD biology because the disease involves impaired proteostasis and accumulation of aggregation-prone proteins. However, the current evidence does not show that HECW2 directly regulates APP, amyloid-β, tau, presenilins, APOE, BACE1, or other canonical AD substrates.</p>
+
+    <p>Beyond proteostasis, HECW2 is linked to nervous-system development, p73-related neuronal biology, DNA-damage signalling, apoptosis, autophagy, immune/inflammatory regulation, RNA modification, noncoding RNA networks, endothelial and blood–brain-barrier biology, vascular/ischemic disease, and cellular metabolism. These pathways overlap substantially with known AD mechanisms, but most evidence derives from neurodevelopmental disorders, cancer, endothelial injury, stroke, hepatic fibrosis, hemangioma, and alcohol use disorder.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="11" aria-label="HECW2 mechanism diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6c3fbf"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Core Enzymatic Identity -->
+          <rect x="10" y="10" width="200" height="210" rx="10" fill="#ede8f8" fill-opacity="0.55" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="110" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#3b1f6e" letter-spacing="0.08em">A · CORE IDENTITY</text>
+
+          <!-- Node A1: HECW2/NEDL2 -->
+          <rect x="30" y="35" width="160" height="38" rx="6" fill="#d8b4fe" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="110" y="50" text-anchor="middle" font-weight="700" fill="#1e293b">HECW2 / NEDL2</text>
+          <text x="110" y="64" text-anchor="middle" fill="#3b1f6e">HECT E3 Ubiquitin Ligase</text>
+
+          <!-- Arrow A1 → A2 -->
+          <line x1="110" y1="73" x2="110" y2="90" stroke="#6c3fbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: UPS / Proteostasis -->
+          <rect x="30" y="90" width="160" height="38" rx="6" fill="#ede8f8" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="110" y="104" text-anchor="middle" fill="#1e293b">UPS / Proteostasis</text>
+          <text x="110" y="118" text-anchor="middle" fill="#3b1f6e">Ubiquitin–Proteasome</text>
+
+          <!-- Arrow A2 → A3 -->
+          <line x1="110" y1="128" x2="110" y2="145" stroke="#6c3fbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Key Substrates -->
+          <rect x="30" y="145" width="160" height="38" rx="6" fill="#ede8f8" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="110" y="159" text-anchor="middle" fill="#1e293b">Substrate Targets</text>
+          <text x="110" y="173" text-anchor="middle" fill="#3b1f6e">ALKBH5, lamin B1, ATR…</text>
+
+          <!-- Panel B: Downstream Branches -->
+          <rect x="225" y="10" width="450" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#0f766e" letter-spacing="0.08em">B · DOWNSTREAM MECHANISMS &amp; DISEASE LINKS</text>
+
+          <!-- Branch 1: Neurological -->
+          <!-- Node B1 -->
+          <rect x="238" y="35" width="130" height="38" rx="6" fill="#bbf7d0" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="303" y="49" text-anchor="middle" fill="#1e293b">p73 Stabilisation</text>
+          <text x="303" y="63" text-anchor="middle" fill="#065f46">Neuronal survival/dev</text>
+
+          <!-- Arrow B1 → B2 -->
+          <line x1="303" y1="73" x2="303" y2="90" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B2 -->
+          <rect x="238" y="90" width="130" height="38" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="303" y="104" text-anchor="middle" fill="#1e293b">Neurodevelopment</text>
+          <text x="303" y="118" text-anchor="middle" fill="#065f46">Seizures, DD, hypotonia</text>
+
+          <!-- Arrow B2 → B3 -->
+          <line x1="303" y1="128" x2="303" y2="145" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B3 -->
+          <rect x="238" y="145" width="130" height="38" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="303" y="159" text-anchor="middle" fill="#1e293b">DNA-Damage /</text>
+          <text x="303" y="173" text-anchor="middle" fill="#065f46">Nuclear Stress (ATR)</text>
+
+          <!-- Branch 2: circHECW2 / Endothelial -->
+          <!-- Node B4 -->
+          <rect x="393" y="35" width="130" height="38" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="458" y="49" text-anchor="middle" fill="#1e293b">circHECW2</text>
+          <text x="458" y="63" text-anchor="middle" fill="#7f1d1d">Noncoding RNA locus</text>
+
+          <!-- Arrow B4 → B5 -->
+          <line x1="458" y1="73" x2="458" y2="90" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B5 -->
+          <rect x="393" y="90" width="130" height="38" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="458" y="104" text-anchor="middle" fill="#1e293b">Endothelial Injury</text>
+          <text x="458" y="118" text-anchor="middle" fill="#7f1d1d">miR-30e-5p, miR-204-5p</text>
+
+          <!-- Arrow B5 → B6 -->
+          <line x1="458" y1="128" x2="458" y2="145" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B6 -->
+          <rect x="393" y="145" width="130" height="38" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="458" y="159" text-anchor="middle" fill="#1e293b">BBB / EndoMT</text>
+          <text x="458" y="173" text-anchor="middle" fill="#7f1d1d">Inflammation, apoptosis</text>
+
+          <!-- Branch 3: RNA / Metabolic -->
+          <!-- Node B7 -->
+          <rect x="548" y="35" width="115" height="38" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="605" y="49" text-anchor="middle" fill="#1e293b">ALKBH5 ubiquit.</text>
+          <text x="605" y="63" text-anchor="middle" fill="#1e3a8a">m6A RNA methyl.</text>
+
+          <!-- Arrow B7 → B8 -->
+          <line x1="605" y1="73" x2="605" y2="90" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node B8 -->
+          <rect x="548" y="90" width="115" height="38" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="605" y="104" text-anchor="middle" fill="#1e293b">LDHA Glycolysis</text>
+          <text x="605" y="118" text-anchor="middle" fill="#1e3a8a">Glucose / ATP / lactate</text>
+
+          <!-- Arrow B8 → B9 -->
+          <line x1="605" y1="128" x2="605" y2="145" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node B9 -->
+          <rect x="548" y="145" width="115" height="38" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="605" y="159" text-anchor="middle" fill="#1e293b">Immune / Inflamm.</text>
+          <text x="605" y="173" text-anchor="middle" fill="#1e3a8a">Neut., mono., B/T cells</text>
+
+          <!-- Convergence zone -->
+          <!-- Arrows from B3, B6, B9 converging down to shared outcome -->
+          <line x1="303" y1="183" x2="303" y2="215" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="458" y1="183" x2="458" y2="215" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="605" y1="183" x2="605" y2="215" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Horizontal connector line at y=215 -->
+          <line x1="303" y1="215" x2="605" y2="215" stroke="#64748b" stroke-width="1.2"/>
+
+          <!-- Arrow down to convergence node -->
+          <line x1="454" y1="215" x2="454" y2="232" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Convergence Node: AD-Adjacent Mechanisms -->
+          <rect x="334" y="232" width="240" height="40" rx="6" fill="#ede8f8" stroke="#6c3fbf" stroke-width="1.5"/>
+          <text x="454" y="247" text-anchor="middle" font-weight="700" fill="#3b1f6e">AD-Adjacent Mechanisms</text>
+          <text x="454" y="262" text-anchor="middle" fill="#1e293b">Proteostasis · BBB · Neuroimmune · Metabolism</text>
+
+          <!-- Arrow to AD biomarker node -->
+          <line x1="454" y1="272" x2="454" y2="292" stroke="#6c3fbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Panel C: AD Evidence -->
+          <rect x="225" y="292" width="450" height="105" rx="10" fill="#faf5ff" fill-opacity="0.6" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="450" y="310" text-anchor="middle" font-weight="700" font-size="9" fill="#3b1f6e" letter-spacing="0.08em">C · AD EVIDENCE &amp; STATUS</text>
+
+          <!-- Node C1 -->
+          <rect x="238" y="316" width="130" height="38" rx="6" fill="#d8b4fe" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="303" y="330" text-anchor="middle" fill="#1e293b">UPS Biomarker</text>
+          <text x="303" y="344" text-anchor="middle" fill="#3b1f6e">USP3·HECW2·PSMB7</text>
+
+          <!-- Node C2 -->
+          <rect x="394" y="316" width="130" height="38" rx="6" fill="#ede8f8" stroke="#6c3fbf" stroke-width="1.2"/>
+          <text x="459" y="330" text-anchor="middle" fill="#1e293b">No Direct Substrate</text>
+          <text x="459" y="344" text-anchor="middle" fill="#3b1f6e">APP / tau / APOE unshown</text>
+
+          <!-- Node C3 -->
+          <rect x="549" y="316" width="115" height="38" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="606" y="330" text-anchor="middle" fill="#1e293b">Exploratory</text>
+          <text x="606" y="344" text-anchor="middle" fill="#7f1d1d">Not validated target</text>
+
+          <!-- Connector from convergence node to C1 (goes straight down then right — using elbow) -->
+          <line x1="454" y1="292" x2="454" y2="306" stroke="#6c3fbf" stroke-width="1.2"/>
+          <line x1="303" y1="306" x2="664" y2="306" stroke="#6c3fbf" stroke-width="1.2"/>
+          <line x1="303" y1="306" x2="303" y2="316" stroke="#6c3fbf" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="459" y1="306" x2="459" y2="316" stroke="#6c3fbf" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="606" y1="306" x2="606" y2="316" stroke="#991b1b" stroke-width="1.2" marker-end="url(#arr-red)"/>
+
+          <!-- Arrow from Panel A (A2) into Panel B convergence: elbow route -->
+          <!-- A2 centre right edge → horizontal through gutter → B convergence -->
+          <line x1="190" y1="109" x2="210" y2="109" stroke="#6c3fbf" stroke-width="1.2"/>
+          <line x1="210" y1="109" x2="210" y2="252" stroke="#6c3fbf" stroke-width="1.2"/>
+          <line x1="210" y1="252" x2="334" y2="252" stroke="#6c3fbf" stroke-width="1.2" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Fig. 1.</strong>
+        <strong>Panel A</strong> shows HECW2/NEDL2's core enzymatic identity as a HECT-type E3 ubiquitin ligase, its UPS/proteostasis function, and representative substrate targets.
+        <strong>Panel B</strong> organises three parallel downstream branches: neurological/p73 signalling and DNA-damage response (green, left); circHECW2-driven endothelial injury, BBB disruption, and EndoMT (red, centre); and RNA-modification/metabolic and immune-inflammatory biology (blue, right). All three branches converge on a shared node of "AD-adjacent mechanisms."
+        <strong>Panel C</strong> summarises the current AD-specific evidence status: a multi-gene UPS biomarker signal, the absence of a validated direct substrate link to APP/tau/APOE, and the overall exploratory/unvalidated designation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Evidence Is Biomarker-Oriented, Not Causal</h3>
+        <p>An AD transcriptomic study identified USP3, HECW2, and PSMB7 as UPS-related hub genes correlated with AD clinical features and incorporated them into a multi-gene risk-score model for diagnosis and severity prediction. This supports HECW2 as part of a <em>candidate multi-gene AD biomarker signature</em>, not as a proven disease driver.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Core Mechanism: Ubiquitin-Mediated Proteostasis</h3>
+        <p>As a HECT-type E3 ligase, HECW2 determines substrate specificity for ubiquitination and proteasomal degradation. In non-AD systems, validated substrates include ALKBH5, fibronectin, lamin B1, PCNA, HP1α/β, KPNA1, MORC4, and ATR kinase. No AD-specific substrate chain (APP, tau, BACE1) has been established.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurological Importance: Loss-of-Function Phenotypes</h3>
+        <p>Pathogenic HECW2 variants are associated with severe neurodevelopmental phenotypes including developmental delay, intellectual disability, hypotonia, absent language, seizures, epileptic encephalopathy, infantile spasms, microcephaly, cortical/cerebellar atrophy, and Rett-like features — confirming nervous-system integrity roles.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>p73 &amp; DNA-Damage Pathways: Indirect AD Relevance</h3>
+        <p>HECW2/NEDL2 stabilises p73 transcriptional activity, relevant to neuronal differentiation and apoptosis. HECW2 also promotes proteasomal degradation of ATR kinase and regulates chromatin-associated proteins (HP1α/β, PCNA, lamin B1). DNA damage and nuclear dysfunction are implicated in AD, but these links remain indirect.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>circHECW2: Vascular &amp; BBB Injury Axis</h3>
+        <p>CircHECW2 is upregulated in LPS-induced brain microvascular endothelial cell injury. Its silencing reduces apoptosis, inflammation, autophagy, and EndoMT through miR-30e-5p/NEGR1, miR-204-5p/NR4A1, and MIR30D/ATG5 axes. In vivo hippocampal siRNA suppressed LPS-induced EndoMT — highly relevant to BBB breakdown in AD, though not studied in AD models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Therapeutic Directionality Is Unresolved</h3>
+        <p>HECW2 exhibits context-dependent effects: knockdown reduces hemangioma growth and circHECW2-driven endothelial injury (beneficial), yet HECW2 protein stabilises AMOTL1 via K63-linked ubiquitination to maintain endothelial junction integrity (depletion loosens barriers). Loss-of-function causes severe neurological disease. Global inhibition is therefore risky without substrate- and cell-type-specific evidence.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><strong>Treat as exploratory, not validated.</strong> Current evidence supports prioritising HECW2 for mechanistic follow-up — especially in proteostasis, neuroimmune, and neurovascular studies — but does not justify therapeutic intervention in AD without additional validation.</div>
+      </li>
+      <li>
+        <div><strong>Replicate the AD biomarker signal first.</strong> Confirm HECW2 expression changes in independent AD cohorts using blood, CSF-accessible cells, and AD-relevant brain regions. Determine whether HECW2 adds predictive value beyond amyloid, tau, NfL, APOE genotype, and established inflammatory markers.</div>
+      </li>
+      <li>
+        <div><strong>Define cell-type-specific expression in AD tissue.</strong> Use single-cell/single-nucleus transcriptomics, spatial transcriptomics, and proteomic validation to determine whether HECW2 is altered in neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, or pericytes in AD brain.</div>
+      </li>
+      <li>
+        <div><strong>Identify AD-relevant HECW2 substrates.</strong> The critical gap is whether HECW2 ubiquitinates or stabilises proteins involved in amyloid processing, tau turnover, synaptic maintenance, autophagy, lysosomal function, DNA-damage repair, inflammatory signalling, or BBB integrity.</div>
+      </li>
+      <li>
+        <div><strong>Separate HECW2 protein from circHECW2 biology.</strong> HECW2 protein may have enzymatic and possibly protective endothelial-junction functions, whereas circHECW2 appears damaging in inflammatory brain endothelial models. Any therapeutic strategy must distinguish protein modulation from circRNA knockdown.</div>
+      </li>
+      <li>
+        <div><strong>Prioritise circHECW2 in neurovascular AD models.</strong> Because circHECW2 silencing protected brain microvascular endothelial cells and reduced LPS-induced EndoMT in vivo, test circHECW2 inhibition in amyloid, tau, aging, and neuroinflammation models for effects on BBB leakage, microglial activation, amyloid/tau pathology, synaptic integrity, and cognition.</div>
+      </li>
+      <li>
+        <div><strong>Avoid assuming global HECW2 inhibition is beneficial.</strong> Pathogenic variants and loss-of-function-like mechanisms are associated with severe neurodevelopmental disease, and HECW2 protein stabilises endothelial junctions. Any therapeutic approach must be substrate-, cell-type-, and disease-stage-specific.</div>
+      </li>
+      <li>
+        <div><strong>Test functional effects in AD-relevant models.</strong> Perform HECW2 gain- and loss-of-function experiments in human iPSC-derived neurons, astrocytes, microglia, endothelial cells, brain organoids, and amyloid/tau animal models. Measure proteasome activity, tau phosphorylation/clearance, amyloid processing, synaptic markers, inflammatory cytokines, BBB integrity, neuronal survival, and cognition.</div>
+      </li>
+      <li>
+        <div><strong>Consider druggability cautiously.</strong> HECW2's HECT-domain E2-binding/ubiquitin-transfer interface is targetable in principle; circHECW2 could be addressed with antisense or RNA-interference approaches. Therapeutic development requires clear AD-specific benefit and careful neurological toxicity assessment.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — HECW2 in Alzheimer's Disease</div>
+      <p>
+        HECW2 is a <strong>multifunctional E3 ubiquitin ligase and RNA-regulatory locus</strong> with plausible relevance to AD mechanisms — especially <strong>UPS-mediated proteostasis, neuroimmune signalling, BBB dysfunction, endothelial injury, DNA-damage response, and cellular metabolism</strong>. Its near-term value is strongest as a <strong>candidate biomarker and mechanistic research target</strong>. The gene is not yet a validated AD therapeutic target: no AD-specific substrate has been identified, therapeutic directionality is unresolved, loss-of-function causes severe neurological disease, and most mechanistic evidence derives from non-AD disease contexts. Rigorous, AD-specific functional studies — including substrate identification, cell-type-specific expression profiling, and testing in amyloid/tau models — are required before any clinical translation is contemplated.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  HECW2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDB1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: white;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2f0fb;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,30,30,0.28);
+    border-color: rgba(255,120,120,0.35);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.02rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.88rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.96rem;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 14px;
+    font-size: 1.01rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 14px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.87rem;
+    color: var(--neutral-text);
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.95rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.84rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.98rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 34px 36px;
+    line-height: 1.8;
+    font-size: 1.02rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .verdict-banner p {
+    opacity: 0.92;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    margin-top: 40px;
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DDB1 &nbsp;|&nbsp; Damage-Specific DNA Binding Protein 1</span>
+    <span class="chip chip-danger">⚠ Broad inhibition: systemic toxicity risk</span>
+  </div>
+  <h1>DDB1 — CRL4 Ubiquitin Ligase Adaptor<br>& Alzheimer's Disease Pathway Relevance</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Caveat:</span> Broad systemic DDB1 inhibition is likely hazardous. DDB1 is essential for DNA repair, genome stability, transcription recovery, protein turnover, immune regulation, development, and neuronal function. Global suppression risks impairing neuronal DNA repair or proteostasis and causing systemic toxicity. Complex-specific or substrate-selective strategies are strongly preferred.
+    </div>
+
+    <div class="overview-body">
+      <p>DDB1 is best characterized as a central DNA-damage-recognition and CUL4/CRL4 E3 ubiquitin-ligase adaptor/scaffold, <em>not</em> as a validated Alzheimer's disease target. Most cited studies arise from cancer, virology, development, DNA repair, immunology, and targeted protein degradation research — not AD models or AD patient tissue.</p>
+      <p>The strongest AD-relevant evidence is indirect, operating through pathways repeatedly implicated in AD pathogenesis: oxidative DNA damage repair, genome maintenance, ubiquitin-proteasome proteostasis, autophagy/lysosomal regulation, mitochondrial stress, NRF2 antioxidant signaling, innate immune/STING/NF-κB-type inflammation, cell-cycle/checkpoint signaling, and targeted protein degradation.</p>
+      <p>One notable AD-linked mechanism involves HHV-6A protein U4 competing with APP for a DDB1/CUL4B E3 ligase complex, potentially inhibiting APP ubiquitination/degradation and increasing Aβ generation. Overall, DDB1 should be viewed as a mechanistically plausible AD-relevant pathway node and druggable degradation platform — not an established AD biomarker or standalone disease-modifying target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;min-width:600px;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: CRL4 Core Assembly -->
+          <rect x="10" y="10" width="260" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">PANEL A — CRL4 CORE</text>
+
+          <!-- DDB1 central node -->
+          <rect x="65" y="48" width="150" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="140" y="63" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="white">DDB1</text>
+          <text x="140" y="78" text-anchor="middle" font-family="Arial" font-size="9" fill="#dbeafe">Adaptor / Scaffold</text>
+
+          <!-- CUL4A -->
+          <rect x="30" y="118" width="95" height="36" rx="6" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+          <text x="77" y="133" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c" font-weight="bold">CUL4A</text>
+          <text x="77" y="147" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#475569">Cullin scaffold</text>
+
+          <!-- CUL4B -->
+          <rect x="155" y="118" width="95" height="36" rx="6" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+          <text x="202" y="133" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c" font-weight="bold">CUL4B</text>
+          <text x="202" y="147" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#475569">APP axis</text>
+
+          <!-- Arrows DDB1 -> CUL4A, CUL4B -->
+          <line x1="115" y1="88" x2="90" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="165" y1="88" x2="190" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- DCAF substrates row -->
+          <rect x="20" y="186" width="72" height="36" rx="6" fill="#dbeafe" stroke="#2e6da4" stroke-width="0.9"/>
+          <text x="56" y="201" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1a3a5c" font-weight="bold">CRBN</text>
+          <text x="56" y="213" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">IMiD glue</text>
+
+          <rect x="103" y="186" width="72" height="36" rx="6" fill="#dbeafe" stroke="#2e6da4" stroke-width="0.9"/>
+          <text x="139" y="201" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1a3a5c" font-weight="bold">DDB2 / CSA</text>
+          <text x="139" y="213" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">DNA repair</text>
+
+          <rect x="186" y="186" width="72" height="36" rx="6" fill="#dbeafe" stroke="#2e6da4" stroke-width="0.9"/>
+          <text x="222" y="201" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1a3a5c" font-weight="bold">WDR23</text>
+          <text x="222" y="213" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">NRF2 target</text>
+
+          <!-- Arrows CUL4A -> DCAFs -->
+          <line x1="77" y1="154" x2="60" y2="186" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="77" y1="154" x2="139" y2="186" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+
+          <!-- Arrow CUL4B -> WDR23 -->
+          <line x1="202" y1="154" x2="222" y2="186" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+
+          <!-- Ubiquitination outcome -->
+          <rect x="55" y="256" width="170" height="36" rx="6" fill="#1a3a5c" stroke="#0b1e30" stroke-width="1"/>
+          <text x="140" y="270" text-anchor="middle" font-family="Arial" font-size="9.5" fill="white" font-weight="bold">Substrate Ubiquitination</text>
+          <text x="140" y="283" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#bfdbfe">via 26S proteasome</text>
+
+          <!-- Arrows DCAFs -> Ub outcome -->
+          <line x1="56" y1="222" x2="100" y2="256" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="139" y1="222" x2="140" y2="256" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="222" y1="222" x2="180" y2="256" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+
+          <!-- CSN/Neddylation regulation -->
+          <rect x="55" y="326" width="170" height="36" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="0.9"/>
+          <text x="140" y="341" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#334155" font-weight="bold">CSN / Neddylation</text>
+          <text x="140" y="354" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">regulates CRL4 activity</text>
+
+          <line x1="140" y1="292" x2="140" y2="326" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Panel A degrader note -->
+          <rect x="30" y="396" width="220" height="36" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.9"/>
+          <text x="140" y="411" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1d4ed8" font-weight="bold">PROTAC / Molecular Glue</text>
+          <text x="140" y="424" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">Platform exploitation</text>
+
+          <line x1="140" y1="362" x2="140" y2="396" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#arr)"/>
+
+          <!-- Panel B: DNA Repair -->
+          <rect x="285" y="10" width="240" height="310" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="405" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1">PANEL B — DNA REPAIR</text>
+
+          <!-- UV-DDB complex -->
+          <rect x="320" y="48" width="170" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+          <text x="405" y="64" text-anchor="middle" font-family="Arial" font-size="10" fill="white" font-weight="bold">UV-DDB Complex</text>
+          <text x="405" y="78" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#a7f3d0">DDB1 + DDB2</text>
+
+          <!-- NER branch -->
+          <rect x="295" y="120" width="100" height="36" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="0.9"/>
+          <text x="345" y="135" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">NER / TCR</text>
+          <text x="345" y="148" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">UV lesions</text>
+
+          <!-- BER branch -->
+          <rect x="415" y="120" width="100" height="36" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="0.9"/>
+          <text x="465" y="135" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">BER / OGG1</text>
+          <text x="465" y="148" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">8-oxoG, abasic</text>
+
+          <!-- Arrows UV-DDB -> NER, BER -->
+          <line x1="380" y1="86" x2="355" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="430" y1="86" x2="455" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- CRL4-CSA TCR -->
+          <rect x="295" y="188" width="100" height="36" rx="6" fill="#ecfdf5" stroke="#0f766e" stroke-width="0.9"/>
+          <text x="345" y="203" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">CRL4CSA</text>
+          <text x="345" y="216" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">RNAPII rescue</text>
+
+          <!-- APE1/Polβ repair -->
+          <rect x="415" y="188" width="100" height="36" rx="6" fill="#ecfdf5" stroke="#0f766e" stroke-width="0.9"/>
+          <text x="465" y="203" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">APE1 / Pol β</text>
+          <text x="465" y="216" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">lesion resection</text>
+
+          <line x1="345" y1="156" x2="345" y2="188" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+          <line x1="465" y1="156" x2="465" y2="188" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Converge: Neuronal Genome -->
+          <rect x="320" y="258" width="170" height="36" rx="6" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+          <text x="405" y="273" text-anchor="middle" font-family="Arial" font-size="9" fill="white" font-weight="bold">Neuronal Genome</text>
+          <text x="405" y="286" text-anchor="middle" font-family="Arial" font-size="8" fill="#a7f3d0">Integrity / Resilience</text>
+
+          <line x1="345" y1="224" x2="370" y2="258" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+          <line x1="465" y1="224" x2="440" y2="258" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel C: AD Pathology Links -->
+          <rect x="540" y="10" width="350" height="480" rx="12" fill="#fdf0f0" fill-opacity="0.5" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="715" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="1">PANEL C — AD-RELEVANT OUTPUTS</text>
+
+          <!-- HHV-6A U4 -->
+          <rect x="605" y="48" width="140" height="38" rx="7" fill="#8b1a1a" stroke="#5b0e0e" stroke-width="1.2"/>
+          <text x="675" y="63" text-anchor="middle" font-family="Arial" font-size="10" fill="white" font-weight="bold">HHV-6A U4</text>
+          <text x="675" y="78" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#fca5a5">Competes with APP</text>
+
+          <!-- APP accumulation -->
+          <rect x="605" y="118" width="140" height="36" rx="6" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="675" y="133" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d" font-weight="bold">APP Accumulation</text>
+          <text x="675" y="147" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">↓ APP ubiquitination</text>
+
+          <line x1="675" y1="86" x2="675" y2="118" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Aβ generation -->
+          <rect x="605" y="186" width="140" height="36" rx="6" fill="#fecaca" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="675" y="201" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d" font-weight="bold">Aβ Generation</text>
+          <text x="675" y="215" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">↑ amyloid burden</text>
+
+          <line x1="675" y1="154" x2="675" y2="186" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- NRF2 antioxidant -->
+          <rect x="555" y="258" width="120" height="36" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="615" y="273" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#7c2d12" font-weight="bold">NRF2 Signaling</text>
+          <text x="615" y="286" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">antioxidant defense</text>
+
+          <!-- STING/NF-κB -->
+          <rect x="695" y="258" width="120" height="36" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1"/>
+          <text x="755" y="273" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#7c2d12" font-weight="bold">STING / NF-κB</text>
+          <text x="755" y="286" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">neuroinflammation</text>
+
+          <!-- Arrows Aβ -> NRF2, STING -->
+          <line x1="645" y1="222" x2="625" y2="258" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+          <line x1="705" y1="222" x2="745" y2="258" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Autophagy/Lysosome -->
+          <rect x="555" y="328" width="120" height="36" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="615" y="343" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">Autophagy / Lysosome</text>
+          <text x="615" y="356" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">WIPI2, AMBRA1</text>
+
+          <!-- Mitochondria -->
+          <rect x="695" y="328" width="120" height="36" rx="6" fill="#ecfdf5" stroke="#0f766e" stroke-width="1"/>
+          <text x="755" y="343" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#064e3b" font-weight="bold">Mitochondria</text>
+          <text x="755" y="356" text-anchor="middle" font-family="Arial" font-size="8" fill="#475569">PGC-1α / Parkin</text>
+
+          <line x1="615" y1="294" x2="615" y2="328" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+          <line x1="755" y1="294" x2="755" y2="328" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+          <!-- AD Proteostasis Outcome -->
+          <rect x="576" y="400" width="278" height="36" rx="6" fill="#1a3a5c" stroke="#0b1e30" stroke-width="1"/>
+          <text x="715" y="415" text-anchor="middle" font-family="Arial" font-size="9.5" fill="white" font-weight="bold">AD Proteostasis / Neuronal Health</text>
+          <text x="715" y="429" text-anchor="middle" font-family="Arial" font-size="8" fill="#bfdbfe">clearance · inflammation · oxidative balance</text>
+
+          <line x1="615" y1="364" x2="660" y2="400" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="755" y1="364" x2="770" y2="400" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel A Ub -> Panel C HHV -->
+          <!-- Route: right of Panel A (x=275) up to y=67, across to x=605 -->
+          <polyline points="225,274 270,274 270,67 605,67" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel B Genome Integrity -> Panel C NRF2 -->
+          <!-- Route: bottom of Panel B node at (405,294), down to y=380, across to x=555 then up -->
+          <polyline points="405,294 405,390 555,390 555,276 555,276" fill="none" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> The CRL4 core assembly — DDB1 bridges CUL4A and CUL4B to substrate-receptor adaptors (CRBN, DDB2/CSA, WDR23), enabling targeted ubiquitination and proteasomal degradation; CSN/neddylation regulates complex activity, and the platform can be exploited by PROTACs and molecular glues.
+        <strong>Panel B (teal, center):</strong> DNA repair functions — UV-DDB (DDB1 + DDB2) branches into NER/TCR (CRL4CSA; RNAPII rescue) and BER (OGG1, APE1/Pol β for oxidative lesions 8-oxoG, abasic sites), both converging to support neuronal genome integrity.
+        <strong>Panel C (red/amber, right):</strong> AD-relevant outputs — HHV-6A U4 competes with APP for DDB1/CUL4B, reducing APP ubiquitination and driving Aβ generation; downstream effects branch into NRF2 antioxidant signaling, STING/NF-κB neuroinflammation, autophagy/lysosomal flux (WIPI2, AMBRA1), and mitochondrial homeostasis (PGC-1α, Parkin), all converging on AD proteostasis and neuronal health. Dashed connectors show cross-panel CRL4 → APP axis (blue) and genome integrity → NRF2 (teal) links.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>CRL4 Adaptor: Core Molecular Role</h3>
+        <p>DDB1's most consistent function is bridging CUL4A/CUL4B to substrate receptors — DCAFs, CRBN, DDB2, CSA, WDR23, DCAF11, DCAF15, DCAF1/VprBP, AMBRA1, and others — enabling substrate-specific ubiquitination and degradation across many biological contexts.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>HHV-6A U4: Clearest AD-Specific Link</h3>
+        <p>HHV-6A protein U4 interacts with a DDB1/CUL4B complex that normally degrades APP. U4 may compete with APP, reduce APP proteasomal clearance, increase APP accumulation, and promote Aβ generation — providing the most direct, infection-associated AD-relevant mechanism described in the text.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>DNA Repair & Neuronal Genome Resilience</h3>
+        <p>UV-DDB (DDB1 + DDB2) participates in nucleotide excision repair and stimulates BER enzymes OGG1, MUTYH, APE1, SMUG1, and Pol β, addressing oxidative lesions (8-oxoG, abasic sites). CRL4CSA supports transcription-coupled repair and RNAPII lesion responses — highly relevant to long-lived neurons sustaining cumulative AD-associated DNA damage.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>NRF2 & Neuroinflammation Pathways</h3>
+        <p>WDR23/DCAF11/DCAF1-associated DDB1 complexes can regulate NRF2 stability and antioxidant responses. Separately, DDB1-containing ligases modulate STING degradation, NF-κB/TNFα/HMGB1 signaling, and interferon pathways — overlapping with microglial and innate immune mechanisms implicated in AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Targeted Protein Degradation Platform</h3>
+        <p>CRBN/DDB1, DCAF15/DDB1/DDA1, DCAF16/DDB1, and direct DDB1-recruiter studies confirm that DDB1-containing E3 ligases can be exploited by molecular glues and PROTAC-like degraders. This establishes DDB1 as a chemically tractable therapeutic platform, pending AD-specific substrate validation and brain-penetrant tool development.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Broad Inhibition Is High-Risk</h3>
+        <p>DDB1 participates in essential DNA repair, genome stability, transcription recovery, protein turnover, immune regulation, development, cell-cycle control, and neuronal function. Global suppression could severely impair neuronal DNA repair, proteostasis, or produce systemic toxicity — making complex-specific or interface-selective strategies obligatory rather than optional.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><b>Frame DDB1 as an unvalidated AD-relevant hub.</b> Claims must be presented as mechanistic hypotheses unless directly supported by AD-specific experimental data — not as established therapeutic targets.</li>
+      <li><b>Prioritize complex-specific over global DDB1 modulation.</b> The most plausible strategies target defined DDB1-containing complexes, specific DCAFs, substrate interfaces, or disease-specific ternary complexes rather than total DDB1 activity.</li>
+      <li><b>Validate the DDB1/CUL4B–APP axis in AD-relevant systems.</b> The HHV-6A U4 finding must be tested in neurons, astrocytes, microglia, iPSC-derived brain cells, organoids, and AD models to confirm whether DDB1/CUL4B normally clears APP and whether viral competition elevates Aβ.</li>
+      <li><b>Map DDB1-dependent substrates across AD brain cell types.</b> Neuron-, astrocyte-, microglia-, oligodendrocyte-, and endothelial-specific DDB1/CUL4 interactomes should be defined under aging, oxidative stress, Aβ, tau, inflammatory, and viral-stress conditions.</li>
+      <li><b>Investigate NRF2-related DDB1 complexes selectively.</b> WDR23/DCAF11/DCAF1-mediated NRF2 degradation pathways may offer a selective route to enhance antioxidant and anti-inflammatory defenses relevant to AD neuroprotection.</li>
+      <li><b>Evaluate autophagy and lysophagy links carefully.</b> Determine whether DDB1-containing complexes promote beneficial clearance of damaged lysosomes and mitochondria or instead degrade autophagy-promoting proteins like WIPI2 in AD-relevant cells.</li>
+      <li><b>Require AD-specific substrate validation before degrader platform use.</b> Candidate applications — targeting tau toxicity regulators, amyloid processing factors, or neuroinflammatory drivers — require demonstrated brain penetration, cell-type specificity, and AD-model efficacy before advancement.</li>
+      <li><b>Avoid broad systemic DDB1 inhibition as a default strategy.</b> Safer therapeutic approaches include blocking pathological interactions, stabilizing beneficial repair complexes, or recruiting DDB1-associated ligases to selected targets while preserving core genome-maintenance and proteostasis functions.</li>
+      <li><b>Define key validation endpoints comprehensively.</b> Studies should measure APP/Aβ, tau phosphorylation/aggregation, DNA damage burden, oxidative stress markers, lysosomal/autophagic flux, mitochondrial function, neuroinflammatory cytokines/STING/NF-κB, synaptic function, neuronal survival, and cognition in validated AD models.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — DDB1 in Alzheimer's Disease Research</span>
+      <p>
+        DDB1 is a <strong>mechanistically rich but AD-unvalidated pathway node</strong> whose biology intersects multiple AD-relevant processes — including APP proteostasis via the HHV-6A/CUL4B axis, oxidative DNA lesion repair through UV-DDB and BER co-stimulation, NRF2 antioxidant defense, STING/NF-κB neuroinflammation, and autophagy/mitochondrial quality control. Its most compelling AD-specific mechanism, <strong>viral U4-mediated competition for APP ubiquitination leading to elevated Aβ</strong>, is hypothesis-generating but requires direct neuronal validation. DDB1's tractability as a <strong>molecular glue and PROTAC platform</strong> represents a genuine therapeutic opportunity, but only with cell-type-specific substrate validation and brain-penetrant tool compounds. The critical constraint throughout is safety: <strong>broad DDB1 inhibition poses unacceptable risks</strong> to genome maintenance and proteostasis in post-mitotic neurons. The field's near-term priority should be precise, complex-specific targeting guided by AD-relevant interactomics and rigorous disease-model validation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  DDB1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

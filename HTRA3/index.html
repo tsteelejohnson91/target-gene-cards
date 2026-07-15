@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTRA3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --body-text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--body-text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2f0ff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: #cfe2f7;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 28px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* OVERVIEW PARAGRAPHS */
+  .overview-text p {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    color: var(--body-text);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 18px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.83rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaways li {
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    line-height: 1.75;
+  }
+
+  .takeaways li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 40px 44px;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: #dbeeff;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .verdict p b {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 32px;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: HTRA3 &nbsp;|&nbsp; High-Temperature Requirement Serine Protease A3</span>
+    <span class="chip chip-danger">⚠ Safety &amp; directionality unresolved</span>
+  </div>
+  <h1>HTRA3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">Caution:</span>
+      HTRA3 has <em>no direct validation in Alzheimer's disease</em>. All AD-relevant rationale is inferential. Systemic modulation carries unresolved risks spanning apoptosis, fibrosis, reproductive biology, tumor suppression, and ECM remodeling.
+    </div>
+
+    <div class="overview-text">
+      <p>HTRA3 is a mammalian HtrA-family serine protease with extracellular, matrix-associated, mitochondrial, stress-response, proapoptotic, and signaling-regulatory roles. No cited study tests HTRA3 in AD patient brain, CSF, plasma, amyloid-β biology, tau pathology, synaptic loss, cognitive decline, or AD animal/cellular models. Its relevance to AD is therefore hypothesis-generating only.</p>
+
+      <p>The strongest AD-relevant rationale is <strong>neurovascular and ECM-based</strong>. HTRA3 appears in CNS endothelial and neurovascular-injury profiling datasets, associated with endothelial TGF-β signaling, Wnt/β-catenin-linked ECM programs, vascular maturation, and barrier integrity. These findings raise the possibility that HTRA3 could influence vascular leakage, BBB dysfunction, perivascular matrix remodeling, and impaired clearance pathways in AD — but this is unproven.</p>
+
+      <p>HTRA3 also has plausible links to <strong>mitochondrial dysfunction and aging</strong>. In Cockayne syndrome/progeroid models, stress-associated HTRA3 accumulation correlated with POLG1 depletion, oxidative/nitrosative imbalance, impaired mitochondrial oxidative phosphorylation, and senescence-related pathology. Serine protease inhibition or antioxidant/peroxynitrite scavenging normalized parts of this axis.</p>
+
+      <p>HTRA3's biological effects are highly context-dependent. It may support tissue repair, endothelial migration, controlled ECM remodeling, and anti-inflammatory responses in some settings, but may promote fibrosis-like TGF-β/Smad activation, basement-membrane degradation, apoptosis, mitochondrial proteolysis, or adverse remodeling in others. As a therapeutic target, HTRA3 is currently best viewed as an <strong>exploratory neurovascular/ECM/stress-response candidate</strong>, not an established AD target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (top-left): Neurovascular / ECM — nodes: HTRA3, Collagen IV, Integrin β1/YAP, BBB Integrity, Perivascular Drainage
+        PANEL B (top-right): TGF-β / Signaling — nodes: TGF-β/BMP, Smad Activation, Wnt/β-catenin, Endothelial Maturation
+        PANEL C (bottom-left): Mitochondrial / Aging — nodes: Stress/ROS, POLG1 Depletion, OxPhos Impairment, Senescence
+        PANEL D (bottom-right): Apoptosis / Proteostasis — nodes: XIAP Cleavage, PI3K/AKT, Apoptosis, Misfolded Proteins
+
+        Total nodes (rectangles): 16 exactly
+        Counted: HTRA3 (shared hub, drawn once in center gutter — actually placed in panel A)
+        Let me plan carefully:
+
+        Panel A (neurovascular): HTRA3 Activity, Collagen IV ECM, Integrin β1/YAP, BBB Integrity — 4 nodes
+        Panel B (TGF-β/signaling): TGF-β/BMP Signals, Smad Activation, Wnt/β-catenin, Endothelial Maturation — 4 nodes
+        Panel C (mito/aging): Stress & ROS, POLG1 Depletion, OxPhos Decline, Cellular Senescence — 4 nodes
+        Panel D (apoptosis): XIAP Cleavage, PI3K/AKT, Neuronal Apoptosis, Misfolded Proteins — 4 nodes
+        Total = 16 nodes exactly ✓
+
+        Layout: 940 wide × 500 tall
+        Panel A: x=10 y=10 w=440 h=225
+        Panel B: x=10 y=265 w=440 h=225
+        Panel C: x=480 y=10 w=450 h=225
+        Panel D: x=480 y=265 w=450 h=225
+
+        Node positions (cx, cy, w=140, h=44):
+        Panel A (neurovascular/ECM):
+          A1 HTRA3 Activity: x=55 y=40 → rect(55,40,140,44)
+          A2 Collagen IV ECM: x=270 y=40 → rect(270,40,140,44)
+          A3 Integrin β1/YAP: x=270 y=130 → rect(270,130,140,44)
+          A4 BBB Integrity: x=55 y=130 → rect(55,130,140,44)
+          Arrow A1→A2, A2→A3, A3→A4, A4 outcome
+
+        Panel B (TGF-β):
+          B1 TGF-β/BMP Signals: x=55 y=295 → rect(55,295,140,44)
+          B2 Smad Activation: x=270 y=295 → rect(270,295,140,44)
+          B3 Wnt/β-catenin: x=55 y=385 → rect(55,385,140,44)
+          B4 Endothelial Maturation: x=270 y=385 → rect(270,385,140,44)
+
+        Panel C (mito/aging):
+          C1 Stress & ROS: x=520 y=40 → rect(520,40,140,44)
+          C2 POLG1 Depletion: x=740 y=40 → rect(740,40,140,44)
+          C3 OxPhos Decline: x=740 y=130 → rect(740,130,140,44)
+          C4 Cellular Senescence: x=520 y=130 → rect(520,130,140,44)
+
+        Panel D (apoptosis/proteostasis):
+          D1 XIAP Cleavage: x=520 y=295 → rect(520,295,140,44)
+          D2 PI3K/AKT: x=740 y=295 → rect(740,295,140,44)
+          D3 Neuronal Apoptosis: x=740 y=385 → rect(740,385,140,44)
+          D4 Misfolded Proteins: x=520 y=385 → rect(520,385,140,44)
+
+        Total = 16 nodes ✓
+
+        Inter-panel connection: HTRA3 Activity (A1) influences Stress&ROS (C1) — but these are in different panels.
+        A1 center: (55+70, 40+22) = (125, 62)
+        C1 rect: (520,40,140,44) → center (590,62)
+        Path from (195, 62) → (520, 62): passes through panel border gap between x=450 and x=480. Safe horizontal line at y=62.
+        But need to check panel A right edge is x=10+440=450, panel C left edge x=480. Gap from x=450 to x=480 = 30px. 
+        Line would go from x=195 (right edge of A1) to x=520 (left edge of C1) at y=62.
+        Does it pass through any box? Panel A ends at x=450. Between x=450 and x=480 is empty gutter. Then enters panel C space. C1 starts at x=520. So the line from x=195 to x=520 at y=62 passes through the panel A area (but no boxes between A1 right edge 195 and panel A right 450 except A2 at x=270). 
+        A2 rect: (270,40,140,44) → x=270 to x=410, y=40 to y=84. Line at y=62 between x=195 and x=520 would pass THROUGH A2 (x=270–410, y=40–84 contains y=62). This violates rule 2.
+
+        Route instead: from A1 bottom-center (125, 84) → down to y=240 (below panel A, above panel B gap) → right to x=590 → up to C1 top-center (590, 40). 
+        Check: does vertical segment x=125, y=84→240 pass through anything in panel A? A4 is at (55,130,140,44) → x=55–195, y=130–174. The line at x=125 from y=84 to y=130 would enter A4's x-range (55–195) and y-range starts at 130. So at y=130 the line hits A4's top edge. That's a violation.
+
+        Better: don't draw cross-panel connectors for A1→C1. Instead show HTRA3 as a shared input with separate arrows within each panel. This keeps it clean. I'll omit the cross-panel line.
+
+        Let me re-examine all arrows:
+
+        Panel A arrows:
+        - A1 → A2: right arrow. A1 right edge: x=195, y=62. A2 left edge: x=270. Arrow at y=62 from x=195 to x=270. Gap is 75px. Does anything sit between? No. ✓
+        - A2 → A3: down arrow. A2 bottom: (340, 84). A3 top: (340, 130). Vertical at x=340 from y=84 to y=130. Nothing in between. ✓
+        - A3 → A4: left arrow. A3 left: x=270, y=152. A4 right: x=195, y=152. Horizontal at y=152 from x=270 to x=195. Nothing in between. ✓
+        - A1 → A4: down arrow. A1 bottom: (125, 84). A4 top: (125, 130). Vertical at x=125 from y=84 to y=130. ✓
+
+        Panel B arrows:
+        - B1 → B2: right. B1 right x=195, y=317. B2 left x=270. y=317. Gap 75px, empty. ✓
+        - B1 → B3: down. B1 bottom (125, 339). B3 top (125, 385). ✓
+        - B2 → B4: down. B2 bottom (340, 339). B4 top (340, 385). ✓
+        - B3 → B4: right. (195, 407) → (270, 407). ✓
+
+        Panel C arrows:
+        - C1 → C2: right. C1 right x=660, y=62. C2 left x=740. y=62. ✓
+        - C2 → C3: down. (810, 84) → (810, 130). ✓
+        - C1 → C4: down. (590, 84) → (590, 130). ✓
+        - C4 → C3: right. (660, 152) → (740, 152). ✓
+
+        Panel D arrows:
+        - D1 → D2: right. D1 right x=660, y=317. D2 left x=740. ✓
+        - D1 → D4: down. (590, 339) → (590, 385). ✓
+        - D2 → D3: down. (810, 339) → (810, 385). ✓
+        - D3 ← D4: right. (660, 407) → (740, 407). ✓
+
+        HTRA3 Activity node (A1) is the main hub. I'll add a note that it feeds into all panels via text.
+
+        Actually, I want to show HTRA3 as feeding into Panel C and D as well. Let me instead add a small central "HTRA3" hub node... but I'm already at 16 nodes. So I'll just note in caption.
+
+        Re-check all node rectangles overlap:
+        Panel A: A1(55,40,140,44), A2(270,40,140,44), A3(270,130,140,44), A4(55,130,140,44)
+        - A1 right=195, A2 left=270 → gap 75px ✓
+        - A1 bottom=84, A4 top=130 → gap 46px ✓
+        - A2 bottom=84, A3 top=130 → gap 46px ✓
+        - A3 right=410, A4 left... wait A4 is at x=55, A3 at x=270. They don't overlap in x anyway ✓
+        - A1(55-195, 40-84) vs A4(55-195, 130-174): same x range but y gap=46px ✓
+        - A2(270-410, 40-84) vs A3(270-410, 130-174): gap=46px ✓
+
+        Panel B: B1(55,295,140,44), B2(270,295,140,44), B3(55,385,140,44), B4(270,385,140,44)
+        Gaps same as Panel A structure: ✓
+
+        Panel C: C1(520,40,140,44), C2(740,40,140,44), C3(740,130,140,44), C4(520,130,140,44)
+        - C1 right=660, C2 left=740 → gap 80px ✓
+        - C1 bottom=84, C4 top=130 → 46px ✓
+        - etc ✓
+
+        Panel D: D1(520,295,140,44), D2(740,295,140,44), D3(740,385,140,44), D4(520,385,140,44) ✓
+
+        Panel boundaries:
+        Panel A: (10,10,440,235) → right=450, bottom=245
+        Panel B: (10,255,440,235) → right=450, bottom=490
+        Panel C: (480,10,450,235) → right=930, bottom=245
+        Panel D: (480,255,450,235) → right=930, bottom=490
+
+        Nodes vs panel borders (need 8px clearance):
+        A1 at (55,40): panel left=10, node left=55 → 45px clearance ✓; panel top=10, node top=40 → 30px ✓
+        A4 at (55,130): node bottom=174, panel bottom=245 → 71px ✓
+        A2 at (270,40): node right=410, panel right=450 → 40px ✓
+        A3 at (270,130): node right=410, panel right=450 → 40px ✓; node bottom=174, panel bottom=245 → 71px ✓
+
+        B nodes: B1/B3 same x as A1/A4, B2/B4 same x as A2/A3
+        B1(55,295): panel B top=255, node top=295 → 40px ✓
+        B3(55,385): node bottom=429, panel bottom=490 → 61px ✓
+        B4(270,385): node right=410, panel right=450 → 40px ✓; node bottom=429 → 61px ✓
+
+        C1(520,40): panel C left=480, node left=520 → 40px ✓
+        C2(740,40): node right=880, panel right=930 → 50px ✓
+        C4(520,130): node bottom=174 ✓
+        C3(740,130): node right=880 → 50px ✓
+
+        D nodes: same structure in panel D ✓
+
+        Inter-panel gap:
+        Panel A/B gap: y=245 to y=255 = 10px. That's tight but panels don't have content there.
+        Nodes: A4 bottom=174, B1 top=295 → 121px gap. Fine.
+
+        Vertical gap between panel A bottom(245) and panel B top(255) = 10px. I should make it 20px.
+        Let me adjust: Panel B starts at y=265, ends at y=500. So SVG height = 500.
+        Panel A: (10,10,440,235) bottom=245
+        Panel B: (10,265,440,230) bottom=495
+        Panel C: (480,10,450,235) bottom=245
+        Panel D: (480,265,450,230) bottom=495
+
+        B nodes: B1(55,300,140,44), B2(270,300,140,44), B3(55,390,140,44), B4(270,390,140,44)
+        B1 top=300, panel B top=265 → 35px ✓; B3 bottom=434, panel B bottom=495 → 61px ✓
+
+        D nodes: D1(520,300,140,44), D2(740,300,140,44), D3(740,390,140,44), D4(520,390,140,44)
+        Same checks ✓
+
+        SVG viewBox: 0 0 950 510, actual width 940px in viewBox
+
+        Panel labels positioned at top-left of each panel, outside node areas.
+
+        Let me finalize all coordinates:
+      -->
+      <svg viewBox="0 0 950 510" width="100%" style="max-width:950px; font-family: Arial, Helvetica, sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#1a3a5c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Neurovascular / ECM ===== -->
+        <rect x="10" y="10" width="440" height="235" rx="10" ry="10"
+              fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="24" y="30" font-size="9" font-weight="700" fill="#1a3a5c"
+              letter-spacing="0.08em" text-anchor="start">A — NEUROVASCULAR &amp; ECM</text>
+
+        <!-- A1: HTRA3 Activity -->
+        <rect x="55" y="42" width="140" height="48" rx="7" fill="#2e6da4" opacity="0.92"/>
+        <text x="125" y="61" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">HTRA3 Activity</text>
+        <text x="125" y="76" font-size="9.5" fill="#dbeeff" text-anchor="middle">(Serine Protease)</text>
+
+        <!-- A2: Collagen IV ECM -->
+        <rect x="270" y="42" width="145" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="342" y="61" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="600">Collagen IV &amp;</text>
+        <text x="342" y="76" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="600">Basement Membrane</text>
+
+        <!-- A3: Integrin β1/YAP -->
+        <rect x="270" y="134" width="145" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="342" y="153" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="600">Integrin β1 / YAP</text>
+        <text x="342" y="168" font-size="9.5" fill="#475569" text-anchor="middle">Mechanotransduction</text>
+
+        <!-- A4: BBB Integrity -->
+        <rect x="55" y="134" width="140" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="125" y="153" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="600">BBB Integrity &amp;</text>
+        <text x="125" y="168" font-size="9.5" fill="#0f766e" text-anchor="middle">Perivascular Drainage</text>
+
+        <!-- Panel A arrows -->
+        <!-- A1 right → A2 left: y=66, from x=195 to x=270 -->
+        <line x1="195" y1="66" x2="262" y2="66" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- A2 bottom → A3 top: x=342, from y=90 to y=134 -->
+        <line x1="342" y1="90" x2="342" y2="126" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- A3 left → A4 right: y=158, from x=270 to x=195 -->
+        <line x1="270" y1="158" x2="203" y2="158" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <!-- A1 bottom → A4 top: x=125, from y=90 to y=134 -->
+        <line x1="125" y1="90" x2="125" y2="126" stroke="#1a3a5c" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arr-dark)"/>
+
+        <!-- ===== PANEL B: TGF-β / Signaling ===== -->
+        <rect x="10" y="265" width="440" height="230" rx="10" ry="10"
+              fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.5"/>
+        <text x="24" y="284" font-size="9" font-weight="700" fill="#92400e"
+              letter-spacing="0.08em" text-anchor="start">B — TGF-β / SIGNALING PATHWAYS</text>
+
+        <!-- B1: TGF-β/BMP Signals -->
+        <rect x="55" y="297" width="145" height="48" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="127" y="316" font-size="10" fill="#92400e" text-anchor="middle" font-weight="600">TGF-β / BMP</text>
+        <text x="127" y="331" font-size="9.5" fill="#475569" text-anchor="middle">Signals</text>
+
+        <!-- B2: Smad Activation -->
+        <rect x="270" y="297" width="145" height="48" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="342" y="316" font-size="10" fill="#92400e" text-anchor="middle" font-weight="600">Smad Activation</text>
+        <text x="342" y="331" font-size="9.5" fill="#475569" text-anchor="middle">EMT / Fibrosis risk</text>
+
+        <!-- B3: Wnt/β-catenin -->
+        <rect x="55" y="388" width="145" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="127" y="407" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="600">Wnt / β-catenin</text>
+        <text x="127" y="422" font-size="9.5" fill="#475569" text-anchor="middle">ECM Programs</text>
+
+        <!-- B4: Endothelial Maturation -->
+        <rect x="270" y="388" width="145" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="342" y="407" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="600">Endothelial</text>
+        <text x="342" y="422" font-size="9.5" fill="#0f766e" text-anchor="middle">Maturation</text>
+
+        <!-- Panel B arrows -->
+        <!-- B1 right → B2: y=321 -->
+        <line x1="200" y1="321" x2="262" y2="321" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+        <!-- B1 bottom → B3 top: x=127 -->
+        <line x1="127" y1="345" x2="127" y2="380" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- B2 bottom → B4 top: x=342 -->
+        <line x1="342" y1="345" x2="342" y2="380" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+        <!-- B3 right → B4: y=412 -->
+        <line x1="200" y1="412" x2="262" y2="412" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- ===== PANEL C: Mitochondrial / Aging ===== -->
+        <rect x="480" y="10" width="460" height="235" rx="10" ry="10"
+              fill="#fef2f2" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="494" y="30" font-size="9" font-weight="700" fill="#7f1d1d"
+              letter-spacing="0.08em" text-anchor="start">C — MITOCHONDRIAL DYSFUNCTION &amp; AGING</text>
+
+        <!-- C1: Stress & ROS -->
+        <rect x="510" y="42" width="145" height="48" rx="7" fill="#991b1b" opacity="0.88"/>
+        <text x="582" y="61" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">Stress &amp; ROS /</text>
+        <text x="582" y="76" font-size="9.5" fill="#fecaca" text-anchor="middle">Peroxynitrite</text>
+
+        <!-- C2: POLG1 Depletion -->
+        <rect x="725" y="42" width="145" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="797" y="61" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">POLG1 Depletion</text>
+        <text x="797" y="76" font-size="9.5" fill="#475569" text-anchor="middle">mtDNA Maintenance</text>
+
+        <!-- C3: OxPhos Decline -->
+        <rect x="725" y="134" width="145" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="797" y="153" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">OxPhos Impairment</text>
+        <text x="797" y="168" font-size="9.5" fill="#475569" text-anchor="middle">Bioenergetic Decline</text>
+
+        <!-- C4: Cellular Senescence -->
+        <rect x="510" y="134" width="145" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="582" y="153" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">Cellular Senescence</text>
+        <text x="582" y="168" font-size="9.5" fill="#475569" text-anchor="middle">Progeroid Axis</text>
+
+        <!-- Panel C arrows -->
+        <!-- C1 right → C2: y=66 -->
+        <line x1="655" y1="66" x2="717" y2="66" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <!-- C2 bottom → C3 top: x=797 -->
+        <line x1="797" y1="90" x2="797" y2="126" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <!-- C1 bottom → C4 top: x=582 -->
+        <line x1="582" y1="90" x2="582" y2="126" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <!-- C4 right → C3: y=158 -->
+        <line x1="655" y1="158" x2="717" y2="158" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- ===== PANEL D: Apoptosis / Proteostasis ===== -->
+        <rect x="480" y="265" width="460" height="230" rx="10" ry="10"
+              fill="#f1f5f9" fill-opacity="0.7" stroke="#64748b" stroke-width="1.5"/>
+        <text x="494" y="284" font-size="9" font-weight="700" fill="#334155"
+              letter-spacing="0.08em" text-anchor="start">D — APOPTOSIS &amp; PROTEOSTASIS</text>
+
+        <!-- D1: XIAP Cleavage -->
+        <rect x="510" y="297" width="145" height="48" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+        <text x="582" y="316" font-size="10" fill="#334155" text-anchor="middle" font-weight="600">XIAP Cleavage</text>
+        <text x="582" y="331" font-size="9.5" fill="#475569" text-anchor="middle">Pro-apoptotic Signal</text>
+
+        <!-- D2: PI3K/AKT -->
+        <rect x="725" y="297" width="145" height="48" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+        <text x="797" y="316" font-size="10" fill="#334155" text-anchor="middle" font-weight="600">PI3K / AKT / PTEN</text>
+        <text x="797" y="331" font-size="9.5" fill="#475569" text-anchor="middle">Survival Signaling</text>
+
+        <!-- D3: Neuronal Apoptosis -->
+        <rect x="725" y="388" width="145" height="48" rx="7" fill="#991b1b" opacity="0.82"/>
+        <text x="797" y="407" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">Neuronal Apoptosis</text>
+        <text x="797" y="422" font-size="9.5" fill="#fecaca" text-anchor="middle">Adverse Outcome</text>
+
+        <!-- D4: Misfolded Proteins -->
+        <rect x="510" y="388" width="145" height="48" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+        <text x="582" y="407" font-size="10" fill="#334155" text-anchor="middle" font-weight="600">Misfolded Proteins</text>
+        <text x="582" y="422" font-size="9.5" fill="#475569" text-anchor="middle">PDZ / Substrate (hyp.)</text>
+
+        <!-- Panel D arrows -->
+        <!-- D1 right → D2: y=321 -->
+        <line x1="655" y1="321" x2="717" y2="321" stroke="#64748b" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- D1 bottom → D4 top: x=582 -->
+        <line x1="582" y1="345" x2="582" y2="380" stroke="#64748b" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- D2 bottom → D3 top: x=797 -->
+        <line x1="797" y1="345" x2="797" y2="380" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <!-- D4 right → D3: y=412 -->
+        <line x1="655" y1="412" x2="717" y2="412" stroke="#64748b" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel gutter label -->
+        <text x="462" y="130" font-size="8.5" fill="#475569" text-anchor="middle"
+              transform="rotate(-90,462,130)" font-style="italic">HTRA3 drives</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Neurovascular/ECM):</strong> HTRA3 protease activity remodels collagen IV and basement membranes, activating integrin β1/YAP mechanotransduction, which feeds back to modulate BBB integrity and perivascular drainage (both protective and destabilizing depending on context).
+      <strong>Panel B (TGF-β/Signaling):</strong> HTRA3 intersects TGF-β/BMP signaling, branching into a Smad activation arm (risk of EMT/fibrosis) and a Wnt/β-catenin arm (endothelial ECM programs), converging on endothelial maturation.
+      <strong>Panel C (Mitochondrial/Aging):</strong> Stress and ROS/peroxynitrite induce HTRA3 accumulation, which drives POLG1 depletion (impairing mtDNA maintenance), OxPhos impairment, and cellular senescence — an axis relevant to AD neurodegeneration.
+      <strong>Panel D (Apoptosis/Proteostasis):</strong> HTRA3 cleaves XIAP, modulating PI3K/AKT/PTEN survival signaling toward neuronal apoptosis; its PDZ-domain and protease activity may also engage misfolded proteins as substrates (hypothesis only — no direct amyloid-β or tau evidence shown).
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>No Direct AD Evidence</h3>
+        <p>No cited study demonstrates HTRA3 expression changes in AD brain, cerebral vasculature, CSF, plasma, plaques, tangles, or AD patient cohorts. All AD relevance is inferential and hypothesis-generating, derived from mechanistic overlap with known AD pathways.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neurovascular &amp; ECM Rationale</h3>
+        <p>The strongest AD-relevant rationale is neurovascular. HTRA3 appears in CNS endothelial/neurovascular-unit profiling, linked to Wnt/β-catenin ECM programs, TGF-β endothelial signaling, vascular stability, and BBB integrity. Downregulation of Htra3 occurs alongside disrupted ECM/TGF-β endothelial signaling in neurovascular injury.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent TGF-β Biology</h3>
+        <p>In neurovascular injury, reduced HTRA3 accompanies disrupted endothelial TGF-β signaling, suggesting insufficiency during repair. In pulmonary fibrosis, HTRA3 promotes TGF-β1/Smad activation and EMT. In AD — where TGF-β is protective or pathogenic depending on timing and cell type — HTRA3 is a pathway modulator, not inherently beneficial or harmful.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Proapoptotic Therapeutic Risk</h3>
+        <p>HTRA3 can cleave XIAP, promote apoptosis, and modulate PTEN/PI3K/AKT survival signaling. These pathways are critical for neuronal survival. Inappropriately increasing HTRA3 activity in neurons could be harmful. Safety and directionality of any therapeutic intervention remain unresolved.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitochondrial &amp; Aging Convergence</h3>
+        <p>Stress-induced HTRA3 accumulation in progeroid models correlates with POLG1 depletion, redox imbalance, mitochondrial oxidative phosphorylation impairment, and senescence. This mechanistically aligns with AD features: mitochondrial respiratory decline, mtDNA maintenance defects, oxidative stress, and aging-related neuronal vulnerability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Druggability &amp; Isoform Specificity</h3>
+        <p>HTRA3 is druggable in principle: peptidomimetic activators, allosteric ligand-binding pockets, and activity-modulating monoclonal antibodies have been demonstrated. Critically, HTRA3-L (with PDZ domain) and HTRA3-S (without) differ in substrate interactions, oligomerization, and biomarker behavior — AD studies must use isoform-specific assays, not total HTRA3.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><b>Treat HTRA3 as an exploratory candidate only.</b> HTRA3 is not a validated AD therapeutic target. All rationale is inferential. Prioritize direct validation in AD tissue and models before any therapeutic development is considered.</li>
+
+      <li><b>Measure HTRA3 directly in AD biology.</b> Key studies should quantify HTRA3-L, HTRA3-S, and processed/activated forms in AD brain regions, cerebral vessels, pericytes, endothelial cells, astrocytes, microglia, neurons, CSF, and plasma — including spatial localization around plaques, tangles, microbleeds, and damaged vessels.</li>
+
+      <li><b>Focus first on neurovascular and ECM endpoints.</b> The strongest rationale supports testing HTRA3 in BBB integrity, endothelial maturation, collagen IV/basement-membrane remodeling, perivascular drainage, vascular leakage, microhemorrhage repair, TGF-β signaling, and Wnt/β-catenin-linked endothelial ECM programs.</li>
+
+      <li><b>Test mitochondrial and senescence hypotheses in AD-relevant systems.</b> Determine whether HTRA3 accumulation affects POLG1, mtDNA maintenance, oxidative phosphorylation, ROS/peroxynitrite stress, neuronal or glial senescence markers, and vulnerability to amyloid-β- or tau-related stress in AD-relevant models.</li>
+
+      <li><b>Identify AD-relevant substrates empirically.</b> Candidate substrate screens should assess amyloid-β, APP fragments, tau/phospho-tau, ApoE, complement factors, collagen IV, laminins, proteoglycans, basement-membrane proteins, synaptic ECM components, POLG1, XIAP, and regulators of PI3K/AKT/PTEN signaling. No current evidence shows direct HTRA3 interaction with amyloid-β or tau.</li>
+
+      <li><b>Define cell-type and disease-stage directionality before modulation.</b> HTRA3 may require enhancement in settings of deficient endothelial repair or ECM remodeling, but inhibition in settings of excessive basement-membrane degradation, fibrosis-like TGF-β/Smad activation, POLG1 depletion, or proapoptotic neuronal stress.</li>
+
+      <li><b>Avoid systemic, nonselective modulation until safety is characterized.</b> HTRA3's roles in apoptosis, tumor biology, placentation/reproductive tissue, fibrosis, and ECM remodeling create substantive risks for broad activation or inhibition. Tissue- and context-specific approaches are essential.</li>
+
+      <li><b>Exploit available druggability tools for mechanistic validation.</b> Allosteric modulators, PDZ-directed ligands, peptidomimetic activators, catalytic-site inhibitors, and activity-modulating antibodies should be deployed experimentally to determine whether HTRA3 activity is protective, harmful, or neutral in AD-relevant cellular and animal models.</li>
+
+      <li><b>Plan for precision modulation as the realistic therapeutic concept.</b> If validated, HTRA3 targeting would likely require disease-stage, brain-region, cell-type, isoform, and pathway specificity — particularly in AD subtypes characterized by vascular dysfunction, BBB breakdown, microhemorrhage, impaired matrix repair, chronic TGF-β dysregulation, mitochondrial oxidative stress, or inflammatory ECM remodeling.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment —</span>
+      <p>
+        HTRA3 is a mechanistically plausible but <b>entirely unvalidated</b> candidate in Alzheimer's disease. Its most defensible AD-relevant rationale centers on <b>neurovascular unit biology</b>: potential modulation of BBB integrity, collagen IV basement-membrane remodeling, TGF-β/Wnt endothelial signaling, and perivascular ECM dynamics — none of which have been tested in AD tissue or models. Secondary hypotheses involving <b>mitochondrial dysfunction, cellular senescence, and POLG1-linked bioenergetic decline</b> are supported by progeroid disease models and align with established AD mechanisms, but remain untested. <b>Therapeutic ambiguity is substantial</b>: HTRA3 can be repair-supporting or fibrosis-promoting, tumor-suppressive or tumor-promoting, pro-apoptotic or cytoprotective depending on context, isoform, and cell type. Any translational program must begin with rigorous direct validation in AD-relevant systems, using isoform-specific tools, before modulation strategies are contemplated. The available druggability evidence — allosteric sites, PDZ-domain ligands, peptidomimetic activators, and activity-modulating antibodies — provides a useful experimental toolkit for mechanistic interrogation, but <b>should not be confused with therapeutic readiness</b>. HTRA3 remains, at present, an exploratory hypothesis-stage target warranting foundational investigation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  HTRA3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

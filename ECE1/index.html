@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECE1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 15px;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    margin-bottom: 0;
+    font-size: 14.5px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue { background: #eff6ff; border-left: 4px solid #2563eb; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 15.5px;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 16px;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: #93c5fd;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ECE1 &nbsp;|&nbsp; Endothelin-Converting Enzyme 1</span>
+    <span class="chip chip-danger">⚠ Therapeutic conflict: Aβ-clearance vs. ET-1 vasoconstriction</span>
+  </div>
+  <h1>ECE1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Key Therapeutic Caution</span>
+      Increasing ECE1 activity to enhance Aβ clearance may simultaneously elevate endothelin-1 (ET-1), a potent vasoconstrictor, worsening cerebral hypoperfusion, endothelial dysfunction, and blood–brain barrier stress. Any therapeutic strategy must address this dual-function conflict.
+    </div>
+
+    <p>Human ECE1 (endothelin-converting enzyme 1) is a metalloprotease with a dual biological profile highly relevant to Alzheimer's disease. On one hand, ECE1 contributes to amyloid-β (Aβ) clearance, operating alongside neprilysin, IDE, ACE, and related enzymes to regulate brain Aβ levels. On the other hand, ECE1 converts big endothelin-1 into mature ET-1, a vasoconstrictor mediator implicated in cerebral vascular dysfunction, oxidative stress, and neurovascular injury — all processes that accelerate AD progression.</p>
+
+    <p>The most compelling AD-relevant evidence favours ECE1 gain-of-function: AAV-mediated ECE1 delivery in APP/PS1 mice reduced Aβ immunoreactivity and Congo red-positive amyloid deposits locally. ECE1 inhibition, conversely, increases intracellular and extracellular Aβ and promotes oligomer formation. Yet human genetic and expression data are mixed, and a 2025 study positions ECE1 primarily as a degrader of Aβ34 within a multienzyme amyloidolytic pathway rather than a universal Aβ-clearing enzyme.</p>
+
+    <p>ECE1 is therefore a plausible but complex therapeutic target. The most defensible strategy is selective enhancement of neuronal, glial, or endosomal ECE1-mediated Aβ degradation while avoiding systemic or endothelial ET-1 overproduction.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:620px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Regulators -->
+        <rect x="10" y="10" width="200" height="480" rx="12" fill="#e8f2fb" fill-opacity="0.5" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.12em">A · UPSTREAM REGULATORS</text>
+
+        <!-- Node A1: Oxidative Stress -->
+        <rect x="28" y="46" width="164" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="62" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Oxidative Stress</text>
+        <text x="110" y="76" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Ischemia / Hypoxia</text>
+
+        <!-- Node A2: Metabolic / Sleep -->
+        <rect x="28" y="106" width="164" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="122" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Diabetes / Sleep Dep.</text>
+        <text x="110" y="136" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Metabolic Stress</text>
+
+        <!-- Node A3: PKC/MAPK Signaling -->
+        <rect x="28" y="166" width="164" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="182" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">PKC / MAPK / ERK</text>
+        <text x="110" y="196" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">CREB Signaling</text>
+
+        <!-- Node A4: Androgen / AhR -->
+        <rect x="28" y="226" width="164" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="242" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Androgen / FPR2</text>
+        <text x="110" y="256" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">AhR Astrocyte Path.</text>
+
+        <!-- Arrows within Panel A -->
+        <line x1="110" y1="86" x2="110" y2="106" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="110" y1="146" x2="110" y2="166" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="110" y1="206" x2="110" y2="226" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: ECE1 Central Hub -->
+        <rect x="226" y="10" width="180" height="480" rx="12" fill="#dbeafe" fill-opacity="0.4" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="316" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.12em">B · ECE1 HUB</text>
+
+        <!-- Node B1: ECE1 Gene/Protein -->
+        <rect x="244" y="46" width="144" height="44" rx="6" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="316" y="66" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">ECE1</text>
+        <text x="316" y="81" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#bfdbfe">Metalloprotease</text>
+
+        <!-- Node B2: Isoforms/Compartments -->
+        <rect x="244" y="112" width="144" height="44" rx="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="316" y="130" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Isoforms: ECE1b/c</text>
+        <text x="316" y="145" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Endosomal / Synaptic</text>
+
+        <!-- Node B3: Gene Variants -->
+        <rect x="244" y="178" width="144" height="44" rx="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="316" y="196" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Promoter Variant</text>
+        <text x="316" y="211" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">rs213045 / C-338A</text>
+
+        <!-- Node B4: AAV Gene Delivery -->
+        <rect x="244" y="244" width="144" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+        <text x="316" y="262" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="700">AAV5 Gene Delivery</text>
+        <text x="316" y="277" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">APP/PS1 Cortex/Hipp.</text>
+
+        <!-- Arrows within Panel B -->
+        <line x1="316" y1="90" x2="316" y2="112" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="316" y1="156" x2="316" y2="178" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="316" y1="222" x2="316" y2="244" stroke="#2563eb" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Arrows: Panel A → Panel B (ECE1 hub) -->
+        <!-- A1 → B1 -->
+        <line x1="192" y1="66" x2="244" y2="66" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- A3 → B1 (route via y=186) -->
+        <path d="M192 186 L218 186 L218 90 L244 90" fill="none" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- A4 → B1 (route via y=246) -->
+        <path d="M192 246 L218 246 L218 112 L244 112" fill="none" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- PANEL C: Aβ Clearance Branch -->
+        <rect x="422" y="10" width="220" height="280" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.12em">C · Aβ CLEARANCE BRANCH</text>
+
+        <!-- Node C1: Aβ Substrates -->
+        <rect x="438" y="46" width="188" height="40" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="62" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Aβ42 / Aβ34 / Aβ40</text>
+        <text x="532" y="76" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Soluble &amp; Endosomal Pools</text>
+
+        <!-- Node C2: ECE1 Degrades -->
+        <rect x="438" y="106" width="188" height="40" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="122" text-anchor="middle" font-family="Arial" font-size="10" fill="#0f766e" font-weight="700">ECE1 Proteolysis</text>
+        <text x="532" y="136" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Produces Aβ20–34 fragment</text>
+
+        <!-- Node C3: Reduced Aβ burden -->
+        <rect x="438" y="166" width="188" height="40" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="182" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="700">↓ Aβ Immunoreactivity</text>
+        <text x="532" y="196" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">↓ Amyloid Deposits</text>
+
+        <!-- Node C4: Microglial Clearance -->
+        <rect x="438" y="226" width="188" height="40" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="242" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Microglial ECE1c ↑</text>
+        <text x="532" y="256" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">↑ Aβ42 Uptake &amp; Degradation</text>
+
+        <!-- Arrows within Panel C -->
+        <line x1="532" y1="86" x2="532" y2="106" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-green)"/>
+        <line x1="532" y1="146" x2="532" y2="166" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-green)"/>
+        <line x1="532" y1="206" x2="532" y2="226" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-green)"/>
+
+        <!-- Arrow: Panel B ECE1 → Panel C C1 -->
+        <line x1="388" y1="68" x2="438" y2="68" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+        <!-- PANEL D: ET-1 Vascular Branch -->
+        <rect x="422" y="306" width="220" height="184" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="532" y="328" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="0.12em">D · ET-1 VASCULAR BRANCH</text>
+
+        <!-- Node D1: Big ET-1 -->
+        <rect x="438" y="340" width="188" height="38" rx="6" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="532" y="356" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">Big Endothelin-1</text>
+        <text x="532" y="370" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b">ECE1 Cleavage → ET-1</text>
+
+        <!-- Node D2: Vasoconstriction -->
+        <rect x="438" y="398" width="188" height="38" rx="6" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="532" y="414" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c" font-weight="700">↑ Vasoconstriction</text>
+        <text x="532" y="428" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">↓ Cerebral Blood Flow</text>
+
+        <!-- Node D3: BBB / Oxidative Damage -->
+        <rect x="438" y="454" width="188" height="32" rx="6" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="532" y="468" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">BBB Stress · Ox. Stress</text>
+        <text x="532" y="481" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">Endothelial Dysfunction</text>
+
+        <!-- Arrows within Panel D -->
+        <line x1="532" y1="378" x2="532" y2="398" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="532" y1="436" x2="532" y2="454" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow: Panel B ECE1 → Panel D D1 (route through right gutter of B, going down) -->
+        <path d="M388 80 L406 80 L406 358 L438 358" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- PANEL E: Outcomes -->
+        <rect x="658" y="10" width="230" height="480" rx="12" fill="#f8fafc" fill-opacity="0.8" stroke="#475569" stroke-width="1.2"/>
+        <text x="773" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#475569" letter-spacing="0.12em">E · THERAPEUTIC OUTCOMES</text>
+
+        <!-- Node E1: Synaptic Protection -->
+        <rect x="672" y="46" width="202" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="773" y="62" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="700">↓ Synaptic Aβ Oligomers</text>
+        <text x="773" y="76" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Preserve Synaptic Function</text>
+
+        <!-- Node E2: Reduced Neuroinflammation -->
+        <rect x="672" y="106" width="202" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="773" y="122" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">↓ IL-1β, TNFα</text>
+        <text x="773" y="136" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">↓ NF-κB · p38 MAPK</text>
+
+        <!-- Node E3: Aβ Biomarkers -->
+        <rect x="672" y="166" width="202" height="40" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="773" y="182" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8">Aβ34 / Aβ20–34</text>
+        <text x="773" y="196" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8">Activity Biomarkers</text>
+
+        <!-- Node E4: Therapeutic Conflict -->
+        <rect x="672" y="240" width="202" height="44" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="1.4"/>
+        <text x="773" y="258" text-anchor="middle" font-family="Arial" font-size="10" fill="#b45309" font-weight="700">Therapeutic Conflict</text>
+        <text x="773" y="272" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">Aβ-clear. vs. ET-1 risk</text>
+        <text x="773" y="285" text-anchor="middle" font-family="Arial" font-size="9" fill="#92400e">Requires compartment selectivity</text>
+
+        <!-- Node E5: Strategy -->
+        <rect x="672" y="370" width="202" height="44" rx="6" fill="#e8f2fb" stroke="#1a3a5c" stroke-width="1.4"/>
+        <text x="773" y="388" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="700">Selective Enhancement</text>
+        <text x="773" y="402" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Brain-local / Endosomal</text>
+        <text x="773" y="415" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">+ ET-R Blockade</text>
+
+        <!-- Node E6: Early Intervention -->
+        <rect x="672" y="430" width="202" height="40" rx="6" fill="#e8f2fb" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="773" y="446" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Early / Pre-plaque Stage</text>
+        <text x="773" y="460" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Soluble Aβ most clearable</text>
+
+        <!-- Arrows within Panel E -->
+        <line x1="773" y1="86" x2="773" y2="106" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-green)"/>
+        <line x1="773" y1="146" x2="773" y2="166" stroke="#2563eb" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="773" y1="414" x2="773" y2="430" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+        <!-- Arrows: Panel C → Panel E -->
+        <line x1="626" y1="186" x2="672" y2="186" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-green)"/>
+        <!-- C3 → E1 -->
+        <path d="M626 176 L644 176 L644 66 L672 66" fill="none" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-green)"/>
+        <!-- C4 → E2 -->
+        <path d="M626 246 L644 246 L644 126 L672 126" fill="none" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-green)"/>
+
+        <!-- Arrow: Panel D → E4 (Conflict) -->
+        <line x1="626" y1="430" x2="644" y2="430" stroke="#9b1c1c" stroke-width="1.3"/>
+        <path d="M644 430 L644 262 L672 262" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Arrow: E4 → E5 (Strategy in response) -->
+        <line x1="773" y1="284" x2="773" y2="370" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A — Upstream Regulators:</strong> Oxidative stress, ischemia/hypoxia, metabolic stressors (diabetes, sleep deprivation), PKC/MAPK/ERK signalling, androgen, and AhR pathways all modulate ECE1 expression or activity. <strong>Panel B — ECE1 Hub:</strong> ECE1 (metalloprotease) acts via isoforms (ECE1b/c) in endosomal/synaptic compartments; promoter variant rs213045 is repeatedly associated with AD risk; AAV5 gene delivery into APP/PS1 mice is the clearest proof-of-concept for gain-of-function amyloid clearance. The hub branches into two parallel downstream cascades. <strong>Panel C — Aβ Clearance Branch (green):</strong> ECE1 degrades soluble Aβ42, Aβ34, and related pools, producing stable Aβ20–34 fragments; this reduces amyloid burden and is augmented by microglial ECE1c (androgen-mediated). <strong>Panel D — ET-1 Vascular Branch (red):</strong> ECE1 also cleaves big endothelin-1 to ET-1, driving vasoconstriction, reduced cerebral blood flow, BBB stress, and endothelial/oxidative injury. <strong>Panel E — Outcomes:</strong> Convergent outcomes include synaptic protection, reduced neuroinflammation, and activity-based biomarkers (Aβ34/Aβ20–34); however, the therapeutic conflict between branches mandates compartment-selective strategies (brain-local delivery + ET receptor blockade) preferentially at early/pre-plaque disease stages.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Aβ-Degrading Enzyme Network</h3>
+        <p>ECE1 is grouped with neprilysin, IDE, ACE, ECE2, and related metalloproteases as a regulator of steady-state brain Aβ levels. Loss or reduction of ECE1 — by partial knockout, inhibition, or disease-related stress — reliably increases intraneuronal, synaptosomal, and extracellular Aβ, including oligomeric species.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Endosomal / Synaptic Proteostasis</h3>
+        <p>ECE1 appears especially relevant to intracellular Aβ clearance in endosomal–lysosomal, autophagic, multivesicular body, and synaptic endosomal compartments. Pharmacologic ECE-family inhibition increased intracellular Aβ, extracellular Aβ, exosome-associated Aβ, and intracellular Aβ oligomers — consistent with a compartment-specific proteostatic role.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>In Vivo Gain-of-Function Evidence</h3>
+        <p>AAV5-mediated ECE1 gene delivery into APP/PS1 mouse cortex and hippocampus produced local ECE1 expression and reduced both Aβ immunoreactivity and Congo red-positive amyloid deposits. This is one of the clearest pieces of evidence supporting ECE1 enhancement as an amyloid-lowering strategy.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Aβ34 as a Pathway Biomarker</h3>
+        <p>A 2025 pathway study positions ECE1 primarily as a major degrader of Aβ34, producing stable Aβ20–34, rather than directly clearing Aβ40 or Aβ42. This suggests ECE1 functions within a multienzyme amyloidolytic cascade; Aβ34 and Aβ20–34 may serve as activity-based biomarkers of downstream amyloid clearance, more informative than total ECE1 protein.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Dual-Function Therapeutic Conflict</h3>
+        <p>ECE1 converts big ET-1 into mature ET-1, a potent vasoconstrictor. Aβ40 and Aβ42 can themselves increase ET-1 release from brain endothelial cells — amplified by oxidative stress. Increased ECE1 could worsen cerebral vasoconstriction, endothelial dysfunction, BBB stress, and impaired perfusion even as it reduces amyloid burden.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Mixed Human Genetic &amp; Expression Evidence</h3>
+        <p>Some studies associate ECE1 promoter variant rs213045 (C-338A) and haplotypes with AD risk or late-life cognition, including APOE-stratified effects. However, other cohorts find no significant rare-variant burden or expression difference. One vascular AD study found reduced ECE1 protein but elevated ECE1 <em>activity</em> and ET-1 in leptomeningeal vessels — suggesting activity, not abundance, is the relevant abnormality.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Exclude Candida ECE1 data from AD interpretation.</strong> Human ECE1 and <em>Candida</em> ECE1 (candidalysin) are evolutionarily distinct; fungal virulence findings do not inform human ECE1 as an AD target and should be rigorously filtered out of mechanistic analyses.</li>
+      <li><strong>Prioritise ECE1 enhancement over inhibition for AD.</strong> The preponderance of AD-relevant evidence supports preserving or increasing ECE1-mediated Aβ degradation — particularly in neuronal, glial, synaptic-endosomal, and microglial compartments — not systemic inhibition.</li>
+      <li><strong>Avoid global systemic ECE1 activation.</strong> Any therapeutic strategy must minimise ET-1 overproduction and consequent vasoconstriction, hypertension, endothelial dysfunction, reduced cerebral perfusion, and inflammatory vascular remodelling.</li>
+      <li><strong>Pursue compartment-selective modulation.</strong> Promising approaches include brain-localised delivery (e.g., AAV-based), isoform-specific targeting, endosomal-compartment focus, substrate-biased activation favouring Aβ over big-ET-1 processing, or combination with endothelin receptor antagonism.</li>
+      <li><strong>Target early, pre-plaque disease stages.</strong> ECE1-family proteases are more effective against soluble and nascent Aβ species than established fibrillar deposits. ECE1-based strategies are likely most impactful before amyloid becomes insoluble or plaque-dominant.</li>
+      <li><strong>Develop activity-based ECE1 biomarkers.</strong> Measure Aβ34 and Aβ20–34 as readouts of amyloidolytic pathway activity; ECE1 enzymatic activity assays are more informative than total ECE1 protein levels alone.</li>
+      <li><strong>Stratify by vascular and metabolic context.</strong> Diabetes, ischemia, chronic sleep deprivation, hypoxia, dyslipidaemia, hypertension, oxidative stress, and APOE genotype all influence whether ECE1 modulation will be beneficial or harmful in a given patient context.</li>
+      <li><strong>Separate Aβ-degrading from ET-1-generating effects experimentally.</strong> Future studies should co-measure Aβ species, ECE1 activity, ET-1 production, cerebral blood flow, endothelial function, and behavioural outcomes to disentangle the two arms of ECE1 biology.</li>
+      <li><strong>Validate causality in AD-specific models.</strong> Further work should test whether selective ECE1 enhancement reverses Aβ accumulation, synaptic dysfunction, neurodegeneration, tau-related changes, neuroinflammation, BBB dysfunction, and cognitive decline in relevant models.</li>
+      <li><strong>Treat ECE1 as mechanistically plausible but not yet clinically validated.</strong> The evidence supports therapeutic exploration, especially for amyloid clearance and neurovascular modulation, but does not yet justify broad ECE1 activation or inhibition without compartment-specific safety controls.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — ECE1 in Alzheimer's Disease</span>
+      <p>ECE1 occupies a <strong>biologically credible but therapeutically complex</strong> position in Alzheimer's disease. Its dual identity — as both an <strong>amyloid-β-degrading metalloprotease</strong> operating in neuronal, endosomal, and microglial compartments and an <strong>endothelin-1-generating vascular enzyme</strong> capable of worsening cerebral vasoconstriction and BBB stress — means that indiscriminate modulation carries meaningful risk. The most compelling evidence, anchored by AAV-mediated gene delivery studies in APP/PS1 mice and consistent findings that ECE1 loss or inhibition increases Aβ, supports <strong>selective gain-of-function strategies targeting neuronal and endosomal ECE1</strong>. The emerging role of ECE1 as a primary <strong>Aβ34 degrader</strong> within a larger multienzyme amyloidolytic cascade — rather than a simple Aβ40/Aβ42 shredder — refines the target hypothesis and highlights Aβ20–34 as a meaningful pharmacodynamic biomarker. Human genetic evidence and brain expression data remain <strong>inconsistent and require replication in well-powered cohorts</strong>. The field's priority should be developing compartment-selective, brain-localised ECE1 modulators tested at early disease stages, with concurrent monitoring of ET-1 biology and cerebrovascular health.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>ECE1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

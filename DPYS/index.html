@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DPYS — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.45);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW BODY */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent {
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    border-left: 4px solid var(--danger);
+    background: var(--danger-light);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    border-left: 4px solid var(--positive);
+    background: var(--positive-light);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    border-left: 4px solid var(--warning);
+    background: var(--warning-light);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    border-left: 4px solid var(--neutral);
+    background: var(--neutral-light);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways-list li:last-child { border-bottom: none; }
+
+  .takeaways-list li::before {
+    content: counter(item, decimal-leading-zero) ".  ";
+    counter-increment: item;
+    font-family: 'Courier New', monospace;
+    color: var(--mid);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .takeaways-list {
+    counter-reset: item;
+  }
+
+  .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    border-radius: 14px;
+    padding: 40px 36px;
+    color: var(--white);
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner p {
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .verdict-banner strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DPYS &nbsp;|&nbsp; Dihydropyrimidinase / DHPase</span>
+    <span class="chip chip-danger">⚠ Safety concern: DPYS loss-of-function toxicity</span>
+  </div>
+  <h1>DPYS &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caution — Indirect Evidence Only:</strong> The AD-relevant signal for DPYS derives from a single mouse toxicant model (1,3,6,8-tetrabromocarbazole). No DPYS changes have been demonstrated in human AD brain tissue, and no targeted experiments directly link DPYS manipulation to Aβ, p-Tau, or cognition. Additionally, DPYS loss-of-function is associated with neurological disease and fluoropyrimidine toxicity; indiscriminate suppression may be harmful.
+    </div>
+
+    <div class="overview-body">
+      <p>DPYS (dihydropyrimidinase/DHPase) is primarily a pyrimidine-catabolism enzyme linked to β-alanine metabolism, fluoropyrimidine drug metabolism, and rare neurometabolic disease. Its strongest Alzheimer's disease–relevant evidence comes from a 2026 mouse study of 1,3,6,8-tetrabromocarbazole (1368-BCZ), where subchronic exposure produced an Alzheimer's-like phenotype: impaired recognition memory, spatial learning and memory deficits, hippocampal injury, approximately 3-fold increased hippocampal Aβ, and approximately 1.5–2-fold increased phosphorylated Tau.</p>
+      <p>In that model, hippocampal <em>Dpys</em> was downregulated alongside <em>Mlycd</em> and <em>Pank1</em>, and multi-omics analysis connected these changes to disruption of β-alanine metabolism and pantothenate/CoA biosynthesis — creating a plausible mechanistic link between reduced DPYS activity, metabolic instability in the hippocampus, and AD-like pathology.</p>
+      <p>However, the evidence remains indirect. The text does not establish DPYS as a validated Alzheimer's target in humans, does not show DPYS changes in AD patient brain tissue, and does not report targeted experiments proving that manipulating Dpys alters Aβ, p-Tau, cognition, or neurodegeneration. As an Alzheimer's therapeutic target, DPYS is best considered an exploratory metabolic-modulation candidate.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Context -->
+        <rect x="10" y="10" width="250" height="480" rx="12" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="135" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#2e6da4" letter-spacing="1">UPSTREAM CONTEXT</text>
+
+        <!-- Node 1: 1368-BCZ Exposure -->
+        <rect x="36" y="44" width="198" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="135" y="63" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c" font-weight="700">1368-BCZ Exposure</text>
+        <text x="135" y="79" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1a3a5c">(subchronic, mouse)</text>
+
+        <!-- Arrow down -->
+        <line x1="135" y1="88" x2="135" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: AD-like Phenotype -->
+        <rect x="36" y="110" width="198" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="135" y="129" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c" font-weight="700">AD-like Phenotype</text>
+        <text x="135" y="145" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1a3a5c">Memory &amp; spatial deficits</text>
+
+        <!-- Arrow down -->
+        <line x1="135" y1="154" x2="135" y2="174" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Hippocampal Injury -->
+        <rect x="36" y="176" width="198" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="135" y="195" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c" font-weight="700">Hippocampal Injury</text>
+        <text x="135" y="211" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1a3a5c">Aβ↑ ~3×, p-Tau↑ ~1.5–2×</text>
+
+        <!-- Arrow down -->
+        <line x1="135" y1="220" x2="135" y2="240" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: DPYS Downregulation -->
+        <rect x="36" y="242" width="198" height="44" rx="7" fill="#1a3a5c" stroke="#0a1f35" stroke-width="1.5"/>
+        <text x="135" y="261" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#ffffff" font-weight="700">DPYS Downregulated</text>
+        <text x="135" y="277" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#93c5fd">(+ Mlycd, Pank1 ↓)</text>
+
+        <!-- Node 5: CNS Human Deficiency -->
+        <rect x="36" y="322" width="198" height="52" rx="7" fill="#e0f2fe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="135" y="342" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c" font-weight="700">Human DPYS Deficiency</text>
+        <text x="135" y="358" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a3a5c">Seizures, dev. delay,</text>
+        <text x="135" y="371" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a3a5c">brain atrophy, parkinsonism</text>
+
+        <!-- Separator label -->
+        <text x="135" y="313" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b" font-style="italic">CNS Relevance (human)</text>
+
+        <!-- Arrow: DPYS down to human deficiency region via elbow -->
+        <polyline points="135,286 135,312" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Node 6: Pharmacogenomics -->
+        <rect x="36" y="404" width="198" height="44" rx="7" fill="#fef9c3" stroke="#b45309" stroke-width="1.2"/>
+        <text x="135" y="423" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#78350f" font-weight="700">Pharmacogenomics</text>
+        <text x="135" y="439" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#78350f">5-FU/fluoropyrimidine toxicity</text>
+
+        <polyline points="135,374 135,403" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- PANEL B: Mechanism Branches -->
+        <rect x="274" y="10" width="356" height="480" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="452" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">METABOLIC MECHANISM (BRANCHES)</text>
+
+        <!-- Node 7: β-alanine Pathway -->
+        <rect x="286" y="44" width="156" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="364" y="62" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a" font-weight="700">β-alanine Pathway</text>
+        <text x="364" y="78" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#134e4a">Pyrimidine catabolism</text>
+
+        <!-- Arrow: DPYS → β-alanine Pathway (cross-panel, horizontal from right side of panel A to left of panel B) -->
+        <polyline points="234,264 258,264 258,66 285,66" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow: β-alanine → Pantothenate/CoA -->
+        <line x1="364" y1="88" x2="364" y2="140" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: Pantothenate / CoA -->
+        <rect x="286" y="142" width="156" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="364" y="161" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a" font-weight="700">Pantothenate / CoA</text>
+        <text x="364" y="177" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#134e4a">Biosynthesis disrupted</text>
+
+        <!-- Branch split arrows from Pantothenate/CoA -->
+        <!-- Left branch to Mitochondrial Energy -->
+        <polyline points="330,186 310,186 310,240" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Right branch to Acetylation -->
+        <polyline points="398,186 418,186 418,240" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 9: Mitochondrial Energy -->
+        <rect x="286" y="242" width="144" height="44" rx="7" fill="#d1fae5" stroke="#059669" stroke-width="1.2"/>
+        <text x="358" y="261" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">Mitochondrial</text>
+        <text x="358" y="276" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#064e3b">Energy Handling</text>
+
+        <!-- Node 10: Acetylation / Lipid -->
+        <rect x="444" y="242" width="144" height="44" rx="7" fill="#d1fae5" stroke="#059669" stroke-width="1.2"/>
+        <text x="516" y="261" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">Acetylation &amp;</text>
+        <text x="516" y="276" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#064e3b">Lipid Metabolism</text>
+
+        <!-- Converge arrows to Neuronal Homeostasis -->
+        <polyline points="358,286 358,320 452,320 452,340" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+        <polyline points="516,286 516,320 452,320" stroke="#0f766e" stroke-width="1.4" fill="none"/>
+
+        <!-- Node 11: Neuronal Homeostasis -->
+        <rect x="360" y="342" width="184" height="44" rx="7" fill="#0f766e" stroke="#064e3b" stroke-width="1.4"/>
+        <text x="452" y="361" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#ffffff" font-weight="700">Neuronal Homeostasis</text>
+        <text x="452" y="377" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#ccfbf1">Resilience disrupted</text>
+
+        <!-- Node 12: Metabolic Collapse (broader) -->
+        <rect x="286" y="418" width="332" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="452" y="437" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a" font-weight="700">Broad Metabolic Collapse</text>
+        <text x="452" y="453" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#134e4a">Hundreds of hippocampal metabolite alterations</text>
+
+        <polyline points="452,386 452,417" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL C: Downstream Outcomes & Therapeutic -->
+        <rect x="644" y="10" width="246" height="480" rx="12" fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="767" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">OUTCOMES &amp; STRATEGY</text>
+
+        <!-- Node 13: AD Pathology Output -->
+        <rect x="658" y="44" width="218" height="52" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="767" y="64" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#7f1d1d" font-weight="700">AD-like Pathology</text>
+        <text x="767" y="80" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">↑Aβ, ↑p-Tau, memory loss,</text>
+        <text x="767" y="93" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">hippocampal injury</text>
+
+        <!-- Cross-panel arrow: Neuronal Homeostasis → AD Pathology -->
+        <polyline points="544,364 620,364 620,70 657,70" stroke="#9b1c1c" stroke-width="1.4" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- Node 14: Validation Needed -->
+        <rect x="658" y="172" width="218" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="767" y="192" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#7f1d1d" font-weight="700">Validation Needed</text>
+        <text x="767" y="208" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">Targeted Dpys rescue/KD</text>
+        <text x="767" y="221" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">in AD-relevant models</text>
+
+        <polyline points="767,96 767,171" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- Node 15: Biomarker Candidate -->
+        <rect x="658" y="300" width="218" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="767" y="320" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#78350f" font-weight="700">Biomarker Candidate</text>
+        <text x="767" y="336" text-anchor="middle" font-family="Georgia" font-size="9" fill="#78350f">Metabolomics: β-alanine,</text>
+        <text x="767" y="349" text-anchor="middle" font-family="Georgia" font-size="9" fill="#78350f">CoA intermediates, CSF/plasma</text>
+
+        <polyline points="767,224 767,299" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 16: Therapeutic Strategy -->
+        <rect x="658" y="420" width="218" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="767" y="439" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c" font-weight="700">Normalize Metabolic Flux</text>
+        <text x="767" y="455" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1a3a5c">(not simple inhibition)</text>
+
+        <polyline points="767,352 767,419" stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (left, blue) — Upstream Context:</strong> Subchronic 1368-BCZ exposure in mice produces an AD-like phenotype with hippocampal pathology, culminating in DPYS downregulation alongside Mlycd and Pank1. Human DPYS deficiency data (dashed) confirm CNS relevance; pharmacogenomic risk (amber) flags fluoropyrimidine toxicity as a safety concern.
+      <strong>Panel B (centre, teal) — Metabolic Mechanism:</strong> DPYS links to the β-alanine pathway and disrupts pantothenate/CoA biosynthesis, which branches into two parallel sub-cascades — mitochondrial energy handling and acetylation/lipid metabolism — reconverging at neuronal homeostasis disruption, then feeding into a broader metabolic collapse.
+      <strong>Panel C (right, red/amber/blue) — Outcomes &amp; Strategy:</strong> AD-like pathology (Aβ, p-Tau, memory loss) flows from mechanistic disruption; targeted validation experiments are urgently needed before therapeutic development; metabolomic biomarker assessment and flux normalization (not blunt inhibition) are the recommended strategic priorities.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Metabolic Intersection</h3>
+        <p>DPYS sits at the junction of pyrimidine degradation, β-alanine production, and broader cofactor/energy metabolism — making it a pathway node rather than a single-function enzyme. Disruption of this hub ramifies into mitochondrial energy handling, lipid metabolism, and acetylation capacity, all relevant to neurodegeneration.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>AD-Relevant Signal (Mouse)</h3>
+        <p>The 1368-BCZ mouse study provides the most direct AD-relevant evidence: Dpys was downregulated in hippocampus concurrent with impaired memory, elevated Aβ (~3×) and p-Tau (~1.5–2×), hippocampal pathology, and disruption of the β-alanine and pantothenate/CoA axes. The signal is real but indirect.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>β-alanine–CoA Axis as Mechanism</h3>
+        <p>The most plausible DPYS-related AD mechanism runs through the β-alanine–pantothenate–CoA axis. CoA metabolism shapes mitochondrial energy flux, lipid biosynthesis, and protein acetylation — all of which affect neuronal resilience. This axis represents the most tractable mechanistic hypothesis for follow-up investigation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Loss-of-Function Risks</h3>
+        <p>Biallelic DPYS variants cause dihydropyrimidinase deficiency with variable neurological phenotypes: developmental delay, seizures, autistic traits, hypotonia, brain atrophy, white matter abnormalities, and juvenile parkinsonism. Furthermore, reduced DPYS activity increases fluoropyrimidine/5-FU toxicity — a critical pharmacogenomic safety concern in older populations who may also receive cancer chemotherapy.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Broader Metabolic Collapse Context</h3>
+        <p>DPYS downregulation in the AD-like toxicant model appears to be part of a wider metabolic disruption (hundreds of altered hippocampal metabolites) rather than an isolated change. This context-dependency complicates direct causal attribution and underscores the need for targeted perturbation experiments.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Exploratory Target Status</h3>
+        <p>Despite CNS relevance from human deficiency data, pharmacogenomic importance, and appearance in neuroinflammatory and hippocampal metabolic studies, DPYS has not been validated as an Alzheimer's target in human brain tissue. No AD-specific DPYS methylation, expression, or variant data from patient cohorts were identified. DPYS should be treated as an exploratory metabolic-modulation candidate and biomarker hypothesis, not an established disease-modifying target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><span class="lead">Prioritize validation before therapeutic development:</span> Test whether Dpys rescue or knockdown specifically changes Aβ accumulation, Tau phosphorylation, hippocampal pathology, synaptic function, and cognition in AD-relevant models before advancing any therapeutic program.</li>
+      <li><span class="lead">Examine DPYS in human AD datasets:</span> Systematically assess DPYS expression, methylation, variants, and linked metabolite levels across hippocampus and other vulnerable brain regions in AD patient cohorts, stratifying by disease stage or subtype.</li>
+      <li><span class="lead">Investigate the β-alanine–pantothenate–CoA axis:</span> Focus mechanistic studies on this axis as the most plausible DPYS-related AD pathway, especially regarding effects on mitochondrial function, lipid metabolism, acetylation balance, and neuronal resilience.</li>
+      <li><span class="lead">Deploy metabolomics in AD-relevant contexts:</span> Measure DPYS-related metabolites — dihydrouracil, dihydrothymine, β-alanine products, pantothenate, and CoA-pathway intermediates — in AD model systems, CSF, plasma, or post-mortem brain tissue to establish whether this metabolic signature tracks with disease.</li>
+      <li><span class="lead">Avoid assuming DPYS inhibition is beneficial:</span> Known DPYS loss-of-function causes neurological disease and increases fluoropyrimidine toxicity; indiscriminate suppression of DPYS activity may be harmful and should not be pursued without robust mechanistic justification.</li>
+      <li><span class="lead">Target metabolic flux normalization, not simple modulation:</span> Any therapeutic strategy should aim to normalize DPYS-linked metabolic flux or compensate for downstream pathway disruption rather than simply activating or inhibiting the enzyme in isolation.</li>
+      <li><span class="lead">Incorporate pharmacogenetic safety screening:</span> Include DPYS variant screening in any DPYS-directed therapeutic or biomarker strategy, particularly because DPYS variants influence fluoropyrimidine toxicity risk and older AD patients may concurrently undergo cancer treatment.</li>
+      <li><span class="lead">Treat DPYS as a candidate biomarker for metabolic/inflammatory AD subtypes:</span> Until causality is demonstrated, position DPYS as a pathway node and biomarker hypothesis for metabolic or neuroinflammatory AD subpopulations rather than a primary disease-modifying target.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-label">Synthesis &amp; Verdict</div>
+      <p>
+        <strong>Overall Assessment —</strong> DPYS represents a <strong>biologically plausible but insufficiently validated</strong> candidate in the Alzheimer's disease target landscape. Its most compelling AD-relevant evidence is restricted to a single toxicant mouse model (1368-BCZ), where hippocampal Dpys downregulation co-occurred with AD-like pathology and disruption of the <strong>β-alanine–pantothenate–CoA metabolic axis</strong>. Human genetic data confirm that DPYS is important for CNS integrity, but human AD-specific evidence is entirely absent from the current literature. Critically, DPYS loss-of-function is itself pathogenic — causing neurological disease and <strong>fluoropyrimidine toxicity</strong> — meaning that therapeutic strategies must be designed with great care to avoid mimicking a loss-of-function state. The immediate research priority should be <strong>direct causal validation</strong> through targeted perturbation studies in AD models, combined with systematic interrogation of DPYS and its metabolic network in human AD brain and biofluid datasets. Until causality is established, DPYS is best positioned as an <strong>exploratory metabolic pathway node and biomarker hypothesis</strong> for metabolic or neuroinflammatory AD subtypes, not as a lead therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DPYS / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

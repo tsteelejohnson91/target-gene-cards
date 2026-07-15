@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOCK3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-border: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #475569;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: white;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border: 1px solid rgba(192,57,43,0.55);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 48px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.855rem;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-top: 2px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.925rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger-border);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    margin-bottom: 22px;
+    padding-left: 44px;
+    position: relative;
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 3px;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.985rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: DOCK3 &nbsp;|&nbsp; Dedicator of Cytokinesis 3 (MOCA / PBP)</span>
+    <span class="chip chip-danger">⚠ Dual-role caution: tau &amp; Rac1 risk</span>
+  </div>
+  <h1>DOCK3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution</strong>&ensp;DOCK3 activation has context-dependent dual roles: enhancement may promote neuroprotection and axonal repair, but DOCK3/Rac1 activity has also been linked to tau phosphorylation, APP/presenilin-associated death signaling, JNK/ASK1 stress cascades, and epileptogenesis. Indiscriminate or irreversible modulation is not advised until pathway selectivity is established.
+    </div>
+
+    <p>DOCK3 — also known as MOCA or presenilin-binding protein (PBP) — is a neuron-enriched atypical guanine nucleotide exchange factor that primarily regulates Rac1-dependent cytoskeletal signaling. Across the available literature it is linked to Alzheimer's disease-relevant mechanisms including presenilin and APP signaling, tau phosphorylation and neurofibrillary pathology, amyloid-β regulation, neurite and axon integrity, synaptic and mitochondrial function, NMDA receptor excitotoxicity, oxidative stress, and neuroinflammation.</p>
+
+    <p>The strongest AD-specific preclinical evidence derives from an APP/PS1 mouse study in which ErbB4 activation by the small-molecule agonist E4A increased hippocampal DOCK3 and SIRT3, improved cognition, reduced Aβ plaque burden, improved synaptic and mitochondrial function, and suppressed TLR4–NF-κB–NLRP3 neuroinflammatory signaling. DOCK3 silencing partially weakened E4A's protective effects, supporting a functional rather than purely correlative role. Human AD evidence includes DOCK3/PBP redistribution into tangle-associated fractions in AD brain and a whole-genome sequencing study in Chinese early-onset AD associating germline DOCK3 variants with age of dementia onset.</p>
+
+    <p>DOCK3 is best characterized as an <em>emerging mechanistic mediator and candidate therapeutic node</em> in AD rather than a validated drug target. Some pathways suggest benefit from enhancing DOCK3 activity; others imply that indiscriminate activation could worsen tau phosphorylation, Rac1/JNK stress signaling, or APP/presenilin-linked death pathways.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Signals -->
+        <rect x="10" y="10" width="210" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">A · UPSTREAM SIGNALS</text>
+
+        <!-- Node: ErbB4/E4A -->
+        <rect x="30" y="44" width="170" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">ErbB4 activation</text>
+        <text x="115" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#d0e8ff">(E4A agonist)</text>
+
+        <!-- Node: Presenilin/APP -->
+        <rect x="30" y="108" width="170" height="40" rx="7" fill="#4a90c4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="124" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Presenilin / APP</text>
+        <text x="115" y="138" text-anchor="middle" font-family="Arial" font-size="9" fill="#d0e8ff">binding &amp; signaling</text>
+
+        <!-- Node: BDNF-TrkB -->
+        <rect x="30" y="172" width="170" height="40" rx="7" fill="#4a90c4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="188" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">BDNF–TrkB</text>
+        <text x="115" y="203" text-anchor="middle" font-family="Arial" font-size="9" fill="#d0e8ff">trophic signaling</text>
+
+        <!-- Node: NMDA-GluN2B -->
+        <rect x="30" y="236" width="170" height="40" rx="7" fill="#4a90c4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="252" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">NMDA–GluN2B/NR2D</text>
+        <text x="115" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#d0e8ff">receptor binding</text>
+
+        <!-- Node: Genetic variant -->
+        <rect x="30" y="300" width="170" height="40" rx="7" fill="#6aaad4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="316" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">DOCK3 germline</text>
+        <text x="115" y="330" text-anchor="middle" font-family="Arial" font-size="9" fill="#dceeff">variants (EOAD onset)</text>
+
+        <!-- Panel B: DOCK3 Hub -->
+        <rect x="234" y="10" width="180" height="480" rx="12" fill="#e0f0ee" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="324" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0a4a44" letter-spacing="1.5">B · DOCK3 HUB</text>
+
+        <!-- Node: DOCK3 central -->
+        <rect x="250" y="185" width="148" height="48" rx="8" fill="#0f766e" stroke="#074f4a" stroke-width="1.5"/>
+        <text x="324" y="205" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="white">DOCK3</text>
+        <text x="324" y="222" text-anchor="middle" font-family="Arial" font-size="9" fill="#a7f3d0">(MOCA / PBP)</text>
+
+        <!-- Node: ELMO/RhoG -->
+        <rect x="252" y="100" width="144" height="36" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="324" y="116" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">ELMO / RhoG</text>
+        <text x="324" y="130" text-anchor="middle" font-family="Arial" font-size="9" fill="#ccfbf1">scaffold complex</text>
+
+        <!-- Node: Rac1 activation -->
+        <rect x="252" y="290" width="144" height="36" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="324" y="306" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Rac1 activation</text>
+        <text x="324" y="320" text-anchor="middle" font-family="Arial" font-size="9" fill="#ccfbf1">GEF activity</text>
+
+        <!-- Node: SIRT3 co-induction -->
+        <rect x="252" y="396" width="144" height="36" rx="7" fill="#0d9488" stroke="#0f766e" stroke-width="1"/>
+        <text x="324" y="412" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">SIRT3 co-induction</text>
+        <text x="324" y="427" text-anchor="middle" font-family="Arial" font-size="9" fill="#a7f3d0">mitochondrial resilience</text>
+
+        <!-- Panel C: Protective Outputs -->
+        <rect x="428" y="10" width="222" height="235" rx="12" fill="#f0fdf4" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="539" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#064e3b" letter-spacing="1.5">C · PROTECTIVE OUTPUTS</text>
+
+        <!-- Node: Neurite/axon -->
+        <rect x="444" y="46" width="186" height="38" rx="7" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+        <text x="537" y="62" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Neurite &amp; axon growth</text>
+        <text x="537" y="76" text-anchor="middle" font-family="Arial" font-size="9" fill="#dcfce7">WAVE, CRMP-2, PAK, cofilin</text>
+
+        <!-- Node: Synaptic / Mito -->
+        <rect x="444" y="106" width="186" height="38" rx="7" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+        <text x="537" y="122" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Synaptic &amp; mito function</text>
+        <text x="537" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#dcfce7">cognition improvement</text>
+
+        <!-- Node: Anti-excitotox -->
+        <rect x="444" y="166" width="186" height="38" rx="7" fill="#16a34a" stroke="#15803d" stroke-width="1"/>
+        <text x="537" y="182" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Anti-excitotoxicity</text>
+        <text x="537" y="197" text-anchor="middle" font-family="Arial" font-size="9" fill="#bbf7d0">↓ Fyn, ↓ NMDAR surface</text>
+
+        <!-- Panel D: Pathological Risks -->
+        <rect x="428" y="260" width="222" height="230" rx="12" fill="#fdf0f0" fill-opacity="0.7" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="539" y="282" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1.5">D · PATHOLOGICAL RISKS</text>
+
+        <!-- Node: Tau phospho -->
+        <rect x="444" y="294" width="186" height="38" rx="7" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+        <text x="537" y="310" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">↑ Tau phosphorylation</text>
+        <text x="537" y="325" text-anchor="middle" font-family="Arial" font-size="9" fill="#fee2e2">tangle-associated PBP</text>
+
+        <!-- Node: ASK1/JNK stress -->
+        <rect x="444" y="354" width="186" height="38" rx="7" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+        <text x="537" y="370" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">ASK1 / JNK stress</text>
+        <text x="537" y="385" text-anchor="middle" font-family="Arial" font-size="9" fill="#fee2e2">Rac1/Cdc42 → apoptosis</text>
+
+        <!-- Node: Neuroinflammation -->
+        <rect x="444" y="414" width="186" height="38" rx="7" fill="#dc2626" stroke="#b91c1c" stroke-width="1"/>
+        <text x="537" y="430" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">TLR4–NF-κB–NLRP3</text>
+        <text x="537" y="445" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">neuroinflammation ↓ (via DOCK3↑)</text>
+
+        <!-- Panel E: Final Outcomes -->
+        <rect x="664" y="10" width="246" height="480" rx="12" fill="#f8fafc" fill-opacity="0.7" stroke="#475569" stroke-width="1.2"/>
+        <text x="787" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e293b" letter-spacing="1.5">E · OUTCOMES</text>
+
+        <!-- Node: Reduced Abeta -->
+        <rect x="678" y="46" width="218" height="38" rx="7" fill="#475569" stroke="#334155" stroke-width="1"/>
+        <text x="787" y="62" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Reduced Aβ plaque burden</text>
+        <text x="787" y="76" text-anchor="middle" font-family="Arial" font-size="9" fill="#cbd5e1">APP/MOCA regulation</text>
+
+        <!-- Node: Cognitive rescue -->
+        <rect x="678" y="106" width="218" height="38" rx="7" fill="#475569" stroke="#334155" stroke-width="1"/>
+        <text x="787" y="122" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Cognitive rescue</text>
+        <text x="787" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#cbd5e1">APP/PS1 mouse model</text>
+
+        <!-- Node: Axonal degeneration -->
+        <rect x="678" y="294" width="218" height="38" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="787" y="310" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Axonal degeneration</text>
+        <text x="787" y="325" text-anchor="middle" font-family="Arial" font-size="9" fill="#fca5a5">DOCK3-KO: dystrophic axons</text>
+
+        <!-- Node: NFT / pathology -->
+        <rect x="678" y="354" width="218" height="38" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="787" y="370" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">Neurofibrillary pathology</text>
+        <text x="787" y="385" text-anchor="middle" font-family="Arial" font-size="9" fill="#fca5a5">tangle association in AD brain</text>
+
+        <!-- Node: EOAD modifier -->
+        <rect x="678" y="420" width="218" height="38" rx="7" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+        <text x="787" y="436" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="white">EOAD onset modification</text>
+        <text x="787" y="451" text-anchor="middle" font-family="Arial" font-size="9" fill="#e2e8f0">germline DOCK3 variants</text>
+
+        <!-- CONNECTORS -->
+
+        <!-- A→B: ErbB4 → DOCK3 (via ELMO) -->
+        <line x1="200" y1="64" x2="252" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A→B: Presenilin → DOCK3 -->
+        <line x1="200" y1="128" x2="252" y2="200" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A→B: BDNF-TrkB → ELMO -->
+        <line x1="200" y1="192" x2="252" y2="136" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A→B: NMDA → DOCK3 -->
+        <line x1="200" y1="256" x2="252" y2="209" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B: ELMO → DOCK3 -->
+        <line x1="324" y1="136" x2="324" y2="185" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B: DOCK3 → Rac1 -->
+        <line x1="324" y1="233" x2="324" y2="290" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B: DOCK3 → SIRT3 (elbow: right edge of panel B, down) -->
+        <polyline points="398,209 415,209 415,414 396,414" fill="none" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B→C: Rac1 → Neurite/axon (elbow going right through gap) -->
+        <polyline points="396,308 418,308 418,65 444,65" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B→C: DOCK3 → Synaptic (elbow) -->
+        <polyline points="398,195 420,195 420,125 444,125" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B→C: DOCK3 → Anti-excitotox (direct rightward) -->
+        <line x1="398" y1="215" x2="444" y2="185" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B→D: Rac1 → Tau phospho -->
+        <polyline points="396,326 418,326 418,313 444,313" fill="none" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B→D: Rac1 → ASK1 (downward then right) -->
+        <polyline points="396,316 418,316 418,373 444,373" fill="none" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B→D (SIRT3)→ NF-kB: SIRT3/DOCK3 suppresses neuroinflammation -->
+        <line x1="396" y1="432" x2="444" y2="432" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr-red)" stroke-dasharray="5,3"/>
+
+        <!-- C→E: Neurite → Reduced Abeta -->
+        <line x1="630" y1="65" x2="678" y2="65" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- C→E: Synaptic → Cognitive rescue -->
+        <line x1="630" y1="125" x2="678" y2="125" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- D→E: Tau phospho → NFT pathology -->
+        <line x1="630" y1="313" x2="678" y2="373" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- D→E: ASK1 → Axonal degen -->
+        <line x1="630" y1="373" x2="678" y2="313" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- A:Genetic → E:EOAD -->
+        <polyline points="200,320 220,320 220,470 660,470 660,439 678,439" fill="none" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Signals:</strong> Major inputs converging on DOCK3, including ErbB4/E4A agonism, presenilin/APP signaling, BDNF–TrkB trophic input, and NMDA receptor interactions; germline DOCK3 variants shown as an independent modifier track.
+      <strong>Panel B — DOCK3 Hub:</strong> DOCK3 as a central GEF node, operating via the ELMO scaffold complex (top), activating Rac1 (below), and co-inducing SIRT3 for mitochondrial resilience (bottom). Rac1 branches into both protective (Panel C) and pathological (Panel D) cascades.
+      <strong>Panel C — Protective Outputs:</strong> Neurite/axon growth (WAVE, CRMP-2, PAK, cofilin), synaptic/mitochondrial function improvement, and anti-excitotoxicity through reduced Fyn and NMDA receptor surface expression.
+      <strong>Panel D — Pathological Risks:</strong> Rac1-mediated tau phosphorylation and ASK1/JNK stress/apoptosis; dashed line indicates that increased DOCK3/SIRT3 <em>suppresses</em> TLR4–NF-κB–NLRP3 neuroinflammation.
+      <strong>Panel E — Outcomes:</strong> Reduced Aβ burden, cognitive rescue (protective branch); axonal degeneration and neurofibrillary pathology (risk branch); EOAD onset modification by germline variants.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>ErbB4–DOCK3–SIRT3: Clearest AD Therapeutic Axis</h3>
+        <p>In APP/PS1 mice, E4A-mediated ErbB4 activation increased hippocampal DOCK3 and SIRT3, associated with improved cognition, reduced Aβ plaques, improved synaptic and mitochondrial function, and suppressed TLR4–NF-κB–NLRP3 neuroinflammation. DOCK3 silencing partially compromised these protective effects.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuronal Structural Integrity &amp; Excitotoxicity Protection</h3>
+        <p>DOCK3 promotes neurite outgrowth, axonal sprouting, growth cone dynamics, actin polymerization, and microtubule assembly via Rac1, ELMO/RhoG, WAVE, Fyn, GSK-3β, CRMP-2, LIMK, PAK, and cofilin. It also binds NMDA subunits GluN2B/NR2B and NR2D to reduce excitotoxic and oxidative injury — relevant to memantine-related AD strategies.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Tau Pathology &amp; Death Signaling Risk</h3>
+        <p>In AD brain, PBP/DOCK3 redistributes into particulate fractions and associates with neurofibrillary tangles. In cultured cells, PBP expression increased tau phosphorylation. Mutant APP/presenilin-mediated neuronal death has been linked to DOCK3/Rac1–Cdc42–ASK1 stress/apoptotic signaling, raising concern for harm from indiscriminate activation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>DOCK3 Loss Causes CNS Degeneration</h3>
+        <p>MOCA/DOCK3-deficient mice develop axonal degeneration, dystrophic axons, neurofilament aggregation, autophagic vacuole accumulation, impaired axonal transport, sensorimotor deficits, and learning impairment — features directly overlapping with AD neuropathology. This underscores DOCK3 sufficiency as necessary for neuronal health.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Amyloid Biology Modulation</h3>
+        <p>MOCA/DOCK3 has been described as regulating APP and β-amyloid accumulation. The APP/PS1 E4A study links increased DOCK3 with reduced Aβ plaque burden. Precise causal mechanisms between DOCK3 activity and amyloid processing remain unresolved and require direct experimental validation.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Genetic Modifier of EOAD Onset</h3>
+        <p>A whole-genome sequencing study in Chinese early-onset AD significantly associated germline DOCK3 variants with age of dementia onset. DOCK3 is thus better characterized as a candidate <em>onset-age modifier</em> rather than a confirmed monogenic AD causative gene. Larger longitudinal cohorts are needed to replicate and extend this finding.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Prioritize validation of the ErbB4–DOCK3–SIRT3 pathway.</strong> Key experiments should test whether DOCK3 is required for E4A-mediated improvements in cognition, Aβ burden, synaptic markers, mitochondrial function, and TLR4–NF-κB–NLRP3 inflammatory signaling in APP/PS1 and other AD models using genetic silencing or conditional knockout.</li>
+
+      <li><strong>Treat DOCK3 as a candidate node, not a validated standalone target.</strong> Current evidence supports further mechanistic development, but direct AD-specific target-engagement, dose-response, safety, and disease-modifying studies in multiple models remain essential before declaring target validation.</li>
+
+      <li><strong>Separate protective from potentially harmful DOCK3 pathways.</strong> Therapeutic strategies should aim to enhance trophic signaling — BDNF–TrkB–DOCK3–Rac1/WAVE, DOCK3–GSK-3β–CRMP-2, DOCK3–HAUS7, or ErbB4–DOCK3–SIRT3 — while avoiding activation of APP/presenilin–Rac1/Cdc42–ASK1 death cascades, excessive Rac1/JNK activity, or tau-phosphorylation-promoting contexts.</li>
+
+      <li><strong>Evaluate direct DOCK3 activators in AD-relevant systems.</strong> Low-molecular-weight compounds that stimulate DOCK3–ELMO1 interaction and promote neurite outgrowth or axon regeneration should be tested in AD neuronal cultures, organoids, and mouse models for effects on synapses, Aβ, tau, inflammation, mitochondrial function, and cognition.</li>
+
+      <li><strong>Investigate DOCK3 localization and solubility in human AD tissue.</strong> Because DOCK3/PBP redistributes into particulate or tangle-associated fractions in AD brain, studies should determine whether loss of soluble DOCK3 function or pathological sequestration contributes to neuronal vulnerability and whether this can be reversed therapeutically.</li>
+
+      <li><strong>Test DOCK3's relationship to tau and GSK-3β directly in AD contexts.</strong> Since DOCK3 can increase tau phosphorylation in some settings but also inhibit GSK-3β and activate CRMP-2 in axonal growth pathways, AD-specific experiments are needed to clarify whether DOCK3 activation reduces or worsens tau pathology depending on cellular and pathway context.</li>
+
+      <li><strong>Examine DOCK3 as a modifier of EOAD onset in larger cohorts.</strong> Longitudinal genetic studies should test whether DOCK3 germline variation reproducibly affects age at onset, progression rate, cognitive trajectory, or biomarker profiles in both early-onset and late-onset AD populations.</li>
+
+      <li><strong>Explore excitotoxicity-focused therapeutic applications.</strong> DOCK3's interactions with GluN2B/NR2B and NR2D NMDA receptor subunits, Fyn signaling, and oxidative stress pathways may offer a route to memantine-adjacent or complementary neuroprotection strategies that are mechanistically distinct from existing approved therapies.</li>
+
+      <li><strong>Avoid global or irreversible DOCK3 modulation until safety is established.</strong> Human loss-of-function and animal knockout data indicate that insufficient DOCK3 disrupts CNS development, motor function, axonal integrity, and learning. Seizure models also suggest excessive DOCK3–Rac1 signaling may be maladaptive. Therapeutic windows must be empirically defined.</li>
+
+      <li><strong>Exclude computational docking software from biological interpretation.</strong> References to DOCK3.5, DOCK3.7, DOCK3.8, CB-Dock3, or SymDOCK refer to molecular docking software tools, not the DOCK3 gene or protein. Only studies explicitly naming dedicator of cytokinesis 3, MOCA, or PBP should inform AD mechanism or target assessments.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — DOCK3 in Alzheimer's Disease</div>
+      <p>
+        DOCK3 represents a <strong>biologically compelling but mechanistically complex candidate</strong> in Alzheimer's disease research. The strongest evidence positions it as a <strong>functional mediator within the ErbB4–DOCK3–SIRT3 neuroprotective axis</strong>, with APP/PS1 mouse data showing that its induction correlates with cognitive improvement, reduced Aβ burden, improved synaptic and mitochondrial function, and suppressed neuroinflammation. Its roles in <strong>Rac1-mediated neuronal structural maintenance, NMDA receptor regulation, and axonal integrity</strong> add broad mechanistic relevance to neurodegeneration. However, the same Rac1 signaling hub connects DOCK3 to <strong>tau phosphorylation, neurofibrillary tangle association, and APP/presenilin-linked apoptotic cascades</strong>, meaning that therapeutic modulation must be carefully pathway-selective rather than globally activating. Genetic data from early-onset AD cohorts suggests DOCK3 may act as a <strong>modifier of disease onset</strong> rather than a primary causative gene. Overall, DOCK3 merits continued investment as a <strong>candidate therapeutic node</strong>, with the immediate priority being rigorous dissection of which downstream pathways confer benefit versus harm in disease-relevant human neuronal contexts.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DOCK3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YIF1B — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #991b1b;
+    --danger-light: #fee2e2;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #ccfbf1;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(248,113,113,0.5);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.95rem;
+    color: #ffffff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Georgia, serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    margin: 0;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 14px;
+    padding: 22px 18px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--slate);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent  { background: var(--light);          border-color: var(--mid);     }
+  .card-accent  h3 { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger);  }
+  .card-danger  h3 { color: var(--danger); }
+
+  .card-positive{ background: var(--positive-light); border-color: var(--positive);}
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light);  border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate   { background: var(--slate-light);    border-color: var(--slate);   }
+  .card-slate   h3 { color: var(--slate); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--slate-border);
+    position: relative;
+    font-size: 0.95rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(take);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.92);
+    margin: 0;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.73rem;
+    color: var(--slate);
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: YIF1B &nbsp;|&nbsp; YPT-Interacting Factor 1B</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Loss-of-function causes severe neurodevelopmental disease</span>
+  </div>
+  <h1>YIF1B &amp; Alzheimer's Disease</h1>
+  <div class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</div>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Therapeutic Safety Caveat</div>
+      <p>Biallelic pathogenic variants and complete loss of YIF1B cause severe neurodevelopmental disease — including profound developmental delay, seizures, movement disorders, microcephaly, and brain structural defects. Broad CNS inhibition could therefore be harmful, and therapeutic strategies must be pursued with extreme caution.</p>
+    </div>
+
+    <p>YIF1B is <strong>not established</strong> in the supplied evidence as an Alzheimer's disease gene, biomarker, or validated therapeutic target. No cited evidence directly links YIF1B to amyloid-β, tau, APOE, AD cohorts, AD animal models, microglial AD biology, cognitive decline, or clinical Alzheimer's treatment outcomes.</p>
+
+    <p>Its relevance to Alzheimer's disease is <em>mechanistic and inferential</em>. The strongest connections are its roles in neuronal ER–Golgi vesicular trafficking, Golgi organization, selective dendritic targeting of serotonin 5-HT1A receptors, lysosome-related cargo routing, primary cilium integrity, CNS development, and inflammatory secretion in non-AD contexts. These pathways overlap with biological processes disrupted in AD — including proteostasis, receptor localization, synaptic function, endolysosomal dysfunction, neuropsychiatric symptoms, and neuroinflammation.</p>
+
+    <p>YIF1B appears particularly important for neuronal organization and serotonergic signaling. It directly binds the C-terminal domain of the 5-HT1A receptor and supports selective dendritic delivery of this receptor, especially to distal dendrites. Because serotonergic dysfunction and neuropsychiatric symptoms such as depression, anxiety, and agitation are common in AD, YIF1B could be relevant to symptom biology — even though no AD-specific role has been demonstrated.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="11">
+
+        <!-- Arrow marker definitions -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Upstream / ER-Golgi Trafficking ===== -->
+        <rect x="12" y="12" width="280" height="466" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="152" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#1e3a5f" letter-spacing="1.5">A · ER–GOLGI TRAFFICKING</text>
+
+        <!-- Node A1: ER -->
+        <rect x="82" y="46" width="140" height="38" rx="7" fill="#2e6da4" fill-opacity="0.15" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="152" y="61" text-anchor="middle" fill="#1e3a5f" font-weight="bold">Endoplasmic</text>
+        <text x="152" y="75" text-anchor="middle" fill="#1e3a5f">Reticulum (ER)</text>
+
+        <!-- Arrow A1 → A2 -->
+        <line x1="152" y1="84" x2="152" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A2: YIF1B hub -->
+        <rect x="72" y="112" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.85" stroke="#1e3a5f" stroke-width="1.6"/>
+        <text x="152" y="127" text-anchor="middle" fill="#fff" font-weight="bold">YIF1B</text>
+        <text x="152" y="141" text-anchor="middle" fill="#dbeafe">ER–Golgi vesicle hub</text>
+
+        <!-- Arrow A2 → A3 -->
+        <line x1="152" y1="150" x2="152" y2="176" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A3: Golgi / ERGIC -->
+        <rect x="72" y="178" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.15" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="152" y="193" text-anchor="middle" fill="#1e3a5f" font-weight="bold">Golgi / ERGIC</text>
+        <text x="152" y="207" text-anchor="middle" fill="#1e3a5f">Organization &amp; sorting</text>
+
+        <!-- Arrow A3 → A4 branch left -->
+        <line x1="120" y1="216" x2="90" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <!-- Arrow A3 → A4 branch right -->
+        <line x1="184" y1="216" x2="214" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A4a: Vesicular transport -->
+        <rect x="22" y="246" width="126" height="38" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="85" y="261" text-anchor="middle" fill="#1e3a5f" font-weight="bold">Vesicular</text>
+        <text x="85" y="275" text-anchor="middle" fill="#1e3a5f">Transport</text>
+
+        <!-- Node A4b: Lysosomal routing -->
+        <rect x="156" y="246" width="126" height="38" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="219" y="261" text-anchor="middle" fill="#1e3a5f" font-weight="bold">Lysosomal</text>
+        <text x="219" y="275" text-anchor="middle" fill="#1e3a5f">Routing (TAPL)</text>
+
+        <!-- Arrow A4a → A5 convergence -->
+        <line x1="85" y1="284" x2="107" y2="312" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <!-- Arrow A4b → A5 convergence -->
+        <line x1="219" y1="284" x2="197" y2="312" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A5: Proteostasis -->
+        <rect x="72" y="314" width="160" height="38" rx="7" fill="#1e3a5f" fill-opacity="0.12" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="152" y="329" text-anchor="middle" fill="#1e3a5f" font-weight="bold">Neuronal Proteostasis</text>
+        <text x="152" y="343" text-anchor="middle" fill="#1e3a5f">&amp; cargo fate</text>
+
+        <!-- Node A6: CNS development -->
+        <rect x="72" y="390" width="160" height="38" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="152" y="405" text-anchor="middle" fill="#1e3a5f" font-weight="bold">CNS Development</text>
+        <text x="152" y="419" text-anchor="middle" fill="#1e3a5f">Myelination · Structure</text>
+
+        <!-- Arrow A5 → A6 (gap between 352 and 390) -->
+        <line x1="152" y1="352" x2="152" y2="388" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- ===== PANEL B: Serotonergic Trafficking ===== -->
+        <rect x="308" y="12" width="296" height="336" rx="12" fill="#ccfbf1" fill-opacity="0.35" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="456" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#065f46" letter-spacing="1.5">B · SEROTONERGIC SIGNALING</text>
+
+        <!-- Node B1: 5-HT1A Receptor -->
+        <rect x="358" y="46" width="196" height="38" rx="7" fill="#0f766e" fill-opacity="0.18" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="456" y="61" text-anchor="middle" fill="#065f46" font-weight="bold">5-HT1A Receptor</text>
+        <text x="456" y="75" text-anchor="middle" fill="#065f46">C-terminal domain binding</text>
+
+        <!-- Arrow B1 → B2 -->
+        <line x1="456" y1="84" x2="456" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2: YIF1B + complex -->
+        <rect x="358" y="112" width="196" height="38" rx="7" fill="#0f766e" fill-opacity="0.75" stroke="#065f46" stroke-width="1.6"/>
+        <text x="456" y="127" text-anchor="middle" fill="#fff" font-weight="bold">YIF1B + Yip1A / Rab6</text>
+        <text x="456" y="141" text-anchor="middle" fill="#d1fae5">Kif5B · dynein complex</text>
+
+        <!-- Arrow B2 → B3 branch left -->
+        <line x1="416" y1="150" x2="386" y2="178" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Arrow B2 → B3 branch right -->
+        <line x1="496" y1="150" x2="526" y2="178" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3a: Dendritic delivery -->
+        <rect x="314" y="180" width="132" height="38" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="380" y="195" text-anchor="middle" fill="#065f46" font-weight="bold">Distal Dendritic</text>
+        <text x="380" y="209" text-anchor="middle" fill="#065f46">Delivery</text>
+
+        <!-- Node B3b: Cargo selectivity -->
+        <rect x="454" y="180" width="132" height="38" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="520" y="195" text-anchor="middle" fill="#065f46" font-weight="bold">Cargo-Selective</text>
+        <text x="520" y="209" text-anchor="middle" fill="#065f46">Trafficking</text>
+
+        <!-- Arrow B3a → B4 convergence -->
+        <line x1="380" y1="218" x2="415" y2="246" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Arrow B3b → B4 convergence -->
+        <line x1="520" y1="218" x2="497" y2="246" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: Serotonergic tone -->
+        <rect x="358" y="248" width="196" height="38" rx="7" fill="#065f46" fill-opacity="0.12" stroke="#065f46" stroke-width="1.3"/>
+        <text x="456" y="263" text-anchor="middle" fill="#065f46" font-weight="bold">Serotonergic Tone</text>
+        <text x="456" y="277" text-anchor="middle" fill="#065f46">Synaptic integration</text>
+
+        <!-- Node B5: AD-symptom relevance -->
+        <rect x="358" y="318" width="196" height="24" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="456" y="334" text-anchor="middle" fill="#78350f" font-size="10">AD neuropsychiatric symptoms</text>
+
+        <!-- Arrow B4 → B5 -->
+        <line x1="456" y1="286" x2="456" y2="316" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- ===== PANEL C: Safety / Loss-of-Function ===== -->
+        <rect x="620" y="12" width="288" height="336" rx="12" fill="#fee2e2" fill-opacity="0.38" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="764" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#7f1d1d" letter-spacing="1.5">C · SAFETY / LOSS-OF-FUNCTION</text>
+
+        <!-- Node C1: Biallelic variants -->
+        <rect x="664" y="46" width="200" height="38" rx="7" fill="#991b1b" fill-opacity="0.14" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="764" y="61" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Biallelic YIF1B</text>
+        <text x="764" y="75" text-anchor="middle" fill="#7f1d1d">Pathogenic Variants</text>
+
+        <!-- Arrow C1 → C2 -->
+        <line x1="764" y1="84" x2="764" y2="110" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C2: ER/Golgi disruption -->
+        <rect x="664" y="112" width="200" height="38" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="764" y="127" text-anchor="middle" fill="#7f1d1d" font-weight="bold">ER/Golgi Disruption</text>
+        <text x="764" y="141" text-anchor="middle" fill="#7f1d1d">Golgi architecture loss</text>
+
+        <!-- Arrow C2 → C3a -->
+        <line x1="724" y1="150" x2="694" y2="178" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Arrow C2 → C3b -->
+        <line x1="804" y1="150" x2="834" y2="178" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node C3a: Brain structure -->
+        <rect x="636" y="180" width="130" height="38" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="701" y="195" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Brain Defects</text>
+        <text x="701" y="209" text-anchor="middle" fill="#7f1d1d">Atrophy · Microcephaly</text>
+
+        <!-- Node C3b: Neuro symptoms -->
+        <rect x="774" y="180" width="122" height="38" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="835" y="195" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Neurological</text>
+        <text x="835" y="209" text-anchor="middle" fill="#7f1d1d">Seizures · Motor</text>
+
+        <!-- Arrow C3a → C4 -->
+        <line x1="701" y1="218" x2="730" y2="246" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Arrow C3b → C4 -->
+        <line x1="835" y1="218" x2="798" y2="246" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node C4: Severe NDD -->
+        <rect x="664" y="248" width="200" height="38" rx="7" fill="#7f1d1d" fill-opacity="0.85" stroke="#7f1d1d" stroke-width="1.5"/>
+        <text x="764" y="263" text-anchor="middle" fill="#fff" font-weight="bold">Severe Neurodevelopmental</text>
+        <text x="764" y="277" text-anchor="middle" fill="#fecaca">Disease (NDD)</text>
+
+        <!-- Node C5: Therapeutic risk label -->
+        <rect x="664" y="318" width="200" height="24" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="764" y="334" text-anchor="middle" fill="#78350f" font-size="10">Broad inhibition — high risk</text>
+
+        <!-- Arrow C4 → C5 -->
+        <line x1="764" y1="286" x2="764" y2="316" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- ===== PANEL D: Inflammatory / Non-AD ===== -->
+        <rect x="308" y="362" width="600" height="116" rx="12" fill="#f1f5f9" fill-opacity="0.7" stroke="#475569" stroke-width="1.2"/>
+        <text x="608" y="382" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#334155" letter-spacing="1.5">D · INFLAMMATORY / NON-AD CONTEXTS</text>
+
+        <!-- Node D1: SARS-CoV-2 -->
+        <rect x="320" y="392" width="148" height="38" rx="7" fill="#e2e8f0" stroke="#475569" stroke-width="1.2"/>
+        <text x="394" y="407" text-anchor="middle" fill="#1e293b" font-weight="bold">SARS-CoV-2 Model</text>
+        <text x="394" y="421" text-anchor="middle" fill="#475569">ORF8 secretion</text>
+
+        <!-- Node D2: Cancer -->
+        <rect x="484" y="392" width="148" height="38" rx="7" fill="#e2e8f0" stroke="#475569" stroke-width="1.2"/>
+        <text x="558" y="407" text-anchor="middle" fill="#1e293b" font-weight="bold">Cancer Models</text>
+        <text x="558" y="421" text-anchor="middle" fill="#475569">IL-6/JAK · Immune</text>
+
+        <!-- Node D3: Cilia -->
+        <rect x="648" y="392" width="148" height="38" rx="7" fill="#e2e8f0" stroke="#475569" stroke-width="1.2"/>
+        <text x="722" y="407" text-anchor="middle" fill="#1e293b" font-weight="bold">Primary Cilia</text>
+        <text x="722" y="421" text-anchor="middle" fill="#475569">Indirect trafficking</text>
+
+        <!-- Arrow D1 → label note: no additional arrows needed; cluster speaks for itself -->
+
+        <!-- Panel A → Panel D connecting arrow (through gutter below panel A node A6) -->
+        <!-- Elbow: from A6 bottom center (152, 428) down to y=458, right to x=308 entry of panel D left edge area -->
+        <polyline points="152,428 152,452 290,452 308,452" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+
+        <!-- Note below Panel D (small italic) - omitted to keep clean -->
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A (blue) — ER–Golgi Trafficking:</strong> YIF1B acts as a central hub in ER-to-Golgi vesicular transport, branching into vesicular transport and lysosomal cargo routing (via TAPL/ABCB9) that converge on neuronal proteostasis, supporting CNS development and myelination. <strong>Panel B (teal) — Serotonergic Signaling:</strong> YIF1B binds the 5-HT1A receptor C-terminal domain and, within a complex including Yip1A, Rab6, Kif5B, and dynein, branches into distal dendritic delivery and cargo-selective trafficking, converging on serotonergic tone; a dashed amber arrow links this to AD neuropsychiatric symptom relevance (inferential). <strong>Panel C (red) — Safety/Loss-of-Function:</strong> Biallelic pathogenic variants cascade through ER/Golgi disruption into brain structural defects and neurological symptoms, converging on severe neurodevelopmental disease; broad therapeutic inhibition is flagged as high risk. <strong>Panel D (slate) — Non-AD Inflammatory Contexts:</strong> Three independent non-AD settings — SARS-CoV-2, cancer, and primary cilia models — show YIF1B involvement in unconventional secretion, immune signaling, and indirect ciliary control.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Intracellular Trafficking — Core Mechanism</h3>
+        <p>YIF1B participates in ER-to-Golgi and ERGIC transport, vesicular routing, and maintenance of Golgi architecture. Disrupted trafficking, ER/Golgi stress, endosomal-lysosomal dysfunction, and impaired neuronal proteostasis are central features of AD neurodegenerative biology, making this YIF1B's strongest AD-inferential mechanism.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Selective 5-HT1A Receptor Trafficking</h3>
+        <p>YIF1B binds the short C-terminal domain of the serotonin 5-HT1A receptor with high affinity and recruits it into vesicular complexes involving Yip1A, Rab6, Kif5B, and dynein. Knockdown selectively impaired distal dendritic delivery of 5-HT1A receptors without broadly affecting other tested receptors — pointing to cargo-selective, not nonspecific, trafficking.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Serotonin Connection — Symptoms, Not Pathology</h3>
+        <p>YIF1B knockout mice showed altered serotonin projection density, hypofunctional 5-HT1A autoreceptors, reduced social interaction, and altered antidepressant response. These findings may relate to AD-associated neuropsychiatric symptoms (depression, anxiety, agitation) but do not establish effects on amyloid, tau, or neurodegeneration per se.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Loss-of-Function Causes Severe NDD</h3>
+        <p>Biallelic pathogenic YIF1B variants and complete loss cause profound developmental delay, seizures, movement disorders, microcephaly, visual impairment, respiratory complications, myelination abnormalities, and brain structural defects. Long-term depletion disrupted Golgi architecture in CA1 hippocampal neurons. Broad CNS inhibition is potentially highly harmful.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Lysosomal Routing &amp; Endolysosomal Relevance</h3>
+        <p>YIF1B's interaction with TAPL/ABCB9 suggests a role in selective cargo routing toward lysosomal pathways — relevant because lysosomal and endolysosomal dysfunction contribute to AD. However, no supplied evidence shows YIF1B regulates APP, BACE1, presenilin, tau, APOE receptors, autophagy, or pathogenic protein clearance.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Inflammatory &amp; Non-AD Immune Contexts</h3>
+        <p>In SARS-CoV-2 models, YIF1B mediated unconventional secretion of ORF8; knockdown reduced inflammation and mortality. Cancer studies link it to IL-6/JAK signaling, immune dysfunction, and therapy resistance. These suggest immune-regulatory potential, but no evidence in the supplied text connects YIF1B to microglia, astrocytes, amyloid- or tau-induced inflammation, or blood–brain barrier trafficking in AD.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li><strong>Frame YIF1B as a mechanistic candidate only.</strong> Treat it as an AD research candidate, not a validated therapeutic target. No supplied study establishes it as an AD biomarker or disease-modifying target.</li>
+
+      <li><strong>Map expression in AD-vulnerable regions.</strong> Prioritize studies measuring YIF1B expression and localization in hippocampus, entorhinal cortex, prefrontal cortex, raphe-related serotonergic circuits, and other vulnerable neuronal populations.</li>
+
+      <li><strong>Correlate with AD pathological measures.</strong> Test whether YIF1B expression or localization correlates with Braak stage, amyloid plaque burden, tau pathology, synapse loss, gliosis, neuroinflammatory markers, endolysosomal dysfunction, or cognitive decline.</li>
+
+      <li><strong>Test trafficking of AD-relevant cargo directly.</strong> Determine whether YIF1B regulates trafficking of APP, BACE1, presenilins, tau-associated vesicles, APOE receptors, lysosomal proteins, and synaptic or serotonergic receptors in AD-relevant model systems.</li>
+
+      <li><strong>Investigate 5-HT1A receptor localization in AD neurons.</strong> Determine whether YIF1B-dependent 5-HT1A receptor trafficking is altered in AD and whether restoring receptor localization improves serotonergic signaling, synaptic function, mood-related phenotypes, or behavioral symptoms.</li>
+
+      <li><strong>Apply stringent safety framing to any therapeutic approach.</strong> If YIF1B is pursued therapeutically, safer strategies would involve partial modulation, cell-type-specific targeting, or disruption/enhancement of specific cargo interactions — not global inhibition or activation.</li>
+
+      <li><strong>Use appropriate model systems before drug-target designation.</strong> Evaluate YIF1B in iPSC-derived neurons, glia–neuron co-cultures, and AD animal models. Key readouts should include amyloid/tau pathology, ER–Golgi integrity, endolysosomal function, synaptic markers, neuronal survival, inflammatory signaling, serotonergic receptor localization, and behavior.</li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — YIF1B in Alzheimer's Disease</div>
+      <p>YIF1B has <strong>plausible but entirely inferential relevance</strong> to Alzheimer's disease mechanisms through its central roles in <strong>ER–Golgi vesicular trafficking, serotonergic 5-HT1A receptor localization, lysosomal cargo routing, and inflammatory secretion</strong>. These pathways intersect with AD-relevant biology — proteostasis failure, endolysosomal dysfunction, synaptic deterioration, and neuropsychiatric symptoms — but <strong>no supplied evidence directly links YIF1B to amyloid-β, tau, APOE, AD cohorts, AD animal models, or clinical Alzheimer's outcomes</strong>. The serotonergic connection is most relevant to AD symptom biology rather than core disease pathology. Critically, complete loss-of-function causes severe neurodevelopmental disease, imposing a <strong>significant safety constraint</strong> on any therapeutic strategy. YIF1B should be pursued as a mechanistic research priority — with rigorous study in AD-relevant models — before any therapeutic designation is considered.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  YIF1B · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

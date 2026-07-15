@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRXN3 — Alzheimer's Disease Synaptic Resilience Candidate</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7ab5;
+    --light: #e8f0fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #3b82f6;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #141e2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .header-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e8f0fb;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(255,160,160,0.4);
+    color: #ffd0d0;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  p {
+    margin-bottom: 1.1em;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #d97706;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 10px;
+    padding: 18px 12px 10px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 6px 4px 0;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 7px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--dark);
+  }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue-mid);
+  }
+  .card-blue h3 { color: #1d4ed8; }
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-neutral h3 { color: var(--neutral-text); }
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.96rem;
+    line-height: 1.7;
+    align-items: flex-start;
+  }
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #141e2e 100%);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 32px 36px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+  .verdict-banner strong {
+    color: #bfdbfe;
+  }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-chips">
+    <span class="chip">Gene: NRXN3 &nbsp;|&nbsp; Neurexin-3</span>
+    <span class="chip chip-danger">⚠ Safety: Pleiotropic off-target risk</span>
+  </div>
+  <h1>NRXN3 &amp; Alzheimer's Disease<br>Synaptic Resilience</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Therapeutic Safety Caveat:</strong> NRXN3 is highly pleiotropic, with documented roles across neurodevelopment, addiction/reward, pain, sleep, metabolism, adipose biology, and multiple brain circuits. Nonselective modulation risks disrupting synaptic specificity, excitatory–inhibitory balance, behavior, metabolism, or seizure susceptibility.
+    </div>
+    <p>NRXN3 encodes neurexin-3, a presynaptic cell-adhesion and trans-synaptic signaling molecule repeatedly linked to synapse organization, synaptic maintenance, neuroligin/cerebellin/LRRTM interactions, neurotransmitter release, dendritic spine integrity, hippocampal and cortical circuit function, and excitatory–inhibitory balance. Its relevance to Alzheimer's disease (AD) is primarily through <em>synaptic vulnerability and cognitive resilience</em> rather than through direct amyloid-β or tau targeting.</p>
+    <p>Direct AD-related evidence is heterogeneous but converges on NRXN3 as a candidate biomarker or susceptibility/resilience node. It appears in AD/AsymAD transcriptomic-network analyses, AD diagnostic gene-expression models, hippocampal aging/AD expression meta-analysis, AD genetic association studies, postmortem AD splicing/isoform findings, microbiome–AD bioinformatics, and ADNI imaging-genetics associations with temporal lobe volume.</p>
+    <p>NRXN3 is <strong>not</strong> established as a validated AD therapeutic target. The evidence is largely associative, transcriptomic, genetic, imaging-genetic, or extrapolated from non-AD models. However, its repeated involvement in synaptic adhesion, inhibitory synapse stability, receptor regulation, alternative splicing, and network balance makes it a plausible target-adjacent pathway for synapse-preserving or resilience-enhancing AD strategies.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL LAYOUT (left→right):
+          Panel A (x=10–300): NRXN3 Molecular Identity & Splicing
+          Panel B (x=315–600): Synaptic Signaling Branches
+          Panel C (x=615–890): AD Context & Outcomes
+
+          NODE COUNT PLAN (max 16):
+          Panel A: 3 nodes
+          Panel B: 5 nodes (1 shared root + 2 branches × 2)
+          Panel C: 5 nodes
+          Connector badge: 0 counted as extra
+          Total: 13 nodes — within limit
+        -->
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="12">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#4a7ab5"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Molecular Identity & Splicing -->
+          <rect x="10" y="10" width="282" height="468" rx="12" fill="rgba(74,122,181,0.07)" stroke="#4a7ab5" stroke-width="1.2"/>
+          <text x="151" y="30" text-anchor="middle" font-weight="700" font-size="9.5" fill="#2d4a7a" letter-spacing="0.10em" text-decoration="none">A · NRXN3 MOLECULAR IDENTITY</text>
+
+          <!-- A1: NRXN3 Gene -->
+          <rect x="66" y="42" width="170" height="48" rx="7" fill="#dbeafe" stroke="#2d4a7a" stroke-width="1.4"/>
+          <text x="151" y="61" text-anchor="middle" font-weight="700" font-size="12" fill="#1e3a5f">NRXN3 Gene</text>
+          <text x="151" y="77" text-anchor="middle" font-size="10.5" fill="#2d4a7a">Presynaptic cell-adhesion</text>
+
+          <!-- arrow A1→A2 -->
+          <line x1="151" y1="90" x2="151" y2="115" stroke="#4a7ab5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A2: Alpha / Beta Isoforms -->
+          <rect x="54" y="116" width="194" height="48" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.2"/>
+          <text x="151" y="135" text-anchor="middle" font-weight="700" font-size="11.5" fill="#2d4a7a">α / β Isoforms</text>
+          <text x="151" y="151" text-anchor="middle" font-size="10" fill="#2d4a7a">SS4 · SS5 splice states</text>
+
+          <!-- arrow A2→A3 -->
+          <line x1="151" y1="164" x2="151" y2="189" stroke="#4a7ab5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A3: rs8019381 / APOE ε4 -->
+          <rect x="44" y="190" width="214" height="54" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.2"/>
+          <text x="151" y="210" text-anchor="middle" font-weight="700" font-size="11" fill="#2d4a7a">AD Splicing Haplotype</text>
+          <text x="151" y="225" text-anchor="middle" font-size="10" fill="#2d4a7a">rs8019381 · APOE ε4</text>
+          <text x="151" y="239" text-anchor="middle" font-size="10" fill="#2d4a7a">NLRP3 inverse correlation</text>
+
+          <!-- arrow A3→A4 -->
+          <line x1="151" y1="244" x2="151" y2="270" stroke="#4a7ab5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A4: Isoform Imbalance -->
+          <rect x="50" y="271" width="202" height="48" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.2"/>
+          <text x="151" y="291" text-anchor="middle" font-weight="700" font-size="11" fill="#5b21b6">Isoform Imbalance</text>
+          <text x="151" y="307" text-anchor="middle" font-size="10" fill="#5b21b6">TM vs soluble · NRXN3 AS5</text>
+
+          <!-- arrow A4→A5 -->
+          <line x1="151" y1="319" x2="151" y2="345" stroke="#4a7ab5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A5: AD Risk Variants -->
+          <rect x="54" y="346" width="194" height="48" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.2"/>
+          <text x="151" y="365" text-anchor="middle" font-weight="700" font-size="11" fill="#2d4a7a">AD Risk / Resilience</text>
+          <text x="151" y="381" text-anchor="middle" font-size="10" fill="#2d4a7a">Genetic variants · expression</text>
+
+        </svg>
+
+        <!-- Full SVG restarted with correct two-panel layout to keep lines clean -->
+      </div>
+
+      <!-- Replace above with a properly two-panel cleaner SVG -->
+      <div class="figure-wrap" style="display:none"></div>
+    </figure>
+
+    <!-- CLEAN FINAL SVG replacing the one above -->
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="12">
+          <defs>
+            <marker id="a1" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0,8 3.5,0 7" fill="#4a7ab5"/>
+            </marker>
+            <marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0,8 3.5,0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0,8 3.5,0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="a4" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0,8 3.5,0 7" fill="#7c3aed"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: Molecular Identity ===== -->
+          <!-- x=12 to x=286, y=12 to y=486 -->
+          <rect x="12" y="12" width="274" height="474" rx="12" fill="rgba(45,74,122,0.06)" stroke="#2d4a7a" stroke-width="1.3"/>
+          <text x="149" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#2d4a7a" letter-spacing="0.11em">A · MOLECULAR IDENTITY &amp; SPLICING</text>
+
+          <!-- A1 -->
+          <rect x="60" y="42" width="178" height="50" rx="7" fill="#dbeafe" stroke="#2d4a7a" stroke-width="1.5"/>
+          <text x="149" y="63" text-anchor="middle" font-weight="700" font-size="12.5" fill="#1e3a5f">NRXN3 Gene</text>
+          <text x="149" y="80" text-anchor="middle" font-size="10.5" fill="#1e3a5f">Presynaptic adhesion molecule</text>
+
+          <!-- A1→A2 -->
+          <line x1="149" y1="92" x2="149" y2="116" stroke="#4a7ab5" stroke-width="1.6" marker-end="url(#a1)"/>
+
+          <!-- A2 -->
+          <rect x="50" y="117" width="198" height="50" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.3"/>
+          <text x="149" y="137" text-anchor="middle" font-weight="700" font-size="12" fill="#2d4a7a">α / β Isoforms</text>
+          <text x="149" y="154" text-anchor="middle" font-size="10.5" fill="#2d4a7a">SS4 · SS5 splice regulation</text>
+
+          <!-- A2→A3 -->
+          <line x1="149" y1="167" x2="149" y2="191" stroke="#4a7ab5" stroke-width="1.6" marker-end="url(#a1)"/>
+
+          <!-- A3 -->
+          <rect x="44" y="192" width="210" height="54" rx="7" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.3"/>
+          <text x="149" y="213" text-anchor="middle" font-weight="700" font-size="11.5" fill="#5b21b6">Isoform Imbalance in AD</text>
+          <text x="149" y="229" text-anchor="middle" font-size="10" fill="#5b21b6">TM vs soluble · NRXN3 AS5</text>
+          <text x="149" y="244" text-anchor="middle" font-size="10" fill="#5b21b6">rs8019381 splicing haplotype</text>
+
+          <!-- A3→A4 -->
+          <line x1="149" y1="246" x2="149" y2="270" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#a4)"/>
+
+          <!-- A4 -->
+          <rect x="50" y="271" width="198" height="50" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.3"/>
+          <text x="149" y="291" text-anchor="middle" font-weight="700" font-size="12" fill="#2d4a7a">AD Risk / Resilience</text>
+          <text x="149" y="308" text-anchor="middle" font-size="10.5" fill="#2d4a7a">Genetic variants · expression ↓</text>
+
+          <!-- ===== PANEL B: Synaptic Signaling (branching) ===== -->
+          <!-- x=300 to x=618, y=12 to y=486 -->
+          <rect x="300" y="12" width="318" height="474" rx="12" fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="459" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.11em">B · SYNAPTIC SIGNALING BRANCHES</text>
+
+          <!-- B1: Shared root -->
+          <rect x="370" y="42" width="178" height="50" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="459" y="63" text-anchor="middle" font-weight="700" font-size="12.5" fill="#064e3b">Trans-Synaptic Complex</text>
+          <text x="459" y="80" text-anchor="middle" font-size="10.5" fill="#064e3b">NRXN3 organizes synapse</text>
+
+          <!-- B1 → B_excit (branch left) arrow down-left to x=348,y=145 -->
+          <line x1="420" y1="92" x2="358" y2="126" stroke="#0f766e" stroke-width="1.5" marker-end="url(#a2)"/>
+
+          <!-- B1 → B_inhib (branch right) arrow down-right to x=570,y=145 -->
+          <line x1="498" y1="92" x2="560" y2="126" stroke="#0f766e" stroke-width="1.5" marker-end="url(#a2)"/>
+
+          <!-- Left branch: Excitatory -->
+          <!-- B2L -->
+          <rect x="306" y="127" width="168" height="50" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="390" y="147" text-anchor="middle" font-weight="700" font-size="11" fill="#064e3b">Excitatory Synapse</text>
+          <text x="390" y="163" text-anchor="middle" font-size="10" fill="#064e3b">LRRTM4 · Cbln/GluD1</text>
+
+          <!-- B2L→B3L -->
+          <line x1="390" y1="177" x2="390" y2="201" stroke="#0f766e" stroke-width="1.5" marker-end="url(#a2)"/>
+
+          <!-- B3L -->
+          <rect x="306" y="202" width="168" height="50" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="390" y="222" text-anchor="middle" font-weight="700" font-size="11" fill="#064e3b">AMPA Response</text>
+          <text x="390" y="238" text-anchor="middle" font-size="10" fill="#064e3b">LTP · Mossy fiber CA3</text>
+
+          <!-- Right branch: Inhibitory -->
+          <!-- B2R -->
+          <rect x="494" y="127" width="168" height="50" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="578" y="147" text-anchor="middle" font-weight="700" font-size="11" fill="#064e3b">Inhibitory Synapse</text>
+          <text x="578" y="163" text-anchor="middle" font-size="10" fill="#064e3b">NLGN1/2/3 · GABA release</text>
+
+          <!-- B2R→B3R -->
+          <line x1="578" y1="177" x2="578" y2="201" stroke="#0f766e" stroke-width="1.5" marker-end="url(#a2)"/>
+
+          <!-- B3R -->
+          <rect x="494" y="202" width="168" height="50" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="578" y="222" text-anchor="middle" font-weight="700" font-size="11" fill="#064e3b">PV Interneurons</text>
+          <text x="578" y="238" text-anchor="middle" font-size="10" fill="#064e3b">E/I balance · dendrites</text>
+
+          <!-- B3L converge to B4 -->
+          <line x1="390" y1="252" x2="390" y2="294" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="390" y1="294" x2="443" y2="294" stroke="#0f766e" stroke-width="1.4"/>
+          <!-- B3R converge to B4 -->
+          <line x1="578" y1="252" x2="578" y2="294" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="578" y1="294" x2="475" y2="294" stroke="#0f766e" stroke-width="1.4" marker-end="url(#a2)"/>
+
+          <!-- B4: Convergent outcome -->
+          <rect x="370" y="295" width="178" height="50" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="459" y="315" text-anchor="middle" font-weight="700" font-size="11.5" fill="#064e3b">Synaptic Network Balance</text>
+          <text x="459" y="331" text-anchor="middle" font-size="10" fill="#064e3b">Hippocampal circuit function</text>
+
+          <!-- ===== PANEL C: AD Context & Outcomes ===== -->
+          <!-- x=632 to x=906, y=12 to y=486 -->
+          <rect x="632" y="12" width="274" height="474" rx="12" fill="rgba(139,26,26,0.05)" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="769" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="0.11em">C · AD CONTEXT &amp; OUTCOMES</text>
+
+          <!-- C1 -->
+          <rect x="668" y="42" width="202" height="50" rx="7" fill="#fef2f2" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="769" y="63" text-anchor="middle" font-weight="700" font-size="12" fill="#7f1d1d">AD Pathology Context</text>
+          <text x="769" y="80" text-anchor="middle" font-size="10.5" fill="#7f1d1d">Amyloid · Tau · APOE ε4</text>
+
+          <!-- C1→C2 -->
+          <line x1="769" y1="92" x2="769" y2="116" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#a3)"/>
+
+          <!-- C2 -->
+          <rect x="658" y="117" width="222" height="54" rx="7" fill="#fef2f2" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="769" y="138" text-anchor="middle" font-weight="700" font-size="11.5" fill="#7f1d1d">AsymAD vs AD Networks</text>
+          <text x="769" y="154" text-anchor="middle" font-size="10" fill="#7f1d1d">Transcriptomic biomarker</text>
+          <text x="769" y="169" text-anchor="middle" font-size="10" fill="#7f1d1d">Temporal lobe volume (ADNI)</text>
+
+          <!-- C2→C3 -->
+          <line x1="769" y1="171" x2="769" y2="195" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#a3)"/>
+
+          <!-- C3 -->
+          <rect x="658" y="196" width="222" height="54" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="769" y="217" text-anchor="middle" font-weight="700" font-size="11.5" fill="#92400e">Synaptic Failure Risk</text>
+          <text x="769" y="233" text-anchor="middle" font-size="10" fill="#92400e">Synapse loss ↔ cognition ↓</text>
+          <text x="769" y="248" text-anchor="middle" font-size="10" fill="#92400e">Hyperexcitability · interneurons</text>
+
+          <!-- C3→C4 -->
+          <line x1="769" y1="250" x2="769" y2="274" stroke="#b45309" stroke-width="1.6" marker-end="url(#a3)"/>
+
+          <!-- C4 -->
+          <rect x="663" y="275" width="212" height="54" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="769" y="296" text-anchor="middle" font-weight="700" font-size="11.5" fill="#064e3b">Cognitive Resilience</text>
+          <text x="769" y="312" text-anchor="middle" font-size="10" fill="#064e3b">AsymAD preserved cognition</text>
+          <text x="769" y="328" text-anchor="middle" font-size="10" fill="#064e3b">NRXN3 as resilience marker</text>
+
+          <!-- C4→C5 -->
+          <line x1="769" y1="329" x2="769" y2="353" stroke="#0f766e" stroke-width="1.6" marker-end="url(#a2)"/>
+
+          <!-- C5 -->
+          <rect x="658" y="354" width="222" height="54" rx="7" fill="#eff6ff" stroke="#4a7ab5" stroke-width="1.3"/>
+          <text x="769" y="375" text-anchor="middle" font-weight="700" font-size="11.5" fill="#1e3a5f">Therapeutic Hypothesis</text>
+          <text x="769" y="391" text-anchor="middle" font-size="10" fill="#1e3a5f">Synapse-preserving strategies</text>
+          <text x="769" y="407" text-anchor="middle" font-size="10" fill="#1e3a5f">Isoform-specific modulation</text>
+
+          <!-- CROSS-PANEL CONNECTOR: Panel B (B4 right edge) → Panel C (C3 left edge) -->
+          <!-- B4 right edge: x=548, y=320 -->
+          <!-- C3 left edge: x=658, y=223 -->
+          <!-- Route: B4 right → gutter right of B4 → up → C3 left -->
+          <!-- Path: from (548,320) right to (622,320), up to (622,223), right to (658,223) -->
+          <path d="M548 320 L622 320 L622 223 L658 223" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#a3)"/>
+
+          <!-- Note label for connector — in gutter space above path -->
+          <text x="585" y="313" text-anchor="middle" font-size="8.5" fill="#b45309" font-style="italic">circuit failure</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A — Molecular Identity &amp; Splicing:</strong> NRXN3 gene produces α/β isoforms regulated by SS4/SS5 splice sites; an AD-specific splicing haplotype (rs8019381) with APOE ε4 interaction produces isoform imbalance (altered transmembrane vs. soluble ratios, NRXN3 AS5), translating into altered AD risk or resilience alleles.
+        <strong>Panel B — Synaptic Signaling Branches:</strong> NRXN3's trans-synaptic complex fans into two parallel branches — excitatory (LRRTM4/Cbln/GluD1 → AMPA/LTP) and inhibitory (NLGN1/2/3/GABA → PV interneurons/E–I balance) — converging on hippocampal network balance.
+        <strong>Panel C — AD Context &amp; Outcomes:</strong> Against an AD pathology background, NRXN3 dysregulation threatens synaptic failure and hyperexcitability, but preserved NRXN3 expression may underlie cognitive resilience (AsymAD), pointing toward isoform-specific synapse-preserving therapeutic strategies.
+        <strong>Dashed connector:</strong> Circuit failure from synaptic network disruption (Panel B) feeds into the synaptic failure risk node in Panel C.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Cognitive Resilience in AD Pathology</h3>
+        In AsymAD-versus-AD RNA-seq/network analyses, NRXN3 emerged among biomarker candidates distinguishing cognitively normal individuals with AD neuropathology from symptomatic cases, suggesting its expression or network position may be linked to preserved cognition despite plaques and tangles.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Synaptic Dysfunction as Central Mechanism</h3>
+        NRXN3 functions as a presynaptic organizer involved in synaptic adhesion and trans-synaptic signaling. Because synapse loss correlates strongly with cognitive decline in AD, NRXN3's role in maintaining synaptic structure and communication is mechanistically central to its AD relevance.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Isoform &amp; Splicing Regulation Is Critical</h3>
+        Multiple studies emphasize α/β isoforms, SS4/SS5 splice states, transmembrane versus soluble isoforms, and specific proteoforms such as NRXN3 AS5 or Nrxn3(25b+). AD biomarker or therapeutic work likely requires isoform-specific assays rather than total NRXN3 measurement.
+      </div>
+
+      <div class="card card-blue">
+        <h3>APOE ε4 &amp; Neuroinflammatory Link</h3>
+        A postmortem AD study links reduced transmembrane and soluble NRXN3 isoforms to an rs8019381 splicing haplotype near splice site 5, APOE ε4 interaction, and inverse correlation with NLRP3 inflammasome activity — suggesting a possible synaptic-inflammatory convergence mechanism.
+      </div>
+
+      <div class="card card-positive">
+        <h3>E/I Balance &amp; Interneuron Circuit Roles</h3>
+        Non-AD models repeatedly connect NRXN3 to GABAergic/glutamatergic regulation, PV interneuron synapses, GABA release, and network hyperexcitability — mechanisms directly relevant to AD's increasingly recognized inhibitory interneuron dysfunction and circuit instability.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Promise Remains Hypothesis-Generating</h3>
+        No supplied study demonstrates that NRXN3 modulation reduces amyloid, tau, neurodegeneration, synapse loss, or cognitive decline in AD models. Safety is also a major concern: NRXN3's pleiotropy across neurodevelopment, addiction, pain, sleep, and metabolism means nonselective modulation carries substantial off-target risk.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Early-stage candidate framing:</strong> Treat NRXN3 as an early-stage AD synaptic-resilience candidate, not a validated drug target — the current evidence base is associative and transcriptomic, not mechanistically proven in AD models.</li>
+      <li><strong>Prioritize human brain validation:</strong> Assess NRXN3 expression, transcript usage, allele-specific expression, and splice isoforms across hippocampus, temporal cortex, entorhinal cortex, and other AD-vulnerable regions in large postmortem datasets.</li>
+      <li><strong>AsymAD versus symptomatic AD comparison:</strong> Determine whether NRXN3 profiles distinguish cognitive resilience from disease burden by comparing normal aging, symptomatic AD, and asymptomatic AD cohorts.</li>
+      <li><strong>Isoform-specific measurement:</strong> Measure α/β isoforms, SS4/SS5 splice states, transmembrane versus soluble forms, NRXN3β, NRXN3 AS5, and other proteoform signals rather than relying on bulk NRXN3 quantification.</li>
+      <li><strong>Correlate with synaptic and pathological markers:</strong> Test whether NRXN3 changes track with synapse density, dendritic spine markers, SNAP-25/PSD95 proteins, cognitive performance, temporal lobe atrophy, amyloid/tau burden, APOE ε4, and NLRP3/inflammatory signals.</li>
+      <li><strong>Functional validation in AD-relevant models:</strong> Evaluate NRXN3 in amyloid/tau models, human iPSC-derived neurons, organoids, and circuit-level systems measuring synaptic transmission, LTP, interneuron function, network hyperexcitability, and cognition.</li>
+      <li><strong>Focus on interaction pathways:</strong> Investigate NRXN3–neuroligin, NRXN3–LRRTM4, NRXN3–Cbln/GluD1, and C1ql2–Nrxn3 complexes as potentially more tractable and safer entry points than direct NRXN3 modulation.</li>
+      <li><strong>Explore resilience-promoting interventions:</strong> Determine whether exercise, metabolic correction, sleep normalization, anti-inflammatory strategies, microbiome modulation, or trophic signaling alter NRXN3 expression or splicing in AD-relevant contexts.</li>
+      <li><strong>Precision modulation design:</strong> Any therapeutic concept will require region-specific, cell-type-specific, disease-stage-specific, and isoform-specific modulation to avoid disrupting normal synaptic organization and circuit function.</li>
+      <li><strong>Establish causality before advancing:</strong> Determine whether restoring NRXN3 function preserves synapses or cognition in AD models, and confirm whether specific NRXN3 variants or splice patterns confer risk, protection, or resilience in human cohorts.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — NRXN3 in Alzheimer's Disease</div>
+      <p>NRXN3 represents a <strong>scientifically plausible but pre-validated synaptic resilience candidate</strong> for Alzheimer's disease. Converging lines of transcriptomic, genetic, imaging-genetic, and postmortem evidence position it at the intersection of <strong>synaptic organization, excitatory–inhibitory balance, isoform-regulated signaling, and cognitive resilience</strong> — all mechanistically relevant to AD progression. The most compelling signal comes from AsymAD network analyses suggesting NRXN3 may help distinguish preserved cognition from symptomatic decline, and from postmortem isoform data linking splicing dysregulation to APOE ε4 and neuroinflammation. <strong>However, no causal AD evidence exists</strong>: no study demonstrates that NRXN3 manipulation alters amyloid, tau, or cognitive outcomes in disease models. Its substantial pleiotropy — spanning neurodevelopment, behavior, addiction, metabolism, and sleep — creates <strong>real safety and specificity hurdles</strong>. The most productive near-term path is rigorous isoform-resolved human brain characterization, functional validation in AD-relevant circuits, and exploration of interaction-pathway nodes (neuroligins, LRRTMs, cerebellins) as potentially safer therapeutic handles than NRXN3 itself.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  NRXN3 · Alzheimer's Disease — Synaptic Resilience TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

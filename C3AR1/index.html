@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C3AR1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.28);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-left: 4px solid var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--slate-border);
+    position: relative;
+    font-size: 0.93rem;
+  }
+
+  .takeaway-list li:last-child { border-bottom: none; }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .takeaway-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .verdict-banner p {
+    opacity: 0.92;
+  }
+
+  .verdict-banner b {
+    color: #bfdbfe;
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    text-align: center;
+    padding: 24px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--slate);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: C3AR1 &nbsp;|&nbsp; Complement C3a Receptor 1</span>
+    <span class="chip chip-danger">⚠ Pharmacologic Caution: SB290157 limitations</span>
+  </div>
+  <h1>C3AR1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Pharmacologic Caution</span>
+      SB290157, widely used as a C3aR antagonist in the cited studies, has known limitations: it can act as a potent C3aR <em>agonist</em> or cause receptor internalization rather than clean blockade. High-dose use was also associated with non-selective apoptosis in vascular smooth muscle cells. Findings relying solely on SB290157 should be interpreted cautiously until confirmed with better-characterized agents.
+    </div>
+
+    <p>C3AR1 (C3aR; Complement C3a Receptor 1) is a G protein-coupled receptor for the complement fragment C3a. Across the supplied literature it is positioned as a receptor-level bridge between complement activation and Alzheimer's disease-relevant processes: innate immune activation, microglial and astrocytic inflammatory states, synaptic injury, amyloid-β handling, tau pathology, blood–brain barrier dysfunction, vascular inflammation, mitochondrial and metabolic stress, inflammasome activation, and cognitive or neuropsychiatric symptoms.</p>
+
+    <p style="margin-top:16px;">The strongest AD-specific evidence supports C3AR1 as a <em>conditional</em> therapeutic target rather than a universally validated disease-modifying target. Several AD and AD-like models show benefit from C3AR1 inhibition or genetic deletion — reduced amyloid burden, reduced tau hyperphosphorylation, improved synaptic integrity, restored dendritic spine density, reduced neuroinflammation, and improved cognition or apathy-like behavior. However, evidence from another tauopathy model found that C3aR knockout failed to rescue tau pathology, microglial activation, neurodegeneration, or behavior, indicating that C3AR1's role is context-dependent.</p>
+
+    <p style="margin-top:16px;">Overall, C3AR1 is best viewed as part of a broader C3/C3a-driven neuroimmune network. Its therapeutic relevance appears strongest in complement-active phenotypes involving maladaptive glial activation, synapse loss, prefrontal cortical spine loss, apathy-like symptoms, amyloid-associated microglial dysfunction, tau phosphorylation pathways, vascular/BBB injury, and inflammaging.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (top-left): Upstream Complement Activation  — 3 nodes
+        PANEL B (top-right): C3AR1 Signaling Branches       — 5 nodes (branching into 2 sub-cascades)
+        PANEL C (bottom-left): Cellular & Pathological Outcomes — 4 nodes
+        PANEL D (bottom-right): AD-Relevant Consequences    — 4 nodes
+        TOTAL: 16 nodes exactly (including shared convergence node counted once)
+      -->
+      <svg viewBox="0 0 960 510" width="920" height="490" xmlns="http://www.w3.org/2000/svg" aria-label="C3AR1 mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Upstream Complement Activation ===== -->
+        <rect x="18" y="18" width="270" height="220" rx="12" ry="12"
+              fill="rgba(26,58,92,0.07)" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="30" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#1a3a5c" text-anchor="start" letter-spacing="1">A · UPSTREAM ACTIVATION</text>
+
+        <!-- A1: C1q/C3 System -->
+        <rect x="84" y="52" width="130" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="149" y="71" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#1a3a5c" text-anchor="middle">C1q / C3</text>
+        <text x="149" y="86" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Complement System</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="149" y1="96" x2="149" y2="118" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A2: C3 Cleavage → C3a -->
+        <rect x="84" y="120" width="130" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="149" y="139" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#1a3a5c" text-anchor="middle">C3 Cleavage</text>
+        <text x="149" y="154" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">→ C3a Fragment</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="149" y1="164" x2="149" y2="186" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A3: C3AR1 Receptor -->
+        <rect x="74" y="188" width="150" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="149" y="207" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#ffffff" text-anchor="middle">C3AR1 Receptor</text>
+        <text x="149" y="222" font-family="Arial,sans-serif" font-size="10"
+              fill="#bfdbfe" text-anchor="middle">GPCR on glia / neurons</text>
+
+        <!-- ===== PANEL B: Signaling Branches ===== -->
+        <rect x="310" y="18" width="330" height="340" rx="12" ry="12"
+              fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="322" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#2e6da4" text-anchor="start" letter-spacing="1">B · INTRACELLULAR SIGNALING BRANCHES</text>
+
+        <!-- B0: Shared: G-protein activation -->
+        <rect x="385" y="52" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="475" y="71" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#1a3a5c" text-anchor="middle">G-Protein Activation</text>
+        <text x="475" y="86" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">NF-κB / MAPK / ERK / p38</text>
+
+        <!-- Arrows from B0 → branch left (B1) and branch right (B2) -->
+        <!-- Left branch: down-left to x=358 -->
+        <line x1="430" y1="96" x2="390" y2="130" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Right branch: down-right to x=558 -->
+        <line x1="520" y1="96" x2="560" y2="130" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B1: Left branch — Inflammatory Cascade -->
+        <rect x="326" y="132" width="148" height="44" rx="7" fill="#e0f2fe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="400" y="151" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#1a3a5c" text-anchor="middle">Inflammatory</text>
+        <text x="400" y="166" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Cytokines / STAT3</text>
+
+        <!-- Arrow B1 → B3 -->
+        <line x1="400" y1="176" x2="400" y2="210" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B2: Right branch — Metabolic/Mitochondrial -->
+        <rect x="496" y="132" width="126" height="44" rx="7" fill="#e0f2fe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="559" y="151" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#1a3a5c" text-anchor="middle">Metabolic</text>
+        <text x="559" y="166" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">HIF-1α / ROS / Lipids</text>
+
+        <!-- Arrow B2 → B3 -->
+        <line x1="559" y1="176" x2="559" y2="210" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B3a: Convergence left arm — NLRP3 Inflammasome -->
+        <rect x="326" y="212" width="148" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="400" y="231" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#92400e" text-anchor="middle">NLRP3</text>
+        <text x="400" y="246" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Inflammasome / IL-1β</text>
+
+        <!-- B3b: Convergence right arm — Tau Phosphorylation -->
+        <rect x="496" y="212" width="126" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="559" y="231" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#92400e" text-anchor="middle">Tau Kinases</text>
+        <text x="559" y="246" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">CDK5 / GSK3β</text>
+
+        <!-- Converging arrows to shared outcome node B4 -->
+        <line x1="400" y1="256" x2="440" y2="295" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="559" y1="256" x2="519" y2="295" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B4: Shared Convergence — Glial Activation -->
+        <rect x="390" y="297" width="170" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="475" y="316" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#9b1c1c" text-anchor="middle">Glial Activation</text>
+        <text x="475" y="331" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Microglia / Astrocyte state</text>
+
+        <!-- ===== PANEL C: Cellular & Pathological Outcomes ===== -->
+        <rect x="18" y="258" width="270" height="232" rx="12" ry="12"
+              fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="30" y="278" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#9b1c1c" text-anchor="start" letter-spacing="1">C · CELLULAR PATHOLOGY</text>
+
+        <!-- C1: Synapse / Spine Loss -->
+        <rect x="38" y="290" width="222" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="149" y="309" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#9b1c1c" text-anchor="middle">Synapse / Spine Loss</text>
+        <text x="149" y="324" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Engulfment, ↓synaptic proteins</text>
+
+        <!-- C2: Amyloid Microglial Dysfunction -->
+        <rect x="38" y="350" width="222" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="149" y="369" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#9b1c1c" text-anchor="middle">Aβ Microglial Dysfunction</text>
+        <text x="149" y="384" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">↓Phagocytosis, plaque ↑</text>
+
+        <!-- C3: BBB Disruption -->
+        <rect x="38" y="410" width="222" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="149" y="429" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#9b1c1c" text-anchor="middle">BBB Disruption</text>
+        <text x="149" y="444" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">VCAM1, ↓VE-cadherin</text>
+
+        <!-- ===== PANEL D: AD-Relevant Consequences ===== -->
+        <rect x="660" y="18" width="282" height="340" rx="12" ry="12"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="672" y="38" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#0f766e" text-anchor="start" letter-spacing="1">D · AD-RELEVANT CONSEQUENCES</text>
+
+        <!-- D1: Cognitive Decline -->
+        <rect x="680" y="52" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="802" y="71" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#065f46" text-anchor="middle">Cognitive Decline</text>
+        <text x="802" y="86" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Spatial memory, behavior ↓</text>
+
+        <!-- D2: Tau Hyperphosphorylation -->
+        <rect x="680" y="118" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="802" y="137" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#065f46" text-anchor="middle">Tau Hyperphosphorylation</text>
+        <text x="802" y="152" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">Tauopathy / Braak staging</text>
+
+        <!-- D3: Apathy / NPS -->
+        <rect x="680" y="184" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="802" y="203" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#065f46" text-anchor="middle">Apathy / NPS</text>
+        <text x="802" y="218" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">PFC spine loss, behavior</text>
+
+        <!-- D4: Inflammaging -->
+        <rect x="680" y="250" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="802" y="269" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+              fill="#065f46" text-anchor="middle">Inflammaging</text>
+        <text x="802" y="284" font-family="Arial,sans-serif" font-size="10"
+              fill="#1e293b" text-anchor="middle">ERK / macrophage aging loop</text>
+
+        <!-- ===== CROSS-PANEL CONNECTORS ===== -->
+
+        <!-- A3 → B0: C3AR1 receptor → G-protein activation
+             A3 right edge: x=224, y=210  |  B0 left edge: x=385, y=74
+             Route: horizontal across gutter at y=210 then up to y=74 -->
+        <polyline points="224,210 305,210 305,74 385,74"
+                  fill="none" stroke="#1a3a5c" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+
+        <!-- B4 Glial Activation → C1 Synapse/Spine Loss
+             B4 bottom-left: x=390, y=341  | C1 right edge: x=260, y=312
+             Route: elbow down from B4 bottom center then left through gutter -->
+        <polyline points="460,341 460,370 290,370 290,312 260,312"
+                  fill="none" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- B4 → C2 Amyloid Dysfunction
+             Route: continue down from gutter to y=372 -->
+        <polyline points="460,341 460,426 290,426 290,372 260,372"
+                  fill="none" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- B4 → D1 Cognitive Decline (right)
+             B4 right edge: x=560, y=319  |  D1 left edge: x=680, y=74
+             Route: right from B4, up through right gutter to D1 -->
+        <polyline points="560,319 630,319 630,74 680,74"
+                  fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- B3b Tau Kinases → D2 Tau Hyperphosphorylation
+             B3b right edge: x=622, y=234  |  D2 left: x=680, y=140
+             Route through right gutter -->
+        <polyline points="622,234 640,234 640,140 680,140"
+                  fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- C3 BBB → D4 Inflammaging (far right)
+             C3 bottom: x=149, y=454  | route: down then right along bottom gutter, up to D4 -->
+        <polyline points="149,454 149,478 802,478 802,294"
+                  fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- B3a NLRP3 → D3 Apathy/NPS -->
+        <polyline points="474,234 640,234 640,206 680,206"
+                  fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> — Upstream complement activation: C1q/C3 system produces C3a fragment, activating C3AR1 (a GPCR expressed on microglia, neurons, and endothelial cells).
+      <strong>Panel B</strong> — Intracellular signaling branches from G-protein activation: the left branch drives inflammatory cytokine/STAT3 cascades converging on NLRP3 inflammasome/IL-1β; the right branch drives metabolic/HIF-1α/ROS/lipid dysregulation converging on tau kinases (CDK5/GSK3β). Both branches converge on a shared glial activation state.
+      <strong>Panel C</strong> — Cellular and pathological outcomes: synapse/spine loss (microglial engulfment), amyloid microglial dysfunction (impaired phagocytosis), and BBB disruption (VCAM1, VE-cadherin loss).
+      <strong>Panel D</strong> — AD-relevant clinical consequences: cognitive decline, tau hyperphosphorylation/tauopathy, neuropsychiatric symptoms/apathy, and inflammaging. Dashed connectors indicate context-dependent or indirect links supported by the literature.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>🔗 Complement-to-Neuroinflammation Link</h3>
+        <p>C3 cleavage generates C3a, which activates C3AR1 on microglia, macrophages, endothelial cells, neurons, and astrocytes. This amplifies cytokine, chemokine, NF-κB, STAT3, MAPK/ERK/p38, inflammasome, and immune-cell recruitment pathways — positioning C3AR1 as a central receptor-level hub in AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>✅ Benefit of C3AR1 Inhibition in Amyloid Models</h3>
+        <p>In APP knock-in amyloid mice, high-C3aR microglia accumulated around plaques and showed HIF-1α-linked metabolic and lipid abnormalities. C3ar1 deletion improved microglial lipid profiles, receptor recycling, Aβ phagocytosis, plaque-associated microglial responses, Aβ pathology, synaptic function, and cognition — supporting a model in which excessive C3AR1 signaling impairs microglial clearance.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚖ Mixed Evidence in Tauopathy</h3>
+        <p>In P301S tauopathy mice, pharmacologic C3aR blockade reduced tau hyperphosphorylation, improved synaptic integrity, and improved spatial memory via CDK5/GSK3β-linked pathways. However, a separate tauopathy study found that genetic C3aR knockout failed to rescue tau pathology, microglial activation, neurodegeneration, or behavior, indicating C3AR1 is not a universal tauopathy driver.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🧠 Neuropsychiatric Symptoms &amp; Prefrontal Pathology</h3>
+        <p>In 5xFAD mice with apathy-like behavior, prefrontal immune hub genes (Tyrobp, C3, C3ar, C1qa–c) were elevated and correlated with apathy-like behavior. Combined SB290157 and methylphenidate improved nest-building, reduced C3/C3ar expression, and restored dendritic spine density, implicating C3AR1 in complement-driven prefrontal synaptic pathology.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>🩸 Neurovascular &amp; BBB Dysfunction</h3>
+        <p>Endothelial C3aR signaling is linked to VCAM1 induction, lymphocyte infiltration, VE-cadherin disruption, calcium-dependent barrier instability, and increased BBB permeability. In aging and tau models, endothelial C3ar1 inactivation reduced vascular inflammation, microglial reactivity, and neurodegeneration — highly relevant given that BBB dysfunction accelerates AD pathology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠ Pharmacologic &amp; Context-Dependent Cautions</h3>
+        <p>SB290157, the most-used C3aR antagonist, can behave as a potent agonist or cause receptor internalization rather than clean blockade. High doses caused non-selective vascular smooth muscle cell apoptosis. Separately, broad C3AR1 blockade risks impairing host defense, phagocytosis, neurogenesis, and tissue repair where C3aR signaling is beneficial. Better-characterized, brain-penetrant, selective or biased modulators are needed.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <b>Prioritize C3AR1 as a phenotype-specific, not universal, AD target.</b>
+        The best-supported use cases are complement-active AD subtypes with neuroinflammation, synaptic/spine loss, apathy-like behavior, microglial metabolic dysfunction, amyloid plaque-associated microglia, BBB dysfunction, and tau phosphorylation — not AD broadly.
+      </li>
+      <li>
+        <b>Validate C3AR1 causality separately across amyloid, tau, vascular, and neuropsychiatric models.</b>
+        Existing evidence shows benefit in APP/5xFAD/P301S pharmacology contexts but failure in one tauopathy knockout study. Validation should include amyloid burden, tau phosphorylation, synaptic endpoints, microglial state, BBB integrity, cognition, and apathy-related behaviors.
+      </li>
+      <li>
+        <b>Develop patient-selection biomarkers for C3AR1-targeted trials.</b>
+        Candidate markers include brain/CSF C3a levels, C3AR1 expression on microglia/myeloid cells, C1q/C3 synaptic tagging signatures, HIF-1α/lipid-droplet microglial profiles, NLRP3/IL-1β activation, STAT3/NF-κB pathway activity, and BBB permeability markers.
+      </li>
+      <li>
+        <b>Develop superior C3AR1 therapeutics for AD translation.</b>
+        Needed: brain-penetrant, selective antagonists; biased modulators that suppress inflammatory/metabolic signaling while preserving phagocytosis; and cell-targeted approaches directed at microglia or brain endothelium — moving beyond SB290157.
+      </li>
+      <li>
+        <b>Avoid indiscriminate long-term systemic blockade.</b>
+        C3AR1 can support host defense, immune-cell survival, phagocytosis, repair, neurogenesis, and tissue regeneration. AD strategies should consider CNS-selective delivery, partial inhibition, stage-specific treatment, or pathway-biased modulation to preserve these functions.
+      </li>
+      <li>
+        <b>Consider combination therapy targeting complementary mechanisms.</b>
+        The 5xFAD apathy study demonstrates that combining C3aR antagonism with methylphenidate improved apathy-like behavior and restored prefrontal spine density beyond complement targeting alone. C3AR1 modulation may be most effective paired with neurotransmitter, amyloid/tau, vascular, or broad neuroinflammation therapies.
+      </li>
+      <li>
+        <b>Treat C3AR1 as part of a complement network, not a standalone target.</b>
+        Upstream C1q/C3 synaptic tagging and other complement receptors may drive pathology independently of C3AR1 in some contexts. Therapeutic programs should compare C3AR1 targeting with upstream C1q/C3 inhibition and confirm C3AR1 is the dominant effector in the chosen AD phenotype.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — C3AR1 in Alzheimer's Disease</span>
+      <p>
+        C3AR1 is a <b>mechanistically plausible and druggable AD-relevant target</b> sitting at the intersection of complement activation, glial inflammation, synaptic injury, amyloid and tau biology, neurovascular dysfunction, and aging-related inflammation. Multiple AD models demonstrate genuine therapeutic benefit from C3AR1 inhibition — including <b>reduced amyloid burden, restored synaptic and dendritic spine integrity, attenuated tau hyperphosphorylation, improved microglial metabolic fitness, reduced BBB dysfunction, and amelioration of apathy-like behaviors</b>. However, a critical counterpoint from tauopathy knockout data establishes that C3AR1 is <b>not a universal disease driver</b>, and its role is conditional on disease context and complement pathway activity. Compounding this, the most widely used pharmacological tool (SB290157) has <b>significant mechanistic liabilities</b> that compromise confidence in pharmacology-only studies. The path forward requires <b>phenotype-stratified target validation, robust patient-selection biomarkers, next-generation brain-penetrant selective or biased modulators</b>, and a framework that treats C3AR1 as one critical node within a broader C3/C3a-driven neuroimmune network — preserving beneficial complement-mediated clearance and repair while selectively dampening maladaptive neuroinflammatory signaling in defined AD subtypes.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  C3AR1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

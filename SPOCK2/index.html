@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPOCK2 / Testican-2 — AD Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f0f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf5;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.28);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #c9d9ee;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 20px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 26px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.94rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-top: 8px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 12px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.slate {
+    border-left-color: #64748b;
+    background: #f8fafc;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.slate h3 { color: #475569; }
+  .card h3 { color: var(--dark); }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+    color: var(--slate);
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--mid);
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    border-radius: 12px;
+    padding: 36px 38px;
+    color: #c9d9ee;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #7fb3d9;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px 28px;
+    margin-top: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SPOCK2 &nbsp;|&nbsp; Testican-2 / SPARC/Osteonectin-family Proteoglycan</span>
+    <span class="chip chip-danger">⚠ No direct AD validation — hypothesis-generating only</span>
+  </div>
+  <h1>SPOCK2 / Testican-2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Critical Caveat:</strong> The evidence base contains <strong>no direct Alzheimer's disease studies</strong> for SPOCK2. There are no reported effects on amyloid-β, tau, AD synaptic loss, AD animal models, or clinical AD cohorts. All AD relevance is inferred from pathway overlap. SPOCK2 must be treated as a <em>hypothesis-generating candidate</em>, not a validated AD target.
+    </div>
+
+    <p>SPOCK2/testican-2 is a secreted, extracellular matrix (ECM)-associated proteoglycan of the SPARC/testican family. It carries follistatin-like, calcium-binding, thyroglobulin-like, and glycosaminoglycan (heparan-sulfate) attachment domains. It is expressed across multiple brain regions, including cortex and hippocampus — regions centrally affected in Alzheimer's disease — and is detectable in biofluids, making it technically accessible for both biomarker and therapeutic approaches.</p>
+
+    <p>The most AD-relevant mechanistic features identified in the supplied evidence include: modulation of neurite outgrowth; interaction with complement component C1q; regulation of MT1-MMP/MMP14–MMP2 protease cascades coupled to astrocytic ERK1/2 and IL-1β signaling; appearance in CNS vascular maturation signatures downstream of Wnt/β-catenin; and association with ECM–integrin (vitronectin, αVβ3/ITGA3, FAK) signaling. These pathways intersect with AD features including ECM remodeling, blood-brain barrier dysfunction, complement-mediated synapse loss, protease imbalance, and neuroinflammation.</p>
+
+    <p>Importantly, SPOCK2 biology is highly context-dependent. It can be protective in endothelial, podocyte, and antiviral settings, yet pro-inflammatory or injury-promoting in other contexts. This dual character renders direct extrapolation to AD unsafe without brain-cell-type-specific experimental validation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          Layout plan (16 nodes max):
+          Panel A (left): ECM / Molecular Identity — 3 nodes (col x=60)
+          Panel B (center-top): Neurite & Complement branch — 4 nodes
+          Panel C (center-bottom): Astrocytic MMP–Inflammation axis — 4 nodes
+          Panel D (right): Neurovascular & ECM-Integrin — 3 nodes
+          Shared outcome row at bottom — 2 nodes
+          Total: 3+4+4+3+2 = 16 exactly
+
+          Row y positions:
+          R1=60, R2=160, R3=260, R4=360, R5=420 (outcome strip)
+
+          Panel A: x=20–200, rows 1-3
+          Panel B: x=220–530, rows 1-3 (branches at R2: neurite node + complement node side by side)
+          Panel C: x=220–530, rows 3-4 (MMP cascade)
+          Panel D: x=550–870, rows 1-3
+          Outcomes: y=400 shared row spanning center
+
+          Revised cleaner layout:
+          === PANELS ===
+          Panel A "ECM Identity"      : x=18  y=30  w=165 h=335
+          Panel B "Neurite & Complement": x=200 y=30  w=295 h=190
+          Panel C "Astrocytic Inflammation": x=200 y=240 w=295 h=185
+          Panel D "Neurovascular & Integrin": x=512 y=30  w=245 h=335
+
+          === NODES (rounded rects ~w=120,h=44) ===
+          Node layout inside panels:
+
+          Panel A (ECM Identity) — 3 nodes, single column, cx=100
+            A1: SPOCK2 / Testican-2  y=70  (source node)
+            A2: HSPG Domains  y=150
+            A3: Secreted / Biofluid  y=230
+
+          Panel B (Neurite & Complement) — 4 nodes, branching
+            B0: CNS Expression (Ctx/Hipp) y=70 cx=347
+            B1: Neurite Inhibition  y=155  cx=265
+            B2: C1q Interaction  y=155  cx=430
+
+          Panel C (Astrocytic Inflammation) — 4 nodes cascade
+            C1: Reactive Astrocyte SPOCK2  y=275  cx=265
+            C2: MT1-MMP / MMP2  y=275  cx=430
+            C3: ERK1/2 Activation  y=355  cx=347
+
+          Panel D (Neurovascular & Integrin) — 3 nodes
+            D1: Wnt/β-catenin → CNS Vascular  y=70  cx=634
+            D2: Basement Membrane / BBB  y=155  cx=634
+            D3: Integrin αVβ3 / FAK  y=255  cx=634
+
+          Shared outcome — 2 nodes at y=410
+            O1: AD-Relevant Pathways  cx=310
+            O2: Context-Dependent Effects  cx=600
+
+          Count: A1,A2,A3, B0,B1,B2, C1,C2,C3, D1,D2,D3, O1,O2 = 14 nodes ✓ (≤16)
+        -->
+        <svg viewBox="0 0 780 480" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-d" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1e3a5f"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: ECM Identity -->
+          <rect x="14" y="20" width="162" height="350" rx="10" ry="10"
+                fill="#e8f0f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="95" y="38" text-anchor="middle" font-size="8" font-weight="700"
+                text-transform="uppercase" fill="#1e3a5f" letter-spacing="1">ECM IDENTITY</text>
+
+          <!-- A1 SPOCK2/Testican-2 -->
+          <rect x="25" y="52" width="140" height="46" rx="7" fill="#1e3a5f" stroke="none"/>
+          <text x="95" y="71" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">SPOCK2</text>
+          <text x="95" y="85" text-anchor="middle" font-size="9" fill="#c9d9ee">Testican-2 Proteoglycan</text>
+
+          <!-- A2 HSPG Domains -->
+          <rect x="25" y="138" width="140" height="46" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="95" y="157" text-anchor="middle" font-size="9.5" fill="#1e3a5f">FS-like · Ca²⁺-binding</text>
+          <text x="95" y="171" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Thyroglobulin · HSPG</text>
+
+          <!-- A3 Secreted/Biofluid -->
+          <rect x="25" y="236" width="140" height="46" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="95" y="255" text-anchor="middle" font-size="9.5" fill="#1e3a5f">Secreted Protein</text>
+          <text x="95" y="269" text-anchor="middle" font-size="9.5" fill="#0f766e">Biofluid-Detectable</text>
+
+          <!-- A1→A2 -->
+          <line x1="95" y1="98" x2="95" y2="131" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- A2→A3 -->
+          <line x1="95" y1="184" x2="95" y2="229" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- PANEL B: Neurite & Complement -->
+          <rect x="192" y="20" width="285" height="200" rx="10" ry="10"
+                fill="#e8f0f9" fill-opacity="0.40" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="334" y="38" text-anchor="middle" font-size="8" font-weight="700"
+                fill="#1e3a5f" letter-spacing="1">NEURITE &amp; COMPLEMENT</text>
+
+          <!-- B0 CNS Expression -->
+          <rect x="264" y="50" width="140" height="46" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="334" y="69" text-anchor="middle" font-size="9.5" fill="#1e3a5f">CNS Expression</text>
+          <text x="334" y="83" text-anchor="middle" font-size="9" fill="#475569">Cortex · Hippocampus</text>
+
+          <!-- B1 Neurite Inhibition -->
+          <rect x="200" y="148" width="130" height="46" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="265" y="167" text-anchor="middle" font-size="9.5" fill="#9b1c1c">Neurite Inhibition</text>
+          <text x="265" y="181" text-anchor="middle" font-size="8.5" fill="#475569">Dystrophic neuritic risk</text>
+
+          <!-- B2 C1q Interaction -->
+          <rect x="345" y="148" width="124" height="46" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="407" y="167" text-anchor="middle" font-size="9.5" fill="#9b1c1c">C1q Interaction</text>
+          <text x="407" y="181" text-anchor="middle" font-size="8.5" fill="#475569">Complement / synapse</text>
+
+          <!-- B0→B1 diagonal elbow: down then left -->
+          <polyline points="310,96 280,96 265,141" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B0→B2 diagonal elbow: down then right -->
+          <polyline points="358,96 390,96 407,141" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- PANEL C: Astrocytic Inflammation -->
+          <rect x="192" y="234" width="285" height="175" rx="10" ry="10"
+                fill="#fffbeb" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="334" y="251" text-anchor="middle" font-size="8" font-weight="700"
+                fill="#b45309" letter-spacing="1">ASTROCYTIC INFLAMMATION</text>
+
+          <!-- C1 Reactive Astrocyte SPOCK2 -->
+          <rect x="200" y="259" width="130" height="46" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="265" y="278" text-anchor="middle" font-size="9.5" fill="#b45309">Reactive Astrocyte</text>
+          <text x="265" y="292" text-anchor="middle" font-size="9" fill="#475569">SPOCK2 upregulation</text>
+
+          <!-- C2 MT1-MMP/MMP2 -->
+          <rect x="345" y="259" width="124" height="46" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="407" y="278" text-anchor="middle" font-size="9.5" fill="#b45309">MT1-MMP / MMP2</text>
+          <text x="407" y="292" text-anchor="middle" font-size="9" fill="#475569">Protease activation</text>
+
+          <!-- C3 ERK1/2 + IL-1β -->
+          <rect x="264" y="355" width="140" height="46" rx="7" fill="#9b1c1c" stroke="none"/>
+          <text x="334" y="374" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">ERK1/2 · IL-1β</text>
+          <text x="334" y="388" text-anchor="middle" font-size="9" fill="#fecaca">Neuroinflammation</text>
+
+          <!-- C1→C3 elbow -->
+          <polyline points="265,305 265,330 320,330 320,348" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-r)"/>
+          <!-- C2→C3 elbow -->
+          <polyline points="407,305 407,330 348,330 348,348" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- PANEL D: Neurovascular & Integrin -->
+          <rect x="494" y="20" width="242" height="350" rx="10" ry="10"
+                fill="#f0fdfa" fill-opacity="0.60" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="615" y="38" text-anchor="middle" font-size="8" font-weight="700"
+                fill="#0f766e" letter-spacing="1">NEUROVASCULAR &amp; INTEGRIN</text>
+
+          <!-- D1 Wnt/β-catenin → CNS Vascular -->
+          <rect x="505" y="50" width="220" height="46" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="615" y="69" text-anchor="middle" font-size="9.5" fill="#0f766e">Wnt/β-catenin Signaling</text>
+          <text x="615" y="83" text-anchor="middle" font-size="9" fill="#475569">CNS vascular maturation</text>
+
+          <!-- D2 Basement Membrane / BBB -->
+          <rect x="505" y="148" width="220" height="46" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="615" y="167" text-anchor="middle" font-size="9.5" fill="#0f766e">Basement Membrane</text>
+          <text x="615" y="181" text-anchor="middle" font-size="9" fill="#475569">BBB integrity / vulnerability</text>
+
+          <!-- D3 Integrin αVβ3 / FAK -->
+          <rect x="505" y="255" width="220" height="46" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="615" y="274" text-anchor="middle" font-size="9.5" fill="#0f766e">Integrin αVβ3 · FAK</text>
+          <text x="615" y="288" text-anchor="middle" font-size="9" fill="#475569">Vitronectin · cell-matrix adhesion</text>
+
+          <!-- D1→D2 -->
+          <line x1="615" y1="96" x2="615" y2="141" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+          <!-- D2→D3 -->
+          <line x1="615" y1="194" x2="615" y2="248" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+          <!-- OUTCOME ROW -->
+          <!-- O1: AD-Relevant Pathways -->
+          <rect x="60" y="415" width="310" height="46" rx="7" fill="#1e3a5f" stroke="none"/>
+          <text x="215" y="434" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">AD-Relevant Pathway Overlap</text>
+          <text x="215" y="450" text-anchor="middle" font-size="9" fill="#c9d9ee">ECM · BBB · Complement · MMP · Astrocyte</text>
+
+          <!-- O2: Context-Dependent Effects -->
+          <rect x="402" y="415" width="280" height="46" rx="7" fill="#475569" stroke="none"/>
+          <text x="542" y="434" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">Context-Dependent Effects</text>
+          <text x="542" y="450" text-anchor="middle" font-size="9" fill="#e2e8f0">Protective vs. Pro-inflammatory</text>
+
+          <!-- Connectors to outcomes -->
+          <!-- A3 → O1 (elbow down through left gutter) -->
+          <polyline points="95,282 95,396 210,396 210,408" fill="none" stroke="#2e6da4" stroke-width="1.2" marker-end="url(#arr)"/>
+          <!-- C3 → O1 -->
+          <polyline points="334,401 334,408" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arr)"/>
+          <!-- B2 → O2 elbow right -->
+          <polyline points="469,171 482,171 482,394 542,394 542,408" fill="none" stroke="#9b1c1c" stroke-width="1.2" marker-end="url(#arr-r)"/>
+          <!-- D3 → O2 elbow down -->
+          <polyline points="615,301 615,394 547,394 547,408" fill="none" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-g)"/>
+
+          <!-- Cross-panel connector: A1 to B0 (horizontal, in gutter row y=75) -->
+          <line x1="165" y1="75" x2="257" y2="75" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr-d)"/>
+
+          <!-- A1 to Panel D top (horizontal at y=75) — goes through B panel territory, avoid -->
+          <!-- Instead: A3 → D2 is too far; skip. Use D1 standalone (already connected from A via B0 context) -->
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A — ECM Identity:</strong> SPOCK2/testican-2 is a multi-domain secreted HSPG detectable in biofluids.
+        <strong>Panel B — Neurite &amp; Complement:</strong> CNS expression (cortex/hippocampus) branches into two parallel hypotheses: direct inhibition of neurite extension (left) and C1q complement interaction potentially mediating synapse loss (right).
+        <strong>Panel C — Astrocytic Inflammation:</strong> In reactive astrocytes, SPOCK2 and MT1-MMP/MMP2 converge on ERK1/2 activation and IL-1β-driven neuroinflammation.
+        <strong>Panel D — Neurovascular &amp; Integrin:</strong> A sequential cascade from Wnt/β-catenin-driven CNS vascular maturation through basement-membrane/BBB integrity to integrin αVβ3/FAK-mediated cell–matrix adhesion.
+        <strong>Outcomes:</strong> All panels feed into either AD-relevant pathway overlap (ECM, BBB, complement, MMP, astrocyte) or the context-dependence barrier that must be resolved before therapeutic targeting.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card danger">
+        <h3>🚫 No Direct AD Evidence</h3>
+        <p>The supplied evidence contains no SPOCK2 studies in AD cohorts, AD animal models, or AD-relevant endpoints (amyloid-β, tau, synaptic degeneration, cognition, or AD-specific microglial mechanisms). All AD relevance is inferred from pathway overlap.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧬 ECM Proteoglycan with CNS Expression</h3>
+        <p>SPOCK2 is a SPARC/testican-family HSPG with follistatin-like, calcium-binding, thyroglobulin-like, and GAG-attachment domains. Expression in cortex and hippocampus positions it in brain regions central to AD vulnerability.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>⚠ Complement C1q Interaction</h3>
+        <p>Recombinant testican-2 physically interacts with C1q, the classical complement pathway initiator. Since C1q drives complement-mediated synapse elimination in AD, this is among the most mechanistically compelling — yet functionally uncharacterised — SPOCK2–AD hypotheses.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>🔥 Astrocytic MMP–ERK–IL-1β Axis</h3>
+        <p>In a rat neuropathic pain model, astrocytic SPOCK2 engaged MT1-MMP/MMP14, promoted MMP2 activation, activated ERK1/2, and drove IL-1β production. This entire axis — astrocyte activation, MMP activity, ERK signaling, and IL-1β — is implicated in AD neuroinflammation.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>🩸 Neurovascular &amp; BBB Relevance</h3>
+        <p>SPOCK2 appears in CNS vascular maturation signatures downstream of Wnt/β-catenin signaling and in neurotoxicity-associated cerebrovascular/basement membrane vulnerability signatures. BBB breakdown is a major AD feature, making vascular SPOCK2 a plausible investigative priority.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>⚖ Context Dependence — Major Barrier</h3>
+        <p>SPOCK2 can be protective in endothelial and podocyte contexts yet pro-inflammatory or injury-promoting in others. Its measurability in biofluids is an asset for biomarker work, but therapeutic directionality (augmentation vs. inhibition) cannot be assumed without cell-type-specific AD validation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat as indirect candidate, not a validated target.</strong> The rationale for SPOCK2 in AD rests entirely on pathway overlap — ECM remodeling, BBB dysfunction, complement biology, MMP activity, astrocyte inflammation, and neurovascular injury — with no direct AD experimental evidence to date.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize AD expression and cell-type localization studies.</strong> Key first experiments should quantify SPOCK2 mRNA and protein in AD versus control brain, specifically in cortex, hippocampus, vasculature, perivascular spaces, plaques, dystrophic neurites, astrocytes, microglia, neurons, endothelial cells, pericytes, and choroid plexus.</div>
+      </li>
+      <li>
+        <div><strong>Investigate the SPOCK2–C1q axis mechanistically.</strong> Determine whether SPOCK2 enhances, inhibits, sequesters, or spatially redirects C1q activity in brain ECM, and whether this affects complement-mediated synapse loss in relevant cellular or animal models.</div>
+      </li>
+      <li>
+        <div><strong>Test the astrocytic SPOCK2–MT1-MMP–MMP2–ERK–IL-1β pathway in AD models.</strong> If SPOCK2 is upregulated in reactive AD astrocytes, disruption of the SPOCK2–MT1-MMP interaction could be explored as a targeted anti-inflammatory strategy, separately from any vascular role.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate neurovascular SPOCK2 independently from glial SPOCK2.</strong> Because SPOCK2 appears to support endothelial survival and basement membrane integrity in some contexts, global inhibition strategies could inadvertently harm BBB resilience even if astrocytic inhibition is beneficial.</div>
+      </li>
+      <li>
+        <div><strong>Approach biomarker development cautiously.</strong> CSF and plasma SPOCK2 could serve as markers of ECM/neurovascular remodeling in AD, but circulating levels must be interpreted with awareness of confounders including kidney function, vascular comorbidities, systemic inflammation, and non-CNS tissue sources.</div>
+      </li>
+      <li>
+        <div><strong>Exclude unreliable evidence from target justification.</strong> Prognostic multi-gene signatures in which SPOCK2 is only one of many features should not be treated as causal evidence for SPOCK2's role; retracted findings (e.g., ovarian cancer) must not be used as supporting data.</div>
+      </li>
+      <li>
+        <div><strong>Avoid premature therapeutic directionality.</strong> Both SPOCK2 augmentation and inhibition are biologically plausible depending on cell type and disease stage. Compartment-specific evidence in AD-relevant models is required before committing to replacement, blockade, antibody therapy, peptide disruption, EV delivery, or gene-expression modulation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — SPOCK2 / Testican-2 in Alzheimer's Disease</span>
+      <p>
+        SPOCK2 is a <strong>plausible but entirely unvalidated</strong> extracellular target candidate for Alzheimer's disease. The evidence base provides no direct AD mechanistic or clinical data; all AD relevance is mechanistically inferred. The strongest hypotheses centre on <strong>neurovascular ECM and basement membrane stability</strong>, <strong>astrocytic MT1-MMP/MMP2–ERK1/2–IL-1β inflammatory signaling</strong>, <strong>C1q/classical complement interaction</strong>, <strong>heparan-sulfate proteoglycan biology</strong>, and <strong>neurite remodeling</strong>. SPOCK2's secreted, extracellular nature and biofluid detectability are genuine technical advantages for both biomarker development and therapeutic access. However, its <strong>pronounced context dependence</strong> — protective in some cell types, injurious in others — means that neither augmentation nor inhibition can be assumed safe or beneficial without systematic, brain-cell-type-resolved AD validation. <strong>Direct AD experimental evidence is the essential prerequisite</strong> before SPOCK2 can be considered an actionable Alzheimer's therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SPOCK2 / Testican-2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPATA22 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 13px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e8f1fa;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.92rem;
+    opacity: 0.72;
+    color: #cbd5e1;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+    color: #78350f;
+    line-height: 1.65;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* ── OVERVIEW TEXT ── */
+  .overview-text p {
+    font-size: 0.97rem;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--slate-light);
+    border-color: var(--slate);
+  }
+  .card-neutral h3 { color: var(--slate); }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    color: #e8f1fa;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 0.96rem;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p strong {
+    color: #fbbf24;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    margin-top: 60px;
+    padding: 20px 24px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--slate);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════ HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SPATA22 &nbsp;|&nbsp; Spermatogenesis Associated 22</span>
+    <span class="chip chip-danger">⚠ Indirect AD relevance — not a validated target</span>
+  </div>
+  <h1>SPATA22 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ════════════════════════════════════════════════════════ MAIN -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caveat — Indirect Relevance:</strong> SPATA22 is primarily a meiosis- and fertility-associated
+      DNA repair factor. Its connection to Alzheimer's disease is indirect and conceptual, based on
+      shared biology (DNA damage, senescence, oxidative stress) rather than demonstrated involvement
+      in AD neuropathology.
+    </div>
+
+    <div class="overview-text">
+      <p>
+        SPATA22 is best characterised as a meiotic DNA repair and recombination factor. Its core functions
+        include ssDNA binding, meiotic homologous recombination, DNA double-strand break (DSB) repair,
+        and chromosome synapsis. It forms an interdependent complex with MEIOB that functionally
+        interacts with RPA, RAD51, and DMC1. Human and animal studies consistently link SPATA22 loss
+        of function to meiotic arrest, infertility, premature ovarian insufficiency, and non-obstructive
+        azoospermia.
+      </p>
+      <p>
+        The Alzheimer's relevance supplied in the available text is indirect. SPATA22-related
+        processes — DNA damage accumulation, impaired repair, oxidative stress, apoptosis, cellular
+        senescence, and epigenetic age acceleration — overlap with broad biology implicated in AD.
+        The gene does not have demonstrated roles in amyloid-β accumulation, tau pathology, synaptic
+        dysfunction, neuroinflammation, neuronal loss, or cognitive decline.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        SVG — 960 × 490 viewBox
+        Panel A (blue): SPATA22/MEIOB Core Complex & Meiotic Function  (x 20–460)
+        Panel B (amber): AD-Overlap / Aging Biology                     (x 490–940)
+        Nodes counted below — total = 14
+      -->
+      <svg viewBox="0 0 960 490" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:920px;display:block;margin:0 auto;" aria-label="SPATA22 mechanistic overview diagram">
+
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- ── Panel A background ── -->
+        <rect x="14" y="14" width="450" height="462" rx="12"
+              fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="239" y="38" text-anchor="middle"
+              font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="700"
+              fill="#1e3a5f" letter-spacing="0.1em">PANEL A — SPATA22 CORE COMPLEX &amp; MEIOTIC FUNCTION</text>
+
+        <!-- Panel A nodes (NODE 1–8) -->
+
+        <!-- N1: SPATA22/MEIOB Complex (root) -->
+        <rect x="112" y="54" width="154" height="50" rx="8"
+              fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="189" y="74" text-anchor="middle" fill="#ffffff"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">SPATA22 / MEIOB</text>
+        <text x="189" y="91" text-anchor="middle" fill="#cbd5e1"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">Interdependent Complex</text>
+
+        <!-- N2: RPA Interaction -->
+        <rect x="30" y="148" width="138" height="46" rx="8"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="99" y="167" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">RPA Interaction</text>
+        <text x="99" y="183" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">ssDNA stabilisation</text>
+
+        <!-- N3: RAD51 / DMC1 -->
+        <rect x="210" y="148" width="138" height="46" rx="8"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="279" y="167" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">RAD51 / DMC1</text>
+        <text x="279" y="183" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">Strand-invasion factors</text>
+
+        <!-- N4: DSB Repair (converge) -->
+        <rect x="112" y="244" width="154" height="46" rx="8"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="189" y="263" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Meiotic DSB Repair</text>
+        <text x="189" y="279" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">Homologous recombination</text>
+
+        <!-- N5: Chromosome Synapsis -->
+        <rect x="30" y="338" width="138" height="46" rx="8"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="99" y="357" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Chromosome</text>
+        <text x="99" y="373" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Synapsis</text>
+
+        <!-- N6: Fertility / Germ Cells -->
+        <rect x="210" y="338" width="138" height="46" rx="8"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="279" y="357" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Germ Cell</text>
+        <text x="279" y="373" text-anchor="middle" fill="#1e3a5f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Fertility</text>
+
+        <!-- N7: Meiotic Arrest / Infertility outcome -->
+        <rect x="112" y="428" width="154" height="36" rx="8"
+              fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="189" y="443" text-anchor="middle" fill="#991b1b"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Meiotic Arrest</text>
+        <text x="189" y="457" text-anchor="middle" fill="#991b1b"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">POI / Azoospermia</text>
+
+        <!-- Panel A arrows -->
+        <!-- N1 → N2 (left branch) -->
+        <line x1="153" y1="104" x2="110" y2="148" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N1 → N3 (right branch) -->
+        <line x1="225" y1="104" x2="264" y2="148" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N2 → N4 (left branch converge) -->
+        <line x1="110" y1="194" x2="155" y2="244" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N3 → N4 (right branch converge) -->
+        <line x1="268" y1="194" x2="228" y2="244" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N4 → N5 -->
+        <line x1="155" y1="290" x2="110" y2="338" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N4 → N6 -->
+        <line x1="223" y1="290" x2="268" y2="338" stroke="#2e6da4" stroke-width="1.6"
+              marker-end="url(#arr-blue)"/>
+        <!-- N5 → N7 -->
+        <line x1="110" y1="384" x2="155" y2="428" stroke="#991b1b" stroke-width="1.6"
+              stroke-dasharray="5 3" marker-end="url(#arr-red)"/>
+        <!-- N6 → N7 -->
+        <line x1="268" y1="384" x2="228" y2="428" stroke="#991b1b" stroke-width="1.6"
+              stroke-dasharray="5 3" marker-end="url(#arr-red)"/>
+        <!-- dashed = loss-of-function consequence label -->
+        <text x="358" y="412" text-anchor="middle" fill="#991b1b"
+              font-family="Arial,Helvetica,sans-serif" font-size="9" font-style="italic">loss-of-function →</text>
+
+        <!-- ── Panel B background ── -->
+        <rect x="496" y="14" width="450" height="462" rx="12"
+              fill="#fffbeb" fill-opacity="0.65" stroke="#d97706" stroke-width="1.5"/>
+        <text x="721" y="38" text-anchor="middle"
+              font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="700"
+              fill="#78350f" letter-spacing="0.1em">PANEL B — AGING / AD-OVERLAP BIOLOGY</text>
+
+        <!-- Panel B nodes (N8–N14) -->
+
+        <!-- N8: Epigenetic Age Accel. GWAS (entry) -->
+        <rect x="592" y="54" width="162" height="50" rx="8"
+              fill="#b45309" stroke="#b45309" stroke-width="1.5"/>
+        <text x="673" y="74" text-anchor="middle" fill="#ffffff"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">DNAm PhenoAge-EAA</text>
+        <text x="673" y="91" text-anchor="middle" fill="#fde68a"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">GWAS (Korean cohort)</text>
+
+        <!-- N9: Cellular Senescence -->
+        <rect x="512" y="152" width="148" height="46" rx="8"
+              fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+        <text x="586" y="171" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Cellular Senescence</text>
+        <text x="586" y="187" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">↑ SPATA22 expression</text>
+
+        <!-- N10: DNA Damage Accumulation -->
+        <rect x="688" y="152" width="148" height="46" rx="8"
+              fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+        <text x="762" y="171" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">DNA Damage</text>
+        <text x="762" y="187" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">Accumulation</text>
+
+        <!-- N11: Oxidative Stress -->
+        <rect x="512" y="252" width="148" height="46" rx="8"
+              fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+        <text x="586" y="271" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Oxidative Stress</text>
+        <text x="586" y="287" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">NAC partial rescue</text>
+
+        <!-- N12: Apoptotic Dysfunction -->
+        <rect x="688" y="252" width="148" height="46" rx="8"
+              fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+        <text x="762" y="271" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Apoptotic</text>
+        <text x="762" y="287" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">Dysfunction</text>
+
+        <!-- N13: Biological Aging (convergence) -->
+        <rect x="592" y="352" width="162" height="46" rx="8"
+              fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+        <text x="673" y="371" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Accelerated Biological</text>
+        <text x="673" y="387" text-anchor="middle" fill="#78350f"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">Aging</text>
+
+        <!-- N14: AD Overlap (conceptual) -->
+        <rect x="592" y="432" width="162" height="36" rx="8"
+              fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="673" y="447" text-anchor="middle" fill="#0f766e"
+              font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700">AD-Biology Overlap</text>
+        <text x="673" y="461" text-anchor="middle" fill="#0f766e"
+              font-family="Arial,Helvetica,sans-serif" font-size="10">(conceptual, unvalidated)</text>
+
+        <!-- Panel B arrows -->
+        <!-- N8 → N9 -->
+        <line x1="635" y1="104" x2="598" y2="152" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N8 → N10 -->
+        <line x1="711" y1="104" x2="748" y2="152" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N9 → N11 -->
+        <line x1="586" y1="198" x2="586" y2="252" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N10 → N12 -->
+        <line x1="762" y1="198" x2="762" y2="252" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N11 → N13 -->
+        <line x1="614" y1="298" x2="645" y2="352" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N12 → N13 -->
+        <line x1="730" y1="298" x2="701" y2="352" stroke="#b45309" stroke-width="1.6"
+              marker-end="url(#arr-amber)"/>
+        <!-- N13 → N14 -->
+        <line x1="673" y1="398" x2="673" y2="432" stroke="#0f766e" stroke-width="1.6"
+              stroke-dasharray="5 3" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connector: N4 (DSB Repair) right edge → N10 (DNA Damage) left edge -->
+        <!-- N4 right: x=266, y=267  N10 left: x=688, y=175 -->
+        <!-- Route: elbow through gutter strip at x=475 -->
+        <polyline points="266,267 475,267 475,175 688,175"
+                  fill="none" stroke="#475569" stroke-width="1.4"
+                  stroke-dasharray="6 4" marker-end="url(#arr-slate)"/>
+        <text x="475" y="248" text-anchor="middle" fill="#475569"
+              font-family="Arial,Helvetica,sans-serif" font-size="9" font-style="italic"
+              transform="rotate(-90 475 248)">repair analogy</text>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (blue) — Core Complex &amp; Meiotic Function:</strong> SPATA22/MEIOB forms an
+        interdependent complex that recruits RPA (left branch, ssDNA stabilisation) and
+        RAD51/DMC1 (right branch, strand-invasion) in parallel, converging on meiotic DSB repair.
+        Downstream, this supports chromosome synapsis and germ-cell fertility; loss-of-function
+        (dashed red) leads to meiotic arrest, premature ovarian insufficiency, and azoospermia.
+        <strong>Panel B (amber) — Aging / AD-Overlap Biology:</strong> A GWAS signal for epigenetic age
+        acceleration (DNAm PhenoAge-EAA) provides the entry point; from it, two parallel branches
+        cover cellular senescence (with elevated SPATA22 expression) and DNA damage accumulation,
+        leading respectively to oxidative stress and apoptotic dysfunction, which converge on
+        accelerated biological aging. The teal dashed arrow indicates a conceptual but unvalidated
+        overlap with AD biology. The slate dashed connector crossing the gutter illustrates the
+        DNA-repair analogy linking Panel A's meiotic function to Panel B's somatic damage context.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Primary Disease Context</h3>
+        <p>SPATA22's strongest disease associations are reproductive — meiotic arrest, infertility,
+        premature ovarian insufficiency, non-obstructive azoospermia, and defective chromosome
+        synapsis — not neurodegeneration.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>AD Bridge: DNA Damage Biology</h3>
+        <p>The mechanistic bridge to AD rests on shared biology: SPATA22 participates in meiotic
+        ssDNA handling and HR through the MEIOB complex. DNA damage and impaired repair are
+        relevant to brain aging, but the evidence places SPATA22 function in germ cells, not
+        neurons or glia.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Epigenetic Aging GWAS Signal</h3>
+        <p>The most AD-adjacent finding is a gene-based GWAS association with DNAm PhenoAge-EAA
+        in a Korean cohort, supported by increased SPATA22 expression in senescent cells. This
+        links SPATA22 to aging-associated states, but not to AD neuropathology specifically.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Granulosa-Cell Stress Analogy</h3>
+        <p>SPATA22 defects in granulosa cells trigger DNA damage accumulation, oxidative stress,
+        and apoptotic dysfunction — partially rescued by N-acetylcysteine. This provides a
+        stress-response analogy relevant to neurodegeneration, but was not tested in AD models
+        or brain cells.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>MEIOB Interdependence</h3>
+        <p>SPATA22 and MEIOB mutually require each other for protein stability, localization,
+        and recruitment to recombination sites. Disrupting their interaction causes complete
+        meiotic failure and infertility across multiple model systems.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Evidence Absent for AD</h3>
+        <p>Isocotoin can inhibit the MEIOB–SPATA22 interaction in cell-based assays, indicating
+        pharmacologic tractability. However, inhibiting a DNA repair complex has no established
+        rationale for AD without evidence of harmful SPATA22 overactivity in brain tissue.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <strong>Treat SPATA22 as hypothesis-generating, not validated:</strong> Position it as an
+        aging/DNA-repair candidate of interest for AD rather than a confirmed AD mechanism gene
+        or therapeutic target.
+      </li>
+      <li>
+        <strong>Establish foundational AD relevance first:</strong> Measure SPATA22 expression in
+        human AD and control brain tissue, define cell-type localization, and test association with
+        senescence, DNA damage, oxidative stress, and apoptosis markers in neural tissue.
+      </li>
+      <li>
+        <strong>Test SPATA22 function in AD-relevant systems:</strong> Deploy knockdown, knockout,
+        and overexpression approaches in neurons, astrocytes, microglia, oligodendrocytes, and brain
+        organoids to characterise any neurobiological role.
+      </li>
+      <li>
+        <strong>Evaluate AD-relevant phenotypes:</strong> Assess whether SPATA22 modulation affects
+        neuronal DNA damage, oxidative stress vulnerability, inflammatory signalling, synaptic
+        integrity, amyloid-β processing, tau phosphorylation/aggregation, and cell survival.
+      </li>
+      <li>
+        <strong>Flag reproductive toxicity as a primary risk:</strong> Any SPATA22-targeted
+        intervention carries a significant reproductive safety liability, given strong evidence of
+        essential roles in fertility and meiotic genome stability.
+      </li>
+      <li>
+        <strong>Do not advance toward therapeutic development prematurely:</strong> The current
+        evidence base does not support SPATA22 as an AD drug target; indirect biological overlap is
+        insufficient justification for therapeutic investment without direct neurobiological evidence.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — SPATA22 in Alzheimer's Disease</span>
+      <p>
+        <strong>SPATA22 is not supported by the available evidence as an Alzheimer's therapeutic
+        target.</strong> Its core biology is meiotic: ssDNA binding, homologous recombination,
+        DSB repair, and the MEIOB-dependent complex required for germ-cell genome stability.
+        <strong>The connection to AD is entirely indirect</strong> — bridged by the conceptual
+        overlap between DNA damage, oxidative stress, senescence, and epigenetic age acceleration
+        and the broad biology of brain aging. A GWAS signal for epigenetic age acceleration and
+        elevated SPATA22 expression in senescent cells represent the strongest aging-related
+        findings, but neither implicates SPATA22 in amyloid-β pathology, tauopathy, or any
+        canonical AD process. <strong>Before any therapeutic consideration</strong>, foundational
+        studies in human brain tissue and AD-relevant cellular models are necessary to establish
+        whether SPATA22 plays any functional role in the CNS. The well-established reproductive
+        phenotype associated with SPATA22 loss-of-function also constitutes a <strong>serious
+        safety liability</strong> for any targeting strategy.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  SPATA22 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

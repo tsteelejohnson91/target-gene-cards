@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FARSA — Target Enabling Package Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2d6a9f;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #64748b;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e0eaf6;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+    color: #e0eaf6;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .danger-callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+
+  .danger-callout .callout-label {
+    color: var(--danger);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 14px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-slate { background: var(--slate-light); border-color: var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT / CLOSING BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f35 100%);
+    color: #e0eaf6;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    color: #94c2e8;
+    margin-bottom: 10px;
+  }
+
+  .verdict p b {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: FARSA &nbsp;|&nbsp; Phenylalanyl-tRNA Synthetase Alpha Subunit</span>
+    <span class="chip chip-danger">⚠ Toxicity Risk: Essential Enzyme</span>
+  </div>
+  <h1>FARSA &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="danger-callout">
+      <div class="callout-label">⚠ Safety Caveat</div>
+      Direct FARSA/PheRS inhibition carries substantial toxicity risk: the enzyme is essential for
+      cytosolic protein synthesis across all cell types, and systemic inhibition would be expected
+      to produce broad, dose-limiting adverse effects.
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">⚑ Evidentiary Caution</div>
+      The supplied evidence does not establish FARSA as an Alzheimer's disease gene, biomarker,
+      amyloid/tau regulator, or validated therapeutic target. All Alzheimer's relevance is
+      indirect and hypothesis-generating at this stage.
+    </div>
+
+    <div class="overview-text">
+      <p>
+        <strong>FARSA</strong> encodes the alpha catalytic subunit of cytosolic
+        phenylalanyl-tRNA synthetase (PheRS), an essential enzyme complex that charges
+        tRNA<sup>Phe</sup> with phenylalanine for protein synthesis. Its primary role is
+        canonical aminoacylation, but evidence from model organisms points to additional
+        non-canonical, moonlighting functions in cell growth and proliferation that are
+        independent of the beta subunit and of detectable translation increases.
+      </p>
+      <p>
+        The Alzheimer's relevance of FARSA is <em>indirect</em>. FARSA/PheRS biology
+        intersects conceptually with processes important in Alzheimer's disease —
+        including translation fidelity, proteostasis, neuronal stress responses, innate
+        immune activation, and interferon/JAK signaling — but no cited study directly links
+        FARSA to amyloid-beta, tau pathology, synaptic loss, cognitive decline, or
+        Alzheimer's clinical outcomes. The strongest supported disease mechanism is
+        loss-of-function: pathogenic FARSA variants reduce aminoacylation activity or
+        destabilize the PheRS complex, causing multisystem pediatric disease with neurologic
+        manifestations.
+      </p>
+      <p>
+        Readers should also note that several apparent "FARSA" hits in literature searches
+        refer to an author surname, the Fatality Analysis Reporting System (FARS), or
+        fusidic acid-resistant <em>Staphylococcus aureus</em> (FAR-SA) — none of which
+        constitute evidence about the FARSA gene or protein.
+      </p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <figure class="figure-wrap">
+      <!--
+        PANEL A (left): FARSA Biology — 5 nodes
+        PANEL B (center): Disease Mechanisms (two branches) — 6 nodes
+        PANEL C (right): AD Relevance — 4 nodes
+        Total: 15 nodes (within 16 limit)
+      -->
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- DEFS -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2d6a9f"/>
+          </marker>
+          <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+        </defs>
+
+        <!-- ===================== PANEL A: FARSA Biology ===================== -->
+        <rect x="10" y="10" width="240" height="480" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2d6a9f" stroke-width="1.5"/>
+        <text x="130" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#1e3a5f" letter-spacing="1.5">PANEL A · FARSA BIOLOGY</text>
+
+        <!-- A1: FARSA gene -->
+        <rect x="55" y="44" width="150" height="44" rx="7" fill="#c8ddf0" stroke="#2d6a9f" stroke-width="1.3"/>
+        <text x="130" y="62" text-anchor="middle" font-weight="700" font-size="11" fill="#1e3a5f">FARSA Gene</text>
+        <text x="130" y="77" text-anchor="middle" font-size="9.5" fill="#1e3a5f">(alpha catalytic subunit)</text>
+
+        <!-- arrow A1→A2 -->
+        <line x1="130" y1="88" x2="130" y2="105" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: PheRS complex -->
+        <rect x="55" y="105" width="150" height="44" rx="7" fill="#b0ccec" stroke="#2d6a9f" stroke-width="1.3"/>
+        <text x="130" y="123" text-anchor="middle" font-weight="700" font-size="11" fill="#1e3a5f">PheRS Complex</text>
+        <text x="130" y="138" text-anchor="middle" font-size="9.5" fill="#1e3a5f">α + β heterotetramer</text>
+
+        <!-- arrow A2→A3 -->
+        <line x1="130" y1="149" x2="130" y2="166" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: Aminoacylation -->
+        <rect x="55" y="166" width="150" height="44" rx="7" fill="#b0ccec" stroke="#2d6a9f" stroke-width="1.3"/>
+        <text x="130" y="184" text-anchor="middle" font-weight="700" font-size="11" fill="#1e3a5f">tRNA<tspan font-style="italic">Phe</tspan> Charging</text>
+        <text x="130" y="199" text-anchor="middle" font-size="9.5" fill="#1e3a5f">canonical aminoacylation</text>
+
+        <!-- arrow A3→A4 -->
+        <line x1="130" y1="210" x2="130" y2="227" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A4: Protein Synthesis -->
+        <rect x="55" y="227" width="150" height="44" rx="7" fill="#93bcde" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="130" y="245" text-anchor="middle" font-weight="700" font-size="11" fill="#1e3a5f">Protein Synthesis</text>
+        <text x="130" y="260" text-anchor="middle" font-size="9.5" fill="#1e3a5f">proteostasis / translation</text>
+
+        <!-- arrow A4→A5 (moonlighting) -->
+        <line x1="130" y1="271" x2="130" y2="290" stroke="#2d6a9f" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- A5: Moonlighting Function -->
+        <rect x="45" y="290" width="170" height="44" rx="7" fill="#dceef8" stroke="#2d6a9f" stroke-width="1.3" stroke-dasharray="5,3"/>
+        <text x="130" y="308" text-anchor="middle" font-weight="700" font-size="11" fill="#1e3a5f">Moonlighting Function</text>
+        <text x="130" y="323" text-anchor="middle" font-size="9.5" fill="#1e3a5f">growth/proliferation (Drosophila)</text>
+
+        <!-- Panel A note -->
+        <text x="130" y="358" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">Dashed = non-canonical,</text>
+        <text x="130" y="370" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">β-subunit independent</text>
+
+
+        <!-- ===================== PANEL B: Disease Mechanisms ===================== -->
+        <rect x="268" y="10" width="300" height="480" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="418" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#7f1d1d" letter-spacing="1.5">PANEL B · DISEASE MECHANISMS</text>
+
+        <!-- B1: LoF Variants (shared entry) -->
+        <rect x="318" y="44" width="200" height="44" rx="7" fill="#fecaca" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="418" y="62" text-anchor="middle" font-weight="700" font-size="11" fill="#7f1d1d">FARSA LoF Variants</text>
+        <text x="418" y="77" text-anchor="middle" font-size="9.5" fill="#7f1d1d">↓ aminoacylation / complex</text>
+
+        <!-- B1 → B-left branch: Neurologic -->
+        <line x1="370" y1="88" x2="340" y2="108" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B-left: Neuro Phenotypes -->
+        <rect x="278" y="108" width="138" height="50" rx="7" fill="#fecaca" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="347" y="127" text-anchor="middle" font-weight="700" font-size="10.5" fill="#7f1d1d">Neurologic</text>
+        <text x="347" y="141" text-anchor="middle" font-size="9" fill="#7f1d1d">Phenotypes</text>
+        <text x="347" y="153" text-anchor="middle" font-size="8.5" fill="#7f1d1d">brain abn / hypotonia</text>
+
+        <!-- B1 → B-right branch: Inflammation -->
+        <line x1="466" y1="88" x2="496" y2="108" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B-right: Inflammation -->
+        <rect x="422" y="108" width="138" height="50" rx="7" fill="#fecaca" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="491" y="127" text-anchor="middle" font-weight="700" font-size="10.5" fill="#7f1d1d">Autoimmune /</text>
+        <text x="491" y="141" text-anchor="middle" font-size="10.5" fill="#7f1d1d">Inflammation</text>
+        <text x="491" y="153" text-anchor="middle" font-size="8.5" fill="#7f1d1d">↑ interferon score</text>
+
+        <!-- B-left → B3 downstream -->
+        <line x1="347" y1="158" x2="347" y2="178" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B3: Multisystem Disease -->
+        <rect x="278" y="178" width="138" height="50" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="347" y="197" text-anchor="middle" font-weight="700" font-size="10.5" fill="#7f1d1d">Multisystem</text>
+        <text x="347" y="211" text-anchor="middle" font-size="10.5" fill="#7f1d1d">Disease</text>
+        <text x="347" y="223" text-anchor="middle" font-size="8.5" fill="#7f1d1d">growth delay / calcif.</text>
+
+        <!-- B-right → B4 downstream (JAK/IFN) -->
+        <line x1="491" y1="158" x2="491" y2="178" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+        <!-- B4: JAK/IFN Signaling -->
+        <rect x="422" y="178" width="138" height="50" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="491" y="197" text-anchor="middle" font-weight="700" font-size="10.5" fill="#92400e">IFN / JAK–STAT</text>
+        <text x="491" y="211" text-anchor="middle" font-size="10.5" fill="#92400e">Signaling</text>
+        <text x="491" y="223" text-anchor="middle" font-size="8.5" fill="#92400e">JAK-i → lung benefit</text>
+
+        <!-- B3 + B4 converge to B5: Shared outcome -->
+        <!-- B3 → B5 -->
+        <line x1="347" y1="228" x2="347" y2="314" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+        <!-- B4 → B5 elbow: down then left -->
+        <polyline points="491,228 491,300 419,300 419,314" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+        <!-- B5: Neurodegeneration Risk -->
+        <rect x="298" y="314" width="240" height="50" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="418" y="334" text-anchor="middle" font-weight="700" font-size="11" fill="#7f1d1d">Neuroinflammation Risk</text>
+        <text x="418" y="350" text-anchor="middle" font-size="9.5" fill="#7f1d1d">chronic IFN activation → neurodegeneration?</text>
+
+        <!-- Panel B note -->
+        <text x="418" y="390" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">Two LoF branches reconverge at</text>
+        <text x="418" y="402" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">neuroinflammation as shared endpoint</text>
+
+
+        <!-- ===================== PANEL C: AD Relevance ===================== -->
+        <rect x="586" y="10" width="324" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="748" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#134e4a" letter-spacing="1.5">PANEL C · AD RELEVANCE (INDIRECT)</text>
+
+        <!-- C1: Proteostasis Stress -->
+        <rect x="626" y="44" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="748" y="62" text-anchor="middle" font-weight="700" font-size="11" fill="#134e4a">Translation / Proteostasis</text>
+        <text x="748" y="77" text-anchor="middle" font-size="9.5" fill="#134e4a">neuronal vulnerability in aging</text>
+
+        <!-- arrow C1→C2 -->
+        <line x1="748" y1="88" x2="748" y2="105" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- C2: Neuronal Stress Response -->
+        <rect x="626" y="105" width="244" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="748" y="123" text-anchor="middle" font-weight="700" font-size="11" fill="#134e4a">Neuronal Stress Response</text>
+        <text x="748" y="138" text-anchor="middle" font-size="9.5" fill="#134e4a">IFN/JAK activation in glia &amp; neurons</text>
+
+        <!-- arrow C2→C3 -->
+        <line x1="748" y1="149" x2="748" y2="166" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- C3: Amyloid / Tau (not yet linked) -->
+        <rect x="626" y="166" width="244" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3"/>
+        <text x="748" y="184" text-anchor="middle" font-weight="700" font-size="11" fill="#134e4a">Amyloid-β / Tau</text>
+        <text x="748" y="199" text-anchor="middle" font-size="9.5" fill="#64748b" font-style="italic">no direct link established</text>
+
+        <!-- arrow C3→C4 dashed -->
+        <line x1="748" y1="210" x2="748" y2="227" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- C4: Speculative Target -->
+        <rect x="626" y="227" width="244" height="44" rx="7" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="748" y="245" text-anchor="middle" font-weight="700" font-size="11" fill="#0c4a6e">Speculative AD Candidate</text>
+        <text x="748" y="260" text-anchor="middle" font-size="9.5" fill="#0c4a6e">requires validation studies</text>
+
+        <!-- Panel C note -->
+        <text x="748" y="298" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">Dashed = not supported by current evidence.</text>
+        <text x="748" y="310" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">Solid = plausible but indirect association.</text>
+
+        <!-- ===================== INTER-PANEL CONNECTOR: B5 → C2 ===================== -->
+        <!-- Route: from right edge of B5 (538, 339) through gutter to left edge of C2 (626, 127) -->
+        <!-- Go right to x=568, then up to y=127, then right to C2 left edge at x=626 -->
+        <polyline points="538,339 568,339 568,127 626,127" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arr-warn)"/>
+
+        <!-- gutter label for inter-panel connector -->
+        <text x="575" y="235" text-anchor="middle" font-size="8" fill="#b45309" font-style="italic" transform="rotate(-90,575,235)">IFN → AD neuroinflam.?</text>
+
+      </svg>
+
+      <figcaption>
+        <strong>Panel A (blue):</strong> FARSA gene → PheRS heterotetramer → tRNA<sup>Phe</sup> charging → protein synthesis; dashed arrow = non-canonical moonlighting cell-growth function independent of the β subunit.
+        <strong>Panel B (red):</strong> Pathogenic LoF variants branch into two sub-cascades — neurologic phenotypes (left) and autoimmune/interferon activation (right) — reconverging at a shared neuroinflammation risk node; JAK inhibition improved lung disease in one patient.
+        <strong>Panel C (teal):</strong> Conceptual AD-relevant intersections (translation fidelity, neuronal stress, glial IFN activation); dashed nodes indicate no direct FARSA–amyloid/tau link is established.
+        <strong>Inter-panel dashed arrow:</strong> Speculative pathway by which FARSA-driven IFN/JAK signaling could contribute to AD neuroinflammation — requires direct experimental validation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-danger">
+        <h3>⚑ Loss-of-Function: Strongest Evidence</h3>
+        Pathogenic FARSA/FARS1 variants reduce PheRS aminoacylation activity or destabilize the
+        complex, causing multisystem pediatric disease: brain abnormalities, calcifications/cysts,
+        hypotonia, growth delay, and developmental phenotypes. This is the best-supported disease
+        mechanism in the literature.
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚠ Inflammatory Pathway Engagement</h3>
+        Pediatric FARSA deficiency was associated with autoimmunity, systemic inflammation, and
+        elevated interferon scores. JAK inhibitor treatment improved lung disease in one patient,
+        demonstrating that FARSA dysfunction can engage IFN/JAK-associated inflammatory pathways —
+        relevant to neurodegeneration in principle.
+      </div>
+
+      <div class="card card-accent">
+        <h3>◈ Non-Canonical Moonlighting Function</h3>
+        In <em>Drosophila</em>, the alpha-PheRS subunit promotes cell growth and proliferation
+        independently of the beta subunit, aminoacylation activity, and detectable translation
+        increases. This "moonlighting" biology adds mechanistic complexity but has no established
+        Alzheimer's-specific relevance.
+      </div>
+
+      <div class="card card-accent">
+        <h3>◈ Non-Coding RNA Associations</h3>
+        FARSA-AS1 and circFARSA (cancer-context antisense and circular RNAs) have been linked to
+        proliferation, invasion, stemness, metastasis, and prognosis in tumor studies. These
+        findings support roles in growth and stress-adaptation but do not establish Alzheimer's
+        disease relevance.
+      </div>
+
+      <div class="card card-slate">
+        <h3>⊘ Literature Contamination Risk</h3>
+        Many apparent "FARSA" hits refer to an author surname (Farsa), the Fatality Analysis
+        Reporting System (FARS), or fusidic acid-resistant <em>Staphylococcus aureus</em>
+        (FAR-SA). These must not be interpreted as evidence about the FARSA gene or protein.
+      </div>
+
+      <div class="card card-positive">
+        <h3>✦ Indirect Conceptual AD Relevance</h3>
+        FARSA/PheRS biology intersects conceptually with translation fidelity, proteostasis,
+        neuronal vulnerability, and innate immune activation — all relevant to Alzheimer's disease.
+        However, no study directly links FARSA to amyloid-β, tau, synaptic loss, or Alzheimer's
+        clinical outcomes.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <div class="takeaways">
+      <ol>
+        <li>
+          <span><b>Treat as speculative, not established.</b> FARSA should be considered a
+          hypothesis-generating candidate in the Alzheimer's space; it is not a validated
+          therapeutic target and should not be prioritized for drug development without direct
+          supporting evidence.</span>
+        </li>
+        <li>
+          <span><b>Prioritize validation studies first.</b> Assess FARSA expression, activity,
+          localization, and PheRS complex integrity in Alzheimer's brain regions, single-cell
+          transcriptomic datasets, and biofluids before any therapeutic nomination.</span>
+        </li>
+        <li>
+          <span><b>Test Alzheimer's-relevant perturbation endpoints.</b> Determine whether FARSA
+          knockdown or overexpression affects neuronal proteostasis, stress responses, synaptic
+          function, amyloid-β production/clearance, tau phosphorylation/aggregation, and glial
+          inflammatory states in appropriate models.</span>
+        </li>
+        <li>
+          <span><b>Investigate the IFN/JAK/STAT link in neural models.</b> Given the
+          interferon-driven inflammatory phenotype documented in FARSA-deficient patients,
+          test whether FARSA perturbation activates these pathways in neurons or glia, which
+          could connect to known neuroinflammatory mechanisms in Alzheimer's disease.</span>
+        </li>
+        <li>
+          <span><b>Rigorously curate literature searches.</b> Exclude records that use "Farsa"
+          as an author name, "FARS" as a traffic-safety dataset, or "FAR-SA" for antibiotic
+          resistance — none of these constitute molecular evidence about the FARSA gene.</span>
+        </li>
+        <li>
+          <span><b>Exercise caution with direct inhibition strategies.</b> Because FARSA/PheRS
+          is essential for cytosolic protein synthesis, systemic inhibition would be expected to
+          produce broad and dose-limiting toxicity across tissues.</span>
+        </li>
+        <li>
+          <span><b>Consider indirect therapeutic strategies only post-validation.</b> Potential
+          directions — such as stabilizing PheRS activity in loss-of-function contexts or
+          modulating downstream inflammatory pathways — are speculative; no Alzheimer's-directed
+          FARSA therapy is currently supported by the evidence.</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — FARSA in Alzheimer's Disease</div>
+      <p>
+        <b>FARSA is an essential aminoacyl-tRNA synthetase subunit</b> whose primary established
+        disease role is in <b>loss-of-function pediatric syndromes</b> with neurologic and
+        inflammatory manifestations. Its conceptual intersections with <b>proteostasis,
+        translational fidelity, neuronal stress biology, and IFN/JAK-driven
+        neuroinflammation</b> make it a plausible but entirely unvalidated candidate for
+        Alzheimer's disease relevance. <b>No direct evidence</b> links FARSA to amyloid-beta,
+        tau, synaptic loss, or Alzheimer's clinical phenotypes. The <b>toxicity risk of direct
+        PheRS inhibition</b> — an enzyme indispensable for protein synthesis — substantially
+        raises the bar for any therapeutic strategy. The immediate scientific priority is
+        <b>rigorous experimental validation</b>: expression profiling in Alzheimer's tissue,
+        functional perturbation in relevant neural models, and careful disambiguation of FARSA
+        from unrelated homonyms in the literature. Only after causal evidence emerges should
+        therapeutic hypotheses — such as restoring PheRS complex stability or targeting
+        downstream inflammatory mediators — be seriously pursued.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  FARSA / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBI/ACBP — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-tint: #fef2f2;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1e40af;
+    --blue-tint: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1f 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+  section { margin-bottom: 52px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-tint);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW TEXT */
+  .overview-body p { margin-bottom: 1rem; font-size: 0.97rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.81rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.89rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent  { background: var(--light);       border-left: 4px solid var(--mid);      }
+  .card-accent h3  { color: var(--dark); }
+  .card-danger  { background: var(--danger-tint);  border-left: 4px solid var(--danger);   }
+  .card-danger h3  { color: var(--danger); }
+  .card-positive{ background: var(--positive-tint);border-left: 4px solid var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+  .card-blue    { background: var(--blue-tint);    border-left: 4px solid var(--blue);     }
+  .card-blue h3    { color: var(--blue); }
+  .card-warning { background: var(--warning-tint); border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate   { background: var(--neutral-bg);   border-left: 4px solid #64748b;         }
+  .card-slate h3   { color: #334155; }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: ta; padding: 0; }
+  .takeaways ol li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  .takeaways ol li::before {
+    content: counter(ta);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 3px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1f 100%);
+    color: #e2d9f3;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .lead { font-size: 1.08rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+  .verdict strong { color: #c4b5fd; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DBI &nbsp;|&nbsp; Diazepam-Binding Inhibitor / Acyl-CoA-Binding Protein (ACBP)</span>
+    <span class="chip chip-danger">⚠ Nomenclature Ambiguity — DBI/ACBP ≠ Drug Burden Index</span>
+  </div>
+  <h1>DBI / ACBP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Nomenclature Caution:</strong> "DBI" appears in the literature in two unrelated senses —
+      <em>diazepam-binding inhibitor / acyl-CoA-binding protein (DBI/ACBP)</em>, the mechanistically relevant
+      molecular entity, and the <em>Drug Burden Index</em>, a clinical medication-risk metric. These must not
+      be conflated despite the shared acronym and overlapping benzodiazepine/sedative terminology.
+    </div>
+    <div class="overview-body">
+      <p>DBI/ACBP is an intracellular acyl-CoA and lipid-binding protein that can be secreted or released
+      into extracellular fluids during cellular stress, organ injury, regulated cell death, systemic
+      inflammation, glucocorticoid exposure, and aging-related disease. Once extracellular, DBI/ACBP acts as
+      a tissue stress hormone and is repeatedly described as an inhibitor of macroautophagy/autophagy, with
+      additional links to inflammation, senescence, metabolic dysfunction, immune regulation, GABA-A receptor
+      benzodiazepine-site signaling, and tissue injury.</p>
+      <p>Its Alzheimer's disease relevance is mostly indirect but biologically plausible. Alzheimer's disease
+      involves impaired autophagy and proteostasis, amyloid-β/tau accumulation, neuroinflammation, glial
+      dysfunction, metabolic stress, lipid dysregulation, cellular senescence, and aging-related vulnerability
+      — all domains in which DBI/ACBP biology has been implicated. However, most studies do not directly test
+      DBI/ACBP in Alzheimer's models or patients.</p>
+      <p>The strongest Alzheimer's-specific signal is a 2026 medRxiv APOE-ε4 proteomics study, in which DBI
+      was prioritized among plasma proteins associated with "protected" APOE-ε4 carrier status — carriers
+      who remained cognitively unimpaired relative to those who developed Alzheimer's disease. This positions
+      DBI as a possible modifier of Alzheimer's risk or delayed onset in APOE-ε4 carriers, but not as a
+      validated causal target. Meanwhile, the Drug Burden Index is a clinical care tool, not a molecular
+      therapy: DBI-guided deprescribing may reduce sedative and anticholinergic burden in dementia
+      populations, but this is wholly distinct from targeting DBI/ACBP as a disease-modifying treatment.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL LAYOUT (4 panels, left-to-right):
+          Panel A (x 20-290): Upstream Triggers — 3 nodes
+          Panel B (x 310-590): DBI/ACBP Release & Core Mechanisms — 4 nodes (hub + 3 branches)
+          Panel C (x 610-870): Downstream Consequences — 4 nodes
+          Panel D (x 20-870, y 340-440): Alzheimer's Disease Context — 4 nodes in a row
+          Total nodes: 3 + 4 + 4 + 4 = 15 ✓ (≤16)
+          Badges: 0 (no spare empty space guaranteed without overlap risk)
+        -->
+        <svg viewBox="0 0 900 460" width="860" height="437" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="DBI/ACBP mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-b" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: Upstream Triggers ===== -->
+          <rect x="18" y="14" width="262" height="300" rx="10" ry="10"
+                fill="rgba(109,63,192,0.06)" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="149" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#6d3fc0" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+          <!-- A1: Aging / Senescence -->
+          <rect x="34" y="50" width="108" height="48" rx="7" fill="#ede8f9" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="88" y="72" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Aging &amp;</text>
+          <text x="88" y="86" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Senescence</text>
+
+          <!-- A2: Systemic Stress / Injury -->
+          <rect x="152" y="50" width="114" height="48" rx="7" fill="#ede8f9" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="209" y="72" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Systemic Stress</text>
+          <text x="209" y="86" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">&amp; Organ Injury</text>
+
+          <!-- A3: Metabolic Disease / Obesity -->
+          <rect x="34" y="128" width="232" height="48" rx="7" fill="#ede8f9" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="150" y="150" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Metabolic Disease, Obesity,</text>
+          <text x="150" y="164" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Glucocorticoid Exposure</text>
+
+          <!-- A4: Inflammation / Sepsis -->
+          <rect x="34" y="206" width="232" height="48" rx="7" fill="#ede8f9" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="150" y="228" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Systemic Inflammation,</text>
+          <text x="150" y="242" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Sepsis, Cell Death</text>
+
+          <!-- Arrows A1→ and A2→ converge down to A3 area (both go down then to B hub) -->
+          <!-- A1 → A3 (vertical within panel A) -->
+          <line x1="88" y1="98" x2="88" y2="128" stroke="#6d3fc0" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A2 → A3 -->
+          <line x1="209" y1="98" x2="209" y2="128" stroke="#6d3fc0" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A3 → A4 -->
+          <line x1="150" y1="176" x2="150" y2="206" stroke="#6d3fc0" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- ===== PANEL B: DBI/ACBP Release & Core Mechanisms ===== -->
+          <rect x="298" y="14" width="292" height="300" rx="10" ry="10"
+                fill="rgba(30,64,175,0.05)" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="444" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#1e40af" letter-spacing="1">DBI/ACBP RELEASE &amp; MECHANISMS</text>
+
+          <!-- B1: DBI/ACBP Released (hub) -->
+          <rect x="338" y="50" width="212" height="48" rx="7" fill="#dbeafe" stroke="#1e40af" stroke-width="1.6"/>
+          <text x="444" y="72" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1e40af">DBI/ACBP Released</text>
+          <text x="444" y="86" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Extracellular Stress Hormone</text>
+
+          <!-- B2: Autophagy Inhibition -->
+          <rect x="314" y="138" width="130" height="48" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="379" y="160" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Autophagy</text>
+          <text x="379" y="174" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Inhibition ↓</text>
+
+          <!-- B3: GABA-A / Endozepine Signaling -->
+          <rect x="460" y="138" width="112" height="48" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="516" y="155" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">GABA-A /</text>
+          <text x="516" y="169" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Endozepine</text>
+          <text x="516" y="183" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Signaling</text>
+
+          <!-- B4: Lipid / Acyl-CoA Binding -->
+          <rect x="314" y="220" width="130" height="48" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="379" y="242" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Lipid / Acyl-CoA</text>
+          <text x="379" y="256" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Metabolism</text>
+
+          <!-- Arrows from Panel A to Panel B hub -->
+          <!-- A4 right edge → B1 left edge (horizontal) -->
+          <line x1="266" y1="230" x2="266" y2="74" stroke="#6d3fc0" stroke-width="1.3"/>
+          <line x1="266" y1="74" x2="338" y2="74" stroke="#6d3fc0" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- B1 → B2 (branch left-down) -->
+          <line x1="444" y1="98" x2="444" y2="118" stroke="#1e40af" stroke-width="1.3"/>
+          <line x1="444" y1="118" x2="379" y2="118" stroke="#1e40af" stroke-width="1.3"/>
+          <line x1="379" y1="118" x2="379" y2="138" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-b)"/>
+
+          <!-- B1 → B3 (branch right-down) -->
+          <line x1="516" y1="98" x2="516" y2="138" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-b)"/>
+
+          <!-- B2 → B4 -->
+          <line x1="379" y1="186" x2="379" y2="220" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-b)"/>
+
+          <!-- ===== PANEL C: Downstream Consequences ===== -->
+          <rect x="608" y="14" width="276" height="300" rx="10" ry="10"
+                fill="rgba(153,27,27,0.05)" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="746" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#991b1b" letter-spacing="1">DOWNSTREAM CONSEQUENCES</text>
+
+          <!-- C1: Immune / Inflammatory Dysregulation -->
+          <rect x="624" y="50" width="244" height="48" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="746" y="72" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Immune / Inflammatory</text>
+          <text x="746" y="86" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Dysregulation</text>
+
+          <!-- C2: Impaired Proteostasis -->
+          <rect x="624" y="138" width="114" height="48" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="681" y="155" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Impaired</text>
+          <text x="681" y="169" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Proteostasis</text>
+          <text x="681" y="183" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">&amp; Clearance</text>
+
+          <!-- C3: Metabolic / Organ Dysfunction -->
+          <rect x="754" y="138" width="114" height="48" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="811" y="155" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Metabolic &amp;</text>
+          <text x="811" y="169" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Organ</text>
+          <text x="811" y="183" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Dysfunction</text>
+
+          <!-- C4: Organ Injury / Mortality (sepsis models) -->
+          <rect x="624" y="220" width="244" height="48" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.6"/>
+          <text x="746" y="242" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#991b1b" font-weight="700">Organ Injury / ↑ Mortality</text>
+          <text x="746" y="256" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">(reversed by mAb neutralization)</text>
+
+          <!-- Arrows Panel B → Panel C -->
+          <!-- B2 right edge → C1 left (route via empty gutter at y=74) -->
+          <line x1="590" y1="162" x2="600" y2="162" stroke="#991b1b" stroke-width="1.3"/>
+          <line x1="600" y1="162" x2="600" y2="74" stroke="#991b1b" stroke-width="1.3"/>
+          <line x1="600" y1="74" x2="624" y2="74" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- C1 → C2 (branch left-down) -->
+          <line x1="746" y1="98" x2="746" y2="118" stroke="#991b1b" stroke-width="1.3"/>
+          <line x1="746" y1="118" x2="681" y2="118" stroke="#991b1b" stroke-width="1.3"/>
+          <line x1="681" y1="118" x2="681" y2="138" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- C1 → C3 (branch right-down) -->
+          <line x1="811" y1="98" x2="811" y2="138" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- C2 → C4 -->
+          <line x1="681" y1="186" x2="681" y2="220" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+          <!-- C3 → C4 -->
+          <line x1="811" y1="186" x2="811" y2="220" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- ===== PANEL D: Alzheimer's Disease Context ===== -->
+          <rect x="18" y="330" width="866" height="116" rx="10" ry="10"
+                fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="451" y="349" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#0f766e" letter-spacing="1">ALZHEIMER'S DISEASE CONTEXT</text>
+
+          <!-- D1: APOE-ε4 Proteomics -->
+          <rect x="34" y="360" width="182" height="72" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="125" y="382" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">APOE-ε4 Proteomics:</text>
+          <text x="125" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">DBI among proteins in</text>
+          <text x="125" y="410" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">"protected" ε4 carriers</text>
+
+          <!-- D2: Autophagy–Aβ/Tau Axis -->
+          <rect x="232" y="360" width="190" height="72" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="327" y="382" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Autophagy Impairment →</text>
+          <text x="327" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Aβ/Tau Accumulation</text>
+          <text x="327" y="410" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">(pathway overlap)</text>
+
+          <!-- D3: Lipid/APOE-Metabolic Overlap -->
+          <rect x="438" y="360" width="200" height="72" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="538" y="382" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Lipid / APOE Biology</text>
+          <text x="538" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Metabolic Risk Overlap</text>
+          <text x="538" y="410" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">(hypothesis only)</text>
+
+          <!-- D4: Drug Burden Index (Clinical) -->
+          <rect x="654" y="360" width="212" height="72" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+          <text x="760" y="382" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#78350f" font-weight="700">Drug Burden Index</text>
+          <text x="760" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Sedative/anticholinergic</text>
+          <text x="760" y="410" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">deprescribing tool (clinical)</text>
+
+          <!-- Connector from Panel B (B4) down to Panel D (D2) via gutter -->
+          <line x1="379" y1="268" x2="379" y2="314" stroke="#0f766e" stroke-width="1.2"/>
+          <line x1="379" y1="314" x2="327" y2="314" stroke="#0f766e" stroke-width="1.2"/>
+          <line x1="327" y1="314" x2="327" y2="360" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-g)"/>
+
+          <!-- Connector from Panel C (C4) down to Panel D (D1) area via gutter -->
+          <line x1="681" y1="268" x2="681" y2="310" stroke="#0f766e" stroke-width="1.2"/>
+          <line x1="681" y1="310" x2="538" y2="310" stroke="#0f766e" stroke-width="1.2"/>
+          <line x1="538" y1="310" x2="538" y2="360" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-g)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers):</strong> Aging, senescence, organ injury, systemic inflammation, sepsis,
+        obesity, and glucocorticoid exposure converge as stimuli that drive extracellular DBI/ACBP release.
+        <strong>Panel B (Release &amp; Core Mechanisms):</strong> DBI/ACBP acts as a secreted stress hormone and branches
+        into two mechanistic arms — autophagy inhibition / lysosomal impairment (left branch) and GABA-A receptor /
+        endozepine signaling (right branch) — with downstream effects on lipid and acyl-CoA metabolism.
+        <strong>Panel C (Downstream Consequences):</strong> These mechanisms reconverge on immune/inflammatory dysregulation,
+        which branches into impaired proteostasis &amp; clearance and metabolic/organ dysfunction, ultimately driving organ
+        injury and increased mortality — effects reversible by monoclonal antibody neutralization in experimental models.
+        <strong>Panel D (Alzheimer's Disease Context):</strong> The four AD-relevant angles: APOE-ε4 proteomic association
+        (DBI linked to protected carrier status), autophagy–Aβ/tau pathway overlap, lipid/APOE metabolic biology, and
+        the clinically distinct Drug Burden Index deprescribing tool.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>DBI/ACBP Identity &amp; Biology</h3>
+        DBI encodes diazepam-binding inhibitor (acyl-CoA-binding protein), normally intracellular and involved
+        in lipid metabolism. Under stress, it is released extracellularly and circulates systemically as a
+        tissue stress hormone, connecting lipid handling to autophagy, inflammation, and GABA-A receptor signaling.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Autophagy Inhibition — Core AD-Relevant Mechanism</h3>
+        Extracellular DBI/ACBP is repeatedly identified as an inhibitor of macroautophagy/autophagy. Because
+        Alzheimer's disease is characterized by impaired autophagic clearance and proteostatic stress, DBI/ACBP
+        could theoretically worsen neuronal and glial vulnerability by reducing autophagic capacity — though
+        this has not yet been tested directly in AD models.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Aging &amp; Systemic Stress Biology</h3>
+        Circulating DBI/ACBP rises with aging, senescence, organ injury, systemic inflammation, sepsis,
+        multiorgan dysfunction, obesity, diabetes, metabolic syndrome, and glucocorticoid exposure. All of
+        these contexts substantially overlap with known risk domains for Alzheimer's disease, supporting
+        DBI/ACBP as a plausible aging-associated vulnerability mediator.
+      </div>
+
+      <div class="card card-positive">
+        <h3>APOE-ε4 Proteomic Signal</h3>
+        A 2026 medRxiv proteomics study prioritized DBI among plasma proteins associated with "protected"
+        APOE-ε4 carrier status — cognitively unimpaired ε4 carriers versus those who developed Alzheimer's
+        disease. This is the strongest Alzheimer's-specific signal currently available, but does not establish
+        causality, directionality, or mechanism.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Therapeutic Precedent: Antibody Neutralization</h3>
+        The clearest druggability evidence involves monoclonal antibody neutralization of DBI/ACBP, with
+        demonstrated benefits in septic shock, glucocorticoid-driven metabolic disease, obesity/ciliopathy
+        models, osteoarthritis, liver injury, and immune-suppression contexts, plus translational interest
+        evidenced by neutralization patents. CNS translation would require blood–brain barrier and
+        brain-exposure data.
+      </div>
+
+      <div class="card card-slate">
+        <h3>Drug Burden Index — A Distinct Clinical Tool</h3>
+        The Drug Burden Index quantifies cumulative sedative and anticholinergic medication exposure. In
+        dementia and older-adult populations, high DBI scores associate with worsened cognition, delirium,
+        falls, frailty, and functional decline. DBI-guided deprescribing is an actionable clinical care
+        strategy but is entirely separate from DBI/ACBP molecular targeting.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div>
+          <strong>Treat DBI/ACBP as an emerging candidate, not a validated target.</strong>
+          The strongest rationale is pathway overlap — autophagy inhibition, aging biology, metabolic stress,
+          lipid regulation, inflammation, immune modulation, and GABA-A receptor signaling — not direct
+          Alzheimer's disease evidence.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Prioritize direct Alzheimer's validation studies.</strong>
+          Measure DBI/ACBP in Alzheimer's brain regions, CSF, and plasma; test associations with amyloid-β,
+          tau, neurodegeneration, synaptic markers, microglial/astrocyte activation, cognitive decline, and
+          APOE genotype; and clarify whether protected APOE-ε4 status corresponds to higher or lower DBI/ACBP activity.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Test causality in AD models.</strong>
+          Evaluate DBI/ACBP genetic deletion, overexpression, neutralizing antibodies, receptor-pathway
+          modulation, and secretion blockade in amyloid, tau, APOE-ε4, aging, and metabolic-risk models,
+          with endpoints including autophagy flux, proteostasis, neuroinflammation, synaptic function,
+          neuronal survival, and cognition.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Clarify therapeutic directionality before intervention.</strong>
+          DBI/ACBP appears harmful in inflammatory/metabolic disease models, but the APOE-ε4 proteomic
+          study does not specify whether increased or decreased DBI is protective. AD-focused work must
+          determine whether DBI/ACBP should be inhibited, normalized, or contextually modulated.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Evaluate CNS feasibility of antibody strategies.</strong>
+          Since the strongest therapeutic precedent involves monoclonal antibody neutralization,
+          Alzheimer's translation requires data on brain exposure, blood–brain barrier penetration
+          or peripheral mechanism sufficiency, target engagement, dosing, safety, and potential
+          effects on GABAergic inhibitory signaling.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Investigate systemic-to-brain mechanisms.</strong>
+          Because circulating DBI/ACBP rises with systemic inflammation, organ injury, glucocorticoid
+          stress, and metabolic disease, studies should test whether peripheral DBI/ACBP contributes
+          to neuroinflammation, vascular dysfunction, blood–brain barrier changes, or brain aging phenotypes.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Keep the two DBI meanings rigorously separate.</strong>
+          DBI/ACBP is a molecular candidate target; Drug Burden Index is a medication-risk score. They
+          must not be conflated despite the shared acronym and the overlapping benzodiazepine/sedative terminology.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Apply Drug Burden Index clinically in dementia care.</strong>
+          For patients with Alzheimer's disease or related dementias, DBI-guided medication review can
+          identify anticholinergic and sedative exposures that may worsen cognition, delirium, falls, frailty,
+          and functional status. Reducing Drug Burden Index is a practical care-optimization strategy, not
+          a disease-modifying molecular therapy.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Focus near-term hypotheses on prevention or risk modification.</strong>
+          Based on the APOE-ε4 protected-carrier signal and the aging/stress biology, DBI/ACBP may be most
+          relevant as a candidate modifier of vulnerability or delayed onset rather than as an established
+          treatment for symptomatic Alzheimer's disease.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Maintain strict evidence boundaries.</strong>
+          The available text does not show that DBI/ACBP affects amyloid-β production or clearance, tau
+          phosphorylation or aggregation, synaptic degeneration, microglial activation, neuronal loss, or
+          cognition in any Alzheimer's model. Claims of DBI/ACBP as an Alzheimer's therapeutic target must
+          be framed as hypothesis-generating until direct validation is achieved.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — DBI/ACBP in Alzheimer's Disease</div>
+      <p>
+        DBI/ACBP is a <strong>biologically plausible but unvalidated Alzheimer's disease candidate</strong>.
+        Its core biology — as a secreted autophagy inhibitor linked to aging, metabolic stress, lipid dysregulation,
+        neuroinflammation-relevant immune pathways, and GABA-A receptor signaling — maps onto multiple
+        established domains of Alzheimer's pathophysiology. The <strong>strongest Alzheimer's-specific
+        signal</strong> is the 2026 APOE-ε4 proteomic study associating DBI with protected carrier status,
+        which is hypothesis-generating but does not establish causality or therapeutic direction.
+        <strong>Therapeutic precedent via monoclonal antibody neutralization</strong> is meaningful but derives
+        entirely from non-neurological disease models. The <strong>Drug Burden Index</strong>, while sharing
+        the DBI acronym and clinically relevant in dementia care through deprescribing, represents an entirely
+        separate concept and must not be conflated with molecular DBI/ACBP targeting. The field's next
+        essential step is <strong>direct validation in Alzheimer's models and human CNS biospecimens</strong>
+        to determine whether DBI/ACBP is mechanistically involved in amyloid, tau, or neurodegeneration biology,
+        and whether modulation can be translated safely across the blood–brain barrier.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DBI/ACBP &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

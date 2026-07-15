@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MT-ND3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfb;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-card: #dbeafe;
+    --blue-card-border: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e0eeff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(239,100,100,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cde0f5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 58px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 18px 14px;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card p {
+    font-size: 0.91rem;
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent   { background: var(--light);         border-color: var(--mid);           }
+  .card-accent h3{ color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);         }
+  .card-danger h3{ color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-color: var(--positive);       }
+  .card-positive h3{ color: var(--positive); }
+  .card-blue     { background: var(--blue-card);     border-color: var(--blue-card-border);}
+  .card-blue h3  { color: var(--blue-card-border); }
+  .card-neutral  { background: var(--neutral-light); border-color: var(--neutral);        }
+  .card-neutral h3{ color: var(--neutral); }
+  .card-warning  { background: var(--warning-light); border-color: var(--warning);        }
+  .card-warning h3{ color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #e0eeff;
+    border-radius: 14px;
+    padding: 38px 40px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .verdict strong.lead {
+    font-size: 1.13rem;
+    color: #ffffff;
+  }
+
+  .verdict strong {
+    color: #a8d4f5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MT-ND3 &nbsp;|&nbsp; Mitochondrial NADH Dehydrogenase Subunit 3</span>
+    <span class="chip chip-danger">⚠ Limited direct AD evidence — modifier hypothesis</span>
+  </div>
+  <h1>MT-ND3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Interpretive Caution:</strong> MT-ND3 is a mechanistically plausible mitochondrial modifier and biomarker candidate for Alzheimer's-related bioenergetic failure, but it is <em>not</em> an established standalone Alzheimer's disease target. Direct Alzheimer's-specific evidence is limited; most functional data derive from mitochondrial encephalopathies, Leigh syndrome, and related disorders.
+    </div>
+
+    <p>
+      MT-ND3 encodes mitochondrial NADH dehydrogenase subunit 3, a mitochondrial DNA–encoded core component of respiratory-chain complex I. The literature positions MT-ND3 as mechanistically relevant to Alzheimer's disease through mitochondrial bioenergetics rather than as a fully validated Alzheimer's disease gene.
+    </p>
+    <p>
+      The strongest Alzheimer's-relevant mechanistic chain is: MT-ND3 mutation or reduced expression → complex I dysfunction → impaired oxidative phosphorylation and oxygen consumption → NADH/NAD⁺ imbalance, ATP deficiency, electron leak, ROS generation, mitochondrial damage, neuroinflammation, hypometabolism, apoptosis, synaptic impairment, and cognitive decline.
+    </p>
+    <p>
+      Direct Alzheimer's-specific evidence includes: (1) the MT-ND3 variant 10398A&gt;G/rs2853826 linked to mitochondrial heteroplasmy in brain tissue and complex I/respiratory-chain gene-expression networks in an Alzheimer's cohort; and (2) amyloid-β1-42 binding to a 25-amino-acid C-terminal MT-ND3 peptide, suggesting a molecular route by which amyloid pathology could directly inhibit complex I. Most supporting mechanistic evidence derives from mitochondrial encephalopathies, Leigh syndrome, MELAS/Leigh overlap, vascular dementia models, diabetic cognitive impairment models, and TDP-43 neurodegeneration models — all of which consistently demonstrate that MT-ND3 disruption can impair complex I, reduce ATP, increase oxidative stress, and cause severe CNS phenotypes.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#1a3a5c"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Triggers -->
+          <rect x="10" y="10" width="210" height="478" rx="12" fill="#e8f1f8" fill-opacity="0.5" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="115" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+          <!-- Node A1: MT-ND3 Mutation -->
+          <rect x="30" y="44" width="170" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="115" y="62" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">MT-ND3 Mutation /</text>
+          <text x="115" y="76" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffffff">Reduced Expression</text>
+
+          <!-- A1 → A2 -->
+          <line x1="115" y1="88" x2="115" y2="107" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Aβ Interaction -->
+          <rect x="30" y="108" width="170" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="115" y="126" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Aβ1-42 binds</text>
+          <text x="115" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">ND3 C-terminal peptide</text>
+
+          <!-- A2 → A3 -->
+          <line x1="115" y1="152" x2="115" y2="171" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Complex I Dysfunction -->
+          <rect x="30" y="172" width="170" height="44" rx="7" fill="#1a3a5c" stroke="#0a1f35" stroke-width="1"/>
+          <text x="115" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">Complex I</text>
+          <text x="115" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#cde0f5">Dysfunction</text>
+
+          <!-- A3 → A4 TDP-43 -->
+          <line x1="115" y1="216" x2="115" y2="235" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4 -->
+          <rect x="30" y="236" width="170" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="115" y="254" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">TDP-43 / FASTKD</text>
+          <text x="115" y="268" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Pathway Disruption</text>
+
+          <!-- Node A5: Heteroplasmy -->
+          <line x1="115" y1="280" x2="115" y2="299" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="30" y="300" width="170" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="115" y="318" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Heteroplasmy /</text>
+          <text x="115" y="332" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Tissue Specificity</text>
+
+          <!-- Panel B: Bioenergetic Cascade (branches) -->
+          <rect x="238" y="10" width="330" height="478" rx="12" fill="#fdf8f0" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="403" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#92400e" letter-spacing="1">BIOENERGETIC CASCADE</text>
+
+          <!-- Shared entry node B0 -->
+          <rect x="304" y="44" width="198" height="40" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+          <text x="403" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">Impaired Oxidative</text>
+          <text x="403" y="74" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff8e8">Phosphorylation &amp; O₂ Consumption</text>
+
+          <!-- B0 → Branch left (ATP) and right (ROS) -->
+          <!-- left branch line -->
+          <line x1="365" y1="84" x2="315" y2="118" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- right branch line -->
+          <line x1="441" y1="84" x2="491" y2="118" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Left branch B1: ATP Deficiency -->
+          <rect x="254" y="118" width="122" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="315" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">ATP Deficiency /</text>
+          <text x="315" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">NADH/NAD⁺ imbal.</text>
+
+          <!-- Right branch B2: Electron Leak / ROS -->
+          <rect x="428" y="118" width="122" height="40" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="489" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Electron Leak /</text>
+          <text x="489" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">ROS Generation</text>
+
+          <!-- B1 down → B3 Synaptic -->
+          <line x1="315" y1="158" x2="315" y2="188" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="254" y="188" width="122" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="315" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Synaptic</text>
+          <text x="315" y="219" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Impairment</text>
+
+          <!-- B2 down → B4 Oxidative Damage -->
+          <line x1="489" y1="158" x2="489" y2="188" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <rect x="428" y="188" width="122" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="489" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Oxidative / mtDNA</text>
+          <text x="489" y="219" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Damage</text>
+
+          <!-- B3 → converge node B5 -->
+          <line x1="315" y1="228" x2="315" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B4 → converge -->
+          <line x1="489" y1="228" x2="489" y2="268" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Converge node B5: Neuroinflammation + Hypometabolism -->
+          <rect x="254" y="268" width="290" height="40" rx="7" fill="#1a3a5c" stroke="#0a1f35" stroke-width="1"/>
+          <text x="399" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">Neuroinflammation &amp; Hypometabolism</text>
+          <text x="399" y="299" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#cde0f5">(TSPO-PET signal; FDG-PET deficit)</text>
+
+          <!-- B5 → B6 Apoptosis -->
+          <line x1="399" y1="308" x2="399" y2="338" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+          <rect x="304" y="338" width="190" height="40" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="399" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Mitochondrial Damage /</text>
+          <text x="399" y="369" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Apoptosis</text>
+
+          <!-- Panel C: CNS Outcomes -->
+          <rect x="586" y="10" width="324" height="338" rx="12" fill="#fdf0f0" fill-opacity="0.45" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="748" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">CNS DISEASE OUTCOMES</text>
+
+          <!-- C nodes: 2×3 grid -->
+          <rect x="600" y="44" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="670" y="61" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Leigh Syndrome /</text>
+          <text x="670" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">MELAS Overlap</text>
+
+          <rect x="756" y="44" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="826" y="61" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Epilepsy /</text>
+          <text x="826" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Stroke-like Episodes</text>
+
+          <rect x="600" y="100" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="670" y="117" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Basal Ganglia /</text>
+          <text x="670" y="131" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Brainstem Lesions</text>
+
+          <rect x="756" y="100" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="826" y="117" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Cerebellar Atrophy /</text>
+          <text x="826" y="131" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Cortical Injury</text>
+
+          <rect x="600" y="156" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="670" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Cognitive Decline /</text>
+          <text x="670" y="187" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Neurodevelopment ↓</text>
+
+          <rect x="756" y="156" width="140" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+          <text x="826" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">AD: Heteroplasmy /</text>
+          <text x="826" y="187" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a">Complex I Networks</text>
+
+          <!-- Panel D: Therapeutic Nodes -->
+          <rect x="586" y="358" width="324" height="130" rx="12" fill="#f0fdfb" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="748" y="378" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">THERAPEUTIC STRATEGIES</text>
+
+          <rect x="600" y="388" width="136" height="40" rx="7" fill="#f0fdfb" stroke="#0f766e" stroke-width="1.1"/>
+          <text x="668" y="405" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">2-HIBA / MT-ND3</text>
+          <text x="668" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">Stabilizing Compounds</text>
+
+          <rect x="752" y="388" width="136" height="40" rx="7" fill="#f0fdfb" stroke="#0f766e" stroke-width="1.1"/>
+          <text x="820" y="405" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">Allotopic / mRNA</text>
+          <text x="820" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">Gene Restoration</text>
+
+          <rect x="676" y="440" width="144" height="38" rx="7" fill="#f0fdfb" stroke="#0f766e" stroke-width="1.1"/>
+          <text x="748" y="457" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">FASTKD4 / Aβ-ND3</text>
+          <text x="748" y="471" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e">Decoy Strategies</text>
+
+          <!-- Cross-panel connector: Panel A (A3 Complex I) → Panel B entry (B0) -->
+          <!-- Route: right from A3 center (200,194) horizontally to B0 left (304,64) via elbow -->
+          <line x1="200" y1="194" x2="238" y2="194" stroke="#1a3a5c" stroke-width="1.5"/>
+          <line x1="238" y1="194" x2="238" y2="64" stroke="#1a3a5c" stroke-width="1.5"/>
+          <line x1="238" y1="64" x2="304" y2="64" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+          <!-- Panel B apoptosis → Panel C outcomes (elbow via gutter at x=580) -->
+          <line x1="494" y1="358" x2="494" y2="420" stroke="#1a3a5c" stroke-width="1.5"/>
+          <line x1="494" y1="420" x2="578" y2="420" stroke="#1a3a5c" stroke-width="1.5"/>
+          <line x1="578" y1="420" x2="578" y2="212" stroke="#1a3a5c" stroke-width="1.5"/>
+          <line x1="578" y1="176" x2="600" y2="176" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+          <!-- small tick to disambiguate path -->
+          <line x1="578" y1="212" x2="578" y2="176" stroke="#1a3a5c" stroke-width="1.5"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers):</strong> MT-ND3 mutation/reduced expression, Aβ1-42 direct binding to the ND3 C-terminal peptide, TDP-43/FASTKD pathway disruption, and heteroplasmy all converge on complex I dysfunction. &nbsp;<strong>Panel B (Bioenergetic Cascade):</strong> Complex I dysfunction branches into two parallel sub-cascades — left: ATP deficiency/NADH imbalance → synaptic impairment; right: electron leak/ROS → oxidative/mtDNA damage — both reconverging on neuroinflammation &amp; hypometabolism and ultimately mitochondrial damage/apoptosis. &nbsp;<strong>Panel C (CNS Disease Outcomes):</strong> Six key phenotypic outcomes clustered as a grid, from Leigh syndrome and epilepsy to Alzheimer's-specific heteroplasmy and complex I expression networks. &nbsp;<strong>Panel D (Therapeutic Strategies):</strong> Three intervention nodes — small-molecule stabilizers (2-HIBA), allotopic/mRNA gene restoration, and FASTKD4/Aβ-ND3 decoy approaches.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Complex I Centrality</h3>
+        <p>MT-ND3 is a core complex I subunit; pathogenic variants (e.g., m.10191T&gt;C / Ser45Pro) produce only ~30–40% residual complex I activity, minimal oxygen consumption in intact cells, and markedly elevated NADH/NAD⁺ ratio — mirroring mitochondrial abnormalities implicated in Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Amyloid-β Directly Binds MT-ND3</h3>
+        <p>Aβ1-42 bound strongly to a 25-amino-acid C-terminal fragment of human MT-ND3, providing a direct molecular route by which amyloid pathology could inhibit complex I and amplify mitochondrial dysfunction in neurons or astrocytes.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammation &amp; Hypometabolism</h3>
+        <p>The m.10158T&gt;C mutation in adult-onset encephalopathy produced TSPO-PET neuroinflammatory signal in thalamus, hippocampus, temporoparietal-occipital cortex, and brainstem, alongside FDG-PET hypometabolism — phenotypes that are cardinal features of Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Alzheimer's Cohort Heteroplasmy Link</h3>
+        <p>The 10398A&gt;G/rs2853826 MT-ND3 variant was significantly associated with mitochondrial heteroplasmy in Alzheimer's brain tissue and linked to complex I/respiratory-chain expression networks, supporting MT-ND3 as a potential mitochondrial modifier — though not a proven causal gene.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Modifiability</h3>
+        <p>2-Hydroxyisobutyric acid crossed the blood–brain barrier, directly bound hippocampal MT-ND3, restored protein levels, stabilized NAD⁺/NADH balance, and rescued cognition in diabetic db/db mice. Allotopic MT-ND3 expression and mitochondrial mRNA delivery also improved complex I activity and ATP in patient cells, establishing proof-of-principle targetability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>TDP-43 Convergence &amp; RNA Regulation</h3>
+        <p>TDP-43 binds MT-ND3 transcripts, reduces expression, causes complex I disassembly, and neuronal loss — relevant because TDP-43 co-pathology occurs in a subset of Alzheimer's cases. FASTKD4 promotes MT-ND3 mRNA polyadenylation and stability; FASTKD1 modulates ND3 mRNA abundance, identifying indirect regulatory targets for preserving complex I expression.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div><strong>Treat MT-ND3 as hypothesis-generating, not validated.</strong> The evidence supports strong mechanistic plausibility but does not prove that MT-ND3 causes Alzheimer's disease or that MT-ND3-targeted therapies work in Alzheimer's models or patients.</div>
+      </li>
+
+      <li>
+        <div><strong>Prioritize Alzheimer's-specific validation studies.</strong> Test whether MT-ND3 expression, protein abundance, heteroplasmy, mRNA stability, or complex I-linked function is altered in Alzheimer's-vulnerable regions — hippocampus, entorhinal cortex, temporal cortex — and in affected glial populations.</div>
+      </li>
+
+      <li>
+        <div><strong>Evaluate whether MT-ND3 dysfunction worsens amyloid-β or tau toxicity.</strong> Test whether reduced MT-ND3 or pathogenic ND3 variants amplify amyloid-induced complex I inhibition, tau-related mitochondrial stress, ROS production, synaptic failure, neuroinflammation, or cognitive decline in appropriate models.</div>
+      </li>
+
+      <li>
+        <div><strong>Investigate the Aβ–MT-ND3 interaction directly.</strong> The identified Aβ-binding ND3 C-terminal peptide could guide mapping of the interaction interface and development of decoy peptides, small molecules, or intracellular biologics that block Aβ–ND3 binding while preserving complex I function.</div>
+      </li>
+
+      <li>
+        <div><strong>Test MT-ND3-stabilizing compounds in Alzheimer's models.</strong> 2-HIBA-like molecules are especially relevant because 2-HIBA directly bound MT-ND3, restored hippocampal protein, improved NAD⁺/NADH balance, normalized respiratory-chain homeostasis, and improved cognition in diabetic mice.</div>
+      </li>
+
+      <li>
+        <div><strong>Explore RNA and gene-restoration approaches cautiously.</strong> Allotopic expression and mitochondrial mRNA delivery provide proof of principle, but Alzheimer's translation requires brain-targeted delivery, long-term safety data, and evidence of MT-ND3 insufficiency in the intended patient subgroup.</div>
+      </li>
+
+      <li>
+        <div><strong>Consider indirect regulatory targets.</strong> FASTKD4-mediated MT-ND3 mRNA stabilization, FASTKD1-related regulation, and prevention of pathological TDP-43 binding to ND3 transcripts are viable routes for preserving ND3 expression and complex I assembly.</div>
+      </li>
+
+      <li>
+        <div><strong>Use MT-ND3 as part of a mitochondrial biomarker panel.</strong> Relevant measures include MT-ND3 heteroplasmy, expression/protein levels, complex I activity, NADH/NAD⁺ ratio, ATP production, oxygen consumption, ROS burden, TSPO-PET neuroinflammation, FDG-PET hypometabolism, and mitochondrial RNA-processing markers.</div>
+      </li>
+
+      <li>
+        <div><strong>Account for heteroplasmy, tissue specificity, sex, haplogroup, and ancestry.</strong> The 10398A&gt;G variant may act as a context-dependent modifier rather than a direct pathogenic allele. Brain-region and cell-type assays are more informative than blood alone, as some MT-ND3 variants are absent or low in blood despite tissue-level pathology.</div>
+      </li>
+
+      <li>
+        <div><strong>Avoid strategies that chronically suppress complex I.</strong> MT-ND3 loss-of-function mutations cause severe neurological disease; Alzheimer's-directed therapies should aim to preserve or restore mitochondrial respiration while reducing pathological ROS, not broadly inhibit complex I. The ND3 Cys39 cysteine switch offers a safer, reversible modulation approach.</div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <strong class="lead">Overall Assessment —</strong> MT-ND3 represents a <strong>mechanistically compelling but insufficiently validated</strong> mitochondrial target for Alzheimer's disease. Its central role in complex I structure and function, the repeated demonstration that MT-ND3 variants produce <strong>ATP deficiency, NADH/NAD⁺ imbalance, ROS generation, neuroinflammation, and hypometabolism</strong> in multiple neurological disease contexts, the discovery of a <strong>direct Aβ1-42 binding interaction</strong> with the ND3 C-terminal peptide, and the association of the 10398A&gt;G variant with <strong>brain heteroplasmy and complex I networks in Alzheimer's cohorts</strong> together constitute a strong biological rationale. However, there are no completed Alzheimer's-model intervention studies targeting MT-ND3 specifically, and no causal genetic proof in Alzheimer's disease. The most productive near-term path is to treat MT-ND3 as a <strong>precision-medicine entry point for Alzheimer's subgroups</strong> with demonstrable mitochondrial complex I dysfunction, high oxidative stress, TDP-43 co-pathology, or impaired mitochondrial RNA homeostasis — prioritizing rigorous target engagement and disease-relevant validation before advancing therapeutic programs.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MT-ND3 / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;&middot;&nbsp; For research use only
+</footer>
+
+</body>
+</html>

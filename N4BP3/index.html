@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N4BP3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf5;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #c8ddf0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e35 100%);
+    color: var(--white);
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #7eb3d8;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    font-size: 1.04rem;
+    color: #dbeafe;
+    margin: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--neutral);
+    font-size: 0.8rem;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: N4BP3 &nbsp;|&nbsp; NEDD4 Binding Protein 3</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Neuronal &amp; Antiviral Risks</span>
+  </div>
+  <h1>N4BP3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caution:</span>
+      N4BP3 has <em>not</em> been directly studied in Alzheimer's disease. All AD relevance is inferential and mechanism-based. Complete inhibition may impair neuronal structural maintenance and MAVS/RIG-I antiviral responses.
+    </div>
+
+    <p>N4BP3 is a ubiquitination-associated regulator whose documented biology — spanning NF-κB/MAPK inflammatory signaling, innate immune antiviral responses, and neuronal process development — overlaps substantially with known AD mechanisms including neuroinflammation, synaptic degeneration, impaired proteostasis, and vascular dysfunction.</p>
+
+    <p>As a therapeutic target, N4BP3 is better established in inflammatory bowel disease and cancer models. In Alzheimer's disease it should be viewed as a <em>plausible mechanistic candidate</em> requiring dedicated CNS validation, rather than an established biomarker or validated target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 880 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: N4BP3 Core Ubiquitin Functions ===== -->
+          <rect x="10" y="10" width="260" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#1e3a5f" text-rendering="geometricPrecision" letter-spacing="1">PANEL A — N4BP3 CORE FUNCTIONS</text>
+
+          <!-- N4BP3 central node -->
+          <rect x="55" y="46" width="170" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="140" y="62" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="white">N4BP3</text>
+          <text x="140" y="77" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#c8ddf0">Ubiquitination Regulator</text>
+
+          <!-- K63 RIPK2 -->
+          <rect x="22" y="118" width="148" height="36" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="96" y="132" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">K63-linked RIPK2</text>
+          <text x="96" y="147" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">Ubiquitination</text>
+
+          <!-- K48 IκBα -->
+          <rect x="186" y="118" width="72" height="36" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="222" y="132" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">K48-linked</text>
+          <text x="222" y="147" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">IκBα Ubiq.</text>
+
+          <!-- Arrows from N4BP3 down -->
+          <line x1="120" y1="84" x2="96" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="185" y1="84" x2="222" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- MAVS -->
+          <rect x="22" y="192" width="100" height="36" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="72" y="207" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">MAVS</text>
+          <text x="72" y="221" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">Ubiquitination</text>
+
+          <!-- NEDD4 E-cad -->
+          <rect x="138" y="192" width="120" height="36" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="198" y="207" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">NEDD4-mediated</text>
+          <text x="198" y="221" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">E-cadherin Deg.</text>
+
+          <!-- Arrows into MAVS / NEDD4 from K63/K48 -->
+          <line x1="72" y1="154" x2="72" y2="192" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="222" y1="154" x2="198" y2="192" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Neuronal Branching node -->
+          <rect x="22" y="268" width="236" height="36" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="140" y="282" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#1e3a5f">Axon &amp; Dendrite Branching</text>
+          <text x="140" y="296" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">(hippocampal neurons, Xenopus)</text>
+
+          <!-- Arrow from MAVS area down -->
+          <line x1="98" y1="228" x2="115" y2="268" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Proteostasis node -->
+          <rect x="22" y="344" width="236" height="36" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="140" y="358" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#1e3a5f">Proteostasis / UPS / Autophagy</text>
+          <text x="140" y="372" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">AD-relevant pathway overlap</text>
+
+          <!-- Arrow down -->
+          <line x1="140" y1="304" x2="140" y2="344" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- AD Overlap badge -->
+          <rect x="42" y="416" width="196" height="26" rx="13" fill="#1e3a5f" fill-opacity="0.12" stroke="#2e6da4" stroke-width="1"/>
+          <text x="140" y="433" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#1e3a5f">AD Mechanism Overlap (Indirect)</text>
+
+          <line x1="140" y1="380" x2="140" y2="416" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+          <!-- ===== PANEL B: Inflammatory Signaling ===== -->
+          <rect x="286" y="10" width="290" height="480" rx="12" fill="#fef3c7" fill-opacity="0.45" stroke="#b45309" stroke-width="1.2"/>
+          <text x="431" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#92400e" letter-spacing="1">PANEL B — INFLAMMATORY SIGNALING</text>
+
+          <!-- NOD2/TLR4 trigger -->
+          <rect x="310" y="46" width="120" height="36" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1"/>
+          <text x="370" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#78350f">NOD2 / TLR4</text>
+          <text x="370" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">Activation (LPS)</text>
+
+          <!-- N4BP3 upregulation -->
+          <rect x="450" y="46" width="112" height="36" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1"/>
+          <text x="506" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#78350f">N4BP3</text>
+          <text x="506" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">Upregulated ↑</text>
+
+          <line x1="430" y1="64" x2="450" y2="64" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- RIPK2 branch -->
+          <rect x="296" y="130" width="108" height="36" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+          <text x="350" y="145" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">RIPK2 (K63-Ub)</text>
+          <text x="350" y="159" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">↑ NOD2 branch</text>
+
+          <!-- IκBα branch -->
+          <rect x="454" y="130" width="108" height="36" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+          <text x="508" y="145" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">IκBα Ubiq. ↑</text>
+          <text x="508" y="159" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">TLR4 branch</text>
+
+          <!-- Arrows from triggers to branches -->
+          <line x1="370" y1="82" x2="350" y2="130" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="506" y1="82" x2="508" y2="130" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- MAPK node -->
+          <rect x="296" y="208" width="108" height="36" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+          <text x="350" y="223" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">MAPK Activation</text>
+          <text x="350" y="237" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">↑</text>
+
+          <!-- NF-κB node -->
+          <rect x="454" y="208" width="108" height="36" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+          <text x="508" y="223" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">NF-κB p65</text>
+          <text x="508" y="237" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">phospho ↑</text>
+
+          <line x1="350" y1="166" x2="350" y2="208" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="508" y1="166" x2="508" y2="208" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- Cytokine output convergence -->
+          <rect x="320" y="292" width="222" height="38" rx="7" fill="#fbbf24" fill-opacity="0.45" stroke="#b45309" stroke-width="1.2"/>
+          <text x="431" y="308" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#78350f">↑ TNF-α, IL-1β, IL-6, IL-8</text>
+          <text x="431" y="321" text-anchor="middle" font-family="Arial" font-size="10" fill="#78350f">Inflammatory Cytokine Output</text>
+
+          <!-- Converging arrows -->
+          <line x1="380" y1="244" x2="400" y2="292" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="480" y1="244" x2="462" y2="292" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- AD Neuroinflammation note -->
+          <rect x="310" y="368" width="242" height="36" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+          <text x="431" y="382" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#78350f">AD Neuroinflammation Overlap</text>
+          <text x="431" y="396" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#78350f">(not yet tested in microglia/brain)</text>
+
+          <line x1="431" y1="330" x2="431" y2="368" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- KD reduces badge -->
+          <rect x="310" y="440" width="150" height="22" rx="11" fill="#78350f" fill-opacity="0.12" stroke="#b45309" stroke-width="1"/>
+          <text x="385" y="455" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="bold" fill="#78350f">knockdown ↓ cytokines</text>
+
+          <!-- ===== PANEL C: Antiviral / Other ===== -->
+          <rect x="592" y="10" width="278" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="731" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#065f46" letter-spacing="1">PANEL C — ANTIVIRAL &amp; OTHER LINKS</text>
+
+          <!-- MAVS/RIG-I -->
+          <rect x="612" y="46" width="238" height="36" rx="7" fill="#99f6e4" fill-opacity="0.6" stroke="#0f766e" stroke-width="1"/>
+          <text x="731" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#065f46">MAVS / RIG-I Antiviral Signaling</text>
+          <text x="731" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">N4BP3 promotes activation</text>
+
+          <!-- IFN-β / ISRE -->
+          <rect x="612" y="122" width="112" height="36" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+          <text x="668" y="137" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">IFN-β &amp; ISRE</text>
+          <text x="668" y="151" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Induction ↑</text>
+
+          <!-- MAVS-TRAF2 -->
+          <rect x="738" y="122" width="112" height="36" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+          <text x="794" y="137" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">MAVS–TRAF2</text>
+          <text x="794" y="151" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Interaction ↑</text>
+
+          <line x1="694" y1="82" x2="668" y2="122" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="770" y1="82" x2="794" y2="122" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Antiviral Genes -->
+          <rect x="660" y="198" width="142" height="36" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+          <text x="731" y="213" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#065f46">Antiviral Gene</text>
+          <text x="731" y="227" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Induction ↑</text>
+
+          <line x1="668" y1="158" x2="700" y2="198" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="794" y1="158" x2="762" y2="198" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Vascular / Hypoxia -->
+          <rect x="612" y="280" width="112" height="36" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+          <text x="668" y="295" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Hypoxia /</text>
+          <text x="668" y="309" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Endothelial Stress</text>
+
+          <!-- Epigenetic / Microbiome -->
+          <rect x="738" y="280" width="112" height="36" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+          <text x="794" y="295" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Immune Epigenetic</text>
+          <text x="794" y="309" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Loci (Nasal)</text>
+
+          <line x1="700" y1="234" x2="668" y2="280" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="762" y1="234" x2="794" y2="280" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Safety Risk node -->
+          <rect x="626" y="358" width="210" height="36" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="731" y="373" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#9b1c1c">Safety Risk: Antiviral Impairment</text>
+          <text x="731" y="387" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#9b1c1c">if N4BP3 fully inhibited</text>
+
+          <line x1="668" y1="316" x2="700" y2="358" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+          <line x1="794" y1="316" x2="762" y2="358" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- AD Indirect tag -->
+          <rect x="640" y="430" width="182" height="22" rx="11" fill="#065f46" fill-opacity="0.10" stroke="#0f766e" stroke-width="1"/>
+          <text x="731" y="445" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="bold" fill="#065f46">AD link: indirect / vascular / IFN</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — N4BP3 Core Ubiquitin Functions:</strong> N4BP3 drives K63-linked RIPK2 ubiquitination, K48-linked IκBα ubiquitination, MAVS ubiquitination, and NEDD4-mediated E-cadherin degradation, converging on neuronal branching and proteostasis pathways with indirect AD relevance. &nbsp;|&nbsp;
+        <strong>Panel B (amber) — Inflammatory Signaling:</strong> NOD2/TLR4 triggers upregulate N4BP3, which fans out to amplify both the RIPK2→MAPK branch (NOD2) and the IκBα→NF-κB p65 branch (TLR4), reconverging on elevated TNF-α, IL-1β, IL-6, and IL-8 cytokine output — a pattern mechanistically relevant to AD neuroinflammation but demonstrated only in gut/epithelial models. &nbsp;|&nbsp;
+        <strong>Panel C (teal) — Antiviral &amp; Indirect Links:</strong> N4BP3 promotes MAVS/RIG-I signaling, branching into IFN-β/ISRE induction and MAVS–TRAF2 interactions, converging on antiviral gene expression; additional indirect AD-relevant connections include hypoxic endothelial stress and immune epigenetic loci. Dashed red arrows indicate the safety risk of complete N4BP3 inhibition impairing antiviral host defence.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Ubiquitination &amp; Proteostasis Hub</h3>
+        <p>N4BP3 orchestrates multiple distinct ubiquitination events — K63-linked RIPK2, K48-linked IκBα, MAVS, and NEDD4-mediated E-cadherin — positioning it as a broad regulator of protein fate. AD involves widespread disruption of the ubiquitin–proteasome system and autophagy, making this role mechanistically suggestive, though no direct AD substrates (APP, tau) have been tested.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neuronal Branching &amp; Circuit Integrity</h3>
+        <p>N4BP3 localises to axons and dendrites in developing hippocampal neurons; knockdown impairs axonal and dendritic branching. Xenopus studies confirm roles in cranial nerve and brain structure development. This raises the possibility of relevance to AD-related dendritic atrophy, synaptic loss, and circuit maintenance — but evidence is purely developmental, not degenerative.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>NF-κB / MAPK Inflammatory Amplifier</h3>
+        <p>In IBD and LPS-stimulated models, N4BP3 amplifies both the NOD2→RIPK2→MAPK arm and the TLR4→IκBα→NF-κB arm of inflammatory signaling, elevating TNF-α, IL-1β, IL-6, and IL-8. These exact mediators drive AD-associated neuroinflammation. N4BP3 knockdown reduces cytokine output in these models, hinting at a pro-inflammatory modulatory role relevant to CNS disease — pending validation in microglia or brain tissue.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Antiviral Innate Immune Regulator</h3>
+        <p>N4BP3 positively regulates MAVS/RIG-I signalling, promoting IFN-β production, ISRE activation, MAVS–TRAF2 interaction, and antiviral gene expression. Type I interferon responses and mitochondrial stress intersect with AD biology, but no direct link to neurodegeneration has been demonstrated. This function also constitutes a key safety concern for any inhibitory therapeutic strategy.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Indirect Vascular &amp; Epigenetic Links</h3>
+        <p>N4BP3 shows differential expression under hypoxic and endothelial stress conditions (high-altitude pulmonary edema study), and is associated with immune-related epigenetic loci in a nasal microbiome study. These findings relate broadly to inflammatory aging, vascular dysfunction, and hypoxia — all modifiers of AD risk and progression — but constitute circumstantial, not mechanistic, evidence.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety &amp; Therapeutic Caution</h3>
+        <p>Because N4BP3 supports neuronal branching/plasticity and antiviral MAVS/RIG-I defence, broad inhibition risks impairing neuronal structural maintenance and host antiviral immunity. Therapeutic approaches must be cell-type-specific and context-dependent. The current rationale for inhibition applies only if CNS studies confirm N4BP3 pathologically amplifies neuroinflammation in AD-relevant contexts.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat as hypothesis-generating, not validated.</strong> Current evidence supports mechanistic plausibility for N4BP3 in AD but offers no disease-specific validation. It should not yet be advanced as a confirmed AD target.</li>
+      <li><strong>Prioritise CNS cell-type testing.</strong> N4BP3's inflammatory roles must be re-evaluated specifically in microglia, astrocytes, neurons, and brain endothelial cells to determine whether TLR4/NOD2/RIPK2/MAPK/NF-κB modulation operates in the brain.</li>
+      <li><strong>Evaluate AD-relevant inflammatory outputs.</strong> Experimental studies should measure TNF-α, IL-1β, IL-6, type I interferon signaling, NF-κB and MAPK activation, and microglial inflammatory phenotypes in response to N4BP3 modulation in CNS-relevant models.</li>
+      <li><strong>Investigate AD-specific proteostasis pathways.</strong> Test whether N4BP3 influences amyloid-β handling, tau phosphorylation/aggregation, synaptic integrity, dendritic spine density, axonal degeneration, autophagy, or proteasome function.</li>
+      <li><strong>Mine human AD datasets.</strong> Assess N4BP3 expression across single-cell RNA-seq, spatial transcriptomics, proteomics, and epigenetic datasets stratified by disease stage, brain region, cell type, and inflammatory state.</li>
+      <li><strong>Use conditional and cell-type-specific models.</strong> Because N4BP3 supports neuronal branching and antiviral immunity, broad systemic inhibition carries unacceptable risk. Cell-type-specific genetic or pharmacological tools are essential.</li>
+      <li><strong>Consider inhibition only in confirmed pathological contexts.</strong> A therapeutic rationale for N4BP3 inhibition is justifiable only if CNS studies demonstrate that it pathologically amplifies neuroinflammation or damaging ubiquitination cascades in AD-relevant settings.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — N4BP3 in Alzheimer's Disease</span>
+      <p>
+        N4BP3 is a <strong>mechanistically plausible but entirely unvalidated candidate</strong> in Alzheimer's disease. Its documented roles in <strong>ubiquitin-linked inflammatory signaling</strong> (NF-κB, MAPK, NOD2, TLR4), <strong>neuronal process development</strong>, and <strong>innate antiviral immunity</strong> (MAVS/RIG-I/IFN-β) converge on pathways known to operate in AD biology — yet <strong>no direct evidence exists</strong> from AD brain tissue, AD models, amyloid-β, tau, or AD-specific ubiquitin substrates. The strongest published context for N4BP3 remains IBD and cancer, not neurodegeneration. A credible path forward requires <strong>dedicated CNS validation</strong> in microglia and neurons, human AD transcriptomic and proteomic mining, and cell-type-selective experimental tools — before N4BP3 can be responsibly advanced toward therapeutic development in this disease.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  N4BP3 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

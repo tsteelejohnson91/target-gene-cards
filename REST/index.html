@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REST/NRSF — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.94rem;
+  }
+
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 18px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent   { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3 { color: var(--danger); }
+  .card-warning  { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+  .card-positive { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-neutral  { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 0.94rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+
+  .verdict-banner p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.97rem;
+    margin-bottom: 0;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner b {
+    color: #e2e8f0;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HEADER ═══════════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: REST / NRSF &nbsp;|&nbsp; RE1-Silencing Transcription Factor</span>
+    <span class="chip chip-danger">⚠ Evidence Gap: No AD Link Established</span>
+  </div>
+  <h1>REST / NRSF &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════════ MAIN ════════════════════════════════════════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Critical Evidence Caveat</span>
+      The supplied source text provides <strong>no direct evidence</strong> connecting REST/NRSF to Alzheimer's disease mechanisms, pathology, or therapeutic targeting. Most occurrences of the word "rest" in the source refer to ordinary rest, resting-state imaging, rest-activity rhythms, or sleep trial acronyms — not the REST transcription factor.
+    </div>
+
+    <p>The RE1-Silencing Transcription Factor (REST), also known as the Neuron-Restrictive Silencer Factor (NRSF), is a well-characterized transcriptional repressor that binds RE1 consensus sequences in gene promoters, recruits repressive chromatin-remodeling complexes, and silences neuronal and neuroendocrine gene-expression programs. Across the source material, REST is described in vascular endothelium, CNS tumors (particularly glioblastoma), lung neuroendocrine carcinoma, neuroendocrine prostate cancer, and aging/hypoxia-related epigenetic contexts.</p>
+
+    <p>Critically, none of these references situate REST within Alzheimer's disease biology. The Alzheimer's- and dementia-relevant content in the text instead concerns other mechanisms — resistin as a circulating biomarker, moxibustion-mediated Aβ clearance, circadian light exposure, insomnia treatment in mild cognitive impairment, and cognitive screening — none of which implicate REST/NRSF.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~960 wide × 480 tall viewBox -->
+        <svg viewBox="0 0 960 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- ── Panel A: REST Core Biology ── -->
+          <!-- Panel background -->
+          <rect x="10" y="10" width="290" height="460" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="155" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.5">A · REST CORE BIOLOGY</text>
+
+          <!-- Node 1: REST/NRSF -->
+          <rect x="65" y="42" width="180" height="40" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="155" y="58" text-anchor="middle" fill="#fff" font-weight="700" font-size="11">REST / NRSF</text>
+          <text x="155" y="73" text-anchor="middle" fill="#c7dff5" font-size="9.5">Transcription Factor</text>
+
+          <!-- Arrow: REST → RE1 binding -->
+          <line x1="155" y1="82" x2="155" y2="110" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+          <!-- Node 2: RE1 Binding -->
+          <rect x="65" y="110" width="180" height="40" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="155" y="126" text-anchor="middle" fill="#1e3a5f" font-weight="700" font-size="11">RE1 Sequence Binding</text>
+          <text x="155" y="140" text-anchor="middle" fill="#2e6da4" font-size="9.5">Promoter recognition</text>
+
+          <!-- Arrow: RE1 → Epigenetic repression -->
+          <line x1="155" y1="150" x2="155" y2="178" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+          <!-- Node 3: Epigenetic Repression -->
+          <rect x="55" y="178" width="200" height="40" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="155" y="194" text-anchor="middle" fill="#1e3a5f" font-weight="700" font-size="11">Epigenetic Repression</text>
+          <text x="155" y="208" text-anchor="middle" fill="#2e6da4" font-size="9.5">HDAC, CoREST complexes</text>
+
+          <!-- Branch arrows from Epigenetic Repression → two sub-nodes -->
+          <line x1="110" y1="218" x2="88" y2="246" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+          <line x1="200" y1="218" x2="222" y2="246" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- Node 4a: Neuronal gene silencing -->
+          <rect x="22" y="246" width="130" height="40" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="87" y="262" text-anchor="middle" fill="#1e3a5f" font-weight="700" font-size="10">Neuronal Gene</text>
+          <text x="87" y="276" text-anchor="middle" fill="#2e6da4" font-size="9.5">Silencing</text>
+
+          <!-- Node 4b: Neuroendocrine gene silencing -->
+          <rect x="158" y="246" width="130" height="40" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="223" y="262" text-anchor="middle" fill="#1e3a5f" font-weight="700" font-size="10">Neuroendocrine</text>
+          <text x="223" y="276" text-anchor="middle" fill="#2e6da4" font-size="9.5">Gene Silencing</text>
+
+          <!-- Converge arrows → miRNA regulation -->
+          <line x1="87" y1="286" x2="105" y2="314" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+          <line x1="223" y1="286" x2="205" y2="314" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- Node 5: Gene expression control -->
+          <rect x="60" y="314" width="190" height="40" rx="7" fill="#1e3a5f" stroke="#0d1f35" stroke-width="1.2"/>
+          <text x="155" y="330" text-anchor="middle" fill="#fff" font-weight="700" font-size="10.5">Gene Expression</text>
+          <text x="155" y="345" text-anchor="middle" fill="#93c5fd" font-size="9.5">Context-dependent output</text>
+
+          <!-- Node 6: miRNA regulation badge -->
+          <rect x="18" y="396" width="130" height="36" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.1"/>
+          <text x="83" y="411" text-anchor="middle" fill="#b45309" font-weight="700" font-size="9.5">Regulated by</text>
+          <text x="83" y="425" text-anchor="middle" fill="#b45309" font-size="9.5">miR-375-3p</text>
+
+          <line x1="105" y1="354" x2="83" y2="396" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 7: Hypoxia / aging badge -->
+          <rect x="160" y="396" width="130" height="36" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.1"/>
+          <text x="225" y="411" text-anchor="middle" fill="#b45309" font-weight="700" font-size="9.5">Aging / Hypoxia</text>
+          <text x="225" y="425" text-anchor="middle" fill="#b45309" font-size="9.5">ARNT co-binding sites</text>
+
+          <line x1="205" y1="354" x2="225" y2="396" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+          <!-- ── Panel B: Non-AD Contexts ── -->
+          <rect x="316" y="10" width="290" height="290" rx="12" fill="#fef2f2" fill-opacity="0.5" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="461" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1.5">B · NON-AD DISEASE CONTEXTS</text>
+
+          <!-- Node 8: Glioblastoma -->
+          <rect x="328" y="42" width="130" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="393" y="58" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10.5">Glioblastoma</text>
+          <text x="393" y="73" text-anchor="middle" fill="#9b1c1c" font-size="9.5">Radioresistance</text>
+
+          <!-- Arrow down -->
+          <line x1="393" y1="82" x2="393" y2="108" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 9: PRLHR axis -->
+          <rect x="328" y="108" width="130" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="393" y="124" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">REST→PRLHR</text>
+          <text x="393" y="138" text-anchor="middle" fill="#9b1c1c" font-size="9.5">YBX1/DNA repair axis</text>
+
+          <!-- Arrow down -->
+          <line x1="393" y1="148" x2="393" y2="174" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 10: X5050 degrader -->
+          <rect x="328" y="174" width="130" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="393" y="190" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">X5050 Degrader</text>
+          <text x="393" y="205" text-anchor="middle" fill="#9b1c1c" font-size="9">↑ Radiotherapy efficacy</text>
+
+          <!-- Node 11: NE Prostate/Lung -->
+          <rect x="470" y="42" width="126" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="533" y="57" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">NE Prostate/</text>
+          <text x="533" y="72" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">Lung Carcinoma</text>
+
+          <!-- Arrow down -->
+          <line x1="533" y1="82" x2="533" y2="108" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 12: LRRC8D / CAV-1 -->
+          <rect x="468" y="108" width="128" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="532" y="124" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">LRRC8D / CAV-1</text>
+          <text x="532" y="138" text-anchor="middle" fill="#9b1c1c" font-size="9.5">STAT3 / Pt sensitivity</text>
+
+          <!-- Arrow down -->
+          <line x1="532" y1="148" x2="532" y2="174" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 13: Vascular endothelium -->
+          <rect x="468" y="174" width="128" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="532" y="190" text-anchor="middle" fill="#7f1d1d" font-weight="700" font-size="10">Vascular</text>
+          <text x="532" y="205" text-anchor="middle" fill="#9b1c1c" font-size="9.5">Atheroprotection</text>
+
+          <!-- ── Panel C: AD Evidence Gap ── -->
+          <rect x="316" y="316" width="290" height="164" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="461" y="336" text-anchor="middle" font-size="9" font-weight="700" fill="#134e4a" letter-spacing="1.5">C · ALZHEIMER'S EVIDENCE GAP</text>
+
+          <!-- Node 14: No AD mechanism -->
+          <rect x="328" y="346" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="393" y="363" text-anchor="middle" fill="#134e4a" font-weight="700" font-size="10">No AD Mechanism</text>
+          <text x="393" y="378" text-anchor="middle" fill="#0f766e" font-size="9">No Aβ/tau/synaptic link</text>
+
+          <!-- Node 15: No therapeutic evidence -->
+          <rect x="468" y="346" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="533" y="363" text-anchor="middle" fill="#134e4a" font-weight="700" font-size="10">No Therapeutic</text>
+          <text x="533" y="378" text-anchor="middle" fill="#0f766e" font-size="9">Evidence for AD</text>
+
+          <!-- Converge to hypothesis only -->
+          <line x1="393" y1="390" x2="393" y2="416" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+          <line x1="533" y1="390" x2="533" y2="416" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 16: Hypothesis only -->
+          <rect x="358" y="416" width="210" height="40" rx="7" fill="#0f766e" stroke="#134e4a" stroke-width="1.2"/>
+          <text x="463" y="432" text-anchor="middle" fill="#fff" font-weight="700" font-size="10.5">Hypothesis-Generating Only</text>
+          <text x="463" y="447" text-anchor="middle" fill="#99f6e4" font-size="9">Indirect rationale; not demonstrated</text>
+
+          <!-- ── Panel D: Other AD-relevant but non-REST ── -->
+          <rect x="622" y="10" width="330" height="460" rx="12" fill="#f8fafc" fill-opacity="0.7" stroke="#64748b" stroke-width="1.2"/>
+          <text x="787" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#334155" letter-spacing="1.5">D · AD-RELEVANT (NON-REST)</text>
+
+          <!-- These show parallel AD-relevant findings not linked to REST -->
+          <rect x="634" y="44" width="145" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="706" y="59" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">Resistin</text>
+          <text x="706" y="73" text-anchor="middle" fill="#64748b" font-size="9">Circulating biomarker</text>
+
+          <rect x="789" y="44" width="150" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="864" y="59" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">Circadian Light</text>
+          <text x="864" y="73" text-anchor="middle" fill="#64748b" font-size="9">Dementia risk factor</text>
+
+          <rect x="634" y="106" width="145" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="706" y="121" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">Moxibustion</text>
+          <text x="706" y="135" text-anchor="middle" fill="#64748b" font-size="9">Autophagy / Aβ1-42</text>
+
+          <rect x="789" y="106" width="150" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="864" y="121" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">CBT-I / Insomnia</text>
+          <text x="864" y="135" text-anchor="middle" fill="#64748b" font-size="9">MCI / mild dementia</text>
+
+          <rect x="634" y="168" width="145" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="706" y="183" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">CAA Management</text>
+          <text x="706" y="197" text-anchor="middle" fill="#64748b" font-size="9">Symptom control</text>
+
+          <rect x="789" y="168" width="150" height="38" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+          <text x="864" y="183" text-anchor="middle" fill="#334155" font-weight="700" font-size="10">Cognitive Screening</text>
+          <text x="864" y="197" text-anchor="middle" fill="#64748b" font-size="9">Impairment detection</text>
+
+          <!-- Divider label -->
+          <text x="787" y="246" text-anchor="middle" fill="#9b1c1c" font-size="9.5" font-style="italic" font-weight="700">⊘  None of the above implicate REST/NRSF</text>
+
+          <!-- "No Connection" barrier bar -->
+          <rect x="634" y="256" width="305" height="22" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.1"/>
+          <text x="786" y="272" text-anchor="middle" fill="#7f1d1d" font-size="9.5" font-weight="700">REST NOT CONNECTED TO AD FINDINGS</text>
+
+          <!-- Arrow definitions -->
+          <defs>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> REST/NRSF core biology — from RE1 binding and epigenetic repressor complex recruitment, branching into neuronal and neuroendocrine gene silencing, reconverging on context-dependent gene-expression output; dashed amber annotations indicate regulation by miR-375-3p (lung NE carcinoma) and aging/hypoxia ARNT co-binding sites, neither of which is connected to Alzheimer's disease in the source text. &nbsp;|&nbsp;
+        <strong>Panel B (red, centre-top):</strong> Non-AD disease contexts where REST has mechanistic evidence — glioblastoma radioresistance (REST→PRLHR→YBX1 repair axis, targeted by X5050 degrader) and neuroendocrine carcinoma/prostate cancer (LRRC8D/CAV-1/STAT3) and vascular atheroprotection. &nbsp;|&nbsp;
+        <strong>Panel C (teal, centre-bottom):</strong> The Alzheimer's evidence gap — no established AD mechanism and no therapeutic evidence converge on a "hypothesis-generating only" conclusion. &nbsp;|&nbsp;
+        <strong>Panel D (slate, right):</strong> AD-relevant findings from the source text (resistin, circadian light, moxibustion, CBT-I, CAA management, cognitive screening) that are explicitly <em>not</em> connected to REST/NRSF in any source document.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No AD-Specific REST Mechanism</h3>
+        <p>The source text reports no REST expression, localization, activation, or repression in Alzheimer's brains, Alzheimer's animal models, or neurons exposed to amyloid-β or tau. No pathway links REST to Aβ deposition, tau pathology, synaptic failure, neuroinflammation, or cognitive decline.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>REST as a Transcriptional Repressor</h3>
+        <p>REST is mechanistically characterized as a transcription factor that binds RE1 sequences, recruits CoREST and HDAC repressive complexes, and epigenetically silences neuronal and neuroendocrine gene-expression programs — established across several non-AD disease contexts in the text.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Glioblastoma: REST Targeting Validated</h3>
+        <p>In glioblastoma, REST represses PRLHR. Pharmacologic REST degradation by compound X5050 upregulated PRLHR, amplified radiation-induced DNA damage, and enhanced radiotherapy efficacy through a PRLHR–YBX1/DNA-repair axis. This therapeutic-target evidence is specific to CNS tumors, not Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Non-AD Neuroendocrine & Vascular Roles</h3>
+        <p>In lung neuroendocrine carcinoma, REST repression is linked to miR-375-3p and epigenetic silencing via promoter hypermethylation and histone deacetylation. In neuroendocrine prostate cancer, REST promotes LRRC8D transcription and influences CAV-1/STAT3 signaling. REST is also described as atheroprotective in vascular endothelium — none of these contexts extend to AD.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Aging/Hypoxia Epigenetics: Indirect Signal</h3>
+        <p>Age-differential DNA methylation in immune cells is enriched near ARNT and REST binding sites, placing REST adjacent to oxygen-sensitive, aging-related epigenetic regulation. However, the referenced study does not examine brain tissue, Alzheimer's pathology, cognition, or REST-targeted therapy.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>AD-Relevant Findings Are REST-Independent</h3>
+        <p>Alzheimer's- and dementia-relevant material in the source — resistin biomarker candidacy, moxibustion-mediated Aβ1-42 clearance via autophagy, circadian light exposure, CBT-I for insomnia in MCI, and cognitive screening — does not establish any REST/NRSF mechanism or targeting rationale.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <span><b>Disambiguate "rest" systematically.</b> Do not interpret ordinary "rest," "resting-state," "rest-activity rhythm," or "bed rest" references as REST/NRSF evidence. These terms are unrelated to the transcription factor unless explicitly defined as RE1-silencing transcription factor or neuron-restrictive silencer factor.</span>
+      </li>
+      <li>
+        <span><b>Treat REST as unvalidated for Alzheimer's disease</b> based on this text. The defensible extraction is that REST is not shown here to drive, protect against, modify, or therapeutically alter Alzheimer's disease.</span>
+      </li>
+      <li>
+        <span><b>Limit mechanistic claims to general REST biology</b> from non-AD contexts: REST regulates neuronal and neuroendocrine gene-expression programs through transcriptional repression and epigenetic mechanisms including histone deacetylation and DNA methylation.</span>
+      </li>
+      <li>
+        <span><b>Frame any Alzheimer's relevance as hypothesis-generating only.</b> Possible indirect rationales — REST's roles in neuronal gene regulation, epigenetic repression, vascular/endothelial biology, hypoxia-responsive aging biology, and cellular stress regulation — are not directly demonstrated in the supplied text.</span>
+      </li>
+      <li>
+        <span><b>Identify the evidence needed before elevating REST to an AD target.</b> Required data would include REST levels and localization in Alzheimer's brains, disease-stage associations, functional links to amyloid-β/tau/synaptic/neuroinflammatory markers, validation in Alzheimer's models, and outcomes from REST modulation in those models.</span>
+      </li>
+      <li>
+        <span><b>Separate AD-relevant non-REST findings from REST biology.</b> Resistin, circadian light exposure, CBT-I for insomnia, moxibustion-mediated autophagy, and cognitive screening may be relevant to Alzheimer's or dementia, but they do not establish REST/NRSF mechanisms or targeting.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment</span>
+      <p>
+        The supplied source text supports <b>REST/NRSF as a transcriptional and epigenetic regulator</b> in several non-Alzheimer's disease settings — including glioblastoma, lung neuroendocrine carcinoma, neuroendocrine prostate cancer, vascular endothelium, and aging/hypoxia-related immune epigenomics. It provides <b>no direct evidence that REST is an Alzheimer's disease mechanism, biomarker, or therapeutic target.</b> The Alzheimer's-relevant content in the text concerns entirely different biological actors and interventions. Any hypothesis placing REST in the Alzheimer's disease landscape must be recognized as <b>inferential and externally motivated</b> — not supported by the current evidence package. Substantial primary evidence, including REST characterization in human Alzheimer's brain tissue and functional validation in disease-relevant models, would be required before REST/NRSF could be considered a credible Alzheimer's therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  REST/NRSF · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OXR1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger-dark: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e2f 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,100,100,0.4);
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.0rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 14px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    border: 1.5px solid #fca5a5;
+    background: var(--danger-light);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--danger-dark);
+    margin-right: 6px;
+  }
+
+  .callout p {
+    margin: 0;
+    font-size: 0.93rem;
+    color: #7f1d1d;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 2px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger-dark);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.neutral {
+    border-left-color: #64748b;
+    background: #f1f5f9;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  .card.danger h3 { color: var(--danger-dark); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: #475569; }
+
+  .card p {
+    font-size: 0.88rem;
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+    background: var(--dark);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways li p {
+    margin: 0;
+    font-size: 0.93rem;
+  }
+
+  .takeaways .lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e2f 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 40px;
+  }
+
+  .verdict h2 {
+    color: #90c4f9;
+    border-color: rgba(144,196,249,0.4);
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.97rem;
+    margin: 0;
+  }
+
+  .verdict strong {
+    color: #fff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: OXR1 | Oxidation Resistance 1 / Orexin Receptor 1</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>OXR1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <p><span class="callout-label">⚠ Caution:</span> OXR1 is not a uniformly protective target. Global activation may worsen proteopathic aggregation, disrupt organelle pH homeostasis, and support survival of harmful senescent cells. Isoform, cell-type, and disease-stage context are critical before therapeutic translation.</p>
+    </div>
+
+    <p>OXR1 appears in the source material under two distinct meanings that must be kept separate: <strong>oxidation resistance 1</strong> — a conserved oxidative-stress and TLDc-domain protein — and <strong>orexin receptor 1 (OX1R)</strong>, a G-protein-coupled receptor involved in orexin/hypocretin signaling. For Alzheimer's disease (AD), oxidation resistance 1 is the stronger mechanistic candidate because it intersects with oxidative stress, mitochondrial dysfunction, lysosomal/endolysosomal failure, proteostasis, aging biology, neuronal survival, apoptosis, neuroinflammation, and protein aggregation.</p>
+
+    <p>The most direct AD-related evidence includes studies in which OXR1-linked pathways were protective in AD models or amyloid-associated neuronal injury. RTA408/omaveloxolone improved cognition in APP/PS1 mice, reduced amyloid-β plaque deposition, restored damaged hippocampal neurons, activated neuronal STAT3/OXR1 and NRF2/ARE antioxidant signaling, and suppressed microglial NFκB/IL6/STAT3 inflammatory signaling. Additionally, miR-668-3p was identified as a suppressor of OXR1 in Aβ1-42-induced neuronal injury, linking OXR1 loss to oxidative stress, p53-p21 activation, apoptosis, and cell-cycle arrest.</p>
+
+    <p>Overall, OXR1 is best viewed as a plausible but complex therapeutic target for AD mechanisms rather than a simple, uniformly protective factor. Evidence supports potential benefits from enhancing protective OXR1 functions, but findings warn that OXR1 activity may be isoform-, cell-type-, compartment-, and disease-context dependent.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- Arrow marker definitions -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Upstream Triggers ===== -->
+        <rect x="10" y="10" width="210" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="30" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#1a3a5c" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: Aβ1-42 / AD Stress -->
+        <rect x="30" y="42" width="170" height="40" rx="7" fill="#c7ddf5" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="58" text-anchor="middle" fill="#1a3a5c" font-weight="bold">Aβ1-42 / AD Stress</text>
+        <text x="115" y="73" text-anchor="middle" fill="#1a3a5c">&amp; Aging</text>
+
+        <!-- Node A2: miR-668-3p ↑ -->
+        <rect x="30" y="116" width="170" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="115" y="132" text-anchor="middle" fill="#7f1d1d" font-weight="bold">miR-668-3p ↑</text>
+        <text x="115" y="147" text-anchor="middle" fill="#7f1d1d">OXR1 suppressor</text>
+
+        <!-- Node A3: OXR1 ↓ (Loss) -->
+        <rect x="30" y="192" width="170" height="40" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+        <text x="115" y="208" text-anchor="middle" fill="#78350f" font-weight="bold">OXR1 ↓ (Loss)</text>
+        <text x="115" y="223" text-anchor="middle" fill="#78350f">Stress resilience fails</text>
+
+        <!-- Node A4: ROS / Oxidative Injury -->
+        <rect x="30" y="266" width="170" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="115" y="282" text-anchor="middle" fill="#7f1d1d" font-weight="bold">ROS / Oxidative</text>
+        <text x="115" y="297" text-anchor="middle" fill="#7f1d1d">Injury</text>
+
+        <!-- Node A5: p53-p21 → Apoptosis -->
+        <rect x="30" y="340" width="170" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="115" y="356" text-anchor="middle" fill="#7f1d1d" font-weight="bold">p53-p21 Activation</text>
+        <text x="115" y="371" text-anchor="middle" fill="#7f1d1d">Apoptosis / Arrest</text>
+
+        <!-- Node A6: Neuronal Death -->
+        <rect x="30" y="416" width="170" height="48" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="115" y="436" text-anchor="middle" fill="#fff" font-weight="bold">Neuronal Death /</text>
+        <text x="115" y="452" text-anchor="middle" fill="#fff">Cognitive Decline</text>
+
+        <!-- Panel A arrows -->
+        <line x1="115" y1="82" x2="115" y2="114" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="115" y1="156" x2="115" y2="190" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="115" y1="232" x2="115" y2="264" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="115" y1="306" x2="115" y2="338" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="115" y1="380" x2="115" y2="414" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- ===== PANEL B: OXR1 Activation Branches ===== -->
+        <rect x="235" y="10" width="430" height="480" rx="12" fill="#e8f6f4" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="450" y="30" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#065f46" letter-spacing="1">OXR1 ACTIVATION — DUAL BRANCH</text>
+
+        <!-- Shared top node: OXR1 Activation -->
+        <rect x="340" y="42" width="220" height="40" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="450" y="58" text-anchor="middle" fill="#065f46" font-weight="bold">OXR1 Activation</text>
+        <text x="115" y="73" text-anchor="middle" fill="#065f46"/>
+        <text x="450" y="73" text-anchor="middle" fill="#065f46">(NRF2/ARE + STAT3)</text>
+
+        <!-- Branch label left -->
+        <text x="316" y="115" text-anchor="middle" font-size="9" fill="#065f46" font-style="italic">Antioxidant / Mito</text>
+
+        <!-- Branch label right -->
+        <text x="584" y="115" text-anchor="middle" font-size="9" fill="#065f46" font-style="italic">Proteostasis / Lyso</text>
+
+        <!-- LEFT BRANCH -->
+        <!-- B-L1: Antioxidant Enzymes -->
+        <rect x="247" y="128" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="316" y="143" text-anchor="middle" fill="#065f46" font-weight="bold">Antioxidant</text>
+        <text x="316" y="157" text-anchor="middle" fill="#065f46">Enzyme Network</text>
+
+        <!-- B-L2: Mitochondrial Protection -->
+        <rect x="247" y="200" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="316" y="215" text-anchor="middle" fill="#065f46" font-weight="bold">Mitochondrial</text>
+        <text x="316" y="229" text-anchor="middle" fill="#065f46">Protection / ATP</text>
+
+        <!-- B-L3: Mitophagy / Quality -->
+        <rect x="247" y="272" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="316" y="287" text-anchor="middle" fill="#065f46" font-weight="bold">Mitophagy &amp;</text>
+        <text x="316" y="301" text-anchor="middle" fill="#065f46">Quality Control</text>
+
+        <!-- RIGHT BRANCH -->
+        <!-- B-R1: V-ATPase / Lysosome -->
+        <rect x="515" y="128" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="584" y="143" text-anchor="middle" fill="#065f46" font-weight="bold">V-ATPase / Lyso</text>
+        <text x="584" y="157" text-anchor="middle" fill="#065f46">pH Regulation</text>
+
+        <!-- B-R2: Retromer / Endo-lysosomal -->
+        <rect x="515" y="200" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="584" y="215" text-anchor="middle" fill="#065f46" font-weight="bold">Retromer &amp; Endo-</text>
+        <text x="584" y="229" text-anchor="middle" fill="#065f46">lysosomal Traffic</text>
+
+        <!-- B-R3: APP Processing / Aβ Clearance -->
+        <rect x="515" y="272" width="138" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="584" y="287" text-anchor="middle" fill="#065f46" font-weight="bold">APP Processing /</text>
+        <text x="584" y="301" text-anchor="middle" fill="#065f46">Aβ Clearance</text>
+
+        <!-- Shared convergence node: Neuroprotection -->
+        <rect x="340" y="350" width="220" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="450" y="366" text-anchor="middle" fill="#fff" font-weight="bold">Neuroprotection</text>
+        <text x="450" y="381" text-anchor="middle" fill="#ecfdf5">Proteostasis + Redox Balance</text>
+
+        <!-- Caveat node: Isoform Risk -->
+        <rect x="320" y="418" width="260" height="40" rx="7" fill="#fef9c3" stroke="#b45309" stroke-width="1.2"/>
+        <text x="450" y="434" text-anchor="middle" fill="#78350f" font-weight="bold">⚠ Isoform / Context Risk</text>
+        <text x="450" y="449" text-anchor="middle" fill="#78350f">Senescence, aggregation, pH disruption</text>
+
+        <!-- Branch split arrows from OXR1 Activation -->
+        <!-- to left branch -->
+        <path d="M380,82 L316,126" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- to right branch -->
+        <path d="M520,82 L584,126" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Left branch vertical arrows -->
+        <line x1="316" y1="166" x2="316" y2="198" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="316" y1="238" x2="316" y2="270" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Right branch vertical arrows -->
+        <line x1="584" y1="166" x2="584" y2="198" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="584" y1="238" x2="584" y2="270" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Converge left to Neuroprotection -->
+        <path d="M316,310 L316,370 L338,370" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Converge right to Neuroprotection -->
+        <path d="M584,310 L584,370 L562,370" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Neuroprotection to Caveat -->
+        <line x1="450" y1="390" x2="450" y2="416" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+        <!-- ===== PANEL C: Therapeutic Axis ===== -->
+        <rect x="680" y="10" width="230" height="480" rx="12" fill="#eef2ff" fill-opacity="0.55" stroke="#4338ca" stroke-width="1.2"/>
+        <text x="795" y="30" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#312e81" letter-spacing="1">THERAPEUTIC AXIS</text>
+
+        <!-- C1: RTA408 / Omaveloxolone -->
+        <rect x="696" y="42" width="198" height="40" rx="7" fill="#c7d2fe" stroke="#4338ca" stroke-width="1.2"/>
+        <text x="795" y="58" text-anchor="middle" fill="#312e81" font-weight="bold">RTA408 / Omavel-</text>
+        <text x="795" y="72" text-anchor="middle" fill="#312e81">oxolone (APP/PS1)</text>
+
+        <!-- C2: STAT3/OXR1 + NRF2/ARE -->
+        <rect x="696" y="116" width="198" height="40" rx="7" fill="#c7d2fe" stroke="#4338ca" stroke-width="1.2"/>
+        <text x="795" y="132" text-anchor="middle" fill="#312e81" font-weight="bold">Neuronal STAT3/OXR1</text>
+        <text x="795" y="147" text-anchor="middle" fill="#312e81">+ NRF2/ARE ↑</text>
+
+        <!-- C3: Suppress NFκB/IL6 -->
+        <rect x="696" y="192" width="198" height="40" rx="7" fill="#c7d2fe" stroke="#4338ca" stroke-width="1.2"/>
+        <text x="795" y="208" text-anchor="middle" fill="#312e81" font-weight="bold">Microglial NFκB/</text>
+        <text x="795" y="223" text-anchor="middle" fill="#312e81">IL6/STAT3 ↓</text>
+
+        <!-- C4: miR-668-3p Inhibition -->
+        <rect x="696" y="268" width="198" height="40" rx="7" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="795" y="284" text-anchor="middle" fill="#4c1d95" font-weight="bold">Inhibit miR-668-3p</text>
+        <text x="795" y="299" text-anchor="middle" fill="#4c1d95">Rescue OXR1 expression</text>
+
+        <!-- C5: Outcomes -->
+        <rect x="696" y="342" width="198" height="56" rx="7" fill="#4338ca" stroke="#312e81" stroke-width="1.2"/>
+        <text x="795" y="360" text-anchor="middle" fill="#fff" font-weight="bold">Improved Cognition</text>
+        <text x="795" y="376" text-anchor="middle" fill="#e0e7ff">↓ Aβ Plaques</text>
+        <text x="795" y="391" text-anchor="middle" fill="#e0e7ff">Rescued Hippocampal Neurons</text>
+
+        <!-- C6: Orexin Rx (separate) -->
+        <rect x="696" y="420" width="198" height="48" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="795" y="438" text-anchor="middle" fill="#334155" font-weight="bold">Orexin Rx (OX1R)</text>
+        <text x="795" y="453" text-anchor="middle" fill="#475569">Sleep / Circadian /</text>
+        <text x="795" y="466" text-anchor="middle" fill="#475569">Neuroinflammation</text>
+
+        <!-- Panel C arrows -->
+        <line x1="795" y1="82" x2="795" y2="114" stroke="#4338ca" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="795" y1="156" x2="795" y2="190" stroke="#4338ca" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="795" y1="232" x2="795" y2="266" stroke="#4338ca" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="795" y1="308" x2="795" y2="340" stroke="#4338ca" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Cross-panel: Panel A (OXR1 loss harm) feeds into Panel B (activation rescue) via gutter -->
+        <!-- From A3 OXR1 Loss to B's OXR1 Activation: arrow through gutter between panel A and B -->
+        <path d="M200,212 L223,212 L223,62 L338,62" stroke="#b45309" stroke-width="1.3" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+        <!-- Cross-panel: Panel B Neuroprotection to Panel C Outcomes via gutter -->
+        <path d="M562,370 L620,370 L620,368 L694,368" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue/red, left):</strong> The harm pathway — Aβ1-42 and aging upregulate miR-668-3p, which suppresses OXR1, amplifying ROS and activating p53-p21 apoptosis, ultimately driving neuronal death and cognitive decline. 
+      <strong>Panel B (teal, center):</strong> OXR1 activation fans out into two parallel protective branches — an antioxidant/mitochondrial arm (antioxidant enzyme networks → mitochondrial protection → mitophagy) and a proteostasis/lysosomal arm (V-ATPase/lysosomal pH → retromer/endolysosomal trafficking → APP processing and Aβ clearance) — both converging on neuroprotection; a dashed arrow to the caveat node flags isoform/context-dependent risks. 
+      <strong>Panel C (indigo, right):</strong> The therapeutic axis — RTA408/omaveloxolone activates neuronal STAT3/OXR1 and NRF2/ARE while suppressing microglial NFκB/IL6/STAT3; miR-668-3p inhibition rescues OXR1 expression; together these yield improved cognition, reduced Aβ plaques, and hippocampal rescue. The gray node (bottom) marks orexin receptor 1 as a conceptually separate therapeutic category.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Oxidative Stress — Core AD Mechanism</h3>
+        <p>OXR1 is repeatedly linked to resistance against ROS accumulation, lipid peroxidation, oxidative DNA damage, protein nitration, and apoptosis. Because oxidative injury is central to AD pathogenesis, OXR1 may materially influence neuronal vulnerability to amyloid- and aging-related stress.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>RTA408 — Clearest Preclinical AD Signal</h3>
+        <p>In APP/PS1 mice, omaveloxolone improved cognition, reduced Aβ plaques, rescued hippocampal neurons, activated neuronal STAT3/OXR1 and NRF2/ARE antioxidant pathways, and suppressed microglial NFκB/IL6/STAT3 inflammatory signaling — the most direct in-vivo AD-relevant evidence to date.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>miR-668-3p / OXR1 / p53-p21 Harm Axis</h3>
+        <p>Aβ1-42 increases miR-668-3p and decreases OXR1, promoting oxidative stress through p53-p21 signaling. Inhibition of miR-668-3p partially rescued neuronal injury, validating this axis as a candidate therapeutic pathway for early-stage AD neuronal protection.</p>
+      </div>
+
+      <div class="card">
+        <h3>Mitochondrial &amp; Bioenergetic Links</h3>
+        <p>OXR1 connects to mitochondrial morphology, ATP levels, membrane potential, mitochondrial DNA integrity, mitophagy, and glycolytic regulation. These overlaps directly engage AD mechanisms involving impaired bioenergetics, mitochondrial fragmentation, and ROS amplification at synapses.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Proteostasis — Complex, Not Simple</h3>
+        <p>While OXR1 can reduce TDP-43/FUS mislocalization relevant to AD co-pathology, OXR1 activation also increased phosphorylated α-synuclein aggregation in human neurons while decreasing ATP and altering mitochondrial membrane potential. OXR1 activation is not always neuroprotective under proteopathic stress.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Orexin Receptor 1 — A Separate Axis</h3>
+        <p>OX1R is a distinct GPCR relating to sleep-wake regulation, hippocampal memory circuits, stress responses, vascular cognitive impairment, and microglial NLRP3 inflammasome activity. Dual orexin receptor antagonists (lemborexant, suvorexant, daridorexant) address AD-associated sleep disturbances but must not be conflated with oxidation resistance 1 biology.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <p><span class="lead">Prioritize oxidation resistance 1 for mechanism studies.</span> Focus on oxidative stress, mitochondrial dysfunction, lysosomal/endolysosomal failure, retromer instability, neuroinflammation, and proteostasis as the primary AD-relevant mechanistic domains where OXR1 evidence is strongest.</p>
+      </li>
+      <li>
+        <p><span class="lead">Validate OXR1 expression and isoform balance in AD brain.</span> Determine whether expression, isoform ratio, TLDc-domain function, and post-translational regulation are altered in hippocampus, cortex, vulnerable interneurons, microglia-adjacent neuronal populations, and especially APOE-ε4 contexts.</p>
+      </li>
+      <li>
+        <p><span class="lead">Test OXR1 modulation directly in AD models.</span> Key endpoints should encompass Aβ burden, tau phosphorylation/aggregation, synaptic integrity, mitochondrial function, lysosomal pH, autophagic flux, neuroinflammation, neuronal survival, and cognition in amyloid-β, tau, and mixed proteinopathy models.</p>
+      </li>
+      <li>
+        <p><span class="lead">Target protective pathways specifically, not global OXR1 activity.</span> Promising precision approaches include activating neuronal STAT3/OXR1 and NRF2/ARE signaling, inhibiting miR-668-3p, stabilizing beneficial OXR1 isoforms, enhancing OXR1-retromer/endolysosomal support, and targeting downstream antioxidant or mitochondrial resilience programs.</p>
+      </li>
+      <li>
+        <p><span class="lead">Use caution with global OXR1 activation.</span> OXR1 may worsen aggregation or mitochondrial energetics under certain proteopathic conditions, disrupt organelle pH homeostasis through V-ATPase effects in a compartment-dependent manner, and support survival of senescent cells. Therapeutic development must define target cell type, isoform, disease stage, and downstream pathway before proceeding.</p>
+      </li>
+      <li>
+        <p><span class="lead">Treat orexin receptor 1 as a separate therapeutic category.</span> Its most plausible AD applications are sleep and circadian symptom management, modulation of stress and arousal circuits, and reduction of neuroinflammatory injury in vascular or hypoperfusion contexts. Monitor cognitive effects of chronic OX1R blockade carefully, as some studies suggest hippocampal OX1R signaling supports learning and memory.</p>
+      </li>
+      <li>
+        <p><span class="lead">The strongest hypothesis and its primary limitation.</span> Precision enhancement of neuronal oxidation resistance 1 pathways could reduce AD-relevant oxidative and mitochondrial injury while improving proteostasis and inflammatory balance. The strongest limitation remains that, despite some direct AD-model evidence, many OXR1 findings are indirect and require disease-specific validation before therapeutic translation.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>Overall Assessment —</strong> OXR1 (oxidation resistance 1) represents a <strong>biologically plausible but mechanistically complex</strong> therapeutic target for Alzheimer's disease. The strongest evidence positions it at the intersection of <strong>oxidative stress resilience, mitochondrial integrity, lysosomal/endolysosomal homeostasis, and proteostasis</strong> — all of which are fundamental to AD pathogenesis. Preclinical data from APP/PS1 models and Aβ1-42 neuronal injury studies provide a foundation for further investigation, particularly around the <strong>STAT3/OXR1/NRF2/ARE</strong> neuronal axis and the <strong>miR-668-3p/OXR1/p53-p21</strong> harm pathway. However, findings also warn that isoform differences, V-ATPase compartment effects, proteopathic context, and senescence biology can flip OXR1's role from protective to detrimental. <strong>Orexin receptor 1 (OX1R)</strong> is a conceptually distinct target most relevant to sleep-wake disturbances, hippocampal arousal circuits, and possibly vascular neuroinflammation, and should be pursued as a <strong>separate therapeutic category</strong>. Progress will require isoform-resolved, cell-type-specific, and disease-stage-stratified studies before any OXR1-based therapeutic strategy can be responsibly advanced.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  OXR1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

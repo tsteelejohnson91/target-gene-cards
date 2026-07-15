@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTN3 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2d6aad;
+    --light: #e8f1fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 50px;
+    padding: 4px 14px;
+    color: #e0eeff;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(220,38,38,0.22);
+    border-color: rgba(220,38,38,0.45);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.98rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .card-accent   { background: var(--light);         border-color: var(--mid);     }
+  .card-accent h3{ color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);  }
+  .card-danger h3{ color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-color: var(--positive);}
+  .card-positive h3{ color: var(--positive); }
+  .card-blue     { background: var(--blue-light);    border-color: var(--blue-mid);}
+  .card-blue h3  { color: var(--blue-mid); }
+  .card-slate    { background: var(--neutral-bg);    border-color: #64748b;        }
+  .card-slate h3 { color: #334155; }
+  .card-warning  { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3{ color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: take;
+    padding: 0;
+  }
+  ol.takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  ol.takeaways li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    color: #e0eeff;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #7dd3fc;
+    margin-bottom: 14px;
+  }
+  .verdict p { color: #e0eeff; margin: 0; }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 56px;
+    padding: 18px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: RTN3 &nbsp;|&nbsp; Reticulon-3</span>
+    <span class="chip chip-danger">⚠ RTN3 aggregation drives neuritic pathology</span>
+  </div>
+  <h1>RTN3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Context-Dependency Caveat:</strong> RTN3 is not a straightforward activation or inhibition target.
+      Excessive, aggregated, or mislocalized RTN3 drives dystrophic neuritic pathology, mitochondrial damage,
+      and tau hyperphosphorylation — meaning broad upregulation strategies carry substantial risk.
+    </div>
+
+    <p>
+      RTN3 is an Alzheimer's disease–relevant endoplasmic reticulum (ER) reticulon protein with a fundamentally
+      dual role. <strong>Functional, nonaggregated monomeric RTN3</strong> acts as a negative regulator of BACE1,
+      thereby suppressing amyloidogenic APP processing and Aβ generation. Conversely,
+      <strong>aggregated, oxidatively damaged, or mislocalized RTN3</strong> is tightly associated with
+      RTN3-immunoreactive dystrophic neurites, abnormal tubular ER clustering, mitochondrial damage, synaptic
+      dysfunction, tau hyperphosphorylation, lipid accumulation, and cognitive impairment.
+    </p>
+    <p>
+      The strongest AD-specific mechanisms are RTN3's interaction with BACE1, its enrichment in plaque-associated
+      dystrophic neurites, and its role in ER and tubular ER homeostasis. RTN3 aggregation reduces the available
+      monomeric pool needed for BACE1 inhibition and can itself drive neuritic pathology — creating a feed-forward
+      cycle that compounds amyloid and tau burden simultaneously.
+    </p>
+    <p>
+      As a therapeutic target, RTN3 is promising but requires precise modulation of protein state, localization,
+      isoforms, and interactions rather than blunt activation or inhibition.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+<!-- SVG DIAGRAM — 4 panels, 16 nodes total -->
+<svg viewBox="0 0 920 500" width="900" height="490" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial, Helvetica, sans-serif" font-size="11">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#2d6aad"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+    </marker>
+    <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+    </marker>
+    <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANEL A: Upstream regulators & RTN3 state              -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="10" y="10" width="218" height="478" rx="10"
+        fill="#e8f1fb" fill-opacity="0.55" stroke="#2d6aad" stroke-width="1.2"/>
+  <text x="119" y="28" text-anchor="middle" font-size="9" font-weight="700"
+        fill="#1e3a5f" letter-spacing="1">A · RTN3 STATE</text>
+
+  <!-- Node A1: BAP31 -->
+  <rect x="34" y="38" width="110" height="40" rx="6"
+        fill="#dbeafe" stroke="#2d6aad" stroke-width="1.3"/>
+  <text x="89" y="54" text-anchor="middle" font-weight="700" fill="#1e3a5f">BAP31</text>
+  <text x="89" y="68" text-anchor="middle" fill="#1e3a5f">Stabiliser</text>
+
+  <!-- Node A2: Oxidative Stress -->
+  <rect x="34" y="104" width="110" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="89" y="118" text-anchor="middle" font-weight="700" fill="#7f1d1d">Oxidative /</text>
+  <text x="89" y="132" text-anchor="middle" fill="#7f1d1d">Metabolic Stress</text>
+
+  <!-- Node A3: RTN3 Monomer (central) -->
+  <rect x="24" y="180" width="130" height="44" rx="7"
+        fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.5"/>
+  <text x="89" y="198" text-anchor="middle" font-weight="700" fill="#ffffff">RTN3 Monomer</text>
+  <text x="89" y="214" text-anchor="middle" fill="#bfdbfe">(functional)</text>
+
+  <!-- Node A4: RTN3 Aggregate -->
+  <rect x="24" y="260" width="130" height="44" rx="7"
+        fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.5"/>
+  <text x="89" y="278" text-anchor="middle" font-weight="700" fill="#ffffff">RTN3 Aggregate</text>
+  <text x="89" y="294" text-anchor="middle" fill="#fecaca">(HMW species)</text>
+
+  <!-- Node A5: ER-phagy -->
+  <rect x="24" y="338" width="130" height="40" rx="6"
+        fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="89" y="353" text-anchor="middle" font-weight="700" fill="#134e4a">ER-phagy /</text>
+  <text x="89" y="367" text-anchor="middle" fill="#134e4a">Reticulophagy</text>
+
+  <!-- A1→A3: BAP31 stabilises monomer -->
+  <line x1="89" y1="78" x2="89" y2="180" stroke="#2d6aad" stroke-width="1.5"
+        marker-end="url(#arr)"/>
+  <!-- A2→A4: stress → aggregates (elbow to avoid A3) -->
+  <polyline points="89,144 89,158 178,158 178,282 154,282"
+            fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <!-- A3→A4 -->
+  <line x1="89" y1="224" x2="89" y2="260" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)" stroke-dasharray="4,3"/>
+  <!-- A4→A5 autophagy label -->
+  <line x1="89" y1="304" x2="89" y2="338" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANEL B: BACE1 / Aβ Pathway                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="238" y="10" width="218" height="310" rx="10"
+        fill="#e8f1fb" fill-opacity="0.45" stroke="#2d6aad" stroke-width="1.2"/>
+  <text x="347" y="28" text-anchor="middle" font-size="9" font-weight="700"
+        fill="#1e3a5f" letter-spacing="1">B · BACE1 / Aβ</text>
+
+  <!-- Node B1: BACE1 -->
+  <rect x="262" y="38" width="110" height="40" rx="6"
+        fill="#dbeafe" stroke="#2d6aad" stroke-width="1.3"/>
+  <text x="317" y="54" text-anchor="middle" font-weight="700" fill="#1e3a5f">BACE1</text>
+  <text x="317" y="68" text-anchor="middle" fill="#1e3a5f">β-secretase</text>
+
+  <!-- Node B2: APP cleavage -->
+  <rect x="262" y="118" width="110" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="317" y="133" text-anchor="middle" font-weight="700" fill="#7f1d1d">APP β-cleavage</text>
+  <text x="317" y="147" text-anchor="middle" fill="#9b1c1c">↑ Aβ40/Aβ42</text>
+
+  <!-- Node B3: Amyloid Plaque -->
+  <rect x="262" y="198" width="110" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="317" y="213" text-anchor="middle" font-weight="700" fill="#7f1d1d">Amyloid Plaque</text>
+  <text x="317" y="227" text-anchor="middle" fill="#9b1c1c">neuritic type</text>
+
+  <!-- Node B4: Endosomal traffic -->
+  <rect x="262" y="268" width="110" height="40" rx="6"
+        fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+  <text x="317" y="283" text-anchor="middle" font-weight="700" fill="#78350f">Endosomal</text>
+  <text x="317" y="297" text-anchor="middle" fill="#92400e">Trafficking</text>
+
+  <!-- B1→B2 -->
+  <line x1="317" y1="78" x2="317" y2="118" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+  <!-- B2→B3 -->
+  <line x1="317" y1="158" x2="317" y2="198" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+  <!-- B4→B1 (endosomal affects BACE1 compartment) elbow -->
+  <polyline points="317,268 317,258 398,258 398,58 372,58"
+            fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3"
+            marker-end="url(#arr-amber)"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANEL C: Neuritic / ER Pathology (right-top)           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="466" y="10" width="218" height="310" rx="10"
+        fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+  <text x="575" y="28" text-anchor="middle" font-size="9" font-weight="700"
+        fill="#7f1d1d" letter-spacing="1">C · NEURITIC / ER PATHOLOGY</text>
+
+  <!-- Node C1: Dystrophic Neurites -->
+  <rect x="490" y="38" width="120" height="40" rx="6"
+        fill="#fecaca" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="550" y="53" text-anchor="middle" font-weight="700" fill="#7f1d1d">Dystrophic</text>
+  <text x="550" y="67" text-anchor="middle" fill="#7f1d1d">Neurites (RTN3+)</text>
+
+  <!-- Node C2: Tubular ER cluster -->
+  <rect x="490" y="118" width="120" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="550" y="133" text-anchor="middle" font-weight="700" fill="#7f1d1d">Tubular ER</text>
+  <text x="550" y="147" text-anchor="middle" fill="#9b1c1c">Clustering</text>
+
+  <!-- Node C3: Mito damage -->
+  <rect x="490" y="198" width="120" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="550" y="213" text-anchor="middle" font-weight="700" fill="#7f1d1d">Mitochondrial</text>
+  <text x="550" y="227" text-anchor="middle" fill="#9b1c1c">Damage / Fission</text>
+
+  <!-- Node C4: Synaptic Loss -->
+  <rect x="490" y="268" width="120" height="40" rx="6"
+        fill="#fef2f2" stroke="#b45309" stroke-width="1.3"/>
+  <text x="550" y="283" text-anchor="middle" font-weight="700" fill="#78350f">Synaptic Loss</text>
+  <text x="550" y="297" text-anchor="middle" fill="#92400e">↓ Spine density</text>
+
+  <!-- C1→C2 -->
+  <line x1="550" y1="78" x2="550" y2="118" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+  <!-- C2→C3 -->
+  <line x1="550" y1="158" x2="550" y2="198" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+  <!-- C3→C4 -->
+  <line x1="550" y1="238" x2="550" y2="268" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANEL D: Tau / Cognitive Outcomes (bottom full-width)   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="238" y="330" width="446" height="158" rx="10"
+        fill="#fffbeb" fill-opacity="0.60" stroke="#b45309" stroke-width="1.2"/>
+  <text x="461" y="348" text-anchor="middle" font-size="9" font-weight="700"
+        fill="#78350f" letter-spacing="1">D · TAU / COGNITIVE OUTCOMES</text>
+
+  <!-- Node D1: PP2A inhibition -->
+  <rect x="258" y="358" width="120" height="40" rx="6"
+        fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+  <text x="318" y="373" text-anchor="middle" font-weight="700" fill="#78350f">PP2A Suppression</text>
+  <text x="318" y="387" text-anchor="middle" fill="#92400e">(RTN3 recruits B-sub)</text>
+
+  <!-- Node D2: Tau hyperphosphorylation -->
+  <rect x="403" y="358" width="120" height="40" rx="6"
+        fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="463" y="373" text-anchor="middle" font-weight="700" fill="#7f1d1d">Tau Hyper-</text>
+  <text x="463" y="387" text-anchor="middle" fill="#9b1c1c">phosphorylation</text>
+
+  <!-- Node D3: Cognitive Impairment -->
+  <rect x="548" y="358" width="120" height="40" rx="6"
+        fill="#fecaca" stroke="#9b1c1c" stroke-width="1.3"/>
+  <text x="608" y="373" text-anchor="middle" font-weight="700" fill="#7f1d1d">Cognitive</text>
+  <text x="608" y="387" text-anchor="middle" fill="#9b1c1c">Impairment</text>
+
+  <!-- D1→D2→D3 -->
+  <line x1="378" y1="378" x2="403" y2="378" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+  <line x1="523" y1="378" x2="548" y2="378" stroke="#9b1c1c" stroke-width="1.5"
+        marker-end="url(#arr-red)"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PANEL E: Biomarker / Early Detection (far right)       -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="694" y="10" width="216" height="478" rx="10"
+        fill="#f0fdfa" fill-opacity="0.60" stroke="#0f766e" stroke-width="1.2"/>
+  <text x="802" y="28" text-anchor="middle" font-size="9" font-weight="700"
+        fill="#134e4a" letter-spacing="1">E · BIOMARKER / THERAPY</text>
+
+  <!-- Node E1: Retinal Müller glia -->
+  <rect x="716" y="38" width="172" height="40" rx="6"
+        fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="802" y="53" text-anchor="middle" font-weight="700" fill="#134e4a">Retinal RTN3↑</text>
+  <text x="802" y="67" text-anchor="middle" fill="#134e4a">Müller Glia (early)</text>
+
+  <!-- Node E2: ER stress / UPR -->
+  <rect x="716" y="108" width="172" height="40" rx="6"
+        fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="802" y="123" text-anchor="middle" font-weight="700" fill="#134e4a">ER Stress / UPR</text>
+  <text x="802" y="137" text-anchor="middle" fill="#0f766e">early signal</text>
+
+  <!-- Node E3: BAP31-RTN3-BACE1 axis -->
+  <rect x="716" y="178" width="172" height="44" rx="6"
+        fill="#dbeafe" stroke="#1e3a5f" stroke-width="1.3"/>
+  <text x="802" y="194" text-anchor="middle" font-weight="700" fill="#1e3a5f">BAP31–RTN3–</text>
+  <text x="802" y="210" text-anchor="middle" fill="#1e3a5f">BACE1 Axis</text>
+
+  <!-- Node E4: Therapeutic target -->
+  <rect x="716" y="252" width="172" height="40" rx="6"
+        fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="802" y="267" text-anchor="middle" font-weight="700" fill="#134e4a">Precision</text>
+  <text x="802" y="281" text-anchor="middle" fill="#134e4a">Modulation Target</text>
+
+  <!-- Node E5: Anti-aggregation -->
+  <rect x="716" y="322" width="172" height="40" rx="6"
+        fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="802" y="337" text-anchor="middle" font-weight="700" fill="#134e4a">Anti-Aggregation /</text>
+  <text x="802" y="351" text-anchor="middle" fill="#0f766e">Anti-Oxidation Strategy</text>
+
+  <!-- Node E6: Disease readout -->
+  <rect x="716" y="392" width="172" height="40" rx="6"
+        fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+  <text x="802" y="407" text-anchor="middle" font-weight="700" fill="#134e4a">RTN3+ Neurites</text>
+  <text x="802" y="421" text-anchor="middle" fill="#0f766e">Disease Readout</text>
+
+  <!-- E1→E2→E3→E4→E5→E6 -->
+  <line x1="802" y1="78"  x2="802" y2="108" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+  <line x1="802" y1="148" x2="802" y2="178" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+  <line x1="802" y1="222" x2="802" y2="252" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+  <line x1="802" y1="292" x2="802" y2="322" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+  <line x1="802" y1="362" x2="802" y2="392" stroke="#0f766e" stroke-width="1.5"
+        marker-end="url(#arr-teal)"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- CROSS-PANEL CONNECTORS                                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- A3 (monomer, right edge x=154, y=202) → B1 BACE1 (left edge x=262, y=58) -->
+  <!-- Route: elbow through gutter, monomer inhibits BACE1 -->
+  <polyline points="154,202 220,202 220,58 262,58"
+            fill="none" stroke="#2d6aad" stroke-width="1.8" stroke-dasharray="5,3"
+            marker-end="url(#arr)"/>
+  <!-- A4 aggregate (right edge x=154, y=282) → C1 dystrophic neurites (left edge x=490, y=58) -->
+  <!-- Elbow: go right along y=448 below all panels, then up -->
+  <polyline points="154,282 228,282 228,450 475,450 475,58 490,58"
+            fill="none" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="4,3"
+            marker-end="url(#arr-red)"/>
+  <!-- B3 plaque (bottom x=317,y=238) → D2 tau (top x=463,y=358) via gutter -->
+  <polyline points="317,238 317,320 463,320 463,358"
+            fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3"
+            marker-end="url(#arr-amber)"/>
+  <!-- C4 synaptic (bottom x=550,y=308) → D2 tau (top x=463,y=358) -->
+  <polyline points="550,308 550,340 463,340 463,358"
+            fill="none" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="4,3"
+            marker-end="url(#arr-red)"/>
+  <!-- D3 cognitive (right x=668,y=378) → E6 readout (left x=716,y=412) elbow -->
+  <polyline points="668,378 682,378 682,412 716,412"
+            fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3"
+            marker-end="url(#arr-teal)"/>
+
+  <!-- Inhibitory bar: RTN3 monomer -| BACE1 label -->
+  <text x="180" y="175" font-size="9" fill="#1e3a5f" font-style="italic">inhibits ⊣</text>
+</svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> shows RTN3 protein state: BAP31 stabilises the functional monomer,
+        while oxidative/metabolic stress promotes high-molecular-weight aggregates; excess aggregates
+        can engage ER-phagy. <strong>Panel B</strong> traces the BACE1/Aβ axis: functional RTN3 monomer
+        (dashed blue connector from Panel A) inhibits BACE1, limiting APP β-cleavage and amyloid plaque
+        formation; endosomal trafficking dysfunction feeds back to amplify BACE1 access to APP.
+        <strong>Panel C</strong> illustrates the neuritic/ER pathology branch: RTN3 aggregates (dashed red
+        from Panel A) seed RTN3-positive dystrophic neurites → tubular ER clustering → mitochondrial fission
+        and damage → synaptic and spine loss. <strong>Panel D</strong> (bottom, spanning B–C) captures tau
+        outcomes: synaptic dysfunction and amyloid converge on PP2A suppression → tau hyperphosphorylation
+        → cognitive impairment. <strong>Panel E</strong> highlights translational dimensions: early retinal
+        RTN3 elevation and ER-stress/UPR as biomarkers, the BAP31–RTN3–BACE1 axis as a therapeutic entry
+        point, and RTN3-positive dystrophic neurites as a disease readout.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card card-accent">
+        <h3>RTN3 Monomer Suppresses BACE1</h3>
+        <p>Functional monomeric RTN3 negatively regulates BACE1, limiting β-site cleavage of APP and Aβ40/Aβ42
+        secretion. RTN3 deficiency or loss of the monomeric pool increases BACE1 activity and amyloid deposition.
+        Overexpression of nonaggregated RTN3 can reduce plaque burden in model systems.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Aggregation Reverses the Protective Benefit</h3>
+        <p>RTN3 aggregation depletes the monomeric pool required for BACE1 inhibition and simultaneously drives
+        RTN3-immunoreactive dystrophic neurites containing clustered tubular ER and damaged mitochondria.
+        Pre-existing aggregates can therefore nullify or reverse the Aβ-lowering benefit of RTN3 overexpression.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Oxidative &amp; Metabolic Stress Fuel Pathology</h3>
+        <p>Oxidative stress, diabetes, and high glucose increase carbonylated and high-molecular-weight RTN3,
+        reduce functional monomers, promote neuritic dystrophy, and may weaken BACE1 inhibition — establishing
+        metabolic risk as a driver of RTN3-mediated pathology and a potential therapeutic window.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>RTN3–Tau Feed-Forward Cycle</h3>
+        <p>In socially isolated AD mice, elevated/aggregated RTN3 recruited PP2A B subunits, suppressed PP2A
+        activity, and promoted tau hyperphosphorylation — creating a feed-forward loop that couples RTN3-driven
+        synaptic dysfunction to progressive tau pathology and presynaptic mossy fiber bouton impairment.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>BAP31 as a Stabilising Partner</h3>
+        <p>BAP31 stabilises RTN3 protein. BAP31 deficiency reduces RTN3 monomers, increases aggregates, enhances
+        BACE1-mediated APP processing, and increases amyloid plaque burden in AD-model mice — placing the
+        BAP31–RTN3–BACE1 axis among the most actionable molecular targets.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Biomarker &amp; ER-Phagy Connections</h3>
+        <p>RTN3 participates in ER-phagy/tubular ER turnover, linking it to proteostasis, ER stress, and
+        autophagy defects. Early RTN3 elevation in retinal Müller glia of an APP knock-in mouse occurred
+        before overt amyloid pathology alongside ER-stress/UPR activation, suggesting potential early
+        diagnostic utility.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <span><strong>Precision modulation, not blunt targeting:</strong> RTN3 requires precise modulation of
+        protein state, localization, and isoforms. Broad activation or inhibition risks amplifying either
+        amyloid burden (loss of BACE1 inhibition) or neuritic pathology (RTN3 aggregation).</span>
+      </li>
+      <li>
+        <span><strong>Preserve monomeric RTN3:</strong> Therapeutic strategies should aim to restore or maintain
+        functional monomeric RTN3 while preventing high-molecular-weight aggregation — the two goals are
+        inseparable for efficacy.</span>
+      </li>
+      <li>
+        <span><strong>Target the BAP31–RTN3–BACE1 axis:</strong> Stabilising RTN3 via BAP31 or related chaperone
+        mechanisms is a strong candidate strategy to maintain BACE1 inhibition and reduce amyloidogenic APP
+        processing without globally elevating RTN3 levels.</span>
+      </li>
+      <li>
+        <span><strong>Intervene before neuritic pathology forms:</strong> Established RTN3-immunoreactive
+        dystrophic neurites are difficult to clear. Evidence favors preventing aggregation early, before
+        neuritic lesions are established, to preserve cognitive function.</span>
+      </li>
+      <li>
+        <span><strong>Anti-oxidative strategies in metabolic-risk patients:</strong> Evaluate anti-carbonylation
+        and anti-oxidative approaches — especially in patients with diabetes or high metabolic risk — to prevent
+        oxidative-damage–driven RTN3 aggregation and consequent loss of BACE1-inhibitory monomers.</span>
+      </li>
+      <li>
+        <span><strong>Block pathological RTN3 interactomes:</strong> Selectively disrupting aberrant RTN3 binding
+        partners (e.g., the PP2A B-subunit recruitment that suppresses phosphatase activity) offers a strategy
+        to rescue synaptic circuit dysfunction and reduce tau pathology without broadly altering RTN3 levels.</span>
+      </li>
+      <li>
+        <span><strong>Use RTN3-positive neurites as a therapeutic readout:</strong> RTN3-stained dystrophic neurites
+        identify chemically distinct, likely more neurotoxic neuritic plaques. They should be used as a marker
+        of plaque toxicity and therapeutic response beyond total amyloid burden measurements.</span>
+      </li>
+      <li>
+        <span><strong>Explore retinal RTN3 as an early biomarker:</strong> Müller glial RTN3 elevation and
+        associated ER-stress/UPR signals in retina preceded overt amyloid pathology in an APP knock-in model,
+        warranting investigation as a non-invasive early diagnostic biomarker strategy.</span>
+      </li>
+      <li>
+        <span><strong>Monitor a broad outcome panel in any RTN3-targeted trial:</strong> Any intervention should
+        track ER morphology, ER-phagy flux, endosomal trafficking, mitochondrial integrity, synaptic function,
+        Aβ production, tau phosphorylation, and cognitive outcomes to ensure beneficial RTN3 function is enhanced
+        without promoting pathological ER clustering or neuritic dystrophy.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — RTN3 in Alzheimer's Disease</div>
+      <p>
+        RTN3 occupies a <strong>context-critical node</strong> in Alzheimer's disease biology. Its functional
+        monomeric form is a genuine endogenous suppressor of BACE1-mediated amyloidogenesis, yet the same protein,
+        when aggregated or oxidatively damaged, becomes a <strong>driver of neuritic pathology, mitochondrial
+        dysfunction, tau hyperphosphorylation, and cognitive decline</strong>. This duality makes RTN3 neither a
+        simple activator target nor a straightforward inhibition target. The most compelling therapeutic angle is
+        <strong>precision maintenance of the functional monomeric state</strong> — achieved by stabilising
+        RTN3 through the BAP31 axis, preventing aggregation before neuritic lesions form, countering oxidative
+        and metabolic stressors that convert monomers to high-molecular-weight species, and selectively disrupting
+        pathological RTN3 interactomes. RTN3's connections to ER-phagy, endosomal trafficking, and early retinal
+        ER-stress signals further broaden its relevance as both a <strong>mechanistic hub and a potential
+        biomarker</strong>. Therapeutic programs targeting RTN3 should be designed with rigorous mechanistic
+        monitoring and strong patient stratification by metabolic risk, disease stage, and RTN3 aggregation
+        status.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  RTN3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

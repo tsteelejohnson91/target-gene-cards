@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNM1L / DRP1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0d6e6e;
+    --positive-light: #e6f7f7;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf5;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(180,60,60,0.22);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cfe0f5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 28px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #d97706;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    color: #78350f;
+    line-height: 1.65;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 18px;
+    font-size: 1rem;
+    color: var(--slate);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin: 8px 0 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.94rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue-mid);
+  }
+  .card-blue h3 { color: var(--blue-mid); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-neutral h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li span {
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    border-radius: 12px;
+    padding: 38px 40px;
+    color: #e2edf8;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #90b8de;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    color: #d6e8f7;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DNM1L &nbsp;|&nbsp; Dynamin-Related Protein 1 (DRP1)</span>
+    <span class="chip chip-danger">⚠ Inhibition Risk — Dose / Selectivity Caution</span>
+  </div>
+  <h1>DNM1L / DRP1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Therapeutic Caution</div>
+      <p>Both excessive DRP1 activation <em>and</em> insufficient DRP1 function are harmful. Pathogenic <em>DNM1L</em> loss-of-function variants cause severe neurological disease, epilepsy, optic atrophy, and cardiomyopathy in humans — arguing against broad chronic DNM1L suppression. The therapeutic goal is selective normalization of pathological hyperfission, not complete DRP1 blockade.</p>
+    </div>
+
+    <div class="overview-text">
+      <p><em>DNM1L</em> encodes dynamin-related protein 1 (DRP1/Drp1), the master GTPase that executes mitochondrial fission. In the context of Alzheimer's disease, DNM1L/DRP1 functions as a mitochondrial-dynamics hub that connects amyloid-β stress, mitochondrial fragmentation, oxidative injury, impaired ATP production, calcium dysregulation, defective mitophagy, neuroinflammation, synaptic dysfunction, neuronal loss, and cognitive impairment.</p>
+      <p>The strongest AD-specific evidence links Aβ exposure or AD mouse models to increased DRP1 activity — especially phosphorylated DRP1 at Ser616 — producing excessive mitochondrial fission, reduced fusion proteins (MFN1, MFN2, OPA1), membrane potential loss, ATP depletion, ROS accumulation, synaptic damage, and cognitive deficits. Interventions that reduce pathological DRP1 activation or rebalance fission/fusion (Mdivi-1, ginsenoside Rg1, Zuo Gui Wan, CCK-8L, miRNA-loaded extracellular vesicles, upstream pathway modulation) are associated with improved mitochondrial function, reduced oxidative stress, improved synaptic markers, and better cognitive outcomes in AD-relevant models.</p>
+      <p>DNM1L/DRP1 is therefore a plausible AD therapeutic target, with the defensible goal being selective normalization of pathological DRP1-mediated hyperfission while fully preserving physiological fission and mitophagy.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (counting nodes — max 16):
+          Panel A (Upstream Triggers): Aβ/AD Stress [1] → p-DRP1 Ser616 ↑ [2]
+          Panel B (DRP1 Hub): DRP1 Activated [3] branches to:
+            Branch 1: Mito Fragmentation [4] → ATP Depletion / ROS [5] → Synaptic Damage [6]
+            Branch 2: Cytochrome c Release [7] → Caspase Activation [8] → Neuronal Apoptosis [9]
+          Panel C (Neuroinflammation): mtDNA Leakage [10] → NF-κB / NLRP3 [11] → IL-1β / IL-18 [12]
+          Panel D (Therapeutic): Fission/Fusion Balance [13] → Improved Mito Function [14] → Cognitive Recovery [15]
+          Plus: p-DRP1 Ser637 ↑ (protective) [16]
+
+          Total = 16 nodes exactly. All within panels, arrows routed in gutters.
+        -->
+        <svg viewBox="0 0 920 500" width="880" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="DNM1L/DRP1 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0d6e6e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ Panel A: Upstream Triggers ═══ -->
+          <rect x="10" y="10" width="170" height="478" rx="10" ry="10"
+                fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="95" y="30" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.2" fill="#1a3a5c" text-transform="uppercase">UPSTREAM TRIGGERS</text>
+
+          <!-- Node 1: Aβ / AD Stress -->
+          <rect x="25" y="42" width="140" height="48" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="95" y="62" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Aβ / AD Stress</text>
+          <text x="95" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#cfe0f5">Tau, Aging, ROS</text>
+
+          <!-- Arrow 1→2 -->
+          <line x1="95" y1="90" x2="95" y2="118" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node 2: p-DRP1 Ser616 ↑ -->
+          <rect x="25" y="120" width="140" height="48" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="95" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">p-DRP1 Ser616 ↑</text>
+          <text x="95" y="156" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#cfe0f5">Pro-fission signal</text>
+
+          <!-- Arrow 2→3 (cross-panel, goes through gutter at x=180) -->
+          <path d="M165 144 L195 144" stroke="#2e6da4" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 16: p-DRP1 Ser637 ↑ (protective) -->
+          <rect x="25" y="208" width="140" height="48" rx="7" fill="#0d6e6e" stroke="#0d6e6e" stroke-width="1"/>
+          <text x="95" y="228" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">p-DRP1 Ser637 ↑</text>
+          <text x="95" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b2eeee">Protective / inhibitory</text>
+
+          <!-- ═══ Panel B: DRP1 Hub & Branches ═══ -->
+          <rect x="190" y="10" width="370" height="478" rx="10" ry="10"
+                fill="#fdf0f0" fill-opacity="0.45" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.2" fill="#8b1a1a">DRP1 HUB &amp; DOWNSTREAM DAMAGE</text>
+
+          <!-- Node 3: DRP1 Activated -->
+          <rect x="285" y="42" width="180" height="48" rx="7" fill="#8b1a1a" stroke="#6b1010" stroke-width="1"/>
+          <text x="375" y="62" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">DRP1 Activated</text>
+          <text x="375" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffc9c9">Mitochondrial recruitment</text>
+
+          <!-- Branch split arrows from Node 3 -->
+          <!-- Left branch arrow 3→4 -->
+          <path d="M375 90 L375 106 L265 106 L265 120" stroke="#8b1a1a" stroke-width="1.8" fill="none" marker-end="url(#arr-red)"/>
+          <!-- Right branch arrow 3→7 -->
+          <path d="M375 90 L375 106 L490 106 L490 120" stroke="#8b1a1a" stroke-width="1.8" fill="none" marker-end="url(#arr-red)"/>
+
+          <!-- Branch 1: Left -->
+          <!-- Node 4: Mito Fragmentation -->
+          <rect x="200" y="120" width="130" height="48" rx="7" fill="#c0392b" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="265" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Mito</text>
+          <text x="265" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Fragmentation</text>
+
+          <!-- Arrow 4→5 -->
+          <line x1="265" y1="168" x2="265" y2="198" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+          <!-- Node 5: ATP Depletion / ROS -->
+          <rect x="200" y="200" width="130" height="48" rx="7" fill="#e55039" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="265" y="220" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">ATP Depletion</text>
+          <text x="265" y="235" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffeaea">ROS Accumulation</text>
+
+          <!-- Arrow 5→6 -->
+          <line x1="265" y1="248" x2="265" y2="278" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+          <!-- Node 6: Synaptic Damage -->
+          <rect x="200" y="280" width="130" height="48" rx="7" fill="#922b21" stroke="#7b241c" stroke-width="1"/>
+          <text x="265" y="300" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Synaptic Damage</text>
+          <text x="265" y="316" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffc9c9">PSD95/SYN loss</text>
+
+          <!-- Branch 2: Right -->
+          <!-- Node 7: Cytochrome c Release -->
+          <rect x="425" y="120" width="125" height="48" rx="7" fill="#c0392b" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="488" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Cytochrome c</text>
+          <text x="488" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffeaea">Release</text>
+
+          <!-- Arrow 7→8 -->
+          <line x1="488" y1="168" x2="488" y2="198" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+          <!-- Node 8: Caspase Activation -->
+          <rect x="425" y="200" width="125" height="48" rx="7" fill="#e55039" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="488" y="220" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Caspase</text>
+          <text x="488" y="235" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffeaea">Activation</text>
+
+          <!-- Arrow 8→9 -->
+          <line x1="488" y1="248" x2="488" y2="278" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+          <!-- Node 9: Neuronal Apoptosis -->
+          <rect x="425" y="280" width="125" height="48" rx="7" fill="#922b21" stroke="#7b241c" stroke-width="1"/>
+          <text x="488" y="300" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Neuronal</text>
+          <text x="488" y="315" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffc9c9">Apoptosis</text>
+
+          <!-- Convergence arrows 6→shared outcome (Panel D node 15 via gutter) and 9→shared -->
+          <!-- These are routed to Panel D node 14 via gutter x=565 -->
+          <path d="M265 328 L265 390 L375 390" stroke="#8b1a1a" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+          <path d="M488 328 L488 390 L375 390" stroke="#8b1a1a" stroke-width="1.5" fill="none"/>
+          <!-- convergence label -->
+          <text x="375" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#8b1a1a" font-style="italic">↓ Cognitive Impairment (converge)</text>
+
+          <!-- ═══ Panel C: Neuroinflammation ═══ -->
+          <rect x="572" y="10" width="170" height="330" rx="10" ry="10"
+                fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="657" y="30" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.2" fill="#b45309">NEUROINFLAMMATION</text>
+
+          <!-- Arrow from Node 4 (Mito Fragmentation) to Node 10, routing through gutter -->
+          <path d="M265 144 L265 440 L553 440 L553 175 L580 175" stroke="#b45309" stroke-width="1.5" fill="none" marker-end="url(#arr-amber)" stroke-dasharray="5,3"/>
+
+          <!-- Node 10: mtDNA Leakage -->
+          <rect x="586" y="42" width="142" height="48" rx="7" fill="#d97706" stroke="#b45309" stroke-width="1"/>
+          <text x="657" y="62" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">mtDNA Leakage</text>
+          <text x="657" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fef3c7">cGAS-STING signaling</text>
+
+          <!-- Arrow 10→11 -->
+          <line x1="657" y1="90" x2="657" y2="120" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 11: NF-κB / NLRP3 -->
+          <rect x="586" y="122" width="142" height="48" rx="7" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+          <text x="657" y="142" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">NF-κB / NLRP3</text>
+          <text x="657" y="157" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fef3c7">Inflammasome</text>
+
+          <!-- Arrow 11→12 -->
+          <line x1="657" y1="170" x2="657" y2="200" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 12: IL-1β / IL-18 -->
+          <rect x="586" y="202" width="142" height="48" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+          <text x="657" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">IL-1β / IL-18</text>
+          <text x="657" y="237" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fef3c7">Microglial activation</text>
+
+          <!-- ═══ Panel D: Therapeutic Axis ═══ -->
+          <rect x="572" y="352" width="340" height="136" rx="10" ry="10"
+                fill="#e6f7f7" fill-opacity="0.7" stroke="#0d6e6e" stroke-width="1.2"/>
+          <text x="742" y="370" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.2" fill="#0d6e6e">THERAPEUTIC AXIS</text>
+
+          <!-- Node 13: Fission/Fusion Balance -->
+          <rect x="582" y="378" width="142" height="48" rx="7" fill="#0d6e6e" stroke="#095f5f" stroke-width="1"/>
+          <text x="653" y="398" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Fission/Fusion</text>
+          <text x="653" y="413" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b2eeee">Balance Restored</text>
+
+          <!-- Arrow 13→14 -->
+          <line x1="724" y1="402" x2="748" y2="402" stroke="#0d6e6e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 14: Improved Mito Function -->
+          <rect x="750" y="378" width="148" height="48" rx="7" fill="#0a5a5a" stroke="#0d6e6e" stroke-width="1"/>
+          <text x="824" y="398" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Improved Mito</text>
+          <text x="824" y="413" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b2eeee">Function + ATP ↑</text>
+
+          <!-- Node 15: Cognitive Recovery (below panel D, connected from Node 14) -->
+          <!-- Place Node 15 in the bottom of Panel D -->
+          <!-- Arrow 14→15 routed downward - but panel is only 136px tall, 378+48=426, panel ends at 488 -->
+          <!-- Node 15 fits at y=435 within panel -->
+          <rect x="682" y="435" width="148" height="42" rx="7" fill="#134e4a" stroke="#0d6e6e" stroke-width="1"/>
+          <text x="756" y="453" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">Cognitive Recovery</text>
+          <text x="756" y="468" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b2eeee">Synaptic markers ↑</text>
+
+          <!-- Arrow 14→15 elbow -->
+          <path d="M824 426 L824 430 L756 430 L756 435" stroke="#0d6e6e" stroke-width="1.8" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- Arrow from Node 13 (therapeutic) ← from upstream modulation label -->
+          <!-- small label: Mdivi-1 / Rg1 / upstream kinases -->
+          <text x="620" y="347" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#0d6e6e" font-style="italic">Mdivi-1 · Rg1 · AMPK · ROCK2 inhibition</text>
+          <line x1="620" y1="350" x2="620" y2="376" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-teal)" stroke-dasharray="3,3"/>
+
+          <!-- NODE COUNT VERIFICATION LABEL (hidden visually, just a comment):
+               1=Aβ/AD Stress, 2=p-DRP1 Ser616, 3=DRP1 Activated, 4=Mito Fragmentation,
+               5=ATP/ROS, 6=Synaptic Damage, 7=Cytochrome c, 8=Caspase, 9=Neuronal Apoptosis,
+               10=mtDNA Leakage, 11=NF-κB/NLRP3, 12=IL-1β/IL-18, 13=Fission/Fusion,
+               14=Improved Mito, 15=Cognitive Recovery, 16=p-DRP1 Ser637 = 16 total. ✓ -->
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers, blue):</strong> Aβ/AD stress drives p-DRP1 Ser616 phosphorylation (pro-fission); p-DRP1 Ser637 (green) represents the opposing protective/inhibitory phospho-state.
+        <strong>Panel B (DRP1 Hub &amp; Downstream Damage, red):</strong> Activated DRP1 branches into two parallel cascades — left: mitochondrial fragmentation → ATP depletion/ROS → synaptic damage; right: cytochrome c release → caspase activation → neuronal apoptosis — both cascades converging on cognitive impairment.
+        <strong>Panel C (Neuroinflammation, amber):</strong> Damaged mitochondria leak mtDNA, triggering cGAS-STING → NF-κB/NLRP3 inflammasome → IL-1β/IL-18 microglial activation.
+        <strong>Panel D (Therapeutic Axis, teal):</strong> Pharmacological or pathway modulation (Mdivi-1, ginsenoside Rg1, AMPK activation, ROCK2 inhibition) restores fission/fusion balance → improved mitochondrial function → cognitive recovery.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>DRP1 Hyperfission as a Core AD Mechanism</h3>
+        <p>Aβ exposure and AD-like models consistently show increased DRP1 expression, phosphorylation at Ser616, or mitochondrial recruitment, producing fragmentation, impaired respiration, reduced ATP, ROS generation, and neuronal stress. Excessive DRP1-mediated fission is a recurring, mechanistically central AD-relevant event.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Dual Phosphorylation Switch: Ser616 vs. Ser637</h3>
+        <p>p-DRP1 Ser616 repeatedly appears as the pro-fission injury signal in AD models — its increase is linked to hippocampal injury, hyperfission, ROS, and cognitive dysfunction. In contrast, Ser637 phosphorylation is generally inhibitory/protective; preserving or increasing it can restrain excessive fission and support mitochondrial integrity.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neuroinflammation: A Major DRP1-Linked Pathway</h3>
+        <p>DRP1-driven mitochondrial damage promotes NF-κB signaling, NLRP3 inflammasome activation, IL-1β/IL-18 release, mtDNA leakage, cGAS-STING-like innate immune signaling, and microglial/macrophage inflammatory activation — mechanisms that overlap strongly with AD neuroinflammatory biology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Human DNM1L Disorder Data Reinforce Safety Risk</h3>
+        <p>Pathogenic <em>DNM1L</em> variants cause severe neurological disease, epilepsy, developmental delay, optic atrophy, neuropathy, brain atrophy, cardiomyopathy, and mitochondrial structural abnormalities. This human genetic evidence argues directly against broad, chronic DNM1L suppression as an AD strategy.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitophagy: Context-Dependent Effects</h3>
+        <p>DRP1-mediated fission can beneficially segregate damaged mitochondria for mitophagy, but excessive or uncoupled fission worsens damage, disrupts mitophagy flux, amplifies ROS, and promotes inflammatory signaling. AD therapy must preserve beneficial mitochondrial quality control while reducing pathological fragmentation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Rich Upstream Regulatory Axes Enable Indirect Targeting</h3>
+        <p>DRP1 is modulated by multiple kinase/adaptor pathways including AMPK, ROCK2, Cdk5, GSK-3β, JNK, Ca²⁺/Calpain, SIRT1/PGC-1α, PINK1/Parkin, FIS1, MFF, and VDAC1. These upstream nodes offer therapeutic opportunities that may achieve selective normalization of pathological DRP1 activity with greater specificity than direct GTPase inhibition.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><span><strong>Prioritize DNM1L/DRP1 as a mitochondrial-dynamics target</strong> in AD models where Aβ, tau, aging, or neuroinflammation produce excessive mitochondrial fission, ROS, ATP failure, and synaptic dysfunction.</span></li>
+      <li><span><strong>Focus on restoring fission/fusion balance, not eliminating DRP1 activity.</strong> Therapeutic programs should normalize pathological DRP1 activation while preserving basal fission needed for mitochondrial transport, mitophagy, and neuronal/glial maintenance.</span></li>
+      <li><span><strong>Use a comprehensive pharmacodynamic readout panel:</strong> p-DRP1 Ser616, p-DRP1 Ser637, mitochondrial DRP1 localization, MFN1/MFN2/OPA1 levels, mitochondrial morphology, ATP, membrane potential, ROS, mitophagy flux, and synaptic markers.</span></li>
+      <li><span><strong>Explore upstream pathway modulation as an alternative to direct DRP1 inhibition.</strong> Promising approaches include AMPK activation, ROCK2 inhibition, Cdk5/GSK-3β pathway control, SIRT1/PGC-1α enhancement, antioxidant pathway activation, and modulation of DRP1 adaptors FIS1, MFF, and VDAC1.</span></li>
+      <li><span><strong>Evaluate cell-type specificity.</strong> DRP1 may exert distinct effects in neurons, astrocytes, microglia, and endothelial cells. AD-targeted therapies should distinguish harmful neuronal hyperfission from necessary glial or immune-cell mitochondrial quality-control functions.</span></li>
+      <li><span><strong>Avoid assuming lower DNM1L is always better.</strong> Excessive inhibition may cause hyperfused mitochondria, impaired transport, defective mitophagy, reduced respiratory competence, calcium dysregulation, and neurological toxicity — as demonstrated by human DNM1L variant disease.</span></li>
+      <li><span><strong>Advance AD-specific validation</strong> in amyloid and tau mouse models, aging systems, human iPSC-derived neuronal/glial co-cultures, organoids, and human AD brain tissue to bridge mechanistic plausibility to clinical translation.</span></li>
+      <li><span><strong>Consider combination strategies.</strong> DRP1 normalization may be most effective when paired with antioxidant support, mitochondrial biogenesis enhancement (OPA1/MFN pathways), mitophagy flux restoration, lysosomal support, or inflammasome suppression.</span></li>
+      <li><span><strong>Develop safer, more selective DRP1 modulators.</strong> Future AD therapeutics should emphasize brain penetration, dosing window, reversibility, phosphorylation-state selectivity, adaptor-interaction specificity, isoform awareness, and biomarkers confirming correction of pathological hyperfission without impairing essential quality control.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — DNM1L / DRP1 in Alzheimer's Disease</div>
+      <p>DNM1L/DRP1 is a <strong>mechanistically well-supported and plausible therapeutic target</strong> for Alzheimer's disease. The convergence of evidence from Aβ models, AD mouse studies, hippocampal neuronal systems, and multi-pathway analyses consistently positions <strong>pathological DRP1-driven mitochondrial hyperfission</strong> as a central amplifier of AD pathology — linking amyloid stress to oxidative injury, synaptic loss, neuroinflammation, and cognitive decline. Multiple intervention strategies demonstrate that <strong>selectively attenuating DRP1 hyperactivation — particularly Ser616 phosphorylation — while preserving Ser637-mediated inhibitory control</strong> can improve mitochondrial function, restore synaptic integrity, reduce neuroinflammation, and rescue behavior in AD-relevant models. However, the <strong>therapeutic window is meaningful and non-trivial</strong>: human DNM1L loss-of-function variants cause severe neurological disease, and complete DRP1 blockade impairs essential mitochondrial maintenance. The most defensible and translatable program is one that pursues <strong>selective normalization of pathological hyperfission</strong> through phosphorylation-state-selective agents, upstream kinase modulation, or adaptor-interface targeting — validated across cell types, combined with mitobiogenesis and mitophagy support, and guided by a rigorous pharmacodynamic biomarker strategy.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  DNM1L / DRP1 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

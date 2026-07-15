@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCN9A / NaV1.7 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e30 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+    color: var(--text);
+  }
+
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.91rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.94rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaway-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e30 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #93c5fd;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    font-size: 0.97rem;
+    color: #e2e8f0;
+    margin-bottom: 0;
+  }
+
+  .verdict-banner b {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SCN9A &nbsp;|&nbsp; Sodium Voltage-Gated Channel Alpha Subunit 9</span>
+    <span class="chip chip-danger">⚠ Safety: Loss of protective pain sensation; anosmia risk</span>
+  </div>
+  <h1>SCN9A / NaV1.7 &amp; Nociception — Alzheimer's Context</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Critical Caveat — AD Evidence Absent</span>
+      The supplied literature does <strong>not</strong> establish SCN9A as an Alzheimer's disease gene, risk locus, biomarker, or validated disease-modifying target. No direct SCN9A studies in AD brain tissue, AD animal models, or cognition-focused interventional studies are provided. Any Alzheimer's relevance is indirect and hypothesis-generating only.
+    </div>
+
+    <p>SCN9A encodes the voltage-gated sodium channel <strong>NaV1.7</strong>, which the supplied text repeatedly identifies as a major regulator of sensory-neuron excitability, nociception, neuropathic pain, inflammatory pain, itch, and inherited pain channelopathies. The evidence base is overwhelmingly centered on peripheral sensory neurons, dorsal root ganglia, trigeminal ganglia, small-fiber neuropathy, erythromelalgia, paroxysmal extreme pain disorder, congenital insensitivity to pain, diabetic neuropathy, chemotherapy-induced neuropathy, and analgesic drug development.</p>
+
+    <p>SCN9A's relevance to Alzheimer's disease is therefore indirect and hypothesis-generating. The plausible mechanistic overlap involves neuronal excitability, sodium/calcium homeostasis, neuroinflammatory signaling, oxidative or mitochondrial stress, cellular senescence, axonal transport and trafficking, olfactory or sensory dysfunction, autonomic symptoms, and pain comorbidity in dementia. These processes can intersect conceptually with AD biology, but the supplied literature does not demonstrate an Alzheimer's-specific causal role for SCN9A.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;font-family:Arial,Helvetica,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="10" y="10" width="260" height="480" rx="12" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="24" y="32" font-size="9" font-weight="700" text-anchor="start" fill="#2e6da4" letter-spacing="1.5">PANEL A · UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: Inflammatory Mediators -->
+        <rect x="30" y="44" width="220" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="61" font-size="10" text-anchor="middle" fill="#1a3a5c" font-weight="700">Inflammatory Mediators</text>
+        <text x="140" y="76" font-size="9" text-anchor="middle" fill="#1e293b">IL-1β · TNF-α · IL-6 · PGE2</text>
+
+        <!-- Arrow A1 -> A2 -->
+        <line x1="140" y1="86" x2="140" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: NF-κB / ERK / PKA -->
+        <rect x="30" y="108" width="220" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="126" font-size="10" text-anchor="middle" fill="#1a3a5c" font-weight="700">NF-κB / ERK / PKA / CREB</text>
+        <text x="140" y="140" font-size="9" text-anchor="middle" fill="#1e293b">BRD4 promoter acetylation</text>
+
+        <!-- Arrow A2 -> A3 -->
+        <line x1="140" y1="150" x2="140" y2="172" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: SCN9A / NaV1.7 Upregulation -->
+        <rect x="30" y="172" width="220" height="42" rx="7" fill="#1a3a5c" stroke="#0c1e30" stroke-width="1.4"/>
+        <text x="140" y="189" font-size="10" text-anchor="middle" fill="#fff" font-weight="700">SCN9A / NaV1.7</text>
+        <text x="140" y="203" font-size="9" text-anchor="middle" fill="#bfdbfe">Channel Upregulation</text>
+
+        <!-- Arrow A3 -> A4 GoF -->
+        <line x1="105" y1="214" x2="80" y2="240" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow A3 -> A5 LoF -->
+        <line x1="175" y1="214" x2="200" y2="240" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node A4: GoF Variants -->
+        <rect x="30" y="240" width="100" height="52" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="80" y="258" font-size="9" text-anchor="middle" fill="#1a3a5c" font-weight="700">GoF Variants</text>
+        <text x="80" y="272" font-size="8.5" text-anchor="middle" fill="#1e293b">Erythromelalgia</text>
+        <text x="80" y="284" font-size="8.5" text-anchor="middle" fill="#1e293b">PEPD · SFN</text>
+
+        <!-- Node A5: LoF Variants -->
+        <rect x="150" y="240" width="100" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="200" y="258" font-size="9" text-anchor="middle" fill="#9b1c1c" font-weight="700">LoF Variants</text>
+        <text x="200" y="272" font-size="8.5" text-anchor="middle" fill="#1e293b">CIP (insensitivity</text>
+        <text x="200" y="284" font-size="8.5" text-anchor="middle" fill="#1e293b">to pain) · Anosmia</text>
+
+        <!-- Arrows A4 & A5 to A6 -->
+        <line x1="80" y1="292" x2="80" y2="328" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="200" y1="292" x2="200" y2="328" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node A6: Bidirectional Pain Genetics -->
+        <rect x="30" y="328" width="220" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="346" font-size="10" text-anchor="middle" fill="#1a3a5c" font-weight="700">Bidirectional Pain Genetics</text>
+        <text x="140" y="360" font-size="9" text-anchor="middle" fill="#1e293b">Strong analgesic-target validation</text>
+
+        <!-- Panel B: Downstream Mechanisms -->
+        <rect x="290" y="10" width="320" height="480" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="306" y="32" font-size="9" font-weight="700" text-anchor="start" fill="#0f766e" letter-spacing="1.5">PANEL B · DOWNSTREAM MECHANISMS</text>
+
+        <!-- Node B1: Sensory Neuron Excitability -->
+        <rect x="310" y="44" width="280" height="42" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="450" y="61" font-size="10" text-anchor="middle" fill="#134e4a" font-weight="700">Sensory Neuron Excitability</text>
+        <text x="450" y="76" font-size="9" text-anchor="middle" fill="#1e293b">AP initiation · threshold amplification</text>
+
+        <!-- Arrow B1 -> branch -->
+        <line x1="390" y1="86" x2="370" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="510" y1="86" x2="530" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2a: Na+/Ca2+ Dysregulation -->
+        <rect x="310" y="112" width="125" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="372" y="131" font-size="9" text-anchor="middle" fill="#134e4a" font-weight="700">Na⁺/Ca²⁺ Dysregulation</text>
+        <text x="372" y="146" font-size="8.5" text-anchor="middle" fill="#1e293b">Oxidative stress</text>
+        <text x="372" y="158" font-size="8.5" text-anchor="middle" fill="#1e293b">Mitochondrial injury</text>
+
+        <!-- Node B2b: Spinal/Central Transmission -->
+        <rect x="455" y="112" width="125" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="517" y="131" font-size="9" text-anchor="middle" fill="#134e4a" font-weight="700">Spinal/Central Trans.</text>
+        <text x="517" y="146" font-size="8.5" text-anchor="middle" fill="#1e293b">Dorsal horn circuits</text>
+        <text x="517" y="158" font-size="8.5" text-anchor="middle" fill="#1e293b">Circuit synchrony</text>
+
+        <!-- Arrows B2a & B2b -> B3 -->
+        <line x1="372" y1="164" x2="390" y2="192" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="517" y1="164" x2="510" y2="192" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: Cellular Stress + Senescence -->
+        <rect x="310" y="192" width="280" height="52" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="450" y="212" font-size="10" text-anchor="middle" fill="#134e4a" font-weight="700">Cellular Stress &amp; Senescence</text>
+        <text x="450" y="228" font-size="8.5" text-anchor="middle" fill="#1e293b">NF-κB → SCN9A → depolarization → Ca²⁺ → Rb/E2F</text>
+        <text x="450" y="241" font-size="8.5" text-anchor="middle" fill="#1e293b">Mitotic gene repression · Neurite degeneration</text>
+
+        <!-- Arrow B3 -> B4 -->
+        <line x1="450" y1="244" x2="450" y2="266" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: AD-Adjacent Overlap (Hypothesis) -->
+        <rect x="310" y="266" width="280" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="450" y="285" font-size="10" text-anchor="middle" fill="#78350f" font-weight="700">AD-Adjacent Mechanistic Overlap</text>
+        <text x="450" y="301" font-size="8.5" text-anchor="middle" fill="#1e293b">Neuroinflammation · Excitability · Ca²⁺ homeostasis</text>
+        <text x="450" y="314" font-size="8.5" text-anchor="middle" fill="#1e293b">Olfactory/autonomic dysfunction · Senescence</text>
+
+        <!-- Warning badge for B4 -->
+        <rect x="390" y="330" width="120" height="18" rx="9" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+        <text x="450" y="343" font-size="8" text-anchor="middle" fill="#92400e" font-weight="700">⚠ Hypothesis Only</text>
+
+        <!-- Arrow B4 -> B5 -->
+        <line x1="450" y1="348" x2="450" y2="370" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node B5: Symptomatic AD Role -->
+        <rect x="310" y="370" width="280" height="42" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="450" y="388" font-size="10" text-anchor="middle" fill="#78350f" font-weight="700">Symptomatic Role in AD Patients</text>
+        <text x="450" y="402" font-size="9" text-anchor="middle" fill="#1e293b">Pain comorbidity · SFN · Altered sensory processing</text>
+
+        <!-- Panel C: Therapeutic Strategies -->
+        <rect x="630" y="10" width="300" height="480" rx="12" fill="rgba(59,130,246,0.06)" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="646" y="32" font-size="9" font-weight="700" text-anchor="start" fill="#1d4ed8" letter-spacing="1.5">PANEL C · THERAPEUTIC STRATEGIES</text>
+
+        <!-- Node C1: NaV1.7 Channel Target -->
+        <rect x="650" y="44" width="260" height="42" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="780" y="61" font-size="10" text-anchor="middle" fill="#1e3a8a" font-weight="700">NaV1.7 Channel — Drug Target</text>
+        <text x="780" y="76" font-size="9" text-anchor="middle" fill="#1e293b">State/use-dependent inhibition</text>
+
+        <!-- Arrow C1 -> C2a and C2b -->
+        <line x1="730" y1="86" x2="710" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="830" y1="86" x2="850" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node C2a: Small Molecules -->
+        <rect x="650" y="112" width="115" height="52" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="707" y="131" font-size="9" text-anchor="middle" fill="#1e3a8a" font-weight="700">Small Molecules</text>
+        <text x="707" y="146" font-size="8.5" text-anchor="middle" fill="#1e293b">Selective inhibitors</text>
+        <text x="707" y="158" font-size="8.5" text-anchor="middle" fill="#1e293b">Topical blockers</text>
+
+        <!-- Node C2b: Biologics / Gene -->
+        <rect x="795" y="112" width="115" height="52" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="852" y="131" font-size="9" text-anchor="middle" fill="#1e3a8a" font-weight="700">Gene/Biologic</text>
+        <text x="852" y="146" font-size="8.5" text-anchor="middle" fill="#1e293b">ASO · siRNA · AAV</text>
+        <text x="852" y="158" font-size="8.5" text-anchor="middle" fill="#1e293b">CRISPR · miRNA</text>
+
+        <!-- Arrows C2a & C2b -> C3 -->
+        <line x1="707" y1="164" x2="730" y2="192" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="852" y1="164" x2="830" y2="192" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node C3: Trafficking Regulators -->
+        <rect x="650" y="192" width="260" height="42" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="780" y="209" font-size="10" text-anchor="middle" fill="#1e3a8a" font-weight="700">Indirect Trafficking Regulation</text>
+        <text x="780" y="224" font-size="9" text-anchor="middle" fill="#1e293b">CRMP2 · NEDD4 · Numb · FGF13 · Eps15</text>
+
+        <!-- Arrow C3 -> C4 -->
+        <line x1="780" y1="234" x2="780" y2="256" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node C4: Pain Analgesia Outcome -->
+        <rect x="650" y="256" width="260" height="42" rx="7" fill="#166534" stroke="#166534" stroke-width="1.2"/>
+        <text x="780" y="273" font-size="10" text-anchor="middle" fill="#fff" font-weight="700">Analgesia / Pain Relief</text>
+        <text x="780" y="287" font-size="9" text-anchor="middle" fill="#bbf7d0">Validated therapeutic outcome</text>
+
+        <!-- Arrow C4 -> C5 -->
+        <line x1="780" y1="298" x2="780" y2="320" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C5: Safety Concerns -->
+        <rect x="650" y="320" width="260" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="780" y="339" font-size="10" text-anchor="middle" fill="#9b1c1c" font-weight="700">Safety Concerns</text>
+        <text x="780" y="354" font-size="8.5" text-anchor="middle" fill="#1e293b">Loss of protective pain · Anosmia</text>
+        <text x="780" y="366" font-size="8.5" text-anchor="middle" fill="#1e293b">Autonomic effects · NaV1.5 selectivity</text>
+
+        <!-- Cross-panel connector: Panel A -> Panel B (A3 -> B1) via gutter -->
+        <line x1="250" y1="193" x2="310" y2="65" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: Panel B -> Panel C (B1 -> C1) via gutter -->
+        <line x1="590" y1="65" x2="650" y2="65" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (blue):</strong> Upstream inflammatory signals (IL-1β, TNF-α, PGE2) activate NF-κB/ERK/PKA/CREB and BRD4 promoter acetylation, driving <em>SCN9A</em>/NaV1.7 upregulation. The pathway branches into gain-of-function (erythromelalgia, PEPD, SFN) and loss-of-function (CIP, anosmia) genetic sub-cascades, reconverging at bidirectional pain genetics — the core analgesic-target validation.
+        <strong>Panel B (teal):</strong> NaV1.7 governs sensory neuron excitability, branching into Na⁺/Ca²⁺ dysregulation (oxidative/mitochondrial stress) and spinal/central transmission, converging on a cellular stress/senescence node. An amber-flagged hypothesis-only node identifies AD-adjacent mechanistic overlap, downstream of which lies a symptomatic AD-patient role only.
+        <strong>Panel C (blue):</strong> Therapeutic strategies branch into small-molecule and gene/biologic approaches, converging through indirect trafficking regulators (CRMP2, NEDD4, Numb, FGF13, Eps15) to a validated analgesia outcome, with a red safety node highlighting loss of protective pain sensation, anosmia, autonomic effects, and NaV1.5 selectivity concerns.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Strong Pain Validation — Not AD Pathology</h3>
+        <p>Gain-of-function SCN9A variants cause inherited erythromelalgia, paroxysmal extreme pain disorder, and small-fiber neuropathy via sensory-neuron hyperexcitability. Loss-of-function variants cause congenital insensitivity to pain with anosmia. This bidirectional human genetic evidence firmly establishes SCN9A as an analgesic target, not an Alzheimer's disease mechanism.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Direct Alzheimer's Evidence Is Absent</h3>
+        <p>The supplied text contains no direct SCN9A studies in AD brain tissue, AD animal models, amyloid/tau systems, or cognition-focused interventional studies. Isolated AD-adjacent mentions — stress-related hippocampal transcriptomics, advanced glycation end-products, or comparison cohorts including AD patients — are insufficient to establish SCN9A as an AD mechanism.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuronal Excitability: The Conceptual Bridge</h3>
+        <p>NaV1.7 controls action-potential initiation, propagation, threshold amplification, and sensory-neuron firing. Some studies suggest influence on spinal dorsal horn circuits or sensory pathway synchrony. Because abnormal excitability and network dysfunction are relevant to AD, SCN9A <em>could</em> be explored in that context — but the text does not show involvement in hippocampal or cortical AD networks.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Inflammatory Signaling Regulates SCN9A in Pain Models</h3>
+        <p>NaV1.7 upregulation is linked to IL-1β, COX-2/PGE2/EP2/PKA/CREB, NF-κB/p65 promoter binding, ERK/MAPK, TNF-α, IL-6, BRD4-mediated promoter acetylation, and glial–neuronal crosstalk. These pathways overlap broadly with neuroinflammation in AD, but all evidence derives from peripheral or spinal pain models — not from Alzheimer's neuroinflammation studies.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Cellular Stress Mechanisms: AD-Relevant in Principle</h3>
+        <p>NaV1.7 gain-of-function links to sodium influx, calcium dysregulation, oxidative stress, reduced ATP, mitochondrial abnormalities, and neurite degeneration. One senescence pathway describes NF-κB–driven SCN9A expression → membrane depolarization → Ca²⁺ signaling → Rb/E2F activation → mitotic gene repression. These are AD-relevant domains in principle, but no AD-specific validation is provided.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety &amp; Selectivity Are Serious Concerns</h3>
+        <p>Complete NaV1.7 suppression can eliminate protective pain sensation and cause anosmia-like effects. NaV1.7 is also present in autonomic neurons and some central nociceptive structures, meaning systemic inhibition may affect autonomic, vascular, olfactory, or cardiovascular functions — particularly relevant for older or frail AD patients. Selectivity over cardiac NaV1.5 and CNS isoforms remains a major drug-development challenge.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><b>Do not classify SCN9A as a validated AD therapeutic target.</b> The evidence supports SCN9A/NaV1.7 as a pain and peripheral neuroexcitability target — not as a demonstrated AD disease-modifying mechanism. Any such classification would overreach the supplied literature.</div>
+      </li>
+      <li>
+        <div><b>Frame any Alzheimer's relevance as speculative and indirect.</b> Appropriate AD-adjacent hypotheses include roles in neuronal hyperexcitability, neuroinflammation-linked excitability, sodium/calcium dyshomeostasis, mitochondrial stress, senescence, olfactory dysfunction, autonomic symptoms, small-fiber neuropathy, or pain comorbidity in dementia.</div>
+      </li>
+      <li>
+        <div><b>Prioritize direct validation studies before pursuing SCN9A for AD.</b> Required work includes SCN9A/NaV1.7 expression analysis in AD and control brain tissue, single-cell or spatial transcriptomics in AD-relevant regions, testing in amyloid and tau animal models, evaluation of effects on synaptic function, neuroinflammation, and cognition, and longitudinal cohort analyses of SCN9A variants versus AD risk or progression.</div>
+      </li>
+      <li>
+        <div><b>Consider SCN9A primarily for AD comorbidity management.</b> NaV1.7-targeted drugs may be worth exploring for neuropathic pain, inflammatory pain, small-fiber neuropathy, altered sensory symptoms, or unrecognized pain-related behavioral symptoms in AD patients — especially as potential non-opioid analgesics.</div>
+      </li>
+      <li>
+        <div><b>Include safety endpoints in any AD-adjacent development plan.</b> Studies must monitor protective pain sensation, olfaction, autonomic function, vascular and cardiovascular effects, cognition, sedation, falls, frailty-related outcomes, and selectivity over other sodium-channel isoforms including cardiac NaV1.5.</div>
+      </li>
+      <li>
+        <div><b>Use mechanistic overlap to design experiments, not to make claims.</b> The most testable hypotheses are: whether AD-related inflammation or aging induces SCN9A in specific neurons or glial/vascular cells; whether NaV1.7 contributes to pathological hyperexcitability in AD-relevant circuits; and whether SCN9A modulation affects neuroinflammatory, calcium, mitochondrial, or senescence markers in AD models.</div>
+      </li>
+      <li>
+        <div><b>Maintain a clear therapeutic distinction.</b> SCN9A is strongly supported as a target for analgesia and sensory-neuron hyperexcitability. Its role in Alzheimer's disease modification remains entirely unproven and should not be conflated with its established pain biology.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — SCN9A / NaV1.7</span>
+      <p>
+        <b>SCN9A/NaV1.7 is one of the best-validated analgesic targets in human genetics,</b> with bidirectional gain- and loss-of-function variants producing well-characterized pain phenotypes in patients. However, <b>the supplied evidence does not support SCN9A as an Alzheimer's disease gene or disease-modifying target.</b> The mechanistic overlap with AD biology — through neuronal excitability, neuroinflammatory signaling, sodium/calcium homeostasis, mitochondrial stress, and cellular senescence — is conceptually plausible but entirely unvalidated in AD-specific systems. <b>The most defensible near-term role for SCN9A in an AD context is symptomatic management</b> of pain comorbidity, neuropathic pain, and altered sensory processing in patients who also have dementia. <b>Any claim beyond this requires direct experimental validation</b> in AD brain tissue, AD animal models, and human cohort studies that are not present in the supplied literature. Safety considerations — particularly loss of protective pain sensation, anosmia, autonomic effects, and cardiac sodium-channel selectivity — must be foregrounded in any development plan targeting an elderly or frail AD population.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>SCN9A / NaV1.7 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical decision-making</p>
+</footer>
+
+</body>
+</html>

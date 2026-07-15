@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDH1 — Alzheimer's Disease Metabolic & Redox Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-card: #1e3a8a;
+    --blue-card-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(185,28,28,0.28);
+    border: 1px solid rgba(248,113,113,0.45);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px 40px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW PROSE */
+  .prose p { margin-bottom: 16px; font-size: 1rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 0.845rem;
+    color: var(--neutral);
+    line-height: 1.6;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent  { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3  { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);   border-left: 4px solid var(--danger);   }
+  .card-danger h3  { color: var(--danger); }
+  .card-positive{ background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+  .card-blue    { background: var(--blue-card-light); border-left: 4px solid var(--blue-card); }
+  .card-blue h3 { color: var(--blue-card); }
+  .card-warning { background: var(--warning-light);  border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate   { background: var(--neutral-light);  border-left: 4px solid var(--neutral);  }
+  .card-slate h3{ color: var(--neutral); }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: takeaway; padding: 0; }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    margin-bottom: 0;
+  }
+  .verdict h2 {
+    color: #93c5fd;
+    border-bottom-color: rgba(147,197,253,0.4);
+    margin-bottom: 18px;
+  }
+  .verdict p { color: rgba(255,255,255,0.88); font-size: 1rem; line-height: 1.8; }
+  .verdict strong { color: #bfdbfe; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 48px;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MDH1 &nbsp;|&nbsp; Malate Dehydrogenase 1 (cytosolic)</span>
+    <span class="chip chip-danger">⚠ Directionality unresolved — context-dependent</span>
+  </div>
+  <h1>MDH1 &amp; Alzheimer's Disease<br>Metabolic &amp; Redox Biology</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Caution — Directionality &amp; Causality Unresolved:</strong> MDH1 abundance changes are compartment- and stage-dependent (elevated in CSF, decreased in plasma and peripheral blood). It is not a validated AD therapeutic target. All functional inferences derive from non-AD or bioinformatic models; AD-specific causal evidence is absent.
+    </div>
+    <div class="prose">
+      <p>MDH1 (cytosolic malate dehydrogenase 1) is an AD-relevant metabolic and redox-associated enzyme, appearing across CSF, plasma, transcriptomic, and network signatures of Alzheimer's disease. It is also implicated in aging and neurodegeneration-related metabolic studies involving the malate-aspartate shuttle (MAS), NAD⁺/NADH balance, mitochondrial-cytosolic coupling, oxidative stress, inflammatory cell-death signaling, and microglial activation.</p>
+      <p>The strongest AD-specific support positions MDH1 as a <em>biomarker or pathway node</em>. It is reported as upregulated in CSF in AD and amyloid-positive MCI, elevated as part of a microglial activity panel, linked to tau-associated CSF proteomic changes, and identified as a hub or feature gene in AD bioinformatic analyses. Conversely, plasma MDH1 is decreased in Aβ-PET-positive preclinical individuals, and peripheral blood/brain-expression datasets show downregulation.</p>
+      <p>Mechanistically, MDH1 catalyses malate/oxaloacetate interconversion and drives MAS flux to maintain cytosolic NAD⁺/NADH balance and transfer reducing equivalents between cellular compartments — functions that intersect with impaired glucose metabolism, mitochondrial dysfunction, oxidative stress, NAD dysregulation, neuronal energy failure, ferroptosis, and inflammatory cell death.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Overview Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left):  Upstream inputs → MDH1 core function → MAS flux
+        PANEL B (right): Two downstream branches — Redox/Neuroprotection & Biomarker/Disease Signatures
+        Total node count: 14 (strictly ≤16)
+        No boxes overlap; arrows route through empty gutters only.
+      -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 490" width="100%" style="display:block; max-width:900px; margin:0 auto;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-a" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A — Core Mechanism ═══ -->
+        <rect x="14" y="14" width="330" height="462" rx="14" fill="#e8f2fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="30" y="34" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" text-transform="uppercase" fill="#1a3a5c" letter-spacing="1.2">A — Core MDH1 Function &amp; MAS</text>
+
+        <!-- Node 1: Glucose Metabolism Impairment -->
+        <rect x="44" y="50" width="148" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="118" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Impaired Glucose</text>
+        <text x="118" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Metabolism (AD)</text>
+
+        <!-- Node 2: Mitochondrial Dysfunction -->
+        <rect x="204" y="50" width="122" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="265" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Mitochondrial</text>
+        <text x="265" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Dysfunction</text>
+
+        <!-- Arrow from Node 1 down to Node 3 -->
+        <line x1="118" y1="96" x2="118" y2="133" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow from Node 2 down to Node 3 -->
+        <line x1="265" y1="96" x2="265" y2="133" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: MDH1 (central) -->
+        <rect x="88" y="133" width="172" height="52" rx="9" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="174" y="155" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#ffffff">MDH1</text>
+        <text x="174" y="172" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#bfdbfe">Malate ⇌ Oxaloacetate</text>
+
+        <!-- Arrow MDH1 down to MAS -->
+        <line x1="174" y1="185" x2="174" y2="223" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: MAS Flux -->
+        <rect x="88" y="223" width="172" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="174" y="241" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Malate-Aspartate</text>
+        <text x="174" y="255" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Shuttle (MAS) Flux</text>
+
+        <!-- Arrow MAS down to NAD balance -->
+        <line x1="174" y1="269" x2="174" y2="307" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: NAD+/NADH Balance -->
+        <rect x="88" y="307" width="172" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="174" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Cytosolic NAD⁺/NADH</text>
+        <text x="174" y="339" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Balance &amp; Redox Transfer</text>
+
+        <!-- Arrow NAD down to ATP -->
+        <line x1="174" y1="353" x2="174" y2="391" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 6: Neuronal Energy -->
+        <rect x="88" y="391" width="172" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="174" y="409" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Neuronal ATP &amp;</text>
+        <text x="174" y="423" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1a3a5c">Bioenergetic Support</text>
+
+        <!-- ═══ PANEL B — Downstream Branches ═══ -->
+        <rect x="358" y="14" width="528" height="462" rx="14" fill="#f0fdf4" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="374" y="34" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" fill="#0a3d35" letter-spacing="1.2">B — Downstream Branches: Neuroprotection &amp; AD Signatures</text>
+
+        <!-- Sub-panel label: Left branch -->
+        <text x="400" y="58" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#0f766e" font-style="italic">Redox / Neuroprotection</text>
+        <!-- Sub-panel label: Right branch -->
+        <text x="625" y="58" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#9b1c1c" font-style="italic">AD Biomarker Signatures</text>
+
+        <!-- ── LEFT BRANCH (Redox/Neuroprotection) x≈395–535 ── -->
+
+        <!-- Node 7: HDAC6–MDH1 Acetylation -->
+        <rect x="370" y="70" width="156" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="448" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">HDAC6 Deacetylates</text>
+        <text x="448" y="103" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">MDH1 (Lys sites)</text>
+
+        <!-- Node 8: Acetylation-mimetic protection -->
+        <rect x="370" y="148" width="156" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="448" y="167" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">Acetyl-MDH1 →</text>
+        <text x="448" y="181" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">Oxidative Neuroprotection</text>
+
+        <!-- Arrow 7→8 -->
+        <line x1="448" y1="118" x2="448" y2="148" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node 9: Ferroptosis / GPX4 -->
+        <rect x="370" y="228" width="156" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="448" y="247" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">K298 Succinylation →</text>
+        <text x="448" y="261" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">GPX4 ↑, Ferroptosis ↓</text>
+
+        <!-- Arrow 8→9 -->
+        <line x1="448" y1="196" x2="448" y2="228" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node 10: Tat-MDH1 Neuroprotection -->
+        <rect x="370" y="308" width="156" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="448" y="327" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">Tat-MDH1 Reduces</text>
+        <text x="448" y="341" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0a3d35">ROS, LPO, Cell Death</text>
+
+        <!-- Arrow 9→10 -->
+        <line x1="448" y1="276" x2="448" y2="308" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- ── RIGHT BRANCH (AD Biomarker Signatures) x≈550–860 ── -->
+
+        <!-- Node 11: CSF Upregulation -->
+        <rect x="556" y="70" width="152" height="48" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="632" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">CSF MDH1 ↑</text>
+        <text x="632" y="103" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">AD &amp; Amyloid+ MCI</text>
+
+        <!-- Node 12: Plasma Decrease -->
+        <rect x="724" y="70" width="148" height="48" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="798" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">Plasma MDH1 ↓</text>
+        <text x="798" y="103" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">Aβ-PET+ Preclinical</text>
+
+        <!-- Node 13: Microglial Panel -->
+        <rect x="556" y="160" width="152" height="48" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="632" y="179" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">Microglial Panel</text>
+        <text x="632" y="193" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d">FABP3/MDH1/GPNMB</text>
+
+        <!-- Arrow 11→13 -->
+        <line x1="632" y1="118" x2="632" y2="160" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Arrow 12→13: route right elbow → down → left to node13 right edge -->
+        <!-- from 798,118 → down to y=184 → left to 708,184 -->
+        <polyline points="798,118 798,184 708,184" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 14: Tau + Pyroptosis Hub -->
+        <rect x="556" y="258" width="316" height="48" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="714" y="277" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">Tau-Associated Proteomics</text>
+        <text x="714" y="291" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#78350f">&amp; Pyroptosis / PANoptosis Signatures</text>
+
+        <!-- Arrow 13→14 -->
+        <line x1="632" y1="208" x2="632" y2="258" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-a)"/>
+
+        <!-- Converging outcome node shared by both branches -->
+        <!-- Node 15: AD Metabolic Remodeling (bottom, shared) -->
+        <rect x="370" y="408" width="502" height="48" rx="9" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="621" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#ffffff">AD Metabolic Remodeling &amp; Bioenergetic Dysregulation</text>
+        <text x="621" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#bfdbfe">Candidate Biomarker / Pathway Readout — Causality Unproven</text>
+
+        <!-- Arrow left-branch Node10 → Node15 -->
+        <line x1="448" y1="356" x2="448" y2="408" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Arrow right-branch Node14 → Node15 -->
+        <line x1="714" y1="306" x2="714" y2="408" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel arrow from Panel A Node6 to Panel B Node15 -->
+        <!-- Node6 right edge: x=260, y=414; Node15 left edge: x=370, y=432 -->
+        <line x1="260" y1="414" x2="370" y2="432" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Core MDH1 Function &amp; MAS:</strong> AD-associated impaired glucose metabolism and mitochondrial dysfunction converge on MDH1, which drives malate-aspartate shuttle flux, cytosolic NAD⁺/NADH balance, and ultimately neuronal bioenergetic support. &nbsp;|&nbsp;
+      <strong>Panel B, left branch — Redox &amp; Neuroprotection:</strong> HDAC6 deacetylates MDH1; acetylation-mimetic MDH1 confers oxidative neuroprotection; K298 succinylation stabilises MDH1 and suppresses ferroptosis via GPX4; Tat-MDH1 fusion reduces ROS, lipid peroxidation, and neuronal death. &nbsp;|&nbsp;
+      <strong>Panel B, right branch — AD Biomarker Signatures:</strong> CSF MDH1 is elevated in AD and amyloid-positive MCI (microglial panel: FABP3/MDH1/GPNMB); plasma MDH1 is decreased in preclinical Aβ-PET-positive individuals; both converge onto tau-associated proteomics and pyroptosis/PANoptosis gene signatures. &nbsp;|&nbsp;
+      Both downstream branches converge on the shared outcome node: AD metabolic remodeling and bioenergetic dysregulation, positioning MDH1 as a candidate pathway-readout biomarker rather than a causal therapeutic target.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>🔬 AD Metabolic Biomarker Candidate</h3>
+        <p>MDH1 is most consistently supported as an AD-associated metabolic biomarker, especially in CSF. It appears alongside glycolytic/metabolic proteins (ALDOA, LDHA, PGAM1, GOT1, FABP3) in AD and amyloid-positive MCI signatures, suggesting it reflects broad metabolic remodeling rather than a disease-specific molecular event.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠ Compartment &amp; Directionality Unresolved</h3>
+        <p>MDH1 is elevated in CSF (AD, amyloid+ MCI), decreased in plasma (Aβ-PET+ preclinical), and downregulated in peripheral blood and brain-expression datasets. These opposing signals may reflect distinct cell sources, disease stages, injury-release effects, or immune activation — and critically complicate any therapeutic interpretation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>🛡 Neuroprotective Mechanistic Evidence</h3>
+        <p>Outside AD, Tat-MDH1 reduced H₂O₂-induced hippocampal neuronal death, DNA fragmentation, ROS, ischemic injury, lipid peroxidation, and glutathione redox disruption. HDAC6–MDH1 acetylation signaling protected neurons from oxidative damage. These findings establish MDH1 as a metabolic resilience factor, though direct AD testing is absent.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>🔗 Early-Stage &amp; Tau-Related Biology</h3>
+        <p>CSF upregulation in amyloid-positive MCI and plasma decrease in cognitively normal Aβ-PET-positive individuals suggest MDH1 changes precede dementia onset. MDH1 also appears among metabolic enzymes associated with tau pathology in proteomic datasets, implicating it in downstream metabolic consequences of tau-driven neurodegeneration.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>🔥 Ferroptosis, Pyroptosis &amp; Inflammatory Death</h3>
+        <p>K298 succinylation of MDH1 stabilises the enzyme, preserves GPX4 activity, and suppresses ferroptosis in cardiac injury. Bioinformatic AD analyses identify MDH1 among pyroptosis-related feature genes; non-AD studies link its regulation to NETosis, cGAS-STING, PANoptosis, and GSDMD pathways — all relevant to AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>📊 Therapeutic Direction Uncertain</h3>
+        <p>In neuronal injury contexts, preserving or enhancing MDH1 function appears protective; in cancer or inflammatory proliferative settings, MDH1 activity may support pathological survival. The optimal therapeutic direction in AD — whether to enhance, restore, or modulate MDH1 — requires cell-type- and disease-stage-specific experimentation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat MDH1 as a candidate metabolic biomarker and pathway-readout,</strong> not as a validated standalone diagnostic marker or therapeutic target. Causal evidence in AD is absent.</li>
+      <li><strong>Prioritise MDH1 in multi-analyte panels</strong> capturing glycolysis, MAS activity, microglial activation, and tau-associated metabolic injury — especially in early amyloid-positive MCI where its discriminatory value appears strongest.</li>
+      <li><strong>Validate MDH1 across compartments and stages:</strong> CSF, plasma, brain tissue, peripheral blood cells, preclinical Aβ-positive individuals, amyloid-positive MCI, symptomatic AD, and non-AD dementias (DLB, FTD).</li>
+      <li><strong>Determine cell sources of MDH1 changes in AD</strong> — neurons, astrocytes, microglia, endothelial cells, infiltrating immune cells, blood cells, liver, and muscle may each contribute differently to observed compartmental signals.</li>
+      <li><strong>Measure enzymatic activity and post-translational state,</strong> not only abundance. Acetylation, succinylation, O-GlcNAcylation, oxidation, and S-glutathionylation all modify MDH1 function, stability, and stress-response capacity.</li>
+      <li><strong>Test whether MDH1 modulation affects AD-relevant phenotypes:</strong> amyloid burden, tau phosphorylation, synaptic function, neuronal survival, cognition, microglial activation, inflammasome markers, ROS, lipid peroxidation, GPX4, NAD⁺/NADH, and ATP.</li>
+      <li><strong>Investigate strategies that normalise MDH1-linked pathways</strong> rather than simply inhibit MDH1 — supporting MAS function, restoring NAD⁺/NADH balance, preserving antioxidant capacity, limiting ferroptosis, and modulating HDAC6–MDH1 or CPT1A–MDH1 axes.</li>
+      <li><strong>Avoid assuming a universal direction.</strong> Increased CSF MDH1 may reflect microglial activation or metabolic compensation; decreased plasma/peripheral MDH1 may reflect systemic metabolic impairment. Therapeutic decisions require context-specific evidence.</li>
+      <li><strong>Prioritise the HDAC6–MDH1 acetylation hypothesis</strong> — neuronal injury data indicate MDH1-dependent neuroprotection, but this mechanism must be tested directly in AD cellular and animal models before therapeutic conclusions can be drawn.</li>
+      <li><strong>Consider MDH1/MAS status as a stratification marker</strong> for metabolic interventions: NAD-supporting, mitochondrial-supporting, antioxidant, ketogenic, pyruvate/OAA-related, or redox-modulating approaches in clinical trials.</li>
+      <li><strong>The critical evidence gap is causality.</strong> MDH1 should advance as a serious AD therapeutic target only if studies demonstrate that changing its activity, expression, stability, localisation, or post-translational state improves AD-relevant molecular, cellular, animal, or clinical outcomes.</li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL VERDICT ── -->
+  <section class="verdict">
+    <h2>Overall Assessment</h2>
+    <p>
+      <strong>Overall Assessment —</strong> MDH1 is a <strong>biologically plausible, mechanistically connected, but causally unvalidated</strong> actor in Alzheimer's disease. Its strongest empirical footing is as a <strong>metabolic biomarker candidate</strong>, appearing reproducibly in CSF, plasma, and network signatures of AD and prodromal MCI, often in conjunction with glycolytic and microglial-activation protein panels. Its mechanistic relevance is well-founded: control of <strong>malate-aspartate shuttle flux, cytosolic NAD⁺/NADH homeostasis, and mitochondrial-cytosolic redox transfer</strong> places MDH1 at the intersection of virtually every major AD bioenergetic deficit. Complementary neuroprotective findings — <strong>Tat-MDH1 ischemic protection, HDAC6-acetylation-dependent oxidative resilience, K298-succinylation-dependent ferroptosis suppression</strong> — strengthen biological plausibility, though none of these experiments were conducted in an AD context. The principal liabilities are the <strong>unresolved directional discordance</strong> between compartments, the absence of AD-specific functional or causal data, and the dual-edged nature of MDH1 in proliferative versus degenerative settings. The path to realising MDH1's translational potential runs through rigorous compartment-resolved biomarker validation, cell-type attribution, post-translational profiling, and — most critically — <strong>direct experimental tests of MDH1 modulation in AD models</strong>.
+    </p>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  MDH1 / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;&middot;&nbsp; For research use only &nbsp;&middot;&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARDBP / TDP-43 — Alzheimer's Disease Co-Pathology Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6d4fc2;
+    --light: #ede9fb;
+    --danger: #b91c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    letter-spacing: 0.03em;
+    color: #e2e8f0;
+  }
+
+  .chip-danger {
+    background: rgba(185,28,28,0.25);
+    border-color: rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    border: 1.5px solid #fca5a5;
+    background: var(--danger-light);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .callout p {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: #7f1d1d;
+  }
+
+  /* BODY TEXT */
+  .body-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent {
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    border-left: 4px solid var(--danger);
+    background: var(--danger-light);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    border-left: 4px solid var(--positive);
+    background: var(--positive-light);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    border-left: 4px solid var(--warning);
+    background: var(--warning-light);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    border-left: 4px solid var(--neutral);
+    background: var(--neutral-light);
+  }
+  .card-slate h3 { color: var(--neutral); }
+
+  .card-blue {
+    border-left: 4px solid #1d4ed8;
+    background: #eff6ff;
+  }
+  .card-blue h3 { color: #1e3a8a; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: take;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .takeaways ol li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    font-size: 0.95rem;
+    line-height: 1.72;
+  }
+
+  .takeaways ol li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    border-radius: 12px;
+    padding: 40px 36px;
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #a78bfa;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .verdict-banner p strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: TARDBP &nbsp;|&nbsp; TAR DNA-Binding Protein 43 (TDP-43)</span>
+    <span class="chip chip-danger">⚠ Essential gene — suppression carries toxicity risk</span>
+  </div>
+  <h1>TARDBP / TDP-43 &amp; Alzheimer's Disease Co-Pathology</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Critical Safety Caveat</span>
+      <p>TDP-43 is essential for neuronal RNA processing, transcript stability, and survival. Indiscriminate TARDBP suppression is contraindicated — broad knockdown causes toxicity in models. All therapeutic strategies must preserve nuclear TDP-43 function while selectively targeting pathological cytoplasmic or aggregated species.</p>
+    </div>
+
+    <div class="body-text">
+      <p>TARDBP encodes TDP-43, a predominantly nuclear RNA/DNA-binding protein that regulates RNA splicing, transcript stability, RNA transport, translation, autoregulation, stress-granule biology, and broader RNA homeostasis. In Alzheimer's disease (AD), TARDBP/TDP-43 is best characterized as a <strong>disease-modifying co-pathology</strong> rather than a primary amyloid-pathway gene. Its relevance is strongest in AD cases with TDP-43 pathology, LATE-NC, hippocampal sclerosis-like degeneration, severe medial temporal atrophy, accelerated cognitive decline, neurovascular dysfunction, or mixed dementia pathology.</p>
+      <p>Pathological TDP-43 is defined by nuclear depletion, cytoplasmic mislocalization, phosphorylation, ubiquitination, cleavage/fragments, insolubility, liquid–liquid phase separation abnormalities, stress-granule association, and aggregation. These changes produce both <em>loss of normal nuclear RNA-processing function</em> and <em>toxic cytoplasmic gain of function</em>.</p>
+      <p>Mechanistically, TARDBP/TDP-43 intersects with core AD biology through tau and amyloid interactions, RNA-splicing failure, cryptic exon inclusion, mitochondrial dysfunction, oxidative stress, autophagy-lysosomal impairment, ER stress, DNA repair defects, neuroimmune activation, microglial and astrocytic dysfunction, endothelial dysfunction, and protein co-aggregation. The therapeutic implication is not broad TARDBP suppression but selective modulation of pathological TDP-43 states or downstream consequences.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~900 wide, 500 tall, 4 panels, 16 nodes max -->
+        <svg viewBox="0 0 900 510" width="900" height="510" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6d4fc2"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b91c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: TDP-43 Pathological States (left) ===== -->
+          <rect x="10" y="10" width="210" height="490" rx="12" ry="12"
+                fill="rgba(109,79,194,0.07)" stroke="#6d4fc2" stroke-width="1.2"/>
+          <text x="115" y="30" text-anchor="middle" font-size="8.5" font-weight="700"
+                fill="#2d1b69" letter-spacing="1">PANEL A · TDP-43 STATES</text>
+
+          <!-- Node A1: Nuclear TDP-43 (normal) -->
+          <rect x="28" y="38" width="174" height="44" rx="7" fill="#ede9fb" stroke="#6d4fc2" stroke-width="1.3"/>
+          <text x="115" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">Nuclear TDP-43</text>
+          <text x="115" y="70" text-anchor="middle" font-size="9" fill="#475569">(normal RNA-binding)</text>
+
+          <!-- arrow A1→A2 -->
+          <line x1="115" y1="82" x2="115" y2="100" stroke="#6d4fc2" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Stress / PTMs -->
+          <rect x="28" y="100" width="174" height="44" rx="7" fill="#ede9fb" stroke="#6d4fc2" stroke-width="1.3"/>
+          <text x="115" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">Stress &amp; PTMs</text>
+          <text x="115" y="132" text-anchor="middle" font-size="9" fill="#475569">phospho · ubiquit · SUMO</text>
+
+          <!-- arrow A2→A3 -->
+          <line x1="115" y1="144" x2="115" y2="162" stroke="#6d4fc2" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Cytoplasmic Misloc. -->
+          <rect x="28" y="162" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="115" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Cytoplasmic</text>
+          <text x="115" y="194" text-anchor="middle" font-size="9" fill="#7f1d1d">Mislocalization</text>
+
+          <!-- arrow A3→A4 -->
+          <line x1="115" y1="206" x2="115" y2="224" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node A4: Phase Sep. / Aggregation -->
+          <rect x="28" y="224" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="115" y="242" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Phase Sep. &amp; Aggregates</text>
+          <text x="115" y="256" text-anchor="middle" font-size="9" fill="#7f1d1d">LDs → fibrils · insoluble</text>
+
+          <!-- arrow A4 → downstream connector to Panel B (elbow route) -->
+          <polyline points="202,246 228,246 228,90 235,90"
+                    fill="none" stroke="#6d4fc2" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- ===== PANEL B: RNA & Splicing Failure (middle-left) ===== -->
+          <rect x="235" y="10" width="200" height="310" rx="12" ry="12"
+                fill="rgba(45,27,105,0.06)" stroke="#2d1b69" stroke-width="1.2"/>
+          <text x="335" y="30" text-anchor="middle" font-size="8.5" font-weight="700"
+                fill="#2d1b69" letter-spacing="1">PANEL B · RNA DYSFUNCTION</text>
+
+          <!-- Node B1: Nuclear Loss of Fn -->
+          <rect x="252" y="38" width="166" height="44" rx="7" fill="#ede9fb" stroke="#2d1b69" stroke-width="1.3"/>
+          <text x="335" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="#2d1b69">Nuclear Loss of Fn</text>
+          <text x="335" y="70" text-anchor="middle" font-size="9" fill="#475569">splicing · stability fails</text>
+
+          <!-- arrow B1 → B2a and B2b branch -->
+          <line x1="295" y1="82" x2="295" y2="104" stroke="#2d1b69" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="375" y1="82" x2="375" y2="104" stroke="#2d1b69" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- branch line -->
+          <line x1="295" y1="82" x2="375" y2="82" stroke="#2d1b69" stroke-width="1.3"/>
+
+          <!-- Node B2a: Cryptic Exons -->
+          <rect x="252" y="104" width="118" height="44" rx="7" fill="#ede9fb" stroke="#2d1b69" stroke-width="1.3"/>
+          <text x="311" y="122" text-anchor="middle" font-size="9.5" font-weight="700" fill="#2d1b69">Cryptic Exons</text>
+          <text x="311" y="136" text-anchor="middle" font-size="8.5" fill="#475569">STMN2 · UNC13A</text>
+
+          <!-- Node B2b: AltPoly / Stability -->
+          <rect x="380" y="104" width="42" height="44" rx="7" fill="#ede9fb" stroke="#2d1b69" stroke-width="1.3"/>
+          <text x="401" y="120" text-anchor="middle" font-size="8" font-weight="700" fill="#2d1b69">Alt</text>
+          <text x="401" y="132" text-anchor="middle" font-size="8" fill="#2d1b69">PolyA</text>
+          <text x="401" y="144" text-anchor="middle" font-size="7.5" fill="#475569">instab.</text>
+
+          <!-- arrow B2a → B3 -->
+          <line x1="311" y1="148" x2="311" y2="166" stroke="#2d1b69" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- arrow B2b → B3 elbow -->
+          <polyline points="401,148 401,158 335,158 335,166"
+                    fill="none" stroke="#2d1b69" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Node B3: Synaptic/Excitability Targets -->
+          <rect x="252" y="166" width="166" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.3"/>
+          <text x="335" y="184" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a8a">Synaptic Targets</text>
+          <text x="335" y="198" text-anchor="middle" font-size="8.5" fill="#1e3a8a">KCNQ2 · GAP43 · PKN1</text>
+
+          <!-- arrow B3 → B4 -->
+          <line x1="335" y1="210" x2="335" y2="228" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Node B4: Synaptic Dysfunction -->
+          <rect x="252" y="228" width="166" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.3"/>
+          <text x="335" y="246" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a8a">Synaptic Dysfunction</text>
+          <text x="335" y="260" text-anchor="middle" font-size="8.5" fill="#1e3a8a">↓ plasticity · excitability↑</text>
+
+          <!-- ===== PANEL C: Proteopathy & Inflammation (middle-right) ===== -->
+          <rect x="450" y="10" width="210" height="490" rx="12" ry="12"
+                fill="rgba(185,28,28,0.05)" stroke="#b91c1c" stroke-width="1.2"/>
+          <text x="555" y="30" text-anchor="middle" font-size="8.5" font-weight="700"
+                fill="#7f1d1d" letter-spacing="1">PANEL C · PROTEOPATHY &amp; INFLAMMATION</text>
+
+          <!-- Node C1: Tau Interaction -->
+          <rect x="467" y="38" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="554" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Tau Interaction</text>
+          <text x="554" y="70" text-anchor="middle" font-size="9" fill="#7f1d1d">co-condense · tauopathy↑</text>
+
+          <!-- arrow C1→C2 -->
+          <line x1="554" y1="82" x2="554" y2="100" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node C2: Aβ Interaction -->
+          <rect x="467" y="100" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="554" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Aβ Interaction</text>
+          <text x="554" y="132" text-anchor="middle" font-size="9" fill="#7f1d1d">promotes toxic oligomers</text>
+
+          <!-- arrow C2→C3 -->
+          <line x1="554" y1="144" x2="554" y2="162" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node C3: Proteostasis Failure -->
+          <rect x="467" y="162" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="554" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Proteostasis Failure</text>
+          <text x="554" y="194" text-anchor="middle" font-size="9" fill="#7f1d1d">UPS · autophagy · ER stress</text>
+
+          <!-- branch from C3: two parallel paths C4a and C4b -->
+          <line x1="510" y1="206" x2="510" y2="224" stroke="#b91c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <line x1="598" y1="206" x2="598" y2="224" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-orange)"/>
+          <line x1="510" y1="206" x2="598" y2="206" stroke="#b91c1c" stroke-width="1.3"/>
+
+          <!-- Node C4a: Neuroinflamm. -->
+          <rect x="467" y="224" width="116" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.3"/>
+          <text x="525" y="242" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">Neuroinflammation</text>
+          <text x="525" y="256" text-anchor="middle" font-size="8.5" fill="#92400e">JAK/TYK2 · cGAS-STING</text>
+
+          <!-- Node C4b: Ferroptosis -->
+          <rect x="592" y="224" width="52" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="618" y="242" text-anchor="middle" font-size="9" font-weight="700" fill="#7f1d1d">Ferropt-</text>
+          <text x="618" y="256" text-anchor="middle" font-size="9" fill="#7f1d1d">osis</text>
+
+          <!-- arrows C4a and C4b → C5 -->
+          <line x1="525" y1="268" x2="525" y2="290" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-orange)"/>
+          <polyline points="618,268 618,282 554,282 554,290"
+                    fill="none" stroke="#b91c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+          <!-- Node C5: Neurodegeneration -->
+          <rect x="467" y="290" width="174" height="44" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+          <text x="554" y="308" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Neurodegeneration</text>
+          <text x="554" y="322" text-anchor="middle" font-size="9" fill="#7f1d1d">HPC/amygdala atrophy</text>
+
+          <!-- ===== PANEL D: Neurovascular & Outcomes (right) ===== -->
+          <rect x="675" y="10" width="215" height="490" rx="12" ry="12"
+                fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="782" y="30" text-anchor="middle" font-size="8.5" font-weight="700"
+                fill="#134e4a" letter-spacing="1">PANEL D · NEUROVASCULAR &amp; OUTCOMES</text>
+
+          <!-- Node D1: Perivascular pTDP-43 -->
+          <rect x="692" y="38" width="181" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="782" y="56" text-anchor="middle" font-size="9.5" font-weight="700" fill="#134e4a">Perivascular pTDP-43</text>
+          <text x="782" y="70" text-anchor="middle" font-size="8.5" fill="#134e4a">astrocytic endfeet inclusions</text>
+
+          <!-- arrow D1→D2 -->
+          <line x1="782" y1="82" x2="782" y2="100" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D2: BBB + Glymphatic -->
+          <rect x="692" y="100" width="181" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="782" y="118" text-anchor="middle" font-size="9.5" font-weight="700" fill="#134e4a">BBB &amp; Glymphatic Fail</text>
+          <text x="782" y="132" text-anchor="middle" font-size="8.5" fill="#134e4a">↓AQP4 · ↓CD146</text>
+
+          <!-- arrow D2→D3 -->
+          <line x1="782" y1="144" x2="782" y2="162" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D3: Mitochondrial Injury -->
+          <rect x="692" y="162" width="181" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="782" y="180" text-anchor="middle" font-size="9.5" font-weight="700" fill="#134e4a">Mitochondrial Injury</text>
+          <text x="782" y="194" text-anchor="middle" font-size="8.5" fill="#134e4a">↓ATP · UQCRC2 · HK1</text>
+
+          <!-- arrow D3→D4 -->
+          <line x1="782" y1="206" x2="782" y2="224" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D4: LATE-NC / Mixed -->
+          <rect x="692" y="224" width="181" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="782" y="242" text-anchor="middle" font-size="9.5" font-weight="700" fill="#134e4a">LATE-NC / Mixed AD</text>
+          <text x="782" y="256" text-anchor="middle" font-size="8.5" fill="#134e4a">~50% AD cases affected</text>
+
+          <!-- arrow D4→D5 -->
+          <line x1="782" y1="268" x2="782" y2="286" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D5: Clinical Outcomes -->
+          <rect x="692" y="286" width="181" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="782" y="304" text-anchor="middle" font-size="9.5" font-weight="700" fill="#134e4a">Clinical Outcomes</text>
+          <text x="782" y="318" text-anchor="middle" font-size="8.5" fill="#134e4a">↑decline · HPC sclerosis</text>
+
+          <!-- Cross-panel connector: Panel B (synaptic dysfn) → Panel C (neurodegeneration) via gutter -->
+          <polyline points="418,250 438,250 438,334 467,334"
+                    fill="none" stroke="#1d4ed8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel C neurodegeneration → Panel D Clinical Outcomes via gutter -->
+          <polyline points="641,312 660,312 660,308 692,308"
+                    fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> traces TDP-43 from its normal nuclear state through stress-driven post-translational modifications (phosphorylation, ubiquitination, SUMOylation) to cytoplasmic mislocalization, phase separation, and aggregate formation.
+        <strong>Panel B</strong> shows how nuclear loss of function branches into two parallel RNA-processing failures — cryptic exon inclusion (STMN2, UNC13A) and alternative polyadenylation/mRNA instability — converging on synaptic target mis-expression and synaptic dysfunction.
+        <strong>Panel C</strong> depicts proteopathic interactions with tau and Aβ, downstream proteostasis collapse, and a bifurcation into neuroinflammatory (JAK/TYK2, cGAS-STING) and ferroptotic branches, both converging on hippocampal/amygdala neurodegeneration.
+        <strong>Panel D</strong> covers the neurovascular cascade: perivascular pTDP-43 inclusions, BBB and glymphatic failure (↓AQP4, ↓CD146), mitochondrial injury, LATE-NC mixed pathology, and accelerated clinical decline. Dashed inter-panel arrows indicate cross-domain convergence.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Co-Pathology, Not Primary AD Gene</h3>
+        <p>TARDBP mutations are established in ALS/FTD-spectrum disease, but AD relevance is mainly acquired TDP-43 proteinopathy — especially in aging, LATE-NC, and mixed AD/LATE pathology. TDP-43 pathology is present in approximately 50% or more of AD cases depending on cohort and definition.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Nuclear Loss Drives Cryptic Splicing</h3>
+        <p>Nuclear TDP-43 depletion triggers cryptic exon inclusion, alternative polyadenylation defects, and impaired mRNA stability. Key cryptic targets — STMN2, UNC13A, KCNQ2, GAP43, PKN1/PKN207, ATG4B — have been detected in AD brain regions with TDP-43 pathology and can impair cognition and synaptic plasticity in models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Tau &amp; Aβ Amplification</h3>
+        <p>TDP-43 loss of function can exacerbate tauopathy, promote caspase-3-mediated tau cleavage, alter 3R/4R tau balance via exon 10 splicing, and influence tau phosphorylation. Aβ42 can bind TDP-43's amyloidogenic core and promote β-sheet remodeling, positioning TDP-43 as an amplifier of classical AD proteopathy, not a bystander.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurovascular &amp; Glymphatic Failure</h3>
+        <p>Phosphorylated TDP-43 inclusions in perivascular astrocytic endfeet associate with loss of CD146 and Aquaporin-4, implicating blood–brain barrier breakdown and glymphatic impairment. Endothelial nuclear TDP-43 loss also disrupts β-catenin signaling and vascular inflammatory homeostasis.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Ferroptosis &amp; Metabolic Pathways</h3>
+        <p>TARDBP stabilizes KRAS mRNA, increasing MAP3K11 and suppressing the protective SLC3A2/GPX4 axis. TARDBP knockdown or ferroptosis inhibition reduced iron deposition, ROS, Fe²⁺ accumulation, and memory deficits in AD-like models — defining a concrete TARDBP–KRAS–MAP3K11/SLC3A2/GPX4 pathway.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Biomarker Gap &amp; Stratification Need</h3>
+        <p>Total plasma or CSF TDP-43 lacks diagnostic specificity. More promising approaches include TDP-43 PET tracers, seed amplification assays, phosphorylated/aggregated TDP-43 assays, cryptic exon panels, medial temporal MRI patterns (hippocampal head/amygdala atrophy), and combined LATE-NC biomarkers for trial stratification.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <div class="takeaways">
+      <ol>
+        <li>
+          <div>
+            <span class="lead">Treat as a precision target for AD subgroups —</span> the highest-priority patients are those with biomarker or imaging evidence of TDP-43 co-pathology, LATE-NC, disproportionate hippocampal/amygdala atrophy, hippocampal sclerosis-like degeneration, rapid progression, parkinsonism without Lewy bodies, epilepsy/seizure vulnerability, or neurovascular/glymphatic dysfunction.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Prioritize biomarker development before broad therapeutic trials —</span> stratification tools should detect pathological TDP-43 species or functional loss, including TDP-43 PET ligands, CSF or tissue seed amplification, phosphorylated/aggregated TDP-43 assays, cryptic exon panels, insoluble TDP-43 measures, and MRI signatures such as hippocampal head/amygdala atrophy or temporal-limbic diffusion changes.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Avoid indiscriminate TARDBP suppression —</span> TDP-43 is essential for RNA processing, DNA/RNA regulation, transcript stability, and neuronal survival. Therapeutic strategies must preserve or restore nuclear TDP-43 function while reducing cytoplasmic aggregation, pathological seeding, toxic fragments, or downstream RNA defects.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Develop therapies that restore nuclear function or correct downstream splicing —</span> antisense oligonucleotides, splice-correcting approaches, AAV-based splicing repressors, or cryptic exon-targeted therapies could address functional TDP-43 loss without removing all aggregates. Key downstream pathways include STMN2, UNC13A, KCNQ2, GAP43, PKN1/PKN207, ATG4B, NRXN1, UQCRC2, and synaptic/excitability transcripts.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Target pathological phase separation and aggregation early —</span> candidate approaches include small molecules binding the low-complexity-domain region around residues 320–340, RNA chaperones, EGCG-like or amyloid-core binders, HSPB8/HSPB1/HSPB5 modulation, SUMO/PML nuclear body pathways, anti-seeding antibodies, and agents that prevent stress-granule liquid-to-solid transition.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Consider tau–TDP-43 and Aβ–TDP-43 interactions in AD drug design —</span> TDP-43-directed therapy may need to account for mixed effects on tau fibril formation, tau oligomeric species, TDP-43 seeding, Aβ oligomerization, and extracellular vesicle-mediated propagation.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Exploit proteostasis and clearance pathways selectively —</span> potential targets include IRE1/RQC activation, NEDD4/ESCRT-mediated clearance, autophagy-lysosome restoration, TFEB activation, USP19 or USP11–ITCH inhibition, HDAC6/proteostasis modulation, and chaperone balancing. These should be tested in AD-TDP/LATE models, as effects may differ from ALS models.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Address neuroinflammation and glial dysfunction in TDP-43-positive AD —</span> TYK2/JAK inhibition, RIPK3 inhibition, IL-6 trans-signaling blockade, cGAS-STING modulation, and microglial lipid-metabolism approaches may be most relevant when biomarkers show cryptic exon expression, interferon activation, necroptosis, lipid-droplet microglia, or glial TDP-43 pathology.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Investigate neurovascular and glymphatic rescue strategies —</span> perivascular astrocytic pTDP-43, AQP4 loss, CD146 loss, endothelial β-catenin disruption, BBB breakdown, and glymphatic impairment suggest actionable targets beyond neurons, including astrocytic endfeet function, AQP4 localization, BBB integrity, and inflammatory vascular signaling.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Use TDP-43 status to interpret amyloid- and tau-targeted trial outcomes —</span> TDP-43 co-pathology may explain severe neurodegeneration despite amyloid/tau burden, faster decline, medial temporal atrophy, and limited response to amyloid-only or tau-only approaches. AD trials should measure or infer TDP-43/LATE status whenever possible.
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="lead">Validate AD-specific models —</span> many therapeutic signals come from ALS/FTD systems. AD translation requires models combining amyloid/tau pathology with TDP-43/LATE-like pathology, hippocampal and amygdala vulnerability, astrocytic/endothelial TDP-43 changes, cryptic exon readouts, and cognitive outcomes.
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — TARDBP / TDP-43 in Alzheimer's Disease</span>
+      <p>
+        TDP-43 represents a <strong>high-relevance, mechanistically rich co-pathology target</strong> in Alzheimer's disease that operates across multiple biological axes — RNA homeostasis, protein aggregation, neuroinflammation, mitochondrial function, and neurovascular integrity. Its prevalence in approximately half of all AD cases and its association with <strong>accelerated hippocampal neurodegeneration, LATE-NC, and medial temporal atrophy</strong> make it a compelling modifier of clinical heterogeneity and treatment response. The therapeutic opportunity is not to eliminate TDP-43 — which is essential — but to achieve <strong>selective normalization</strong>: preserve nuclear RNA/DNA functions, reduce toxic cytoplasmic or seeded species, correct cryptic splicing, stabilize mitochondria and proteostasis, and treat inflammatory and neurovascular consequences in <strong>biomarker-defined AD-TDP or AD/LATE patient subpopulations</strong>. Biomarker development, AD-specific model validation, and precision patient stratification are the most urgent near-term priorities before broad therapeutic trials can be responsibly initiated.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TARDBP / TDP-43 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PYCARD / ASC — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0218 100%);
+    color: white;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 14px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--danger);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 24px 16px 16px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-color: var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-color: var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.93rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: white;
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0218 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 36px 36px;
+    margin-bottom: 56px;
+    line-height: 1.75;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #c4b5fd;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 0.77rem;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PYCARD &nbsp;|&nbsp; ASC (Apoptosis-associated Speck-like protein containing a CARD)</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Immune Function Risk</span>
+  </div>
+  <h1>PYCARD / ASC &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Broad systemic or chronic PYCARD/ASC inhibition risks impairing host defense, antimicrobial immunity, adaptive immune responses, and tumor-suppressive biology. CNS-targeted, cell-specific, stage-specific, or pathway-selective modulation is strongly preferred over lifelong systemic blockade.
+    </div>
+
+    <p>PYCARD, also known as ASC, is a central inflammasome adaptor that links sensors such as NLRP3 and AIM2 to caspase-1 activation, IL-1β/IL-18 maturation, ASC speck formation, and pyroptotic inflammatory signaling. In Alzheimer's disease, PYCARD is relevant because Aβ, tau aggregates, oxidative stress, ER stress, mitochondrial dysfunction, lysosomal damage, gut dysbiosis, and vascular/metabolic stress can converge on inflammasome pathways in microglia, astrocytes, neurons, peripheral immune cells, and gut or vascular compartments.</p>
+
+    <p>The strongest AD-related evidence supports PYCARD/ASC as both a mechanistic amplifier and a candidate biomarker and therapeutic target. AD models and human data associate ASC/PYCARD with Aβ-induced microglial activation, tau-seed-driven inflammasome activation, hippocampal ER stress/TXNIP/NLRP3 signaling, plaque-associated glial ASC accumulation, extracellular ASC specks and granules, early cognitive impairment biomarkers, and AD-like gut–brain inflammatory changes. Extracellular ASC specks can propagate inflammation and may cross-seed or cluster Aβ, directly linking inflammasome activation to amyloid pathology.</p>
+
+    <p>Therapeutically, PYCARD is best viewed as a selective inflammasome-modulating target. The most promising approaches inhibit pathological ASC speck formation, ASC oligomerization, ASC–NLRP3/AIM2 interactions, ASC-mediated IL-1β maturation, extracellular ASC speck propagation, or upstream triggers such as NLRP3 activation, TLR4/NF-κB priming, reactive oxygen species, TXNIP, mitochondrial damage, and impaired autophagy/mitophagy.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL A (left): Upstream Triggers → PYCARD activation  (4 nodes)
+          PANEL B (center): Core PYCARD Mechanism with branching  (5 nodes)
+          PANEL C (right): Downstream AD Consequences             (5 nodes)
+          Total nodes: 14  ✓ (≤16)
+          All connectors verified to pass through empty gutter space only.
+        -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 490" width="900" height="469" aria-label="PYCARD/ASC signaling pathway in Alzheimer's disease">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#3b0764"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: Upstream Triggers ═══ -->
+          <rect x="14" y="14" width="240" height="460" rx="12" fill="#f3eeff" stroke="#7c3aed" stroke-width="1.2" opacity="0.55"/>
+          <text x="134" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b0764" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+          <!-- Node A1: Aβ / Tau Aggregates -->
+          <rect x="34" y="50" width="200" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+          <text x="134" y="70" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">Aβ / Tau Aggregates</text>
+          <text x="134" y="87" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">lysosomal damage, TLR4</text>
+
+          <!-- Node A2: Mitochondrial Dysfunction -->
+          <rect x="34" y="122" width="200" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+          <text x="134" y="142" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">Mitochondrial Dysfunction</text>
+          <text x="134" y="159" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">mtROS, mtDNA leakage</text>
+
+          <!-- Node A3: ER / Oxidative Stress -->
+          <rect x="34" y="194" width="200" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+          <text x="134" y="214" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">ER / Oxidative Stress</text>
+          <text x="134" y="231" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">TXNIP, ROS, NF-κB priming</text>
+
+          <!-- Node A4: Gut / Vascular Stress -->
+          <rect x="34" y="266" width="200" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+          <text x="134" y="286" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">Gut / Vascular Stress</text>
+          <text x="134" y="303" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">dysbiosis, barrier dysfunction</text>
+
+          <!-- A1→A2, A2→A3, A3→A4: vertical flow arrows in panel A gutter -->
+          <line x1="134" y1="100" x2="134" y2="122" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="134" y1="172" x2="134" y2="194" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="134" y1="244" x2="134" y2="266" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ═══ PANEL B: Core PYCARD Mechanism (center) ═══ -->
+          <rect x="268" y="14" width="400" height="460" rx="12" fill="#faf5ff" stroke="#3b0764" stroke-width="1.4" opacity="0.5"/>
+          <text x="468" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b0764" letter-spacing="1">CORE PYCARD / ASC MECHANISM</text>
+
+          <!-- Node B1: NLRP3 / AIM2 Sensor Activation -->
+          <rect x="318" y="50" width="300" height="50" rx="8" fill="#ede9fe" stroke="#3b0764" stroke-width="1.6"/>
+          <text x="468" y="70" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">NLRP3 / AIM2 Sensor Activation</text>
+          <text x="468" y="87" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">TLR4/NF-κB primed; sensors engaged</text>
+
+          <!-- Node B2: PYCARD / ASC Recruitment & Oligomerization -->
+          <rect x="318" y="130" width="300" height="52" rx="8" fill="#ddd6fe" stroke="#3b0764" stroke-width="1.8"/>
+          <text x="468" y="151" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e0540" font-weight="700">PYCARD / ASC Oligomerization</text>
+          <text x="468" y="169" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e0540">PYD–PYD &amp; CARD–CARD filament / speck</text>
+
+          <!-- B1→B2 -->
+          <line x1="468" y1="100" x2="468" y2="130" stroke="#3b0764" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+          <!-- Branch left: Caspase-1 arm -->
+          <!-- Node B3a: Caspase-1 Activation -->
+          <rect x="288" y="220" width="170" height="50" rx="8" fill="#c4b5fd" stroke="#3b0764" stroke-width="1.4"/>
+          <text x="373" y="240" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e0540" font-weight="700">Caspase-1 Activation</text>
+          <text x="373" y="257" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e0540">pro-caspase-1 cleavage</text>
+
+          <!-- Branch right: Extracellular Speck arm -->
+          <!-- Node B3b: Extracellular ASC Specks -->
+          <rect x="478" y="220" width="170" height="50" rx="8" fill="#f5d0fe" stroke="#9333ea" stroke-width="1.4"/>
+          <text x="563" y="240" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3b0764" font-weight="700">Extracellular ASC Specks</text>
+          <text x="563" y="257" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b0764">prion-like spread, Aβ cross-seeding</text>
+
+          <!-- B2→B3a (left branch) -->
+          <line x1="390" y1="182" x2="373" y2="220" stroke="#3b0764" stroke-width="1.6" marker-end="url(#arr-dark)"/>
+          <!-- B2→B3b (right branch) -->
+          <line x1="548" y1="182" x2="563" y2="220" stroke="#9333ea" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node B4: IL-1β / IL-18 Maturation (converges from B3a) -->
+          <rect x="318" y="310" width="300" height="50" rx="8" fill="#ddd6fe" stroke="#3b0764" stroke-width="1.6"/>
+          <text x="468" y="330" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e0540" font-weight="700">IL-1β / IL-18 Maturation &amp; Release</text>
+          <text x="468" y="347" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e0540">cytokine processing; GSDMD cleavage</text>
+
+          <!-- B3a→B4 -->
+          <line x1="373" y1="270" x2="400" y2="310" stroke="#3b0764" stroke-width="1.6" marker-end="url(#arr-dark)"/>
+          <!-- B3b→B4 -->
+          <line x1="563" y1="270" x2="536" y2="310" stroke="#9333ea" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node B5: Pyroptosis / ASC Speck Release -->
+          <rect x="318" y="398" width="300" height="50" rx="8" fill="#a78bfa" stroke="#3b0764" stroke-width="1.8"/>
+          <text x="468" y="418" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#fff" font-weight="700">Pyroptosis &amp; Inflammatory Amplification</text>
+          <text x="468" y="435" text-anchor="middle" font-family="Georgia" font-size="10" fill="#f3e8ff">cell death; propagation cycle</text>
+
+          <!-- B4→B5 -->
+          <line x1="468" y1="360" x2="468" y2="398" stroke="#3b0764" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+          <!-- ═══ PANEL C: Downstream AD Consequences ═══ -->
+          <rect x="682" y="14" width="242" height="460" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" opacity="0.5"/>
+          <text x="803" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">AD CONSEQUENCES</text>
+
+          <!-- Node C1: Aβ Deposition / BACE1 -->
+          <rect x="698" y="50" width="210" height="50" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="803" y="70" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d" font-weight="700">↑ Aβ Deposition / BACE1</text>
+          <text x="803" y="87" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">impaired microglial clearance</text>
+
+          <!-- Node C2: Tau Hyperphosphorylation -->
+          <rect x="698" y="122" width="210" height="50" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="803" y="142" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d" font-weight="700">Tau Hyperphosphorylation</text>
+          <text x="803" y="159" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">seeded tau pathology amplified</text>
+
+          <!-- Node C3: Microglia / Astrocyte Activation -->
+          <rect x="698" y="194" width="210" height="50" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="803" y="214" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d" font-weight="700">Microglia / Astrocyte Activation</text>
+          <text x="803" y="231" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">neuroinflammatory gliosis</text>
+
+          <!-- Node C4: Synaptic Loss / Neurodegeneration -->
+          <rect x="698" y="266" width="210" height="50" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="803" y="286" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d" font-weight="700">Synaptic Loss / Neurodegeneration</text>
+          <text x="803" y="303" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">apoptosis, neuritic dystrophy</text>
+
+          <!-- Node C5: Cognitive Impairment -->
+          <rect x="698" y="338" width="210" height="50" rx="8" fill="#fca5a5" stroke="#991b1b" stroke-width="1.6"/>
+          <text x="803" y="358" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#7f1d1d" font-weight="700">Cognitive Impairment</text>
+          <text x="803" y="375" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">MCI → AD; biomarker elevation</text>
+
+          <!-- C1→C2→C3→C4→C5 arrows in panel C -->
+          <line x1="803" y1="100" x2="803" y2="122" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="803" y1="172" x2="803" y2="194" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="803" y1="244" x2="803" y2="266" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="803" y1="316" x2="803" y2="338" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel connector A→B: horizontal line at mid-height, through gutter (y=219) -->
+          <!-- All A nodes end at x=234; B panel starts at x=268; gutter 234–268 is clear -->
+          <!-- Route from A (x=234, y=219) horizontally to B1 (x=318, y=75) via elbow -->
+          <!-- Elbow: A exits right at (234, 219) → goes to (254, 219) → up to (254, 75) → into B1 left at (318,75) -->
+          <polyline points="234,219 254,219 254,75 318,75" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector B→C: from B4 (right edge x=618, y=335) → gutter → C nodes -->
+          <!-- B panel right edge x=668; C panel left edge x=682; gutter 668–682 is very narrow -->
+          <!-- Route from B5 bottom-right area to C panels via right edge gutter -->
+          <!-- IL-1β (B4, y=335) →  C1 (y=75): elbow right at (618,335) → (670,335) → up to (670,75) → C1 left (698,75) -->
+          <polyline points="618,335 668,335 668,75 698,75" fill="none" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <!-- B5 pyroptosis → C3 microglia (y=219): elbow (618,423) → (670,423) → up to (670,219) but 698 is C3 left; check C4 ends y=316 and C3 starts y=194 so y=219 is inside C3 box which is from 194–244. Route to top of C3 instead: y=194 -->
+          <polyline points="618,423 670,423 670,194 698,194" fill="none" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel labels annotation for A triggers -->
+          <text x="134" y="356" text-anchor="middle" font-family="Arial" font-size="9" fill="#7c3aed" font-style="italic">all converge on inflammasome</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure:</strong>
+        <strong>Panel A (left, purple tint) — Upstream Triggers:</strong> Aβ/tau aggregates, mitochondrial dysfunction (mtROS/mtDNA), ER/oxidative stress (TXNIP, NF-κB), and gut/vascular stress all converge on inflammasome sensor activation.
+        <strong>Panel B (center, violet) — Core PYCARD/ASC Mechanism:</strong> NLRP3/AIM2 sensors recruit PYCARD/ASC, driving oligomerization and speck formation. The pathway then <em>branches</em>: one arm activates caspase-1 (leading to IL-1β/IL-18 maturation and GSDMD cleavage); the other produces extracellular ASC specks (prion-like spread, Aβ cross-seeding). Both branches reconverge at cytokine release and ultimately pyroptosis/inflammatory amplification.
+        <strong>Panel C (right, red tint) — AD Consequences:</strong> Downstream effects cascade from increased Aβ deposition/BACE1 activity and tau hyperphosphorylation through microglial/astrocyte activation and synaptic loss to cognitive impairment. Dashed cross-panel arrows indicate IL-1β–driven and pyroptosis-driven feeds from Panel B into AD pathology in Panel C.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Inflammasome Adaptor Role</h3>
+        <p>PYCARD/ASC bridges inflammasome sensors to pro-caspase-1 through PYD and CARD domain interactions, enabling ASC oligomerization, speck formation, caspase-1 cleavage, IL-1β/IL-18 maturation, and pyroptosis. It is not merely an intracellular scaffold — extracellular ASC specks released from pyroptotic cells act as durable, prion-like inflammatory particles capable of propagating neuroinflammation between cells.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Aβ- and Tau-Driven Microglial Activation</h3>
+        <p>In AD-relevant microglial models, Aβ1-42 activates the TLR4/NF-κB/NLRP3/PYCARD axis, increasing ASC speck formation, cytokine release, and NF-κB nuclear translocation. Aggregated tau-derived material also activates NLRP3-ASC inflammasomes in microglia; ASC deficiency reduced seeded and spontaneous tau pathology in tau-transgenic mice. ASC specks can bind and cross-seed Aβ, further linking inflammasome activation to amyloid pathology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Biomarker &amp; Translational Evidence</h3>
+        <p>ASC/PYCARD is elevated and diagnostically informative in MCI/AD serum, blood, CSF, and brain tissue. Blood/serum ASC-based analysis showed strong discrimination of controls versus MCI patients, and ASC combined with p-tau and Aβ improved early AD discrimination in at least one study. AD entorhinal cortex inflammatory transcriptomic signatures also support PYCARD's translational relevance.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Selective IL-1β Maturation Blockade</h3>
+        <p>A key mechanistic finding shows that disrupting ASC-mediated pro-IL-1β docking impairs IL-1β processing without preventing ASC speck formation or pyroptosis. This selective uncoupling suggests it may be possible to reduce chronic IL-1β signaling in AD — where it is harmful — while preserving broader inflammasome functions such as debris clearance and host defense.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Preclinical Therapeutic Support</h3>
+        <p>Anti-ASC antibodies targeting PYD or CARD domains improved cognitive impairment and reduced Aβ deposition, tau hyperphosphorylation, neuroinflammation, apoptosis, mitochondrial damage, Aβ production, and BACE1 activity in APP/PS1 mouse models. Upstream modulation via NLRP3 inhibitors, irisin/exercise signaling, mitophagy enhancement, TLR4/NF-κB suppression, and miRNA modulation further supports the feasibility of indirect PYCARD modulation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Immune Function Risk</h3>
+        <p>PYCARD/ASC supports host defense, antimicrobial immunity, adaptive immune responses, and in some contexts apoptotic and tumor-suppressive biology. Broad systemic or chronic inhibition could impair immune function or produce unintended off-target effects. CNS-targeted, microglia- or myeloid-selective, extracellular-speck-focused, temporally controlled, or pathway-selective approaches are substantially safer than lifelong systemic blockade.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Prioritize active inflammasome assembly as the readout.</strong> PYCARD/ASC should be targeted when evidence indicates active assembly, not merely increased transcript abundance. Key readouts must include ASC specks/oligomers, caspase-1 activation, IL-1β/IL-18 release, GSDMD cleavage, and extracellular ASC burden.</div>
+      </li>
+      <li>
+        <div><strong>Test direct ASC/PYCARD interventions in AD models.</strong> High-priority strategies include anti-ASC antibodies, ASC PYD/CARD interface blockers, ASC oligomerization inhibitors, ASC speck-neutralizing agents, ASC–Aβ interaction blockers, and peptides or small molecules that selectively disrupt NLRP3–ASC assembly.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate selective IL-1β maturation blockade.</strong> ASC-interface targeting that uncouples IL-1β processing from broader inflammasome functions may be especially attractive for AD, where chronic IL-1β signaling is harmful but complete innate immune suppression could impair debris clearance and host defense.</div>
+      </li>
+      <li>
+        <div><strong>Include extracellular ASC specks as biomarkers and therapeutic endpoints.</strong> CSF, plasma/serum, brain tissue, and extracellular vesicle-associated ASC should be assessed alongside Aβ, p-tau, NLRP3, caspase-1, IL-1β, IL-18, and neurodegeneration markers in both trials and preclinical studies.</div>
+      </li>
+      <li>
+        <div><strong>Use AD-relevant cellular systems for screening.</strong> Candidates should be tested in Aβ-activated and tau-activated human microglia, iPSC-derived microglia/astrocytes, neuron–glia co-cultures, and organotypic hippocampal systems for effects on ASC speck formation, cytokine output, Aβ clearance, tau seeding, mitochondrial stress, and cell viability.</div>
+      </li>
+      <li>
+        <div><strong>Validate in vivo across multiple AD pathological domains.</strong> Experiments should determine whether PYCARD modulation reduces Aβ deposition, tau pathology, microgliosis/astrogliosis, synaptic loss, neuronal injury, gut–brain inflammatory signaling, vascular inflammation, and cognitive decline.</div>
+      </li>
+      <li>
+        <div><strong>Consider upstream and indirect suppression.</strong> Enhancing mitophagy/autophagy, reducing mitochondrial ROS, blocking TLR4/NF-κB priming, inhibiting NLRP3 activation, restoring gut barrier/microbiome balance, and promoting irisin/exercise-like signaling may reduce PYCARD-dependent inflammasome activity without directly eliminating ASC.</div>
+      </li>
+      <li>
+        <div><strong>Design therapies to avoid broad immunosuppression.</strong> The most viable AD approaches should be brain-penetrant, microglia- or myeloid-selective, extracellular-speck-focused, temporally controlled, or pathway-selective rather than systemic lifelong PYCARD blockade.</div>
+      </li>
+      <li>
+        <div><strong>Treat current evidence as promising but still preclinical.</strong> Direct AD evidence includes cell models, APP/PS1 and tau-transgenic mouse data, AD-like metabolic/gut models, human hippocampal/entorhinal transcriptomic data, and biomarker studies. Robust clinical validation is still needed to establish whether PYCARD targeting slows AD progression in humans.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-label">Overall Assessment</div>
+    <p>
+      <strong>PYCARD/ASC is a mechanistically compelling and therapeutically tractable target in Alzheimer's disease.</strong> Converging evidence from AD cell models, tau- and amyloid-transgenic mice, human biomarker studies, and AD brain transcriptomics positions PYCARD as both a <strong>central amplifier of neuroinflammation</strong> and a <strong>candidate precision biomarker</strong>. Its unique biology — bridging intracellular inflammasome assembly with extracellular prion-like speck propagation and Aβ cross-seeding — makes it especially relevant to AD's chronic, self-amplifying inflammatory pathology. <strong>Selective modulation strategies</strong> (anti-ASC antibodies, PYD/CARD interface blockers, speck-neutralizing agents, or upstream mitophagy/NLRP3-based approaches) are preferred over broad systemic blockade to preserve immune homeostasis. The field is at a promising but still preclinical stage; <strong>robust clinical validation remains the critical next step</strong> before PYCARD targeting can be considered a proven disease-modifying strategy in human Alzheimer's disease.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  PYCARD / ASC · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

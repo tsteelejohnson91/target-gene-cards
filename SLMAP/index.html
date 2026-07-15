@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLMAP — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(255,120,120,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f0c070;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    text-align: center;
+    line-height: 1.55;
+    margin-top: 6px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.91rem;
+    margin-bottom: 0;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    font-size: 1rem;
+    color: #dbeafe;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SLMAP &nbsp;|&nbsp; Sarcolemma-associated protein</span>
+    <span class="chip chip-danger">⚠ Cardiac safety concern</span>
+  </div>
+  <h1>SLMAP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Notice:</strong> SLMAP has established roles in cardiac electrophysiology, sodium-channel trafficking, calcium handling, and is associated with Brugada syndrome. Systemic SLMAP modulation may carry cardiac safety risks requiring early and thorough electrophysiology assessment.
+    </div>
+
+    <p>SLMAP is a membrane-associated scaffolding and signaling protein most consistently linked to STRIPAK/PP2A complexes, Hippo/MST/YAP regulation, organelle and membrane organization, calcium handling, cytoskeletal architecture, mitochondrial and metabolic stress responses, vascular dysfunction, and cell survival pathways. It is <em>not</em> presented as an Alzheimer's disease-specific gene, biomarker, disease driver, or validated therapeutic target.</p>
+
+    <p>No cited study directly investigates SLMAP in Alzheimer's disease, amyloid-β production or clearance, tau phosphorylation or aggregation, synaptic loss, microglial activation in AD, neuronal degeneration, blood–brain barrier dysfunction in AD, cognitive decline, or AD model systems. Its relevance to Alzheimer's disease is therefore <strong>indirect and hypothesis-generating</strong>.</p>
+
+    <p>The strongest mechanistic bridge to AD is SLMAP's role in STRIPAK/PP2A signaling. PP2A is a major tau phosphatase whose reduced activity is associated with tau hyperphosphorylation, a hallmark of AD. Multiple studies place SLMAP within conserved STRIPAK assemblies that regulate kinase/phosphatase balance, particularly MST/Hippo signaling. However, the literature does not demonstrate that SLMAP regulates neuronal PP2A activity, tau phosphorylation, amyloid processing, or AD progression.</p>
+
+    <p>Beyond STRIPAK/PP2A, SLMAP has plausible but unproven links to other AD-relevant mechanisms including Hippo/YAP-mediated stress responses, autophagy-lysosome function, mitochondrial dysfunction, ER stress, calcium dysregulation, cytoskeletal and microtubule organization, vascular/metabolic disease, and innate immune signaling. These pathway overlaps make SLMAP a biologically plausible exploratory candidate, but not an established AD target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="920" height="500" aria-label="SLMAP mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: SLMAP Hub -->
+        <rect x="10" y="10" width="200" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.7" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="110" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PANEL A · SLMAP HUB</text>
+
+        <!-- SLMAP node -->
+        <rect x="32" y="46" width="136" height="44" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="100" y="65" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">SLMAP</text>
+        <text x="100" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#cfe0f5">Scaffolding Protein</text>
+
+        <!-- Isoforms cluster -->
+        <rect x="26" y="118" width="60" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="56" y="133" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">SLMAP1/2</text>
+        <text x="56" y="146" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">35–45 kDa</text>
+
+        <rect x="114" y="118" width="60" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="144" y="133" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">SLMAP3</text>
+        <text x="144" y="146" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">74–91 kDa</text>
+
+        <!-- Membrane localization -->
+        <rect x="30" y="184" width="140" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="100" y="199" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">Membrane / Organelle</text>
+        <text x="100" y="212" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">Localization (SR/ER, Mito)</text>
+
+        <!-- Arrow SLMAP → isoforms -->
+        <line x1="100" y1="90" x2="56" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="100" y1="90" x2="144" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Arrow isoforms → membrane -->
+        <line x1="56" y1="154" x2="80" y2="184" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="144" y1="154" x2="120" y2="184" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Panel A label 2 -->
+        <text x="110" y="246" text-anchor="middle" font-family="Arial" font-size="8.5" font-style="italic" fill="#475569">Isoform &amp; localization</text>
+
+      <!-- Panel B: STRIPAK/Hippo axis -->
+        <rect x="224" y="10" width="222" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.5" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="335" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PANEL B · STRIPAK / HIPPO</text>
+
+        <!-- STRIPAK complex -->
+        <rect x="248" y="46" width="148" height="40" rx="7" fill="#1e3a5f" stroke="#0a1a2e" stroke-width="1.5"/>
+        <text x="322" y="63" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">STRIPAK Complex</text>
+        <text x="322" y="78" text-anchor="middle" font-family="Arial" font-size="9" fill="#93c5fd">PP2A + SLMAP scaffold</text>
+
+        <!-- Branch 1: PP2A/tau -->
+        <rect x="242" y="122" width="96" height="38" rx="6" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="290" y="138" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">PP2A Phosphatase</text>
+        <text x="290" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Activity</text>
+
+        <rect x="242" y="188" width="96" height="38" rx="6" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="290" y="204" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Tau Phospho-</text>
+        <text x="290" y="217" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">rylation (AD link)</text>
+
+        <!-- Branch 2: MST/Hippo/YAP -->
+        <rect x="356" y="122" width="80" height="38" rx="6" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="396" y="138" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">MST1/2</text>
+        <text x="396" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Kinase</text>
+
+        <rect x="356" y="188" width="80" height="38" rx="6" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="396" y="204" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">YAP/TAZ</text>
+        <text x="396" y="217" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Activity</text>
+
+        <!-- Convergence node -->
+        <rect x="270" y="258" width="120" height="38" rx="6" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="330" y="274" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#ffffff">Kinase/Phosphatase</text>
+        <text x="330" y="287" text-anchor="middle" font-family="Arial" font-size="9" fill="#dbeafe">Balance</text>
+
+        <!-- Arrows panel B -->
+        <line x1="290" y1="86" x2="290" y2="122" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="356" y1="86" x2="396" y2="122" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="290" y1="160" x2="290" y2="188" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="396" y1="160" x2="396" y2="188" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="290" y1="226" x2="305" y2="258" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="396" y1="226" x2="356" y2="258" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- SLMAP → STRIPAK connector (cross-panel) via gutter -->
+        <path d="M 168 68 L 210 68 L 248 68" stroke="#2e6da4" stroke-width="1.6" fill="none" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+      <!-- Panel C: Stress / Neuro Relevance -->
+        <rect x="460" y="10" width="210" height="285" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="565" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C · STRESS PATHWAYS</text>
+
+        <rect x="484" y="46" width="162" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.3"/>
+        <text x="565" y="62" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">Stress Response</text>
+        <text x="565" y="76" text-anchor="middle" font-family="Arial" font-size="9" fill="#a7f3d0">SLMAP-linked complexes</text>
+
+        <!-- Branch A: Mitochondria/ER -->
+        <rect x="474" y="116" width="86" height="38" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="517" y="132" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Mitochondrial</text>
+        <text x="517" y="145" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">/ ER Stress</text>
+
+        <!-- Branch B: DNA/Immune -->
+        <rect x="576" y="116" width="86" height="38" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="619" y="132" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">cGAS/STING</text>
+        <text x="619" y="145" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">TBK1 Signaling</text>
+
+        <!-- Autophagy -->
+        <rect x="484" y="186" width="162" height="38" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="565" y="202" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Autophagy / Lysosomal</text>
+        <text x="565" y="215" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Function</text>
+
+        <!-- Apoptosis -->
+        <rect x="484" y="252" width="162" height="30" rx="6" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="565" y="272" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Apoptosis / Cell Survival</text>
+
+        <!-- Arrows panel C -->
+        <line x1="517" y1="84" x2="517" y2="116" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="619" y1="84" x2="619" y2="116" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="517" y1="154" x2="527" y2="186" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="619" y1="154" x2="603" y2="186" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="565" y1="224" x2="565" y2="252" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+      <!-- Panel D: Vascular / Cardiac -->
+        <rect x="460" y="308" width="210" height="182" rx="12" fill="#fffbeb" fill-opacity="0.8" stroke="#b45309" stroke-width="1.5"/>
+        <text x="565" y="332" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">PANEL D · VASCULAR / CARDIAC</text>
+
+        <rect x="476" y="344" width="82" height="38" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="517" y="360" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Diabetic /</text>
+        <text x="517" y="373" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Endothelial</text>
+
+        <rect x="572" y="344" width="86" height="38" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="615" y="360" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Na⁺ Channel</text>
+        <text x="615" y="373" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">/ Ca²⁺ Handling</text>
+
+        <rect x="484" y="416" width="162" height="36" rx="6" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.4"/>
+        <text x="565" y="431" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">Brugada Syndrome Risk</text>
+        <text x="565" y="445" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Cardiac Safety Concern</text>
+
+        <line x1="517" y1="382" x2="524" y2="416" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="615" y1="382" x2="606" y2="416" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+      <!-- Panel E: AD Relevance Outcome -->
+        <rect x="686" y="10" width="222" height="480" rx="12" fill="#fdf0f0" fill-opacity="0.6" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="797" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">PANEL E · AD RELEVANCE</text>
+
+        <rect x="706" y="46" width="182" height="40" rx="7" fill="#8b1a1a" stroke="#5a0e0e" stroke-width="1.4"/>
+        <text x="797" y="63" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">AD Pathway Overlap</text>
+        <text x="797" y="78" text-anchor="middle" font-family="Arial" font-size="9" fill="#ffc9c9">Indirect / Unvalidated</text>
+
+        <rect x="706" y="122" width="182" height="38" rx="6" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="797" y="139" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Tau Hyperphosphorylation</text>
+        <text x="797" y="152" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">(via PP2A hypothesis)</text>
+
+        <rect x="706" y="190" width="182" height="38" rx="6" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="797" y="206" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Cytoskeletal / Microtubule</text>
+        <text x="797" y="219" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Disorganization</text>
+
+        <rect x="706" y="258" width="182" height="38" rx="6" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="797" y="274" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Ca²⁺ Dysregulation /</text>
+        <text x="797" y="287" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Neuronal Excitability</text>
+
+        <rect x="706" y="326" width="182" height="38" rx="6" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="797" y="342" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">Vascular / Metabolic</text>
+        <text x="797" y="355" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e293b">AD Risk (BBB / Diabetes)</text>
+
+        <rect x="706" y="394" width="182" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.6"/>
+        <text x="797" y="411" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#8b1a1a">No Direct AD Evidence</text>
+        <text x="797" y="426" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Hypothesis-generating only</text>
+
+        <line x1="797" y1="86" x2="797" y2="122" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="797" y1="160" x2="797" y2="190" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="797" y1="228" x2="797" y2="258" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="797" y1="296" x2="797" y2="326" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="797" y1="364" x2="797" y2="394" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connectors: Panel B convergence → Panel E tau (routed through gutter at y=277) -->
+        <path d="M 390 277 L 450 277 L 450 141 L 706 141" stroke="#1e3a5f" stroke-width="1.3" fill="none" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+        <!-- Panel C autophagy → Panel E cytoskeletal (routed through gutter at y=205) -->
+        <path d="M 646 205 L 666 205 L 666 209 L 706 209" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)" stroke-dasharray="5,3"/>
+
+        <!-- Panel D vascular → Panel E vascular row (routed at y=345) -->
+        <path d="M 670 434 L 674 452 L 706 452 L 706 414 L 706 414" stroke="#b45309" stroke-width="1.3" fill="none" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> — SLMAP isoform diversity (SLMAP1/2 vs SLMAP3) and membrane/organelle localization (SR/ER, mitochondria).
+      <strong>Panel B</strong> — STRIPAK complex branches into PP2A phosphatase (tau dephosphorylation link) and MST1/2→YAP/TAZ (Hippo axis), reconverging at kinase/phosphatase balance.
+      <strong>Panel C</strong> — SLMAP-linked stress response complexes branch into mitochondrial/ER stress and cGAS/STING–TBK1 innate immune signaling, funneling into autophagy/lysosomal function and apoptosis.
+      <strong>Panel D</strong> — Vascular/cardiac arm: diabetic endothelial dysfunction and Na⁺/Ca²⁺ channel trafficking converge on Brugada syndrome cardiac safety risk.
+      <strong>Panel E</strong> — Putative AD pathway overlaps (tau, cytoskeletal, calcium, vascular), all flagged as indirect/unvalidated with no direct AD evidence.
+      Dashed arrows indicate indirect, cross-domain connections inferred from pathway overlap rather than direct experimental demonstration.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>STRIPAK/PP2A — Strongest AD Bridge</h3>
+        <p>SLMAP is a recurring STRIPAK component or interactor. Because STRIPAK complexes include PP2A subunits central to tau dephosphorylation, this is the most compelling — though still indirect — mechanistic link to Alzheimer's disease. No study has demonstrated this link in neurons or AD models.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Hippo/MST/YAP — Context-Dependent Regulation</h3>
+        <p>SLMAP-containing STRIPAK complexes suppress MST1/2 or Hippo signaling in some contexts, while SLMAP3 developmental phenotypes occur without altered YAP activity in others. Pathway effects depend critically on isoform, cell type, and tissue context.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Stress Pathways — Neurodegenerative Overlap</h3>
+        <p>SLMAP or SLMAP-linked complexes are implicated in apoptosis, DNA damage responses, cGAS/STING–TBK1 signaling, mitochondrial function, oxidative phosphorylation, autophagy, and ER stress — all of which overlap with AD biology, though none have been demonstrated in AD models.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Cytoskeletal &amp; Cilia Biology</h3>
+        <p>SLMAP3 loss disrupts neural tube development, convergent extension, PCP signaling, cytoskeletal protein localization, ciliation, and organogenesis. This is relevant by analogy to tau's effects on microtubules and neuronal structure, but evidence is embryonic/developmental in origin.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cardiac Safety Risk</h3>
+        <p>SLMAP has established roles in cardiac electrophysiology, sodium-channel trafficking, calcium cycling, contractility, and adrenergic response. It is associated with Brugada syndrome in some genetic contexts. Systemic SLMAP modulation carries meaningful cardiac safety risk that must be assessed early.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Isoform Specificity — Critical Complexity</h3>
+        <p>The literature consistently distinguishes isoforms (35-kDa, 45-kDa, 74/80/91-kDa; SLMAP1, SLMAP2, SLMAP3) by domain structure, tail-anchor sequence, localization, and function. Any AD investigation must resolve isoform- and cell-type-specific expression rather than treating SLMAP as a single uniform target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat SLMAP as speculative, not validated.</strong> The current evidence supports only indirect, pathway-level relevance to Alzheimer's disease. It should not be prioritized as a therapeutic target without disease-specific experimental validation.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize brain-specific validation first.</strong> Key experiments should test whether SLMAP expression, isoform usage, localization, methylation, or protein interactions are altered in AD brain tissue, especially in vulnerable regions and across neurons, astrocytes, microglia, endothelial cells, and pericytes at single-cell resolution.</div>
+      </li>
+      <li>
+        <div><strong>Test the STRIPAK/PP2A/tau hypothesis directly.</strong> The most important AD-focused question is whether SLMAP perturbation changes PP2A activity, tau phosphorylation, tau aggregation, or MST/Hippo signaling in neurons and glia — an experiment not yet reported in the literature.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate SLMAP in AD-relevant functional models.</strong> Perturbation studies should assess amyloid precursor protein processing, amyloid-β generation/clearance, synaptic integrity, neuronal survival, autophagic flux, lysosomal function, mitochondrial respiration, oxidative stress, ER stress, calcium signaling, and neuroinflammatory responses.</div>
+      </li>
+      <li>
+        <div><strong>Investigate vascular-metabolic mechanisms.</strong> Given SLMAP's links to diabetes, endothelial dysfunction, and glucose uptake, studies should test whether SLMAP affects brain endothelial cells, blood–brain barrier integrity, neurovascular coupling, cerebral microvascular inflammation, or insulin/glucose signaling in AD-relevant settings.</div>
+      </li>
+      <li>
+        <div><strong>Resolve isoform- and cell-type-specific biology.</strong> Any AD program must distinguish SLMAP isoforms and their subcellular pools, since different isoforms localize to different membranes and may have distinct or even opposing functions relevant to neuronal health.</div>
+      </li>
+      <li>
+        <div><strong>Consider pathway modulation over direct SLMAP inhibition.</strong> If SLMAP proves relevant in AD models, the most plausible therapeutic angle would be selective modulation of SLMAP-dependent STRIPAK interactions, Hippo/MST/YAP balance, PP2A-associated signaling, or stress-response complexes rather than broad suppression of SLMAP itself.</div>
+      </li>
+      <li>
+        <div><strong>Build in cardiac safety assessment early.</strong> Because SLMAP is implicated in cardiac conduction, sodium-channel trafficking, calcium handling, and Brugada syndrome risk, any systemic therapeutic strategy requires careful, early electrophysiology and cardiovascular safety testing.</div>
+      </li>
+      <li>
+        <div><strong>Do not infer AD therapeutic value from oncology fusion data.</strong> SLMAP kinase fusions (NTRK2, NTRK3, ROS1, ALK, BRAF) are therapeutically actionable in cancer because of the fused kinase partner, not because native SLMAP is established as a disease-modifying target in neurodegeneration.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — SLMAP in Alzheimer's Disease</div>
+      <p>
+        SLMAP is best viewed as an <strong>indirect, pathway-level candidate</strong> for Alzheimer's research rather than a validated therapeutic target. Its strongest rationale rests in <strong>STRIPAK/PP2A-linked phosphorylation control</strong> — the most mechanistically compelling bridge, given PP2A's central role as a tau phosphatase — alongside <strong>Hippo/MST/YAP signaling</strong>, <strong>organelle stress responses</strong>, <strong>vascular-metabolic dysfunction</strong>, and <strong>cytoskeletal/membrane organization</strong>. However, the available literature does not establish SLMAP as an Alzheimer's disease mechanism or therapeutic target. <strong>No study has directly investigated SLMAP in AD contexts</strong>, and all pathway-level connections remain hypothetical without brain-specific, disease-context validation. Critically, SLMAP's roles in <strong>cardiac electrophysiology and Brugada syndrome risk</strong> impose a meaningful safety constraint on any systemic modulation strategy. Substantial disease-specific validation — including isoform-resolved, cell-type-specific studies in AD models — is required before SLMAP can be responsibly advanced as an Alzheimer's therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SLMAP · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

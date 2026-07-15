@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRPC3 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255,160,160,0.4);
+  }
+
+  header h1 {
+    font-size: clamp(26px, 4.5vw, 40px);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 15px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--neutral);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: #dc2626; }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: #0f766e; }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: #d97706; }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue { background: #eff6ff; border-color: #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaways li {
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+
+  .verdict p {
+    font-size: 15.5px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+
+  .verdict h2 {
+    color: #bfdbfe;
+    border-bottom-color: rgba(147, 197, 253, 0.4);
+    font-size: 11px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 12.5px;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TRPC3 &nbsp;|&nbsp; Transient Receptor Potential Canonical Channel 3</span>
+    <span class="chip chip-danger">⚠ Safety: Systemic off-target concern</span>
+  </div>
+  <h1>TRPC3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Systemic Safety Caveat:</strong> TRPC3 has established physiological roles in cardiovascular, endocrine, immune, renal, muscle, and neural tissues. Systemic safety of TRPC3 inhibition remains a major concern, and current human data are mainly expression/localization-based. This target should be treated as promising but still preclinical.
+    </div>
+
+    <p>TRPC3 is a <strong>calcium-permeable, nonselective canonical TRP channel</strong> repeatedly implicated in Alzheimer's disease (AD)-relevant mechanisms, including Ca²⁺ dyshomeostasis, amyloid-β oligomer–induced calcium overload, synaptic dysfunction, neuronal hyperexcitability, glial reactivity, neuroinflammatory signaling, mitochondrial and oxidative stress, and neurovascular dysfunction.</p>
+
+    <p>The strongest AD-specific evidence shows that TRPC3 is <strong>aberrantly upregulated in human AD cortex and hippocampus</strong>, including pyramidal and excitatory neurons and regions overlapping GFAP-positive reactive astrocytes. This pattern is conserved across AD-relevant mouse models, including 5xFAD and PS19 mice. TRPC3 upregulation strikingly contrasts with TRPC6 downregulation, suggesting a disease-associated TRPC channel imbalance rather than nonspecific TRPC-family disruption.</p>
+
+    <p>Mechanistically, soluble amyloid-β oligomers increase TRPC3 expression and activity, contributing to dendritic Ca²⁺ overload, impaired Ca²⁺/calmodulin signaling, synaptic injury, long-term potentiation (LTP) deficits, and memory impairment. Selective TRPC3 antagonism — especially with JW-65 and related compounds — prevents or reverses several of these AD-like abnormalities in neuronal cultures and mouse models, supporting TRPC3 as a plausible disease-modifying therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 940 wide × 500 tall viewBox -->
+        <!-- Panel A: Upstream triggers (left) -->
+        <!-- Panel B: TRPC3 core mechanism with branching (center) -->
+        <!-- Panel C: Downstream outcomes (right) -->
+        <svg viewBox="0 0 940 500" width="900" height="430" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="12">
+
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#dc2626"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+          </defs>
+
+          <!-- ═══════════════════════════════════════════ -->
+          <!-- PANEL A: Upstream / AD Context  x=8..230   -->
+          <!-- ═══════════════════════════════════════════ -->
+          <rect x="8" y="10" width="222" height="478" rx="12" ry="12"
+                fill="rgba(30,58,95,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="22" y="30" font-size="9" font-weight="700" fill="#1e3a5f"
+                text-anchor="start" letter-spacing="1">A · UPSTREAM TRIGGERS</text>
+
+          <!-- Node 1: Aβ oligomers -->
+          <rect x="34" y="44" width="164" height="44" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="116" y="63" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="12">Aβ Oligomers</text>
+          <text x="116" y="78" text-anchor="middle" fill="#475569" font-size="10">(soluble, AD-relevant)</text>
+
+          <!-- Node 2: AD Brain Upregulation -->
+          <rect x="34" y="118" width="164" height="44" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="116" y="136" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="12">TRPC3 Upregulated</text>
+          <text x="116" y="151" text-anchor="middle" fill="#475569" font-size="10">Human AD cortex &amp; HPC</text>
+
+          <!-- Node 3: TRPC6 Downregulated -->
+          <rect x="34" y="196" width="164" height="44" rx="7" fill="#fef2f2" stroke="#dc2626" stroke-width="1.3"/>
+          <text x="116" y="213" text-anchor="middle" font-weight="700" fill="#9b1c1c" font-size="12">TRPC6 Downregulated</text>
+          <text x="116" y="228" text-anchor="middle" fill="#7f1d1d" font-size="10">Channel imbalance in AD</text>
+
+          <!-- Node 4: Ca2+/calcineurin/NFAT -->
+          <rect x="34" y="274" width="164" height="44" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="116" y="291" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="11">Calcineurin/NFAT</text>
+          <text x="116" y="306" text-anchor="middle" fill="#475569" font-size="10">Transcriptional upregulation</text>
+
+          <!-- Arrows panel A internal -->
+          <!-- N1 -> N2 -->
+          <line x1="116" y1="88" x2="116" y2="116" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+          <!-- N2 -> N3 -->
+          <line x1="116" y1="162" x2="116" y2="194" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <!-- N1 -> N4 via left gutter -->
+          <polyline points="34,66 20,66 20,296 34,296"
+                    stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+          <!-- ═══════════════════════════════════════════════════ -->
+          <!-- PANEL B: TRPC3 Core Mechanism  x=248..660         -->
+          <!-- ═══════════════════════════════════════════════════ -->
+          <rect x="248" y="10" width="412" height="478" rx="12" ry="12"
+                fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="264" y="30" font-size="9" font-weight="700" fill="#1e3a5f"
+                letter-spacing="1">B · TRPC3 CHANNEL MECHANISM &amp; DUAL BRANCH</text>
+
+          <!-- Node 5: TRPC3 Channel (shared hub) -->
+          <rect x="314" y="44" width="180" height="46" rx="7" fill="#1e3a5f" stroke="#0c1e33" stroke-width="1.5"/>
+          <text x="404" y="63" text-anchor="middle" font-weight="700" fill="#ffffff" font-size="13">TRPC3 Channel</text>
+          <text x="404" y="79" text-anchor="middle" fill="#bfdbfe" font-size="10">Ca²⁺-permeable · non-selective</text>
+
+          <!-- Branch fork line from node 5 down to two sub-nodes -->
+          <!-- Left branch: Neuronal Ca²⁺ branch -->
+          <!-- Right branch: Inflammatory/oxidative branch -->
+
+          <!-- Node 6: Dendritic Ca²⁺ overload (left branch) -->
+          <rect x="262" y="134" width="160" height="44" rx="7" fill="#fef2f2" stroke="#dc2626" stroke-width="1.3"/>
+          <text x="342" y="152" text-anchor="middle" font-weight="700" fill="#9b1c1c" font-size="11">Ca²⁺ Overload</text>
+          <text x="342" y="167" text-anchor="middle" fill="#7f1d1d" font-size="10">Dendritic Ca²⁺ excess</text>
+
+          <!-- Node 7: NF-κB / Nox2 / TNFα (right branch) -->
+          <rect x="454" y="134" width="172" height="44" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+          <text x="540" y="152" text-anchor="middle" font-weight="700" fill="#92400e" font-size="11">NF-κB / Nox2 / TNFα</text>
+          <text x="540" y="167" text-anchor="middle" fill="#78350f" font-size="10">Neuroinflammation &amp; ROS</text>
+
+          <!-- Branch arrows from Node5 to Node6 and Node7 -->
+          <polyline points="368,90 342,90 342,132" stroke="#dc2626" stroke-width="1.5" fill="none" marker-end="url(#arr-red)"/>
+          <polyline points="440,90 540,90 540,132" stroke="#d97706" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 8: Impaired CaM signaling (under node 6) -->
+          <rect x="262" y="216" width="160" height="44" rx="7" fill="#fef2f2" stroke="#dc2626" stroke-width="1.3"/>
+          <text x="342" y="234" text-anchor="middle" font-weight="700" fill="#9b1c1c" font-size="11">Impaired CaM</text>
+          <text x="342" y="249" text-anchor="middle" fill="#7f1d1d" font-size="10">Ca²⁺/calmodulin pathway ↓</text>
+
+          <!-- Node 9: Mitochondrial Ca²⁺ loading (under node 7) -->
+          <rect x="454" y="216" width="172" height="44" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+          <text x="540" y="234" text-anchor="middle" font-weight="700" fill="#92400e" font-size="11">Mito Ca²⁺ Loading</text>
+          <text x="540" y="249" text-anchor="middle" fill="#78350f" font-size="10">Oxidative stress &amp; injury</text>
+
+          <!-- Arrows node6->node8 and node7->node9 -->
+          <line x1="342" y1="178" x2="342" y2="214" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="540" y1="178" x2="540" y2="214" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Converge: Node 8 and Node 9 -> Node 10 (Synaptic injury / LTP deficit) -->
+          <!-- Node 10: shared outcome -->
+          <rect x="328" y="308" width="192" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="424" y="326" text-anchor="middle" font-weight="700" fill="#9b1c1c" font-size="12">Synaptic Injury</text>
+          <text x="424" y="341" text-anchor="middle" fill="#7f1d1d" font-size="10">LTP deficit · memory loss</text>
+
+          <!-- Arrows node8->node10 and node9->node10 -->
+          <polyline points="342,260 342,286 424,286 424,306" stroke="#dc2626" stroke-width="1.5" fill="none" marker-end="url(#arr-red)"/>
+          <polyline points="540,260 540,286 520,286 520,306" stroke="#d97706" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 11: JW-65 / Compound 60a inhibition -->
+          <rect x="328" y="396" width="192" height="46" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="424" y="414" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="12">JW-65 / Cmpd 60a</text>
+          <text x="424" y="430" text-anchor="middle" fill="#134e4a" font-size="10">Selective TRPC3 inhibition</text>
+
+          <!-- Arrow node10 -> node11 (rescue) -->
+          <line x1="424" y1="352" x2="424" y2="394" stroke="#0f766e" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- ═══════════════════════════════════════════ -->
+          <!-- PANEL C: Downstream Outcomes  x=678..932   -->
+          <!-- ═══════════════════════════════════════════ -->
+          <rect x="678" y="10" width="254" height="478" rx="12" ry="12"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="694" y="30" font-size="9" font-weight="700" fill="#0f766e"
+                letter-spacing="1">C · THERAPEUTIC OUTCOMES</text>
+
+          <!-- Node 12: LTP Rescue -->
+          <rect x="700" y="44" width="210" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="805" y="63" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="12">LTP Rescued</text>
+          <text x="805" y="78" text-anchor="middle" fill="#134e4a" font-size="10">Hippocampal plasticity restored</text>
+
+          <!-- Node 13: Memory / Cognition -->
+          <rect x="700" y="132" width="210" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="805" y="151" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="12">Memory Improved</text>
+          <text x="805" y="166" text-anchor="middle" fill="#134e4a" font-size="10">Learning/memory in 5xFAD</text>
+
+          <!-- Node 14: Synaptic gene expression -->
+          <rect x="700" y="220" width="210" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="805" y="239" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="12">Synaptic Genes Restored</text>
+          <text x="805" y="254" text-anchor="middle" fill="#134e4a" font-size="10">Gene expression corrected</text>
+
+          <!-- Node 15: Neuroprotection -->
+          <rect x="700" y="308" width="210" height="44" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="805" y="326" text-anchor="middle" font-weight="700" fill="#1d4ed8" font-size="12">Neuroprotection</text>
+          <text x="805" y="341" text-anchor="middle" fill="#1e40af" font-size="10">Neuronal survival · ROS ↓</text>
+
+          <!-- Node 16: Unresolved / Future -->
+          <rect x="700" y="396" width="210" height="46" rx="7" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.3"/>
+          <text x="805" y="415" text-anchor="middle" font-weight="700" fill="#475569" font-size="11">Open Questions</text>
+          <text x="805" y="431" text-anchor="middle" fill="#64748b" font-size="10">Astrocytes · tau · BBB · safety</text>
+
+          <!-- Arrows within panel C (vertical chain) -->
+          <line x1="805" y1="88" x2="805" y2="130" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="805" y1="176" x2="805" y2="218" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="805" y1="264" x2="805" y2="306" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="805" y1="352" x2="805" y2="394" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connectors: Panel B -> Panel C through right gutter -->
+          <!-- Node11 (JW-65, y center=419) -> Node12 (LTP, y center=66) via right edge -->
+          <!-- Route: from node11 right edge (520,419) -> gutter x=666 -> up to y=66 -> node12 left (700,66) -->
+          <polyline points="520,419 666,419 666,66 698,66"
+                    stroke="#0f766e" stroke-width="1.6" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel A -> Panel B connector: Node2 right edge (198,140) -> Node5 left (314,67) via top gutter y=22? No, use horizontal approach -->
+          <!-- Node2 center-right (198,140) -> Node5 left (314,67) -->
+          <!-- Safe route: from 198,140 -> 240,140 -> 240,67 -> 314,67 -->
+          <polyline points="198,140 240,140 240,67 312,67"
+                    stroke="#2e6da4" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers):</strong> Soluble Aβ oligomers drive TRPC3 transcriptional upregulation via Ca²⁺/calcineurin/NFAT signaling; TRPC6 is simultaneously downregulated, establishing a disease-specific channel imbalance.
+        <strong>Panel B (TRPC3 Mechanism — dual branch):</strong> Aberrant TRPC3 activity fans out into two parallel cascades — a neuronal Ca²⁺ branch (dendritic overload → impaired calmodulin signaling) and an inflammatory/oxidative branch (NF-κB/Nox2/TNFα → mitochondrial Ca²⁺ loading) — both converging on synaptic injury and LTP deficit. Selective inhibition by JW-65 / Compound 60a (dashed teal) interrupts this convergence.
+        <strong>Panel C (Therapeutic Outcomes):</strong> TRPC3 inhibition rescues LTP, restores memory in 5xFAD mice, corrects synaptic gene expression, and reduces oxidative neuronal injury. Open questions (astrocytic causality, tau, BBB, systemic safety) remain unresolved.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>TRPC3 Upregulation in AD Tissue</h3>
+        <p>Increased TRPC3 expression is documented in human AD cortex and hippocampus, post-mortem AD brains, excitatory/pyramidal neurons, and AD mouse models (5xFAD, PS19). This contrasts with reduced TRPC6 and TRPC1, while TRPC4/5 show minimal AD-associated change — indicating a selective channel imbalance, not global TRPC disruption.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Aβ-Driven Feed-Forward Ca²⁺ Pathology</h3>
+        <p>Soluble Aβ oligomers induce sustained TRPC3 upregulation in mature excitatory neurons through Ca²⁺/calcineurin/NFAT transcriptional signaling. Elevated TRPC3 then amplifies pathological Ca²⁺ entry and dendritic overload — creating a feed-forward loop of amyloid-driven calcium dyshomeostasis.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>TRPC3 Inhibition Rescues Synaptic & Cognitive Phenotypes</h3>
+        <p>JW-65 (selective for TRPC3 over TRPC6) prevents Aβ-induced Ca²⁺ overload, restores Ca²⁺/calmodulin-mediated pathways, protects hippocampal neurons from synaptic injury, rescues LTP, corrects synaptic gene-expression abnormalities, and improves learning and memory — including in symptomatic 5xFAD mice.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Functional Divergence of TRPC3 vs. TRPC6</h3>
+        <p>TRPC3 is upregulated and harmful when aberrantly activated in AD; TRPC6 is reduced and may support synaptic integrity. This divergence argues strongly against broad TRPC-family blockade and in favor of TRPC3-selective inhibition that avoids suppressing potentially protective TRPC6 activity.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammation & Oxidative Stress Amplification</h3>
+        <p>Persistent TRPC3 activity can promote proinflammatory mediators (TNFα, COX2), NF-κB-linked signaling, Nox2-associated ROS production, mitochondrial Ca²⁺ loading, and cell injury. These mechanisms directly overlap with AD neuroinflammation, oxidative stress, and mitochondrial dysfunction pathways.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Pharmacological Tractability & Drug Development</h3>
+        <p>Multiple inhibitors exist: JW-65, Pyr3, Pyr10, compound 20, and compound 60a (improved potency, selectivity, and drug-like properties). Structural insights into DAG, sterol, and PIP2-linked regulatory sites further support rational, CNS-penetrant TRPC3-selective drug design. Off-target selectivity against ORAI, TRPC6/7, and TREK/TASK channels must be rigorously established.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Prioritize TRPC3-selective inhibition</strong> as the principal AD therapeutic strategy, targeting amyloid-driven Ca²⁺ overload, synaptic dysfunction, LTP impairment, and memory deficits as primary endpoints.</li>
+      <li><strong>Avoid broad TRPC-family blockade</strong> unless selectivity and functional consequences are carefully defined — TRPC6 is reduced in AD and may possess synaptoprotective roles that must not be inadvertently suppressed.</li>
+      <li><strong>Advance next-generation antagonists</strong> such as compound 60a (JW-65 derivative) with emphasis on TRPC3/TRPC6 selectivity, CNS penetration, metabolic stability, potency, and long-term systemic safety profiling.</li>
+      <li><strong>Validate cell-type-specific roles</strong> of TRPC3 in AD, particularly in excitatory neurons, reactive astrocytes, microglia, and brain vascular/pericyte compartments where expression and functional consequences remain incompletely characterized.</li>
+      <li><strong>Test whether TRPC3 inhibition modifies core AD endpoints</strong> beyond calcium and synaptic physiology — including amyloid burden, tau pathology, neuroinflammation, astrocyte reactivity, mitochondrial ROS, neuronal survival, network hyperexcitability, and cognition.</li>
+      <li><strong>Require genetic confirmation alongside pharmacology</strong>, because commonly used TRPC inhibitors carry off-target risks and may not reliably distinguish TRPC3 from ORAI, TRPC6/7, or other ion channels at relevant concentrations.</li>
+      <li><strong>Investigate TRPC3 within a broader calcium-signaling module</strong> involving calcineurin/NFAT, Ca²⁺/calmodulin, CaMKII/CaMKIV, STIM/ORAI, ER Ca²⁺ release, IP3 receptors, and mitochondrial Ca²⁺ handling — as these pathways likely act cooperatively in AD pathogenesis.</li>
+      <li><strong>Evaluate neurovascular and glial mechanisms</strong> as secondary but important therapeutic opportunities, especially where TRPC3 may contribute to reactive astrogliosis, inflammatory signaling, vascular constriction, BBB dysfunction, or oxidative injury.</li>
+      <li><strong>Treat TRPC3 as promising but preclinical:</strong> direct evidence supports disease-relevant rescue in AD models, but human data remain mainly expression/localization-based, astrocytic causality is unresolved, and systemic safety is a major concern given TRPC3's physiological roles across cardiovascular, endocrine, renal, immune, and neural tissues.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Synthesis</div>
+      <p>
+        <strong>TRPC3 emerges as a mechanistically credible and pharmacologically tractable target</strong> for Alzheimer's disease, particularly for the early synaptic and calcium dysregulation that precedes irreversible neuronal loss. The convergence of evidence — <strong>aberrant upregulation in human AD brain</strong>, conservation across AD mouse models, a defined feed-forward loop linking <strong>Aβ oligomers → TRPC3 → Ca²⁺ overload → synaptic and cognitive failure</strong>, and the demonstration that <strong>selective inhibition with JW-65 rescues LTP and memory in 5xFAD mice</strong> — provides a compelling preclinical rationale. The functional divergence from TRPC6 sharpens the therapeutic hypothesis and argues for a precision approach. Key unresolved challenges include <strong>systemic safety across cardiovascular and endocrine tissues</strong>, incomplete understanding of astrocytic and neurovascular contributions, absence of human interventional data, and the need for next-generation compounds with proven CNS penetrance and true TRPC3/TRPC6 selectivity. TRPC3 warrants continued investment as a <strong>disease-modifying calcium-channel target</strong>, with a clear priority on selectivity, cell-type resolution, and translation into human-relevant biomarker endpoints.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TRPC3 / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

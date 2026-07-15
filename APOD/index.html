@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APOD / ApoD — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-border: #e8b4b4;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0d7377;
+    --positive-light: #e6f7f7;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #3b82f6;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,60,60,0.28);
+    border: 1px solid rgba(240,150,150,0.4);
+    color: #ffd0d0;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.68);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 26px;
+    font-weight: 700;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f0c060;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW PROSE */
+  .prose p {
+    margin-bottom: 18px;
+    font-size: 1.02rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 14px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.blue {
+    border-left-color: var(--blue-mid);
+    background: var(--blue-light);
+  }
+
+  .card.neutral {
+    border-left-color: #94a3b8;
+    background: var(--neutral-bg);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    color: var(--slate);
+  }
+
+  .card p {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: #334155;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .takeaways li .lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  .takeaways li p {
+    font-size: 0.97rem;
+    line-height: 1.72;
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    border-radius: 12px;
+    padding: 38px 40px;
+    color: #e2eef8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #90b8d8;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .verdict p {
+    font-size: 1.04rem;
+    line-height: 1.82;
+    color: #d8eaf8;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    color: var(--neutral-text);
+    font-size: 0.82rem;
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: APOD &nbsp;|&nbsp; Apolipoprotein D</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety concern</span>
+  </div>
+  <h1>APOD / ApoD &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caution — Context-Dependent Effects:</strong> Broad systemic APOD elevation carries uncharacterized risks including hepatic lipid effects, inflammasome activation in microglia, and potential maladaptive secretory phenotypes. Cell-type-specific and CNS-targeted approaches are strongly preferred until safety is clarified.
+    </div>
+
+    <div class="prose">
+      <p>APOD/ApoD is a lipid-binding apolipoprotein and lipocalin family member with repeatedly documented links to Alzheimer's disease–relevant biology: oxidative lipid damage, lipid and cholesterol transport, APOE-related pathways, glial stress responses, neuroinflammation, blood–brain barrier and vascular dysfunction, lysosomal/autophagy integrity, myelin maintenance, synaptic and axonal remodeling, and aging-related vulnerability.</p>
+      <p>The strongest AD-specific evidence supports APOD as both a <strong>biomarker candidate</strong> and a <strong>mechanistic modifier</strong>. APOD is upregulated in AD brain in proportion to Braak stage, is present in senile plaques and amyloid-related vascular deposits, and appears in CSF/plasma/urine biomarker panels. In APP/PS1 mice, apoD loss nearly doubled hippocampal amyloid plaque burden, while neuronal human apoD expression reduced plaque load and lowered Aβ1-40 and insoluble Aβ1-42.</p>
+      <p>Mechanistically, APOD is most consistently a <em>protective or compensatory stress-response factor</em> rather than a primary causative gene. Its therapeutic rationale stems from buffering lipid peroxidation, supporting glial–neuronal lipid handling, preserving lysosomal function, modulating inflammatory signaling, and potentially reducing amyloidogenic processing through BACE1-related mechanisms. However, its biology is context-dependent and precise modulation — rather than indiscriminate upregulation — will be required.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (viewBox 0 0 960 500):
+        Panel A (Upstream/Input):  x=10, y=10, w=200, h=480
+        Panel B (Core Mechanisms): x=225, y=10, w=370, h=480
+        Panel C (Downstream):      x=610, y=10, w=340, h=480
+
+        NODE COUNT PLAN:
+        Panel A: 3 nodes (Oxidative stress, Lipid dyshomeo, APOE4 risk)
+        Panel B: 6 nodes (APOD protein [hub], Antioxidant branch: Met93 rxn + Lysosomal stabilization,
+                          Amyloid branch: BACE1 modulation + Aβ reduction,
+                          Glial branch: Astrocyte EV transfer)
+        Panel C: 4 nodes (BBB/CD36, Neuroinflam/NLRC4, Synaptic/myelin, Cognitive outcome)
+        TOTAL = 13 nodes ✓ (≤16)
+      -->
+      <svg viewBox="0 0 960 510" xmlns="http://www.w3.org/2000/svg" aria-label="APOD mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0d7377"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: UPSTREAM STRESSORS ═══ -->
+        <rect x="10" y="10" width="198" height="488" rx="10" ry="10"
+              fill="rgba(30,58,92,0.06)" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="109" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9.5" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">UPSTREAM STRESSORS</text>
+
+        <!-- A1: Oxidative stress -->
+        <rect x="24" y="48" width="170" height="52" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="109" y="69" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">Oxidative / Lipid</text>
+        <text x="109" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">Peroxidation Stress</text>
+
+        <!-- A2: Lipid dyshomeostasis -->
+        <rect x="24" y="148" width="170" height="52" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="109" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">Lipid / Membrane</text>
+        <text x="109" y="184" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">Dyshomeostasis</text>
+
+        <!-- A3: APOE4 / aging risk -->
+        <rect x="24" y="248" width="170" height="52" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="109" y="269" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">APOE4 Risk /</text>
+        <text x="109" y="284" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="600">Aging Brain</text>
+
+        <!-- ═══ PANEL B: APOD CORE MECHANISMS ═══ -->
+        <rect x="222" y="10" width="378" height="488" rx="10" ry="10"
+              fill="rgba(46,109,164,0.05)" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="411" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9.5" font-weight="700" fill="#2e6da4" letter-spacing="0.1em">APOD CORE MECHANISMS</text>
+
+        <!-- B-HUB: APOD protein (central hub) -->
+        <rect x="302" y="46" width="218" height="56" rx="9" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.8"/>
+        <text x="411" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="12.5" fill="#ffffff" font-weight="700">APOD / ApoD Protein</text>
+        <text x="411" y="87" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#cfe3f5">(Lipocalin / Lipid-Binding)</text>
+
+        <!-- Left branch: Antioxidant -->
+        <!-- B-L1: Met93 antioxidant -->
+        <rect x="236" y="168" width="162" height="52" rx="7" fill="#e6f7f7" stroke="#0d7377" stroke-width="1.3"/>
+        <text x="317" y="189" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Met93 Antioxidant</text>
+        <text x="317" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Lipid Peroxide Reduction</text>
+
+        <!-- B-L2: Lysosomal stabilization -->
+        <rect x="236" y="278" width="162" height="52" rx="7" fill="#e6f7f7" stroke="#0d7377" stroke-width="1.3"/>
+        <text x="317" y="299" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Lysosomal Membrane</text>
+        <text x="317" y="314" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Stabilization / Autophagy</text>
+
+        <!-- B-L3: Astrocyte EV transfer -->
+        <rect x="236" y="388" width="162" height="52" rx="7" fill="#e6f7f7" stroke="#0d7377" stroke-width="1.3"/>
+        <text x="317" y="409" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Astrocyte→Neuron</text>
+        <text x="317" y="424" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">EV Lipid Transfer</text>
+
+        <!-- Right branch: Amyloid -->
+        <!-- B-R1: BACE1 modulation -->
+        <rect x="422" y="168" width="162" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="503" y="189" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#6b3600" font-weight="600">BACE1 Modulation</text>
+        <text x="503" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#6b3600" font-weight="600">APP Processing</text>
+
+        <!-- B-R2: Aβ reduction -->
+        <rect x="422" y="278" width="162" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="503" y="299" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#6b3600" font-weight="600">↓ Aβ1-40 / Aβ1-42</text>
+        <text x="503" y="314" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#6b3600" font-weight="600">Plaque Burden ↓</text>
+
+        <!-- ═══ PANEL C: DOWNSTREAM OUTCOMES ═══ -->
+        <rect x="614" y="10" width="336" height="488" rx="10" ry="10"
+              fill="rgba(139,26,26,0.04)" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="782" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9.5" font-weight="700" fill="#8b1a1a" letter-spacing="0.1em">DOWNSTREAM OUTCOMES</text>
+
+        <!-- C1: BBB / CD36 -->
+        <rect x="628" y="48" width="308" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="782" y="69" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#5c0f0f" font-weight="600">BBB Integrity via CD36 Binding</text>
+        <text x="782" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#5c0f0f" font-weight="600">(Mural Cell / Endothelial Axis)</text>
+
+        <!-- C2: Neuroinflammation / NLRC4 -->
+        <rect x="628" y="158" width="308" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="782" y="179" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#5c0f0f" font-weight="600">Microglial NLRC4</text>
+        <text x="782" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#5c0f0f" font-weight="600">Inflammasome (Context-Risk)</text>
+
+        <!-- C3: Synaptic / myelin preservation -->
+        <rect x="628" y="268" width="308" height="52" rx="7" fill="#e6f7f7" stroke="#0d7377" stroke-width="1.3"/>
+        <text x="782" y="289" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Synaptic / Myelin</text>
+        <text x="782" y="304" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0a4a4c" font-weight="600">Preservation</text>
+
+        <!-- C4: Cognitive / AD outcome -->
+        <rect x="628" y="378" width="308" height="62" rx="7" fill="#1a3a5c" stroke="#0b1e30" stroke-width="1.8"/>
+        <text x="782" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" fill="#ffffff" font-weight="700">Cognitive Resilience /</text>
+        <text x="782" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" fill="#ffffff" font-weight="700">AD Progression Outcome</text>
+        <text x="782" y="434" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#90b8d8">(biomarker + therapeutic target)</text>
+
+        <!-- ═══ ARROWS ═══ -->
+
+        <!-- Panel A → Hub: A1 ox stress → hub -->
+        <line x1="194" y1="74" x2="301" y2="74" stroke="#2e6da4" stroke-width="1.7" marker-end="url(#arr)"/>
+
+        <!-- A2 lipid → hub (via midpoint at panel gap) -->
+        <polyline points="194,174 208,174 208,74 302,74" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3 APOE4 → hub -->
+        <polyline points="194,274 208,274 208,90 302,90" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Hub → B-L1 antioxidant (left branch) -->
+        <polyline points="356,102 356,144 317,144 317,168" fill="none" stroke="#0d7377" stroke-width="1.6" marker-end="url(#arr-pos)"/>
+
+        <!-- Hub → B-R1 BACE1 (right branch) -->
+        <polyline points="466,102 466,144 503,144 503,168" fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+        <!-- B-L1 → B-L2 lysosomal -->
+        <line x1="317" y1="220" x2="317" y2="278" stroke="#0d7377" stroke-width="1.6" marker-end="url(#arr-pos)"/>
+
+        <!-- B-L2 → B-L3 EV transfer -->
+        <line x1="317" y1="330" x2="317" y2="388" stroke="#0d7377" stroke-width="1.6" marker-end="url(#arr-pos)"/>
+
+        <!-- B-R1 → B-R2 Aβ reduction -->
+        <line x1="503" y1="220" x2="503" y2="278" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+        <!-- Panel B → Panel C (left branch to C1 BBB via horizontal line) -->
+        <!-- B-L1 → C1 BBB: route via right of B panel top -->
+        <polyline points="398,194 410,194 410,103 600,103 600,74 628,74" fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B-R1 BACE1 → C2 Neuroinflam -->
+        <polyline points="584,194 600,194 600,184 628,184" fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B-L3 EV → C3 Synaptic -->
+        <polyline points="398,414 410,414 410,360 600,360 600,294 628,294" fill="none" stroke="#0d7377" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B-R2 Aβ reduction → C4 Cognitive outcome -->
+        <polyline points="584,304 600,304 600,340 782,340 782,378" fill="none" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- C1 BBB → C4 Cognitive (right panel vertical) -->
+        <polyline points="906,100 930,100 930,409 936,409" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- C2 Neuroinflam → C4 -->
+        <!-- C3 Synaptic → C4 -->
+        <line x1="782" y1="320" x2="782" y2="378" stroke="#0d7377" stroke-width="1.6" marker-end="url(#arr-pos)"/>
+        <line x1="782" y1="210" x2="782" y2="268" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-danger)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Stressors:</strong> Three converging AD-relevant inputs (oxidative/lipid peroxidation stress, lipid/membrane dyshomeostasis, and APOE4/aging-associated risk) drive APOD expression and activity.
+      <strong>Panel B — APOD Core Mechanisms:</strong> The central APOD protein hub fans out into two parallel branches: a protective antioxidant branch (Met93-dependent lipid peroxide reduction → lysosomal membrane stabilization → astrocyte-to-neuron EV lipid transfer) and an amyloid-modulatory branch (BACE1 modulation of APP processing → reduced Aβ1-40/Aβ1-42 and plaque burden).
+      <strong>Panel C — Downstream Outcomes:</strong> Mechanism outputs converge on four outcome nodes: BBB integrity via CD36, microglial NLRC4 inflammasome activation (context-dependent risk, dashed), synaptic/myelin preservation, and the composite AD cognitive/progression outcome. Dashed lines indicate context-dependent or potentially maladaptive effects.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card positive">
+        <h3>Antioxidant Lipid Protection</h3>
+        <p>ApoD reduces lipid hydroperoxides to less reactive lipid hydroxides via a Met93-dependent mechanism. Dimers and aggregates of ApoD in AD hippocampus appear linked to active lipid peroxidation, suggesting APOD is responding to oxidative injury in the most vulnerable AD regions.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Amyloid Pathology Modifier</h3>
+        <p>In APP/PS1 mice, apoD deficiency nearly doubled hippocampal amyloid plaque burden, while neuronal human apoD expression reduced plaque load and lowered Aβ1-40 and insoluble Aβ1-42. Associated BACE1 changes suggest APOD influences amyloidogenic APP processing.</p>
+      </div>
+
+      <div class="card">
+        <h3>AD Brain Upregulation &amp; Biomarker Potential</h3>
+        <p>APOD is upregulated in AD brain proportionate to Braak stage and age, is immunoreactive in neurons without degenerative morphology, appears in glial/plaque contexts, and features in plasma AD/MCI panels, CSF apolipoprotein clusters, and urinary/HDL-cargo biomarker screens.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Lysosomal &amp; Autophagy Resilience</h3>
+        <p>ApoD can enter oxidatively stressed cells, target vulnerable lysosomes, prevent lysosomal membrane permeabilization, restore lysosomal pH, and reduce lipid peroxide accumulation — directly relevant to the lysosomal/autophagic failure central to AD pathology.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Microglial Inflammasome Risk</h3>
+        <p>One AD-focused study describes microglial ApoD-induced NLRC4 inflammasome activation as promoting AD progression. This indicates that APOD can be pathogenic in specific cellular contexts and that cell-type-specific targeting is essential for any therapeutic approach.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Neurovascular / BBB Axis</h3>
+        <p>Mural cell-derived APOD preserves BBB integrity by binding endothelial CD36 and inhibiting pathological CD36 signaling. Because BBB breakdown drives impaired amyloid clearance and neuroinflammation in AD, the APOD–CD36 axis represents a plausible therapeutic route at the neurovascular unit.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <p><span class="lead">Context-dependent modifier, not a simple on/off target —</span> Protective mechanisms include antioxidant lipid handling, lysosomal stabilization, glial–neuronal lipid transfer, and BBB support; potentially harmful mechanisms include microglial inflammasome activation, maladaptive secretory phenotypes, and aggregation after oxidation.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Prioritize AD-specific validation —</span> Key experiments should test APOD gain/loss or glycoform-specific delivery in AD models and measure amyloid burden, Aβ species, tau phosphorylation, synaptic integrity, lysosomal/autophagy function, neuroinflammation, BBB integrity, and cognition.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Focus on cell-type specificity —</span> APOD must be studied separately in astrocytes, microglia, neurons, oligodendrocytes, endothelial cells, pericytes/mural cells, and perivascular fibroblast-like cells because effects may diverge sharply across compartments.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Investigate biochemical form as biomarker —</span> Total APOD may be less informative than CNS-specific hypoglycosylated APOD, oxidized/dimerized APOD, exosome-associated APOD, HDL-associated APOD/ApoA-I ratio, CSF APOD, or APOD leakage into plasma during BBB dysfunction.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Explore therapeutic strategies cautiously —</span> Plausible approaches include enhancing CNS APOD antioxidant function, ApoD-loaded extracellular vesicle delivery, promoting astrocyte-to-neuron transfer, preventing oxidized APOD aggregation, and targeting APOD–CD36 signaling at the neurovascular unit.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Target upstream pathways —</span> ABCA1/LXR/RXR lipid efflux, PPARγ signaling, ApoE-associated lipoprotein biology, lysosomal membrane protection, arachidonic-acid/eicosanoid signaling, and CD36-mediated vascular inflammatory signaling are all tractable upstream/downstream nodes.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Use APOD for patient stratification —</span> APOD may help identify AD subtypes involving BBB dysfunction, vascular amyloid/CAA, oxidative lipid stress, glial activation, HDL/lipoprotein dysfunction, or mixed metabolic-vascular cognitive impairment rather than serving as a standalone diagnostic.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Account for biological modifiers —</span> APOE genotype, sex/hormonal background, age, oxidative stress burden, and neurodegenerative stage all influence APOD regulation and should be built into both biomarker and therapeutic study designs.</p>
+      </li>
+
+      <li>
+        <p><span class="lead">Avoid broad systemic APOD elevation —</span> Systemic manipulation may affect hepatic lipid metabolism, insulin sensitivity, angiogenesis, immune signaling, and cancer-related pathways. CNS-targeted, cell-specific, or function-specific approaches are strictly preferred until safety is fully characterized.</p>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — APOD in Alzheimer's Disease</div>
+      <p>
+        APOD is a <strong>promising AD-relevant biomarker and therapeutic candidate</strong>, particularly for the interconnected disease processes of <strong>oxidative lipid injury</strong>, <strong>glial lipid handling</strong>, <strong>lysosomal resilience</strong>, <strong>neurovascular integrity</strong>, and <strong>neuroinflammation</strong>. Animal model evidence demonstrates genuine disease-modifying potential — apoD deficiency amplifies amyloid pathology, while neuronal apoD expression reduces it. The protein's antioxidant, lysosomal-protective, and BBB-preserving functions align tightly with established AD pathophysiology. Nevertheless, APOD is <strong>not yet a validated standalone AD therapeutic target</strong>: direct human intervention data are absent, its biology is cell-type- and context-dependent, the microglial NLRC4 inflammasome finding introduces a real safety dimension, and its biochemical form (glycosylation state, oligomeric status, oxidation level, vesicle association) appears to determine whether its net effect is protective or harmful. The most defensible immediate priorities are <strong>AD-model studies with defined APOD forms and cell-type-resolved readouts</strong>, <strong>biochemical form–specific biomarker validation</strong>, and <strong>cautious, CNS-targeted therapeutic exploration</strong> via extracellular vesicle delivery or upstream pathway modulation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  APOD / ApoD — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

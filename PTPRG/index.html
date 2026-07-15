@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTPRG — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 5px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.45);
+    border: 1px solid rgba(255,100,100,0.45);
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.0rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 28px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #d97706;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* OVERVIEW PROSE */
+  .overview-prose p {
+    margin-bottom: 16px;
+    font-size: 1.0rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.94rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #475569; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #2563eb;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1.02rem;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .verdict-banner strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PTPRG &nbsp;|&nbsp; Protein Tyrosine Phosphatase Receptor Type G</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>PTPRG &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ════════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Direction Unresolved:</strong> PTPRG displays context-dependent
+      effects across neurons, microglia, astrocytes, endothelium, and immune cells. Global
+      inhibition or activation carries real safety risk; cell-type-selective strategies are
+      required before any therapeutic advance.
+    </div>
+
+    <div class="overview-prose">
+      <p>PTPRG (protein tyrosine phosphatase receptor type G; RPTPγ/PTPγ) is a plausible but
+      not yet validated Alzheimer's disease therapeutic target. The strongest AD-specific
+      evidence links PTPRG to microglial and microglia–neuron disease mechanisms, including
+      chronic inflammatory activation, altered neuron-to-microglia communication, and a neuronal
+      <strong>PTPRG–VIRMA–PRKN/Parkin axis</strong> that may impair mitophagy and promote
+      neuronal death.</p>
+
+      <p>Several AD-focused findings converge on PTPRG as a disease-associated signaling hub.
+      One computational transcriptomic study identified microglial PTPRG as the strongest
+      individual feature in an AD classifier and placed it in AD-specific inflammatory microglial
+      co-expression networks. A complementary study described a <em>Mic_PTPRG</em> microglial
+      subpopulation communicating with vulnerable PRKN/VIRMA neuronal subtypes, inducing neuronal
+      PTPRG expression and linking PTPRG to mitochondrial quality-control failure.</p>
+
+      <p>The broader non-AD literature supports biological plausibility: PTPRG is a CNS-expressed
+      receptor tyrosine phosphatase involved in neuronal signaling, contactin-mediated cell
+      interactions, neurite biology, astrocytic inflammatory responses, oligodendrocyte-lineage
+      signaling, vascular/endothelial regulation, oxidative-stress biology, and kinase/phosphatase
+      balance. However, the therapeutic direction remains unresolved because PTPRG can behave
+      either as a tumor-suppressor–like brake or as a potentially pathogenic driver depending on
+      cell type and disease context.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+
+      <!--
+        PANEL PLAN (4 panels, left→right):
+        Panel A (Upstream Signals): 3 nodes
+        Panel B (Microglial Hub): 4 nodes
+        Panel C (Neuronal Axis – branching): 5 nodes
+        Panel D (Outcomes): 3 nodes
+        TOTAL NODES: 15  ✓ ≤ 16
+      -->
+      <svg viewBox="0 0 940 490" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;height:auto;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: UPSTREAM AD SIGNALS ══ -->
+        <rect x="12" y="12" width="178" height="466" rx="12"
+              fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="101" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#2e6da4" letter-spacing="1">UPSTREAM SIGNALS</text>
+
+        <!-- A1: AD Risk Genes -->
+        <rect x="24" y="46" width="154" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="101" y="65" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1a3a5c">AD Risk Genes</text>
+        <text x="101" y="81" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">APOE · GRN · PSEN1 · CLU</text>
+
+        <!-- A2: GWAS Locus -->
+        <rect x="24" y="138" width="154" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="101" y="157" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1a3a5c">PTPRG GWAS Locus</text>
+        <text x="101" y="173" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">rs7609954 (AD risk)</text>
+
+        <!-- A3: Cytokines -->
+        <rect x="24" y="230" width="154" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="101" y="249" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1a3a5c">Inflammatory Cytokines</text>
+        <text x="101" y="265" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">IL-1 · TNFα → PTPRG ↑</text>
+
+        <!-- A arrows → Panel B entrance line at x=202 -->
+        <!-- A1 → Panel B (Mic_PTPRG at y=95) -->
+        <line x1="178" y1="72" x2="212" y2="72" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- A2 → Panel B (microglial hub at y=164) -->
+        <line x1="178" y1="164" x2="212" y2="164" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- A3 → Panel B (astrocyte at y=256) -->
+        <line x1="178" y1="256" x2="212" y2="256" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══ PANEL B: GLIAL HUB ══ -->
+        <rect x="202" y="12" width="200" height="466" rx="12"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="302" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#0f766e" letter-spacing="1">GLIAL HUB</text>
+
+        <!-- B1: Mic_PTPRG Subpopulation -->
+        <rect x="214" y="46" width="176" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="302" y="65" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Mic_PTPRG Microglia</text>
+        <text x="302" y="81" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">AD-specific subpopulation</text>
+
+        <!-- B2: Inflammatory Network -->
+        <rect x="214" y="138" width="176" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="302" y="157" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Inflammatory Co-expr.</text>
+        <text x="302" y="173" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Network (AD classifier #1)</text>
+
+        <!-- B3: Astrocyte PTPRG -->
+        <rect x="214" y="230" width="176" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="302" y="249" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Astrocytic PTPRG ↑</text>
+        <text x="302" y="265" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Activated glia / AD model</text>
+
+        <!-- B4: Endothelial PTPRG -->
+        <rect x="214" y="322" width="176" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="302" y="341" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Endothelial PTPRG</text>
+        <text x="302" y="357" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Vascular / cerebral perfusion</text>
+
+        <!-- internal B arrows -->
+        <line x1="302" y1="98" x2="302" y2="134" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- ══ PANEL C: NEURONAL AXIS (BRANCHING) ══ -->
+        <rect x="414" y="12" width="318" height="466" rx="12"
+              fill="rgba(180,83,9,0.05)" stroke="#b45309" stroke-width="1.2"/>
+        <text x="573" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#b45309" letter-spacing="1">NEURONAL AXIS</text>
+
+        <!-- C1: Neuronal PTPRG (shared entry node) -->
+        <rect x="460" y="46" width="186" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+        <text x="553" y="65" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">Neuronal PTPRG ↑</text>
+        <text x="553" y="81" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">ExNeu &amp; InNeu PRKN/VIRMA</text>
+
+        <!-- Branch LEFT: VIRMA arm -->
+        <!-- C2-left: VIRMA upregulation -->
+        <rect x="426" y="148" width="152" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="502" y="167" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">VIRMA Upregulation</text>
+        <text x="502" y="183" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">m6A methyltransferase</text>
+
+        <!-- C3-left: PRKN/Parkin suppressed -->
+        <rect x="426" y="250" width="152" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="502" y="269" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">PRKN/Parkin ↓</text>
+        <text x="502" y="285" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">mRNA translation suppressed</text>
+
+        <!-- Branch RIGHT: Contactin / neurite arm -->
+        <!-- C2-right: Contactin (CNTN3-6) -->
+        <rect x="590" y="148" width="130" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="655" y="167" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">Contactin (CNTN3–6)</text>
+        <text x="655" y="183" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">Neuronal wiring</text>
+
+        <!-- C3-right: Synaptic / neurite effects -->
+        <rect x="590" y="250" width="130" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="655" y="269" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">Neurite / Synaptic</text>
+        <text x="655" y="285" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">Plasticity disruption</text>
+
+        <!-- C convergence: impaired mitophagy -->
+        <rect x="456" y="352" width="194" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="553" y="371" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Impaired Mitophagy</text>
+        <text x="553" y="387" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Damaged mitochondria persist</text>
+
+        <!-- C arrows: entry→branches -->
+        <!-- C1 → C2-left (branch left) -->
+        <line x1="510" y1="98" x2="502" y2="144" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <!-- C1 → C2-right (branch right) -->
+        <line x1="596" y1="98" x2="643" y2="144" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <!-- C2-left → C3-left -->
+        <line x1="502" y1="200" x2="502" y2="246" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- C2-right → C3-right -->
+        <line x1="655" y1="200" x2="655" y2="246" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <!-- C3-left → convergence -->
+        <line x1="502" y1="302" x2="519" y2="348" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- C3-right → convergence (elbow via gutter) -->
+        <polyline points="655,302 655,328 590,328 587,348" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- cross-panel: Mic_PTPRG → Neuronal PTPRG -->
+        <!-- B1 right edge x=390, C1 left edge x=460, both at y=72 -->
+        <line x1="390" y1="72" x2="456" y2="72" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B3 (Astrocyte y=256) → C1 via top-elbow through gutter -->
+        <!-- Route: right from B3 to x=410, then up to y=72 is blocked; instead go to x=430,y=256 then diagonal to C2-left -->
+        <!-- Actually route: B3 right→ gutter → C elbow is blocked. Use elbow: right from B3(390,256) → up to (410,130) → right to C2-left(426,130)→down to C2-left top -->
+        <!-- Check: (410,130)→(426,130) horizontal is in gutter between x=390 and x=414, y=130 — clear. -->
+        <polyline points="390,256 406,256 406,130 426,130 426,148" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- ══ PANEL D: OUTCOMES ══ -->
+        <rect x="744" y="12" width="184" height="466" rx="12"
+              fill="rgba(153,27,27,0.05)" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="836" y="33" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#991b1b" letter-spacing="1">OUTCOMES</text>
+
+        <!-- D1: Neuronal Death -->
+        <rect x="756" y="46" width="160" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="836" y="65" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Neuronal Death</text>
+        <text x="836" y="81" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Metabolic failure / AD</text>
+
+        <!-- D2: Neuroinflammation -->
+        <rect x="756" y="200" width="160" height="52" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="836" y="219" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Neuroinflammation</text>
+        <text x="836" y="235" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Chronic microglial activation</text>
+
+        <!-- D3: Cerebrovascular Dysfunction -->
+        <rect x="756" y="352" width="160" height="52" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="836" y="371" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Cerebrovascular Dysfn.</text>
+        <text x="836" y="387" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Hypoperfusion / ischemia</text>
+
+        <!-- C convergence → D1 (impaired mitophagy at y=352+26=378 center; D1 center y=72) -->
+        <!-- Route: right from convergence(650,378) → (744,378)? No, D3 is at y=352. -->
+        <!-- C-convergence center: x=553, y=378. D1: x=756,y=72 -->
+        <!-- Draw C-conv→D1: right to gutter(740,378) then up to (740,72) then right to D1 -->
+        <!-- Check gutter x=740 is between panel C right(732) and panel D left(744)? Panel C rect ends at x=732, D starts x=744. Gutter x=737 ok. -->
+        <polyline points="650,378 737,378 737,72 756,72" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B2 (inflammatory network, center x=302,y=164) → D2 (neuroinflam, center x=756,y=226) -->
+        <!-- Route through gutters: right from B2(390,164) → gutter(410,164) → right through C panel IS BLOCKED by C nodes. -->
+        <!-- Instead route: right from B2 to x=406, down to y=440 (below all panels), right to x=738, up to y=226, right to D2 -->
+        <!-- Check y=440: below all nodes (last node bottom ~404). Panel rects end at y=478. y=440 within panel rects. -->
+        <!-- Better: go below panel rects. Panel bottoms y=478. So route at y=458 below content. -->
+        <polyline points="390,164 406,164 406,458 738,458 738,226 756,226" fill="none" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="6,3" marker-end="url(#arr-red)"/>
+
+        <!-- B4 (Endothelial, center x=302,y=348) → D3 (Cerebrovasc, center x=756,y=378) -->
+        <!-- Route: right from B4(390,348) → gutter x=406 → y=348 → route below C panel bottom → right to gutter x=738 → up to y=378 → right -->
+        <!-- Since B4 y=348 and C panel occupies x=414 to 732; below C nodes: C-convergence bottom = 404 → route at y=420 -->
+        <polyline points="390,348 406,348 406,420 738,420 738,378 756,378" fill="none" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="6,3" marker-end="url(#arr-red)"/>
+
+        <!-- Legend -->
+        <line x1="24" y1="430" x2="60" y2="430" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="66" y="434" font-family="Arial" font-size="9" fill="#475569">Direct signal</text>
+        <line x1="24" y1="450" x2="60" y2="450" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+        <text x="66" y="454" font-family="Arial" font-size="9" fill="#475569">Indirect / cross-panel</text>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Signals:</strong> AD risk genes (APOE, GRN, PSEN1, CLU), the PTPRG GWAS locus (rs7609954),
+        and inflammatory cytokines (IL-1, TNFα) feed into the glial hub.
+        <strong>Panel B — Glial Hub:</strong> Mic_PTPRG microglia, inflammatory co-expression networks,
+        activated astrocytic PTPRG, and endothelial PTPRG represent four distinct glial/vascular nodes.
+        <strong>Panel C — Neuronal Axis (branching):</strong> Neuronal PTPRG upregulation fans out into two
+        parallel sub-cascades — a VIRMA→PRKN/Parkin arm (left) suppressing mitophagy, and a
+        Contactin(CNTN3–6)→synaptic/neurite arm (right) disrupting plasticity — both converging on
+        impaired mitophagy. <strong>Panel D — Outcomes:</strong> Neuronal death, chronic neuroinflammation,
+        and cerebrovascular dysfunction represent the downstream AD-relevant consequences. Dashed lines indicate
+        indirect or cross-panel connections inferred from the evidence.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>🔬 Microglial AD Classifier</h3>
+        <p>Using ROSMAP snRNA-seq pseudobulk profiles and supervised machine learning, microglial PTPRG
+        carried the <strong>highest absolute model coefficient</strong> among 72 selected genes, making it
+        the single strongest AD classifier feature. The model generalized to an independent Seattle
+        Alzheimer's Disease Brain Cell Atlas cohort.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚡ PTPRG–VIRMA–PRKN Axis</h3>
+        <p>Neuronal PTPRG reportedly binds and upregulates <strong>VIRMA</strong>, an m6A RNA
+        methyltransferase component, which suppresses <strong>PRKN/Parkin mRNA translation</strong>.
+        Reduced Parkin activity impairs mitophagy, allowing damaged mitochondria to persist and
+        contributing to metabolic reprogramming and neuronal death.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>🔗 Neuron-to-Microglia Convergence</h3>
+        <p>Cell-cell communication analysis identified <strong>APOE, GRN, PSEN1, and CLU</strong>
+        among neuronal ligands predicted to regulate microglial PTPRG, positioning it as a convergence
+        point for neuronal disease cues that influence microglial state transitions.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚠ Context-Dependent Duality</h3>
+        <p>In cancer settings, PTPRG acts as a <strong>tumor-suppressor–like brake</strong>, opposing
+        EGFR, AXL, FGFR1, PDGFRB, BCR-ABL1, JAK2, PI3K/Akt, and RAS/ERK pathways. In AD neuronal
+        data it appears potentially <strong>pathogenic</strong> via VIRMA-mediated PRKN suppression —
+        making global activation or inhibition risky without cell-type validation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>🧬 Genetic & Vascular Evidence</h3>
+        <p>A family-based GWAS reported <strong>rs7609954</strong> in PTPRG as genome-wide significantly
+        associated with AD risk. Separately, endothelial PTPRG regulates bicarbonate/CO₂-sensitive
+        vasorelaxation and cerebral perfusion, implicating it in vascular contributions to dementia.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>📌 PTPRG-AS1 Distinction</h3>
+        <p>Many literature sources concern <strong>PTPRG-AS1</strong>, an antisense lncRNA near the
+        PTPRG locus with roles in ceRNA, PI3K/AKT, KIT, ferroptosis, and proliferation pathways —
+        primarily in cancer. These findings do <em>not</em> provide direct evidence for PTPRG protein
+        function in AD and must not be conflated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <span><strong>Treat as high-priority candidate, not validated target.</strong>
+        Current AD-specific data are largely computational, transcriptomic, genetic, or preclinical;
+        mechanistic studies are the essential next step before any therapeutic programme.</span>
+      </li>
+
+      <li>
+        <span><strong>Validate causality in AD models.</strong>
+        Perturb PTPRG in human iPSC-derived microglia, neurons, astrocytes, brain organoids, and
+        AD mouse models to determine whether altering PTPRG changes inflammatory state, mitophagy,
+        neuronal survival, synaptic markers, or amyloid/tau pathology.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritize the neuronal PTPRG–VIRMA–PRKN/Parkin pathway.</strong>
+        Test whether PTPRG directly binds VIRMA in human AD-relevant neurons, suppresses PRKN
+        translation, impairs Parkin-mediated mitophagy, and whether blocking PTPRG–VIRMA interaction
+        rescues mitochondrial quality control and neuronal survival.</span>
+      </li>
+
+      <li>
+        <span><strong>Investigate Mic_PTPRG microglia as a therapeutic entry point.</strong>
+        Identify ligands and receptors mediating communication between Mic_PTPRG microglia and
+        vulnerable PRKN/VIRMA neuronal subtypes; test whether disrupting this communication prevents
+        harmful neuronal PTPRG induction.</span>
+      </li>
+
+      <li>
+        <span><strong>Define therapeutic direction by cell type.</strong>
+        Determine whether PTPRG should be inhibited, activated, or selectively modulated in
+        microglia, neurons, astrocytes, oligodendrocytes, endothelial cells, and peripheral immune
+        cells — the same intervention may have opposite effects depending on cellular context.</span>
+      </li>
+
+      <li>
+        <span><strong>Map PTPRG expression and isoforms in AD tissue.</strong>
+        Measure mRNA, protein, phosphatase activity, isoforms, cleavage products, and cellular
+        localization in human AD and control hippocampus, cortex, vasculature, CSF, and blood.
+        Protein-level assays are essential because PTPRG regulation may not be captured by bulk
+        transcript data.</span>
+      </li>
+
+      <li>
+        <span><strong>Evaluate vascular PTPRG separately.</strong>
+        Because endothelial PTPRG regulates acid-base–sensitive vascular responses and cerebral
+        perfusion, test whether PTPRG modulation improves neurovascular coupling, hypoperfusion,
+        blood-brain barrier function, or ischemia vulnerability in AD models with vascular
+        pathology.</span>
+      </li>
+
+      <li>
+        <span><strong>Avoid premature systemic targeting.</strong>
+        Given PTPRG's tumor-suppressor–like roles, immune functions, vascular activity, and
+        possible neuronal pathogenicity, CNS-targeted, cell-type-selective, or pathway-selective
+        modulation is strongly preferred over systemic inhibition or activation.</span>
+      </li>
+
+      <li>
+        <span><strong>Resolve the central causal question.</strong>
+        Determine whether AD-associated PTPRG upregulation is a <em>harmful driver</em> of
+        neuroinflammation and mitophagy failure, a <em>protective compensatory brake</em> on
+        kinase-driven inflammation, or a mixed cell-type-specific response — this distinction
+        defines the entire therapeutic strategy.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Synthesized Evidence Verdict</span>
+      <p>
+        <strong>Overall Assessment —</strong> PTPRG represents a <strong>biologically compelling
+        but mechanistically unresolved</strong> Alzheimer's disease candidate. Its emergence as the
+        <strong>top individual feature</strong> in a multivariate AD microglial classifier, its
+        membership in AD-specific inflammatory co-expression networks, the genetic association at
+        rs7609954, and — most crucially — the proposed <strong>PTPRG–VIRMA–PRKN/Parkin
+        mitophagy axis</strong> collectively justify prioritization for dedicated mechanistic
+        investigation. However, the <strong>context-dependence</strong> of PTPRG biology across
+        microglia, neurons, astrocytes, endothelium, and cancer is a genuine and serious obstacle:
+        the same phosphatase can suppress kinase-driven pathways protectively in one cellular
+        environment while driving pathological VIRMA-mediated Parkin loss in another. Until causal
+        experiments in disease-relevant human cell types resolve whether PTPRG is a <strong>driver,
+        a bystander, or a compensatory brake</strong>, therapeutic intervention carries meaningful
+        safety and efficacy uncertainty. The most rational near-term path is rigorous causal
+        perturbation in iPSC-derived and organoid models, careful isoform- and cell-type-resolved
+        protein characterization in human AD tissue, and mechanistic dissection of the
+        Mic_PTPRG → neuronal PTPRG → VIRMA → Parkin axis before committing to any modality
+        or direction of therapeutic modulation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  PTPRG · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

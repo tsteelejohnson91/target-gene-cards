@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTK — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2eaf4;
+    padding: 5px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.30);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #cfe2f7;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section { margin-bottom: 56px; }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW TEXT */
+  .overview-text p { margin-bottom: 14px; font-size: 1rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+  }
+  .figure-wrap svg { display: block; width: 100%; height: auto; }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card p { line-height: 1.65; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-bg); border-left: 4px solid var(--neutral-text); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: takeaway; }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .verdict-banner p { color: #e2eaf4; }
+  .verdict-banner strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 56px;
+    padding: 22px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: BTK &nbsp;|&nbsp; Bruton's Tyrosine Kinase</span>
+    <span class="chip chip-danger">⚠ Safety Constraints — See Section</span>
+  </div>
+  <h1>BTK &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Translational Safety Alert:</strong> BTK inhibitors carry documented risks of infection, bleeding, atrial fibrillation, cardiovascular toxicity, and immunosuppression — concerns that are especially significant for chronic treatment in elderly Alzheimer's populations. Safety evaluation must be integrated into any AD-directed BTK program from the outset.
+    </div>
+    <div class="overview-text">
+      <p>BTK (Bruton's Tyrosine Kinase) is a biologically plausible but not yet validated therapeutic target in Alzheimer's disease. The most direct AD-specific evidence derives from a chrysin/Alpiniae Oxyphyllae Fructus study in AD mice, where chrysin — identified as a brain-permeable SYK-targeting compound — modulated the SYK/BTK/PLCγ2 and NF-κB pathways in microglia, reducing neuroinflammation, improving microglial Aβ phagocytosis, and ameliorating cognitive deficits.</p>
+      <p>More broadly, BTK functions as a microglial and myeloid innate-immune signaling node: downstream of SYK and upstream of PLCγ2, NF-κB, NLRP3 inflammasome activity, cytokine production, and phagocytic programs. Supporting evidence from multiple sclerosis, perioperative neurocognitive dysfunction, ALS, traumatic brain injury, intracerebral hemorrhage, and other neuroinflammatory contexts establishes its general relevance to brain-resident immune cells, though most evidence remains indirect with respect to AD.</p>
+      <p>The key unresolved issue is that selective BTK inhibitors have not been directly demonstrated to improve AD pathology or clinical outcomes as standalone AD therapies. BTK is best characterized, at present, as a pathway-level modulator of maladaptive neuroinflammation and microglial function rather than a direct amyloid- or tau-targeting therapy.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Signals -->
+        <rect x="10" y="10" width="200" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">UPSTREAM SIGNALS</text>
+
+        <!-- Node 1: TREM2 -->
+        <rect x="35" y="45" width="130" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="100" y="63" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="600">TREM2</text>
+        <text x="100" y="78" text-anchor="middle" font-size="9.5" fill="#475569">Microglial receptor</text>
+
+        <!-- Node 2: SYK -->
+        <rect x="35" y="120" width="130" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="100" y="138" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="600">SYK Kinase</text>
+        <text x="100" y="153" text-anchor="middle" font-size="9.5" fill="#475569">Chrysin target</text>
+
+        <!-- Node 3: BTK (central) -->
+        <rect x="28" y="208" width="144" height="50" rx="9" fill="#1e3a5f" stroke="#2e6da4" stroke-width="2"/>
+        <text x="100" y="229" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="700">BTK</text>
+        <text x="100" y="247" text-anchor="middle" font-size="9.5" fill="#93c5fd">Bruton's Tyrosine Kinase</text>
+
+        <!-- Arrow TREM2 -> SYK -->
+        <line x1="100" y1="89" x2="100" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow SYK -> BTK -->
+        <line x1="100" y1="164" x2="100" y2="206" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: NOX2/FC -->
+        <rect x="35" y="330" width="130" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="100" y="348" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="600">NOX2 / FcR</text>
+        <text x="100" y="363" text-anchor="middle" font-size="9.5" fill="#475569">Oxidative / immune</text>
+
+        <!-- Arrow BTK -> NOX2 (downward, below BTK node) -->
+        <line x1="100" y1="258" x2="100" y2="328" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: Downstream Branches -->
+        <rect x="222" y="10" width="440" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.30" stroke="#2e6da4" stroke-width="1"/>
+        <text x="442" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">DOWNSTREAM SIGNALING BRANCHES</text>
+
+        <!-- Branch label: PLCγ2 Branch -->
+        <text x="310" y="55" text-anchor="middle" font-size="8.5" fill="#2e6da4" font-weight="700" font-style="italic">PLCγ2 Branch</text>
+        <!-- Branch label: NF-κB Branch -->
+        <text x="568" y="55" text-anchor="middle" font-size="8.5" fill="#9b1c1c" font-weight="700" font-style="italic">NF-κB / Inflammasome</text>
+
+        <!-- Node 5: PLCγ2 -->
+        <rect x="245" y="65" width="130" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="310" y="83" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="600">PLCγ2</text>
+        <text x="310" y="98" text-anchor="middle" font-size="9.5" fill="#475569">Microglial signaling</text>
+
+        <!-- Node 6: NF-κB -->
+        <rect x="503" y="65" width="130" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="568" y="83" text-anchor="middle" font-size="11" fill="#9b1c1c" font-weight="600">NF-κB</text>
+        <text x="568" y="98" text-anchor="middle" font-size="9.5" fill="#475569">Transcription factor</text>
+
+        <!-- Arrows from BTK node to PLCγ2 and NF-κB via horizontal leads -->
+        <!-- BTK right edge at x=172, center y=233 -->
+        <!-- PLCγ2 left edge at x=245, center y=87 -->
+        <path d="M172,233 H208 V87 H243" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- NF-κB left edge at x=503, center y=87 -->
+        <path d="M172,233 H208 V87 H501" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 7: Microglial Phenotype -->
+        <rect x="245" y="148" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="310" y="166" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="600">M1→M2 Shift</text>
+        <text x="310" y="181" text-anchor="middle" font-size="9.5" fill="#475569">Polarization</text>
+
+        <!-- Arrow PLCγ2 -> M1->M2 -->
+        <line x1="310" y1="109" x2="310" y2="146" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: NLRP3 -->
+        <rect x="503" y="148" width="130" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="568" y="166" text-anchor="middle" font-size="11" fill="#9b1c1c" font-weight="600">NLRP3</text>
+        <text x="568" y="181" text-anchor="middle" font-size="9.5" fill="#475569">Inflammasome</text>
+
+        <!-- Arrow NF-κB -> NLRP3 -->
+        <line x1="568" y1="109" x2="568" y2="146" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 9: Phagocytosis/Clearance -->
+        <rect x="245" y="235" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="310" y="252" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="600">Aβ Phagocytosis</text>
+        <text x="310" y="267" text-anchor="middle" font-size="9.5" fill="#475569">&amp; debris clearance</text>
+
+        <!-- Arrow M1->M2 -> Phagocytosis -->
+        <line x1="310" y1="192" x2="310" y2="233" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Cytokines IL-1β/IL-6/TNFα -->
+        <rect x="503" y="235" width="130" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="568" y="252" text-anchor="middle" font-size="10.5" fill="#9b1c1c" font-weight="600">IL-1β, IL-6</text>
+        <text x="568" y="267" text-anchor="middle" font-size="9.5" fill="#475569">TNF-α, IL-18</text>
+
+        <!-- Arrow NLRP3 -> Cytokines -->
+        <line x1="568" y1="192" x2="568" y2="233" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 11: Metabolic Reprogramming -->
+        <rect x="245" y="325" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="310" y="342" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="600">Metabolic Shift</text>
+        <text x="310" y="357" text-anchor="middle" font-size="9.5" fill="#475569">Glycolysis→OxPhos</text>
+
+        <!-- Arrow Phagocytosis -> Metabolic -->
+        <line x1="310" y1="279" x2="310" y2="323" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 12: Neuroinflammation outcome -->
+        <rect x="503" y="325" width="130" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="568" y="342" text-anchor="middle" font-size="10.5" fill="#9b1c1c" font-weight="600">Neuroinflammation</text>
+        <text x="568" y="357" text-anchor="middle" font-size="9.5" fill="#475569">Neuronal injury</text>
+
+        <!-- Arrow Cytokines -> Neuroinflammation -->
+        <line x1="568" y1="279" x2="568" y2="323" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- PANEL C: Outcomes -->
+        <rect x="674" y="10" width="216" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="782" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">AD OUTCOMES</text>
+
+        <!-- Node 13: Reduced Aβ Burden -->
+        <rect x="697" y="65" width="170" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="782" y="83" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600">Reduced Aβ Burden</text>
+        <text x="782" y="98" text-anchor="middle" font-size="9.5" fill="#475569">Improved clearance</text>
+
+        <!-- Node 14: Cognitive Improvement -->
+        <rect x="697" y="195" width="170" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="782" y="213" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="600">Cognitive Benefit</text>
+        <text x="782" y="228" text-anchor="middle" font-size="9.5" fill="#475569">AD mouse models</text>
+
+        <!-- Node 15: Synaptic / Neuronal Integrity -->
+        <rect x="697" y="325" width="170" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="782" y="342" text-anchor="middle" font-size="11" fill="#9b1c1c" font-weight="600">Synaptic Injury</text>
+        <text x="782" y="357" text-anchor="middle" font-size="9.5" fill="#475569">Neuronal loss risk</text>
+
+        <!-- Arrows from branches to outcomes -->
+        <!-- Phagocytosis/Metabolic -> Reduced Aβ -->
+        <path d="M375,257 H430 V87 H695" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Metabolic -> Cognitive -->
+        <path d="M375,347 H430 V217 H695" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Neuroinflammation -> Synaptic Injury -->
+        <line x1="633" y1="347" x2="695" y2="347" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 16: Safety Risk badge -->
+        <rect x="697" y="420" width="170" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="782" y="437" text-anchor="middle" font-size="10.5" fill="#b45309" font-weight="700">⚠ Safety Risks</text>
+        <text x="782" y="453" text-anchor="middle" font-size="9.5" fill="#475569">Infection, bleeding, CV</text>
+
+        <!-- NOX2/FcR -> Neuroinflammation via elbow (panel A to panel B right) -->
+        <path d="M100,374 V445 H650 V347 H635" fill="none" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Signals):</strong> TREM2 activates SYK, which phosphorylates and activates BTK in microglia; NOX2/FcR signaling provides an additional upstream input.
+      <strong>Panel B (Downstream Branches):</strong> BTK fans out into two parallel sub-cascades — a PLCγ2 branch (left, teal) promoting M1→M2 microglial polarization, enhanced Aβ phagocytosis, and metabolic reprogramming toward oxidative phosphorylation; and an NF-κB/NLRP3 branch (right, red) driving inflammasome activation, pro-inflammatory cytokine release (IL-1β, IL-6, TNF-α, IL-18), and neuroinflammation.
+      <strong>Panel C (AD Outcomes):</strong> The PLCγ2 branch converges on reduced Aβ burden and cognitive benefit (observed in AD mouse models); the NF-κB branch converges on synaptic injury and neuronal loss risk. The dashed amber connector indicates that NOX2/FcR inputs also feed into neuroinflammatory outcomes. The safety risk node (amber, bottom) reflects documented BTK-inhibitor adverse effects relevant to chronic AD therapy.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core AD Mechanism: SYK/BTK/PLCγ2 Axis</h3>
+        <p>The most direct AD-specific evidence comes from a chrysin AD mouse study in which the SYK/BTK/PLCγ2 and NF-κB pathways were modulated in microglia, shifting cells from M1-like inflammatory states toward M2-like phenotypes, enhancing Aβ phagocytosis, reducing Aβ burden, and improving cognition. PLCγ2 — a microglial molecule with independent AD genetic relevance — acts downstream of BTK in this axis.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>TREM2/SYK/BTK: A Critical Bridge to AD Biology</h3>
+        <p>In a perioperative neurocognitive dysfunction model, TREM2 regulated neuroinflammation through SYK-dependent inhibition of BTK activation. BTK phosphorylation in hippocampal microglia drove M1-like inflammation, NF-κB/NLRP3 activation, IL-1β/IL-6 production, and cognitive impairment. BTK knockdown reversed these effects. Because TREM2 is central to AD microglial biology, this axis provides a strong mechanistic rationale for BTK targeting in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Broad Neuroinflammatory Evidence Base</h3>
+        <p>BTK's relevance to brain-resident immune cells is supported across multiple disease contexts — intracerebral hemorrhage, ALS, traumatic brain injury, multiple sclerosis, and diabetic hippocampal neuroinflammation — linking it to NF-κB, NLRP3, IL-1β, IL-6, TNF-α, IL-18, TLR, Fc receptor, cGAS-STING-TBK1, and STAT3 signaling. These pathways overlap substantially with recognized AD neuroinflammatory mechanisms.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>CNS Penetrance: Feasible but Unproven for AD</h3>
+        <p>Multiple sclerosis and CNS lymphoma literature demonstrates that several BTK inhibitors — including tolebrutinib, orelabrutinib, tirabrutinib, and zanubrutinib — are active in CNS disease settings or are brain-penetrant. This supports the practical feasibility of CNS BTK modulation, though it does not establish efficacy in AD specifically.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Phagocytosis: A Critical Therapeutic Balance</h3>
+        <p>BTK inhibition can restore dysfunctional microglial phagocytosis in some contexts, potentially improving Aβ and debris clearance. However, evidence from BTK-WASp-actin signaling warns that BTK blockade can also impair macrophage phagocytosis. In AD, any therapeutic strategy must reduce harmful inflammation while preserving or enhancing beneficial clearance — a balance that has not yet been established with selective BTK inhibitors.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: A Major Translational Constraint</h3>
+        <p>BTK inhibitors carry documented risks including serious infections, opportunistic fungal disease, bleeding, platelet dysfunction, atrial fibrillation, hypertension, heart failure, hepatotoxicity, cytopenias, and drug-drug interactions. These concerns are especially significant for chronic treatment in elderly, comorbid AD populations and must be addressed from the earliest stages of any AD-directed BTK program.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat BTK as a promising neuroimmune pathway target, not a validated AD drug target.</strong> The strongest supported claim is that BTK participates in AD-relevant microglial signaling cascades, especially SYK/BTK/PLCγ2 and NF-κB/NLRP3, not that BTK inhibition improves AD pathology directly.</li>
+      <li><strong>Prioritize direct AD validation experiments.</strong> Key studies should determine whether BTK expression, phosphorylation, or pathway activity is elevated in AD brain tissue, plaque-associated microglia, TREM2-defined microglial states, or AD-relevant single-cell transcriptomic datasets.</li>
+      <li><strong>Test selective BTK inhibitors in established AD models.</strong> Required endpoints include Aβ deposition and clearance, tau phosphorylation and spread, microglial phenotype, NLRP3/IL-1β activation, NF-κB signaling, synaptic integrity, neuronal survival, neurovascular function, and cognition.</li>
+      <li><strong>Measure microglial function comprehensively, not only inflammatory suppression.</strong> AD-relevant BTK modulation must reduce harmful cytokine and inflammasome signaling while preserving or enhancing beneficial microglial migration, phagocytosis, debris clearance, and metabolic homeostasis.</li>
+      <li><strong>Focus on CNS-penetrant, highly selective, safer next-generation agents.</strong> First-generation inhibitors such as ibrutinib carry important off-target and cardiovascular liabilities. AD programs will likely require brain-penetrant, highly selective, tolerable inhibitors or targeted delivery systems that minimize systemic immune suppression.</li>
+      <li><strong>Deploy pathway biomarkers for dose-finding and target engagement.</strong> Candidate biomarkers include BTK occupancy or phosphorylation, PLCγ2 signaling, NF-κB activation, NLRP3/caspase-1 activity, IL-1β, IL-6, TNF-α, IL-18, microglial activation signatures, and CSF or imaging markers of neuroinflammation.</li>
+      <li><strong>Integrate safety assessment from the outset.</strong> Any AD-directed BTK strategy requires cardiovascular screening, bleeding-risk assessment, infection monitoring, liver enzyme surveillance, medication-interaction review, and careful evaluation specifically in elderly, comorbid populations.</li>
+      <li><strong>Avoid overclaiming direct amyloid or tau effects.</strong> The available evidence supports BTK primarily through neuroinflammation, microglial function, and inflammasome biology. Direct amyloid- or tau-modifying effects remain unproven and require dedicated, mechanistically rigorous testing.</li>
+      <li><strong>Consider precision patient selection.</strong> BTK may be most therapeutically relevant in AD subgroups with high neuroinflammatory tone, TREM2/PLCγ2-linked microglial dysfunction, vascular inflammatory burden, systemic inflammatory comorbidity, or biomarker evidence of BTK pathway activation.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — BTK as an Alzheimer's Disease Target</span>
+      <p>BTK occupies a <strong>biologically plausible but early-stage position</strong> in the AD therapeutic landscape. Its most compelling rationale rests on its role as a microglial innate-immune signaling node within the <strong>SYK/BTK/PLCγ2 and NF-κB/NLRP3 axes</strong> — pathways directly implicated in the chronic microglial activation and cytokine-mediated neuronal injury central to AD pathophysiology. The TREM2/SYK/BTK axis provides an especially strong mechanistic bridge given TREM2's established importance in AD microglial biology. However, <strong>direct validation in AD models using selective BTK inhibitors is absent</strong> from the current evidence base, and the available data largely derive from non-AD neuroinflammatory contexts. CNS penetrance is feasible based on MS and CNS lymphoma literature, but has not been proven efficacious in AD. Critically, <strong>safety liabilities — including cardiovascular toxicity, infection risk, and bleeding — represent a major translational constraint</strong> that must be addressed through careful agent selection and patient screening. BTK merits structured investigation as a <strong>neuroimmune pathway modulator in neuroinflammatory AD subgroups</strong>, but claims of direct amyloid- or tau-modifying efficacy are currently unsupported and should not drive prioritization decisions.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  BTK / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical decision-making
+</footer>
+
+</body>
+</html>

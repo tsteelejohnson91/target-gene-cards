@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLCD1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-card: #eff6ff;
+    --blue-border: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e0eaf4;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: var(--slate);
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .card p { font-size: 0.875rem; color: var(--slate); margin-bottom: 0; }
+
+  .card-accent   { background: var(--light);         border-color: var(--mid);       }
+  .card-accent h3{ color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);    }
+  .card-danger h3{ color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-color: var(--positive);  }
+  .card-positive h3{ color: var(--positive); }
+  .card-warning  { background: var(--warning-light); border-color: var(--warning);   }
+  .card-warning h3{ color: var(--warning); }
+  .card-blue     { background: var(--blue-card);     border-color: var(--blue-border);}
+  .card-blue h3  { color: var(--blue-border); }
+  .card-slate    { background: #f1f5f9;              border-color: #64748b;          }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PLCD1 &nbsp;|&nbsp; Phospholipase C Delta 1</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unclear — context-dependent risks</span>
+  </div>
+  <h1>PLCD1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Unvalidated Target:</strong> PLCD1 is best characterized as an
+      <em>Alzheimer's-relevant signaling node</em>, not a validated therapeutic target. Evidence
+      supports mechanistic plausibility but does not establish causal roles in amyloid pathology,
+      tau pathology, synaptic loss, cognitive decline, or neurodegeneration in AD models. Systemic
+      inhibition carries risks across peripheral tissues, vascular tone, immune responses, cardiac
+      survival pathways, and tumor suppression.
+    </div>
+
+    <p>PLCD1 (phospholipase C delta 1; PLCδ1) is a phosphoinositide-signaling enzyme that
+    hydrolyzes PIP2/PI(4,5)P2 to generate IP3 and DAG, linking membrane lipid metabolism to
+    intracellular calcium release, PKC-related signaling, receptor trafficking, cytoskeletal
+    dynamics, membrane localization, and stress-response pathways.</p>
+
+    <p>These mechanisms overlap substantially with Alzheimer's disease biology, including calcium
+    dyshomeostasis, glutamate excitotoxicity, synaptic dysfunction, phosphoinositide imbalance,
+    oxidative stress, neuroinflammation, altered membrane trafficking, and neuronal vulnerability.
+    The strongest AD-specific evidence is that Aβ42 increased PLCD1/PLCδ1 expression in human
+    neuroblastoma cells via NF-κB-dependent promoter activation, and PLCδ1 was found to abnormally
+    accumulate in Alzheimer's disease brains. Additional findings include reduced platelet PLCδ1
+    activity in APOE ε3/ε3 AD patients and oxidative-stress-associated upregulation in
+    aluminum-treated rat brain.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="12">
+
+        <!-- PANEL A: Upstream Inducers -->
+        <rect x="10" y="10" width="195" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="107" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">UPSTREAM INDUCERS</text>
+
+        <!-- Node 1: Aβ42 -->
+        <rect x="32" y="42" width="150" height="40" rx="6" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="107" y="58" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="11">Aβ42</text>
+        <text x="107" y="73" text-anchor="middle" fill="#1e3a5f" font-size="10">Amyloid peptide</text>
+
+        <!-- Arrow Aβ42 → NF-κB -->
+        <line x1="107" y1="82" x2="107" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 2: NF-κB / TAK1 / NIK -->
+        <rect x="32" y="108" width="150" height="44" rx="6" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="107" y="125" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="11">NF-κB / TAK1 / NIK</text>
+        <text x="107" y="141" text-anchor="middle" fill="#1e3a5f" font-size="10">Inflammatory axis</text>
+
+        <!-- Arrow NF-κB → Oxidative Stress -->
+        <line x1="107" y1="152" x2="107" y2="176" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 3: Oxidative Stress -->
+        <rect x="32" y="176" width="150" height="40" rx="6" fill="#fef9c3" stroke="#b45309" stroke-width="1.2"/>
+        <text x="107" y="192" text-anchor="middle" font-weight="700" fill="#78350f" font-size="11">Oxidative Stress</text>
+        <text x="107" y="207" text-anchor="middle" fill="#78350f" font-size="10">Al³⁺ / AD pathology</text>
+
+        <!-- Node 4: miR-23a-5p (inhibitor) -->
+        <rect x="32" y="350" width="150" height="40" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="107" y="366" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="11">miR-23a-5p</text>
+        <text x="107" y="381" text-anchor="middle" fill="#0f766e" font-size="10">PLCD1 inhibitor</text>
+
+        <!-- PANEL B: PLCD1 Core Enzyme -->
+        <rect x="222" y="10" width="200" height="480" rx="10" fill="#eff6ff" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="322" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PLCD1 CORE ENZYME</text>
+
+        <!-- Node 5: PLCD1 (central) -->
+        <rect x="244" y="42" width="156" height="50" rx="6" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="322" y="62" text-anchor="middle" font-weight="700" fill="#ffffff" font-size="12">PLCD1 / PLCδ1</text>
+        <text x="322" y="79" text-anchor="middle" fill="#bfdbfe" font-size="10">PIP2 hydrolase enzyme</text>
+
+        <!-- Arrow NF-κB panel A → PLCD1 horizontal -->
+        <line x1="182" y1="130" x2="244" y2="67" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr-blue)"/>
+
+        <!-- Arrow Ox Stress → PLCD1 (elbow: right then up) -->
+        <polyline points="182,196 210,196 210,92 244,92" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr-amber)"/>
+
+        <!-- miR-23a-5p → PLCD1 inhibition arrow (elbow) -->
+        <polyline points="182,370 210,370 210,160 244,120" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 6: PIP2 substrate -->
+        <rect x="244" y="118" width="156" height="40" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="322" y="134" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="11">PIP2 Cleavage</text>
+        <text x="322" y="149" text-anchor="middle" fill="#1e3a5f" font-size="10">PI(4,5)P2 → IP3 + DAG</text>
+
+        <!-- Arrow PLCD1 → PIP2 -->
+        <line x1="322" y1="92" x2="322" y2="118" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-navy)"/>
+
+        <!-- Node 7: PH domain / membrane -->
+        <rect x="244" y="186" width="156" height="40" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="322" y="202" text-anchor="middle" font-weight="700" fill="#1e3a5f" font-size="11">PH Domain / PIP2</text>
+        <text x="322" y="217" text-anchor="middle" fill="#1e3a5f" font-size="10">Membrane localization</text>
+
+        <!-- Arrow PIP2 → PH domain -->
+        <line x1="322" y1="158" x2="322" y2="186" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-navy)"/>
+
+        <!-- PANEL C: Downstream Branches -->
+        <rect x="438" y="10" width="450" height="480" rx="10" fill="#f0fdf9" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="663" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">DOWNSTREAM EFFECTS</text>
+
+        <!-- Branch header row labels -->
+        <text x="541" y="50" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b">Ca²⁺ BRANCH</text>
+        <text x="770" y="50" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e">PKC / GluA2 BRANCH</text>
+
+        <!-- Node 8: IP3 → Ca2+ release -->
+        <rect x="460" y="58" width="160" height="42" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="540" y="74" text-anchor="middle" font-weight="700" fill="#7f1d1d" font-size="11">IP3 → Ca²⁺ Release</text>
+        <text x="540" y="89" text-anchor="middle" fill="#7f1d1d" font-size="10">ER store mobilization</text>
+
+        <!-- Node 9: DAG → PKC -->
+        <rect x="658" y="58" width="160" height="42" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="738" y="74" text-anchor="middle" font-weight="700" fill="#064e3b" font-size="11">DAG → PKCα</text>
+        <text x="738" y="89" text-anchor="middle" fill="#064e3b" font-size="10">Kinase activation</text>
+
+        <!-- Arrows from PIP2 node (panel B) to Ca2+ branch and PKC branch -->
+        <!-- PIP2 → IP3 Ca2+ -->
+        <polyline points="400,138 430,138 430,79 460,79" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- PIP2 → DAG PKC -->
+        <polyline points="400,138 430,138 430,79 658,79" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Ca2+ Overload / Excitotoxicity -->
+        <rect x="460" y="130" width="160" height="42" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="540" y="146" text-anchor="middle" font-weight="700" fill="#7f1d1d" font-size="11">Ca²⁺ Overload</text>
+        <text x="540" y="161" text-anchor="middle" fill="#7f1d1d" font-size="10">Excitotoxic vulnerability</text>
+
+        <!-- Arrow IP3 → Ca2+ Overload -->
+        <line x1="540" y1="100" x2="540" y2="130" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 11: GluA2 trafficking -->
+        <rect x="658" y="130" width="160" height="42" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="738" y="146" text-anchor="middle" font-weight="700" fill="#064e3b" font-size="11">GluA2 Trafficking</text>
+        <text x="738" y="161" text-anchor="middle" fill="#064e3b" font-size="10">AMPA receptor surface</text>
+
+        <!-- Arrow DAG → GluA2 -->
+        <line x1="738" y1="100" x2="738" y2="130" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 12: Synaptic / Membrane dysfunction -->
+        <rect x="460" y="205" width="160" height="42" rx="6" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="540" y="221" text-anchor="middle" font-weight="700" fill="#7f1d1d" font-size="11">Synaptic Disruption</text>
+        <text x="540" y="236" text-anchor="middle" fill="#7f1d1d" font-size="10">PIP2-dependent cycling</text>
+
+        <!-- Arrow Ca2+ Overload → Synaptic -->
+        <line x1="540" y1="172" x2="540" y2="205" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 13: Microglial phagocytosis / IL-1β -->
+        <rect x="658" y="205" width="160" height="42" rx="6" fill="#fef9c3" stroke="#b45309" stroke-width="1.2"/>
+        <text x="738" y="221" text-anchor="middle" font-weight="700" fill="#78350f" font-size="11">Neuroinflammation</text>
+        <text x="738" y="236" text-anchor="middle" fill="#78350f" font-size="10">IL-1β / phagocytosis</text>
+
+        <!-- Arrow GluA2 → Neuroinflammation -->
+        <line x1="738" y1="172" x2="738" y2="205" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Convergence node 14: Neuronal Vulnerability / AD Outcome -->
+        <rect x="558" y="320" width="212" height="44" rx="6" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="664" y="337" text-anchor="middle" font-weight="700" fill="#ffffff" font-size="11">Neuronal Vulnerability</text>
+        <text x="664" y="353" text-anchor="middle" fill="#bfdbfe" font-size="10">AD-relevant outcome node</text>
+
+        <!-- Arrows to convergence node -->
+        <polyline points="540,247 540,290 558,320" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <polyline points="738,247 738,290 770,320" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- APOE genotype note box (fits in empty lower-left of panel C) -->
+        <rect x="460" y="400" width="160" height="42" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="540" y="416" text-anchor="middle" font-weight="700" fill="#334155" font-size="11">APOE Genotype</text>
+        <text x="540" y="431" text-anchor="middle" fill="#475569" font-size="10">ε3/ε3: ↓ platelet PLCδ1</text>
+
+        <!-- ALS protective note box -->
+        <rect x="660" y="400" width="160" height="42" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="740" y="416" text-anchor="middle" font-weight="700" fill="#334155" font-size="11">ALS Model Evidence</text>
+        <text x="740" y="431" text-anchor="middle" fill="#475569" font-size="10">PLCD1 ablation ↑ survival</text>
+
+        <!-- Arrows from convergence → APOE & ALS note (downward) -->
+        <line x1="620" y1="364" x2="540" y2="400" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arr-slate)"/>
+        <line x1="706" y1="364" x2="740" y2="400" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arr-slate)"/>
+
+        <!-- DEFS -->
+        <defs>
+          <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-navy" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-red" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel 1 — Upstream Inducers (blue):</strong> Aβ42 activates NF-κB/TAK1/NIK
+      signaling to drive PLCD1 transcription; oxidative stress (e.g., Al³⁺) independently
+      upregulates PLCδ1; miR-23a-5p provides inhibitory input.
+      <strong>Panel 2 — PLCD1 Core Enzyme (navy):</strong> PLCδ1 hydrolyzes PIP2 into IP3 + DAG
+      and localizes to membranes via its PH domain.
+      <strong>Panel 3 — Downstream Branches (teal/red):</strong>
+      <em>Ca²⁺ branch (red):</em> IP3 mobilizes ER Ca²⁺ → overload → synaptic disruption.
+      <em>PKC/GluA2 branch (teal):</em> DAG activates PKCα → regulates GluA2 surface trafficking →
+      neuroinflammatory context (IL-1β / phagocytosis). Both branches converge on a shared
+      Neuronal Vulnerability outcome node. Lower nodes indicate APOE-genotype subtype findings
+      and ALS model protective evidence from PLCD1 ablation.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Aβ42 / NF-κB Induction of PLCD1</h3>
+        <p>Aβ42 increased PLCδ1 mRNA and activated the PLCD1 promoter dose-dependently in human
+        neuroblastoma cells. Activation required an NF-κB binding site and was blocked by
+        dominant-negative TAK1 and NIK, placing PLCD1 downstream of Aβ/NF-κB signaling. PLCδ1
+        also abnormally accumulates in Alzheimer's disease brains.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Calcium Dysregulation Risk</h3>
+        <p>PLCD1 hydrolyzes PIP2 to produce IP3, which mobilizes intracellular Ca²⁺, and DAG,
+        which activates PKC-related pathways. PLCδ1 can amplify Ca²⁺-dependent signaling after
+        Ca²⁺ influx. In AD, excessive or mislocalized PLCD1 activity could plausibly worsen
+        neuronal calcium overload and excitotoxic vulnerability.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>miR-23a-5p / PLCD1 / GluA2 Protective Axis</h3>
+        <p>In glutamate-injured retinal cells, miR-23a-5p inhibited PLCD1, modulated the
+        PLCD1/PKCα/GluA2 axis, preserved membrane GluA2, reduced intracellular Ca²⁺, and
+        decreased cell death. By analogy to AD, selective PLCD1 inhibition could theoretically
+        reduce excitotoxic Ca²⁺ entry via AMPA receptor mechanisms.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Synaptic &amp; Membrane-Trafficking Intersection</h3>
+        <p>PLCD1 binds and hydrolyzes PIP2, a lipid critical for synaptic vesicle cycling,
+        receptor internalization, actin organization, endocytosis, and membrane identity.
+        Abnormal PLCD1 accumulation could disturb PIP2-dependent synaptic homeostasis, though
+        direct APP-processing or synaptic-loss evidence is not yet provided.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammation Therapeutic Tradeoff</h3>
+        <p>In macrophage models, reducing PLCδ1 increased LPS-induced IL-1β expression and
+        enhanced Fcγ receptor-mediated phagocytosis, while PLCD1 overexpression reduced
+        phagocytosis. PLCD1 inhibition might enhance microglial clearance but could also
+        worsen IL-1β-driven neuroinflammation — a genuine therapeutic tradeoff.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>APOE Genotype Subtype Specificity</h3>
+        <p>Platelet PLCδ1 activity was reduced in APOE ε3/ε3 AD patients but not in APOE ε4
+        carriers. This implies PLCD1-related signaling may vary by genotype or disease subtype
+        and should not be assumed uniformly increased or decreased across all AD patients.
+        ALS mouse data additionally show PLCD1 ablation improved survival via reduced IP3-mediated
+        Ca²⁺ release, supporting a broader neuroprotective rationale for its reduction.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <span><strong>Treat PLCD1 as hypothesis-generating, not validated.</strong>
+        Current evidence supports mechanistic plausibility through PIP2/IP3/DAG/Ca²⁺ signaling
+        and Aβ/NF-κB-driven PLCD1 induction, but does not establish causal roles in amyloid
+        pathology, tau pathology, synaptic loss, or cognitive decline in AD models.</span>
+      </li>
+      <li>
+        <span><strong>Prioritize direct AD validation studies.</strong>
+        Key experiments should measure PLCD1 expression, methylation, localization,
+        phosphorylation, enzymatic activity, and downstream PIP2/IP3/DAG/Ca²⁺ signaling in
+        AD-relevant brain regions — entorhinal cortex, hippocampus, and prefrontal cortex.</span>
+      </li>
+      <li>
+        <span><strong>Evaluate the Aβ42/NF-κB/PLCD1 axis in neuronal and glial AD models.</strong>
+        This is the most direct AD-linked mechanism. Test this pathway in human iPSC-derived
+        neurons, astrocytes, microglia, organoids, and AD animal models to establish whether
+        PLCD1 induction is a driver or bystander.</span>
+      </li>
+      <li>
+        <span><strong>Investigate selective PLCD1 suppression in excitotoxic contexts.</strong>
+        The miR-23a-5p/PLCD1/PKCα/GluA2 pathway suggests that reducing PLCD1 could preserve
+        GluA2-containing AMPA receptors, reduce calcium overload, and improve survival under
+        glutamate stress — test this in AD-relevant neuronal models before any therapeutic
+        development.</span>
+      </li>
+      <li>
+        <span><strong>Avoid assuming global inhibition or activation is beneficial.</strong>
+        PLCD1 has context-dependent roles in calcium signaling, inflammation, phagocytosis,
+        cytoprotection, vascular contractility, metabolism, and tumor suppression. Any therapeutic
+        approach should aim for cell-type-, brain-region-, disease-stage-, or pathway-specific
+        modulation.</span>
+      </li>
+      <li>
+        <span><strong>Implement biomarker stratification.</strong>
+        APOE genotype, PLCD1 activity state, oxidative-stress markers, Aβ/NF-κB activation, and
+        calcium-signaling phenotypes may determine whether PLCD1 modulation is appropriate in a
+        given AD subgroup. The ε3/ε3 versus ε4 platelet finding underscores this need.</span>
+      </li>
+      <li>
+        <span><strong>Explore intervention nodes upstream or downstream of PLCD1.</strong>
+        Safer strategies may include blocking pathological Aβ/NF-κB-driven PLCD1 induction,
+        tuning PLCD1 membrane/PIP2 interactions, modulating miR-23a-5p delivery, limiting
+        downstream IP3/Ca²⁺ overload, or selectively correcting PKCα/GluA2 trafficking defects
+        without broad PLCD1 inhibition.</span>
+      </li>
+      <li>
+        <span><strong>Use PLCD1 biology as a readout of phosphoinositide dysfunction.</strong>
+        Even if PLCD1 is not ultimately druggable, its PH-domain/PIP2 interactions and
+        Ca²⁺-sensitive signaling make it a useful tool for studying PIP2 distribution, membrane
+        signaling, and calcium-linked dysfunction in AD models.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — PLCD1 in Alzheimer's Disease</div>
+      <p>
+        PLCD1 represents a <strong>mechanistically plausible but unvalidated Alzheimer's disease
+        target</strong>. Its role as a PIP2-hydrolyzing enzyme places it at the intersection of
+        phosphoinositide imbalance, calcium dyshomeostasis, glutamate excitotoxicity, and
+        neuroinflammation — all central to AD pathophysiology. The <strong>strongest direct
+        evidence</strong> is Aβ42-driven, NF-κB-dependent PLCD1 transcriptional activation and
+        abnormal PLCδ1 accumulation in AD brains. Supportive signals include oxidative-stress
+        upregulation, APOE-genotype-specific platelet activity changes, and ALS model evidence
+        that PLCD1 ablation reduces Ca²⁺-driven neurodegeneration. However, <strong>no study
+        has causally linked PLCD1 to amyloid processing, tau pathology, synaptic loss, or
+        cognitive decline in AD</strong>. Therapeutic intervention is further complicated by
+        context-dependent roles in phagocytosis, vascular tone, cytoprotection, and tumor
+        suppression. The immediate priority should be <strong>rigorous AD-specific validation
+        in human and animal models</strong>, with therapeutic development contingent on
+        demonstration of disease-relevant pathway specificity and an acceptable safety window.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PLCD1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

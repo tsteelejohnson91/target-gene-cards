@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIA2 / GluA2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f1f5f9;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.9rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    color: var(--slate);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    text-align: center;
+    padding: 0 12px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(ta);
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.78;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 24px 16px;
+    margin-top: 32px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GRIA2 &nbsp;|&nbsp; Glutamate Ionotropic Receptor AMPA Type Subunit 2</span>
+    <span class="chip chip-danger">⚠ Excitotoxic risk with broad AMPAR modulation</span>
+  </div>
+  <h1>GRIA2 / GluA2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> Broad, nonselective AMPA receptor activation or inhibition carries significant risk — including cognitive impairment and worsened excitotoxicity. Strategies must be receptor-complex-specific, disease-stage-aware, and region-selective.
+    </div>
+
+    <div class="overview-text">
+      <p>GRIA2 encodes GluA2 (GluR2), an AMPA receptor subunit repeatedly linked to Alzheimer's disease–relevant synaptic mechanisms. Across the literature, GRIA2 is most consistently implicated in AD through regulation of excitatory synaptic transmission, AMPAR trafficking, membrane and synaptic receptor stability, calcium permeability, long-term potentiation and depression, dendritic spine integrity, hippocampal memory circuits, neuroinflammation, RNA editing, epigenetic control, and excitotoxic vulnerability.</p>
+      <p>The strongest AD-specific evidence supports GRIA2/GluA2 as a <em>synaptic rescue target</em> rather than an amyloid- or tau-clearance target. In AD and AD-like models, pathological changes commonly involve excessive endocytosis, impaired surface expression, defective palmitoylation and assembly, altered phosphorylation, or impaired activity-dependent upregulation of GluA2-containing AMPARs. These changes weaken synaptic transmission, impair LTP, destabilize dendritic spines, increase calcium-permeable AMPAR signaling, and contribute to memory impairment.</p>
+      <p>GRIA2's therapeutic potential is therefore best framed as <em>precision normalization</em> of GluA2-containing AMPAR function — preserving correctly edited, appropriately localized, synaptic GluA2 receptors — rather than broadly activating or blocking AMPA receptors.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="880" height="475" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1e3a5f"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Regulators -->
+        <rect x="10" y="10" width="210" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">A · UPSTREAM REGULATORS</text>
+
+        <!-- A nodes -->
+        <!-- HDAC3/Epigenetic -->
+        <rect x="30" y="38" width="170" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="52" text-anchor="middle" font-weight="700" fill="#1e3a5f">HDAC3 / TSA</text>
+        <text x="115" y="65" text-anchor="middle" fill="#475569">Epigenetic repression</text>
+
+        <!-- miR-181a -->
+        <rect x="30" y="96" width="170" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="110" text-anchor="middle" font-weight="700" fill="#1e3a5f">miR-181a / Translin</text>
+        <text x="115" y="123" text-anchor="middle" fill="#475569">Post-transcriptional</text>
+
+        <!-- ADAR2 / RNA editing -->
+        <rect x="30" y="154" width="170" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="168" text-anchor="middle" font-weight="700" fill="#1e3a5f">ADAR2 / Q→R Editing</text>
+        <text x="115" y="181" text-anchor="middle" fill="#475569">RNA editing control</text>
+
+        <!-- SELENOK/DHHC6 -->
+        <rect x="30" y="212" width="170" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="226" text-anchor="middle" font-weight="700" fill="#1e3a5f">SELENOK / DHHC6</text>
+        <text x="115" y="239" text-anchor="middle" fill="#475569">Palmitoylation / assembly</text>
+
+        <!-- Aβ / AD pathology -->
+        <rect x="30" y="270" width="170" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="115" y="284" text-anchor="middle" font-weight="700" fill="#9b1c1c">Aβ / AD Pathology</text>
+        <text x="115" y="297" text-anchor="middle" fill="#7f1d1d">Disrupts upstream signals</text>
+
+        <!-- Tau -->
+        <rect x="30" y="328" width="170" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="115" y="342" text-anchor="middle" font-weight="700" fill="#9b1c1c">Tau Pathology</text>
+        <text x="115" y="355" text-anchor="middle" fill="#7f1d1d">Dendritic trafficking</text>
+
+        <!-- Neuroinflammation -->
+        <rect x="30" y="386" width="170" height="36" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="115" y="400" text-anchor="middle" font-weight="700" fill="#92400e">Neuroinflammation</text>
+        <text x="115" y="413" text-anchor="middle" fill="#92400e">LPS / microglia / GluR2↓</text>
+
+        <!-- Panel B: GluA2 Receptor Hub -->
+        <rect x="238" y="10" width="190" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.38" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="333" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">B · GluA2 RECEPTOR HUB</text>
+
+        <!-- GluA2 Surface AMPAR - central hub -->
+        <rect x="254" y="80" width="158" height="40" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="333" y="96" text-anchor="middle" font-weight="700" fill="#ffffff" font-size="12">GluA2-AMPAR</text>
+        <text x="333" y="111" text-anchor="middle" fill="#93c5fd" font-size="10">Synaptic / Surface</text>
+
+        <!-- AP2M1 interaction -->
+        <rect x="254" y="154" width="158" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="333" y="168" text-anchor="middle" font-weight="700" fill="#1e3a5f">AP2M1 Binding</text>
+        <text x="333" y="181" text-anchor="middle" fill="#475569">GluA2 endocytosis ↑</text>
+
+        <!-- PICK1 -->
+        <rect x="254" y="214" width="158" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="333" y="228" text-anchor="middle" font-weight="700" fill="#1e3a5f">PICK1 / STEP</text>
+        <text x="333" y="241" text-anchor="middle" fill="#475569">Ser880 phosphorylation</text>
+
+        <!-- Phosphorylation state -->
+        <rect x="254" y="274" width="158" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="333" y="288" text-anchor="middle" font-weight="700" fill="#1e3a5f">Palmitoylation State</text>
+        <text x="333" y="301" text-anchor="middle" fill="#475569">Assembly / stability</text>
+
+        <!-- Calcium permeability node -->
+        <rect x="254" y="334" width="158" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="333" y="348" text-anchor="middle" font-weight="700" fill="#9b1c1c">Ca²⁺ Permeability</text>
+        <text x="333" y="361" text-anchor="middle" fill="#7f1d1d">GluA2(Q) unedited → ↑Ca²⁺</text>
+
+        <!-- Panel C: Downstream Consequences -->
+        <rect x="446" y="10" width="220" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="556" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#065f46" letter-spacing="1">C · DOWNSTREAM EFFECTS</text>
+
+        <!-- LTP / Synaptic plasticity -->
+        <rect x="462" y="42" width="188" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="556" y="56" text-anchor="middle" font-weight="700" fill="#065f46">LTP / Synaptic Strength</text>
+        <text x="556" y="69" text-anchor="middle" fill="#047857">EPSCs, plasticity preserved</text>
+
+        <!-- Dendritic spines -->
+        <rect x="462" y="102" width="188" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="556" y="116" text-anchor="middle" font-weight="700" fill="#065f46">Dendritic Spine Integrity</text>
+        <text x="556" y="129" text-anchor="middle" fill="#047857">Morphology / density</text>
+
+        <!-- Hippocampal memory -->
+        <rect x="462" y="162" width="188" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="556" y="176" text-anchor="middle" font-weight="700" fill="#065f46">Hippocampal Memory</text>
+        <text x="556" y="189" text-anchor="middle" fill="#047857">CA1 / DG circuits</text>
+
+        <!-- Excitotoxicity branch -->
+        <rect x="462" y="222" width="188" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="556" y="236" text-anchor="middle" font-weight="700" fill="#9b1c1c">Excitotoxicity / Ca²⁺ overload</text>
+        <text x="556" y="249" text-anchor="middle" fill="#7f1d1d">Oxidative / mito stress</text>
+
+        <!-- Neurodegeneration -->
+        <rect x="462" y="282" width="188" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="556" y="296" text-anchor="middle" font-weight="700" fill="#9b1c1c">Neurodegeneration</text>
+        <text x="556" y="309" text-anchor="middle" fill="#7f1d1d">CA1 cell loss, seizures</text>
+
+        <!-- Network hyperexcitability -->
+        <rect x="462" y="342" width="188" height="36" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="556" y="356" text-anchor="middle" font-weight="700" fill="#92400e">Network Hyperexcitability</text>
+        <text x="556" y="369" text-anchor="middle" fill="#92400e">Oscillatory disruption</text>
+
+        <!-- Panel D: Therapeutic Interventions -->
+        <rect x="684" y="10" width="228" height="480" rx="10" fill="#eff6ff" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">D · THERAPEUTIC STRATEGIES</text>
+
+        <!-- G2CT peptide -->
+        <rect x="700" y="42" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="56" text-anchor="middle" font-weight="700" fill="#1d4ed8">G2CT / AP2M1 Blockers</text>
+        <text x="798" y="69" text-anchor="middle" fill="#1e40af">Restores surface GluA2</text>
+
+        <!-- PICK1 inhibitors -->
+        <rect x="700" y="102" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="116" text-anchor="middle" font-weight="700" fill="#1d4ed8">PICK1 / STEP Inhibitors</text>
+        <text x="798" y="129" text-anchor="middle" fill="#1e40af">Stabilize synaptic GluA2</text>
+
+        <!-- miR-181a antagonism -->
+        <rect x="700" y="162" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="176" text-anchor="middle" font-weight="700" fill="#1d4ed8">miR-181a Antagonism</text>
+        <text x="798" y="189" text-anchor="middle" fill="#1e40af">Restores GluA2/GluA1 ↑</text>
+
+        <!-- ADAR2 / RNA editing support -->
+        <rect x="700" y="222" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="236" text-anchor="middle" font-weight="700" fill="#1d4ed8">ADAR2 / Editing Support</text>
+        <text x="798" y="249" text-anchor="middle" fill="#1e40af">Reduces Ca²⁺-AMPAR burden</text>
+
+        <!-- HDAC3 inhibition -->
+        <rect x="700" y="282" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="296" text-anchor="middle" font-weight="700" fill="#1d4ed8">HDAC3 Inhibition</text>
+        <text x="798" y="309" text-anchor="middle" fill="#1e40af">Epigenetic GluA2 restoration</text>
+
+        <!-- SELENOK / palmitoylation -->
+        <rect x="700" y="342" width="196" height="36" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="798" y="356" text-anchor="middle" font-weight="700" fill="#1d4ed8">SELENOK Overexpression</text>
+        <text x="798" y="369" text-anchor="middle" fill="#1e40af">Palmitoylation / cognition ↑</text>
+
+        <!-- ARROWS: Panel A → Panel B (hub) -->
+        <!-- HDAC3 → GluA2 hub -->
+        <line x1="200" y1="56" x2="252" y2="100" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <!-- miR-181a → GluA2 hub -->
+        <line x1="200" y1="114" x2="252" y2="100" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <!-- ADAR2 → GluA2 hub -->
+        <line x1="200" y1="172" x2="252" y2="108" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <!-- SELENOK → GluA2 hub -->
+        <line x1="200" y1="230" x2="252" y2="112" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <!-- Aβ → AP2M1 -->
+        <line x1="200" y1="288" x2="252" y2="172" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- Tau → PICK1 -->
+        <line x1="200" y1="346" x2="252" y2="232" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- Neuroinflammation → Ca permeability -->
+        <line x1="200" y1="403" x2="252" y2="352" stroke="#d97706" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Panel B internal arrows -->
+        <!-- GluA2 hub → AP2M1 -->
+        <line x1="333" y1="120" x2="333" y2="152" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+        <!-- AP2M1 → PICK1 -->
+        <line x1="333" y1="190" x2="333" y2="212" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+        <!-- PICK1 → Palmitoylation -->
+        <line x1="333" y1="250" x2="333" y2="272" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+        <!-- Palmitoylation → Ca permeability -->
+        <line x1="333" y1="310" x2="333" y2="332" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B → Panel C arrows -->
+        <!-- GluA2 hub → LTP (protective) -->
+        <line x1="412" y1="94" x2="460" y2="60" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- GluA2 hub → Dendritic spines -->
+        <line x1="412" y1="106" x2="460" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- AP2M1 → Hippocampal memory -->
+        <line x1="412" y1="172" x2="460" y2="180" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Ca permeability → Excitotoxicity -->
+        <line x1="412" y1="352" x2="460" y2="240" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Ca permeability → Neurodegeneration -->
+        <line x1="412" y1="358" x2="460" y2="300" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Ca permeability → Hyperexcitability -->
+        <line x1="412" y1="362" x2="460" y2="360" stroke="#d97706" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Panel D arrows (interventions → hub or effects) - routed through gutters -->
+        <!-- G2CT → AP2M1 (Panel B) via top gutter: elbow path -->
+        <polyline points="700,60 674,60 674,172 414,172" fill="none" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- PICK1 inhibitors → PICK1 (Panel B): elbow -->
+        <polyline points="700,120 674,120 674,232 414,232" fill="none" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- miR-181a antagonism → GluA2 hub (Panel B): elbow through top -->
+        <polyline points="700,180 672,180 672,100 414,100" fill="none" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- ADAR2 → Ca permeability (Panel B): elbow -->
+        <polyline points="700,240 668,240 668,352 414,352" fill="none" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- HDAC3 → HDAC3 node (Panel A): elbow through bottom gutter -->
+        <polyline points="700,300 662,300 662,460 220,460 220,56 202,56" fill="none" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Regulators):</strong> Epigenetic (HDAC3), post-transcriptional (miR-181a/translin), RNA-editing (ADAR2), palmitoylation (SELENOK/DHHC6), and AD-pathological (Aβ, tau, neuroinflammation) inputs that converge on GluA2 receptor status.
+      <strong>Panel B (GluA2 Receptor Hub):</strong> The GluA2-AMPAR surface pool is regulated by AP2M1-driven endocytosis, PICK1/STEP-mediated phosphorylation, palmitoylation state, and Q/R editing — collectively determining calcium permeability.
+      <strong>Panel C (Downstream Effects):</strong> Two branches emerge — a protective branch (LTP, dendritic spine integrity, hippocampal memory) and a pathological branch (Ca²⁺ overload, excitotoxicity, neurodegeneration, network hyperexcitability).
+      <strong>Panel D (Therapeutic Strategies):</strong> Six intervention classes (G2CT/AP2M1 blockers, PICK1/STEP inhibitors, miR-181a antagonism, ADAR2 support, HDAC3 inhibition, SELENOK overexpression) route back through Panels A–B to normalize GluA2 function (dashed blue arrows).
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>🔄 GluA2 Trafficking as a Core AD Mechanism</h3>
+        <p>Human AD tissue, 5×FAD mice, and APP-overexpressing cells showed enhanced GluA2 endocytosis driven by increased GluA2–AP2M1 interaction, without major changes in total GluA2 protein. Blocking this interaction with G2CT restored membrane GluA2, improved synaptic function, and rescued cognition in 5×FAD mice without altering Aβ production.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠ Excitotoxic Risk via Q/R Editing Loss</h3>
+        <p>Properly edited GluA2(R) limits AMPAR calcium permeability. Reduced editing or GluA2 loss shifts receptors toward calcium-permeable AMPARs, promoting excitotoxic calcium influx, dendritic spine loss, neuronal death, and seizures. Eliminating unedited GluA2(Q) in AD-model mice prevented CA1 neurodegeneration and improved memory independently of Aβ pathology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>✦ Epigenetic &amp; miR-181a Regulation</h3>
+        <p>HDAC3 suppression, ADAR-mediated editing, miR-181a inhibition, m6A/FTO regulation, and REST-associated repression all regulate GRIA2 expression and receptor function. In 3xTg-AD mice, miR-181a inhibition improved memory deficits and increased GluA2 and GluA1 protein levels, providing a direct AD-linked regulatory mechanism.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🔗 Tau and GRIA2-Dependent Plasticity</h3>
+        <p>Tau regulates dendritic trafficking and NMDA-triggered redistribution of GluA2-containing AMPARs. Tau deficiency altered dendritic GluA2 puncta dynamics and prevented normal activity-dependent synaptic GluA2 reduction, suggesting tau pathology disrupts GRIA2-dependent synaptic plasticity in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>💊 Palmitoylation &amp; SELENOK in AD</h3>
+        <p>AD model mice and human AD brains showed reduced GluA2 palmitoylation. SELENOK enhanced DHHC6-dependent GluA2 palmitoylation, supporting AMPAR assembly and synaptic plasticity. Hippocampal SELENOK overexpression restored cognition and synaptic function in AD mice, establishing palmitoylation as a therapeutically actionable node.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚡ Druggability with Precision Required</h3>
+        <p>Oxiracetam modulated GluA1/GluA2 AMPAR kinetics and GluA2 desensitization recovery. PICK1 inhibitors stabilized surface GluA2 and blocked Aβ-induced calcium increases. However, nonselective AMPAR agonism or antagonism could impair cognition or worsen excitotoxicity — interventions must be receptor-complex-, cell-type-, and stage-specific.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <p><strong>Prioritize synaptic resilience over amyloid clearance:</strong> Frame GRIA2 as a target for restoring GluA2-containing AMPAR surface expression, synaptic retention, and hippocampal plasticity, rather than for reducing amyloid or tau burden directly.</p>
+      </li>
+
+      <li>
+        <p><strong>Investigate GluA2 trafficking biomarkers:</strong> Measure membrane/surface GluA2, GluA2–AP2M1 binding, PICK1-GluA2 and STEP-GluA2 interactions, PSD95 colocalization, Ser880/Y876 phosphorylation, and endocytosis/recycling dynamics in AD models and human tissue.</p>
+      </li>
+
+      <li>
+        <p><strong>Develop anti-internalization interventions:</strong> Optimize G2CT-like GluA2–AP2M1 blockers, Tat-GluA2-3Y-derived peptides, PICK1 inhibitors, STEP-GluA2 inhibitors, SYT3/BRAG2 pathway blockers, or compounds that stabilize GluA2-containing AMPARs at synapses.</p>
+      </li>
+
+      <li>
+        <p><strong>Preserve correct Q/R RNA editing:</strong> Explore ADAR2 support, RNA-editing technologies, or selective suppression of unedited GluA2(Q) to reduce calcium-permeable AMPAR burden and excitotoxic vulnerability — a mechanism shown to prevent CA1 neurodegeneration.</p>
+      </li>
+
+      <li>
+        <p><strong>Pursue upstream regulatory therapies:</strong> Investigate HDAC3 inhibition, miR-181a antagonism (validated in 3xTg-AD), SELENOK/DHHC6-mediated palmitoylation support, Reelin/ApoER2/CREB pathway restoration, and anti-inflammatory strategies to normalize GluA2-linked synaptic signaling.</p>
+      </li>
+
+      <li>
+        <p><strong>Use GluA2 as a pharmacodynamic readout:</strong> Surface GluA2 restoration, improved AMPAR-dependent EPSCs, rescued LTP, normalized calcium responses, preserved dendritic spines, and improved memory behavior are more relevant therapeutic readouts than total GRIA2 mRNA alone.</p>
+      </li>
+
+      <li>
+        <p><strong>Avoid simplistic global AMPAR modulation:</strong> GluA2-containing AMPARs are necessary for learning and memory; GluA2 loss or under-editing drives calcium-mediated toxicity. Therapeutic strategies must be region-, cell-type-, disease-stage-, and receptor-complex-specific to avoid harm.</p>
+      </li>
+
+      <li>
+        <p><strong>Validate patient-level defects as candidacy criteria:</strong> Confirm that AD patients or defined subgroups show measurable defects in GluA2 trafficking, editing, palmitoylation, phosphorylation, or interaction with AP2M1/PICK1/STEP/PSD95 — these would strongly support GRIA2 as a precision therapeutic target.</p>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — GRIA2 / GluA2 in Alzheimer's Disease</span>
+      <p>GRIA2/GluA2 emerges from the evidence as a <strong>high-priority synaptic resilience target</strong> in Alzheimer's disease, with a mechanistic profile far richer than a simple on/off therapeutic switch. The convergent literature implicates <strong>pathological GluA2 internalization</strong> (via AP2M1, PICK1, STEP), <strong>RNA editing failure</strong> (ADAR2/Q→R), <strong>palmitoylation defects</strong> (SELENOK/DHHC6), and <strong>upstream epigenetic and microRNA dysregulation</strong> (HDAC3, miR-181a) as distinct, independently actionable nodes — each supported by rescue experiments in AD models. The therapeutic opportunity is <strong>precision normalization</strong>: restoring correctly edited, appropriately localized, palmitoylated GluA2-containing AMPARs at hippocampal synapses, thereby preserving LTP, dendritic spine integrity, and memory without broadly activating or silencing AMPAR signaling. The principal risk is that <strong>nonselective AMPAR modulation</strong> could impair cognition or worsen excitotoxicity — underscoring the need for receptor-complex-specific, disease-stage-aware interventions. GRIA2 is not yet a validated clinical target, but the depth of mechanistic convergence and the breadth of rescue phenotypes across multiple independent AD models make it a compelling candidate for focused translational investment.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>GRIA2 / GluA2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only</p>
+</footer>
+
+</body>
+</html>

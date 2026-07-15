@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGLS — Target Enabling Package | AI Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2a7ab5;
+    --light: #e8f3fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #f1f5f9;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.96rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  .takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 0;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    color: #e2e8f0;
+    line-height: 1.85;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 24px 16px;
+    margin-top: 56px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: PGLS &nbsp;|&nbsp; 6-Phosphogluconolactonase</span>
+    <span class="chip chip-danger">⚠ No direct AD evidence — acronym-overlap risk</span>
+  </div>
+  <h1>PGLS &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> No published study directly evaluates PGLS (6-phosphogluconolactonase) in Alzheimer's disease. AD relevance is entirely indirect and hypothesis-generating. Additionally, many instances of "PGL," "PglS," or "PGLS" in the literature refer to unrelated entities — paragangliomas, phylogenetic generalized least squares, bacterial oligosaccharyltransferase, phenolic glycolipids, or cancer-model nomenclature — and must not be interpreted as evidence for PGLS in AD.
+    </div>
+
+    <p>PGLS encodes 6-phosphogluconolactonase, a pentose phosphate pathway (PPP) enzyme that catalyzes hydrolysis of 6-phosphogluconolactone to 6-phosphogluconate. Through its role in the oxidative PPP, the enzyme contributes to NADPH production and redox homeostasis — processes broadly relevant to oxidative stress biology. The text situates PGLS at the intersection of metabolic regulation, antioxidant defense, AMPK/PP2A signaling, and brain aging, each of which overlaps conceptually with Alzheimer's disease mechanisms.</p>
+
+    <p>However, the supplied evidence does not establish that PGLS drives, modifies, or protects against Alzheimer's pathology. No study reports PGLS expression changes in AD brain, genetic association with AD risk, altered enzymatic activity in AD tissue, effects on amyloid-β or tau, or therapeutic modulation in AD models. The strongest non-AD rationale for further investigation derives from a non-human primate transcriptomic study identifying PGLS as a brain-aging hub gene, and from glioblastoma models demonstrating that PGLS silencing reduces NADPH, depletes reduced glutathione, and increases reactive oxygen species.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~940 wide x 480 tall. Three panels:
+             Panel A (left): Oxidative PPP Enzyme Role — upstream substrate flow
+             Panel B (center): Redox Branching — NADPH branch and PPP flux branch
+             Panel C (right): Downstream / AD-Context signaling
+             Total nodes: 15 (counted below)
+        -->
+        <svg viewBox="0 0 940 480" width="940" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="12">
+
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#2a7ab5"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ============================================================
+               PANEL A — Oxidative PPP Enzyme Role
+               x: 14..296, y: 28..452
+          ============================================================ -->
+          <rect x="14" y="28" width="282" height="424" rx="12" fill="#e8f3fb" fill-opacity="0.55" stroke="#2a7ab5" stroke-width="1.2"/>
+          <text x="155" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#1a4a6b" letter-spacing="0.1em">PANEL A — PPP ENZYME ROLE</text>
+
+          <!-- Node 1: Glucose-6-P -->
+          <rect x="82" y="62" width="146" height="46" rx="8" fill="#ffffff" stroke="#2a7ab5" stroke-width="1.5"/>
+          <text x="155" y="81" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">Glucose-6-Phosphate</text>
+          <text x="155" y="98" text-anchor="middle" font-size="10" fill="#475569">(G6PD substrate)</text>
+
+          <!-- arrow 1→2 -->
+          <line x1="155" y1="108" x2="155" y2="146" stroke="#2a7ab5" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 2: 6-PGL -->
+          <rect x="82" y="148" width="146" height="44" rx="8" fill="#ffffff" stroke="#2a7ab5" stroke-width="1.5"/>
+          <text x="155" y="167" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">6-Phosphogluco-</text>
+          <text x="155" y="183" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">nolactone (6-PGL)</text>
+
+          <!-- arrow 2→3 -->
+          <line x1="155" y1="192" x2="155" y2="230" stroke="#2a7ab5" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 3: PGLS enzyme -->
+          <rect x="72" y="232" width="166" height="50" rx="8" fill="#1a4a6b" stroke="#2a7ab5" stroke-width="1.5"/>
+          <text x="155" y="253" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">PGLS</text>
+          <text x="155" y="271" text-anchor="middle" font-size="10" fill="#bfdbfe">6-Phosphogluconolactonase</text>
+
+          <!-- arrow 3→4 -->
+          <line x1="155" y1="282" x2="155" y2="320" stroke="#2a7ab5" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 4: 6-Phosphogluconate -->
+          <rect x="78" y="322" width="154" height="44" rx="8" fill="#ffffff" stroke="#2a7ab5" stroke-width="1.5"/>
+          <text x="155" y="341" text-anchor="middle" font-size="11" font-weight="700" fill="#1a4a6b">6-Phosphogluconate</text>
+          <text x="155" y="357" text-anchor="middle" font-size="10" fill="#475569">(6PGD substrate)</text>
+
+          <!-- arrow 4→5 -->
+          <line x1="155" y1="366" x2="155" y2="402" stroke="#2a7ab5" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 5: NADPH + Ribulose-5P -->
+          <rect x="60" y="404" width="190" height="42" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="155" y="421" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">NADPH + Ribulose-5P</text>
+          <text x="155" y="438" text-anchor="middle" font-size="10" fill="#475569">Oxidative PPP output</text>
+
+          <!-- ============================================================
+               PANEL B — Redox Branching
+               x: 322..618, y: 28..452
+          ============================================================ -->
+          <rect x="322" y="28" width="296" height="424" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="470" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#0f766e" letter-spacing="0.1em">PANEL B — REDOX BRANCHING</text>
+
+          <!-- Entry from Panel A: arrow from Node 5 area → Branch node -->
+          <!-- Route: from right edge of Panel A (x=296) at y=425 → branch node in Panel B -->
+          <!-- We'll draw an elbow through the gutter (x=297..322, y ~425) -->
+          <polyline points="250,425 250,456 470,456 470,434" stroke="#2a7ab5" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 6: Redox Branch Hub -->
+          <rect x="390" y="384" width="160" height="48" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+          <text x="470" y="404" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">NADPH Hub</text>
+          <text x="470" y="421" text-anchor="middle" font-size="10" fill="#ccfbf1">Redox branch point</text>
+
+          <!-- BRANCH LEFT: GSH/Antioxidant arm -->
+          <!-- arrow hub → node 7 -->
+          <line x1="390" y1="408" x2="352" y2="300" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 7: GSH Recycling -->
+          <rect x="330" y="248" width="140" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="400" y="268" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">GSH Recycling</text>
+          <text x="400" y="285" text-anchor="middle" font-size="10" fill="#475569">Glutathione defense</text>
+
+          <!-- arrow 7 → node 9 (converge) -->
+          <line x1="400" y1="248" x2="400" y2="188" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- BRANCH RIGHT: ROS/Oxidative stress arm -->
+          <!-- arrow hub → node 8 -->
+          <line x1="550" y1="408" x2="588" y2="300" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 8: PGLS Knockdown -->
+          <rect x="492" y="248" width="140" height="48" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="562" y="268" text-anchor="middle" font-size="11" font-weight="700" fill="#9b1c1c">PGLS Silencing</text>
+          <text x="562" y="285" text-anchor="middle" font-size="10" fill="#475569">↓ NADPH, ↑ ROS</text>
+
+          <!-- arrow 8 → node 10 -->
+          <line x1="562" y1="248" x2="562" y2="188" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 9: Neuroprotection -->
+          <rect x="330" y="138" width="140" height="48" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="400" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">Antioxidant</text>
+          <text x="400" y="175" text-anchor="middle" font-size="10" fill="#475569">Neuroprotection (hypoth.)</text>
+
+          <!-- Node 10: Oxidative damage -->
+          <rect x="492" y="138" width="140" height="48" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="562" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#9b1c1c">Oxidative Damage</text>
+          <text x="562" y="175" text-anchor="middle" font-size="10" fill="#475569">Clonogenicity ↓ (GBM)</text>
+
+          <!-- converge arrows to shared outcome -->
+          <line x1="400" y1="138" x2="430" y2="80" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="562" y1="138" x2="510" y2="80" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node 11: Converge — Cellular Redox State -->
+          <rect x="382" y="56" width="176" height="44" rx="8" fill="#1a4a6b" stroke="#2a7ab5" stroke-width="1.5"/>
+          <text x="470" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">Cellular Redox State</text>
+          <text x="470" y="90" text-anchor="middle" font-size="10" fill="#bfdbfe">Survival / stress outcome</text>
+
+          <!-- ============================================================
+               PANEL C — Downstream / AD-Context
+               x: 640..926, y: 28..452
+          ============================================================ -->
+          <rect x="640" y="28" width="286" height="424" rx="12" fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="783" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309" letter-spacing="0.1em">PANEL C — AD-CONTEXT SIGNALS</text>
+
+          <!-- Node 12: PP2A/AMPK signaling -->
+          <rect x="670" y="62" width="226" height="50" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="783" y="82" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">PP2A / AMPK Signaling</text>
+          <text x="783" y="99" text-anchor="middle" font-size="10" fill="#475569">6-PGL → Src → PP2A ↓</text>
+
+          <!-- arrow 12→13 -->
+          <line x1="783" y1="112" x2="783" y2="152" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 13: Brain Aging Hub -->
+          <rect x="670" y="154" width="226" height="50" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="783" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Brain-Aging Hub Gene</text>
+          <text x="783" y="191" text-anchor="middle" font-size="10" fill="#475569">NHP transcriptomics + mouse</text>
+
+          <!-- arrow 13→14 -->
+          <line x1="783" y1="204" x2="783" y2="244" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 14: Metabolic disease contexts -->
+          <rect x="670" y="246" width="226" height="50" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="783" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Metabolic Disease Contexts</text>
+          <text x="783" y="283" text-anchor="middle" font-size="10" fill="#475569">MAFLD, DKD, stroke proteomics</text>
+
+          <!-- arrow 14→15 -->
+          <line x1="783" y1="296" x2="783" y2="358" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Node 15: AD Hypothesis (no direct evidence) -->
+          <rect x="662" y="360" width="242" height="56" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+          <text x="783" y="381" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">AD Hypothesis Only</text>
+          <text x="783" y="398" text-anchor="middle" font-size="10" fill="#475569">No direct AD evidence;</text>
+          <text x="783" y="413" text-anchor="middle" font-size="10" fill="#475569">redox-metabolic candidate</text>
+
+          <!-- Cross-panel connector: Panel B Node 11 → Panel C Node 12 -->
+          <!-- Route through gutter between panels (x=620..638), at y=78 -->
+          <polyline points="558,78 630,78 670,87" stroke="#2a7ab5" stroke-width="1.2" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> shows the core enzymatic role of PGLS within the oxidative pentose phosphate pathway: sequential conversion from Glucose-6-Phosphate through 6-Phosphogluconolactone (via PGLS) to 6-Phosphogluconate, yielding NADPH and Ribulose-5-Phosphate.
+        <strong>Panel B</strong> depicts the redox branching downstream of the NADPH hub: the left (teal) arm illustrates how intact PGLS supports GSH recycling and putative antioxidant neuroprotection, while the right (red) arm shows that PGLS silencing depletes NADPH, elevates ROS, and impairs clonogenicity (demonstrated in glioblastoma models); both arms converge on cellular redox state as the shared outcome.
+        <strong>Panel C</strong> maps the broader AD-contextual signals — PP2A/AMPK regulation via 6-phosphogluconolactone/Src, identification of PGLS as a brain-aging hub gene in non-human primate transcriptomics, metabolic-disease proteomic appearances (MAFLD, diabetic kidney disease, stroke), and the ultimate conclusion that PGLS remains a hypothesis-generating, not validated, Alzheimer's candidate. A dashed connector from Panel B indicates conceptual cross-pathway relevance.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct Alzheimer's Evidence</h3>
+        <p>The supplied text contains zero studies evaluating PGLS expression, activity, or genetic association in AD brain, CSF, blood, animal models, or cell systems. No connection to amyloid-β, tau, synaptic degeneration, microglial activation, or cognitive decline is established.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Oxidative PPP Mechanistic Role</h3>
+        <p>PGLS catalyzes the hydrolysis of 6-phosphogluconolactone to 6-phosphogluconate within the oxidative pentose phosphate pathway. This positions it upstream of NADPH production and redox homeostasis — processes broadly relevant to oxidative stress biology, including neurodegeneration.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Strongest Indirect Link: Redox Defense</h3>
+        <p>Glioblastoma studies show PGLS silencing reduces NADPH and reduced glutathione and increases reactive oxygen species. Because Alzheimer's disease involves oxidative damage and impaired antioxidant defenses, PGLS could function as a redox-metabolic support node — but this is entirely untested in AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Therapeutic Direction Is Context-Dependent</h3>
+        <p>Cancer evidence supports PGLS inhibition (increases ROS, suppresses proliferation). In Alzheimer's disease — where neurons are vulnerable to oxidative injury — inhibiting PGLS could be harmful. Preservation or enhancement of PGLS/PPP flux is a more plausible AD hypothesis, but remains unproven.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Brain-Aging Hub Gene</h3>
+        <p>A non-human primate transcriptomic study identified PGLS as a hub gene in brain aging, with functional significance confirmed at transcriptional, molecular, and behavioral levels in mice. As aging is the dominant AD risk factor, this is the strongest non-AD rationale for further study — though it does not establish AD disease modification.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Acronym-Overlap Warning</h3>
+        <p>Many literature uses of "PGL," "PglS," or "PGLS" refer to unrelated entities: paragangliomas, phylogenetic generalized least squares, bacterial oligosaccharyltransferase PglS, phenolic glycolipids, cardiac strain measures, and cancer-model names. None of these constitute evidence for the enzyme in Alzheimer's disease.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat PGLS as hypothesis-generating, not validated.</strong> The current evidence does not support PGLS as an established Alzheimer's therapeutic target. All AD-relevant claims must be flagged as speculative until direct experimental evidence is obtained.</li>
+      <li><strong>Exclude acronym-overlap entries before interpreting the literature.</strong> Evidence from paraganglioma biology, phylogenetic methods, bacterial PglS, phenolic glycolipids, or unrelated biomedical uses must be rigorously distinguished from 6-phosphogluconolactonase data before drawing any conclusions.</li>
+      <li><strong>Prioritize direct AD validation experiments.</strong> Key missing studies include PGLS expression and activity analysis in AD brain regions and single-cell datasets, CSF and blood biomarker cohorts, amyloid and tau model systems, and aging/neurodegeneration model organisms.</li>
+      <li><strong>Test AD-relevant mechanistic endpoints.</strong> Experimental programs should evaluate whether PGLS modulation affects NADPH/GSH balance, oxidative stress, mitochondrial integrity, neuronal survival, synaptic function, microglial and astrocytic inflammatory states, amyloid-β toxicity, tau phosphorylation, and cognition in appropriate models.</li>
+      <li><strong>Evaluate modulation direction carefully before therapeutic claims.</strong> Cancer-derived evidence supporting PGLS inhibition should not be transposed to AD without testing. Maintaining or enhancing PGLS/PPP function may be neuroprotective, whereas inhibition could exacerbate oxidative injury in vulnerable neurons and glia.</li>
+      <li><strong>Investigate PGLS within the broader metabolic-redox network.</strong> Relevant pathway endpoints include PPP flux, G6PD/6PGD coupling, NADPH production, glutathione recycling, PP2A activity, AMPK signaling, and stress-response pathways including hypoxia and IRE1/ER stress — not PGLS as an isolated target.</li>
+      <li><strong>Leverage brain-aging data as the strongest current rationale.</strong> The identification of PGLS as a brain-aging hub gene in non-human primates supports investigation in age-related cognitive decline and AD-risk contexts, representing the most scientifically grounded entry point for further study.</li>
+      <li><strong>Defer therapeutic development pending foundational evidence.</strong> The data support PGLS as a possible biomarker or redox-metabolic research node, not as a drug target. Therapeutic investment is premature without first establishing disease-relevant biology in AD models.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — PGLS in Alzheimer's Disease</div>
+      <p>
+        <strong>PGLS (6-phosphogluconolactonase) has no direct evidential foothold in Alzheimer's disease research.</strong> Its potential relevance is entirely conceptual, resting on its enzymatic role in the oxidative pentose phosphate pathway and the consequent contribution to <strong>NADPH-dependent redox homeostasis</strong> — a process that is impaired in Alzheimer's brain but has not been linked to PGLS specifically. The most compelling indirect evidence is the identification of <strong>PGLS as a brain-aging hub gene</strong> in non-human primates, given that aging is the principal AD risk context. Glioblastoma studies demonstrating that PGLS silencing depletes NADPH and glutathione while increasing ROS provide a mechanistic framework worth translating to neuronal systems, but <strong>this translation has not been attempted</strong>. Critically, the therapeutic direction is uncertain: cancer-justified PGLS inhibition could be detrimental in the oxidatively vulnerable AD brain, where maintaining PPP flux and antioxidant capacity may be protective. Extensive <strong>acronym-overlap contamination</strong> in the literature further complicates evidence appraisal. In summary, PGLS is a biologically plausible but wholly unvalidated candidate for Alzheimer's research — suitable for exploratory mechanistic study, but far from supporting therapeutic or biomarker claims in this disease context.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PGLS / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No clinical decisions should be based on this document
+</footer>
+
+</body>
+</html>

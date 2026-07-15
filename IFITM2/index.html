@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFITM2 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e8f1f8;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: #e2eaf2;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: var(--slate);
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .callout p {
+    margin: 6px 0 0;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    text-align: center;
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.neutral {
+    border-left-color: #64748b;
+    background: #f1f5f9;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--dark);
+    margin-bottom: 7px;
+  }
+
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: #475569; }
+
+  .card p {
+    font-size: 0.875rem;
+    color: var(--slate);
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+
+  .takeaways li {
+    margin-bottom: 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--slate);
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    border-radius: 12px;
+    padding: 36px 36px;
+    color: #e8f1f8;
+    margin-bottom: 56px;
+  }
+
+  .verdict p {
+    color: #d1e4f5;
+    font-size: 0.975rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #7eb8e8;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 18px 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: IFITM2 &nbsp;|&nbsp; Interferon-Induced Transmembrane Protein 2</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>IFITM2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Context-Dependent Risk</strong>
+      <p>Broad systemic inhibition or enhancement of IFITM2 could be harmful: it can both restrict and facilitate pathogen entry, and it supports normal endosomal functions in neural and endothelial cells. Any therapeutic strategy must be cell-type-specific and disease-context-validated.</p>
+    </div>
+
+    <p>IFITM2 is an interferon-inducible transmembrane protein centrally involved in innate immunity, endolysosomal biology, viral-entry/fusion control, vesicle/cargo handling, immune-cell activation, and inflammatory signaling. Its connection to Alzheimer's disease (AD) is predominantly indirect, though one landmark study directly implicates it in AD-relevant mechanisms.</p>
+
+    <p>The strongest AD-specific evidence comes from Xiang et al. 2025, which identified IFITM2 and CLIC1 as shared co-diagnostic genes between sepsis-induced cognitive impairment and AD. Sepsis accelerated cognitive decline and AD-like amyloid pathology in mice; IFITM2 was upregulated in septic mouse brain tissue and in cytokine-stimulated human cerebral endothelial cells, implicating it in immune dysregulation and endothelial inflammatory responses directly relevant to AD.</p>
+
+    <p>Across the broader literature, IFITM2 intersects with AD-relevant mechanisms including chronic interferon signaling, microglial inflammatory states, endothelial dysfunction, endosomal/lysosomal trafficking, extracellular-vesicle communication, membrane fluidity, AKT/GSK3β and mTORC1 signaling, cytokine production, T-cell regulation, and peripheral myeloid activation. These findings support IFITM2 as a plausible AD-relevant biomarker or mechanistic node — but not yet as a validated AD therapeutic target.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANELS:
+          A (left):    Upstream Inducers & Interferon Signaling  (~x 14..310)
+          B (center):  IFITM2 Core Functions                     (~x 330..590)
+          C (right):   AD-Relevant Downstream Effects            (~x 610..870)
+        Node count plan (max 16):
+          Panel A: 3 nodes
+          Panel B: 4 nodes (IFITM2 hub + 3 functions)
+          Panel C: 6 nodes in 2 sub-branches (3+3) converging to 1 outcome
+          Total: 3 + 4 + 6 = 13 nodes ✓
+      -->
+      <svg viewBox="0 0 900 470" width="900" height="470" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dk" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1e3a5f"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: Upstream Inducers ═══ -->
+        <rect x="12" y="14" width="278" height="440" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="28" y="34" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.5">A — UPSTREAM INDUCERS</text>
+
+        <!-- A1: Type I/II IFN Signals -->
+        <rect x="34" y="50" width="234" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="151" y="72" font-size="11.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">Type I / II Interferon</text>
+        <text x="151" y="89" font-size="10" fill="#1e3a5f" text-anchor="middle">Signaling (JAK/STAT, IRF3/7)</text>
+
+        <!-- A1 → A2 arrow -->
+        <line x1="151" y1="102" x2="151" y2="128" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A2: Sepsis / Cytokine Stimulation -->
+        <rect x="34" y="130" width="234" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="151" y="152" font-size="11.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">Sepsis / Cytokine Storm</text>
+        <text x="151" y="169" font-size="10" fill="#1e3a5f" text-anchor="middle">Endothelial &amp; microglial induction</text>
+
+        <!-- A2 → A3 arrow -->
+        <line x1="151" y1="182" x2="151" y2="208" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A3: Viral / NET-DNA Sensing -->
+        <rect x="34" y="210" width="234" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="151" y="232" font-size="11.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">Viral / NET-DNA Sensing</text>
+        <text x="151" y="249" font-size="10" fill="#1e3a5f" text-anchor="middle">RAP1B–ERK; T-cell activation</text>
+
+        <!-- ═══ PANEL B: IFITM2 Core ═══ -->
+        <rect x="308" y="14" width="278" height="440" rx="12" fill="#fef9e7" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="324" y="34" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.5">B — IFITM2 CORE FUNCTIONS</text>
+
+        <!-- B1: IFITM2 Hub -->
+        <rect x="366" y="54" width="162" height="52" rx="8" fill="#fde68a" stroke="#b45309" stroke-width="1.8"/>
+        <text x="447" y="76" font-size="12.5" font-weight="700" fill="#78350f" text-anchor="middle">IFITM2</text>
+        <text x="447" y="93" font-size="10" fill="#78350f" text-anchor="middle">Transmembrane protein</text>
+
+        <!-- B1 → B2 arrow -->
+        <line x1="447" y1="106" x2="447" y2="152" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B2: Membrane / Endolysosomal -->
+        <rect x="330" y="154" width="234" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="447" y="176" font-size="11.5" font-weight="700" fill="#78350f" text-anchor="middle">Membrane Gatekeeper</text>
+        <text x="447" y="193" font-size="10" fill="#78350f" text-anchor="middle">Lipid order, fusion-pore control</text>
+
+        <!-- B2 → B3 arrow -->
+        <line x1="447" y1="206" x2="447" y2="252" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B3: Endosomal Trafficking -->
+        <rect x="330" y="254" width="234" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="447" y="276" font-size="11.5" font-weight="700" fill="#78350f" text-anchor="middle">Endosomal Trafficking</text>
+        <text x="447" y="293" font-size="10" fill="#78350f" text-anchor="middle">PI interactions; AKT/GSK3β signaling</text>
+
+        <!-- B3 → B4 arrow -->
+        <line x1="447" y1="306" x2="447" y2="352" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- B4: EV Communication -->
+        <rect x="330" y="354" width="234" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="447" y="376" font-size="11.5" font-weight="700" fill="#78350f" text-anchor="middle">Extracellular Vesicles</text>
+        <text x="447" y="393" font-size="10" fill="#78350f" text-anchor="middle">Cargo transfer; immune signaling</text>
+
+        <!-- ═══ PANEL C: AD Downstream ═══ -->
+        <rect x="604" y="14" width="282" height="440" rx="12" fill="#f0fdf4" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="620" y="34" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.5">C — AD-RELEVANT OUTCOMES</text>
+
+        <!-- C-branch 1 top: Neuroinflammation -->
+        <rect x="624" y="54" width="244" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="746" y="74" font-size="11.5" font-weight="700" fill="#134e4a" text-anchor="middle">Neuroinflammation /</text>
+        <text x="746" y="91" font-size="10" fill="#134e4a" text-anchor="middle">Microglial activation states</text>
+
+        <!-- C1 → C2 -->
+        <line x1="746" y1="106" x2="746" y2="152" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C2: Vascular / BBB Injury -->
+        <rect x="624" y="154" width="244" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="746" y="174" font-size="11.5" font-weight="700" fill="#134e4a" text-anchor="middle">Vascular / BBB Injury</text>
+        <text x="746" y="191" font-size="10" fill="#134e4a" text-anchor="middle">Brain endothelial IFITM2 elevation</text>
+
+        <!-- C2 → C3 -->
+        <line x1="746" y1="206" x2="746" y2="252" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C3: Endosomal Enlargement -->
+        <rect x="624" y="254" width="244" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="746" y="274" font-size="11.5" font-weight="700" fill="#134e4a" text-anchor="middle">Endosomal Enlargement</text>
+        <text x="746" y="291" font-size="10" fill="#134e4a" text-anchor="middle">APP trafficking; Aβ handling</text>
+
+        <!-- C3 → C4 converge -->
+        <line x1="746" y1="306" x2="746" y2="352" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C4: AD Cognitive / Pathological Outcome -->
+        <rect x="624" y="354" width="244" height="52" rx="8" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="746" y="374" font-size="11.5" font-weight="700" fill="#064e3b" text-anchor="middle">Cognitive Decline /</text>
+        <text x="746" y="391" font-size="10" fill="#064e3b" text-anchor="middle">AD-like amyloid pathology</text>
+
+        <!-- ═══ INTER-PANEL CONNECTORS ═══ -->
+        <!-- Panel A → Panel B: A1 (right edge x=268, y=76) → B1 hub (left edge x=366, y=80) -->
+        <line x1="268" y1="76" x2="364" y2="76" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-dk)"/>
+
+        <!-- A2 right → B hub via gutter: elbow at y=156 -->
+        <polyline points="268,156 288,156 288,80 364,80" stroke="#1e3a5f" stroke-width="1.3" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-dk)"/>
+
+        <!-- A3 right → B3: elbow through gutter y=236 -->
+        <polyline points="268,236 290,236 290,280 328,280" stroke="#1e3a5f" stroke-width="1.3" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-dk)"/>
+
+        <!-- Panel B → Panel C: B2 right → C1 left via gutter y=180 → C1 y=80 -->
+        <polyline points="564,180 584,180 584,80 622,80" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" fill="none" marker-end="url(#arr)"/>
+
+        <!-- B3 right → C3 -->
+        <line x1="564" y1="280" x2="622" y2="280" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- B4 right → C4 -->
+        <line x1="564" y1="380" x2="622" y2="380" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Inducers):</strong> IFITM2 expression is driven by type I/II interferon signaling (JAK/STAT, IRF3/7), augmented by sepsis/cytokine stimulation in cerebral endothelial cells and microglia, and by viral/NET-DNA sensing activating RAP1B–ERK in T cells.
+      <strong>Panel B (IFITM2 Core Functions):</strong> IFITM2 acts as a membrane gatekeeper controlling lipid order and fusion-pore dynamics, regulates endosomal trafficking via phosphoinositide interactions and AKT/GSK3β signaling, and participates in extracellular-vesicle cargo transfer and immune signaling.
+      <strong>Panel C (AD-Relevant Outcomes):</strong> Downstream consequences cascade from neuroinflammation and microglial activation states → vascular/blood–brain barrier injury → endosomal enlargement and APP/Aβ trafficking disruption → AD-like amyloid pathology and cognitive decline. Dashed connectors indicate inter-panel mechanistic links.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Interferon Signature &amp; Neuroinflammation</h3>
+        <p>IFITM2 is repeatedly induced by type I/II interferon pathways and co-expressed with IFITM1, IFITM3, STAT1, MX1, ISG15, IRF3, and IRF7. In AD, chronic interferon signaling and microglial activation are recognized contributors to neuroinflammation, synaptic dysfunction, and neurodegeneration.</p>
+      </div>
+
+      <div class="card">
+        <h3>Microglial Biology</h3>
+        <p>Human monocyte-derived microglia in 2D culture display an interferon-responsive state characterized by elevated IFITM2 and IFITM3. IFITM2 may identify or participate in inflammatory microglial states, though more complex 3D and neural-glial systems reveal broader microglial heterogeneity.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Brain Endothelial Inflammation &amp; BBB</h3>
+        <p>IFITM2 is upregulated in cytokine-stimulated human cerebral endothelial cells (Xiang et al. 2025) and was identified among antiviral defense genes elevated in brain endothelial cells in COVID-19/AD network medicine studies, alongside IFITM3, LY6E, IFNAR1, BSG, and FURIN — supporting a vascular model of BBB inflammation and infection-associated cognitive decline.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Endosomal / Lysosomal Dysfunction</h3>
+        <p>IFITM2 is required for endocytosis in radial glial cells, interacts with phosphoinositides via K82/K87, and its deficiency reduces AKT and GSK3β phosphorylation. These pathways are directly relevant to AD: endosomal enlargement, APP trafficking, Aβ handling, lysosomal stress, and tau-relevant kinase signaling are all implicated.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Signaling Pathway Intersections</h3>
+        <p>Across non-AD studies, IFITM2 associates with JAK/STAT3, PI3K/AKT, MAPK/ERK, Wnt, TGF-β/SMAD, mTORC1, ERK–TBK1–IRF3, and AKT/GSK3β pathways — all of which affect glial activation, neuronal survival, tau phosphorylation, autophagy, and vascular dysfunction relevant to AD.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Context-Dependent Therapeutic Risk</h3>
+        <p>IFITM2 can both restrict and facilitate pathogen entry depending on context, and supports normal endosomal functions in neural and endothelial lineages. Broad systemic inhibition or enhancement therefore carries a risk of impairing antiviral defense, immune homeostasis, or beneficial endocytic trafficking.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat IFITM2 as an exploratory biomarker first.</strong> Regard it as a plausible AD mechanistic node, not a validated standalone therapeutic target — disease-specific validation must precede drug development.</li>
+      <li><strong>Map cell-type-specific expression in AD brain.</strong> Prioritize microglia, astrocytes, brain endothelial cells, neurons, oligodendrocytes, infiltrating monocytes/macrophages, and T cells using human single-cell and spatial transcriptomic datasets.</li>
+      <li><strong>Correlate IFITM2 with AD-relevant phenotypes.</strong> Test associations with amyloid burden, tau pathology, endosomal enlargement, interferon signatures, microglial activation states, vascular injury, blood–brain barrier dysfunction, synapse loss, cognitive decline, and APOE genotype.</li>
+      <li><strong>Functionally interrogate AD-specific mechanisms.</strong> Assess whether IFITM2 modulation changes Aβ uptake/clearance, APP trafficking, tau phosphorylation, cytokine release, microglial phagocytosis, endolysosomal flux, extracellular-vesicle delivery, endothelial permeability, and neuronal survival.</li>
+      <li><strong>Use AD-relevant experimental models.</strong> Employ human iPSC-derived microglia, brain endothelial cells, neural-glial co-cultures, organoids, AD mouse models, and human transcriptomic datasets rather than relying on viral, cancer, or peripheral-immune systems alone.</li>
+      <li><strong>Do not assume IFITM2 inhibition is beneficial.</strong> Suppression might reduce maladaptive interferon-driven inflammation in some contexts but could also impair antiviral defense, immune homeostasis, or essential endosomal trafficking.</li>
+      <li><strong>Consider targeted strategies if pathogenic activity is confirmed.</strong> Options include selective dampening of IFITM2 induction in inflammatory microglia or brain endothelial cells; modulation of endocytic/phosphoinositide interactions; interference with pathological extracellular-vesicle signaling; or targeting upstream JAK-STAT/IRF pathways rather than global IFITM2 blockade.</li>
+      <li><strong>Evaluate infection-associated and vascular AD subtypes separately.</strong> IFITM2 may be especially relevant where AD risk overlaps with sepsis, viral exposure, APOE4-linked antiviral vulnerability, endothelial inflammation, or microvascular injury.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — IFITM2 in Alzheimer's Disease</span>
+      <p>
+        IFITM2 is a <strong>plausible contributor to AD-relevant neuroimmune and endolysosomal mechanisms</strong>, most compellingly through <strong>interferon-driven microglial and cerebral endothelial activation</strong> and <strong>vascular inflammation</strong>. The co-diagnostic link with sepsis-induced cognitive impairment (Xiang et al. 2025) provides the most direct AD-relevant evidence, positioning IFITM2 at the intersection of <strong>infection, immune dysregulation, and AD-like pathology</strong>. Indirect support from endosomal trafficking biology, membrane physics, extracellular-vesicle communication, and broad pathway intersections (AKT/GSK3β, mTORC1, JAK/STAT) reinforces mechanistic plausibility. However, <strong>therapeutic potential remains preliminary</strong>: the context-dependence of IFITM2 function makes simple inhibition or enhancement risky, and disease-specific, cell-type-specific validation — in human AD brain and appropriate in vitro/in vivo AD models — is <strong>required before any drug development is justified</strong>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  IFITM2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCML4 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 54px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.96rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.neutral {
+    border-left-color: #64748b;
+    background: #f1f5f9;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--slate);
+  }
+
+  .card p {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: var(--slate);
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 56px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 34px;
+    height: 34px;
+    background: var(--dark);
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict p {
+    font-size: 1.05rem;
+    color: #e2eaf4;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* PROSE */
+  .prose p {
+    margin-bottom: 1.1em;
+  }
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SCML4 &nbsp;|&nbsp; Sex comb on midleg-like protein 4</span>
+    <span class="chip chip-danger">⚠ No direct AD validation — speculative candidate only</span>
+  </div>
+  <h1>SCML4 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidential Caveat</strong>
+      SCML4 is <em>not</em> a validated Alzheimer's disease gene or therapeutic target. No study in the reviewed literature directly tests SCML4 in AD patients, AD models, amyloid-β biology, tau pathology, synaptic degeneration, or cognition. All connections to AD are indirect and hypothesis-generating.
+    </div>
+
+    <div class="prose">
+      <p>SCML4 (Sex comb on midleg-like protein 4) is a polycomb-associated transcriptional regulator whose relevance to Alzheimer's disease (AD) is inferred rather than established. The reviewed literature places SCML4 at the intersection of several biological systems that overlap with AD mechanisms — brain aging, neurogenesis, chromatin/polycomb regulation, immune function, endothelial inflammation, vascular remodeling, lipid/fatty-acid metabolism, and proteostasis stress — yet none of these studies was conducted in an AD context.</p>
+      <p>The most directly AD-relevant evidence derives from an aging-brain RNA-seq study in <em>Nothobranchius furzeri</em>, a short-lived fish model, where SCML4 was downregulated with age among genes linked to neurogenesis and chromatin regulation. Because aging is the strongest AD risk factor and AD involves impaired neurogenesis, epigenetic remodeling, and inflammation, this finding positions SCML4 as a plausible hypothesis-generating candidate — but not a proven AD driver.</p>
+      <p>A recurrent pattern across disease contexts is that reduced SCML4 associates with dysfunction: aging-brain downregulation, coronary artery disease genetic risk, endothelial pro-inflammatory activation after knockdown, worsened vascular remodeling, diminished antitumor T-cell function, low expression in lung cancer with poor prognosis, and downregulation during vascular/hematopoietic toxicity. This directional consistency supports further investigation but remains entirely indirect with respect to AD.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 3 panels — Upstream Regulators | Core SCML4 Mechanisms | Downstream Relevance to AD -->
+      <svg viewBox="0 0 900 500" width="900" height="500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- DEFS -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Signals (left) -->
+        <rect x="12" y="22" width="230" height="456" rx="12" ry="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="127" y="42" text-anchor="middle" font-weight="700" font-size="9" fill="#1e3a5f" letter-spacing="1.5">UPSTREAM SIGNALS</text>
+
+        <!-- Node A1: Brain Aging -->
+        <rect x="32" y="54" width="190" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="127" y="69" text-anchor="middle" font-weight="700" fill="#1e3a5f">Brain Aging</text>
+        <text x="127" y="83" text-anchor="middle" fill="#475569">(N. furzeri RNA-seq)</text>
+
+        <!-- Node A2: mTOR–IRF4–PRDM1 -->
+        <rect x="32" y="116" width="190" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="127" y="131" text-anchor="middle" font-weight="700" fill="#1e3a5f">mTOR–IRF4–PRDM1</text>
+        <text x="127" y="145" text-anchor="middle" fill="#475569">Fatty-acid signalling</text>
+
+        <!-- Node A3: CAD GWAS SNP -->
+        <rect x="32" y="178" width="190" height="38" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="127" y="193" text-anchor="middle" font-weight="700" fill="#9b1c1c">CAD GWAS SNP</text>
+        <text x="127" y="207" text-anchor="middle" fill="#475569">rs9486729 (↓ expression)</text>
+
+        <!-- Node A4: Proteotoxic Stress -->
+        <rect x="32" y="240" width="190" height="38" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="127" y="255" text-anchor="middle" font-weight="700" fill="#b45309">Proteotoxic Stress</text>
+        <text x="127" y="269" text-anchor="middle" fill="#475569">Cardiac autophagy context</text>
+
+        <!-- Node A5: Adipogenesis cue -->
+        <rect x="32" y="302" width="190" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="127" y="317" text-anchor="middle" font-weight="700" fill="#1e3a5f">Adipogenic Cue</text>
+        <text x="127" y="331" text-anchor="middle" fill="#475569">PPARγ / FABP4 axis</text>
+
+        <!-- Arrows within Panel A → to SCML4 (drawn in gutter, terminated before panel B) -->
+        <line x1="222" y1="73" x2="258" y2="73" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="222" y1="135" x2="258" y2="135" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="222" y1="197" x2="258" y2="197" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="222" y1="259" x2="258" y2="259" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <line x1="222" y1="321" x2="258" y2="321" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: SCML4 Core (centre) -->
+        <rect x="256" y="22" width="222" height="456" rx="12" ry="12" fill="#e8f1fa" fill-opacity="0.75" stroke="#1e3a5f" stroke-width="1.8"/>
+        <text x="367" y="42" text-anchor="middle" font-weight="700" font-size="9" fill="#1e3a5f" letter-spacing="1.5">SCML4 CORE FUNCTIONS</text>
+
+        <!-- Node B1: SCML4 (central hub) -->
+        <rect x="278" y="54" width="178" height="44" rx="8" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="367" y="73" text-anchor="middle" font-weight="700" font-size="13" fill="#ffffff">SCML4</text>
+        <text x="367" y="89" text-anchor="middle" font-size="10" fill="#93c5fd">Polycomb-associated regulator</text>
+
+        <!-- Node B2: HBO1–BRPF2–ING4 -->
+        <rect x="278" y="126" width="178" height="38" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+        <text x="367" y="141" text-anchor="middle" font-weight="700" fill="#1e3a5f">HBO1–BRPF2–ING4</text>
+        <text x="367" y="155" text-anchor="middle" fill="#475569">Complex recruitment</text>
+
+        <!-- Node B3: H3K27me3 / Chromatin -->
+        <rect x="278" y="188" width="178" height="38" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+        <text x="367" y="203" text-anchor="middle" font-weight="700" fill="#1e3a5f">H3K27me3 Remodelling</text>
+        <text x="367" y="217" text-anchor="middle" fill="#475569">Epigenetic gene silencing</text>
+
+        <!-- Node B4: CD8+ TRM / TIL -->
+        <rect x="278" y="250" width="178" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="367" y="265" text-anchor="middle" font-weight="700" fill="#0f766e">CD8+ TRM / TIL</text>
+        <text x="367" y="279" text-anchor="middle" fill="#475569">Survival &amp; effector function</text>
+
+        <!-- Node B5: Lipid / Fatty-acid -->
+        <rect x="278" y="312" width="178" height="38" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+        <text x="367" y="327" text-anchor="middle" font-weight="700" fill="#1e3a5f">Lipid / FA Metabolism</text>
+        <text x="367" y="341" text-anchor="middle" fill="#475569">mTOR–SCML4 maintenance</text>
+
+        <!-- Node B6: Endothelial regulation -->
+        <rect x="278" y="374" width="178" height="38" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="367" y="389" text-anchor="middle" font-weight="700" fill="#9b1c1c">Endothelial Regulation</text>
+        <text x="367" y="403" text-anchor="middle" fill="#475569">Anti-inflammatory, anti-apoptotic</text>
+
+        <!-- Arrows in Panel B (vertical) -->
+        <line x1="367" y1="98" x2="367" y2="124" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="367" y1="164" x2="367" y2="186" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Branch from B1 down to B4 (diagonal avoided: run along right gutter inside panel) -->
+        <polyline points="455,76 464,76 464,269 456,269" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Branch from B1 down to B5 -->
+        <polyline points="455,82 470,82 470,331 456,331" fill="none" stroke="#1e3a5f" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- Branch from B1 down to B6 -->
+        <polyline points="455,88 476,88 476,393 456,393" fill="none" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- PANEL C: AD-Relevant Downstream (right) -->
+        <rect x="490" y="22" width="398" height="456" rx="12" ry="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="689" y="42" text-anchor="middle" font-weight="700" font-size="9" fill="#0f766e" letter-spacing="1.5">AD-RELEVANT DOWNSTREAM DOMAINS</text>
+
+        <!-- Sub-branch 1: Epigenetic / Neuro (top-left of panel C) -->
+        <!-- Node C1 -->
+        <rect x="506" y="54" width="170" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="591" y="69" text-anchor="middle" font-weight="700" fill="#1e3a5f">Neurogenesis &amp;</text>
+        <text x="591" y="83" text-anchor="middle" fill="#1e3a5f">Chromatin Homeostasis</text>
+
+        <!-- Node C2 -->
+        <rect x="506" y="120" width="170" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="591" y="135" text-anchor="middle" font-weight="700" fill="#1e3a5f">Age-related ↓ SCML4</text>
+        <text x="591" y="149" text-anchor="middle" fill="#475569">Epigenetic dysregulation</text>
+
+        <!-- Node C3 -->
+        <rect x="506" y="186" width="170" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="591" y="201" text-anchor="middle" font-weight="700" fill="#1e3a5f">Synaptic / Axonal</text>
+        <text x="591" y="215" text-anchor="middle" fill="#475569">Gene expression changes</text>
+
+        <!-- Sub-branch 2: Immune / Vascular (top-right of panel C) -->
+        <!-- Node C4 -->
+        <rect x="706" y="54" width="170" height="38" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="791" y="69" text-anchor="middle" font-weight="700" fill="#9b1c1c">Endothelial Activation</text>
+        <text x="791" y="83" text-anchor="middle" fill="#475569">IL-6, E-selectin, ICAM ↑</text>
+
+        <!-- Node C5 -->
+        <rect x="706" y="120" width="170" height="38" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="791" y="135" text-anchor="middle" font-weight="700" fill="#9b1c1c">Vascular Remodelling</text>
+        <text x="791" y="149" text-anchor="middle" fill="#475569">Worsened on knockdown</text>
+
+        <!-- Node C6 -->
+        <rect x="706" y="186" width="170" height="38" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="791" y="201" text-anchor="middle" font-weight="700" fill="#9b1c1c">BBB / Neuroinflammation</text>
+        <text x="791" y="215" text-anchor="middle" fill="#475569">(inferred link to AD)</text>
+
+        <!-- Shared convergence node C7 -->
+        <rect x="580" y="272" width="218" height="44" rx="8" fill="#e8f1fa" stroke="#1e3a5f" stroke-width="1.6"/>
+        <text x="689" y="291" text-anchor="middle" font-weight="700" fill="#1e3a5f">AD-Relevant Mechanism</text>
+        <text x="689" y="307" text-anchor="middle" fill="#475569">Overlapping biology (unproven)</text>
+
+        <!-- Immune node C8 -->
+        <rect x="506" y="350" width="170" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="591" y="365" text-anchor="middle" font-weight="700" fill="#0f766e">Immune Competence</text>
+        <text x="591" y="379" text-anchor="middle" fill="#475569">CD8+ exhaustion reduction</text>
+
+        <!-- Lipid/Proteostasis node C9 -->
+        <rect x="706" y="350" width="170" height="38" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="791" y="365" text-anchor="middle" font-weight="700" fill="#b45309">Lipid &amp; Proteostasis</text>
+        <text x="791" y="379" text-anchor="middle" fill="#475569">Autophagy / proteasome link</text>
+
+        <!-- Arrows within Panel C -->
+        <!-- C1 → C2 -->
+        <line x1="591" y1="92" x2="591" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- C2 → C3 -->
+        <line x1="591" y1="158" x2="591" y2="184" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- C4 → C5 -->
+        <line x1="791" y1="92" x2="791" y2="118" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- C5 → C6 -->
+        <line x1="791" y1="158" x2="791" y2="184" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- C3 → convergence node (from bottom of C3 down into C7) -->
+        <polyline points="591,224 591,248 648,248 648,270" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- C6 → convergence node -->
+        <polyline points="791,224 791,248 730,248 730,270" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- C7 → C8 -->
+        <polyline points="620,316 591,316 591,348" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- C7 → C9 -->
+        <polyline points="760,316 791,316 791,348" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel B → Panel C connectors (through gutter between x=478 and x=490) -->
+        <!-- B3 (chromatin) → C1 (neurogenesis): horizontal line through gutter -->
+        <polyline points="456,207 481,207 481,73 504,73" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- B4 (CD8) → C8 (immune) -->
+        <polyline points="456,269 483,269 483,369 504,369" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- B6 (endothelial) → C4 (endothelial activation) -->
+        <polyline points="456,393 483,393 483,137 504,137" fill="none" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- B5 (lipid) → C9 -->
+        <polyline points="456,331 485,331 485,153 706,153" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- "knockdown ↓" badge — placed in empty space top-left of Panel C gutter -->
+        <rect x="493" y="420" width="80" height="20" rx="10" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="533" y="434" text-anchor="middle" font-size="9" fill="#9b1c1c" font-weight="700">knockdown ↓</text>
+
+        <!-- "aging ↓" badge in Panel A lower area -->
+        <rect x="44" y="420" width="60" height="20" rx="10" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1"/>
+        <text x="74" y="434" text-anchor="middle" font-size="9" fill="#1e3a5f" font-weight="700">aging ↓</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Signals):</strong> Five upstream contexts in which SCML4 expression or function is modulated — brain aging, fatty-acid/mTOR signalling, a coronary artery disease GWAS SNP, proteotoxic stress, and adipogenic cues — each feeding into SCML4 via gutter connectors.
+      <strong>Panel B (SCML4 Core Functions):</strong> SCML4 recruits the HBO1–BRPF2–ING4 complex, drives H3K27me3 epigenetic remodelling, supports CD8⁺ tissue-resident memory and tumour-infiltrating lymphocyte function, maintains lipid/fatty-acid metabolism, and exerts anti-inflammatory/anti-apoptotic effects on endothelium. Three branches (teal, blue, red) fan out from the central SCML4 hub node.
+      <strong>Panel C (AD-Relevant Downstream Domains):</strong> Two parallel sub-cascades — epigenetic/neurogenesis (blue, left) and endothelial/vascular (red, right) — reconverge at a shared "AD-Relevant Mechanism" node. Immune competence and lipid/proteostasis nodes complete the downstream landscape. All connections to AD are inferred; no direct AD evidence is established.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card danger">
+        <h3>⬜ Direct AD Evidence Is Absent</h3>
+        <p>No study in the reviewed literature shows that SCML4 affects amyloid-β production or clearance, tau phosphorylation or aggregation, neuronal loss, synaptic decline, AD-related neuroinflammation, or cognitive outcomes. All AD relevance is indirect and inferential.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧠 Brain-Aging Link (Epigenetic)</h3>
+        <p>SCML4 was downregulated during brain aging in <em>N. furzeri</em>, alongside age-related changes in neurogenesis, extracellular matrix, synaptic/axonal, and chromatin remodeller genes, and increased H3K27me3. This places SCML4 near the epigenetic biology central to AD risk.</p>
+      </div>
+
+      <div class="card">
+        <h3>🔬 Immune-Cell Transcriptional Regulator</h3>
+        <p>SCML4 recruits the HBO1–BRPF2–ING4 complex in immune cells to reshape gene expression, and supports CD8⁺ T-cell survival, effector function, and reduced exhaustion in cancer models. Hypothetically, analogous exhaustion-like states could be relevant to AD immune dysfunction, but no evidence exists in the text for SCML4 in brain-resident or infiltrating immune cells in AD.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>🩺 Vascular &amp; Endothelial Risk Signal</h3>
+        <p>A CAD GWAS SNP (rs9486729) is associated with decreased SCML4 expression. Knockdown increases IL-6, E-selectin, and ICAM; impairs endothelial anti-apoptotic activity; and worsens carotid remodelling. These findings are relevant to AD only through cerebrovascular and blood–brain barrier mechanisms.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>🧬 Lipid &amp; Proteostasis Overlap</h3>
+        <p>SCML4 knockdown reduces PPARγ and FABP4 in adipocytes. Fatty-acid metabolism maintains SCML4 via mTOR–IRF4–PRDM1. SCML4 appears among proteotoxic-stress candidates involving autophagy and proteasome pathways. Lipid metabolism and proteostasis are central to AD biology, but no text evidence links SCML4 to APOE, amyloid, or tau.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>📉 Recurrent Loss-of-Function Directionality</h3>
+        <p>Across multiple disease contexts — aging brain, CAD GWAS, endothelial knockdown, T-cell deletion, lung cancer prognosis, vascular/hematopoietic toxicity — reduced SCML4 is consistently associated with dysfunction. This pattern is suggestive but remains indirect and cell-type-specific.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <strong>Treat SCML4 as a speculative candidate.</strong> The current evidence base does not support positioning SCML4 as a validated AD therapeutic target. Framing it as a hypothesis-generating node is appropriate and scientifically honest.
+      </li>
+      <li>
+        <strong>Prioritize direct AD expression studies.</strong> Assess SCML4 expression in AD patient brain tissue and single-cell datasets across microglia, astrocytes, neurons, endothelial cells, and infiltrating immune cells before any therapeutic development is considered.
+      </li>
+      <li>
+        <strong>Test against core AD pathological features.</strong> Examine whether SCML4 levels correlate with amyloid burden, tau pathology, synaptic loss, neuroinflammation, vascular dysfunction, blood–brain barrier impairment, and cognitive decline in existing datasets or new studies.
+      </li>
+      <li>
+        <strong>Investigate protective effects in AD-relevant models.</strong> Determine whether restoring or preserving SCML4 has protective effects in aging-brain models, vascular endothelium, or immune-cell compartments relevant to AD biology.
+      </li>
+      <li>
+        <strong>Design mechanistic experiments around plausible pathways.</strong> Evaluate whether SCML4 influences chromatin state and H3K27me3/polycomb regulation, inflammatory transcriptional programs, endothelial adhesion molecules, proteostasis pathways, lipid metabolism, or neurogenesis in AD-relevant cellular systems.
+      </li>
+      <li>
+        <strong>Do not overstate current findings.</strong> The evidence does not justify claims that SCML4 modifies amyloid-β, tau, cognition, or core AD pathology. Its best current scientific use is as a connecting hypothesis node across aging, vascular, immune, metabolic, and epigenetic mechanisms implicated in AD.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — SCML4 in Alzheimer's Disease</span>
+      <p>
+        SCML4 is a <strong>biologically plausible but entirely unvalidated</strong> candidate in Alzheimer's disease research. Its interest derives from a convergence of indirect signals: <strong>age-related downregulation in a neurogenesis/chromatin regulatory context</strong>, a recurrent pattern of dysfunction associated with reduced expression across vascular, immune, metabolic, and stress-response settings, and mechanistic overlap with polycomb-mediated epigenetic regulation — a system increasingly implicated in AD-associated transcriptional changes. However, <strong>no study has directly interrogated SCML4 in any AD model, patient cohort, or AD-relevant cellular context</strong>. The current evidence does not support therapeutic investment or target validation claims. The most productive next step is targeted AD expression profiling, followed by functional studies in aging-brain, endothelial, and immune compartments, to determine whether SCML4's indirect connections to AD-relevant biology represent a genuine mechanistic contribution or a coincidental overlap.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  SCML4 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No external validation has been performed
+</footer>
+
+</body>
+</html>

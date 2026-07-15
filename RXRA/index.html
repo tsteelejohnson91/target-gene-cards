@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RXRA — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0d6e6e;
+    --positive-light: #e6f5f5;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f4f7fa;
+    --slate-dark: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2ecf7;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180, 50, 50, 0.3);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #ffd5d5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.68);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: #d97706; }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate { background: #f1f5f9; border-color: #94a3b8; }
+  .card-slate h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    padding: 0;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway-counter);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+
+  .verdict-banner p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .verdict-banner strong {
+    color: #a8d4f5;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: RXRA &nbsp;|&nbsp; Retinoid X Receptor Alpha</span>
+    <span class="chip chip-danger">⚠ Broad activation risk — systemic safety concern</span>
+  </div>
+  <h1>RXRA &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Systemic RXR activation (rexinoids such as bexarotene) can cause hypertriglyceridemia, hypothyroidism, hepatic effects, immune suppression, and endocrine disruption. Therapeutic direction is highly context-dependent; broad RXRA activation may accompany maladaptive inflammatory priming, lipid dysregulation, or tumor-related transcriptional programs.
+    </div>
+
+    <div class="overview-text">
+      <p>RXRα (encoded by <em>RXRA</em>) is a ligand-responsive nuclear receptor and transcriptional hub that connects several Alzheimer's disease–relevant mechanisms: lipid/cholesterol handling, APOE-associated pathways, microglial and macrophage inflammatory states, retinoid/vitamin D signaling, PPAR/LXR/RAR heterodimer transcription, mitochondrial metabolism, oxidative stress, autophagy/lysosomal function, calcium signaling, senescence, synaptic regulation, and vascular/barrier biology.</p>
+      <p>The evidence is mixed in directness. Some studies explicitly involve AD models or AD-focused network analyses, where RXRA appears as a predicted therapeutic target or upstream transcriptional regulator. Others place RXRA in pathways that overlap strongly with AD biology without being AD-specific. The strongest AD-relevant signals include: RXRA/APOE chromatin accessibility changes in glia in a HAND neurodegeneration study; RXRA as a candidate transcription factor in AD hippocampal CA1 RNA-seq; RXRA as a core/predicted target in AD-oriented network pharmacology studies; RXRA involvement in PPAR/RXR signaling associated with reduced neuroinflammation and tau phosphorylation in an aging-like model; and RXRA-mediated DHA-dependent synapse formation in cortical neurons.</p>
+      <p>Overall, RXRA is best characterized as a plausible, druggable, systems-level therapeutic node for AD mechanisms rather than a fully validated standalone AD target. Its therapeutic direction is context-dependent: some evidence supports RXRA activation to improve lipid transport, phagocytosis, synaptic resilience, anti-inflammatory signaling, or mitochondrial function, while other evidence suggests excessive or nonspecific RXRA activity may accompany maladaptive immune-metabolic priming, neurotoxicity, or immune suppression.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="860" height="477" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#0d6e6e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Ligands & Activation -->
+        <rect x="14" y="14" width="192" height="472" rx="10" fill="#e8f1f9" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.10em">A · UPSTREAM INPUTS</text>
+
+        <!-- Node A1: Retinoids/9-cis-RA -->
+        <rect x="30" y="44" width="160" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="60" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Retinoids / 9-cis-RA</text>
+        <text x="110" y="75" text-anchor="middle" font-size="9" fill="#475569">Bexarotene · LGD1069</text>
+
+        <!-- Node A2: DHA/Oxysterols -->
+        <rect x="30" y="100" width="160" height="40" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="116" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">DHA / Oxysterols</text>
+        <text x="110" y="131" text-anchor="middle" font-size="9" fill="#475569">Vitamin D · lipid ligands</text>
+
+        <!-- Node A3: RXRA hub -->
+        <rect x="30" y="156" width="160" height="44" rx="6" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1.5"/>
+        <text x="110" y="174" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="700">RXRα (RXRA)</text>
+        <text x="110" y="190" text-anchor="middle" font-size="9" fill="#a8d4f5">Nuclear receptor hub</text>
+
+        <!-- Node A4: Heterodimer partners -->
+        <rect x="30" y="218" width="160" height="52" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="234" text-anchor="middle" font-size="9.5" fill="#1a3a5c" font-weight="700">Heterodimer Partners</text>
+        <text x="110" y="249" text-anchor="middle" font-size="8.5" fill="#475569">PPARγ · PPARα · LXR</text>
+        <text x="110" y="262" text-anchor="middle" font-size="8.5" fill="#475569">VDR · RAR · FXR</text>
+
+        <!-- arrows panel A vertical -->
+        <line x1="110" y1="84" x2="110" y2="98" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="110" y1="140" x2="110" y2="154" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="110" y1="200" x2="110" y2="216" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: Lipid & APOE Axis -->
+        <rect x="222" y="14" width="198" height="236" rx="10" fill="#e8f5e9" fill-opacity="0.5" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="321" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#0d6e6e" letter-spacing="0.10em">B · LIPID / APOE AXIS</text>
+
+        <!-- Node B1: APOE/Chol efflux -->
+        <rect x="238" y="44" width="166" height="44" rx="6" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="321" y="62" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">APOE Expression</text>
+        <text x="321" y="77" text-anchor="middle" font-size="8.5" fill="#475569">ABCA1/ABCG1 efflux</text>
+
+        <!-- Node B2: Cholesterol transport -->
+        <rect x="238" y="104" width="166" height="44" rx="6" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="321" y="122" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Cholesterol Transport</text>
+        <text x="321" y="137" text-anchor="middle" font-size="8.5" fill="#475569">Sphingolipids · lipid droplets</text>
+
+        <!-- Node B3: Amyloid/tau clearance -->
+        <rect x="238" y="164" width="166" height="44" rx="6" fill="#e6f5f5" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="321" y="182" text-anchor="middle" font-size="10" fill="#0d6e6e" font-weight="700">Amyloid Clearance</text>
+        <text x="321" y="197" text-anchor="middle" font-size="8.5" fill="#475569">Tau phosphorylation ↓</text>
+
+        <!-- arrows B -->
+        <line x1="321" y1="88" x2="321" y2="102" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="321" y1="148" x2="321" y2="162" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL C: Neuroinflammation & Glia -->
+        <rect x="222" y="266" width="198" height="220" rx="10" fill="#fff8f0" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="321" y="286" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="0.10em">C · NEUROINFLAMMATION</text>
+
+        <!-- Node C1: Microglial priming -->
+        <rect x="238" y="296" width="166" height="44" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="321" y="314" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Microglial Priming</text>
+        <text x="321" y="329" text-anchor="middle" font-size="8.5" fill="#475569">NLRP3 · TLR · NF-κB</text>
+
+        <!-- Node C2: Cytokine regulation -->
+        <rect x="238" y="356" width="166" height="44" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="321" y="374" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Cytokine Regulation</text>
+        <text x="321" y="389" text-anchor="middle" font-size="8.5" fill="#475569">IL-1β · TNF-α · IL-10</text>
+
+        <!-- Node C3: Phagocytosis -->
+        <rect x="238" y="416" width="166" height="44" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+        <text x="321" y="434" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700">Debris Phagocytosis</text>
+        <text x="321" y="449" text-anchor="middle" font-size="8.5" fill="#475569">Myelin · Aβ · apoptotic</text>
+
+        <!-- arrows C -->
+        <line x1="321" y1="340" x2="321" y2="354" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <line x1="321" y1="400" x2="321" y2="414" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- PANEL D: Downstream Neuroprotection -->
+        <rect x="436" y="14" width="448" height="472" rx="10" fill="#fdf0f0" fill-opacity="0.35" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="660" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="0.10em">D · DOWNSTREAM OUTCOMES &amp; SAFETY</text>
+
+        <!-- Branch shared origin: Synaptic / Mitochondrial header -->
+        <rect x="580" y="44" width="160" height="40" rx="6" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1.4"/>
+        <text x="660" y="60" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="700">Target Gene Programs</text>
+        <text x="660" y="75" text-anchor="middle" font-size="8.5" fill="#a8d4f5">RXRA-heterodimer output</text>
+
+        <!-- LEFT BRANCH: Synaptic resilience -->
+        <!-- Node D-L1 -->
+        <rect x="452" y="106" width="148" height="44" rx="6" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="526" y="124" text-anchor="middle" font-size="10" fill="#0d6e6e" font-weight="700">Synaptic Resilience</text>
+        <text x="526" y="139" text-anchor="middle" font-size="8.5" fill="#475569">DHA–RXRA spinogenesis</text>
+
+        <!-- Node D-L2 -->
+        <rect x="452" y="168" width="148" height="44" rx="6" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="526" y="186" text-anchor="middle" font-size="10" fill="#0d6e6e" font-weight="700">Excitatory Transmission</text>
+        <text x="526" y="201" text-anchor="middle" font-size="8.5" fill="#475569">Cortical pyramidal neurons</text>
+
+        <!-- RIGHT BRANCH: Mitochondrial/metabolic -->
+        <!-- Node D-R1 -->
+        <rect x="722" y="106" width="148" height="44" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="796" y="124" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Mitochondrial Function</text>
+        <text x="796" y="139" text-anchor="middle" font-size="8.5" fill="#475569">PGC1α · SIRT3 · OxPhos</text>
+
+        <!-- Node D-R2 -->
+        <rect x="722" y="168" width="148" height="44" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="796" y="186" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Autophagy / Lysosome</text>
+        <text x="796" y="201" text-anchor="middle" font-size="8.5" fill="#475569">p62/SQSTM1 · mitophagy</text>
+
+        <!-- Convergence node: Neuroprotective outcome -->
+        <rect x="572" y="232" width="176" height="44" rx="6" fill="#e6f5f5" stroke="#0d6e6e" stroke-width="1.5"/>
+        <text x="660" y="250" text-anchor="middle" font-size="10" fill="#0d6e6e" font-weight="700">Neuroprotective Outcome</text>
+        <text x="660" y="265" text-anchor="middle" font-size="8.5" fill="#475569">Cognitive · metabolic resilience</text>
+
+        <!-- Vascular/Barrier node -->
+        <rect x="452" y="298" width="148" height="44" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="526" y="316" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Vascular / BBB</text>
+        <text x="526" y="331" text-anchor="middle" font-size="8.5" fill="#475569">Endothelial · pericyte repair</text>
+
+        <!-- Safety/Risk node -->
+        <rect x="722" y="298" width="148" height="52" rx="6" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="796" y="316" text-anchor="middle" font-size="10" fill="#8b1a1a" font-weight="700">Systemic Safety Risks</text>
+        <text x="796" y="331" text-anchor="middle" font-size="8.5" fill="#6b2323">Hypertriglyceridemia</text>
+        <text x="796" y="345" text-anchor="middle" font-size="8.5" fill="#6b2323">Hypothyroidism · immune</text>
+
+        <!-- Context node -->
+        <rect x="572" y="370" width="176" height="44" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+        <text x="660" y="388" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700">Context Dependence</text>
+        <text x="660" y="403" text-anchor="middle" font-size="8.5" fill="#475569">Cell type · stage · APOE status</text>
+
+        <!-- AD Outcome node -->
+        <rect x="572" y="432" width="176" height="40" rx="6" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1.5"/>
+        <text x="660" y="450" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="700">AD Therapeutic Node</text>
+        <text x="660" y="465" text-anchor="middle" font-size="8.5" fill="#a8d4f5">Plausible · not yet validated</text>
+
+        <!-- ===== CONNECTORS ===== -->
+
+        <!-- Panel A to Panel B (B1): from A4 right to B1 left -->
+        <line x1="190" y1="240" x2="236" y2="66" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Panel A to Panel C (C1): from A4 right to C1 left -->
+        <line x1="190" y1="252" x2="236" y2="318" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel B → Panel D: B3 right to D shared-origin (D top node) via horizontal -->
+        <!-- B3 right edge x=404, mid y=186; D top node left x=580, y=64 -->
+        <!-- Route: right of B3 → elbow up at x=424 → across to D top node -->
+        <polyline points="404,186 424,186 424,64 580,64" fill="none" stroke="#0d6e6e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C → Panel D: C3 right to convergence node left -->
+        <!-- C3 right x=404, y=438; convergence left x=572, y=254 -->
+        <!-- Route through gutter: right of C3 → x=424 → up → across -->
+        <polyline points="404,438 424,438 424,254 572,254" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- D top node → left branch D-L1 -->
+        <polyline points="620,84 526,84 526,104" fill="none" stroke="#0d6e6e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- D top node → right branch D-R1 -->
+        <polyline points="700,84 796,84 796,104" fill="none" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- D-L1 → D-L2 -->
+        <line x1="526" y1="150" x2="526" y2="166" stroke="#0d6e6e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- D-R1 → D-R2 -->
+        <line x1="796" y1="150" x2="796" y2="166" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- D-L2 → convergence -->
+        <polyline points="526,212 526,254 572,254" fill="none" stroke="#0d6e6e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- D-R2 → convergence -->
+        <polyline points="796,212 796,254 748,254" fill="none" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- convergence → vascular -->
+        <polyline points="616,276 526,276 526,296" fill="none" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- convergence → safety -->
+        <polyline points="704,276 796,276 796,296" fill="none" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- vascular → context -->
+        <polyline points="526,342 526,388 572,388" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- safety → context -->
+        <polyline points="796,350 796,388 748,388" fill="none" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- context → AD outcome -->
+        <line x1="660" y1="414" x2="660" y2="430" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arr)"/>
+
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (Upstream Inputs):</strong> Retinoid/lipid ligands activate RXRα, which forms obligate heterodimers with nuclear receptor partners (PPARγ/α, LXR, VDR, RAR).
+        <strong>Panel B (Lipid/APOE Axis):</strong> Heterodimer complexes drive APOE expression, ABCA1/ABCG1-mediated cholesterol efflux, and downstream amyloid clearance with reduced tau phosphorylation.
+        <strong>Panel C (Neuroinflammation):</strong> RXRA modulates microglial priming (NLRP3/TLR/NF-κB), cytokine balance (IL-1β, TNF-α, IL-10), and phagocytic clearance of Aβ and myelin debris.
+        <strong>Panel D (Downstream Outcomes):</strong> RXRA target-gene programs branch into synaptic resilience (DHA-spinogenesis) and mitochondrial/autophagy pathways, reconverging on a neuroprotective outcome node; vascular/BBB and systemic safety risks feed into a context-dependence node before the overall AD therapeutic verdict.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Lipid &amp; APOE Biology</h3>
+        <p>RXRA repeatedly appears in lipid-metabolic programs involving PPARs, LXRs, cholesterol efflux, fatty-acid oxidation, sphingolipids, and oxysterols — all central to APOE lipidation, amyloid clearance, and microglial lipid handling in AD.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Heterodimer Signaling Complexity</h3>
+        <p>RXRA acts as an obligate or permissive partner for PPARγ, PPARα, LXR, VDR, RAR, and FXR-related receptors. These distinct complexes regulate APOE expression, ABCA1/ABCG1 efflux, inflammatory tone, and mitochondrial metabolism — demanding heterodimer-selective therapeutic strategies.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammation &amp; Microglial Priming</h3>
+        <p>In a HAND single-nucleus multiomic study, glia showed chromatin accessibility gains at RXRA and APOE loci alongside inflammatory and glycolytic reprogramming — resembling AD-relevant microglial priming where lipid handling and innate immune activation converge.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Synaptic &amp; Mitochondrial Support</h3>
+        <p>RXRA is required for DHA-dependent spinogenesis and excitatory synaptic transmission in cortical pyramidal neurons. RXRA is also linked to PGC1α/SIRT3 mitochondrial pathways and fatty-acid oxidation — overlapping directly with AD features of synapse loss and energy failure.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Druggability with Safety Caveats</h3>
+        <p>Rexinoids (bexarotene, 9-cis-retinoic acid, LGD1069) demonstrate pharmacologic tractability, but systemic RXR activation risks hypertriglyceridemia, hypothyroidism, hepatic toxicity, immune suppression, and cancer-related transcriptional programs. Partial or selective agonists are preferred.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Systems-Level Evidence — AD Validation Pending</h3>
+        <p>RXRA was identified as a candidate transcription factor in AD hippocampal CA1 RNA-seq and as a predicted target in network pharmacology studies (Wuji Pills, XSBO, Tremella aurantialba). These computationally nominate RXRA but do not yet directly manipulate it in canonical AD models.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Prioritize AD-specific RXRA validation.</strong> Key experiments should directly manipulate RXRA in AD models and measure amyloid burden, tau phosphorylation, synaptic density, cognition, glial phenotypes, APOE lipidation, lipid efflux, mitochondrial function, and inflammatory state — rather than assuming benefit from global RXR activation.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate cell-type-specific effects separately.</strong> RXRA should be assessed in microglia, astrocytes, neurons, oligodendrocytes, endothelial cells, pericytes, and peripheral immune/metabolic tissues, because the desired direction of modulation may differ substantially across compartments.</div>
+      </li>
+      <li>
+        <div><strong>Test heterodimer-selective strategies.</strong> Therapeutic development should distinguish RXRA/LXR, RXRA/PPARγ, RXRA/PPARα, RXRA/VDR, and RAR/RXR signaling rather than treating RXRA as a single uniform target. Selective or partial agonists are likely safer than broad rexinoid activation.</div>
+      </li>
+      <li>
+        <div><strong>Use lipid/APOE-focused endpoints.</strong> Studies should measure APOE expression and lipidation, ABCA1/ABCG1 activity, cholesterol efflux, lipid droplets, sphingolipid profiles, oxysterols, and microglial lipid-associated states — reflecting the strongest AD rationale for RXRA.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate neuroinflammatory consequences carefully.</strong> RXRA modulation should be assessed for effects on TLR signaling, NLRP3 inflammasome activity, IL-1β, IL-6, TNF-α, interferon responses, microglial priming, phagocytosis, and resolution-associated markers. Both anti-inflammatory and maladaptive immune-suppressive outcomes are possible.</div>
+      </li>
+      <li>
+        <div><strong>Include mitochondrial, autophagy, and metabolic endpoints.</strong> Studies should examine oxidative phosphorylation, glycolysis, ROS, mitochondrial membrane potential, SIRT3/PGC1α pathways, p62/SQSTM1, lysosomal degradation, mitophagy, insulin signaling, and glucose metabolism.</div>
+      </li>
+      <li>
+        <div><strong>Consider disease stage and timing.</strong> Evidence from non-AD injury models suggests RXRA agonism may benefit only specific time windows or cellular states. Early-stage lipid/inflammatory remodeling may require different RXRA modulation than late-stage neurodegeneration or severe glial priming.</div>
+      </li>
+      <li>
+        <div><strong>Stratify by APOE genotype and metabolic status.</strong> RXRA-targeted strategies may have different effects in APOE ε4 carriers versus non-carriers and in patients with diabetes, insulin resistance, dyslipidemia, vascular disease, or altered vitamin D/retinoid status.</div>
+      </li>
+      <li>
+        <div><strong>Monitor systemic safety throughout.</strong> Any AD-directed RXRA therapy should assess hypertriglyceridemia, hypothyroidism, hepatic effects, immune suppression, endocrine disruption, vascular effects, and proliferative/cancer-related risks in parallel with CNS endpoints.</div>
+      </li>
+      <li>
+        <div><strong>Treat RXRA as a promising network target, not a validated monotherapy.</strong> Current evidence supports RXRA as a biologically plausible therapeutic node connecting AD-relevant lipid, immune, synaptic, mitochondrial, and vascular pathways — but direct causal and therapeutic proof in AD remains necessary before clinical translation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <p class="verdict-lead">Overall Assessment — RXRA in Alzheimer's Disease</p>
+      <p>
+        RXRα stands as a <strong>biologically rich, pharmacologically tractable, but incompletely validated node</strong> in the Alzheimer's disease landscape. Its position at the intersection of <strong>APOE/cholesterol biology, microglial lipid-immune crosstalk, synaptic maintenance, mitochondrial metabolism, and vascular integrity</strong> gives it broad mechanistic relevance to AD pathophysiology. The evidence base ranges from compelling systems-level and computational nominations — including AD hippocampal transcriptomics and network pharmacology — to mechanistically informative non-AD studies on synapse formation, myelin debris clearance, and inflammatory resolution. However, <strong>direct causal manipulation of RXRA in canonical AD models with rigorous endpoint assessment remains absent</strong>. The therapeutic direction is decidedly context-dependent: RXRA activation can be neuroprotective or detrimental depending on cell type, disease stage, heterodimer partner, ligand identity, APOE genotype, and metabolic state. <strong>Broad rexinoid activation carries real systemic safety risks</strong>. The most defensible path forward is heterodimer-selective, cell-type-aware, stage-appropriate RXRA modulation validated in genetically and metabolically stratified AD models — pursuing RXRA as a <strong>multimechanism therapeutic hub</strong> rather than a single-target intervention.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  RXRA / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

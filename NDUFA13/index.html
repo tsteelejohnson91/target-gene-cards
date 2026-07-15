@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDUFA13 / GRIM-19 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2d6a9f;
+    --light: #e8f2fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf2;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+    color: #cce0f5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 40px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW TEXT */
+  .prose p { margin-bottom: 1rem; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--slate);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card p { line-height: 1.65; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-slate { background: var(--slate-light); border-left: 4px solid var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways { list-style: none; counter-reset: take; }
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    line-height: 1.7;
+    font-size: 0.96rem;
+  }
+  .takeaways li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+    font-size: 0.98rem;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #90c4e8;
+    margin-bottom: 14px;
+  }
+  .verdict p { color: #dbeeff; }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 22px 20px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NDUFA13 &nbsp;|&nbsp; NADH:Ubiquinone Oxidoreductase Subunit A13 (GRIM-19)</span>
+    <span class="chip chip-danger">⚠ Safety concern: severe LOF → neurological disease</span>
+  </div>
+  <h1>NDUFA13 / GRIM-19 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Human Genetic Safety Signal:</strong> Pathogenic biallelic <em>NDUFA13</em> loss-of-function variants cause mitochondrial complex I deficiency with progressive neurological impairment (epilepsy, movement disorder, optic atrophy, substantia nigra lesions). Broad nervous-system suppression of NDUFA13 may therefore be harmful.
+    </div>
+
+    <div class="prose">
+      <p>NDUFA13 (also known as GRIM-19) is a mitochondrial complex I–associated protein that integrates oxidative phosphorylation, NAD⁺/NADH redox balance, glycolysis, reactive oxygen species signalling, NF-κB/STAT3 inflammatory pathways, NLRP3 inflammasome activation, apoptosis, and programmed cell death. The supplied evidence does not include direct Alzheimer's disease studies involving amyloid-β, tau, synaptic loss, cognitive decline, or patient brain tissue. Alzheimer's relevance is therefore mechanistic and inferential.</p>
+      <p>The strongest Alzheimer's-relevant rationale is that NDUFA13 sits within pathways central to Alzheimer's biology: mitochondrial complex I dysfunction, brain glucose hypometabolism, impaired oxidative phosphorylation, oxidative stress, altered NAD metabolism, neuroinflammation, NLRP3 inflammasome signalling, STAT3-linked glial activation, apoptosis-like neuronal injury, and mitochondrial cell-death cascades.</p>
+      <p>As a therapeutic target, NDUFA13 should be viewed as a <em>plausible but unvalidated</em> mitochondrial-inflammatory candidate. The evidence does not support simple blanket activation or inhibition. Therapeutic benefit, if any, would likely depend on cell type, disease stage, mitochondrial reserve, and whether the goal is to stabilise complex I / oxidative phosphorylation or to promote compensatory glycolytic metabolism.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2d6a9f"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream / Complex I -->
+          <rect x="10" y="10" width="270" height="480" rx="12"
+                fill="rgba(45,106,159,0.07)" stroke="#2d6a9f" stroke-width="1.3"/>
+          <text x="145" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1">PANEL A — COMPLEX I / BIOENERGETICS</text>
+
+          <!-- Node A1: NDUFA13 central -->
+          <rect x="60" y="48" width="170" height="44" rx="8" fill="#1a3a5c" stroke="#1a3a5c"/>
+          <text x="145" y="67" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">NDUFA13 / GRIM-19</text>
+          <text x="145" y="83" text-anchor="middle" font-family="Arial" font-size="9" fill="#cce0f5">Complex I subunit</text>
+
+          <!-- Node A2: Complex I assembly -->
+          <rect x="60" y="118" width="170" height="40" rx="8" fill="#e8f2fa" stroke="#2d6a9f" stroke-width="1.2"/>
+          <text x="145" y="135" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Complex I Assembly</text>
+          <text x="145" y="150" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">&amp; Supercomplexes</text>
+
+          <!-- A1 → A2 -->
+          <line x1="145" y1="92" x2="145" y2="118" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: OXPHOS / ATP -->
+          <rect x="60" y="184" width="170" height="40" rx="8" fill="#e8f2fa" stroke="#2d6a9f" stroke-width="1.2"/>
+          <text x="145" y="201" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Oxidative Phosphorylation</text>
+          <text x="145" y="216" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">ATP production / O₂ consumption</text>
+
+          <!-- A2 → A3 -->
+          <line x1="145" y1="158" x2="145" y2="184" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4: NAD+/NADH -->
+          <rect x="60" y="250" width="170" height="40" rx="8" fill="#e8f2fa" stroke="#2d6a9f" stroke-width="1.2"/>
+          <text x="145" y="267" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">NAD⁺/NADH Redox Balance</text>
+          <text x="145" y="282" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">NADH oxidation / redox state</text>
+
+          <!-- A3 → A4 -->
+          <line x1="145" y1="224" x2="145" y2="250" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A5: Glycolysis / brain metabolism -->
+          <rect x="60" y="316" width="170" height="40" rx="8" fill="#e8f2fa" stroke="#2d6a9f" stroke-width="1.2"/>
+          <text x="145" y="333" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Glycolytic Compensation</text>
+          <text x="145" y="348" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Brain FDG-PET / glucose flux</text>
+
+          <!-- A4 → A5 -->
+          <line x1="145" y1="290" x2="145" y2="316" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A6: Mitochondrial membrane potential -->
+          <rect x="60" y="384" width="170" height="40" rx="8" fill="#e8f2fa" stroke="#2d6a9f" stroke-width="1.2"/>
+          <text x="145" y="401" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Mitochondrial Membrane</text>
+          <text x="145" y="416" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Potential &amp; Morphology</text>
+
+          <!-- A4 → A6 via elbow in panel A -->
+          <polyline points="145,290 145,310 48,310 48,404 60,404"
+                    fill="none" stroke="#2d6a9f" stroke-width="1.4" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+          <!-- Panel B: Inflammatory Signalling -->
+          <rect x="295" y="10" width="300" height="480" rx="12"
+                fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="445" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#9b1c1c" letter-spacing="1">PANEL B — INFLAMMATORY SIGNALLING</text>
+
+          <!-- Node B1: ROS -->
+          <rect x="340" y="48" width="105" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="392" y="65" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">Mitochondrial</text>
+          <text x="392" y="79" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">ROS ↑</text>
+
+          <!-- Node B2: NF-κB -->
+          <rect x="455" y="48" width="105" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="507" y="65" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">NF-κB</text>
+          <text x="507" y="79" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">Activation</text>
+
+          <!-- B1 → B2 -->
+          <line x1="445" y1="68" x2="455" y2="68" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B3: NLRP3 Inflammasome -->
+          <rect x="340" y="120" width="220" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="450" y="137" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">NLRP3 Inflammasome Activation</text>
+          <text x="450" y="152" text-anchor="middle" font-family="Arial" font-size="9" fill="#9b1c1c">Caspase-1 / IL-1β / IL-33</text>
+
+          <!-- B1 → B3 -->
+          <line x1="392" y1="88" x2="392" y2="120" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- B2 → B3 -->
+          <line x1="507" y1="88" x2="507" y2="110" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="507" y1="110" x2="510" y2="110" stroke="none"/>
+          <polyline points="507,110 507,120 560,120" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node B4: STAT3 -->
+          <rect x="340" y="192" width="105" height="40" rx="8" fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+          <text x="392" y="209" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">STAT3 Inhibition</text>
+          <text x="392" y="223" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">phospho-STAT3</text>
+
+          <!-- B3 → B4 -->
+          <line x1="392" y1="160" x2="392" y2="192" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B5: TNF-α / Cytokines -->
+          <rect x="455" y="192" width="105" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="507" y="209" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">TNF-α / IL-6</text>
+          <text x="507" y="223" text-anchor="middle" font-family="Arial" font-size="9" fill="#9b1c1c">Cytokine release</text>
+
+          <!-- B3 → B5 elbow -->
+          <polyline points="560,140 580,140 580,212 560,212" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node B6: Macrophage/Microglial polarisation -->
+          <rect x="340" y="264" width="220" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="450" y="281" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d">Microglial / Macrophage</text>
+          <text x="450" y="295" text-anchor="middle" font-family="Arial" font-size="9" fill="#9b1c1c">Polarisation &amp; Glial Activation</text>
+
+          <!-- B4 → B6 -->
+          <line x1="392" y1="232" x2="392" y2="264" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- B5 → B6 elbow -->
+          <polyline points="507,232 507,248 560,248 560,264" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node B7: Neuroinflammation output -->
+          <rect x="340" y="336" width="220" height="40" rx="8" fill="#7f1d1d" stroke="#7f1d1d"/>
+          <text x="450" y="353" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Chronic Neuroinflammation</text>
+          <text x="450" y="367" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">AD-relevant danger signalling</text>
+
+          <!-- B6 → B7 -->
+          <line x1="450" y1="304" x2="450" y2="336" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C: Cell Death / Outcomes -->
+          <rect x="610" y="10" width="320" height="480" rx="12"
+                fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="770" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#0f766e" letter-spacing="1">PANEL C — CELL DEATH &amp; OUTCOMES</text>
+
+          <!-- Node C1: Apoptosis signalling -->
+          <rect x="640" y="48" width="130" height="40" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="705" y="65" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Apoptosis Signalling</text>
+          <text x="705" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#0f766e">IFN / AIFM1 / p53</text>
+
+          <!-- Node C2: Pyroptosis / Ferroptosis -->
+          <rect x="790" y="48" width="120" height="40" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="850" y="65" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Pyroptosis /</text>
+          <text x="850" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#0f766e">Ferroptosis pathway</text>
+
+          <!-- Node C3: Autophagy -->
+          <rect x="640" y="120" width="130" height="40" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="705" y="137" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Autophagy</text>
+          <text x="705" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#0f766e">Mitophagy responses</text>
+
+          <!-- Node C4: HtrA2/XIAP death -->
+          <rect x="790" y="120" width="120" height="40" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="850" y="137" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">HtrA2 / XIAP</text>
+          <text x="850" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#0f766e">Death signalling</text>
+
+          <!-- C1 → C3 -->
+          <line x1="705" y1="88" x2="705" y2="120" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- C2 → C4 -->
+          <line x1="850" y1="88" x2="850" y2="120" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C5: Neuronal Vulnerability (convergence) -->
+          <rect x="645" y="192" width="270" height="44" rx="8" fill="#0f766e" stroke="#0f766e"/>
+          <text x="780" y="211" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">Neuronal Vulnerability</text>
+          <text x="780" y="227" text-anchor="middle" font-family="Arial" font-size="9" fill="#ccfbf1">Oxidative injury · synaptic loss · cell death</text>
+
+          <!-- C3 → C5 -->
+          <line x1="705" y1="160" x2="705" y2="192" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- C4 → C5 elbow -->
+          <polyline points="850,160 850,176 780,176 780,192" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C6: AD-relevant endpoints -->
+          <rect x="645" y="264" width="270" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="780" y="283" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">AD-Relevant Endpoints</text>
+          <text x="780" y="297" text-anchor="middle" font-family="Arial" font-size="9" fill="#0f766e">Amyloid · Tau · Cognition · Synaptic function</text>
+
+          <!-- C5 → C6 -->
+          <line x1="780" y1="236" x2="780" y2="264" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C7: Therapeutic precision target -->
+          <rect x="645" y="336" width="270" height="44" rx="8" fill="#e8f2fa" stroke="#1a3a5c" stroke-width="1.6"/>
+          <text x="780" y="355" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1a3a5c">Precision Therapeutic Strategy</text>
+          <text x="780" y="369" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">AMPK/SIRT1/PGC-1α · NLRP3/STAT3/NF-κB</text>
+
+          <!-- C6 → C7 -->
+          <line x1="780" y1="308" x2="780" y2="336" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel A → Panel B (ROS branch) -->
+          <!-- A OXPHOS → B ROS via right-angle in gutter between A and B -->
+          <polyline points="230,204 283,204 283,68 340,68"
+                    fill="none" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel: Panel B Neuro-inflammation → Panel C Neuronal Vulnerability -->
+          <polyline points="560,356 600,356 600,214 645,214"
+                    fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel: Panel A Glycolysis → Panel C (note about metabolic rescue) in bottom gutter -->
+          <polyline points="230,336 283,336 283,450 620,450 620,372 645,372"
+                    fill="none" stroke="#1a3a5c" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Safety badge -->
+          <rect x="640" y="432" width="118" height="22" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="699" y="447" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#9b1c1c">⚠ LOF → Neurological Dx</text>
+
+          <!-- Metabolic rescue badge -->
+          <rect x="770" y="432" width="130" height="22" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="835" y="447" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e">↓ KD → glycolytic rescue</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — Complex I / Bioenergetics:</strong> NDUFA13/GRIM-19 anchors mitochondrial complex I assembly and supercomplexes, governing oxidative phosphorylation, ATP production, NAD⁺/NADH redox balance, glycolytic compensation (↓ NDUFA13 can rescue glycolytic flux in Sigma-1R KO neurons), and mitochondrial membrane potential. A dashed elbow illustrates the secondary link from redox balance to membrane potential. &nbsp;|&nbsp; <strong>Panel B (red) — Inflammatory Signalling:</strong> NDUFA13 loss elevates mitochondrial ROS, which activates NF-κB; together these converge on NLRP3 inflammasome / caspase-1 / IL-1β. Two parallel branches (STAT3 inhibition and cytokine release) reconverge on microglial polarisation and chronic neuroinflammation. &nbsp;|&nbsp; <strong>Panel C (teal) — Cell Death &amp; Outcomes:</strong> Apoptosis/AIFM1/p53 and pyroptosis/ferroptosis branches reconverge on neuronal vulnerability, then flow to AD-relevant endpoints and a precision therapeutic strategy node. Dashed cross-panel connectors show OXPHOS failure feeding Panel B ROS, neuroinflammation feeding Panel C neuronal injury, and glycolytic compensation linking to therapeutic precision. Badges flag the human LOF safety signal and the experimental knockdown-rescue finding.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Complex I Anchor &amp; Bioenergetic Control</h3>
+        <p>Multiple studies identify NDUFA13 as a complex I subunit or assembly factor. Its loss reduces complex I activity, destabilises holoenzyme/supercomplexes, lowers oxygen consumption and ATP production, alters mitochondrial membrane potential, and disrupts mitochondrial morphology — all hallmarks of Alzheimer's bioenergetic failure.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>No Direct Alzheimer's Validation</h3>
+        <p>The supplied studies do not directly test NDUFA13 in Alzheimer's disease models, amyloid-β biology, tau pathology, synaptic degeneration, microglial AD states, cognition, or patient AD brain tissue. Alzheimer's relevance remains mechanistic and inferential only.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Brain Hypometabolism &amp; Metabolic Brake</h3>
+        <p>In neuronal Sigma-1 receptor knockout models, elevated NDUFA13/GRIM-19 was associated with reduced glycolysis, an altered NAD⁺/NADH ratio, and reduced brain FDG-PET uptake. NDUFA13 knockdown rescued the glycolytic deficit, suggesting it can act as a metabolic brake on glycolytic compensation in some neuronal contexts.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Therapeutic Direction</h3>
+        <p>Partial NDUFA13 downregulation improved glycolytic flux in specific neuronal/cardiac contexts. Conversely, NDUFA13 loss in other settings caused complex I deficiency, oxidative stress, apoptosis, inflammatory injury, and severe neurological mitochondrial disease. Neither blanket activation nor inhibition is universally beneficial.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Human Genetic Safety Signal</h3>
+        <p>Pathogenic biallelic NDUFA13 variants cause mitochondrial complex I deficiency with epilepsy, movement abnormalities, optic nerve atrophy, substantia nigra lesions, lactate elevation, impaired respiration, and reduced ATP output. Broad nervous-system suppression is therefore potentially harmful.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuroinflammatory &amp; STAT3 Nexus</h3>
+        <p>NDUFA13/GRIM-19 connects to NLRP3 inflammasome activation, caspase-1, IL-1β, IL-33, TNF-α, NF-κB, and macrophage/microglial polarisation. It is also a STAT3 inhibitor/modulator relevant to astrocyte reactivity and glial inflammatory states — all central to Alzheimer's amyloid- and tau-associated neurodegeneration.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat NDUFA13 as a mechanistic research candidate, not a validated target.</strong> Prioritise it for hypothesis-generating studies rather than immediate drug development until direct Alzheimer's evidence is established.</li>
+      <li><strong>Measure NDUFA13 directly in Alzheimer's-vulnerable brain regions.</strong> Quantify expression, localisation, post-translational modifications, splicing variants, and incorporation into complex I/supercomplexes in hippocampus, entorhinal cortex, cortex, and basal forebrain.</li>
+      <li><strong>Test effects separately in each relevant cell type.</strong> Neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and iPSC-derived human brain cells should be evaluated independently, as NDUFA13 effects are expected to be cell-type-specific.</li>
+      <li><strong>Determine what Alzheimer's stressors do to NDUFA13.</strong> Assess whether amyloid-β, phosphorylated tau, inflammatory cytokines, metabolic stress, oxidative stress, insulin resistance, or ageing alter NDUFA13 expression or function.</li>
+      <li><strong>Evaluate restoration of physiological NDUFA13 function.</strong> Key endpoints: mitochondrial respiration, complex I stability, ATP production, NAD⁺/NADH balance, mitochondrial membrane potential, synaptic energetics, and neuronal survival.</li>
+      <li><strong>Investigate inflammatory output modulation.</strong> Determine whether NDUFA13 modulation changes NLRP3 activation, caspase-1, IL-1β, IL-33, TNF-α, NF-κB, STAT3 signalling, and microglial phagolysosomal function in Alzheimer's-relevant contexts.</li>
+      <li><strong>Pursue precision stabilisation over broad modulation.</strong> Strategies should focus on preserving NDUFA13-containing complex I assemblies, supporting mitochondrial biogenesis via AMPK/SIRT1/PGC-1α pathways, preventing oxidative-stress-induced NDUFA13 loss, and modulating downstream NLRP3/STAT3/NF-κB signalling.</li>
+      <li><strong>Assess long-term safety in post-mitotic neurons carefully.</strong> Because NDUFA13 supports mitochondrial respiration but also participates in apoptosis under inflammatory/stress conditions, chronic modulation in neurons carries potential risks that must be explicitly evaluated.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — NDUFA13 / GRIM-19 in Alzheimer's Disease</div>
+      <p>NDUFA13/GRIM-19 is a <strong>plausible but unvalidated mitochondrial-inflammatory candidate</strong> for Alzheimer's disease research. Its position at the intersection of <strong>complex I bioenergetics, NAD⁺/NADH redox balance, oxidative stress, NLRP3 inflammasome signalling, STAT3-linked glial activation, and programmed cell death</strong> places it squarely within the pathophysiological landscape of Alzheimer's disease — even though no direct Alzheimer's evidence is currently available. Human genetic data showing that <strong>severe NDUFA13 loss-of-function causes progressive neurological disease</strong> adds a meaningful safety constraint: broad suppression is unlikely to be a viable therapeutic strategy. The most scientifically defensible path forward is <strong>precision stabilisation</strong> — preserving physiological NDUFA13 function within complex I, supporting mitochondrial biogenesis, and modulating downstream inflammatory effectors — always anchored to <strong>cell-type-specific, stage-specific, and context-specific validation</strong> in genuine Alzheimer's disease models before any translational conclusion is drawn.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  NDUFA13 / GRIM-19 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

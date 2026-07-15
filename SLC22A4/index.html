@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLC22A4 / OCTN1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2a7ab8;
+    --light: #e8f3fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e8f3fb;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e2eef7;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 24px 16px 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.75rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate { background: var(--neutral-bg); border-left: 4px solid #64748b; }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 40px 44px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #7dc4f0;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 1rem;
+    color: #e2eef7;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: SLC22A4 &nbsp;|&nbsp; Solute Carrier Family 22 Member 4 (OCTN1 / ETT)</span>
+    <span class="chip chip-danger">⚠ Broad expression — caution re: peripheral off-target effects</span>
+  </div>
+  <h1>SLC22A4 / OCTN1 &amp; Alzheimer's-Adjacent Biology</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caution — Validation Gap:</strong> The available evidence does not establish SLC22A4 as a validated Alzheimer's disease gene or therapeutic target. Most cited evidence is not Alzheimer's-specific. Broad peripheral tissue expression and context-dependent vascular findings (including stroke-related Mendelian-randomization signals) require careful consideration before therapeutic development proceeds.
+    </div>
+
+    <p>SLC22A4, also known as OCTN1 or ETT, functions primarily as a transporter for <em>ergothioneine</em> — a diet-derived, stable antioxidant that mammals cannot efficiently synthesize and must obtain from food. Because ergothioneine is hydrophilic and poorly membrane-permeable, SLC22A4/OCTN1 acts as a near-essential gatekeeper for its cellular uptake, tissue distribution, retention, and biological efficacy. The gene also participates in organic cation transport, immune and inflammatory biology, drug disposition, and handling across the blood–brain and blood–CSF interfaces.</p>
+
+    <p>Although the source text does not demonstrate that SLC22A4 directly causes or modifies Alzheimer's disease, the mechanisms repeatedly linked to this transporter — oxidative stress, mitochondrial dysfunction, neuroinflammation, ferroptosis and lipid ROS, neurovascular barrier injury, aging-related antioxidant decline, and synaptic resilience — overlap substantially with established Alzheimer's disease biology. This positions SLC22A4 as a plausible <em>Alzheimer's-adjacent</em> target worthy of further investigation, particularly through the lens of ergothioneine-mediated cytoprotection.</p>
+
+    <p>CNS-relevant expression or functional evidence covers neurons, neural stem/progenitor cells, microglia, brain endothelial cells, choroid plexus, hippocampus, cortex, and olfactory regions. Oral ergothioneine has been shown to reach brain and hippocampus in mice, improve recognition memory, increase mature dendritic spines and synaptic markers, and protect brain endothelial cells from oxidized-cholesterol injury in an OCTN1-dependent manner. One review additionally reports ergothioneine protection against amyloid-β-induced neuronal injury in rodents — placing the pathway directly adjacent to Alzheimer's-relevant toxicity.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: viewBox 960 x 500 -->
+        <svg viewBox="0 0 960 500" width="912" height="475" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2a7ab8"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-d" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#1a4a6b"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream Input -->
+          <rect x="8" y="10" width="194" height="480" rx="12" fill="#e8f3fb" fill-opacity="0.55" stroke="#2a7ab8" stroke-width="1.2"/>
+          <text x="105" y="30" text-anchor="middle" font-weight="700" font-size="9.5" fill="#1a4a6b" letter-spacing="0.1em">A · UPSTREAM INPUT</text>
+
+          <!-- Node 1: Dietary Ergothioneine -->
+          <rect x="24" y="42" width="162" height="46" rx="8" fill="#ffffff" stroke="#2a7ab8" stroke-width="1.4"/>
+          <text x="105" y="60" text-anchor="middle" fill="#1a4a6b" font-weight="700">Dietary</text>
+          <text x="105" y="76" text-anchor="middle" fill="#1a4a6b" font-weight="700">Ergothioneine</text>
+
+          <!-- Arrow: Node1 -> Node2 -->
+          <line x1="105" y1="88" x2="105" y2="108" stroke="#2a7ab8" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 2: SLC22A4/OCTN1 Transporter -->
+          <rect x="24" y="110" width="162" height="50" rx="8" fill="#1a4a6b" stroke="#0d2a3e" stroke-width="1.4"/>
+          <text x="105" y="130" text-anchor="middle" fill="#ffffff" font-weight="700">SLC22A4 / OCTN1</text>
+          <text x="105" y="146" text-anchor="middle" fill="#b8d8f0" font-size="10">Ergothioneine transporter</text>
+
+          <!-- Arrow: Node2 -> Node3 -->
+          <line x1="105" y1="160" x2="105" y2="182" stroke="#2a7ab8" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Cellular Uptake & Retention -->
+          <rect x="24" y="184" width="162" height="46" rx="8" fill="#ffffff" stroke="#2a7ab8" stroke-width="1.4"/>
+          <text x="105" y="203" text-anchor="middle" fill="#1a4a6b">Cellular Uptake</text>
+          <text x="105" y="218" text-anchor="middle" fill="#1a4a6b">&amp; Retention</text>
+
+          <!-- Node 4: Genetic Variants -->
+          <rect x="24" y="390" width="162" height="46" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="105" y="409" text-anchor="middle" fill="#78350f" font-weight="700">Genetic Variants</text>
+          <text x="105" y="425" text-anchor="middle" fill="#78350f" font-size="10">rs1050152 / L503F</text>
+
+          <!-- Arrow: Variants -> Transporter (elbow up the left side) -->
+          <polyline points="24,413 14,413 14,135 24,135" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+
+          <!-- PANEL B: CNS Mechanisms -->
+          <rect x="212" y="10" width="372" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="398" y="30" text-anchor="middle" font-weight="700" font-size="9.5" fill="#0f766e" letter-spacing="0.1em">B · CNS MECHANISMS</text>
+
+          <!-- Arrow from Panel A Node3 into Panel B -->
+          <line x1="186" y1="207" x2="224" y2="207" stroke="#2a7ab8" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 5: Antioxidant Signalling (branch root) -->
+          <rect x="226" y="184" width="150" height="46" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.4"/>
+          <text x="301" y="203" text-anchor="middle" fill="#ffffff" font-weight="700">Antioxidant</text>
+          <text x="301" y="219" text-anchor="middle" fill="#ccfbf1" font-size="10">Nrf2 / HO-1 / NQO-1</text>
+
+          <!-- Branch left: ROS/Mito -->
+          <line x1="269" y1="230" x2="248" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+          <!-- Node 6: ROS & Mito Protection -->
+          <rect x="226" y="264" width="148" height="50" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="300" y="283" text-anchor="middle" fill="#065f46">↓ ROS · Lipid Perox.</text>
+          <text x="300" y="299" text-anchor="middle" fill="#065f46">Mito. Protection</text>
+
+          <!-- Branch right: Ferroptosis -->
+          <line x1="334" y1="230" x2="404" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+          <!-- Node 7: Ferroptosis / Lipid ROS -->
+          <rect x="378" y="264" width="148" height="50" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="452" y="283" text-anchor="middle" fill="#9b1c1c">↓ Ferroptosis</text>
+          <text x="452" y="299" text-anchor="middle" fill="#9b1c1c">Lipid ROS Rescue</text>
+
+          <!-- Node 8: Neuroinflammation (microglia) -->
+          <rect x="226" y="42" width="148" height="50" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="300" y="62" text-anchor="middle" fill="#065f46" font-weight="700">Microglia</text>
+          <text x="300" y="78" text-anchor="middle" fill="#065f46">↓ ROS · ↓ IL-1β</text>
+
+          <!-- Arrow: Node5 -> Microglia (upward) -->
+          <line x1="301" y1="184" x2="301" y2="92" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+          <!-- Node 9: Synaptic / Cognitive -->
+          <rect x="378" y="42" width="148" height="50" rx="8" fill="#ffffff" stroke="#2a7ab8" stroke-width="1.4"/>
+          <text x="452" y="62" text-anchor="middle" fill="#1a4a6b" font-weight="700">Synaptic / Cognitive</text>
+          <text x="452" y="78" text-anchor="middle" fill="#1a4a6b">↑ Spines · Memory</text>
+
+          <!-- Arrow: Node5 -> Synaptic (elbow right-up) -->
+          <polyline points="376,207 452,207 452,92" fill="none" stroke="#2a7ab8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Converge arrows: Node6 & Node7 -> Node10 (shared outcome) in Panel C -->
+          <!-- These arrows go to the right into Panel C - handled below -->
+
+          <!-- PANEL C: Neurovascular & CSF -->
+          <rect x="594" y="10" width="358" height="480" rx="12" fill="#fef2f2" fill-opacity="0.38" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="773" y="30" text-anchor="middle" font-weight="700" font-size="9.5" fill="#9b1c1c" letter-spacing="0.1em">C · NEUROVASCULAR &amp; OUTCOMES</text>
+
+          <!-- Node 10: Brain Endothelial Cells -->
+          <rect x="608" y="42" width="154" height="50" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="685" y="62" text-anchor="middle" fill="#9b1c1c" font-weight="700">Brain Endothelial</text>
+          <text x="685" y="78" text-anchor="middle" fill="#9b1c1c">↓ 7-KC Injury · TJ</text>
+
+          <!-- Node 11: Choroid Plexus / CSF -->
+          <rect x="782" y="42" width="154" height="50" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="859" y="62" text-anchor="middle" fill="#9b1c1c" font-weight="700">Choroid Plexus</text>
+          <text x="859" y="78" text-anchor="middle" fill="#9b1c1c">CSF Ergothioneine</text>
+
+          <!-- Arrow: Node9 -> Node10 (rightward) -->
+          <line x1="526" y1="67" x2="608" y2="67" stroke="#2a7ab8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Arrow: Node10 -> Node11 -->
+          <line x1="762" y1="67" x2="782" y2="67" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- Node 12: Shared Outcome — Neuroprotection -->
+          <rect x="682" y="184" width="178" height="50" rx="8" fill="#1a4a6b" stroke="#0d2a3e" stroke-width="1.6"/>
+          <text x="771" y="204" text-anchor="middle" fill="#ffffff" font-weight="700">Reduced</text>
+          <text x="771" y="220" text-anchor="middle" fill="#b8d8f0">Neurodegeneration Risk</text>
+
+          <!-- Arrow: Node6 -> Node12 (elbow) -->
+          <polyline points="374,289 584,289 584,209 682,209" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+          <!-- Arrow: Node7 -> Node12 -->
+          <polyline points="526,289 584,289 584,209 682,209" fill="none" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="2,2"/>
+
+          <!-- Arrow: Node10 -> Node12 -->
+          <line x1="685" y1="92" x2="720" y2="184" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- Node 13: Immune Cell Biology -->
+          <rect x="608" y="330" width="154" height="50" rx="8" fill="#ffffff" stroke="#2a7ab8" stroke-width="1.4"/>
+          <text x="685" y="350" text-anchor="middle" fill="#1a4a6b" font-weight="700">Immune Cells</text>
+          <text x="685" y="366" text-anchor="middle" fill="#1a4a6b">Monocyte / Neutrophil</text>
+
+          <!-- Node 14: Inflammatory Disease Links -->
+          <rect x="782" y="330" width="154" height="50" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="859" y="350" text-anchor="middle" fill="#78350f" font-weight="700">IBD · RA · Sepsis</text>
+          <text x="859" y="366" text-anchor="middle" fill="#78350f">Inflammatory Links</text>
+
+          <!-- Arrow: Node12 -> Node13 -->
+          <line x1="730" y1="234" x2="685" y2="330" stroke="#1a4a6b" stroke-width="1.5" marker-end="url(#arr-d)"/>
+
+          <!-- Arrow: Node13 -> Node14 -->
+          <line x1="762" y1="355" x2="782" y2="355" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- Arrow: Node8 -> Node12 (elbow, through gap) -->
+          <polyline points="374,67 584,67 584,142 771,142 771,184" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue tint) — Upstream Input:</strong> Dietary ergothioneine enters cells via the SLC22A4/OCTN1 transporter; genetic variants (e.g., rs1050152/L503F) modulate transporter activity and are shown with a dashed feedback arrow.
+        <strong>Panel B (green tint) — CNS Mechanisms:</strong> Once internalized, ergothioneine activates antioxidant signalling (Nrf2/HO-1/NQO-1) that branches into two parallel sub-cascades — (left) suppression of ROS and mitochondrial injury, and (right) rescue from ferroptosis/lipid-ROS accumulation — while also upregulating microglial homeostasis and hippocampal synaptic/cognitive outcomes.
+        <strong>Panel C (red tint) — Neurovascular &amp; Outcomes:</strong> Ergothioneine delivered to brain endothelial cells (OCTN1-dependent) and the choroid-plexus/CSF compartment converges on a shared outcome of reduced neurodegeneration risk, with downstream effects on peripheral immune-cell biology and established inflammatory disease associations.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>🔬 Direct Alzheimer's Evidence Is Limited</h3>
+        <p>The source text does not demonstrate that SLC22A4 causes Alzheimer's disease, alters amyloid-β production or clearance, regulates tau phosphorylation or aggregation, or improves cognition in Alzheimer's patients. The Alzheimer's relevance is mechanistic and adjacent, not proven.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>⚗️ Antioxidant Delivery Is the Core Mechanism</h3>
+        <p>SLC22A4/OCTN1 transports ergothioneine into cells, linking it to ROS reduction, lipid peroxidation suppression, mitochondrial protection, DNA/protein/lipid damage reduction, metal-related oxidative protection, and Nrf2/HO-1/NQO-1 antioxidant signalling — all relevant to Alzheimer's pathobiology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>🧠 Neurovascular &amp; CSF Interfaces Matter</h3>
+        <p>In human brain endothelial cells, ergothioneine reduced 7-ketocholesterol-induced oxidative, inflammatory, mitochondrial, and tight-junction-related injury in an OCTN1-dependent manner. In mice, choroid-plexus OCTN1 contributed to ergothioneine handling from CSF, connecting SLC22A4 to the neurovascular and CSF compartments central to Alzheimer's pathology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🔗 Ferroptosis / Lipid ROS Is a Recurring Theme</h3>
+        <p>In septic-shock/neutrophil experiments, SLC22A4 perturbation altered intracellular ergothioneine and ferroptosis markers; ergothioneine partially rescued erastin-induced viability loss and lipid ROS accumulation. This supports a protective axis: SLC22A4-mediated uptake → reduced lipid ROS/ferroptotic stress → altered inflammatory signalling — a pathway relevant to Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>💊 Genetic Variation May Determine Response</h3>
+        <p>Variants including rs1050152/L503F and other SLC22A4 coding or regulatory polymorphisms alter transporter activity, expression, localization, substrate affinity, and drug response in clinically documented contexts. Ergothioneine-based interventions may therefore require SLC22A4 genotype or expression stratification to achieve meaningful efficacy.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚠️ Targeting Must Be Cautious</h3>
+        <p>SLC22A4 is broadly expressed in peripheral tissues and affects drug disposition, organic cation transport, inflammatory responses, and vascular biology. Some Mendelian-randomization findings suggest context-dependent vascular risks, including stroke-related tradeoffs. Broad SLC22A4 inhibition is not the appropriate therapeutic strategy; preserving or enhancing beneficial ergothioneine uptake is.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Frame SLC22A4 as plausible, not validated.</strong> Treat it as an Alzheimer's-adjacent target requiring further mechanistic and clinical validation before therapeutic development is pursued.</li>
+      <li><strong>Prioritize the SLC22A4–ergothioneine axis</strong> in models of oxidative stress, mitochondrial dysfunction, neuroinflammation, endothelial injury, ferroptosis/lipid peroxidation, and aging-related antioxidant decline.</li>
+      <li><strong>Map tissue expression in Alzheimer's-relevant compartments:</strong> hippocampus, cortex, choroid plexus, brain endothelium, microglia, astrocytes, neurons, CSF, blood immune cells, and peripheral metabolic tissues should all be profiled.</li>
+      <li><strong>Measure pharmacodynamic linkage:</strong> determine whether SLC22A4 genotype, expression, or transporter activity predicts brain/CSF/plasma ergothioneine levels, oxidative stress biomarkers, inflammatory cytokines, vascular dysfunction, cognitive decline, or Alzheimer's progression.</li>
+      <li><strong>Include SLC22A4 dependency tests</strong> in any ergothioneine-supplementation or ergothioneine-like-compound study: transporter inhibition, knockdown, knockout, overexpression, or variant-specific transport assays are required to establish mechanistic linkage.</li>
+      <li><strong>Incorporate pharmacogenetic stratification</strong> — especially around rs1050152/L503F and other function-altering variants — because transporter variation may determine cellular uptake and therapeutic response.</li>
+      <li><strong>Investigate neurovascular mechanisms specifically,</strong> given evidence that OCTN1-dependent ergothioneine protects brain endothelial cells from 7-ketocholesterol-induced oxidative/inflammatory injury and tight-junction disruption relevant to Alzheimer's-associated blood–brain barrier breakdown.</li>
+      <li><strong>Study immune-cell mechanisms</strong> — particularly microglia and monocyte/macrophage biology — to determine whether SLC22A4-mediated ergothioneine uptake reduces Alzheimer's-relevant inflammatory activation, ROS, IL-1β signalling, or inflammasome-like responses.</li>
+      <li><strong>Avoid overclaiming drug-delivery utility.</strong> Evidence does not support treating SLC22A4 as a general BBB transporter for Alzheimer's drugs, despite its transport of some cationic/zwitterionic substrates.</li>
+      <li><strong>Orient therapeutic development toward enhancing, not inhibiting, transporter function:</strong> preserving SLC22A4 activity, ensuring ergothioneine substrate availability, protecting the transporter from inhibition or mislocalization, and validating direct brain target engagement are the appropriate near-term goals.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — SLC22A4 / OCTN1 in Alzheimer's Disease</div>
+      <p>
+        SLC22A4/OCTN1 is a <strong>plausible Alzheimer's-adjacent target</strong> rather than a validated Alzheimer's disease gene or proven therapeutic target. Its most compelling contribution is as the <strong>essential gatekeeper for ergothioneine-mediated cytoprotection</strong> — a function with strong mechanistic overlap with the oxidative stress, mitochondrial dysfunction, neuroinflammation, ferroptosis, and neurovascular injury central to Alzheimer's pathobiology. <strong>CNS-relevant findings</strong> — including OCTN1-dependent protection of brain endothelial cells, choroid-plexus ergothioneine handling, microglial ROS and IL-1β suppression, and oral ergothioneine improving recognition memory and hippocampal synaptic markers in mice — collectively warrant dedicated Alzheimer's-focused investigation. However, <strong>direct causal links to amyloid-β, tau, or human Alzheimer's outcomes are absent</strong> from the current evidence base. The most rational near-term strategy is to <strong>preserve and enhance beneficial SLC22A4-mediated ergothioneine uptake</strong> across neurons, glia, endothelial cells, and choroid plexus, while accounting for pharmacogenetic variation and avoiding the pitfalls of broad transporter inhibition or unvalidated drug-delivery assumptions.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SLC22A4 / OCTN1 — Alzheimer's-Adjacent Biology TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SERPINI1 / Neuroserpin — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #ede8f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2d9f3;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.68;
+    color: #e2d9f3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW PROSE */
+  .prose p {
+    margin-bottom: 1.1em;
+    font-size: 1rem;
+    color: var(--slate-dark);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 28px;
+  }
+
+  .takeaways li {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 36px;
+    line-height: 1.75;
+  }
+
+  .verdict-banner p {
+    font-size: 1rem;
+    color: #ddd6f3;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SERPINI1 &nbsp;|&nbsp; Neuroserpin / PI12</span>
+    <span class="chip chip-danger">⚠ FENIB — gain-of-toxic-function misfolding</span>
+  </div>
+  <h1>SERPINI1 &amp; Alzheimer's Disease<br>— Neuroserpin Biology &amp; Proteostasis</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<main>
+
+  <!-- ─────────────── OVERVIEW ─────────────── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caveat — Limited Direct AD Validation:</strong> The strongest disease evidence for
+      SERPINI1 is <em>familial encephalopathy with neuroserpin inclusion bodies (FENIB)</em>,
+      not Alzheimer's disease. Direct experimental validation in AD models is currently limited,
+      and SERPINI1 has not been established as a validated AD gene or therapeutic target.
+    </div>
+
+    <div class="prose">
+      <p>
+        <strong>SERPINI1</strong> encodes <strong>neuroserpin</strong>, a secreted neuronal serine
+        protease inhibitor relevant to Alzheimer's disease through indirect but mechanistically
+        plausible links: regulation of extracellular tPA/plasmin protease activity,
+        neuroprotection, synaptic and neurite biology, proteostasis, ER stress, protein
+        misfolding and polymerization, and shared neurodegenerative transcriptional signatures.
+      </p>
+      <p>
+        The strongest direct disease evidence for SERPINI1 concerns FENIB — a
+        mutation-driven dementia and epilepsy disorder caused by neuroserpin misfolding,
+        polymerization, intracellular inclusion formation, and neuronal toxicity. This makes
+        SERPINI1 highly relevant to AD-like mechanisms of toxic protein conformation and
+        aggregation, but does not establish it as a validated AD therapeutic target.
+      </p>
+      <p>
+        Across AD-specific evidence, SERPINI1 appears in broader serpin/neurodegeneration
+        datasets and an AD-COPD comorbidity bioinformatics study, but direct experimental
+        validation in AD models is limited. In one human frontal cortex analysis comparing prion
+        disease with early AD-related pathology, SERPINI1 was dysregulated in sporadic
+        Creutzfeldt-Jakob disease, while the stronger AD-associated serpin signal was
+        <em>SERPINA3/SerpinA3n</em> rather than SERPINI1.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────── FIGURE ─────────────── -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL A (left): tPA/Plasmin axis — SERPINI1 inhibits tPA, branching into two sub-cascades
+          PANEL B (right): FENIB / Aggregation — misfolding → polymerization → toxicity
+          Total nodes planned & counted: 14
+        -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 490" width="100%" style="display:block; min-width:640px;">
+          <defs>
+            <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#6d3bbf"/>
+            </marker>
+            <marker id="arr-r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-t" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#1d4ed8"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: SERPINI1 / tPA-Plasmin Axis ═══ -->
+          <rect x="18" y="18" width="448" height="454" rx="14" ry="14"
+                fill="#ede8f8" fill-opacity="0.45" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="32" y="40" font-family="Arial,sans-serif" font-size="10" font-weight="700"
+                fill="#3b1f6e" letter-spacing="0.12em" text-anchor="start">A  SERPINI1 / tPA–PLASMIN AXIS</text>
+
+          <!-- Node 1: SERPINI1 (top centre of panel A) -->
+          <rect x="163" y="54" width="140" height="44" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.5"/>
+          <text x="233" y="73" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#ffffff">SERPINI1</text>
+          <text x="233" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#c4b5fd">Neuroserpin (secreted)</text>
+
+          <!-- Arrow: SERPINI1 → tPA inhibition -->
+          <line x1="233" y1="98" x2="233" y2="130" stroke="#6d3bbf" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node 2: Inhibits tPA/Plasmin -->
+          <rect x="153" y="130" width="160" height="44" rx="8" fill="#6d3bbf" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="233" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#ffffff">Inhibits tPA / Plasmin</text>
+          <text x="233" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#e2d9f3">Extracellular proteolysis ↓</text>
+
+          <!-- Branch arrows from tPA node downward: left branch & right branch -->
+          <!-- Left branch arrow: down-left to Node 3 -->
+          <line x1="185" y1="174" x2="120" y2="210" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+          <!-- Right branch arrow: down-right to Node 5 -->
+          <line x1="280" y1="174" x2="346" y2="210" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- ── LEFT SUB-CASCADE: Neuroprotection ── -->
+          <!-- Node 3 -->
+          <rect x="48" y="210" width="144" height="44" rx="8" fill="#ffffff" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="120" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#3b1f6e">Synaptic Plasticity</text>
+          <text x="120" y="244" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#64748b">ECM remodeling</text>
+
+          <!-- Arrow: Node 3 → Node 4 -->
+          <line x1="120" y1="254" x2="120" y2="290" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-t)"/>
+
+          <!-- Node 4 -->
+          <rect x="48" y="290" width="144" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="120" y="309" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#0f766e">Neuroprotection</text>
+          <text x="120" y="324" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#64748b">Neuronal survival ↑</text>
+
+          <!-- Arrow Node 4 → Convergence node -->
+          <line x1="120" y1="334" x2="120" y2="380" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="120" y1="380" x2="200" y2="406" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-t)"/>
+
+          <!-- ── RIGHT SUB-CASCADE: Inflammation/BBB ── -->
+          <!-- Node 5 -->
+          <rect x="274" y="210" width="150" height="44" rx="8" fill="#ffffff" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="349" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#3b1f6e">Inflammation &amp;</text>
+          <text x="349" y="244" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#3b1f6e">Excitotoxicity</text>
+
+          <!-- Arrow: Node 5 → Node 6 -->
+          <line x1="349" y1="254" x2="349" y2="290" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 6 -->
+          <rect x="274" y="290" width="150" height="44" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+          <text x="349" y="309" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#b45309">BBB / Vascular</text>
+          <text x="349" y="324" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#64748b">AD-relevant injury</text>
+
+          <!-- Arrow Node 6 → Convergence node -->
+          <line x1="349" y1="334" x2="349" y2="380" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="349" y1="380" x2="280" y2="406" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 7: Convergence — AD-relevant pathways -->
+          <rect x="160" y="406" width="158" height="44" rx="8" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1.5"/>
+          <text x="239" y="425" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#ffffff">AD-Relevant</text>
+          <text x="239" y="441" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#ffffff">Pathway Modulation</text>
+
+
+          <!-- ═══ PANEL B: FENIB / Aggregation Pathology ═══ -->
+          <rect x="494" y="18" width="448" height="454" rx="14" ry="14"
+                fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="510" y="40" font-family="Arial,sans-serif" font-size="10" font-weight="700"
+                fill="#7f1d1d" letter-spacing="0.12em" text-anchor="start">B  FENIB — MISFOLDING &amp; AGGREGATION PATHOLOGY</text>
+
+          <!-- Node 8: Pathogenic Variants -->
+          <rect x="640" y="54" width="168" height="44" rx="8" fill="#991b1b" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="724" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#ffffff">Pathogenic Variants</text>
+          <text x="724" y="88" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">S49P · H338R · G392E/R</text>
+
+          <!-- Arrow: Variants → Misfolding -->
+          <line x1="724" y1="98" x2="724" y2="130" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-r)"/>
+
+          <!-- Node 9: Neuroserpin Misfolding -->
+          <rect x="634" y="130" width="180" height="44" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="724" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#991b1b">Neuroserpin Misfolding</text>
+          <text x="724" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#64748b">Structural destabilisation</text>
+
+          <!-- Branch from misfolding: left → ER stress, right → polymerization -->
+          <line x1="680" y1="174" x2="598" y2="210" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-r)"/>
+          <line x1="768" y1="174" x2="840" y2="210" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-r)"/>
+
+          <!-- Node 10: ER / Proteotoxic Stress -->
+          <rect x="510" y="210" width="162" height="44" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="591" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#991b1b">ER / Proteotoxic</text>
+          <text x="591" y="244" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#991b1b">Stress</text>
+
+          <!-- Node 11: Polymerization & Inclusions -->
+          <rect x="792" y="210" width="136" height="44" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="860" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#991b1b">Polymerisation &amp;</text>
+          <text x="860" y="244" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#991b1b">Inclusions</text>
+
+          <!-- Arrow Node 10 → Node 12 -->
+          <line x1="591" y1="254" x2="591" y2="290" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- Arrow Node 11 → Node 12 via elbow -->
+          <line x1="860" y1="254" x2="860" y2="272" stroke="#991b1b" stroke-width="1.5"/>
+          <line x1="860" y1="272" x2="774" y2="290" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- Node 12: Neuronal Death -->
+          <rect x="634" y="290" width="180" height="44" rx="8" fill="#7f1d1d" stroke="#7f1d1d" stroke-width="1.5"/>
+          <text x="724" y="309" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#ffffff">Neuronal Death</text>
+          <text x="724" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">Epilepsy · Dementia · Atrophy</text>
+
+          <!-- Arrow: Neuronal death → Therapeutic node -->
+          <line x1="724" y1="334" x2="724" y2="370" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-t)"/>
+
+          <!-- Node 13: Adenine Base Editing (therapeutic) -->
+          <rect x="620" y="370" width="208" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="724" y="388" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#0f766e">Adenine Base Editing</text>
+          <text x="724" y="404" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#64748b">iPSC neurons · Inclusion rescue</text>
+
+          <!-- Arrow: Base editing → Node 14 -->
+          <line x1="724" y1="414" x2="724" y2="440" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-t)"/>
+
+          <!-- Node 14: Dendritic Morphology Restored -->
+          <rect x="600" y="440" width="248" height="28" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="724" y="459" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#ffffff">Dendritic Morphology Restored</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> (left, purple) — SERPINI1/neuroserpin inhibits extracellular tPA/plasmin activity, branching into two parallel sub-cascades:
+        the left arm leads through synaptic plasticity and ECM remodeling toward neuroprotection and neuronal survival;
+        the right arm captures inflammatory, excitotoxic, and blood-brain barrier effects. Both arms converge onto
+        AD-relevant pathway modulation. &nbsp;|&nbsp;
+        <strong>Panel B</strong> (right, red) — Pathogenic FENIB variants (S49P, H338R, G392E/R) cause neuroserpin misfolding,
+        which bifurcates into ER/proteotoxic stress and polymerization with inclusion formation; both arms reconverge on
+        neuronal death (epilepsy, dementia, atrophy). The teal branch illustrates the adenine base-editing therapeutic
+        proof-of-concept that rescued inclusions and restored dendritic morphology in iPSC-derived neurons.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ─────────────── KEY INSIGHTS ─────────────── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>tPA/Plasmin Regulation</h3>
+        <p>Neuroserpin selectively inhibits the tPA/plasmin system, implicated in synaptic
+        plasticity, extracellular matrix remodeling, inflammation, excitotoxicity, blood-brain
+        barrier responses, and neurodegenerative injury — all pathways with mechanistic relevance
+        to AD, though direct modulation of AD pathology has not been demonstrated.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>FENIB — Aggregation-Driven Dementia</h3>
+        <p>Pathogenic variants (S49P, H338R, G392E, G392R) destabilize neuroserpin, causing
+        polymerization, intracellular inclusions, ER/proteotoxic stress, neuronal death, epilepsy,
+        brain atrophy, and premature death. Disease severity correlates with predicted structural
+        disruption and aggregate burden — a compelling conformational disease model parallel to
+        amyloid-β and tau.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Gene-Editing Therapeutic Proof-of-Concept</h3>
+        <p>Adenine base editing in FENIB cell and iPSC-derived neuronal models corrected a
+        pathogenic SERPINI1 variant, reduced inclusion size and number, and restored neuronal
+        dendritic morphology — supporting precision correction strategies and informing broader
+        anti-aggregation approaches relevant to AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Dosage Is Context-Dependent</h3>
+        <p>Zebrafish knockouts showed anxiety-like behavior, motoneuron axon extension defects,
+        and altered neurodegeneration-related gene expression, while overexpression also produced
+        behavioral abnormalities and neurodegeneration-related transcriptomic changes. Therapeutic
+        modulation requires careful calibration — not simple activation or inhibition.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Limited Direct AD Validation</h3>
+        <p>In a human frontal cortex study of prion disease and early AD-related pathology,
+        SERPINI1 was dysregulated in sporadic Creutzfeldt-Jakob disease, but the stronger
+        AD-associated serpin signal was <em>SERPINA3/SerpinA3n</em>. No study demonstrates that
+        SERPINI1 modulation improves amyloid burden, tau pathology, synaptic survival, or
+        cognition in AD models.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Bioinformatic Signatures — Exploratory</h3>
+        <p>SERPINI1 was identified as a hub gene in a 2026 AD-COPD shared-gene analysis and as
+        a key gene in a Parkinson's disease cuproptosis-related analysis. It also appears in
+        neuroserpin-deficient mouse CNS proteomic changes spanning apoptosis, glutamate receptor
+        activation, and synaptic signaling. These findings remain computational and require
+        experimental validation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────── ACTIONABLE TAKEAWAYS ─────────────── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat as exploratory, not validated:</strong> Handle SERPINI1 as an
+      exploratory AD-relevant target; direct experimental evidence establishing it as a validated
+      AD therapeutic target does not yet exist.</li>
+
+      <li><strong>Prioritize direct AD model testing:</strong> Systematically test whether
+      SERPINI1 modulation affects amyloid-β, tau, synaptic loss, neuroinflammation, neuronal
+      survival, vascular dysfunction, and cognition in established AD model systems.</li>
+
+      <li><strong>Focus on tPA/plasmin-relevant AD contexts:</strong> Investigate SERPINI1 in
+      AD contexts where extracellular proteolysis, excitotoxicity, blood-brain barrier
+      dysfunction, or inflammatory ECM remodeling are mechanistically prominent.</li>
+
+      <li><strong>Do not assume overexpression is beneficial:</strong> Both SERPINI1 deficiency
+      and overexpression can alter neuronal function, behavior, and neurodegeneration-related
+      gene expression; therapeutic strategies must be carefully calibrated.</li>
+
+      <li><strong>Use FENIB as a proteostasis model:</strong> Leverage FENIB as a mechanistic
+      platform for studying ER stress, serpin polymerization, inclusion-body toxicity, aggregate
+      clearance, and neuronal vulnerability — mechanisms directly relevant to AD.</li>
+
+      <li><strong>Pursue stabilization over broad expression changes:</strong> Explore
+      approaches that stabilize native neuroserpin conformation, prevent polymerization, improve
+      toxic aggregate clearance, or correct pathogenic variants rather than bluntly
+      upregulating or silencing expression.</li>
+
+      <li><strong>Embed in multi-gene panels rather than standalone biomarker:</strong>
+      Consider SERPINI1 as part of multi-gene neurodegenerative or AD-comorbidity biomarker
+      panels; disease specificity for AD as a standalone diagnostic marker is not established.</li>
+
+      <li><strong>Benchmark against SERPINA3:</strong> Compare SERPINI1 systematically with
+      SERPINA3/SerpinA3n to determine whether SERPINI1 has independent AD relevance or
+      primarily reflects broader serpin/neurodegeneration biology.</li>
+
+      <li><strong>Validate bioinformatic findings experimentally:</strong> Confirm computational
+      signatures using human AD brain tissue, single-cell datasets, CSF/plasma protein
+      measurements, and mechanistic AD model systems before drawing translational conclusions.</li>
+
+      <li><strong>Account for context-dependence in any therapeutic program:</strong> Cell
+      type, brain region, disease stage, protein folding status, secretion dynamics, and
+      gene dosage all modulate SERPINI1 biology and must be incorporated into translational
+      study designs.</li>
+    </ol>
+  </section>
+
+  <!-- ─────────────── VERDICT ─────────────── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — SERPINI1 / Neuroserpin in Alzheimer's Disease</span>
+      <p>
+        <strong>SERPINI1 occupies a mechanistically plausible but insufficiently validated position
+        in Alzheimer's disease research.</strong> Its strongest disease credentials come from FENIB,
+        where gain-of-toxic-function misfolding and polymerization of neuroserpin recapitulate the
+        conformational disease logic central to AD — a parallel that makes it a scientifically
+        compelling model. Its regulation of the <strong>tPA/plasmin extracellular protease
+        system</strong>, its associations with synaptic plasticity, neuroprotection, and BBB
+        integrity, and the gene-editing therapeutic proof-of-concept in FENIB neuronal models
+        all support continued mechanistic investigation. However, <strong>no published study
+        demonstrates that SERPINI1 modulation directly improves amyloid burden, tau pathology,
+        neuroinflammation, or cognitive outcomes in AD</strong>, and stronger AD serpin signals
+        reside in SERPINA3. The dosage-sensitivity observed across zebrafish and overexpression
+        models further cautions against assuming a straightforward therapeutic direction.
+        <strong>The most productive near-term path is direct experimental testing in AD
+        models</strong>, strategic use of FENIB as a proteostasis platform, and embedding
+        SERPINI1 within multi-gene neurodegenerative signatures rather than pursuing it as a
+        standalone AD target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer>
+  SERPINI1 / Neuroserpin — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp;
+  AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

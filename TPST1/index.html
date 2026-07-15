@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TPST1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.92);
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.45);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #ffd5d5;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+    color: var(--text);
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid #f59e0b; }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TPST1 &nbsp;|&nbsp; Tyrosylprotein Sulfotransferase 1</span>
+    <span class="chip chip-danger">⚠ Safety: broad substrate inhibition risk</span>
+  </div>
+  <h1>TPST1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> The supplied literature does <em>not</em> provide direct evidence that TPST1 is an Alzheimer's disease gene or validated AD therapeutic target. Its relevance to AD is indirect and hypothesis-generating only.
+    </div>
+
+    <p>TPST1 is a Golgi-localized tyrosylprotein sulfotransferase that catalyzes protein tyrosine O-sulfation using PAPS as the sulfate donor. This post-translational modification regulates extracellular and membrane-associated protein interactions, including receptor–ligand binding, chemokine receptor function, leukocyte adhesion, immune signaling, cell migration, and extracellular-matrix/cell-adhesion biology.</p>
+
+    <p>No cited study directly evaluates TPST1 in Alzheimer's brain tissue, amyloid-β biology, tau phosphorylation or aggregation, synaptic degeneration in AD, cognition, CSF biomarkers, dementia cohorts, or AD animal models. TPST1's strongest overlap with Alzheimer's mechanisms is through neuroinflammation, innate immune activation, myeloid/macrophage biology, chemokine receptor sulfation, complement receptor signaling, vascular inflammation, endothelial biology, and possible neural/synaptic roles suggested by fetal brain and retinal studies.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN — 3 panels, left-to-right:
+          Panel A (Enzyme Core): TPST1 Enzyme → PAPS donor → Tyr O-Sulfation  [3 nodes]
+          Panel B (Immune/Vascular branches): fans from "Sulfated Substrates" into 2 sub-branches:
+            Branch 1: Chemokine Rs (CXCR4/CCR5/CCR2) → Leukocyte Trafficking → Monocyte/MΦ Migration
+            Branch 2: Complement Rs (C3aR/C5aR) → Complement Signaling → Neuroinflammation
+            plus PSGL-1 → Leukocyte Rolling side node  [8 nodes]
+          Panel C (AD-Adjacent / Neural): Vascular Inflammation → BBB Dysfunction, Microglial Activation → IL-6/Cytokines, Retinal/Neural Sulfation → Synapse Organization  [5 nodes]
+          Total: 3+1+8+5 = let me recount carefully.
+
+          Panel A: node1 TPST1 Enzyme, node2 PAPS Donor, node3 Tyr O-Sulfation → 3 nodes
+          Connector node between panels: node4 Sulfated Substrates → 1 node
+          Panel B upper branch: node5 Chemokine Rs, node6 Leukocyte Trafficking → 2 nodes
+          Panel B lower branch: node7 Complement Rs, node8 Complement Signaling → 2 nodes
+          Panel B side: node9 PSGL-1/Adhesion → 1 node
+          Panel C: node10 Vascular Inflammation, node11 Microglial Activation, node12 IL-6/Cytokines, node13 Synapse Organization, node14 Neuroinflammation (shared outcome) → 5 nodes
+          Total: 3+1+2+2+1+5 = 14 nodes ✓ (≤16)
+
+          Let me refine into clean x,y grid:
+
+          ViewBox: 0 0 960 480
+
+          Panel A: x=10 y=10 w=190 h=460
+            node1: TPST1 Enzyme  cx=105 y=90  w=140 h=44
+            node2: PAPS Donor    cx=105 y=180 w=140 h=44
+            node3: Tyr O-Sulfation cx=105 y=280 w=140 h=44
+          
+          Gap between A and B: x=200 to x=220
+
+          Panel B: x=220 y=10 w=310 h=460
+            node4: Sulfated Substrates  x=270 y=80 w=150 h=44 (entry from panel A)
+            Upper branch:
+              node5: Chemokine Rs      x=240 y=185 w=140 h=44
+              node6: Leukocyte Traffic  x=240 y=285 w=140 h=44
+            Lower branch:
+              node7: Complement Rs     x=400 y=185 w=130 h=44
+              node8: Complement Sig.   x=400 y=285 w=130 h=44
+            node9: PSGL-1/Adhesion     x=310 y=385 w=130 h=44
+
+          Gap between B and C: x=530 to x=550
+
+          Panel C: x=550 y=10 w=400 h=460
+            node10: Vascular Inflam.   x=570 y=95 w=150 h=44
+            node11: Microglial Activ.  x=750 y=95 w=150 h=44
+            node12: IL-6/Cytokines     x=750 y=200 w=150 h=44
+            node13: Synapse Org.       x=570 y=200 w=150 h=44
+            node14: Neuroinflam. (AD)  x=660 y=340 w=170 h=44
+
+          Total: 14 ✓
+
+          Let me be more precise about coordinates to avoid overlaps.
+        -->
+        <svg viewBox="0 0 960 490" width="100%" style="max-width:940px; font-family: Arial, Helvetica, sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- ── PANEL A: Enzyme Core ── -->
+          <rect x="10" y="14" width="190" height="462" rx="10" ry="10"
+                fill="rgba(30,58,95,0.06)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="105" y="36" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#1e3a5f" letter-spacing="0.1em" text-transform="uppercase">A · ENZYME CORE</text>
+
+          <!-- node1: TPST1 Enzyme -->
+          <rect x="30" y="56" width="150" height="44" rx="7" ry="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="105" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">TPST1 Enzyme</text>
+          <text x="105" y="90" text-anchor="middle" font-size="9.5" fill="#1e3a5f">(Golgi-localized)</text>
+
+          <!-- node2: PAPS Donor -->
+          <rect x="30" y="158" width="150" height="44" rx="7" ry="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="105" y="176" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">PAPS Donor</text>
+          <text x="105" y="192" text-anchor="middle" font-size="9.5" fill="#1e3a5f">(sulfate source)</text>
+
+          <!-- arrow node1 → node2 (A-side: TPST1 uses PAPS) -->
+          <!-- route: from bottom of node1 (y=100) to top of node2 (y=158) -->
+          <line x1="105" y1="100" x2="105" y2="150" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- node3: Tyr O-Sulfation -->
+          <rect x="30" y="262" width="150" height="44" rx="7" ry="7"
+                fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.8"/>
+          <text x="105" y="280" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">Tyr O-Sulfation</text>
+          <text x="105" y="296" text-anchor="middle" font-size="9.5" fill="#1e3a5f">(post-translational)</text>
+
+          <!-- arrow: node2 → node3 -->
+          <line x1="105" y1="202" x2="105" y2="254" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ── PANEL B: Immune / Vascular Branches ── -->
+          <rect x="215" y="14" width="320" height="462" rx="10" ry="10"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="375" y="36" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#0f766e" letter-spacing="0.1em">B · IMMUNE &amp; VASCULAR SUBSTRATES</text>
+
+          <!-- node4: Sulfated Substrates (entry/fan-out node) -->
+          <rect x="290" y="56" width="170" height="44" rx="7" ry="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="375" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">Sulfated Substrates</text>
+          <text x="375" y="90" text-anchor="middle" font-size="9.5" fill="#0f766e">(secreted &amp; membrane)</text>
+
+          <!-- arrow Panel A → Panel B: from right of node3 out through gutter, into node4 -->
+          <!-- node3 right edge: x=180, y=284 (center). node4 left edge: x=290, y=78 -->
+          <!-- Route: elbow — right from node3 to x=202, then up to y=78, then right into node4 -->
+          <polyline points="180,284 202,284 202,78 290,78"
+                    fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Upper branch: Chemokine Rs -->
+          <!-- node5: Chemokine Rs -->
+          <rect x="225" y="162" width="150" height="44" rx="7" ry="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="300" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Chemokine Rs</text>
+          <text x="300" y="196" text-anchor="middle" font-size="9.5" fill="#065f46">CXCR4, CCR5, CCR2</text>
+
+          <!-- node6: Leukocyte Trafficking -->
+          <rect x="225" y="264" width="150" height="44" rx="7" ry="7"
+                fill="#a7f3d0" stroke="#059669" stroke-width="1.5"/>
+          <text x="300" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Leukocyte</text>
+          <text x="300" y="298" text-anchor="middle" font-size="9.5" fill="#065f46">Trafficking</text>
+
+          <!-- Lower branch: Complement Rs -->
+          <!-- node7: Complement Rs -->
+          <rect x="395" y="162" width="130" height="44" rx="7" ry="7"
+                fill="#fce7f3" stroke="#9d174d" stroke-width="1.5"/>
+          <text x="460" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#831843">Complement Rs</text>
+          <text x="460" y="196" text-anchor="middle" font-size="9.5" fill="#831843">C3aR, C5aR</text>
+
+          <!-- node8: Complement Signaling -->
+          <rect x="395" y="264" width="130" height="44" rx="7" ry="7"
+                fill="#fbcfe8" stroke="#9d174d" stroke-width="1.5"/>
+          <text x="460" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#831843">Complement</text>
+          <text x="460" y="298" text-anchor="middle" font-size="9.5" fill="#831843">Signaling ↓</text>
+
+          <!-- node9: PSGL-1 / Adhesion -->
+          <rect x="290" y="366" width="170" height="44" rx="7" ry="7"
+                fill="#e0f2fe" stroke="#0369a1" stroke-width="1.5"/>
+          <text x="375" y="384" text-anchor="middle" font-size="11" font-weight="700" fill="#0c4a6e">PSGL-1 / Adhesion</text>
+          <text x="375" y="400" text-anchor="middle" font-size="9.5" fill="#0c4a6e">Leukocyte rolling ↓</text>
+
+          <!-- Fan-out arrows from node4 to node5 and node7 -->
+          <!-- node4 bottom center: x=375, y=100 -->
+          <!-- node5 top: x=300, y=162 -->
+          <polyline points="375,100 375,135 300,135 300,162"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- node4 to node7: -->
+          <polyline points="375,100 375,135 460,135 460,162"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- node5 → node6 -->
+          <line x1="300" y1="206" x2="300" y2="256" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- node7 → node8 -->
+          <line x1="460" y1="206" x2="460" y2="256" stroke="#9d174d" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- node6 → node9 (converge) -->
+          <polyline points="300,308 300,350 375,350 375,366"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- node8 → node9 (converge) -->
+          <polyline points="460,308 460,350 375,350 375,366"
+                    fill="none" stroke="#9d174d" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- ── PANEL C: AD-Adjacent / Neural ── -->
+          <rect x="550" y="14" width="400" height="462" rx="10" ry="10"
+                fill="rgba(139,26,26,0.04)" stroke="#8b1a1a" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="750" y="36" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#8b1a1a" letter-spacing="0.1em">C · AD-ADJACENT MECHANISMS</text>
+
+          <!-- node10: Vascular Inflammation -->
+          <rect x="560" y="64" width="165" height="44" rx="7" ry="7"
+                fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="642" y="82" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Vascular</text>
+          <text x="642" y="98" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Inflammation</text>
+
+          <!-- node11: Microglial Activation -->
+          <rect x="745" y="64" width="165" height="44" rx="7" ry="7"
+                fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="827" y="82" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Microglial</text>
+          <text x="827" y="98" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Activation</text>
+
+          <!-- node12: IL-6 / Cytokines -->
+          <rect x="745" y="186" width="165" height="44" rx="7" ry="7"
+                fill="#fde8d0" stroke="#b45309" stroke-width="1.5"/>
+          <text x="827" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">IL-6 / Cytokines</text>
+          <text x="827" y="220" text-anchor="middle" font-size="9.5" fill="#92400e">(LPS-induced ↓)</text>
+
+          <!-- node13: Synapse Organization -->
+          <rect x="560" y="186" width="165" height="44" rx="7" ry="7"
+                fill="#ede9fe" stroke="#5b21b6" stroke-width="1.5"/>
+          <text x="642" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#3b0764">Neural / Synapse</text>
+          <text x="642" y="220" text-anchor="middle" font-size="9.5" fill="#3b0764">Organization</text>
+
+          <!-- node14: Neuroinflammation (AD hypothesis) -->
+          <rect x="651" y="348" width="198" height="48" rx="7" ry="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+          <text x="750" y="369" text-anchor="middle" font-size="11" font-weight="700" fill="#78350f">AD-Adjacent</text>
+          <text x="750" y="386" text-anchor="middle" font-size="9.5" fill="#78350f">Neuroinflammation (hypothesis)</text>
+
+          <!-- arrows within Panel C -->
+          <!-- node10 → node13 -->
+          <line x1="642" y1="108" x2="642" y2="178" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- node11 → node12 -->
+          <line x1="827" y1="108" x2="827" y2="178" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- node13 → node14 -->
+          <polyline points="642,230 642,320 750,320 750,348"
+                    fill="none" stroke="#5b21b6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- node12 → node14 -->
+          <polyline points="827,230 827,320 750,320 750,348"
+                    fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connectors: Panel B → Panel C -->
+          <!-- node6 (Leukocyte Trafficking) right edge → node10 (Vascular Inflam.) left edge -->
+          <!-- node6 center: x=300, y=286. right edge x=375, y=286 -->
+          <!-- node10 left edge: x=560, y=86. The gutter is at x=535–550 (empty) -->
+          <!-- Route: from node6 right (375,286) → elbow at (537,286) → up to (537,86) → node10 left (560,86) -->
+          <polyline points="375,286 537,286 537,86 560,86"
+                    fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+          <!-- node8 (Complement Sig.) right edge → node11 (Microglial) left edge -->
+          <!-- node8 center: x=460, y=286. right edge: x=525, y=286 -->
+          <!-- node11 left: x=745, y=86. gutter already used: route via x=537 at y=296? avoid clash -->
+          <!-- Better: from node8 right (525,296) elbow at (537,296) up to y=76, right to node11 (745,76) -->
+          <!-- But y=296 is close to y=286 — small gap. Use y=306 for safety -->
+          <polyline points="525,296 537,296 537,76 745,76"
+                    fill="none" stroke="#9d174d" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel label text bottom -->
+          <text x="105" y="458" text-anchor="middle" font-size="8.5" fill="#1e3a5f" font-style="italic">Enzyme Core</text>
+          <text x="375" y="458" text-anchor="middle" font-size="8.5" fill="#0f766e" font-style="italic">Immune &amp; Vascular</text>
+          <text x="750" y="476" text-anchor="middle" font-size="8.5" fill="#8b1a1a" font-style="italic">AD-Adjacent Mechanisms</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A — Enzyme Core:</strong> TPST1 (Golgi-localized) uses PAPS as sulfate donor to catalyze tyrosine O-sulfation of target proteins.
+        <strong>Panel B — Immune &amp; Vascular Substrates:</strong> Sulfated substrates fan out into two parallel branches: (upper) chemokine receptors (CXCR4, CCR5, CCR2) regulating leukocyte trafficking, and (lower) complement receptors (C3aR, C5aR) driving complement signaling; both converge on PSGL-1/adhesion-mediated leukocyte rolling. Dashed connectors indicate routes to Panel C.
+        <strong>Panel C — AD-Adjacent Mechanisms:</strong> Vascular inflammation and microglial activation (each linked to Panel B) drive downstream IL-6/cytokine production and neural/synapse organization disruption, converging on a hypothetical AD-adjacent neuroinflammatory outcome. This panel represents mechanistically plausible but as yet unvalidated AD links.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Enzyme &amp; Signaling Role</h3>
+        <p>TPST1 controls tyrosine sulfation, a modification that alters receptor–ligand interactions and extracellular signaling. This places TPST1 upstream of inflammatory cell trafficking and cell–cell communication pathways, but <em>not</em> directly upstream of amyloid or tau mechanisms in the supplied evidence.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Immune / Myeloid Evidence (Strongest Link)</h3>
+        <p>TPST1 appears in inflammatory and myeloid/macrophage-related signatures across glioma, chronic EBV infection, vasculitis, rheumatoid arthritis, ALS prognosis, and macrophage TLR-response studies — the strongest functional basis for AD-adjacent relevance.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Functional Immune-Cell Effects</h3>
+        <p>TPST inhibition or deficiency reduced LPS-induced IL-6 production in macrophage-like cells, reduced leukocyte rolling via PSGL-1 effects, reduced macrophage accumulation and atherosclerotic lesion size in mouse models, and decreased macrophage adherence/migration under CKD-related conditions.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Complement Receptor Sulfation</h3>
+        <p>TPST inhibition reduced sulfation and ligand binding of C3aR and C5aR in one study. Because complement signaling is implicated in synapse loss and neuroinflammation in AD, this is mechanistically interesting — but it has not been validated in any AD context in the supplied text.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Brain &amp; Neural Evidence (Indirect)</h3>
+        <p>TPST1 shows steady expression in human fetal brain development. Sulfate-related genes were linked to neurogenesis, differentiation, and MAPT-containing networks. Retinal studies further support a TPST role in photoreceptor ultrastructure and synaptic terminal organization — but TPST1 itself was not shown to regulate tau or AD pathology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Risk &amp; Druggability</h3>
+        <p>Early-stage inhibitor scaffolds (suramin, rottlerin, oxindole-based RAF inhibitors, PAP/PAPS mimetics) confirm enzymatic targetability. However, broad TPST1/TPST2 inhibition risks disrupting immunity, vascular adhesion, chemokine signaling, development, endocrine biology, and neural tissue maintenance — demanding careful substrate and safety profiling.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span><strong>Treat as a plausible indirect candidate:</strong> TPST1 should be considered a hypothesis-generating mechanism candidate for Alzheimer's disease, not a validated AD target, based on the current evidence.</span>
+      </li>
+      <li>
+        <span><strong>Prioritize AD-specific validation first:</strong> Key studies should measure TPST1 expression, TPST activity, sulfotyrosine burden, and sulfated receptor levels in AD brain regions, CSF, blood, microglia, astrocytes, neurons, endothelial cells, and infiltrating myeloid cells.</span>
+      </li>
+      <li>
+        <span><strong>Map TPST1-dependent substrates in AD-relevant systems:</strong> Focus on chemokine receptors (CCR2, CCR5, CXCR4), complement receptors (C3aR, C5aR), adhesion molecules (PSGL-1), and extracellular signaling proteins involved in glial, vascular, or synaptic biology.</span>
+      </li>
+      <li>
+        <span><strong>Test AD-relevant phenotypes in experimental models:</strong> Determine whether TPST1 modulation affects microglial activation state, IL-6/cytokine production, monocyte/macrophage trafficking, blood–brain barrier dysfunction, amyloid-β clearance, tau pathology, synaptic integrity, and cognition.</span>
+      </li>
+      <li>
+        <span><strong>Avoid assuming systemic inhibition will be beneficial:</strong> A more realistic strategy is pathway- or substrate-selective modulation of sulfation-dependent interactions rather than broad blockade of TPST1/TPST2 activity, given the wide substrate range and safety risks.</span>
+      </li>
+      <li>
+        <span><strong>Deploy chemical-biology tools for proteome profiling:</strong> Use available inhibitor scaffolds and anti-sulfotyrosine detection methods to determine whether the sulfotyrosyl proteome is altered in AD and whether those changes track with pathology, neuroinflammation, vascular dysfunction, or cognitive decline.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — TPST1 in Alzheimer's Disease</div>
+      <p>
+        <strong>TPST1 is mechanistically interesting</strong> for Alzheimer's disease because it regulates sulfation-dependent immune, chemokine, complement, adhesion, vascular, and extracellular signaling pathways — several of which are independently implicated in AD neuroinflammation and vascular dysfunction. The <strong>functional evidence in macrophage and vascular models is credible</strong>, and the complement receptor link (C3aR/C5aR sulfation) is particularly noteworthy given the established role of complement in synaptic pruning and AD pathology. However, <strong>the supplied text supports only an exploratory therapeutic hypothesis</strong>: no study directly places TPST1 in AD brain tissue, amyloid-β biology, tau mechanisms, or cognitive outcomes. Any progression toward TPST1 as an AD therapeutic target requires <strong>substantial primary validation work</strong> in AD-relevant biological systems, accompanied by rigorous substrate mapping and safety assessment given the enzyme's broad and partially redundant (with TPST2) activity across immunity, development, and neural tissue.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  TPST1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

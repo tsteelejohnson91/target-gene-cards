@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LACTB — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-warning {
+    background: rgba(180, 83, 9, 0.25);
+    border: 1px solid rgba(251,191,36,0.4);
+    color: #fde68a;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 5px solid var(--warning);
+    background: var(--warning-light);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 0.93rem;
+    color: #78350f;
+    margin: 0;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: ta;
+  }
+
+  .takeaways-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(ta);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+  }
+
+  .verdict-banner p {
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .verdict-lead {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LACTB &nbsp;|&nbsp; Lactamase Beta (Mitochondrial Serine β-Lactamase-like Protease)</span>
+    <span class="chip chip-warning">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>LACTB &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- 1. OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Therapeutic Caution</span>
+      <p>Complete or systemic LACTB inhibition carries meaningful risk: LACTB participates in mitochondrial lipid metabolism, cardiolipin remodeling, apoptosis regulation, autophagy/mitophagy, and degradation of D-aspartate-containing damaged proteins. Global suppression could disrupt these essential functions across multiple cell types and tissues.</p>
+    </div>
+
+    <p>LACTB is a conserved mitochondrial serine β-lactamase-like protease with Alzheimer's disease (AD)-relevant links centered on mitochondrial metabolism, myeloid/microglial immune function, succinylcarnitine handling, lipid remodeling, inflammatory signaling, proteostasis, autophagy/mitophagy, oxidative stress, ferroptosis, and mitochondrial membrane organization.</p>
+
+    <p>The strongest AD-specific evidence comes from Romero-Molina et al. (2026 bioRxiv), identifying a <strong>LACTB–succinylcarnitine–myeloid cell axis</strong>. Lower LACTB expression in myeloid cells was genetically associated with reduced AD risk, while lower LACTB also correlated with higher succinylcarnitine levels. Succinylcarnitine independently correlated with lower AD risk, and LACTB was identified as the primary enzyme responsible for succinylcarnitine hydrolysis. This supports a model in which reduced myeloid LACTB increases succinylcarnitine, shifting immune-metabolic states toward lower AD susceptibility.</p>
+
+    <p>A second AD-relevant finding (Ito &amp; Utsunomiya-Tate, 2025) identifies LACTB as a mammalian <strong>D-aspartyl endopeptidase</strong> capable of cleaving D-Asp-containing peptides, including an amyloid-β<sub>1–10</sub>-derived fragment containing D-Asp at position 7. This links LACTB to age-related protein damage and amyloid-relevant proteostasis, but also complicates therapeutic interpretation — complete LACTB inhibition could theoretically impair degradation of abnormal D-Asp-containing proteins.</p>
+
+    <p>Non-AD studies further reinforce mechanistic relevance through mitochondrial lipid metabolism, oxidative phosphorylation, phospholipid remodeling, apoptosis, autophagy/mitophagy, ferroptosis, p53 signaling, NF-κB-linked inflammation, and respiratory/membrane organization. Overall, LACTB is best viewed as a plausible but context-dependent AD therapeutic target, with the strongest rationale favoring <em>selective modulation or inhibition in myeloid/microglial compartments</em> rather than systemic suppression.</p>
+  </section>
+
+  <!-- 2. MECHANISM FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+
+    <div class="figure-wrap">
+      <!-- SVG: 940 wide × 500 tall -->
+      <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block; min-width:680px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: Upstream Regulation ═══ -->
+        <rect x="12" y="10" width="200" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="112" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">UPSTREAM SIGNALS</text>
+
+        <!-- Node A1: IFN/TNF -->
+        <rect x="30" y="42" width="164" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="112" y="59" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="bold" fill="#1a3a5c">IFN / TNF</text>
+        <text x="112" y="74" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Inflammatory Signals</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="112" y1="84" x2="112" y2="112" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: LACTB Expression -->
+        <rect x="30" y="114" width="164" height="42" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.4"/>
+        <text x="112" y="131" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="bold" fill="#ffffff">LACTB</text>
+        <text x="112" y="146" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#bfdbfe">Mitochondrial Protease</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="112" y1="156" x2="112" y2="184" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: Succinylcarnitine -->
+        <rect x="30" y="186" width="164" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="112" y="203" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#1a3a5c">Succinylcarnitine</text>
+        <text x="112" y="218" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Hydrolysis substrate</text>
+
+        <!-- Arrow A3→A4 (down, within panel A) -->
+        <line x1="112" y1="228" x2="112" y2="258" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node A4: Reduced AD Risk -->
+        <rect x="30" y="260" width="164" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="112" y="277" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#0f766e">↓ AD Risk</text>
+        <text x="112" y="292" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Myeloid genetic signal</text>
+
+        <!-- Node A5: p53 / NF-κB -->
+        <rect x="30" y="394" width="164" height="42" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="112" y="411" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#b45309">p53 / NF-κB</text>
+        <text x="112" y="426" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Inflammatory signaling</text>
+
+        <!-- ═══ PANEL B: Myeloid/Microglial Mechanism ═══ -->
+        <rect x="224" y="10" width="222" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.35" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="335" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">MYELOID / MICROGLIAL</text>
+
+        <!-- Node B1: LACTB-KO Microglia -->
+        <rect x="238" y="42" width="194" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="335" y="59" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#1a3a5c">LACTB-KO Microglia</text>
+        <text x="335" y="74" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Human iPSC-derived</text>
+
+        <!-- Arrow B1→B2 left branch -->
+        <line x1="290" y1="84" x2="265" y2="114" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow B1→B3 right branch -->
+        <line x1="380" y1="84" x2="405" y2="114" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node B2: Enhanced OxPhos -->
+        <rect x="238" y="116" width="130" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="303" y="132" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#0f766e">Enhanced OxPhos</text>
+        <text x="303" y="147" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">↑ Respiration</text>
+
+        <!-- Node B3: Altered Lipids -->
+        <rect x="378" y="116" width="60" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="408" y="132" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#0f766e">Altered</text>
+        <text x="408" y="147" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Lipids</text>
+
+        <!-- Arrow B2→B4 -->
+        <line x1="303" y1="156" x2="303" y2="184" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow B3→B4 (elbow: right to down, then left) -->
+        <polyline points="408,156 408,168 335,168 335,184" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node B4: Plaque Association -->
+        <rect x="238" y="186" width="194" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="335" y="203" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#1a3a5c">↑ Plaque Association</text>
+        <text x="335" y="218" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Xenotransplant mouse model</text>
+
+        <!-- Arrow B4→B5 -->
+        <line x1="335" y1="228" x2="335" y2="258" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node B5: Efferocytosis / Immune Reprog. -->
+        <rect x="238" y="260" width="194" height="42" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="335" y="277" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#1a3a5c">Efferocytosis / Immune</text>
+        <text x="335" y="292" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Reprogramming</text>
+
+        <!-- ═══ PANEL C: Mitochondrial Biology ═══ -->
+        <rect x="458" y="10" width="222" height="480" rx="10" fill="#fffbeb" fill-opacity="0.45" stroke="#b45309" stroke-width="1.2"/>
+        <text x="569" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#78350f" letter-spacing="1">MITOCHONDRIAL BIOLOGY</text>
+
+        <!-- Node C1: Phospholipid Remodeling -->
+        <rect x="472" y="42" width="194" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="569" y="58" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#78350f">Phospholipid Remodeling</text>
+        <text x="569" y="73" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">PE / Cardiolipin</text>
+
+        <!-- Arrow C1→C2 left -->
+        <line x1="524" y1="82" x2="505" y2="110" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Arrow C1→C3 right -->
+        <line x1="614" y1="82" x2="633" y2="110" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node C2: Membrane Structure -->
+        <rect x="472" y="112" width="118" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="531" y="128" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#78350f">Membrane</text>
+        <text x="531" y="143" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Organization</text>
+
+        <!-- Node C3: Cytochrome c -->
+        <rect x="600" y="112" width="66" height="40" rx="7" fill="#fffbeb" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="633" y="128" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#9b1c1c">Cyto-</text>
+        <text x="633" y="143" text-anchor="middle" font-family="Arial" font-size="9" fill="#9b1c1c">chrome c</text>
+
+        <!-- Arrow C2→C4 -->
+        <line x1="531" y1="152" x2="531" y2="182" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Arrow C3→C4 (elbow) -->
+        <polyline points="633,152 633,166 569,166 569,182" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C4: Apoptosis / Autophagy -->
+        <rect x="472" y="184" width="194" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="569" y="201" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#9b1c1c">Apoptosis / Mitophagy</text>
+        <text x="569" y="216" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Autophagy flux</text>
+
+        <!-- Arrow C4→C5 -->
+        <line x1="569" y1="226" x2="569" y2="256" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C5: Ferroptosis / Oxidative Stress -->
+        <rect x="472" y="258" width="194" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="569" y="275" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#9b1c1c">Ferroptosis / Ox. Stress</text>
+        <text x="569" y="290" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Iron, GPX4, lipid perox.</text>
+
+        <!-- ═══ PANEL D: Proteostasis ═══ -->
+        <rect x="692" y="10" width="238" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="811" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#065f46" letter-spacing="1">PROTEOSTASIS / BIOMARKER</text>
+
+        <!-- Node D1: D-Asp Endopeptidase -->
+        <rect x="706" y="42" width="210" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="811" y="59" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#065f46">D-Asp Endopeptidase</text>
+        <text x="811" y="74" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">LACTB cleaves D-Asp peptides</text>
+
+        <!-- Arrow D1→D2 -->
+        <line x1="811" y1="84" x2="811" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node D2: Aβ-derived fragment -->
+        <rect x="706" y="114" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="811" y="131" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#065f46">Aβ₁₋₁₀ D-Asp7 Peptide</text>
+        <text x="811" y="146" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Age-modified substrate</text>
+
+        <!-- Arrow D2→D3 -->
+        <line x1="811" y1="156" x2="811" y2="184" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node D3: Damaged Protein Clearance -->
+        <rect x="706" y="186" width="210" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="811" y="203" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#065f46">Damaged Protein Clearance</text>
+        <text x="811" y="218" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Age-related proteostasis</text>
+
+        <!-- Arrow D3→D4 -->
+        <line x1="811" y1="228" x2="811" y2="258" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node D4: Succinylcarnitine Biomarker -->
+        <rect x="706" y="260" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="811" y="277" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#065f46">Succinylcarnitine</text>
+        <text x="811" y="292" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Target-engagement biomarker</text>
+
+        <!-- Arrow D4→D5 -->
+        <line x1="811" y1="302" x2="811" y2="332" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node D5: Succinylation Regulation -->
+        <rect x="706" y="334" width="210" height="42" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="811" y="351" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#78350f">Post-translational Succinylation</text>
+        <text x="811" y="366" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#475569">Regulates LACTB activity</text>
+
+        <!-- ═══ SHARED OUTCOME ROW at y=400 ═══ -->
+        <!-- Node OUT1: AD Risk Reduction (panel A/B side) -->
+        <rect x="30" y="348" width="164" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="112" y="364" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#0f766e">Immune-Metabolic Shift</text>
+        <text x="112" y="379" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">↓ Myeloid LACTB → AD protection</text>
+
+        <!-- Arrow A4→OUT1 -->
+        <line x1="112" y1="302" x2="112" y2="348" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow OUT1→A5 -->
+        <line x1="112" y1="388" x2="112" y2="394" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node OUTB: Therapeutic Context (panel B bottom) -->
+        <rect x="238" y="334" width="194" height="42" rx="7" fill="#e8f1f9" stroke="#1a3a5c" stroke-width="1.4"/>
+        <text x="335" y="351" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#1a3a5c">Selective Myeloid Target</text>
+        <text x="335" y="366" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Not systemic inhibition</text>
+
+        <!-- Arrow B5→OUTB -->
+        <line x1="335" y1="302" x2="335" y2="334" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node OUTC: Neuronal Caution (panel C bottom) -->
+        <rect x="472" y="334" width="194" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="569" y="351" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="bold" fill="#9b1c1c">Neuronal / Systemic Risk</text>
+        <text x="569" y="366" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Cell-specific targeting essential</text>
+
+        <!-- Arrow C5→OUTC -->
+        <line x1="569" y1="300" x2="569" y2="334" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connector: Panel A OUT1 → Panel B OUTB (through gutter) -->
+        <polyline points="194,368 216,368 238,368" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connector: Panel B OUTB → Panel C OUTC (through gutter) -->
+        <polyline points="432,355 452,355 472,355" fill="none" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Signals):</strong> IFN/TNF inflammatory signals upregulate LACTB, which hydrolyzes succinylcarnitine; lower myeloid LACTB raises succinylcarnitine and associates with reduced AD risk, linking back to p53/NF-κB inflammatory regulation.
+      <strong>Panel B (Myeloid/Microglial):</strong> LACTB-KO microglia branch into enhanced oxidative phosphorylation and altered lipid profiles, converging on increased amyloid plaque association and immune reprogramming, supporting selective myeloid targeting.
+      <strong>Panel C (Mitochondrial Biology):</strong> LACTB influences phospholipid/cardiolipin remodeling, branching into membrane organization and cytochrome c release, converging on apoptosis/mitophagy and ferroptosis/oxidative stress — identifying systemic inhibition risks.
+      <strong>Panel D (Proteostasis/Biomarker):</strong> LACTB's D-aspartyl endopeptidase activity cleaves Aβ-derived D-Asp-containing peptides, supporting aged-protein clearance; succinylcarnitine emerges as a translational biomarker, with post-translational succinylation further modulating LACTB function.
+    </p>
+  </section>
+
+  <!-- 3. KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Central AD Mechanism</h3>
+        <p>The primary AD-specific pathway is: lower myeloid LACTB → higher succinylcarnitine → reduced AD risk. LACTB is identified as the principal enzyme hydrolyzing succinylcarnitine, making its activity a direct modulator of this protective metabolite axis.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Microglial Plaque Engagement</h3>
+        <p>In vivo xenotransplantation experiments demonstrated that human LACTB-KO microglia showed enhanced association with amyloid plaques in amyloid-pathology mouse brains, accompanied by enhanced oxidative phosphorylation and altered lipid profiles. Evidence supports increased plaque engagement, though definitive improved clearance remains unconfirmed.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Proteostasis Complexity & Safety Risk</h3>
+        <p>LACTB functions as a mammalian D-aspartyl endopeptidase, cleaving age-damaged D-Asp-containing proteins including an Aβ<sub>1–10</sub>-derived fragment. Complete inhibition could impair degradation of abnormal age-modified proteins, and systemic suppression risks disrupting cardiolipin remodeling, apoptosis, and autophagy/mitophagy across tissues.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Inflammatory Induction & NF-κB</h3>
+        <p>LACTB expression is upregulated by IFN and TNF stimulation, suggesting chronic inflammatory signaling in AD brains could further induce LACTB in myeloid cells. Reduced LACTB may thus counteract or reshape pathological inflammatory microglial programs, with NF-κB and p53 signaling implicated.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Succinylcarnitine as Translational Biomarker</h3>
+        <p>Succinylcarnitine is the clearest proposed translational biomarker for LACTB target engagement. Post-translational succinylation of LACTB may further regulate its proteolytic activity, mitochondrial respiration, and inflammatory signaling, offering an additional mechanistic regulatory layer to investigate.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Context-Dependent, Non-Linear Directionality</h3>
+        <p>Myeloid genetics favor lower LACTB as protective, while mitochondrial proteostasis data support a role for LACTB in clearing damaged proteins. LACTB's effects depend critically on cell type, disease stage, substrate type, compartment, and degree of inhibition — precluding simple universal therapeutic conclusions. Human cortical proteomics further suggests relevance to dementia vulnerability rather than direct amyloid/tau pathology.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Prioritize myeloid AD models:</strong> Focus experimental testing on human iPSC-derived microglia, macrophages, and microglia in amyloid/tau environments to establish whether LACTB modulation recapitulates the genetic protective signal.</div>
+      </li>
+      <li>
+        <div><strong>Target selectively, not systemically:</strong> Develop selective myeloid/microglial LACTB modulation strategies; systemic inhibition risks disrupting mitochondrial lipid metabolism, cardiolipin remodeling, apoptosis regulation, autophagy/mitophagy, and D-Asp-protein degradation in non-target tissues.</div>
+      </li>
+      <li>
+        <div><strong>Validate succinylcarnitine as a biomarker:</strong> Use succinylcarnitine as a leading target-engagement biomarker, while rigorously determining whether changes in this metabolite correspond to beneficial microglial phenotypes and cognitive outcomes.</div>
+      </li>
+      <li>
+        <div><strong>Move beyond plaque association:</strong> Determine whether LACTB inhibition improves plaque handling beyond mere association — including assays of amyloid uptake, degradation, compaction, neuritic dystrophy, synapse preservation, and inflammatory state transitions.</div>
+      </li>
+      <li>
+        <div><strong>Clarify neuronal LACTB function:</strong> Determine whether LACTB activity in neurons is protective or harmful under AD stressors, including amyloid-β, tau, oxidative stress, iron loading, lipid peroxidation, mitochondrial injury, and impaired autophagy.</div>
+      </li>
+      <li>
+        <div><strong>Investigate post-translational succinylation:</strong> Examine how succinylation modulates LACTB proteolytic activity, mitochondrial respiration, and NF-κB inflammatory signaling, as this represents an understudied regulatory dimension with potential therapeutic relevance.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate the LACTB–PLA2G6–oxidized phospholipid axis:</strong> Given connections to mitochondrial lipid handling, ferroptosis, and neurologically relevant lipid metabolism, this pathway warrants targeted investigation in AD models — particularly given AD's iron dyshomeostasis and lipid peroxidation burden.</div>
+      </li>
+      <li>
+        <div><strong>Stratify all studies by biological context:</strong> Stratify future experiments by cell type, disease stage, genotype, inflammatory state, and metabolic state, because LACTB biology is highly context-dependent and findings from one context may not generalize.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 5. OVERALL VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — LACTB as a Context-Dependent AD Therapeutic Target</span>
+      <p>
+        LACTB represents a <strong>biologically plausible but not yet validated</strong> Alzheimer's disease therapeutic target. The strongest current evidence, anchored in genetic and metabolomic data, supports a <strong>myeloid LACTB–succinylcarnitine axis</strong> in which selective reduction of LACTB activity in microglial/myeloid compartments may raise succinylcarnitine levels and shift immune-metabolic states toward lower AD susceptibility. Supporting mechanistic evidence from LACTB-KO microglial models — including enhanced oxidative phosphorylation, altered lipid profiles, and increased amyloid plaque association in vivo — reinforces the rationale for this compartment-specific approach. However, LACTB's additional roles as a <strong>D-aspartyl endopeptidase</strong> involved in clearing age-damaged proteins, alongside its broad participation in mitochondrial lipid remodeling, cardiolipin metabolism, apoptosis, autophagy/mitophagy, ferroptosis, and inflammatory NF-κB signaling, create a <strong>complex, context-dependent therapeutic landscape</strong>. Complete or systemic inhibition carries meaningful risks. The most defensible near-term strategy is <strong>controlled, cell-type-selective modulation</strong> of LACTB in myeloid/microglial populations, paired with succinylcarnitine as a translational biomarker and rigorous stratification by cell type, disease stage, and inflammatory context.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  LACTB / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

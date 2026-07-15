@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCRN2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(180,60,60,0.22);
+    border: 1px solid rgba(220,100,100,0.38);
+    color: #fbbcbc;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.68);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+  /* PROSE */
+  p {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 7px;
+  }
+  .card p { font-size: 0.92rem; margin-bottom: 0; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: #f1f5f9; border-left: 4px solid #64748b; }
+  .card-neutral h3 { color: #334155; }
+  .card-blue { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .takeaways strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+  .verdict p { color: rgba(255,255,255,0.88); margin-bottom: 0; }
+  .verdict strong { color: #ffffff; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px 24px 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SCRN2 &nbsp;|&nbsp; Secernin-2</span>
+    <span class="chip chip-danger">⚠ Directionality Unknown — Not Drug-Ready</span>
+  </div>
+  <h1>SCRN2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Critical Caveat:</strong> Whether increasing or decreasing SCRN2 activity would reduce amyloid burden or protect neurons is entirely unknown. SCRN2 should not be advanced as a therapeutic target until directionality is established through functional studies.
+    </div>
+    <p>
+      SCRN2 is an emerging Alzheimer's disease–associated susceptibility and regulatory gene, not a validated therapeutic target. Its strongest AD-specific evidence derives from a 2023 Korean gene-based association study linking SCRN2 to brain beta-amyloid burden as measured by <sup>18</sup>F-flutemetamol PET imaging. The SCRN2-linked variant rs11079797 was associated with regulation of SCRN2 expression and was implicated, through amyloid uptake, in decreased hippocampal volume and lower cognitive scores.
+    </p>
+    <p>
+      The proposed AD-relevant pathway is: <em>SCRN2 genetic regulation → altered brain Aβ uptake/deposition → hippocampal atrophy → cognitive impairment.</em> Current evidence is associative and regulatory/eQTL-based rather than causal or functionally validated in AD experimental models.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Genetic/eQTL -->
+          <rect x="14" y="14" width="248" height="462" rx="12" ry="12"
+                fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="138" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#2e6da4" letter-spacing="0.1em">A · GENETIC ASSOCIATION</text>
+
+          <!-- Node A1: rs11079797 -->
+          <rect x="44" y="48" width="158" height="46" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="123" y="67" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1d4ed8">rs11079797</text>
+          <text x="123" y="82" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e40af">(eQTL variant)</text>
+
+          <!-- Node A2: SCRN2 expression -->
+          <rect x="44" y="124" width="158" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="123" y="143" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a3a5c">SCRN2</text>
+          <text x="123" y="158" text-anchor="middle" font-family="Georgia" font-size="10" fill="#2e6da4">Expression Altered</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="123" y1="94" x2="123" y2="122" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Gene-based GWAS -->
+          <rect x="44" y="202" width="158" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="123" y="221" text-anchor="middle" font-family="Georgia" font-size="11" fill="#0f766e">Gene-Based</text>
+          <text x="123" y="236" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">GWAS Signal</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="123" y1="168" x2="123" y2="200" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node A4: Korean cohort -->
+          <rect x="44" y="282" width="158" height="44" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+          <text x="123" y="301" text-anchor="middle" font-family="Georgia" font-size="11" fill="#334155">Korean Cohort</text>
+          <text x="123" y="316" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">PET Aβ SUVR</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="123" y1="246" x2="123" y2="280" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A5: Axon/Chemokine context -->
+          <rect x="44" y="362" width="158" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="123" y="381" text-anchor="middle" font-family="Georgia" font-size="11" fill="#78350f">Axon &amp; Chemokine</text>
+          <text x="123" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Pathway Context</text>
+
+          <!-- Arrow A4→A5 -->
+          <line x1="123" y1="326" x2="123" y2="360" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel B: AD Cascade -->
+          <rect x="278" y="14" width="260" height="280" rx="12" ry="12"
+                fill="rgba(139,26,26,0.05)" stroke="#8b1a1a" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="408" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#8b1a1a" letter-spacing="0.1em">B · AD AMYLOID CASCADE</text>
+
+          <!-- Node B1: Aβ uptake -->
+          <rect x="309" y="48" width="158" height="44" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="388" y="67" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8b1a1a">Altered Aβ</text>
+          <text x="388" y="82" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Uptake/Deposition</text>
+
+          <!-- Arrow A3→B1 cross-panel elbow: go right from A3 then down then right to B1 -->
+          <!-- A3 right edge: x=202, y=224. B1 left edge: x=309, y=70. Route: right along y=224 to x=265, then up to y=70, then right to x=309 -->
+          <polyline points="202,224 265,224 265,70 309,70" fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B2: Amyloid PET -->
+          <rect x="309" y="130" width="158" height="44" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="388" y="149" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8b1a1a">¹⁸F-Flutemetamol</text>
+          <text x="388" y="164" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">PET Burden ↑</text>
+
+          <!-- Arrow B1→B2 -->
+          <line x1="388" y1="92" x2="388" y2="128" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B3: Hippocampal atrophy -->
+          <rect x="309" y="212" width="158" height="44" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="388" y="231" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8b1a1a">Hippocampal</text>
+          <text x="388" y="246" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Volume Loss ↓</text>
+
+          <!-- Arrow B2→B3 -->
+          <line x1="388" y1="174" x2="388" y2="210" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C: Parallel Mechanisms -->
+          <rect x="554" y="14" width="330" height="462" rx="12" ry="12"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="719" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#0f766e" letter-spacing="0.1em">C · PARALLEL MECHANISMS</text>
+
+          <!-- Sub-branch 1: Ferroptosis/Redox (left column of panel C) -->
+          <text x="640" y="54" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700"
+                fill="#475569" letter-spacing="0.06em">REDOX / FERROPTOSIS</text>
+
+          <!-- Node C1: lncRNA axis -->
+          <rect x="572" y="62" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="637" y="81" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">lncRNA / miR-133a-3p</text>
+          <text x="637" y="96" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">/SRXN1 Axis</text>
+
+          <!-- Node C2: Ferroptosis -->
+          <rect x="572" y="146" width="130" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="637" y="165" text-anchor="middle" font-family="Georgia" font-size="11" fill="#0f766e">Neuronal</text>
+          <text x="637" y="180" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">Ferroptosis / ROS</text>
+
+          <!-- Arrow C1→C2 -->
+          <line x1="637" y1="106" x2="637" y2="144" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Sub-branch 2: Proteostasis (right column of panel C) -->
+          <text x="800" y="54" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700"
+                fill="#475569" letter-spacing="0.06em">PROTEOSTASIS</text>
+
+          <!-- Node C3: KMT2C stability -->
+          <rect x="732" y="62" width="132" height="44" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="798" y="81" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1d4ed8">KMT2C Stability</text>
+          <text x="798" y="96" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1d4ed8">Chromatin Reg.</text>
+
+          <!-- Node C4: CHIP/Proteasome -->
+          <rect x="732" y="146" width="132" height="44" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="798" y="165" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1d4ed8">CHIP-Mediated</text>
+          <text x="798" y="180" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1d4ed8">Proteostasis</text>
+
+          <!-- Arrow C3→C4 -->
+          <line x1="798" y1="106" x2="798" y2="144" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Shared convergence node C5: Neurodegeneration risk -->
+          <rect x="636" y="240" width="166" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="719" y="259" text-anchor="middle" font-family="Georgia" font-size="11" fill="#78350f">Neurodegeneration</text>
+          <text x="719" y="274" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Risk Mechanisms</text>
+
+          <!-- Arrow C2→C5 elbow -->
+          <polyline points="637,190 637,218 636,240" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Arrow C4→C5 elbow -->
+          <polyline points="798,190 798,218 802,240" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node C6: Ligandability -->
+          <rect x="636" y="328" width="166" height="44" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+          <text x="719" y="347" text-anchor="middle" font-family="Georgia" font-size="11" fill="#334155">Glox N-terminal</text>
+          <text x="719" y="362" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Ligandability (Potential)</text>
+
+          <!-- Arrow C5→C6 -->
+          <line x1="719" y1="284" x2="719" y2="326" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node C7: Directionality unknown badge -->
+          <rect x="614" y="414" width="210" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="719" y="431" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="bold" fill="#8b1a1a">Directionality Unknown</text>
+          <text x="719" y="446" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">↑ or ↓ SCRN2 = unclear</text>
+
+          <!-- Arrow C6→C7 -->
+          <line x1="719" y1="372" x2="719" y2="412" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Shared outcome: Cognitive Impairment (below panel B) -->
+          <rect x="309" y="308" width="158" height="44" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.8"/>
+          <text x="388" y="327" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="bold" fill="#8b1a1a">Cognitive</text>
+          <text x="388" y="342" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Impairment ↓</text>
+
+          <!-- Arrow B3→Outcome -->
+          <line x1="388" y1="256" x2="388" y2="306" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel: C5 → Cognitive outcome via elbow through gutter -->
+          <!-- C5 left edge: x=636, y=262. Outcome right edge: x=467, y=330. Gutter between panels: x~540 -->
+          <polyline points="636,262 540,262 540,330 467,330" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> Genetic association pathway — rs11079797 eQTL variant alters SCRN2 expression, identified via gene-based (not single-SNP) GWAS in a Korean PET cohort; contextual axon/chemokine pathway enrichment shown.
+        <strong>Panel B (red, centre):</strong> AD amyloid cascade — altered Aβ uptake/deposition → raised ¹⁸F-flutemetamol PET burden → hippocampal volume loss → cognitive impairment.
+        <strong>Panel C (teal/blue, right):</strong> Two parallel mechanistic branches — <em>left:</em> lncRNA/miR-133a-3p/SRXN1 axis driving neuronal ferroptosis and redox stress; <em>right:</em> KMT2C stability and CHIP-mediated proteostasis — both converging on neurodegeneration risk, with potential ligandability via the electrophilic Glox group, and a critical caveat that directionality of SCRN2 modulation remains unknown. Dashed amber line indicates putative contribution of neurodegeneration mechanisms to cognitive outcome.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Gene-Based GWAS Signal</h3>
+        <p>SCRN2 was one of six genes significantly associated with brain Aβ SUVR in a Korean cohort. Importantly, single-SNP GWAS was negative — only gene-based analysis revealed the association, underscoring the need for aggregated variant approaches in this gene.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>rs11079797 &amp; Amyloid-Hippocampal Link</h3>
+        <p>The variant rs11079797 is associated with SCRN2 regulation and linked to Aβ-mediated hippocampal volume loss and reduced cognitive performance. The proposed cascade is eQTL-based, not yet causally validated in experimental models.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Ferroptosis &amp; Redox Relevance</h3>
+        <p>A Scrn2-linked lncRNA/miR-133a-3p/SRXN1 axis has been implicated in neuronal ferroptosis and redox stress in non-AD studies — processes increasingly recognized as relevant to AD neurodegeneration, suggesting broader mechanistic context.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Cancer Biology Mechanistic Parallels</h3>
+        <p>Cancer biology data show SCRN2 can influence KMT2C stability, chromatin regulation, proteasomal degradation, apoptosis, DNA damage responses, and CHIP-mediated proteostasis — all relevant to neurodegeneration, but not yet proven in AD neuronal contexts.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ligandability Signal — Cautious Potential</h3>
+        <p>SCRN2 carries an electrophilic N-terminal glyoxylyl (Glox) group, suggesting potential for covalent or targeted chemical biology approaches. However, no SCRN2-selective, brain-penetrant, AD-relevant modulator has yet been described.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Pathway Context: Axons &amp; Chemokines</h3>
+        <p>Pathway enrichment from the AD association study implicated axon-related and chemokine activity gene sets, placing SCRN2 within broader neuronal integrity and immune-signaling contexts — though direct SCRN2 function in these pathways was not demonstrated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Position SCRN2 as a mechanism candidate, not a drug target:</strong> Treat SCRN2 as a promising AD mechanism candidate and biomarker lead rather than a drug-ready target until causal evidence is established.</div>
+      </li>
+      <li>
+        <div><strong>Replicate the genetic signal:</strong> Prioritize validation of whether rs11079797 genotype and SCRN2 expression correlate with amyloid PET burden, hippocampal atrophy, and cognition in independent, multi-ethnic AD cohorts.</div>
+      </li>
+      <li>
+        <div><strong>Test causality in cellular models:</strong> Manipulate SCRN2 in neurons, astrocytes, microglia, and blood-brain barrier models to determine effects on Aβ uptake, clearance, aggregation, and toxicity directly.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate in AD animal models:</strong> Assess SCRN2 perturbation effects on hippocampal synaptic integrity, neurodegeneration markers, and cognitive behavioral outcomes in established AD model systems.</div>
+      </li>
+      <li>
+        <div><strong>Probe the extended mechanism space:</strong> Investigate SCRN2's potential roles in ferroptosis, oxidative stress, lipid peroxidation, chemokine signaling, axonal pathways, KMT2C stability, CHIP-mediated proteostasis, apoptosis, and DNA damage repair within neuronal contexts.</div>
+      </li>
+      <li>
+        <div><strong>Explore chemical biology cautiously:</strong> Investigate Glox-targeting chemistry to develop tool compounds, while rigorously addressing selectivity, brain penetration, target engagement, and neuronal safety before any translational advancement.</div>
+      </li>
+      <li>
+        <div><strong>Resolve directionality before advancing:</strong> Avoid advancing SCRN2 as a therapeutic target until it is clarified whether increasing or decreasing SCRN2 activity reduces amyloid burden or protects neurons — this is the single most critical knowledge gap.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — SCRN2 in Alzheimer's Disease</div>
+      <p>
+        SCRN2 represents an <strong>intriguing but early-stage AD susceptibility candidate</strong> whose clinical potential remains entirely uncharacterized. Its association with brain amyloid burden in a Korean cohort is noteworthy, especially given that the signal emerged only through gene-based analysis, suggesting that <strong>aggregated regulatory variants rather than single common SNPs</strong> drive its biology. The proposed pathway — from rs11079797 eQTL effects on SCRN2 expression through altered Aβ uptake to hippocampal atrophy and cognitive decline — is biologically coherent but <strong>currently associative and unvalidated</strong> in functional or animal models. Convergent non-AD evidence touching on ferroptosis, proteostasis, chromatin regulation, and a potential electrophilic ligandability handle add mechanistic interest. However, the <strong>most critical unresolved question — whether SCRN2 gain or loss of function is harmful or protective in neurons — must be answered before any translational investment</strong>. SCRN2 is best classified today as a <strong>high-priority functional validation target</strong> and a <strong>potential biomarker anchor</strong>, not a drug discovery program.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SCRN2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical application
+</footer>
+
+</body>
+</html>

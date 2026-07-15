@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELAVL2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6c3fc5;
+    --light: #ede8fa;
+    --danger: #991b1b;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.38);
+    border: 1px solid rgba(255,180,180,0.35);
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #fff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: var(--slate);
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 1em;
+    font-size: 1.01rem;
+  }
+
+  /* FIGURE WRAPPER */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin: 32px 0;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-border);
+  }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: take;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.99rem;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict p {
+    margin-bottom: 0;
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .verdict strong {
+    color: #c4b5fd;
+  }
+
+  .verdict .verdict-lead {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ELAVL2 &nbsp;|&nbsp; HuB / Hel-N1 — ELAV/Hu-family RNA-binding protein</span>
+    <span class="chip chip-danger">⚠ Broad neuronal roles — targeting risk</span>
+  </div>
+  <h1>ELAVL2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Therapeutic Caution:</strong> ELAVL2 has broad neuronal roles spanning development, differentiation, retinal function, splicing, synaptic biology, stress responses, apoptosis, and metabolic regulation. Broad systemic activation or inhibition carries significant off-target risk and should not be pursued until cell-type- and transcript-specific effects are fully characterised.
+    </div>
+
+    <p>ELAVL2, also known as <em>HuB/Hel-N1</em>, is a neuron-enriched ELAV/Hu-family RNA-binding protein implicated in Alzheimer's disease (AD) primarily through post-transcriptional RNA regulation, synaptic transcript control, neuronal stress responses, and APP isoform regulation. It is <strong>not</strong> an established, validated AD drug target, but repeatedly appears as a plausible mechanistic node in AD-relevant pathways.</p>
+
+    <p>The most direct AD-related mechanisms include: involvement in AD synaptic proteomic signatures; interaction with ER-stress-induced MANF, linking ELAVL2-mediated RNA regulation to synapse loss and memory impairment; regulation of APP alternative splicing toward the neuron-enriched APP695 isoform; and possible roles in neuroinflammatory RNA biology through 3′UTR lengthening, endogenous dsRNA formation, innate immune signalling, and cytokine mRNA regulation.</p>
+
+    <p>Overall, ELAVL2 is best understood as a <strong>neuronal RNA-regulatory hub</strong> rather than a conventional AD biomarker or single-pathway therapeutic target.</p>
+
+    <!-- FIGURE -->
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11.5">
+        <!-- PANEL BACKGROUNDS -->
+        <!-- Panel A: Upstream / ER Stress -->
+        <rect x="10" y="10" width="270" height="468" rx="12" fill="#ede8fa" fill-opacity="0.55" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="145" y="30" text-anchor="middle" font-size="9.5" font-weight="700" fill="#2d1b69" letter-spacing="0.1em" text-transform="uppercase">A  UPSTREAM / ER STRESS</text>
+
+        <!-- Panel B: RNA Regulatory Hub -->
+        <rect x="292" y="10" width="270" height="468" rx="12" fill="#eff6ff" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="427" y="30" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1d4ed8" letter-spacing="0.1em">B  RNA REGULATORY HUB</text>
+
+        <!-- Panel C: Downstream Outcomes -->
+        <rect x="574" y="10" width="336" height="468" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="742" y="30" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0f766e" letter-spacing="0.1em">C  DOWNSTREAM OUTCOMES</text>
+
+        <!-- ===================== PANEL A NODES ===================== -->
+        <!-- A1: ER Stress -->
+        <rect x="55" y="50" width="180" height="44" rx="7" fill="#2d1b69" stroke="#2d1b69" stroke-width="1"/>
+        <text x="145" y="67" text-anchor="middle" fill="#fff" font-weight="700" font-size="12">ER Stress</text>
+        <text x="145" y="83" text-anchor="middle" fill="#c4b5fd" font-size="10.5">(neuronal stress stimulus)</text>
+
+        <!-- A2: MANF induction -->
+        <rect x="55" y="126" width="180" height="44" rx="7" fill="#ffffff" stroke="#6c3fc5" stroke-width="1.4"/>
+        <text x="145" y="143" text-anchor="middle" fill="#2d1b69" font-weight="700">MANF induction</text>
+        <text x="145" y="159" text-anchor="middle" fill="#64748b" font-size="10.5">(ER-stress effector)</text>
+
+        <!-- A3: MANF–ELAVL2 interaction -->
+        <rect x="55" y="206" width="180" height="44" rx="7" fill="#ffffff" stroke="#6c3fc5" stroke-width="1.4"/>
+        <text x="145" y="223" text-anchor="middle" fill="#2d1b69" font-weight="700">MANF–ELAVL2</text>
+        <text x="145" y="239" text-anchor="middle" fill="#64748b" font-size="10.5">protein interaction</text>
+
+        <!-- A4: Altered RNA-binding -->
+        <rect x="55" y="286" width="180" height="44" rx="7" fill="#ffffff" stroke="#6c3fc5" stroke-width="1.4"/>
+        <text x="145" y="303" text-anchor="middle" fill="#2d1b69" font-weight="700">Altered ELAVL2</text>
+        <text x="145" y="319" text-anchor="middle" fill="#64748b" font-size="10.5">RNA-binding activity</text>
+
+        <!-- A5: Synapse loss badge area — note: used as node -->
+        <rect x="55" y="366" width="180" height="44" rx="7" fill="#fff1f1" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="145" y="383" text-anchor="middle" fill="#991b1b" font-weight="700">Synapse loss &amp;</text>
+        <text x="145" y="399" text-anchor="middle" fill="#991b1b">memory deficits (AD)</text>
+
+        <!-- Panel A arrows -->
+        <line x1="145" y1="94" x2="145" y2="124" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr-mid)"/>
+        <line x1="145" y1="170" x2="145" y2="204" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr-mid)"/>
+        <line x1="145" y1="250" x2="145" y2="284" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr-mid)"/>
+        <line x1="145" y1="330" x2="145" y2="364" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-danger)"/>
+
+        <!-- ===================== PANEL B NODES ===================== -->
+        <!-- B1: ELAVL2 Hub -->
+        <rect x="327" y="50" width="200" height="44" rx="7" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1"/>
+        <text x="427" y="67" text-anchor="middle" fill="#fff" font-weight="700" font-size="12">ELAVL2</text>
+        <text x="427" y="83" text-anchor="middle" fill="#bfdbfe" font-size="10.5">neuronal RNA-binding hub</text>
+
+        <!-- B2: APP splicing branch -->
+        <rect x="327" y="134" width="190" height="44" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="422" y="151" text-anchor="middle" fill="#1e293b" font-weight="700">APP alt. splicing</text>
+        <text x="422" y="167" text-anchor="middle" fill="#64748b" font-size="10.5">exon 7/8 skipping → APP695</text>
+
+        <!-- B3: Synaptic transcript stabilisation -->
+        <rect x="327" y="214" width="190" height="44" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="422" y="231" text-anchor="middle" fill="#1e293b" font-weight="700">Synaptic transcript</text>
+        <text x="422" y="247" text-anchor="middle" fill="#64748b" font-size="10.5">stability / translation</text>
+
+        <!-- B4: 3'UTR lengthening / dsRNA -->
+        <rect x="327" y="294" width="190" height="44" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="422" y="311" text-anchor="middle" fill="#1e293b" font-weight="700">3′UTR lengthening</text>
+        <text x="422" y="327" text-anchor="middle" fill="#64748b" font-size="10.5">endogenous dsRNA load</text>
+
+        <!-- B5: Innate immune axis -->
+        <rect x="327" y="374" width="190" height="44" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.4"/>
+        <text x="422" y="391" text-anchor="middle" fill="#b45309" font-weight="700">Innate immune axis</text>
+        <text x="422" y="407" text-anchor="middle" fill="#b45309" font-size="10.5">PRR / IFN signalling</text>
+
+        <!-- Panel B arrows from hub -->
+        <!-- hub → APP splicing -->
+        <line x1="427" y1="94" x2="427" y2="132" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+        <!-- hub → synaptic transcripts -->
+        <line x1="427" y1="178" x2="427" y2="212" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+        <!-- synaptic → 3UTR -->
+        <line x1="427" y1="258" x2="427" y2="292" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+        <!-- 3UTR → innate immune -->
+        <line x1="427" y1="338" x2="427" y2="372" stroke="#d97706" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+        <!-- ===================== PANEL C NODES ===================== -->
+        <!-- C1: APP695 / Aβ -->
+        <rect x="608" y="50" width="164" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="690" y="67" text-anchor="middle" fill="#1e293b" font-weight="700">APP695 isoform</text>
+        <text x="690" y="83" text-anchor="middle" fill="#64748b" font-size="10.5">Aβ-processing source</text>
+
+        <!-- C2: Synaptic proteome (NPTXR, DLG4…) -->
+        <rect x="608" y="130" width="164" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="690" y="147" text-anchor="middle" fill="#1e293b" font-weight="700">Synaptic proteome</text>
+        <text x="690" y="163" text-anchor="middle" fill="#64748b" font-size="10.5">NPTXR, DLG4, SYT5…</text>
+
+        <!-- C3: MAPT/tau & LTP module -->
+        <rect x="608" y="210" width="164" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="690" y="227" text-anchor="middle" fill="#1e293b" font-weight="700">MAPT/tau &amp; LTP</text>
+        <text x="690" y="243" text-anchor="middle" fill="#64748b" font-size="10.5">Ca²⁺ signalling module</text>
+
+        <!-- C4: GABAergic splicing -->
+        <rect x="608" y="290" width="164" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="690" y="307" text-anchor="middle" fill="#1e293b" font-weight="700">GABAergic splicing</text>
+        <text x="690" y="323" text-anchor="middle" fill="#64748b" font-size="10.5">E/I balance in AD</text>
+
+        <!-- C5: Neuroprotection vs inflammation -->
+        <rect x="608" y="370" width="164" height="44" rx="7" fill="#fff1f1" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="690" y="387" text-anchor="middle" fill="#991b1b" font-weight="700">Neuroinflammation</text>
+        <text x="690" y="403" text-anchor="middle" fill="#991b1b" font-size="10.5">toxic dsRNA / cytokines</text>
+
+        <!-- Panel C connector arrows from Panel B -->
+        <!-- B APP695 → C APP695 -->
+        <line x1="517" y1="72" x2="606" y2="72" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <!-- B synaptic → C synaptic proteome -->
+        <line x1="517" y1="236" x2="606" y2="155" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- B innate immune → C neuroinflammation -->
+        <line x1="517" y1="396" x2="606" y2="396" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- B3 synaptic → C3 LTP module (straight horizontal from B3 right edge) -->
+        <!-- route: right from B3 end at y=236 → then we already have that, let's add B4→C4 -->
+        <!-- B 3UTR → C GABAergic splicing -->
+        <line x1="517" y1="316" x2="606" y2="312" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Cross-panel: Panel A altered RNA-binding → Panel B hub (elbow) -->
+        <!-- Route: right from A4 (x=235,y=308) → gutter x=270 → up to y=72 → right to B hub -->
+        <polyline points="235,308 270,308 270,72 325,72" fill="none" stroke="#6c3fc5" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr-mid)"/>
+
+        <!-- Also MAPT/tau: from B hub area → C3 LTP -->
+        <line x1="517" y1="155" x2="606" y2="232" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- ARROW MARKERS -->
+        <defs>
+          <marker id="arr-mid" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#6c3fc5"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#d97706"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#0f766e"/>
+          </marker>
+        </defs>
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Fig. 1 — ELAVL2 mechanistic landscape in Alzheimer's disease.</strong>
+        <strong>Panel A (purple):</strong> Upstream ER-stress cascade — ER stress induces MANF, which physically interacts with ELAVL2, altering its RNA-binding activity and ultimately driving synaptic loss and memory deficits in AD models. The dashed purple arrow routes through the inter-panel gutter to indicate ELAVL2's re-entry as the central hub in Panel B.
+        <strong>Panel B (blue):</strong> ELAVL2 as an RNA-regulatory hub, branching into four parallel downstream programs: APP alternative splicing (exon 7/8 skipping → APP695), synaptic transcript stability, 3′UTR lengthening/dsRNA accumulation, and innate immune PRR/IFN signalling.
+        <strong>Panel C (teal/red):</strong> Downstream biological outcomes — APP695 as an Aβ-processing isoform source; the AD synaptic proteome (NPTXR, DLG4, SYT5); the age-declining MAPT/tau–LTP–Ca²⁺ module; GABAergic subtype-specific splicing and E/I balance; and, where dsRNA load becomes excessive, neuroinflammation and cytokine toxicity.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Synaptic Proteomic Signature</h3>
+        <p>ELAVL2 appears in AD synaptic proteomic axes alongside NPTXR, NPTX2, DLG4, SYT5, and VSNL1, supporting its association with synaptic dysfunction — a central and early feature of AD pathogenesis.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>MANF–ELAVL2 Mechanistic Link</h3>
+        <p>The MANF study provides the strongest mechanistic AD connection: ER-stress-induced MANF interacts with ELAVL2 and alters its binding to synaptic-function transcripts. MANF overexpression worsened synapse loss and memory deficits in AD mice; MANF reduction improved pathology and behaviour. ELAVL2 operates as a downstream effector in this pathway.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>APP Isoform Regulation</h3>
+        <p>ELAVL2/nELAVL proteins promote skipping of APP exons 7 and 8, favouring production of the neuron-enriched APP695 isoform. Because APP695 is a substrate for amyloidogenic processing, ELAVL2 could theoretically modulate Aβ-relevant APP biology, though direct effects on Aβ production in AD models have not yet been demonstrated.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Dual Role in Neuronal Innate Immunity</h3>
+        <p>ELAVL2 can increase long 3′UTRs and endogenous dsRNA load, supporting tonic antiviral interferon signalling. However, where RNA editing is defective or dsRNA accumulates excessively, ELAVL2-associated RNA structures may contribute to toxic innate immune activation — a dual role that complicates therapeutic direction.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Aging Brain Module &amp; Tau Co-occurrence</h3>
+        <p>Aging-brain data place ELAVL2 in a frontal cortex gene module that declines with age, enriched for long-term potentiation and calcium signalling. ELAVL2 co-occurs with MAPT and SYN1, linking it indirectly to tau biology, synaptic vesicle function, calcium dysregulation, and age-related cognitive vulnerability.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Broad Roles — Targeting Risk</h3>
+        <p>Directly targeting ELAVL2 carries substantial risk because it holds broad neuronal roles in development, differentiation, retinal function, cell-type-specific splicing, synaptic biology, cytoskeletal transcript regulation, stress responses, apoptosis, and metabolic regulation. Any intervention must be carefully scoped to avoid these functions.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <span><strong>Treat as a mechanism node, not a validated target.</strong> ELAVL2 should be considered a candidate AD mechanism node rather than a confirmed therapeutic target pending independent validation.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritise the MANF–ELAVL2 pathway.</strong> This axis provides the clearest demonstrated link between ER stress, altered RNA binding, synaptic transcript disruption, synapse loss, and cognitive impairment in AD models, and should be the primary focus for follow-up experiments.</span>
+      </li>
+
+      <li>
+        <span><strong>Validate ELAVL2 in independent AD cohorts.</strong> Measure mRNA, protein, isoforms, subcellular localisation, and RNA-binding activity specifically in hippocampus, frontal cortex, and vulnerable neuronal subtypes to establish disease-stage-dependent changes.</span>
+      </li>
+
+      <li>
+        <span><strong>Map ELAVL2-bound transcripts in AD-relevant neurons.</strong> Focus on synaptic genes, APP-processing pathways, MAPT/tau networks, calcium signalling, mitochondrial function, inflammatory transcripts, stress-granule biology, and proteostasis pathways.</span>
+      </li>
+
+      <li>
+        <span><strong>Test ELAVL2 modulation on AD-relevant endpoints.</strong> Assess effects on APP isoform balance, Aβ production, tau pathology, synapse density, neuronal survival, innate immune activation, and learning/memory behaviour in appropriate model systems.</span>
+      </li>
+
+      <li>
+        <span><strong>Avoid broad systemic modulation.</strong> Do not pursue global ELAVL2 activation or inhibition until transcript-specific and cell-type-specific effects are fully characterised; the breadth of neuronal roles makes systemic targeting hazardous.</span>
+      </li>
+
+      <li>
+        <span><strong>Consider precision therapeutic concepts.</strong> More viable strategies include disrupting the pathological MANF–ELAVL2 interaction, preserving ELAVL2 binding to specific synaptic transcripts, correcting selected ELAVL2-regulated splicing events, targeting APP exon 7/8 splice-regulatory elements, or modulating upstream ER-stress pathways.</span>
+      </li>
+
+      <li>
+        <span><strong>Evaluate inflammatory context before intervening.</strong> ELAVL2 suppression may reduce toxic dsRNA/PRR activation in some settings but could simultaneously impair protective neuronal antiviral defences; the net effect is context-dependent.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="verdict-lead">Overall Assessment —</p>
+      <p>ELAVL2 is a <strong>neuronal RNA-regulatory hub with genuine mechanistic relevance to Alzheimer's disease</strong>, primarily through its involvement in synaptic transcript control, the MANF-driven ER-stress pathway, APP exon splicing, and neuroinflammatory RNA biology. It is <strong>not yet a validated AD drug target</strong>, and the breadth of its neuronal functions makes direct, systemic targeting genuinely risky. The most scientifically grounded near-term strategy is to <strong>dissect the MANF–ELAVL2 interaction and its downstream synaptic transcript consequences</strong>, validate ELAVL2 changes across independent AD datasets and vulnerable cell types, and map its full RNA-binding landscape in disease-relevant conditions. Longer-term, <strong>precision approaches targeting specific ELAVL2-containing RNA-protein complexes or individual splice events</strong> — rather than global ELAVL2 modulation — represent the most plausible and safest therapeutic direction.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ELAVL2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAXX — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2d9f9;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #f5f0ff;
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.65);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+    font-weight: 700;
+  }
+  /* CALLOUT */
+  .callout {
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    background: var(--danger-light);
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--danger);
+    margin-right: 6px;
+  }
+  /* OVERVIEW BODY */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 18px 16px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+  .takeaways-list li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #f5f0ff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #c4b5f8;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .verdict-banner p b {
+    color: #e2d9f9;
+  }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DAXX &nbsp;|&nbsp; Death Domain-Associated Protein 6</span>
+    <span class="chip chip-danger">⚠ Safety concern: genome-stability risk with broad inhibition</span>
+  </div>
+  <h1>DAXX &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Caveat:</span>
+      Because DAXX supports genome stability, heterochromatin maintenance, telomere regulation, DNA repair, retroelement repression, and tumor-suppressive chromatin functions, <strong>chronic or systemic DAXX inhibition carries substantive safety risks</strong>. Brain- or pathway-selective interventions are required before any therapeutic development.
+    </div>
+    <div class="overview-body">
+      <p>DAXX is a multifunctional regulator of chromatin, stress signaling, apoptosis, innate immunity, proteostasis, and genome stability. It is <strong>not a fully validated Alzheimer's disease (AD) target</strong>: several passages in the source evidence explicitly state that direct AD data are absent, while others describe AD-adjacent findings including DAXX differential expression in human AD brain and streptozotocin-induced sporadic AD models, DAXX modulation by herbal/extract interventions without clear cognitive rescue, DAXX involvement in excitotoxic caspase-6 pathways, and DAXX-related neuronal stress signaling.</p>
+      <p>The strongest mechanistic links to AD are indirect but biologically plausible. DAXX intersects with neuronal apoptosis, necroptosis, mitochondrial dysfunction, oxidative stress, excitotoxicity, DNA damage repair, chromatin remodeling, histone H3.3 deposition, heterochromatin maintenance, retroelement/ERV silencing, innate immune/interferon regulation, PML nuclear body biology, telomere/aging biology, protein quality control, autophagy/p62-NRF2 signaling, and metabolic or vascular stress pathways.</p>
+      <p>As a therapeutic target, DAXX is best characterized as <strong>context-dependent and unvalidated for AD</strong>. Evidence points in two opposing directions: reducing DAXX activity or blocking DAXX-associated death signaling may protect neurons in acute injury or excitotoxic contexts, while preserving DAXX function may be essential for chromatin integrity, retroelement suppression, DNA repair, anti-inflammatory control, p62/NRF2 stress responses, and protein-folding capacity. Broad DAXX inhibition or activation would therefore be risky without defining the disease stage, cell type, subcellular localization, and DAXX interaction network involved.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3bbf"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-b" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="10" y="10" width="200" height="480" rx="12" fill="#ede8f9" fill-opacity="0.45" stroke="#6d3bbf" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#3b1f6e" letter-spacing="0.09em">A · UPSTREAM TRIGGERS</text>
+
+        <!-- Excitotoxicity node -->
+        <rect x="28" y="42" width="164" height="38" rx="7" fill="#ffffff" stroke="#6d3bbf" stroke-width="1.3"/>
+        <text x="110" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Excitotoxicity /</text>
+        <text x="110" y="71" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">NMDA over-activation</text>
+
+        <!-- Caspase-6 node -->
+        <rect x="28" y="104" width="164" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="110" y="119" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Caspase-6 cleavage</text>
+        <text x="110" y="132" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#991b1b">of DAXX</text>
+
+        <!-- Ischemia/ICH node -->
+        <rect x="28" y="164" width="164" height="36" rx="7" fill="#ffffff" stroke="#6d3bbf" stroke-width="1.3"/>
+        <text x="110" y="179" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Ischemia / ICH /</text>
+        <text x="110" y="192" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">RIP1/RIP3 activation</text>
+
+        <!-- DNA damage node -->
+        <rect x="28" y="224" width="164" height="36" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="110" y="239" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">DNA damage /</text>
+        <text x="110" y="252" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Oxidative stress</text>
+
+        <!-- Retroelement trigger -->
+        <rect x="28" y="284" width="164" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="110" y="299" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">LINE1 / ERV</text>
+        <text x="110" y="312" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">activation</text>
+
+        <!-- Protein aggregation trigger -->
+        <rect x="28" y="344" width="164" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="110" y="359" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Misfolded protein /</text>
+        <text x="110" y="372" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">aggregate stress</text>
+
+        <!-- DAXX central node -->
+        <rect x="28" y="414" width="164" height="46" rx="9" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.5"/>
+        <text x="110" y="434" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#ffffff">DAXX</text>
+        <text x="110" y="451" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#c4b5f8">(central hub)</text>
+
+        <!-- Arrows Panel A -->
+        <line x1="110" y1="80" x2="110" y2="104" stroke="#6d3bbf" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="110" y1="140" x2="110" y2="164" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <line x1="110" y1="200" x2="110" y2="224" stroke="#6d3bbf" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="110" y1="260" x2="110" y2="284" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="110" y1="320" x2="110" y2="344" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="110" y1="380" x2="110" y2="414" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+        <!-- Panel B: Death Signaling Branch -->
+        <rect x="228" y="10" width="210" height="480" rx="12" fill="#fef2f2" fill-opacity="0.5" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="333" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#991b1b" letter-spacing="0.09em">B · DEATH SIGNALING</text>
+
+        <!-- RIP3-DAXX -->
+        <rect x="246" y="42" width="170" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="331" y="57" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">RIP3 – DAXX</text>
+        <text x="331" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">interaction</text>
+
+        <!-- DAXX translocation -->
+        <rect x="246" y="104" width="170" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="331" y="119" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">DAXX translocation</text>
+        <text x="331" y="132" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">/ Fas–DAXX signal</text>
+
+        <!-- Branch split: AIF branch + p-MLKL branch -->
+        <!-- AIF node -->
+        <rect x="246" y="168" width="78" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="285" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">RIPK3 /</text>
+        <text x="285" y="196" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">AIF pathway</text>
+
+        <!-- pMLKL node -->
+        <rect x="338" y="168" width="78" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="377" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">p-MLKL /</text>
+        <text x="377" y="196" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">necroptosis</text>
+
+        <!-- ERK activation -->
+        <rect x="246" y="232" width="170" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="331" y="247" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ERK activation /</text>
+        <text x="331" y="260" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">apoptosis cascade</text>
+
+        <!-- Mitochondrial dysfunction -->
+        <rect x="246" y="296" width="170" height="36" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="331" y="311" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Mitochondrial</text>
+        <text x="331" y="324" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">dysfunction</text>
+
+        <!-- Neuronal death outcome -->
+        <rect x="246" y="360" width="170" height="38" rx="7" fill="#991b1b" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="331" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#ffffff">Neuronal death /</text>
+        <text x="331" y="390" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#ffffff">cognitive decline</text>
+
+        <!-- UBA52 protective note -->
+        <rect x="246" y="424" width="170" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="331" y="439" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#0f766e">UBA52 → DAXX</text>
+        <text x="331" y="452" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#0f766e">ubiquitination/degradation</text>
+
+        <!-- Arrows Panel B -->
+        <line x1="331" y1="78" x2="331" y2="104" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <line x1="331" y1="140" x2="285" y2="168" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <line x1="331" y1="140" x2="377" y2="168" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <!-- converge from AIF and pMLKL to ERK -->
+        <line x1="285" y1="204" x2="285" y2="238" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="285" y1="238" x2="310" y2="238" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="377" y1="204" x2="377" y2="238" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="377" y1="238" x2="352" y2="238" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="331" y1="232" x2="331" y2="232" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <line x1="331" y1="268" x2="331" y2="296" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <line x1="331" y1="332" x2="331" y2="360" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-r)"/>
+        <!-- UBA52 protective arrow up to death outcome with inhibitory style -->
+        <line x1="331" y1="424" x2="331" y2="398" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
+
+        <!-- Cross-panel connector: DAXX hub → RIP3-DAXX (panel A bottom → panel B top) -->
+        <line x1="192" y1="437" x2="246" y2="60" stroke="#6d3bbf" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Panel C: Protective Chromatin & Proteostasis -->
+        <rect x="456" y="10" width="220" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="566" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#0f766e" letter-spacing="0.09em">C · CHROMATIN &amp; PROTEOSTASIS</text>
+
+        <!-- ATRX-DAXX-H3.3 -->
+        <rect x="474" y="42" width="184" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="566" y="57" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ATRX–DAXX–H3.3</text>
+        <text x="566" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">chaperone complex</text>
+
+        <!-- Heterochromatin / telomere -->
+        <rect x="474" y="104" width="184" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="566" y="119" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Heterochromatin /</text>
+        <text x="566" y="132" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">telomere maintenance</text>
+
+        <!-- ERV/LINE1 silencing -->
+        <rect x="474" y="164" width="184" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="566" y="179" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ERV / LINE1</text>
+        <text x="566" y="192" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">silencing (cGAS/STING ↓)</text>
+
+        <!-- DSB repair / R-loop suppression -->
+        <rect x="474" y="224" width="184" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="566" y="239" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">DSB repair /</text>
+        <text x="566" y="252" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">R-loop suppression</text>
+
+        <!-- p62 / NRF2 -->
+        <rect x="474" y="284" width="184" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="566" y="299" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">SQSTM1/p62 interaction</text>
+        <text x="566" y="312" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">→ NRF2 activation</text>
+
+        <!-- Protein disaggregase -->
+        <rect x="474" y="344" width="184" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="566" y="359" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ATP-indep. chaperone /</text>
+        <text x="566" y="372" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">disaggregase activity</text>
+
+        <!-- Genome / proteostasis protected -->
+        <rect x="474" y="414" width="184" height="46" rx="9" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="566" y="434" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#ffffff">Genome &amp; proteostasis</text>
+        <text x="566" y="451" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#ffffff">integrity preserved</text>
+
+        <!-- Arrows Panel C -->
+        <line x1="566" y1="78" x2="566" y2="104" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+        <line x1="566" y1="140" x2="566" y2="164" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+        <line x1="566" y1="200" x2="566" y2="224" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="566" y1="260" x2="566" y2="284" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+        <line x1="566" y1="320" x2="566" y2="344" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+        <line x1="566" y1="380" x2="566" y2="414" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+        <!-- Panel D: Neuroinflammation -->
+        <rect x="694" y="10" width="234" height="480" rx="12" fill="#eff6ff" fill-opacity="0.5" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="811" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#1d4ed8" letter-spacing="0.09em">D · NEUROINFLAMMATION</text>
+
+        <!-- PML nuclear bodies -->
+        <rect x="712" y="42" width="198" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="811" y="57" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">PML nuclear body /</text>
+        <text x="811" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">IFN regulation</text>
+
+        <!-- NFkB repression -->
+        <rect x="712" y="104" width="198" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="811" y="119" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">NFκB transcriptional</text>
+        <text x="811" y="132" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">repression / IL-6 ↓</text>
+
+        <!-- Branch: microglia vs. astrocytes -->
+        <!-- PPARg IL-10 microglia -->
+        <rect x="712" y="168" width="93" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="758" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">PPARγ/IL-10</text>
+        <text x="758" y="196" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1d4ed8">microglia</text>
+
+        <!-- cGAS STING -->
+        <rect x="817" y="168" width="93" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="863" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">cGAS/STING</text>
+        <text x="863" y="196" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#991b1b">innate immune</text>
+
+        <!-- Converge: IFN/inflammatory output -->
+        <rect x="712" y="232" width="198" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="811" y="247" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">IFN / inflammatory</text>
+        <text x="811" y="260" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">gene expression</text>
+
+        <!-- AD neuroinflammation context -->
+        <rect x="712" y="296" width="198" height="36" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="811" y="311" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">AD-relevant neuro-</text>
+        <text x="811" y="324" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">inflammation overlap</text>
+
+        <!-- Validation gap note -->
+        <rect x="712" y="360" width="198" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="811" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#b45309">Direct microglial /</text>
+        <text x="811" y="390" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#b45309">astrocytic AD validation</text>
+
+        <!-- Unvalidated label -->
+        <rect x="712" y="424" width="198" height="36" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.3"/>
+        <text x="811" y="439" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#475569">Currently unvalidated</text>
+        <text x="811" y="452" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#475569">in AD brain models</text>
+
+        <!-- Arrows Panel D -->
+        <line x1="811" y1="78" x2="811" y2="104" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="811" y1="140" x2="758" y2="168" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="811" y1="140" x2="863" y2="168" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="758" y1="204" x2="758" y2="238" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="758" y1="238" x2="775" y2="238" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="863" y1="204" x2="863" y2="238" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="863" y1="238" x2="847" y2="238" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="811" y1="268" x2="811" y2="296" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-b)"/>
+        <line x1="811" y1="332" x2="811" y2="360" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <line x1="811" y1="398" x2="811" y2="424" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (purple) — Upstream triggers:</strong> Six distinct cellular stress inputs — excitotoxicity, caspase-6 cleavage, ischemia/ICH, DNA damage, retroelement activation, and protein aggregation — converge on DAXX as a central hub.
+        <strong>Panel B (red) — Death signaling branch:</strong> DAXX engages RIP3, then bifurcates into a RIPK3/AIF apoptotic branch and a p-MLKL necroptotic branch, reconverging onto ERK-driven apoptosis and mitochondrial dysfunction leading to neuronal death; UBA52-mediated DAXX degradation (dashed green) provides a protective counter-signal.
+        <strong>Panel C (teal) — Chromatin &amp; proteostasis:</strong> DAXX within the ATRX–DAXX–H3.3 complex maintains heterochromatin and telomeres, silences retroelements (suppressing cGAS/STING), supports DSB repair/R-loop suppression, engages p62/NRF2 for oxidative stress resilience, and acts as an ATP-independent disaggregase, collectively preserving genome and proteostasis integrity.
+        <strong>Panel D (blue) — Neuroinflammation:</strong> DAXX modulates PML nuclear body/IFN signaling and NFκB/IL-6 repression, bifurcating into PPARγ/IL-10 anti-inflammatory microglial signaling and cGAS/STING innate immune activation, converging on inflammatory gene expression with AD-overlap potential — though direct AD validation remains absent (amber dashed line).
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+      <div class="card card-danger">
+        <h3>Limited Direct AD Evidence</h3>
+        DAXX is not a causal AD gene or validated therapeutic target. AD-model studies cite DAXX based on differential expression in human AD brain or STZ-induced sporadic AD, but treatment effects on cognition were absent or unclear. No direct evidence links DAXX to amyloid-β or tau regulation.
+      </div>
+      <div class="card card-accent">
+        <h3>AD-Relevant Death Signaling Hub</h3>
+        DAXX participates in apoptosis, necroptosis, RIPK3/AIF/DAXX signaling, RIP3-DAXX interaction, DAXX translocation, p-MLKL, Fas-DAXX, ERK activation, and caspase-associated pathways. Crucially, DAXX is a caspase-6 substrate cleaved after NMDA receptor excitotoxicity — a pathway explicitly connected to AD neuronal death biology.
+      </div>
+      <div class="card card-positive">
+        <h3>Neuroprotection via DAXX Degradation</h3>
+        UBA52-mediated DAXX ubiquitination and degradation protected neurons after intracerebral hemorrhage; DAXX overexpression abolished protection. In ischemia/reperfusion, blocking RIP1/RIP3 reduced RIP3-DAXX interaction, DAXX translocation, and neuronal death. These findings support DAXX-linked death signaling as a potentially targetable mechanism.
+      </div>
+      <div class="card card-positive">
+        <h3>Protective Chromatin Functions</h3>
+        DAXX operates within the ATRX–DAXX–H3.3 histone chaperone complex to maintain heterochromatin, regulate telomeres, silence repetitive DNA/rDNA, repair DNA double-strand breaks, suppress R-loops, and preserve genome stability — all functions directly relevant to aging neurons and AD-associated epigenetic drift.
+      </div>
+      <div class="card card-blue">
+        <h3>Neuroinflammation &amp; Retroelement Suppression</h3>
+        DAXX-containing chromatin complexes suppress LINE1/ERV activation, cytoplasmic DNA generation, cGAS/STING activation, and aberrant interferon responses. DAXX also participates in NFκB repression, IL-6 regulation, PPARγ/IL-10 anti-inflammatory microglial signaling, and PML nuclear body biology — pathways overlapping with AD neuroinflammation.
+      </div>
+      <div class="card card-accent">
+        <h3>Proteostasis: p62/NRF2 &amp; Disaggregase Roles</h3>
+        Cytoplasmic DAXX interacts with SQSTM1/p62, promotes p62 oligomerization, enhances Keap1 recruitment, and activates NRF2-mediated stress responses. Separately, DAXX acts as an ATP-independent chaperone, disaggregase, and unfoldase preventing and solubilizing protein aggregates — conceptually relevant to amyloid-β and tau pathology, though no direct evidence exists.
+      </div>
+      <div class="card card-warning">
+        <h3>Fundamentally Ambiguous Therapeutic Direction</h3>
+        Inhibiting DAXX might reduce apoptosis, necroptosis, ERK-driven death, and Fas-DAXX signaling. Enhancing or preserving DAXX might support chromatin stability, DNA repair, retroelement repression, antiviral restriction, p62/NRF2 responses, and protein quality control. This duality makes global modulation unsafe as a near-term AD strategy.
+      </div>
+      <div class="card card-danger">
+        <h3>Oncology Safety Caution</h3>
+        DAXX/ATRX alterations are clinically measurable by IHC, sequencing, cfDNA, and tumor biomarker workflows. However, DAXX/ATRX loss is repeatedly associated with ALT, chromosomal instability, recurrence, metastasis, and altered prognosis — raising concern that broad DAXX inhibition could compromise genome maintenance or tumor-suppressive functions.
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><b>Treat DAXX as hypothesis-generating, not validated.</b> Current evidence supports mechanistic plausibility across multiple AD-relevant pathways but does not support therapeutic readiness. Direct causal and interventional AD data are still required before advancing DAXX as a drug target.</li>
+      <li><b>Prioritize AD-specific validation in human brain and disease models.</b> Key studies should measure DAXX expression, localization, phosphorylation, SUMOylation, ubiquitination, cleavage, ATRX/H3.3 binding, PML nuclear body association, p62 interaction, and degradation status across AD-vulnerable brain regions and cell types.</li>
+      <li><b>Test DAXX separately in each CNS cell type.</b> DAXX may be harmful in stressed neurons through death signaling but beneficial in microglia, astrocytes, oligodendrocytes, or nuclei through anti-inflammatory or chromatin-stabilizing mechanisms. Cell-type-resolved studies are essential.</li>
+      <li><b>Focus on pathway-selective modulation, not global DAXX targeting.</b> Specific strategies include blocking RIPK3/AIF-DAXX or Fas-DAXX death-signaling interactions, preventing pathological DAXX cleavage downstream of caspase-6, enhancing DAXX–p62–NRF2 stress resilience, or preserving the ATRX–DAXX–H3.3 chromatin maintenance complex.</li>
+      <li><b>Evaluate DAXX against core AD endpoints before therapeutic claims.</b> Required assays include amyloid-β production/clearance, tau phosphorylation and aggregation, synaptic gene expression, synapse density, neuronal survival, mitochondrial function, DNA damage markers, retroelement expression, cGAS/STING/interferon activation, microglial inflammatory state, and cognition in AD models.</li>
+      <li><b>Develop DAXX as a biomarker candidate before a drug target.</b> Candidate readouts include the nuclear/cytoplasmic DAXX ratio, DAXX cleavage products, DAXX ubiquitination/degradation status, DAXX–H3.3/ATRX complex integrity, DAXX-associated heterochromatin markers, p62/NRF2 activation, and DAXX-linked inflammatory signatures.</li>
+      <li><b>Address safety early in program design.</b> Because DAXX supports genome stability, DNA repair, heterochromatin, telomere regulation, retroelement repression, antiviral restriction, and tumor-suppressive chromatin functions, chronic systemic inhibition carries substantive risks. Brain- or pathway-selective interventions are a prerequisite, not an afterthought.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — DAXX in Alzheimer's Disease</span>
+      <p>
+        DAXX is a <b>mechanistically interesting but currently unvalidated node</b> at the intersection of neuronal stress/death signaling, chromatin maintenance, proteostasis, innate immunity, and aging biology. Its duality — functioning as both a <b>pro-death effector in excitotoxic and ischemic contexts</b> and a <b>protective chromatin, genome-stability, and proteostasis factor</b> — means that any therapeutic intervention must be exquisitely context- and pathway-specific. The <b>strongest near-term priorities</b> are: (1) AD-specific causal validation in human brain tissue and relevant disease models, (2) cell-type-resolved dissection of DAXX function across neurons, glia, and endothelium, (3) pathway-selective targeting strategies such as disrupting RIP3-DAXX or caspase-6-DAXX death interactions while preserving chromatin and proteostasis functions, and (4) development of DAXX-related biomarkers (cleavage products, nuclear/cytoplasmic ratio, p62/NRF2 activation) to stratify disease stages before any intervention. <b>Broad DAXX inhibition or activation should not be pursued</b> without resolving this therapeutic ambiguity and addressing the substantive genome-maintenance safety concerns established in oncology contexts.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DAXX · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

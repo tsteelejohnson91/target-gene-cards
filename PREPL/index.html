@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PREPL — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ffffff;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(200,50,50,0.25);
+    border-color: rgba(255,120,120,0.4);
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    max-width: 860px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+    border-left: 4px solid transparent;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-bg); border-left-color: var(--neutral-text); border: 1px solid var(--neutral-border); border-left: 4px solid var(--neutral-text); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+    font-size: 0.96rem;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1e33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 40px 44px;
+    line-height: 1.75;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+  }
+  .verdict p {
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.92);
+  }
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PREPL &nbsp;|&nbsp; Prolyl Endopeptidase-Like</span>
+    <span class="chip chip-danger">⚠ Exploratory target — limited in vivo AD validation</span>
+  </div>
+  <h1>PREPL &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Validation Caveat:</strong> PREPL is a mechanistically plausible but incompletely validated AD target. Clinical and robust in vivo Alzheimer's model validation is currently insufficient for therapeutic translation; findings to date are largely from postmortem multiomics, cell-based knockdown studies, and non-AD disease contexts.
+    </div>
+
+    <p>PREPL is best characterized as a mechanistically plausible but still incompletely validated Alzheimer's disease–relevant protein. The strongest PREPL-specific AD evidence comes from human postmortem multiomics and network analyses reporting PREPL downregulation in sporadic late-onset AD brains, with functional PREPL knockdown producing AD-relevant cellular changes: disrupted protein trafficking and vesicle biology, altered neuropeptide secretion, increased secreted Aβ42, increased tau phosphorylation, altered synaptic protein levels, and impaired hippocampal long-term potentiation in mice.</p>
+
+    <p>Beyond the AD-focused data, PREPL is repeatedly linked to mitochondrial function, trans-Golgi/AP1-mediated trafficking, synaptic and neuromuscular physiology, neurodevelopment, cytoskeletal organization, and metabolic regulation. These processes overlap substantially with core AD mechanisms including neuronal energy failure, vesicle and endosomal dysfunction, synaptic decline, altered amyloid and tau handling, and vascular-metabolic stress.</p>
+
+    <p>PREPL should be distinguished from PREP/POP/PEP — related prolyl oligopeptidase and prolyl endopeptidase enzymes that are more extensively studied as CNS and neurodegeneration targets. POP/PREP inhibitor literature supports the broader druggability of related prolyl-processing enzymes, but does not directly validate PREPL inhibition or activation for AD. PREPL's own biology appears more complex than simple peptidase inhibition, with both enzymatic and nonenzymatic functions likely contributing to disease-relevant pathways.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:640px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream / PREPL Biology -->
+        <rect x="10" y="10" width="270" height="478" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PANEL A · PREPL BIOLOGY</text>
+
+        <!-- Node 1: PREPL (central) -->
+        <rect x="55" y="42" width="180" height="46" rx="8" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="145" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#ffffff">PREPL Protein</text>
+        <text x="145" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#c7d9ed">(Prolyl Endopeptidase-Like)</text>
+
+        <!-- Node 2: Enzymatic -->
+        <rect x="30" y="118" width="110" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="85" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Hydrolase /</text>
+        <text x="85" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Catalytic Activity</text>
+
+        <!-- Node 3: Non-enzymatic -->
+        <rect x="155" y="118" width="110" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="210" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Protein–Protein</text>
+        <text x="210" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Interactions</text>
+
+        <!-- Node 4: Mitochondria -->
+        <rect x="30" y="188" width="110" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="85" y="203" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Mitochondrial</text>
+        <text x="85" y="217" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Complex Activity</text>
+
+        <!-- Node 5: AP1/TGN -->
+        <rect x="155" y="188" width="110" height="38" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1"/>
+        <text x="210" y="203" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">AP1 / Trans-Golgi</text>
+        <text x="210" y="217" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Network Traffic</text>
+
+        <!-- Node 6: Cytoskeletal -->
+        <rect x="55" y="260" width="180" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="145" y="275" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Cytoskeletal / Growth Cone</text>
+        <text x="145" y="289" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Organization (β-actin, MAP2)</text>
+
+        <!-- Node 7: Metabolic -->
+        <rect x="55" y="330" width="180" height="38" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="145" y="345" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Glucose / Energy</text>
+        <text x="145" y="359" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Metabolism Hub</text>
+
+        <!-- Node 8: AD Downregulation -->
+        <rect x="55" y="400" width="180" height="46" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="145" y="419" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">↓ PREPL in Sporadic</text>
+        <text x="145" y="433" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Late-Onset AD Brain</text>
+
+        <!-- Panel A arrows -->
+        <!-- PREPL → Enzymatic -->
+        <line x1="115" y1="88" x2="85" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- PREPL → Non-enzymatic -->
+        <line x1="175" y1="88" x2="210" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Enzymatic → Mitochondrial -->
+        <line x1="85" y1="156" x2="85" y2="188" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Non-enzymatic → AP1/TGN -->
+        <line x1="210" y1="156" x2="210" y2="188" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Mitochondrial → Cytoskeletal (elbow) -->
+        <polyline points="85,226 85,248 145,248 145,260" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- AP1/TGN → Cytoskeletal (elbow) -->
+        <polyline points="210,226 210,248 145,248" fill="none" stroke="#2e6da4" stroke-width="1.5"/>
+        <!-- Cytoskeletal → Metabolic -->
+        <line x1="145" y1="298" x2="145" y2="330" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Metabolic → AD Downregulation -->
+        <line x1="145" y1="368" x2="145" y2="400" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B: AD Consequences -->
+        <rect x="295" y="10" width="310" height="478" rx="12" fill="#fdf0f0" fill-opacity="0.55" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="450" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">PANEL B · AD CONSEQUENCES OF PREPL LOSS</text>
+
+        <!-- Node 9: Vesicle Trafficking -->
+        <rect x="320" y="42" width="260" height="38" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="450" y="57" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Disrupted Vesicle / Endosomal</text>
+        <text x="450" y="71" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Trafficking &amp; Neuropeptide Secretion</text>
+
+        <!-- Branch A label -->
+        <text x="365" y="102" text-anchor="middle" font-family="Arial" font-size="8" fill="#8b1a1a" font-style="italic">Amyloid branch</text>
+        <!-- Branch B label -->
+        <text x="537" y="102" text-anchor="middle" font-family="Arial" font-size="8" fill="#8b1a1a" font-style="italic">Tau branch</text>
+
+        <!-- Node 10: ↑ Aβ42 secretion -->
+        <rect x="315" y="112" width="120" height="38" rx="7" fill="#c0392b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="375" y="127" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">↑ Secreted Aβ42</text>
+        <text x="375" y="141" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">(APP trafficking)</text>
+
+        <!-- Node 11: ↑ Tau Phosphorylation -->
+        <rect x="465" y="112" width="120" height="38" rx="7" fill="#c0392b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="525" y="127" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">↑ Tau</text>
+        <text x="525" y="141" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Phosphorylation</text>
+
+        <!-- Node 12: Synaptic proteins -->
+        <rect x="315" y="182" width="120" height="38" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="375" y="197" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Altered Synaptic</text>
+        <text x="375" y="211" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Protein Levels</text>
+
+        <!-- Node 13: Neuritic pathology -->
+        <rect x="465" y="182" width="120" height="38" rx="7" fill="#8b1a1a" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="525" y="197" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Neuritic / Nuclear</text>
+        <text x="525" y="211" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Mis-localization</text>
+
+        <!-- Node 14: Impaired LTP -->
+        <rect x="355" y="258" width="190" height="38" rx="7" fill="#7f1d1d" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="450" y="273" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Impaired Hippocampal</text>
+        <text x="450" y="287" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Long-Term Potentiation (LTP)</text>
+
+        <!-- Node 15: Mitochondrial dysfunction -->
+        <rect x="315" y="328" width="270" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="450" y="343" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Mitochondrial Dysfunction: ↓ Complex</text>
+        <text x="450" y="357" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Activity, Gene Expr., Ultrastructure</text>
+
+        <!-- Node 16: Cognitive / AD outcome -->
+        <rect x="355" y="398" width="190" height="46" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="450" y="417" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Cognitive Decline /</text>
+        <text x="450" y="431" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">AD Progression Risk</text>
+
+        <!-- Panel B arrows -->
+        <!-- Vesicle → Aβ42 -->
+        <line x1="400" y1="80" x2="375" y2="112" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Vesicle → Tau -->
+        <line x1="500" y1="80" x2="525" y2="112" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Aβ42 → Synaptic -->
+        <line x1="375" y1="150" x2="375" y2="182" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Tau → Neuritic -->
+        <line x1="525" y1="150" x2="525" y2="182" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Synaptic → LTP (elbow) -->
+        <polyline points="375,220 375,246 450,246 450,258" fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Neuritic → LTP (elbow) -->
+        <polyline points="525,220 525,246 450,246" fill="none" stroke="#8b1a1a" stroke-width="1.5"/>
+        <!-- LTP → Mito -->
+        <line x1="450" y1="296" x2="450" y2="328" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Mito → Cognitive -->
+        <line x1="450" y1="366" x2="450" y2="398" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: AD Downregulation → Vesicle Trafficking (Panel A node 8 → Panel B node 9) -->
+        <!-- Node 8 right edge: x=235, y=423; Node 9 left edge: x=320, y=61 -->
+        <!-- Route: right from node8, through gutter, up, then right into node9 -->
+        <polyline points="235,423 270,423 270,61 320,61" fill="none" stroke="#8b1a1a" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C: Therapeutic -->
+        <rect x="620" y="10" width="290" height="478" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="765" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C · THERAPEUTIC CONCEPTS</text>
+
+        <!-- Restore PREPL -->
+        <rect x="645" y="44" width="240" height="46" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="765" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Restore / Enhance PREPL</text>
+        <text x="765" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">(Expression, Stability, Activity)</text>
+
+        <!-- Correct trafficking -->
+        <rect x="645" y="122" width="110" height="40" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1"/>
+        <text x="700" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Correct AP1/</text>
+        <text x="700" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">TGN Defects</text>
+
+        <!-- CoQ10 / mito rescue -->
+        <rect x="775" y="122" width="110" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="830" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">CoQ10 / Mito</text>
+        <text x="830" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Rescue Strategy</text>
+
+        <!-- Substrates / partners -->
+        <rect x="645" y="196" width="240" height="40" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="765" y="212" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Identify Substrates &amp;</text>
+        <text x="765" y="226" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Binding Partners</text>
+
+        <!-- Biomarker -->
+        <rect x="645" y="268" width="240" height="40" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="765" y="284" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">PREPL-Based Biomarker</text>
+        <text x="765" y="298" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Panel (Activity, Localization)</text>
+
+        <!-- Avoid PREP conflation -->
+        <rect x="645" y="340" width="240" height="40" rx="7" fill="#64748b" stroke="#475569" stroke-width="1"/>
+        <text x="765" y="356" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Distinguish from PREP/POP</text>
+        <text x="765" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">(PREPL-Specific Assays Required)</text>
+
+        <!-- AD model validation -->
+        <rect x="645" y="412" width="240" height="46" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="765" y="431" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">AD-Model Validation</text>
+        <text x="765" y="445" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">(iPSC, Amyloid/Tau Models)</text>
+
+        <!-- Panel C arrows -->
+        <line x1="700" y1="90" x2="700" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="830" y1="90" x2="830" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- elbow from both to substrates -->
+        <polyline points="700,162 700,178 765,178 765,196" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <polyline points="830,162 830,178 765,178" fill="none" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="765" y1="236" x2="765" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="765" y1="308" x2="765" y2="340" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="765" y1="380" x2="765" y2="412" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left)</strong> — PREPL's dual enzymatic (hydrolase) and nonenzymatic (protein–protein interaction) roles feed into mitochondrial complex activity and AP1/trans-Golgi network trafficking respectively, converging on cytoskeletal/growth-cone organization, metabolic regulation, and ultimately the documented downregulation of PREPL in sporadic late-onset AD brain (dashed red arrow connects to Panel B).
+      <strong>Panel B (red, centre)</strong> — PREPL loss triggers two parallel AD-relevant branches: an amyloid branch (↑ secreted Aβ42 → altered synaptic proteins) and a tau branch (↑ tau phosphorylation → neuritic mis-localization), both converging on impaired hippocampal LTP and mitochondrial dysfunction, culminating in elevated AD progression risk.
+      <strong>Panel C (teal, right)</strong> — Therapeutic concepts cascade from restoring PREPL expression/stability through correcting trafficking defects and CoQ10-based mitochondrial rescue, toward substrate/partner identification, biomarker development, rigorous distinction from PREP/POP, and final validation in iPSC and amyloid/tau AD models.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>Direct AD Signal</h3>
+        PREPL was reported as downregulated in sporadic late-onset AD brain via integrative postmortem multiomics and network analysis. PREPL knockdown altered AD-relevant pathways rather than acting merely as a passive marker, producing increases in secreted Aβ42 and tau phosphorylation — the most disease-specific PREPL evidence available.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Synaptic Plasticity &amp; LTP</h3>
+        PREPL reduction changed multiple synaptic protein levels and impaired hippocampal long-term potentiation in mice, directly linking PREPL loss to synaptic dysfunction — a major cellular correlate of cognitive decline in Alzheimer's disease.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitochondrial Mechanisms</h3>
+        PREPL deficiency reduces mitochondrial complex activities, disrupts mitochondrial gene expression and ultrastructure, and affects Complex IV / cytochrome c oxidase biogenesis. Coenzyme Q10 and PREPL overexpression have rescued mitochondrial dysfunction in non-AD disease contexts, offering a translatable rescue strategy.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Vesicle Trafficking &amp; Secretion</h3>
+        PREPL knockdown disrupts vesicle structure, neuropeptide-processing enzyme levels, and neuropeptide secretion. Independent work links PREPL to AP1-mediated trans-Golgi network transport partly through nonenzymatic functions — highly relevant because endosomal, Golgi, secretory, and vesicular trafficking defects are central to AD pathobiology.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Enzymatic vs. Nonenzymatic Complexity</h3>
+        PREPL has both catalytic and noncatalytic roles. Some disease-associated missense variants preserve hydrolase activity while disrupting protein–protein interactions. Hydrolase activity is required for normal mitochondrial function, while AP1/trans-Golgi transport regulation can occur independently — drug discovery must address both modes.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>POP/PREP: Supportive, Not Interchangeable</h3>
+        Related POP/PREP enzymes have inhibitor programs affecting neuropeptide processing, neuroinflammation, autophagy, and α-synuclein aggregation, demonstrating broader family druggability. However, these data should not be treated as direct PREPL evidence — PREPL-specific assays and selective modulators are required.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat PREPL as an exploratory, not validated, therapeutic target.</strong> The evidence is promising — PREPL downregulation and knockdown affect Aβ42, tau phosphorylation, trafficking, synaptic proteins, LTP, and mitochondria — but robust clinical and in vivo AD validation remains insufficient for therapeutic translation.</li>
+      <li><strong>Prioritize validation in AD-relevant systems.</strong> Key experiments should measure PREPL expression, localization, hydrolase activity, and interaction networks across AD stages, brain regions, and cell types, especially hippocampal and cortical neurons, astrocytes, microglia, and endothelial/vascular cells.</li>
+      <li><strong>Test causal effects in AD models.</strong> PREPL knockdown, overexpression, rescue, and catalytic-dead/noncatalytic mutant studies should be performed in amyloid, tau, synaptic, and human iPSC-derived neuronal and glial models to determine effects on Aβ42 secretion, APP trafficking, tau phosphorylation, synaptic vesicle biology, mitochondrial function, and neuronal survival.</li>
+      <li><strong>Separate catalytic from noncatalytic mechanisms.</strong> Drug discovery should not assume that active-site inhibition is beneficial. PREPL-directed therapy may need to preserve or enhance mitochondrial-supporting enzymatic activity while restoring protein–protein interaction and AP1/trans-Golgi trafficking functions.</li>
+      <li><strong>Identify endogenous PREPL substrates and binding partners.</strong> This is essential for rational therapeutic design, biomarker development, and safety prediction. Particular attention should be given to lipid-modified/thioester-linked substrates, mitochondrial lipid/protein synthesis pathways, vesicle-trafficking proteins, and synaptic secretion machinery.</li>
+      <li><strong>Explore restoration strategies.</strong> Given PREPL downregulation in AD and harmful effects of PREPL reduction, plausible interventions include enhancing PREPL expression, stabilizing PREPL protein, correcting PREPL-dependent trafficking defects, supporting mitochondrial downstream pathways, or targeting disease-relevant PREPL interaction networks.</li>
+      <li><strong>Investigate mitochondrial rescue approaches.</strong> Coenzyme Q10 rescued mitochondrial dysfunction in PREPL-deficient cells in non-AD contexts, and PREPL overexpression rescued mitochondrial dysfunction in patient fibroblasts. Similar rescue approaches should be tested in AD-relevant neuronal and glial models.</li>
+      <li><strong>Avoid conflating PREPL with PREP/POP.</strong> POP/PREP inhibitors may inform chemical tractability and family-level neurodegeneration mechanisms, but they do not establish how PREPL should be targeted. PREPL-specific assays and selective modulators are required for meaningful progress.</li>
+      <li><strong>Build biomarker evidence.</strong> PREPL protein level, localization, enzymatic activity, and downstream mitochondrial/trafficking signatures should be evaluated as potential biomarkers of AD subtype, disease stage, synaptic vulnerability, or metabolic dysfunction.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — PREPL in Alzheimer's Disease</div>
+      <p>
+        PREPL sits at a <strong>mechanistic intersection highly relevant to Alzheimer's disease</strong> — encompassing mitochondrial homeostasis, vesicle and protein trafficking, synaptic plasticity, amyloid and tau-associated changes, and metabolic regulation. The direct AD evidence — <strong>postmortem downregulation in sporadic late-onset AD brain</strong> and functional knockdown effects on <strong>Aβ42 secretion, tau phosphorylation, synaptic proteins, and hippocampal LTP</strong> — is scientifically compelling and distinguishes PREPL from a purely circumstantial association. However, PREPL remains an <strong>early-stage, exploratory target</strong>: in vivo AD model efficacy, selective chemical tools, defined substrates, and clinical correlation data are all currently insufficient. The most plausible therapeutic direction is <strong>restoration or enhancement of PREPL-dependent functions</strong> rather than broad inhibition, but this requires substantial validation before clinical translation can be contemplated. PREPL warrants continued, carefully staged investigation as a novel node in the AD pathomechanistic landscape.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PREPL · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

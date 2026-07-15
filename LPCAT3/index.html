@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LPCAT3 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1942;
+    --mid: #8b3a82;
+    --light: #f5eaf4;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #e2e8f0;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0518 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #f0e8ef;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #f0e8ef;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+  section { margin-bottom: 54px; }
+  section h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* PROSE */
+  p { margin-bottom: 1.1em; font-size: 1rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+  }
+  .figure-wrap svg { display: block; width: 100%; height: auto; }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { font-size: 0.92rem; margin-bottom: 0; }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: ta-counter; }
+  .takeaways ol li {
+    counter-increment: ta-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+  .takeaways ol li::before {
+    content: counter(ta-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0518 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 36px 32px;
+    margin-bottom: 54px;
+  }
+  .verdict .lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #c9a8c6;
+    margin-bottom: 14px;
+  }
+  .verdict p { font-size: 1rem; line-height: 1.8; color: #f0e8ef; opacity: 0.95; }
+  .verdict p strong { color: #e0b8dd; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LPCAT3 &nbsp;|&nbsp; Lysophosphatidylcholine Acyltransferase 3</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>LPCAT3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caveat:</strong> LPCAT3 is <strong>not</strong> a validated, universally suppressible AD target. Evidence indicates that complete systemic inhibition could be harmful — LPCAT3 deficiency in liver, adipose, mitochondrial, and ER-stress contexts has worsened inflammation, ER stress, lysophospholipid accumulation, and tissue injury. Modulation must be context- and cell-type-specific.
+    </div>
+
+    <p>LPCAT3 is a phospholipid-remodeling enzyme with strong mechanistic relevance to Alzheimer's disease (AD) through arachidonic acid and polyunsaturated fatty acid (PUFA) metabolism, lipid peroxidation, ferroptosis, oxidative stress, neuroinflammation, microglial function, mitochondrial and ER stress, and neurovascular injury. Its core role is to incorporate PUFAs — especially arachidonic acid — into membrane phospholipids such as phosphatidylcholine and phosphatidylethanolamine, enriching membranes with oxidizable lipid substrates.</p>
+
+    <p>In ferroptosis-prone settings, LPCAT3 works in concert with ACSL4 and ALOX/LOX enzymes: ACSL4 activates long-chain PUFAs, LPCAT3 inserts them into phospholipids, and lipoxygenases oxidize them into lipid hydroperoxides. When protective systems — including SLC7A11/xCT, GSH, GPX4, NRF2, ferritin/FTH1, and FSP1 — are insufficient, lipid peroxides accumulate and drive ferroptotic cell injury.</p>
+
+    <p>Direct AD evidence is mixed: most is mechanistic or from non-AD models, but microglial Lpcat3 deletion in Aβ pathology, APP/PS1 mouse intervention data, and human AD hippocampal bioinformatics all implicate LPCAT3 in AD-relevant biology. LPCAT3 is best viewed as a <em>context-dependent candidate target</em> within a lipid peroxidation and ferroptosis network, rather than an established standalone AD therapeutic.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6b2f65"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- ── Panel A: Upstream Inputs ── -->
+        <rect x="12" y="10" width="200" height="480" rx="12" fill="#f5eaf4" fill-opacity="0.55" stroke="#8b3a82" stroke-width="1.3"/>
+        <text x="112" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1942" letter-spacing="1.2">A · UPSTREAM INPUTS</text>
+
+        <!-- Node 1: Iron Accumulation -->
+        <rect x="34" y="45" width="158" height="44" rx="8" fill="#fff" stroke="#8b3a82" stroke-width="1.4"/>
+        <text x="113" y="64" text-anchor="middle" font-size="10.5" fill="#1e293b">Iron Accumulation</text>
+        <text x="113" y="79" text-anchor="middle" font-size="9.5" fill="#64748b">ROS / Fenton Rxn</text>
+
+        <!-- Node 2: Disease Stimuli -->
+        <rect x="34" y="115" width="158" height="44" rx="8" fill="#fff" stroke="#8b3a82" stroke-width="1.4"/>
+        <text x="113" y="134" text-anchor="middle" font-size="10.5" fill="#1e293b">Aβ / Tau / CNS</text>
+        <text x="113" y="149" text-anchor="middle" font-size="9.5" fill="#64748b">Injury Stimuli</text>
+
+        <!-- Node 3: ACSL4 -->
+        <rect x="34" y="195" width="158" height="44" rx="8" fill="#f5eaf4" stroke="#4a1942" stroke-width="1.8"/>
+        <text x="113" y="218" text-anchor="middle" font-size="11" font-weight="700" fill="#4a1942">ACSL4</text>
+        <text x="113" y="232" text-anchor="middle" font-size="9.5" fill="#64748b">PUFA Activation</text>
+
+        <!-- Arrows within Panel A -->
+        <line x1="113" y1="89" x2="113" y2="113" stroke="#6b2f65" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="113" y1="159" x2="113" y2="193" stroke="#6b2f65" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ── Panel B: LPCAT3 Core ── -->
+        <rect x="226" y="10" width="196" height="480" rx="12" fill="#ede9f8" fill-opacity="0.45" stroke="#6b2f65" stroke-width="1.3"/>
+        <text x="324" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1942" letter-spacing="1.2">B · LPCAT3 CORE</text>
+
+        <!-- Node 4: LPCAT3 -->
+        <rect x="248" y="155" width="152" height="54" rx="10" fill="#4a1942" stroke="#4a1942" stroke-width="1.5"/>
+        <text x="324" y="179" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">LPCAT3</text>
+        <text x="324" y="196" text-anchor="middle" font-size="9.5" fill="#d4b8d0">PUFA → Phospholipid</text>
+
+        <!-- Node 5: PUFA-PC / PUFA-PE -->
+        <rect x="248" y="243" width="152" height="46" rx="8" fill="#fff" stroke="#8b3a82" stroke-width="1.4"/>
+        <text x="324" y="263" text-anchor="middle" font-size="10" fill="#1e293b">PUFA-PC / PUFA-PE</text>
+        <text x="324" y="278" text-anchor="middle" font-size="9.5" fill="#64748b">Membrane Enrichment</text>
+
+        <!-- Node 6: ALOX / LOX -->
+        <rect x="248" y="323" width="152" height="44" rx="8" fill="#fff" stroke="#8b3a82" stroke-width="1.4"/>
+        <text x="324" y="342" text-anchor="middle" font-size="10.5" fill="#1e293b">ALOX / LOX</text>
+        <text x="324" y="357" text-anchor="middle" font-size="9.5" fill="#64748b">Lipid Oxidation</text>
+
+        <!-- Arrow: ACSL4 → LPCAT3 (cross-panel) -->
+        <line x1="192" y1="217" x2="246" y2="182" stroke="#6b2f65" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Arrows within Panel B -->
+        <line x1="324" y1="209" x2="324" y2="241" stroke="#6b2f65" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="324" y1="289" x2="324" y2="321" stroke="#6b2f65" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ── Panel C: Protective vs Ferroptosis ── -->
+        <rect x="436" y="10" width="260" height="480" rx="12" fill="#fff5f5" fill-opacity="0.60" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="566" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1.2">C · PROTECTIVE vs FERROPTOSIS</text>
+
+        <!-- Branch left: Protection -->
+        <!-- Node 7: GPX4 / GSH / SLC7A11 -->
+        <rect x="450" y="155" width="112" height="56" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="506" y="175" text-anchor="middle" font-size="10" fill="#0f766e" font-weight="700">GPX4 / GSH</text>
+        <text x="506" y="189" text-anchor="middle" font-size="9.5" fill="#0f766e">SLC7A11 / NRF2</text>
+        <text x="506" y="203" text-anchor="middle" font-size="9" fill="#0f766e">FSP1 / FTH1</text>
+
+        <!-- Node 8: Membrane Protected -->
+        <rect x="450" y="247" width="112" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="506" y="266" text-anchor="middle" font-size="10" fill="#0f766e">Membrane</text>
+        <text x="506" y="280" text-anchor="middle" font-size="9.5" fill="#0f766e">Integrity ✓</text>
+
+        <!-- Branch right: Ferroptosis -->
+        <!-- Node 9: Lipid Peroxides -->
+        <rect x="576" y="155" width="108" height="56" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="630" y="175" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="700">Lipid Peroxides</text>
+        <text x="630" y="189" text-anchor="middle" font-size="9.5" fill="#991b1b">MDA / 4-HNE</text>
+        <text x="630" y="203" text-anchor="middle" font-size="9" fill="#991b1b">↑ PTGS2</text>
+
+        <!-- Node 10: Ferroptosis -->
+        <rect x="564" y="247" width="120" height="44" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="2"/>
+        <text x="624" y="266" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="700">Ferroptosis</text>
+        <text x="624" y="280" text-anchor="middle" font-size="9.5" fill="#991b1b">Cell Injury / Death</text>
+
+        <!-- ALOX → branch split via elbow paths -->
+        <!-- ALOX to GPX4 (left branch) -->
+        <polyline points="400,345 420,345 420,183 448,183" fill="none" stroke="#6b2f65" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- ALOX to Lipid Peroxides (right branch) -->
+        <polyline points="400,345 430,345 430,175 574,175" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Protection arrow down -->
+        <line x1="506" y1="211" x2="506" y2="245" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Ferroptosis arrow down -->
+        <line x1="630" y1="211" x2="630" y2="245" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- ── Panel D: AD Outcomes ── -->
+        <rect x="710" y="10" width="220" height="480" rx="12" fill="#eff6ff" fill-opacity="0.55" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="820" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="1.2">D · AD OUTCOMES</text>
+
+        <!-- Node 11: Neuronal Injury -->
+        <rect x="724" y="45" width="192" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="820" y="64" text-anchor="middle" font-size="10.5" fill="#1e293b">Neuronal / Glial Injury</text>
+        <text x="820" y="79" text-anchor="middle" font-size="9.5" fill="#64748b">Synaptic Loss</text>
+
+        <!-- Node 12: Microglial Dysfunction -->
+        <rect x="724" y="127" width="192" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="820" y="146" text-anchor="middle" font-size="10.5" fill="#1e293b">Microglial Dysfunction</text>
+        <text x="820" y="161" text-anchor="middle" font-size="9.5" fill="#64748b">↓ Aβ Phagocytosis</text>
+
+        <!-- Node 13: BBB / Vascular -->
+        <rect x="724" y="209" width="192" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="820" y="228" text-anchor="middle" font-size="10.5" fill="#1e293b">BBB / Vascular Injury</text>
+        <text x="820" y="243" text-anchor="middle" font-size="9.5" fill="#64748b">NF-κB / TJ Proteins ↓</text>
+
+        <!-- Node 14: Neuroinflammation -->
+        <rect x="724" y="291" width="192" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="820" y="310" text-anchor="middle" font-size="10.5" fill="#1e293b">Neuroinflammation</text>
+        <text x="820" y="325" text-anchor="middle" font-size="9.5" fill="#64748b">Cytokines / NF-κB</text>
+
+        <!-- Node 15: Cognitive Decline -->
+        <rect x="724" y="373" width="192" height="52" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+        <text x="820" y="396" text-anchor="middle" font-size="11" fill="#1e3a8a" font-weight="700">Cognitive Decline</text>
+        <text x="820" y="413" text-anchor="middle" font-size="9.5" fill="#1d4ed8">AD Progression</text>
+
+        <!-- Ferroptosis → Panel D nodes via right-angle connectors -->
+        <!-- Ferroptosis → Neuronal Injury -->
+        <polyline points="684,269 700,269 700,67 722,67" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Ferroptosis → Microglial Dysfunction -->
+        <polyline points="684,269 700,269 700,149 722,149" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Ferroptosis → BBB -->
+        <polyline points="684,269 700,269 700,231 722,231" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Ferroptosis → Neuroinflammation -->
+        <polyline points="684,269 700,269 700,313 722,313" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Outcome nodes → Cognitive Decline -->
+        <line x1="820" y1="173" x2="820" y2="207" stroke="#1d4ed8" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+        <line x1="820" y1="253" x2="820" y2="289" stroke="#1d4ed8" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+        <line x1="820" y1="335" x2="820" y2="371" stroke="#1d4ed8" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+
+        <!-- Cross-panel arrow: LPCAT3 feeds Iron loop back -->
+        <!-- Removed to avoid crossing boxes — connection represented by Panel A flow -->
+
+        <!-- Panel labels for branches in C -->
+        <text x="506" y="145" text-anchor="middle" font-size="9" fill="#0f766e" font-style="italic">Protective Branch</text>
+        <text x="630" y="145" text-anchor="middle" font-size="9" fill="#991b1b" font-style="italic">Ferroptosis Branch</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A (Upstream Inputs):</strong> Iron accumulation and ROS production, combined with Aβ/tau and CNS injury stimuli, converge on ACSL4, which activates long-chain PUFAs as substrates for LPCAT3. <strong>Panel B (LPCAT3 Core):</strong> LPCAT3 inserts PUFAs into phosphatidylcholine/phosphatidylethanolamine, enriching membranes; ALOX/LOX enzymes then oxidize these lipids. <strong>Panel C (Protective vs. Ferroptosis):</strong> From ALOX/LOX, the pathway branches: the <em>protective branch</em> (left) is governed by GPX4, GSH, SLC7A11, NRF2, FSP1, and FTH1, maintaining membrane integrity; the <em>ferroptosis branch</em> (right) shows lipid peroxide and MDA/4-HNE accumulation, converging on ferroptotic cell death when defenses are insufficient. <strong>Panel D (AD Outcomes):</strong> Ferroptosis-driven injury propagates to neuronal/glial injury, microglial dysfunction (↓ Aβ phagocytosis), BBB disruption, and neuroinflammation, ultimately contributing to cognitive decline and AD progression.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Direct AD Evidence — Limited but Informative</h3>
+        <p>Microglial <em>Lpcat3</em> deletion in Aβ pathology reduced arachidonic-acid-containing phospholipids, oxidative stress, and inflammatory responses while enhancing Aβ phagocytosis and promoting plaque compaction. A bioinformatics study of human AD hippocampus identified LPCAT3 as dysregulated and included it in a ferroptosis-related predictive model for AD occurrence.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>ACSL4–LPCAT3–ALOX Ferroptosis Axis</h3>
+        <p>The dominant mechanistic pattern across the literature: disease stimuli increase iron, ROS, MDA, 4-HNE, lipid peroxides, ACSL4, LPCAT3, and ALOX/LOX while decreasing GPX4, SLC7A11, GSH, SOD, FTH1, and FSP1. Interventions that suppress this axis — including a multi-compound intervention in APP/PS1 mice that inhibited ACSL4 and LPCAT3 while restoring GPX4/SLC7A11/GSH — reduced lipid peroxidation and improved behavioral outcomes.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Complex Directionality in AD Hippocampus</h3>
+        <p>Human AD hippocampal expression data reported LPCAT3 as <em>downregulated</em>, complicating the interpretation. Whether inhibition, restoration, or selective rebalancing of LPCAT3 is optimal may depend on disease stage, cell type, and compensatory lipid responses — the therapeutic direction is not straightforward.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>CNS &amp; Neurovascular Plausibility</h3>
+        <p>In ischemia/reperfusion, stroke, TBI, hemorrhage, post-stroke depression, encephalitis, and vascular cognitive impairment, LPCAT3-associated ferroptosis pathways were linked to iron accumulation, BBB dysfunction (↓ tight junction proteins), microglial activation, inflammatory cytokines, neuronal structural injury, and cognitive deficits — all mechanistically relevant to AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Microglial &amp; Neuroinflammatory Regulation</h3>
+        <p>LPCAT3 can regulate arachidonic acid pools, lysophospholipid balance, eicosanoid substrate availability, lipid-raft signaling, TLR/NF-κB activation, cytokine production, and phagocytic function in microglia. In AD, these processes are directly relevant to plaque clearance, chronic neuroinflammation, and glial lipid stress.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Protective Homeostatic Functions — A Critical Caveat</h3>
+        <p>LPCAT3 supports normal membrane remodeling, ER and mitochondrial homeostasis, cholesterol/lipoprotein handling, lysophospholipid balance, and immune-cell organization. In liver, adipose, macrophage, and CNS lipid-balance models, LPCAT3 deficiency <em>worsened</em> inflammation, ER stress, lysophospholipid accumulation, and cholesterol efflux defects. Complete systemic inhibition could therefore be harmful.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Position LPCAT3 within a network, not as a standalone target.</strong> Treat it as a candidate AD target embedded in the lipid peroxidation/ferroptosis network (ACSL4–LPCAT3–ALOX–GPX4 axis), and validate its relevance alongside co-regulators such as ACSL4, SLC7A11, GPX4, NRF2, and FSP1.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize direct AD validation in human tissue and relevant models.</strong> Measure LPCAT3 expression and activity in AD brain regions — especially hippocampus and cortex — and separate results by cell type: neurons, microglia, astrocytes, oligodendrocytes, endothelial cells, and infiltrating immune cells.</div>
+      </li>
+      <li>
+        <div><strong>Correlate LPCAT3 with established AD biomarkers.</strong> Test whether LPCAT3 activity correlates with amyloid burden, tau pathology, synaptic loss, cognitive decline, iron accumulation, GPX4/SLC7A11/GSH status, MDA, 4-HNE, lipid ROS, oxidized phosphatidylethanolamine/phosphatidylcholine species, mitochondrial injury, ER stress, and inflammatory cytokines.</div>
+      </li>
+      <li>
+        <div><strong>Deploy lipidomics to define the relevant LPCAT3-dependent species.</strong> Focus on arachidonoyl-PC, arachidonoyl-PE, arachidonoyl-PS, adrenic-acid-containing phospholipids, lysophospholipids, free arachidonic acid, eicosanoids, and oxidized phospholipids as mechanistic readouts.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate cell-specific rather than blanket modulation.</strong> Microglial LPCAT3 reduction may improve Aβ phagocytosis and reduce oxidative/inflammatory stress in amyloid pathology, but excessive LPCAT3 loss could impair cholesterol efflux, increase lysophospholipids, or worsen inflammatory signaling in other cell types or tissues.</div>
+      </li>
+      <li>
+        <div><strong>Pursue combination strategies targeting the full ferroptosis axis.</strong> Consider partial LPCAT3 modulation combined with ACSL4 inhibition, LOX/ALOX inhibition, iron chelation, GPX4/GSH/SLC7A11 restoration, NRF2 pathway support, FSP1-CoQ10 support, mitochondrial protection, and lipid radical-trapping antioxidants.</div>
+      </li>
+      <li>
+        <div><strong>Explore targeted delivery approaches to avoid systemic toxicity.</strong> Consider brain-penetrant small molecules, microglia- or neuron-targeted nanoparticles, exosome/RNA-based strategies, or BBB-targeted delivery systems to minimize off-target effects in liver, adipose, and systemic immune tissues.</div>
+      </li>
+      <li>
+        <div><strong>Do not assume lower LPCAT3 is always beneficial.</strong> AD hippocampal data reporting LPCAT3 downregulation — combined with non-AD evidence showing harmful effects of LPCAT3 deficiency — indicate that disease stage and cell type may determine whether inhibition, restoration, or rebalancing is the optimal therapeutic direction.</div>
+      </li>
+      <li>
+        <div><strong>The strongest hypothesis is selective normalization, not blanket inhibition.</strong> The goal is to reduce excessive arachidonic acid/PUFA-phospholipid peroxidation in ferroptosis-prone cells while preserving physiological phospholipid remodeling needed for membrane, ER, mitochondrial, cholesterol, and immune homeostasis.</div>
+      </li>
+      <li>
+        <div><strong>Require meaningful clinical endpoints before translation.</strong> Pre-clinical AD studies should demonstrate reduced lipid peroxidation and ferroptosis markers, improved microglial plaque handling, preserved synapses and neurons, reduced neuroinflammation and BBB dysfunction, improved mitochondrial/ER function, and better cognition — without systemic lipid-metabolic harm.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — LPCAT3 in Alzheimer's Disease</div>
+      <p>LPCAT3 represents a <strong>mechanistically plausible but not yet validated</strong> candidate within the Alzheimer's disease drug target landscape. Its role in incorporating oxidizable PUFAs into membrane phospholipids, combined with its position in the <strong>ACSL4–LPCAT3–ALOX ferroptosis axis</strong>, provides a coherent rationale for its involvement in AD-relevant neuronal vulnerability, microglial dysfunction, neuroinflammation, and BBB injury. Direct AD evidence — including microglial deletion studies in Aβ pathology, APP/PS1 mouse intervention data, and human hippocampal bioinformatics — is limited but supportive. However, <strong>LPCAT3 downregulation in human AD hippocampal data</strong>, combined with evidence that LPCAT3 deficiency can be harmful in multiple tissue contexts, underscores that this is not a simple inhibitory target. The most defensible therapeutic hypothesis is <strong>selective, cell-type-specific normalization of LPCAT3-dependent lipid remodeling</strong> — dampening ferroptosis-driving PUFA-phospholipid peroxidation in vulnerable neurons and microglia while preserving essential physiological membrane, ER, mitochondrial, and cholesterol homeostatic functions. Achieving this specificity will require substantially more mechanistic and translational work before LPCAT3 can be considered a development-ready AD target.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  LPCAT3 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

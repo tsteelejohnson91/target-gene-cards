@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRPS15 — Mitochondrial Resilience & Alzheimer's Disease</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: white;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2eaf3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1px solid #f59e0b;
+    border-left: 5px solid #f59e0b;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.92rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.65rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger-dark);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #f59e0b;
+  }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-border);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger-dark); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card p {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5e8;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    font-size: 0.95rem;
+    color: #e2eaf3;
+    margin-bottom: 0;
+  }
+
+  .verdict b {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 16px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: MRPS15 | Mitochondrial Ribosomal Protein S15</span>
+    <span class="chip chip-danger">⚠ Cancer proliferation safety concern</span>
+  </div>
+  <h1>MRPS15 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety / Caveats</span>
+      MRPS15-linked mitochondrial translation and biogenesis pathways are associated in multiple cancers with survival and growth phenotypes. Broad systemic activation carries context-dependent oncological risk and must be addressed before clinical development.
+    </div>
+
+    <p>MRPS15 is a mitochondrial ribosomal protein implicated in mitochondrial translation, oxidative phosphorylation (OXPHOS), respiratory-chain integrity, oxidative stress control, mitochondrial proteostasis, and stress-adaptive translation. The supplied evidence base does not include direct Alzheimer's disease data — no patient cohort data, amyloid-beta or tau experiments, neuronal models, cognitive endpoints, or neurodegeneration-specific MRPS15 studies are present.</p>
+
+    <p>Its relevance to Alzheimer's disease is therefore <em>mechanistic and hypothesis-generating</em>. Alzheimer's disease involves mitochondrial respiratory impairment, reduced membrane potential, ROS accumulation, proteostatic and ER stress, altered translation, and metabolic remodeling — processes that substantially overlap with the pathways repeatedly associated with MRPS15.</p>
+
+    <p>MRPS15 is best framed as a <strong>potential mitochondrial resilience target</strong>, not an amyloid- or tau-specific therapeutic target. Current evidence supports further investigation, not direct therapeutic validation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 960 wide × 500 tall viewBox -->
+        <svg viewBox="0 0 960 500" width="900" height="469" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+
+          <!-- === PANEL BACKGROUNDS === -->
+          <!-- Panel A: Upstream Regulation (x=10, y=10, w=240, h=480) -->
+          <rect x="10" y="10" width="240" height="480" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="130" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">A · UPSTREAM REGULATION</text>
+
+          <!-- Panel B: Core Mitochondrial Function (x=268, y=10, w=282, h=480) -->
+          <rect x="268" y="10" width="282" height="480" rx="12" fill="#e8f2fb" fill-opacity="0.35" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="409" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">B · CORE MITOCHONDRIAL FUNCTION</text>
+
+          <!-- Panel C: Stress-Adaptive Outputs (x=568, y=10, w=382, h=480) -->
+          <rect x="568" y="10" width="382" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="759" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">C · STRESS-ADAPTIVE &amp; DISEASE OUTPUTS</text>
+
+          <!-- ====== PANEL A NODES ====== -->
+          <!-- Node A1: ZHX1 Transcription Factor -->
+          <rect x="35" y="50" width="190" height="44" rx="7" fill="#1a3a5c" stroke="none"/>
+          <text x="130" y="68" text-anchor="middle" font-size="11" fill="white" font-weight="700">ZHX1</text>
+          <text x="130" y="83" text-anchor="middle" font-size="9.5" fill="#b8d4ee">Transcription Factor</text>
+
+          <!-- A1 → A2 arrow -->
+          <line x1="130" y1="94" x2="130" y2="116" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arrowBlue)"/>
+
+          <!-- Node A2: MRPS15/MRPS21 Transcription -->
+          <rect x="35" y="116" width="190" height="44" rx="7" fill="#2e6da4" stroke="none"/>
+          <text x="130" y="134" text-anchor="middle" font-size="11" fill="white" font-weight="700">MRPS15 / MRPS21</text>
+          <text x="130" y="149" text-anchor="middle" font-size="9" fill="#d0e8fb">Transcription ↑</text>
+
+          <!-- A2 → A3 arrow -->
+          <line x1="130" y1="160" x2="130" y2="182" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arrowBlue)"/>
+
+          <!-- Node A3: Mitochondrial Ribosome Assembly -->
+          <rect x="35" y="182" width="190" height="44" rx="7" fill="#4a8ec2" stroke="none"/>
+          <text x="130" y="200" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Mito. Ribosome</text>
+          <text x="130" y="215" text-anchor="middle" font-size="9" fill="#ddeefa">Assembly</text>
+
+          <!-- A3 → Panel B (MRPS15 core) arrow — horizontal, going into panel B -->
+          <line x1="225" y1="204" x2="268" y2="204" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arrowBlue)"/>
+
+          <!-- ====== PANEL B NODES ====== -->
+          <!-- Node B1: MRPS15 Core Hub -->
+          <rect x="284" y="182" width="148" height="44" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="2"/>
+          <text x="358" y="200" text-anchor="middle" font-size="11" fill="white" font-weight="700">MRPS15 Hub</text>
+          <text x="358" y="215" text-anchor="middle" font-size="9" fill="#b8d4ee">Core Component</text>
+
+          <!-- B1 branches downward to B2 (OXPHOS branch) and B3 (Translation branch) -->
+          <!-- B1 → B2 arrow (left branch) -->
+          <line x1="320" y1="226" x2="308" y2="268" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arrowBlue)"/>
+
+          <!-- B1 → B3 arrow (right branch) -->
+          <line x1="396" y1="226" x2="408" y2="268" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arrowBlue)"/>
+
+          <!-- Node B2: OXPHOS / Respiration -->
+          <rect x="271" y="268" width="120" height="44" rx="7" fill="#2e6da4" stroke="none"/>
+          <text x="331" y="286" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">OXPHOS</text>
+          <text x="331" y="301" text-anchor="middle" font-size="9" fill="#d0e8fb">Respiration</text>
+
+          <!-- Node B3: Mito. Translation -->
+          <rect x="399" y="268" width="130" height="44" rx="7" fill="#2e6da4" stroke="none"/>
+          <text x="464" y="286" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Mito. Translation</text>
+          <text x="464" y="301" text-anchor="middle" font-size="9" fill="#d0e8fb">Protein Synthesis</text>
+
+          <!-- B2 → B4 (converge) -->
+          <line x1="331" y1="312" x2="358" y2="366" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arrowBlue)"/>
+
+          <!-- B3 → B4 (converge) -->
+          <line x1="464" y1="312" x2="430" y2="366" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arrowBlue)"/>
+
+          <!-- Node B4: Mitochondrial Membrane Potential -->
+          <rect x="284" y="366" width="184" height="44" rx="7" fill="#1a3a5c" stroke="none"/>
+          <text x="376" y="384" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Membrane Potential</text>
+          <text x="376" y="399" text-anchor="middle" font-size="9" fill="#b8d4ee">&amp; Energy Output</text>
+
+          <!-- B4 → Panel C connector (horizontal) -->
+          <line x1="468" y1="388" x2="568" y2="388" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arrowTeal)"/>
+
+          <!-- ====== PANEL C NODES ====== -->
+          <!-- Two branches from Panel C entry -->
+
+          <!-- Node C1 (top branch): ROS / Antioxidant -->
+          <rect x="584" y="55" width="150" height="44" rx="7" fill="#0f766e" stroke="none"/>
+          <text x="659" y="73" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">ROS &amp; Oxidative</text>
+          <text x="659" y="88" text-anchor="middle" font-size="9" fill="#ccfbf1">Stress Control</text>
+
+          <!-- C1 → C2 -->
+          <line x1="659" y1="99" x2="659" y2="140" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- Node C2: Glutaredoxin-2 / Antioxidant Defenses -->
+          <rect x="584" y="140" width="150" height="44" rx="7" fill="#14b8a6" stroke="none"/>
+          <text x="659" y="158" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Glutaredoxin-2</text>
+          <text x="659" y="173" text-anchor="middle" font-size="9" fill="#ccfbf1">Antioxidant Defense</text>
+
+          <!-- Node C3 (second branch, middle): ER Stress / UPR -->
+          <rect x="584" y="240" width="150" height="44" rx="7" fill="#0f766e" stroke="none"/>
+          <text x="659" y="258" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">ER Stress / UPR</text>
+          <text x="659" y="273" text-anchor="middle" font-size="9" fill="#ccfbf1">IRES Translation</text>
+
+          <!-- C3 → C4 -->
+          <line x1="659" y1="284" x2="659" y2="326" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- Node C4: Cytosolic Ribosome / Stress mRNA -->
+          <rect x="584" y="326" width="150" height="44" rx="7" fill="#14b8a6" stroke="none"/>
+          <text x="659" y="344" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Cytosolic Polysomes</text>
+          <text x="659" y="359" text-anchor="middle" font-size="9" fill="#ccfbf1">Stress mRNA Select.</text>
+
+          <!-- Panel C right column — Safety / Cancer -->
+          <!-- Node C5: Cancer Risk -->
+          <rect x="764" y="55" width="164" height="44" rx="7" fill="#9b1c1c" stroke="none"/>
+          <text x="846" y="73" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">Cancer: OXPHOS</text>
+          <text x="846" y="88" text-anchor="middle" font-size="9" fill="#fecaca">Biogenesis / Growth</text>
+
+          <!-- Node C6: Translation Rebalancing -->
+          <rect x="764" y="240" width="164" height="44" rx="7" fill="#b45309" stroke="none"/>
+          <text x="846" y="258" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">LONP-1 Suppressor</text>
+          <text x="846" y="273" text-anchor="middle" font-size="9" fill="#fef3c7">Translation Rebalance</text>
+
+          <!-- Node C7: Shared Convergent Output — AD-relevant mitochondrial resilience -->
+          <rect x="660" y="420" width="248" height="46" rx="7" fill="#134e4a" stroke="#0f766e" stroke-width="2"/>
+          <text x="784" y="438" text-anchor="middle" font-size="11" fill="white" font-weight="700">AD-Relevant Mito.</text>
+          <text x="784" y="453" text-anchor="middle" font-size="9.5" fill="#99f6e4">Resilience &amp; Neuronal Survival</text>
+
+          <!-- Connectors from C2 and C4 down to C7 — routed via C7 edges -->
+          <!-- C2 → C7: go down from C2 bottom, then right to C7 -->
+          <polyline points="659,184 659,210 784,210 784,420" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- C4 → C7 straight -->
+          <line x1="659" y1="370" x2="784" y2="420" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- C6 → C7 -->
+          <line x1="846" y1="284" x2="846" y2="410" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arrowAmber)"/>
+          <line x1="846" y1="410" x2="908" y2="443" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+          <!-- C5 safety node — dashed arrow pointing right/down: note only — no path to C7 to avoid crossing -->
+          <!-- Small dashed line from C5 to a "safety note" position, routed clear of C7 -->
+          <!-- (no additional connector added to keep clean — C5 stands alone as a warning) -->
+
+          <!-- B4 → C3 connector: route through gutter -->
+          <!-- B4 exits right at y=388, panel C starts at x=568. C3 is at y=240-284. -->
+          <!-- We draw an elbow: from (568,388) up to (568,262) then right to C3 left edge (584,262) -->
+          <polyline points="568,388 557,388 557,262 584,262" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- B4 → C1 connector via gutter: from (568,388) up to y=77 then right -->
+          <polyline points="568,388 546,388 546,77 584,77" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+          <!-- B4 → C5 (safety) and C6 connectors via top of panel C -->
+          <!-- C5 right column at y=55-99: connect from top gutter line x=546 to right column -->
+          <polyline points="546,77 740,77 764,77" fill="none" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arrowRed)"/>
+
+          <!-- Panel B → C6 warning: from B4 bottom via gutter -->
+          <polyline points="546,388 546,262 557,262" fill="none" stroke="none"/>
+          <!-- C6 separately informed by B1 via a direct note — skip to avoid crossing -->
+
+          <!-- ARROWHEAD MARKERS -->
+          <defs>
+            <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arrowTeal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+            </marker>
+          </defs>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Regulation):</strong> ZHX1 drives MRPS15/MRPS21 transcription, enabling mitochondrial ribosome assembly. 
+        <strong>Panel B (Core Mitochondrial Function):</strong> The MRPS15 hub branches into parallel OXPHOS and mitochondrial translation sub-cascades, converging on membrane potential and energy output. 
+        <strong>Panel C (Stress-Adaptive &amp; Disease Outputs):</strong> Left column traces the antioxidant/ROS branch (Glutaredoxin-2) and the ER stress/UPR–IRES translation branch, both converging on AD-relevant mitochondrial resilience. Right column flags cancer-associated safety risk (red, dashed) and the LONP-1 suppressor / translation-rebalancing finding (amber, dashed).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Mitochondrial Translation &amp; Respiratory Function</h3>
+        <p>In cardiac stress models, reduced Mrps15/Mrps21 impaired mitochondrial translation, depolarized membrane potential, reduced respiration, increased mitochondrial ROS, disrupted nuclear-encoded protein import, and weakened antioxidant defenses linked to Glutaredoxin-2. These defects closely mirror the mitochondrial lesions observed in Alzheimer's-vulnerable neurons.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>ZHX1–MRPS15/MRPS21 Regulatory Axis</h3>
+        <p>ZHX1 promotes Mrps15/Mrps21 transcription; its activation or overexpression protected against mitochondrial damage in hypertensive-heart-disease models. Silencing Mrps15/Mrps21 reduced this protection, suggesting MRPS15 mediates mitochondrial benefits downstream of ZHX1. This axis has not yet been studied in neurons or Alzheimer's models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Precision Modulation Required — Translation Balance</h3>
+        <p>In a LONP-1 deficiency model, suppressor mutations in mitochondrial ribosomal proteins including MRPS-15 restored mitochondrial function by apparently <em>slowing</em> translation and improving OXPHOS complex assembly. Excessive or poorly coordinated mitochondrial translation can be harmful; rebalancing — not simply boosting — translation may be the therapeutic goal.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Extra-Mitochondrial Role in Stress Translation</h3>
+        <p>In stressed human cardiomyocytes, MRPS15 appeared in cytosolic polysomes, increased during ER stress, interacted with cytosolic ribosomal proteins, and promoted IRES-dependent translation of UPR-related mRNAs. This is directly relevant to Alzheimer's disease, where ER stress, UPR signaling, and stress-selective translation contribute to neuronal dysfunction.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cancer Safety Concern</h3>
+        <p>MRPS15 is associated in several cancers with mitochondrial biogenesis, ribosome biogenesis, OXPHOS, metabolic reprogramming, and survival/growth phenotypes. Broad systemic stimulation of MRPS15-linked pathways could promote unwanted cell survival or proliferation, necessitating brain-targeted and physiologically normalizing therapeutic strategies.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Cross-Disease Signature &amp; Essentiality</h3>
+        <p>MRPS15 appears repeatedly in mitochondrial dysfunction signatures across diseases including non-obstructive azoospermia and collagen VI-related dystrophies, reinforcing its role as a hub of mitochondrial disease biology. Broader MRP studies indicate these proteins are widely expressed, essential, and generally nonredundant, ruling out complete inhibition as a therapeutic approach.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><b>Treat MRPS15 as a plausible research candidate, not a validated target.</b> Current evidence is entirely mechanistic and hypothesis-generating; no Alzheimer's patient data, amyloid-beta, or tau experiments exist for this gene.</li>
+      <li><b>Prioritize expression and localization studies in AD-relevant brain tissue.</b> Measure MRPS15 expression, localization, and activity in neurons, astrocytes, and microglia from human Alzheimer's brain regions before designing interventions.</li>
+      <li><b>Test context-specific responses to AD-associated stressors.</b> Determine whether MRPS15 levels or activity change in response to amyloid-beta, tau pathology, oxidative stress, ER stress, or mitochondrial proteotoxic stress in neuronal and glial models.</li>
+      <li><b>Evaluate functional endpoints comprehensively.</b> Assess whether modulating MRPS15 improves mitochondrial respiration, OXPHOS complex assembly, membrane potential, ROS control, protein import, synaptic resilience, and neuronal survival.</li>
+      <li><b>Avoid assuming upregulation is uniformly beneficial.</b> The LONP-1-related findings indicate that rebalancing or slowing mitochondrial translation may sometimes improve OXPHOS assembly and mitochondrial function more than straightforward upregulation.</li>
+      <li><b>Explore upstream transcriptional programs (e.g., ZHX1-like axes).</b> These represent a possible lever for restoring MRPS15-linked mitochondrial function, but must be validated in brain-relevant systems before being pursued therapeutically.</li>
+      <li><b>Investigate the cytosolic / UPR-translation role in stressed neurons.</b> MRPS15's extra-mitochondrial function in IRES-dependent translation is directly relevant to the ER stress and proteostasis disruption characterizing Alzheimer's disease.</li>
+      <li><b>Integrate safety evaluation from the outset.</b> Given MRPS15-linked biogenesis pathways' association with cancer survival phenotypes, any therapeutic strategy must be cell-type-specific, brain-targeted, and aimed at physiological normalization rather than broad systemic activation.</li>
+      <li><b>Frame the therapeutic concept around mitochondrial resilience, not amyloid or tau.</b> The most defensible rationale is enhancing mitochondrial resilience and stress adaptation in Alzheimer's-vulnerable cells, keeping the mechanism distinct from existing amyloid/tau-targeting paradigms.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — MRPS15 in Alzheimer's Disease Research</span>
+      <p>
+        MRPS15 is a <b>core, nonredundant mitochondrial ribosomal protein</b> whose functions in translation, OXPHOS, ROS control, protein import, and stress-adaptive cytosolic translation are mechanistically relevant to the mitochondrial failure that characterizes Alzheimer's disease. However, <b>no direct Alzheimer's evidence exists</b> in the supplied literature: all supporting data derive from cardiac, cancer, and model-organism contexts. The gene's promise lies in its position at the intersection of mitochondrial resilience pathways that are genuinely disrupted in neurodegeneration. Critically, <b>modulation strategy matters profoundly</b>: the LONP-1 suppressor data warn against naive upregulation, and cancer-association data mandate safety-first, brain-targeted approaches. The <b>ZHX1–MRPS15 axis and cytosolic UPR-translation role</b> offer two mechanistically distinct but complementary research directions. MRPS15 warrants structured investigation as a <b>mitochondrial resilience node in AD-vulnerable cells</b>, with priority given to brain-specific expression profiling, functional validation in neuronal stress models, and rigorous safety evaluation before any therapeutic development is contemplated.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MRPS15 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COL25A1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #ede8f7;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #f8fafc;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.68;
+    font-size: 0.97rem;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 24px;
+  }
+
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW TEXT */
+  .overview-text p { margin-bottom: 14px; font-size: 1rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 22px 18px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .cards-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 0.92rem;
+    border-left-width: 4px;
+    border-left-style: solid;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card.accent { background: var(--light); border-left-color: var(--mid); }
+  .card.accent h3 { color: var(--dark); }
+  .card.danger { background: var(--danger-light); border-left-color: var(--danger); }
+  .card.danger h3 { color: var(--danger); }
+  .card.positive { background: var(--positive-light); border-left-color: var(--positive); }
+  .card.positive h3 { color: var(--positive); }
+  .card.blue { background: var(--blue-light); border-left-color: var(--blue); }
+  .card.blue h3 { color: var(--blue); }
+  .card.neutral { background: var(--neutral-light); border-left-color: var(--neutral); }
+  .card.neutral h3 { color: var(--neutral); }
+  .card.warning { background: var(--warning-light); border-left-color: var(--warning); }
+  .card.warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list { list-style: none; counter-reset: takeaway; }
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .takeaways-list li strong { color: var(--dark); }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    border-radius: 14px;
+    padding: 36px 36px;
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .verdict .lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #a78bfa;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .verdict p strong { color: #f0abfc; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: COL25A1 &nbsp;|&nbsp; Collagen Type XXV Alpha 1 (CLAC-P)</span>
+    <span class="chip chip-danger">⚠ Therapeutic directionality unresolved</span>
+  </div>
+  <h1>COL25A1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> COL25A1/CLAC may exert both harmful and potentially protective effects depending on disease stage and mechanism. Whether to enhance or inhibit its activity remains unresolved — direct therapeutic modulation should not be pursued without first establishing causal directionality.
+    </div>
+    <div class="overview-text">
+      <p>COL25A1 encodes collagen type XXV alpha 1, also known as collagen XXV or CLAC-P — the precursor of CLAC (collagenous/collagen-like Alzheimer amyloid plaque component). In Alzheimer's disease, COL25A1 is most consistently linked to amyloid plaque biology. Its protein product is a neuronally expressed, membrane-associated collagen that can be cleaved to release an extracellular fragment deposited in senile plaques.</p>
+      <p>The evidence supports COL25A1 as more than a generic extracellular matrix contaminant. It is repeatedly detected in amyloid plaques, binds preferentially to aggregated or fibrillar Aβ, modifies amyloid fibril organization, and accumulates in AD-vulnerable brain regions such as hippocampus and occipital cortex. Proteomics, immunohistochemistry, transcriptomics, miRNA-network studies, genetic association data, and mouse models all converge on a role in AD-associated amyloid and matrisome remodeling.</p>
+      <p>As a therapeutic target, COL25A1 is plausible but not yet validated. It may influence plaque morphology, Aβ aggregation state, interstitial Aβ levels, BACE1 expression, synaptic injury, and glial activation. However, resolving whether its net effect is pathogenic, protective, or compensatory is a prerequisite for any rational intervention strategy.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — COL25A1/CLAC Pathway</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="11">
+
+        <!-- PANEL A: Origin & Processing -->
+        <rect x="8" y="8" width="248" height="474" rx="12" fill="#ede8f7" fill-opacity="0.55" stroke="#6d3bbf" stroke-width="1.2"/>
+        <text x="132" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1.2">A · ORIGIN &amp; PROCESSING</text>
+
+        <!-- Node 1: COL25A1 Gene -->
+        <rect x="68" y="40" width="130" height="40" rx="7" fill="#fff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="133" y="55" text-anchor="middle" font-weight="700" fill="#3b1f6e">COL25A1 Gene</text>
+        <text x="133" y="70" text-anchor="middle" fill="#64748b">Neuronal expression</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="133" y1="80" x2="133" y2="104" stroke="#6d3bbf" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+
+        <!-- Node 2: CLAC-P (collagen XXV) -->
+        <rect x="60" y="106" width="146" height="40" rx="7" fill="#fff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="133" y="121" text-anchor="middle" font-weight="700" fill="#3b1f6e">CLAC-P / Collagen XXV</text>
+        <text x="133" y="136" text-anchor="middle" fill="#64748b">Membrane-associated</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="133" y1="146" x2="133" y2="170" stroke="#6d3bbf" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+
+        <!-- Node 3: Furin cleavage -->
+        <rect x="63" y="172" width="140" height="40" rx="7" fill="#fff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="133" y="187" text-anchor="middle" font-weight="700" fill="#3b1f6e">Furin-mediated</text>
+        <text x="133" y="202" text-anchor="middle" fill="#64748b">Proteolytic cleavage</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="133" y1="212" x2="133" y2="236" stroke="#6d3bbf" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+
+        <!-- Node 4: CLAC fragment -->
+        <rect x="63" y="238" width="140" height="40" rx="7" fill="#6d3bbf" stroke="#3b1f6e" stroke-width="1.5"/>
+        <text x="133" y="253" text-anchor="middle" font-weight="700" fill="#fff">CLAC Fragment</text>
+        <text x="133" y="268" text-anchor="middle" fill="#e2e8f0">Secreted / ECM-deposited</text>
+
+        <!-- Node 5: Genetic / Aging context -->
+        <rect x="45" y="370" width="178" height="40" rx="7" fill="#fff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="134" y="385" text-anchor="middle" font-weight="700" fill="#3b1f6e">SNP Associations (Swedish)</text>
+        <text x="134" y="400" text-anchor="middle" fill="#64748b">AD susceptibility risk</text>
+
+        <!-- Node 6: Aging / PTPσ signaling -->
+        <rect x="45" y="424" width="178" height="48" rx="7" fill="#fff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="134" y="441" text-anchor="middle" font-weight="700" fill="#3b1f6e">Axon guidance · PTPσ/δ</text>
+        <text x="134" y="456" text-anchor="middle" fill="#64748b">Aging / p38 MAPK /</text>
+        <text x="134" y="469" text-anchor="middle" fill="#64748b">YAP mechanotransduction</text>
+
+        <!-- PANEL B: Aβ Interaction -->
+        <rect x="268" y="8" width="216" height="320" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="376" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.2">B · Aβ INTERACTION &amp; FIBRIL EFFECTS</text>
+
+        <!-- Node 7: Fibrillar Aβ binding -->
+        <rect x="286" y="40" width="180" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="376" y="55" text-anchor="middle" font-weight="700" fill="#991b1b">Binds Fibrillar Aβ</text>
+        <text x="376" y="70" text-anchor="middle" fill="#64748b">Col. &amp; non-col. domains</text>
+
+        <!-- Arrow from panel A Node4 to Panel B Node7 — routed through gutter -->
+        <!-- Start: right edge of CLAC node (203, 258), go right to x=268 gutter, then up to y=60, then right to node -->
+        <polyline points="203,258 256,258 256,60 286,60" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+        <!-- Arrow B7 down to two branches -->
+        <line x1="376" y1="80" x2="376" y2="104" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+        <!-- Node 8: Fibril bundling -->
+        <rect x="278" y="106" width="88" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="322" y="121" text-anchor="middle" font-weight="700" fill="#991b1b">Fibril Bundling</text>
+        <text x="322" y="136" text-anchor="middle" fill="#64748b">↑ Sedimentable Aβ</text>
+
+        <!-- Node 9: Attenuate elongation -->
+        <rect x="376" y="106" width="96" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="424" y="121" text-anchor="middle" font-weight="700" fill="#991b1b">Attenuate</text>
+        <text x="424" y="136" text-anchor="middle" fill="#64748b">Fibril elongation</text>
+
+        <!-- Arrows from B7 to branch nodes -->
+        <line x1="340" y1="100" x2="322" y2="106" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arrowRed)"/>
+        <line x1="412" y1="100" x2="424" y2="106" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arrowRed)"/>
+
+        <!-- convergence arrows to Node10 -->
+        <!-- Node 10: Protease resistance -->
+        <rect x="296" y="194" width="160" height="40" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.5"/>
+        <text x="376" y="209" text-anchor="middle" font-weight="700" fill="#fff">Protease-Resistant</text>
+        <text x="376" y="224" text-anchor="middle" fill="#fecaca">Aggregates formed</text>
+
+        <line x1="322" y1="146" x2="322" y2="180" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="322" y1="180" x2="376" y2="180" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="424" y1="146" x2="424" y2="180" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="424" y1="180" x2="376" y2="180" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="376" y1="180" x2="376" y2="194" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arrowRed)"/>
+
+        <!-- Arrow B10 → Node 11 -->
+        <line x1="376" y1="234" x2="376" y2="258" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+        <!-- Node 11: Plaque deposition -->
+        <rect x="286" y="260" width="180" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="376" y="275" text-anchor="middle" font-weight="700" fill="#991b1b">Senile Plaque Deposition</text>
+        <text x="376" y="290" text-anchor="middle" fill="#64748b">Hippocampus · Occipital ctx</text>
+
+        <!-- PANEL C: Downstream Consequences -->
+        <rect x="496" y="8" width="396" height="474" rx="12" fill="#eff6ff" fill-opacity="0.5" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="694" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af" letter-spacing="1.2">C · DOWNSTREAM CONSEQUENCES &amp; CONTEXT</text>
+
+        <!-- Node 12: APP processing / BACE1 -->
+        <rect x="514" y="40" width="170" height="40" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5"/>
+        <text x="599" y="55" text-anchor="middle" font-weight="700" fill="#1e40af">↑ BACE1 &amp; p35/p25</text>
+        <text x="599" y="70" text-anchor="middle" fill="#64748b">Amyloidogenic processing</text>
+
+        <!-- Arrow from panel B node11 to panel C node12 — through gutter -->
+        <polyline points="466,280 484,280 484,60 514,60" fill="none" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- Arrow C12 down -->
+        <line x1="599" y1="80" x2="599" y2="104" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- Two branches from C12 -->
+        <!-- Node 13: Synaptic injury -->
+        <rect x="514" y="106" width="116" height="40" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5"/>
+        <text x="572" y="121" text-anchor="middle" font-weight="700" fill="#1e40af">↓ Synaptophysin</text>
+        <text x="572" y="136" text-anchor="middle" fill="#64748b">Synaptic injury</text>
+
+        <!-- Node 14: Glial activation -->
+        <rect x="644" y="106" width="130" height="40" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5"/>
+        <text x="709" y="121" text-anchor="middle" font-weight="700" fill="#1e40af">Astrocyte Activation</text>
+        <text x="709" y="136" text-anchor="middle" fill="#64748b">Glial responses</text>
+
+        <!-- Arrows to branches -->
+        <line x1="572" y1="100" x2="572" y2="106" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arrowBlue)"/>
+        <line x1="626" y1="100" x2="709" y2="106" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arrowBlue)"/>
+
+        <!-- Node 15: Plaque compaction (mouse model) -->
+        <rect x="514" y="200" width="170" height="48" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="599" y="218" text-anchor="middle" font-weight="700" fill="#0f766e">Plaque Compaction</text>
+        <text x="599" y="233" text-anchor="middle" fill="#0f766e">↓ Diffuse · ↑ Compact</text>
+        <text x="599" y="248" text-anchor="middle" fill="#64748b">↓ Interstitial Aβ (mouse)</text>
+
+        <line x1="572" y1="146" x2="572" y2="175" stroke="#1e40af" stroke-width="1.3"/>
+        <line x1="572" y1="175" x2="599" y2="175" stroke="#1e40af" stroke-width="1.3"/>
+        <line x1="709" y1="146" x2="709" y2="175" stroke="#1e40af" stroke-width="1.3"/>
+        <line x1="709" y1="175" x2="599" y2="175" stroke="#1e40af" stroke-width="1.3"/>
+        <line x1="599" y1="175" x2="599" y2="200" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arrowBlue)"/>
+
+        <!-- Node 16: Biomarker / Network context -->
+        <rect x="514" y="310" width="362" height="48" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5"/>
+        <text x="695" y="327" text-anchor="middle" font-weight="700" fill="#1e40af">Plaque Proteomics / miRNA-Network Hub</text>
+        <text x="695" y="343" text-anchor="middle" fill="#64748b">SMOC1, MDK, NTN1, OLFML3, HTRA1 co-enriched · Asymptomatic AD networks</text>
+
+        <line x1="599" y1="248" x2="599" y2="280" stroke="#0f766e" stroke-width="1.3"/>
+        <line x1="599" y1="280" x2="695" y2="280" stroke="#0f766e" stroke-width="1.3"/>
+        <line x1="695" y1="280" x2="695" y2="310" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arrowTeal)"/>
+
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#6d3bbf"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1e40af"/>
+          </marker>
+          <marker id="arrowTeal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+        </defs>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A (purple) — Origin &amp; Processing:</strong> COL25A1 is transcribed in neurons, producing the membrane-associated precursor CLAC-P, which undergoes furin-mediated cleavage to yield the secreted CLAC fragment deposited in the ECM. Genetic risk (Swedish SNPs) and broader aging biology (PTPσ/δ signaling, p38 MAPK, YAP mechanotransduction) provide contextual modulation. <strong>Panel B (red) — Aβ Interaction &amp; Fibril Effects:</strong> CLAC binds preferentially to fibrillar Aβ and branches into two parallel effects — fibril bundling (↑ sedimentable Aβ) and attenuation of elongation — converging on protease-resistant aggregates that are ultimately deposited as senile plaques in AD-vulnerable regions. <strong>Panel C (blue/teal) — Downstream Consequences &amp; Context:</strong> Overexpression of CLAC-P in mouse models upregulates BACE1/p35/p25, driving two parallel arms of injury (synaptic loss and astrocyte activation) that converge on plaque compaction, with reduced diffuse plaques and interstitial Aβ. COL25A1 also emerges as a hub in plaque proteomics and miRNA-network analyses alongside co-enriched matrisome proteins.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card accent">
+        <h3>Plaque Proteomics &amp; Matrisome Enrichment</h3>
+        <p>COL25A1 is among the most enriched plaque-associated proteins in early-onset AD and Down syndrome with AD, co-detected alongside SMOC1, MDK, NTN1, OLFML3, and HTRA1 — placing it firmly within a disease-relevant matrisome remodeling signature.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>BACE1 Induction &amp; Synaptic Injury</h3>
+        <p>Overexpression of CLAC-P in APP transgenic mice increased BACE1 and p35/p25, facilitated Aβ deposition, reduced synaptophysin, activated astrocytes, and produced behavioral abnormalities — indicating a potentially pathogenic gain-of-function dimension.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Plaque Compaction &amp; Aβ Sequestration</h3>
+        <p>In the same mouse models, CLAC-P overexpression reduced diffuse plaques, increased compact thioflavin S-positive core plaques, and lowered interstitial-fluid Aβ — consistent with a possible protective role in sequestering soluble Aβ into compact deposits.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Fibril Binding: Mechanism &amp; Structural Effects</h3>
+        <p>CLAC binds aggregated/fibrillar Aβ via charge-dependent interactions across collagenous and non-collagenous domains, promoting fibril bundling, increasing sedimentable Aβ, and rendering aggregates more resistant to proteolysis — directly altering plaque architecture.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Region-Specific &amp; Stage-Specific Deposition</h3>
+        <p>COL25A1 accumulates preferentially in hippocampus and occipital cortex, is sparse in striatum, and is absent in cerebellum — mirroring AD-vulnerable regions. Asymptomatic AD transcriptomic analyses further implicate COL25A1 in early-stage divergence and potential resilience mechanisms.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Genetic Association &amp; Network Context</h3>
+        <p>Swedish cohort studies link COL25A1 SNPs to AD risk. miRNA-network analyses identify it as a hub component in AD-altered regulatory networks. Its developmental roles in axon guidance (PTPσ/δ interactions) and broader aging biology (p38 MAPK, YAP mechanotransduction) extend its relevance beyond a simple structural ECM role.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Prioritize COL25A1 as a biomarker.</strong> Treat it as a strong candidate for amyloid-associated ECM/matrisome remodeling and plaque subtype characterization before investing in therapeutic modulation.</li>
+      <li><strong>Validate localization comprehensively.</strong> Characterize COL25A1 by cell type, plaque subtype, disease stage, and brain region in human AD tissue to establish the context-dependence of its deposition.</li>
+      <li><strong>Resolve causal directionality first.</strong> Determine whether COL25A1 activity is pathogenic, protective, or compensatory — this is a prerequisite for choosing any intervention direction.</li>
+      <li><strong>Run targeted mechanistic experiments.</strong> Test whether manipulating COL25A1 expression, CLAC cleavage, or CLAC–Aβ binding changes amyloid burden, plaque compaction, soluble/interstitial Aβ, tau pathology, glial activation, synaptic integrity, and cognition.</li>
+      <li><strong>Target specific intervention points — not broad inhibition.</strong> Investigate CLAC–Aβ binding interfaces, collagenous domain 1, non-collagenous domain 2, furin-mediated processing, and BACE1-induction motifs as discrete pharmacological handles.</li>
+      <li><strong>Account for the dual-edged biology.</strong> Increasing CLAC might sequester diffuse Aβ into compact plaques but could also stabilize protease-resistant aggregates. Inhibiting COL25A1 might reduce BACE1 induction and fibril bundling, but could also remove a potential brake on fibril elongation.</li>
+      <li><strong>Leverage asymptomatic and resilience cohorts.</strong> Use cognitively normal amyloid-positive individuals vs. symptomatic AD cohorts to clarify whether COL25A1 expression distinguishes tolerated from harmful amyloid pathology.</li>
+      <li><strong>Embed COL25A1 in broader AD discovery frameworks.</strong> Integrate findings with ECM remodeling, amyloid plaque maturation, neuronal–ECM signaling, APP processing, glial responses, and aging biology rather than treating it as an isolated target.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — COL25A1 in Alzheimer's Disease</div>
+      <p>COL25A1 is <strong>more mature as a plaque-associated biomarker and mechanistic hypothesis than as a ready therapeutic target</strong>. The convergence of proteomics, immunohistochemistry, transcriptomics, genetic association, and mouse model data establishes it as a <strong>genuine, non-redundant component of the AD amyloid plaque microenvironment</strong> with region- and pathology-specific deposition. Its ability to bind fibrillar Aβ, alter fibril architecture, and influence interstitial Aβ levels makes it mechanistically compelling. However, <strong>the same protein appears capable of both accelerating pathology (via BACE1 induction, fibril bundling, protease-resistant aggregates) and limiting it (via plaque compaction and Aβ sequestration)</strong>. Until this therapeutic ambiguity is resolved through rigorous causal studies in human-relevant models, COL25A1 should be developed as a <strong>plaque biology biomarker, a mechanistic node within matrisome remodeling networks, and a platform for identifying precise intervention points</strong> — not pursued as a target for broad inhibition or activation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  COL25A1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

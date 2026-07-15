@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GALNT2 — AD-Relevant Biology Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #e2e8f0;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e0eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.30);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--danger);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    color: #7f1d1d;
+    line-height: 1.65;
+  }
+
+  /* PROSE */
+  .prose p {
+    margin-bottom: 1.1em;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-top: 10px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.65rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent    { background: var(--light);          border-color: var(--mid);     }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger    { background: var(--danger-light);   border-color: var(--danger);  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive  { background: var(--positive-light); border-color: var(--positive);}
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning   { background: var(--warning-light);  border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral   { background: var(--neutral-light);  border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue      { background: #eff6ff;               border-color: #3b82f6;        }
+  .card-blue h3   { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+    line-height: 1.7;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+
+  .verdict p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 18px 24px;
+    margin-top: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GALNT2 &nbsp;|&nbsp; Polypeptide N-Acetylgalactosaminyltransferase 2</span>
+    <span class="chip chip-danger">⚠ Safety concern: LOF &amp; overexpression pathology</span>
+  </div>
+  <h1>GALNT2 &amp; Alzheimer's Disease–Relevant Biology</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety &amp; Validity Caveat</span>
+      <p>No supplied study directly establishes GALNT2 as an Alzheimer's disease gene, biomarker, mechanism, or therapeutic target. Loss-of-function causes multisystem congenital glycosylation disease; pancreatic overexpression models produce fibrosis, inflammation, and lethality. Broad systemic modulation carries significant risk.</p>
+    </div>
+
+    <div class="prose">
+      <p>GALNT2 encodes GalNAc-T2, a Golgi enzyme that initiates mucin-type O-linked glycosylation by transferring N-acetylgalactosamine onto serine/threonine residues of target proteins. The supplied literature connects GALNT2 to protein glycosylation, lipid and glucose metabolism, apolipoprotein modification, vascular inflammation, immune regulation, insulin signaling, proteolytic processing, and nervous-system development.</p>
+      <p>The supplied text contains no direct evidence that GALNT2 alters amyloid-β, tau, APP processing, synaptic loss, microglial activation, AD clinical risk, cognition, or AD animal-model outcomes. Its AD relevance is therefore indirect and hypothesis-generating. The strongest rationale rests on GALNT2 modifying biological systems already implicated in AD risk: APOE/lipoprotein biology, HDL/triglyceride metabolism, insulin resistance, vascular injury, and inflammatory signaling — with the GALNT2→apoE/LOX-1 mechanism being the most AD-adjacent finding.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanism Overview</h2>
+    <div class="figure-wrap">
+      <!-- 
+        PANELS:
+        A (left):  Upstream context & O-glycosylation enzyme function  (nodes 1-4)
+        B (mid):   Branching metabolic outputs — Lipid branch + Insulin branch  (nodes 5-11)
+        C (right): AD-adjacent &amp; CNS outputs  (nodes 12-15)
+        Total planned nodes: 15 ≤ 16 ✓
+      -->
+      <svg viewBox="0 0 940 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GALNT2 mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-t" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ======= PANEL A: Enzyme & Substrate ======= -->
+        <rect x="12" y="12" width="220" height="456" rx="12" ry="12"
+              fill="rgba(26,58,92,0.06)" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="122" y="34" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A · ENZYME FUNCTION</text>
+
+        <!-- Node 1: LPC/HIF-1α -->
+        <rect x="36" y="50" width="172" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="122" y="68" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f" font-weight="700">LPC / HIF-1α</text>
+        <text x="122" y="82" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">Upstream inducer</text>
+
+        <!-- arrow 1→2 -->
+        <line x1="122" y1="94" x2="122" y2="115" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: GALNT2 (central enzyme) -->
+        <rect x="36" y="116" width="172" height="48" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="122" y="136" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#ffffff" font-weight="700">GALNT2</text>
+        <text x="122" y="152" text-anchor="middle" font-family="Arial" font-size="9" fill="#93c5fd">GalNAc-T2 (Golgi enzyme)</text>
+
+        <!-- arrow 2→3 -->
+        <line x1="122" y1="164" x2="122" y2="185" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: O-GalNAc glycosylation -->
+        <rect x="36" y="186" width="172" height="48" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+        <text x="122" y="206" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="700">O-GalNAc Glycosylation</text>
+        <text x="122" y="220" text-anchor="middle" font-family="Arial" font-size="9" fill="#1d4ed8">Ser/Thr on substrates</text>
+
+        <!-- arrow 3→4 -->
+        <line x1="122" y1="234" x2="122" y2="255" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Substrate set -->
+        <rect x="36" y="256" width="172" height="56" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="122" y="276" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="700">Key Substrates</text>
+        <text x="122" y="290" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">apoE · apoC-III · ANGPTL3</text>
+        <text x="122" y="303" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">IGF1R · EGFR · PLTP</text>
+
+        <!-- ======= PANEL B: Metabolic Branches ======= -->
+        <rect x="246" y="12" width="430" height="456" rx="12" ry="12"
+              fill="rgba(46,109,164,0.05)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="461" y="34" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">B · METABOLIC OUTPUTS (BRANCHING)</text>
+
+        <!-- Branch header: central output node -->
+        <!-- Node 5: Glycoprotein remodelling -->
+        <rect x="340" y="50" width="180" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="430" y="68" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f" font-weight="700">Glycoprotein Remodelling</text>
+        <text x="430" y="82" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">stability · secretion · cleavage</text>
+
+        <!-- arrow from Panel A node4 to Panel B node5, routed through gutter -->
+        <path d="M208 284 Q232 284 232 72 Q232 72 340 72"
+              fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Arrow node5 branches left (Lipid) -->
+        <line x1="340" y1="72" x2="304" y2="72" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="304" y1="72" x2="304" y2="142" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Arrow node5 branches right (Insulin) -->
+        <line x1="520" y1="72" x2="558" y2="72" stroke="#9b1c1c" stroke-width="1.3"/>
+        <line x1="558" y1="72" x2="558" y2="142" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+        <!-- ---- LIPID BRANCH (left column, cx~304) ---- -->
+        <!-- Node 6: ApoE/VLDL-LDL sialylation -->
+        <rect x="258" y="142" width="168" height="48" rx="7" fill="#e8f1f9" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="342" y="162" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="700">apoE Sialylation</text>
+        <text x="342" y="176" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">VLDL/LDL → electronegative</text>
+
+        <!-- arrow node6→7 -->
+        <line x1="342" y1="190" x2="342" y2="212" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 7: LOX-1 uptake -->
+        <rect x="258" y="212" width="168" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.3"/>
+        <text x="342" y="230" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e" font-weight="700">LOX-1 Uptake ↑</text>
+        <text x="342" y="244" text-anchor="middle" font-family="Arial" font-size="9" fill="#92400e">LDLR uptake ↓</text>
+
+        <!-- arrow node7→8 -->
+        <line x1="342" y1="256" x2="342" y2="278" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 8: HDL/TG traits -->
+        <rect x="258" y="278" width="168" height="48" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="342" y="298" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e" font-weight="700">HDL-C · TG · apoC-III</text>
+        <text x="342" y="312" text-anchor="middle" font-family="Arial" font-size="9" fill="#92400e">ANGPTL3 · PLTP traits</text>
+
+        <!-- ---- INSULIN BRANCH (right column, cx~560) ---- -->
+        <!-- Node 9: Insulin receptor glycosylation -->
+        <rect x="474" y="142" width="168" height="48" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="558" y="162" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d" font-weight="700">Insulin-R Glycosylation</text>
+        <text x="558" y="176" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">ENPP1 regulation</text>
+
+        <!-- arrow node9→10 -->
+        <line x1="558" y1="190" x2="558" y2="212" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 10: IR–IRS1–Akt signaling -->
+        <rect x="474" y="212" width="168" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="558" y="230" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d" font-weight="700">IR–IRS1–Akt Signaling</text>
+        <text x="558" y="244" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">HbA1c · HOMA-IR</text>
+
+        <!-- arrow node10→11 -->
+        <line x1="558" y1="256" x2="558" y2="278" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 11: T2D / cardiometabolic risk -->
+        <rect x="474" y="278" width="168" height="48" rx="7" fill="#fff0f0" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="558" y="298" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d" font-weight="700">T2D &amp; Cardiometabolic</text>
+        <text x="558" y="312" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">risk · insulin resistance</text>
+
+        <!-- Converge arrows from node8 and node11 down toward shared outcome in panel B -->
+        <line x1="342" y1="326" x2="342" y2="360" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr-g)"/>
+        <line x1="558" y1="326" x2="558" y2="360" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+        <!-- Node 12: Vascular / inflammatory injury (convergence) -->
+        <rect x="340" y="360" width="180" height="46" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.3"/>
+        <text x="430" y="378" text-anchor="middle" font-family="Arial" font-size="10" fill="#334155" font-weight="700">Vascular &amp; Inflammatory</text>
+        <text x="430" y="392" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Injury · TNF-α/ADAM17</text>
+
+        <!-- horizontal connector lines into node 12 -->
+        <line x1="342" y1="360" x2="340" y2="360" stroke="#64748b" stroke-width="1" />
+        <line x1="558" y1="360" x2="520" y2="360" stroke="#64748b" stroke-width="1" />
+
+        <!-- ======= PANEL C: CNS / AD-Adjacent ======= -->
+        <rect x="690" y="12" width="238" height="456" rx="12" ry="12"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="809" y="34" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#0f766e" letter-spacing="0.1em">C · CNS / AD-ADJACENT</text>
+
+        <!-- Node 13: Neural development -->
+        <rect x="706" y="50" width="206" height="48" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="809" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a" font-weight="700">Neural Development</text>
+        <text x="809" y="84" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">axon guidance · commissures</text>
+
+        <!-- arrow 13→14 -->
+        <line x1="809" y1="98" x2="809" y2="120" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-t)"/>
+
+        <!-- Node 14: LOF disease -->
+        <rect x="706" y="120" width="206" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="809" y="140" text-anchor="middle" font-family="Arial" font-size="10" fill="#7f1d1d" font-weight="700">LOF: CDG Syndrome</text>
+        <text x="809" y="154" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Dev. delay · epilepsy</text>
+        <text x="809" y="167" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">white matter changes</text>
+
+        <!-- arrow 14→15 -->
+        <line x1="809" y1="172" x2="809" y2="200" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-t)"/>
+
+        <!-- Node 15: AD-hypothesis zone -->
+        <rect x="706" y="200" width="206" height="72" rx="7" fill="#e8f1f9" stroke="#1a3a5c" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="809" y="224" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="700">AD-Hypothesis Zone</text>
+        <text x="809" y="240" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">apoE glycosylation · lipid</text>
+        <text x="809" y="254" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">transport · insulin signaling</text>
+        <text x="809" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">vascular · neuroinflammation</text>
+
+        <!-- connector: Panel B node12 → Panel C node15, routed through gutter -->
+        <path d="M520 383 Q606 383 606 236 Q606 236 706 236"
+              fill="none" stroke="#64748b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-g)"/>
+
+        <!-- LEGEND strip at bottom of figure -->
+        <rect x="12" y="434" width="390" height="24" rx="5" fill="rgba(255,255,255,0.6)"/>
+        <line x1="24" y1="446" x2="60" y2="446" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="66" y="450" font-family="Arial" font-size="8.5" fill="#334155">direct pathway</text>
+        <line x1="130" y1="446" x2="166" y2="446" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+        <text x="172" y="450" font-family="Arial" font-size="8.5" fill="#334155">risk/insulin axis</text>
+        <line x1="248" y1="446" x2="284" y2="446" stroke="#64748b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-g)"/>
+        <text x="290" y="450" font-family="Arial" font-size="8.5" fill="#334155">hypothetical / indirect</text>
+
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (blue, left)</strong> — GALNT2 enzyme context: LPC/HIF-1α upstream induction, GalNAc-T2 catalytic function, O-GalNAc glycosylation of Ser/Thr residues, and the key substrate repertoire (apoE, apoC-III, ANGPTL3, IGF1R, PLTP).
+        <strong>Panel B (center)</strong> — Branching metabolic outputs: the <em>lipid branch</em> (left) runs from apoE sialylation → electronegative VLDL/LDL → LOX-1 uptake → altered HDL-C/TG/apoC-III traits; the <em>insulin branch</em> (right) runs from insulin-receptor glycosylation/ENPP1 → IR–IRS1–Akt signaling → T2D/cardiometabolic risk. Both branches converge on a shared vascular/inflammatory injury node (TNF-α/ADAM17).
+        <strong>Panel C (teal, right)</strong> — CNS and AD-adjacent outputs: neural developmental role (axon guidance), loss-of-function CDG syndrome phenotypes, and the dashed AD-hypothesis zone summarising indirect links (apoE biology, lipid transport, insulin signaling, neuroinflammation) supported only by indirect/contextual evidence in the supplied text.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>O-Glycosylation Enzyme — Not a Validated AD Target</h3>
+        <p>GALNT2 initiates mucin-type O-glycosylation and can alter glycoprotein stability, receptor engagement, proteolytic cleavage, secretion, and signaling. The supplied literature contains no direct evidence of GALNT2 effects on amyloid-β, tau, synaptic degeneration, or AD cohorts.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>apoE/Lipoprotein Mechanism: Most AD-Adjacent Link</h3>
+        <p>A hepatic/vascular LPC–HIF-1α pathway induces GALNT2 and ST3GAL1, promoting apoE O-glycosylation/sialylation on electronegative VLDL/LDL. This redirects uptake from LDLR toward LOX-1, supporting vascular injury. Because APOE is central to late-onset AD risk, this mechanism is plausible but remains brain- and AD-unvalidated.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Lipid &amp; Cardiometabolic Traits</h3>
+        <p>GALNT2 variants and expression changes are associated with HDL-C, triglycerides, apoC-III glycosylation, ANGPTL3 processing, PLTP, ApoC1, and postprandial triglyceride clearance. These pathways may influence AD indirectly through vascular disease, APOE-related lipid transport, and cardiometabolic risk.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Insulin Resistance &amp; Glucose Metabolism</h3>
+        <p>Evidence links GALNT2 to insulin receptor glycosylation, ENPP1 regulation, IR–IRS1–Akt signaling, HbA1c, HOMA-IR, type 2 diabetes traits, hyperglycemia responses, and hypothalamic glucose-sensing circuits — all relevant to AD vulnerability, but neural AD-specific effects are untested.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>CNS Relevance Outside Neurodegeneration</h3>
+        <p>GALNT2 loss-of-function causes congenital glycosylation disease with developmental delay, intellectual disability, epilepsy, and white matter changes. GALNT2 also affects commissural axon guidance in organoid/assembloid models and marks hypothalamic glucose-inhibited neurons — CNS relevance without AD causality.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Major Systemic Concern</h3>
+        <p>Loss-of-function causes multisystem congenital glycosylation disease. Overexpression in animal pancreas models produces severe fibrosis, inflammation, exocrine insufficiency, malnutrition, and lethality. GALNT2 supports malignant phenotypes in several cancers and glioblastoma stem-cell models. Therapeutic direction is deeply uncertain and context-dependent.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat GALNT2 as an AD hypothesis, not a validated target.</strong> Current evidence supports GALNT2 as a modifier of metabolic, vascular, inflammatory, and glycosylation pathways that overlap with AD biology — not as a direct causal or therapeutic mechanism.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize the apoE/lipoprotein axis for AD-focused validation.</strong> Test whether GALNT2 alters apoE glycosylation/sialylation in brain-relevant systems, whether effects differ by APOE genotype, and whether apoE receptor interactions, lipidation, aggregation, clearance, or inflammatory signaling are changed.</div>
+      </li>
+      <li>
+        <div><strong>Map GALNT2 substrates in AD-relevant cells.</strong> Use glycoproteomics in neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, choroid plexus, and brain organoid/AD model systems to identify whether GALNT2 modifies APP, APOE, TREM2, ADAM substrates, complement proteins, insulin/IGF receptors, or blood–brain barrier proteins.</div>
+      </li>
+      <li>
+        <div><strong>Assess GALNT2 expression in AD datasets.</strong> Examine GALNT2 mRNA, protein, methylation, and single-cell expression in AD brain regions, CSF/plasma datasets, peripheral immune cells, and cohorts stratified by APOE genotype, diabetes, obesity, dyslipidemia, and vascular disease.</div>
+      </li>
+      <li>
+        <div><strong>Test disease mechanisms directly.</strong> Determine whether GALNT2 modulation affects amyloid-β generation/clearance, tau phosphorylation/aggregation, synaptic markers, neuronal survival, microglial activation, astrocyte reactivity, TNF-α/ADAM17 shedding, insulin signaling, and blood–brain barrier integrity in AD cellular and animal models.</div>
+      </li>
+      <li>
+        <div><strong>Avoid assuming global inhibition or activation will be beneficial.</strong> GALNT2 has substrate-, tissue-, and context-dependent effects. Any AD therapeutic strategy would likely require tissue-specific or substrate-specific modulation rather than nonspecific systemic GALNT2 targeting.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate metabolic safety alongside AD efficacy.</strong> Any GALNT2-directed approach should monitor HDL-C, triglycerides, apoC-III, apoE glycoforms, insulin sensitivity, glucose control, vascular inflammation, liver function, pancreatic toxicity, immune effects, and cancer/proliferation risk.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — Synthesis</span>
+      <p>
+        <strong>GALNT2 is a biologically credible upstream modifier</strong> at the intersection of O-glycosylation, apoE/lipoprotein metabolism, insulin resistance, vascular injury, inflammation, and neural development. The supplied evidence is consistent with GALNT2 influencing multiple biological axes already implicated in Alzheimer's disease risk — most compellingly through <strong>apoE sialylation and lipoprotein receptor biology</strong> — but it does not establish GALNT2 as a direct AD gene, biomarker, or therapeutic target. <strong>No supplied study demonstrates GALNT2 effects on amyloid-β, tau, synaptic integrity, or AD clinical outcomes.</strong> Significant safety concerns — including multisystem loss-of-function disease and severe pancreatic pathology from overexpression — further underscore that GALNT2 is not ready for therapeutic targeting without substantial further AD-specific, brain-relevant, and mechanistically directed investigation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GALNT2 / Alzheimer's Disease Biology TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

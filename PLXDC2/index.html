@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLXDC2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-comp: #1e4d8c;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: white;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #e2eaf3;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.32);
+    border: 1px solid rgba(255,120,120,0.38);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 20px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-color: var(--blue-comp); }
+  .card-blue h3 { color: var(--blue-comp); }
+  .card-slate { background: var(--neutral-bg); border-color: #64748b; }
+  .card-slate h3 { color: #334155; }
+  /* TAKEAWAYS */
+  .takeaway-list { list-style: none; counter-reset: takeaway; }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 12px 0 12px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+  .takeaway-list li:last-child { border-bottom: none; }
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .takeaway-list li strong { color: var(--dark); }
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    margin-bottom: 56px;
+    line-height: 1.8;
+  }
+  .verdict .lead { font-size: 1.05rem; }
+  .verdict strong { color: #7dd3fc; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.77rem;
+    color: #94a3b8;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+  p { margin-bottom: 1em; }
+  p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PLXDC2 &nbsp;|&nbsp; Plexin Domain Containing Protein 2</span>
+    <span class="chip chip-danger">⚠ Pleiotropic Safety Concern</span>
+  </div>
+  <h1>PLXDC2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety / Pleiotropic Caveat:</strong> PLXDC2 is pleiotropic and linked in non-AD literature to immune regulation, vascular remodeling, angiogenesis, proliferation, cancer invasion, viral entry, reproduction, and developmental processes. Context-dependent therapeutic modulation — rather than simple global activation or inhibition — is strongly indicated before any direct drug development is pursued.
+    </div>
+
+    <p>PLXDC2 sits at the intersection of microglial biology, immune regulation, lipid/phagocytic states, BACE1 substrate biology, and biomarker development in Alzheimer's disease. The strongest direct AD-linked evidence places PLXDC2 as upregulated in AD brain and cerebrospinal fluid, enriched in AD-associated microglial subclusters, and functionally capable of altering amyloid-β uptake and inflammatory cytokine output in microglial cells.</p>
+
+    <p>As a transmembrane and cell-surface protein, PLXDC2 holds potential therapeutic tractability. It is also reported as a BACE1 substrate in CSF proteomics, linking it to amyloidogenic APP-processing biology and suggesting value as a pharmacodynamic marker for BACE1 inhibitor engagement. Beyond AD-specific studies, PLXDC2 is associated with macrophage-like cell states, lipid metabolism, NF-κB signaling, PPARγ activation, PEDF receptor biology, vascular remodeling, angiogenesis, extracellular-domain shedding, and neural development — all relevant but requiring direct AD validation.</p>
+
+    <p>Therapeutically, PLXDC2 is promising but not straightforward. AD-focused evidence suggests elevated PLXDC2 may impair microglial amyloid-β uptake, potentially favoring inhibition or normalization. However, non-AD neuroinflammatory evidence — especially from ischemic stroke — suggests PLXDC2 can preserve microglial homeostasis and restrain inflammatory injury, implying that context-dependent, disease-stage-specific modulation is required.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Context -->
+        <rect x="12" y="12" width="270" height="466" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="147" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="bold" fill="#1a3a5c" letter-spacing="1.5">UPSTREAM CONTEXT</text>
+
+        <!-- Node A1: AD Brain / CSF Upregulation -->
+        <rect x="32" y="44" width="230" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="147" y="61" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">AD Brain &amp; CSF</text>
+        <text x="147" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Upregulation</text>
+
+        <!-- Node A2: snRNA-seq Microglial Enrichment -->
+        <rect x="32" y="107" width="230" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="147" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">snRNA-seq Microglial</text>
+        <text x="147" y="139" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Subclusters (AD)</text>
+
+        <!-- Node A3: ML Biomarker Signature -->
+        <rect x="32" y="170" width="230" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="147" y="187" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">ML Biomarker Signature</text>
+        <text x="147" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">AUC 0.895–0.933</text>
+
+        <!-- Node A4: BACE1 Substrate (CSF Proteomics) -->
+        <rect x="32" y="233" width="230" height="42" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="147" y="250" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">BACE1 Substrate</text>
+        <text x="147" y="265" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">CSF Proteomics</text>
+
+        <!-- Node A5: Peripheral Blood Detection -->
+        <rect x="32" y="296" width="230" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="147" y="313" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Peripheral Blood</text>
+        <text x="147" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Non-invasive Biomarker</text>
+
+        <!-- Node A6: Transmembrane / Cell-Surface -->
+        <rect x="32" y="359" width="230" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="147" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Transmembrane /</text>
+        <text x="147" y="391" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Cell-Surface Receptor</text>
+
+        <!-- Panel A arrows -->
+        <line x1="147" y1="86" x2="147" y2="107" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="147" y1="149" x2="147" y2="170" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="147" y1="212" x2="147" y2="233" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="147" y1="275" x2="147" y2="296" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="147" y1="338" x2="147" y2="359" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: Microglial Mechanism (branching) -->
+        <rect x="302" y="12" width="310" height="466" rx="12" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="457" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="bold" fill="#0f4e49" letter-spacing="1.5">MICROGLIAL MECHANISM</text>
+
+        <!-- Node B1: PLXDC2 on Microglia (shared entry) -->
+        <rect x="347" y="44" width="218" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="456" y="61" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" font-weight="bold" fill="#0f4e49">PLXDC2</text>
+        <text x="456" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#0f4e49">Microglial Expression</text>
+
+        <!-- Branch left: Amyloid-β uptake -->
+        <rect x="320" y="130" width="130" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="385" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Aβ Uptake</text>
+        <text x="385" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#9b1c1c">Impaired ↓</text>
+
+        <!-- Branch right: Cytokine output -->
+        <rect x="464" y="130" width="130" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="529" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">IL-6 / IL-1β</text>
+        <text x="529" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#b45309">Reduced ↓</text>
+
+        <!-- Branch left continues: Plaque Accumulation -->
+        <rect x="320" y="210" width="130" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="385" y="227" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Plaque</text>
+        <text x="385" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#9b1c1c">Accumulation Risk</text>
+
+        <!-- Branch right continues: Inflammation Damping -->
+        <rect x="464" y="210" width="130" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="529" y="227" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Damaging</text>
+        <text x="529" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#0f766e">Neuroinflamm. ↓</text>
+
+        <!-- Converge: Microglial State -->
+        <rect x="347" y="300" width="218" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="456" y="317" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Microglial State</text>
+        <text x="456" y="332" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#0f4e49">Recalibration</text>
+
+        <!-- NF-kB / PPARγ node -->
+        <rect x="347" y="375" width="218" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="456" y="392" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">NF-κB / PPARγ</text>
+        <text x="456" y="407" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Lipid Metabolism</text>
+
+        <!-- Panel B connectors -->
+        <!-- B1 -> branch left -->
+        <line x1="420" y1="86" x2="385" y2="130" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- B1 -> branch right -->
+        <line x1="492" y1="86" x2="529" y2="130" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <!-- branch left down -->
+        <line x1="385" y1="172" x2="385" y2="210" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- branch right down -->
+        <line x1="529" y1="172" x2="529" y2="210" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <!-- converge left -> B-converge -->
+        <line x1="385" y1="252" x2="420" y2="300" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- converge right -> B-converge -->
+        <line x1="529" y1="252" x2="492" y2="300" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- converge -> NF-kB -->
+        <line x1="456" y1="342" x2="456" y2="375" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL C: Broader Biology & Biomarker Output -->
+        <rect x="632" y="12" width="276" height="466" rx="12" fill="#fef9e8" fill-opacity="0.5" stroke="#b45309" stroke-width="1.3"/>
+        <text x="770" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="bold" fill="#7c3a0a" letter-spacing="1.5">BROADER BIOLOGY &amp; OUTPUTS</text>
+
+        <!-- Node C1: PEDF Receptor / Neurotrophic -->
+        <rect x="651" y="44" width="236" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="769" y="61" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">PEDF Receptor /</text>
+        <text x="769" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">ERK–Akt Signaling</text>
+
+        <!-- Node C2: JAK2-STAT1 Macrophage -->
+        <rect x="651" y="107" width="236" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="769" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">JAK2–STAT1</text>
+        <text x="769" y="139" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Macrophage Reprogramming</text>
+
+        <!-- Node C3: Vascular / Angiogenesis -->
+        <rect x="651" y="170" width="236" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="769" y="187" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Vascular Remodeling /</text>
+        <text x="769" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Angiogenesis</text>
+
+        <!-- Node C4: Neural Development -->
+        <rect x="651" y="233" width="236" height="42" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="769" y="250" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Neural Progenitor /</text>
+        <text x="769" y="265" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Axon Guidance</text>
+
+        <!-- Node C5: BACE1 PD Biomarker -->
+        <rect x="651" y="296" width="236" height="42" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.8"/>
+        <text x="769" y="313" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">BACE1 PD Biomarker</text>
+        <text x="769" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1a3a5c">Cleavage Fragments</text>
+
+        <!-- Node C6: Pleiotropic Safety -->
+        <rect x="651" y="359" width="236" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="769" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#9b1c1c">Pleiotropic Safety</text>
+        <text x="769" y="391" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#9b1c1c">Cancer / Viral / Repro.</text>
+
+        <!-- Panel C internal arrows -->
+        <line x1="769" y1="86" x2="769" y2="107" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="769" y1="149" x2="769" y2="170" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="769" y1="212" x2="769" y2="233" stroke="#1a3a5c" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="769" y1="275" x2="769" y2="296" stroke="#1a3a5c" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="769" y1="338" x2="769" y2="359" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connectors (routed through gutters) -->
+        <!-- A4 (BACE1) -> C5 (BACE1 PD) via top gutter (y=455, avoid all boxes) -->
+        <!-- Route: A4 right edge (262,254) -> horizontal to gutter between panels (~620) -> then right to C5 left edge (651,317) -->
+        <!-- Actually route via bottom gutter at y=446 -->
+        <polyline points="262,254 620,254 620,317 651,317" fill="none" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- B-NF-kB (panel B node at y=375-417) connects to C1 via panel gutter y ~396 -->
+        <!-- route B right edge (612,396) -> C1 is at y 44-86, too far; instead connect B-microglial-state to C2 JAK2 -->
+        <!-- B converge node (347-565, y300-342) right edge 565 -> gutter -> C2 left 651, y128 -->
+        <polyline points="565,321 620,321 620,128 651,128" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Context:</strong> PLXDC2 is detected across AD brain, CSF, and peripheral blood, enriched in AD-associated microglial subclusters by snRNA-seq, included in a machine-learning biomarker signature (SVM AUC 0.895; nomogram AUC 0.933), and identified as a BACE1 substrate in CSF proteomics. Its transmembrane/cell-surface topology underpins its therapeutic tractability.
+        <strong>Panel B — Microglial Mechanism (branching):</strong> Elevated PLXDC2 on microglia bifurcates into two opposing sub-cascades: a left branch (red) showing impaired amyloid-β uptake → increased plaque accumulation risk, and a right branch (amber/teal) showing reduced IL-6/IL-1β → dampened neuroinflammation. Both branches reconverge at the microglial state recalibration node, which feeds into NF-κB/PPARγ/lipid-metabolism regulation.
+        <strong>Panel C — Broader Biology &amp; Outputs:</strong> PLXDC2 additionally operates as a PEDF receptor linked to ERK–Akt signaling, drives JAK2–STAT1 macrophage reprogramming, influences vascular remodeling/angiogenesis, participates in neural progenitor/axon guidance biology, and — via the BACE1 substrate link (dashed cross-panel connector) — provides a pharmacodynamic biomarker readout of BACE1 inhibitor engagement. The final node flags pleiotropic safety concerns relevant to therapeutic development. Dashed connectors indicate cross-panel mechanistic links.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Multi-Omics Convergence</h3>
+        PLXDC2 is repeatedly detected across AD-relevant omics layers — AD brain transcriptomics, CSF proteomics, single-nucleus RNA-seq, and machine-learning biomarker models — providing convergent, multi-platform evidence of its AD relevance rather than a single-study finding.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Microglial Function: A Double-Edged Role</h3>
+        In BV2 microglial cells, PLXDC2 overexpression both impaired amyloid-β uptake (potentially worsening amyloid burden) and reduced IL-6/IL-1β output (potentially limiting damaging inflammation). This decoupling of phagocytosis from cytokine responses means PLXDC2 cannot be simply classified as pro- or anti-pathogenic.
+      </div>
+
+      <div class="card card-blue">
+        <h3>BACE1 Substrate &amp; Pharmacodynamic Biomarker</h3>
+        PLXDC2 is a BACE1 substrate identified in mouse CSF proteomics. Cleavage-derived PLXDC2 fragments could serve as pharmacodynamic markers for BACE1 inhibitor target engagement, complementing APP/Aβ measures by reporting on non-APP BACE1 substrate cleavage. This currently supports a biomarker rather than a direct therapeutic driver role.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Stroke Evidence: Homeostatic Protection</h3>
+        In ischemic stroke models, Plxdc2 helped maintain microglial homeostasis, limited inflammatory responses, regulated NF-κB p65 signaling, modulated lipid metabolism, and facilitated PPARγ activation. This contrasts with AD overexpression data and argues strongly for disease-stage-specific and cell-state-specific targeting strategies.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Broader Immunomodulatory Circuitry</h3>
+        Secreted PTEN binding to PLXDC2 on macrophages activated JAK2–STAT1 signaling and reprogrammed macrophage phenotype in cancer contexts. PLXDC2's PEDF receptor function connects it to neurotrophic ERK/Akt signaling. These mechanisms support the concept that PLXDC2 directs myeloid-cell state transitions, with potential microglial relevance in AD.
+      </div>
+
+      <div class="card card-slate">
+        <h3>Limitations &amp; Validation Gaps</h3>
+        A significant portion of PLXDC2 literature lacks direct AD evidence and does not involve amyloid-β, tau, APOE, AD clinical cohorts, AD animal models, or human AD brain validation. PLXDC2 should be treated as biologically plausible and increasingly supported, but not yet a fully validated therapeutic target.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <strong>Validate in independent AD cohorts:</strong> Prioritize multi-region brain, CSF, plasma, and peripheral blood validation with attention to disease stage, amyloid/tau status, cognitive status, and longitudinal progression.
+      </li>
+      <li>
+        <strong>Define cell-type expression profiles:</strong> Determine which brain cell types — microglial subtypes near plaques vs. homeostatic microglia, astrocytes, oligodendrocyte-lineage cells, endothelial cells, pericytes, and neurons — express PLXDC2 in human AD tissue.
+      </li>
+      <li>
+        <strong>Test functional modulation in AD-relevant systems:</strong> Assess whether PLXDC2 modulation changes amyloid-β uptake, plaque clearance, lysosomal function, lipid-droplet biology, cytokine release, inflammasome activity, and microglial survival in primary human microglia, iPSC-derived microglia, and AD mouse models.
+      </li>
+      <li>
+        <strong>Do not assume a single therapeutic direction:</strong> Current evidence does not support simple global inhibition or activation. PLXDC2 may both impair amyloid uptake when elevated and restrain damaging inflammation when appropriately expressed — requiring context-dependent, stage-specific modulation strategies.
+      </li>
+      <li>
+        <strong>Develop PLXDC2 as a BACE1 pharmacodynamic biomarker:</strong> Investigate CSF-accessible PLXDC2 cleavage fragments as monitors of non-APP BACE1 substrate effects and mechanism-based risks in BACE inhibitor clinical studies.
+      </li>
+      <li>
+        <strong>Characterize distinct molecular forms:</strong> Assess whether soluble ectodomains, membrane-bound PLXDC2, and BACE1-cleaved fragments have distinct biological effects in neurons, microglia, and vascular cells.
+      </li>
+      <li>
+        <strong>Map linked signaling pathways:</strong> Explore NF-κB, PPARγ, JAK2–STAT1, lipid metabolism, PEDF signaling, ERK/Akt, cytoskeletal/phagocytic remodeling, and vascular permeability pathways as mechanistically relevant AD angles for PLXDC2.
+      </li>
+      <li>
+        <strong>Build fragment-specific biomarker assays:</strong> Develop assays that distinguish total PLXDC2, cell-type-specific PLXDC2 signatures, and cleavage-specific PLXDC2 fragments in CSF and blood for translational use.
+      </li>
+      <li>
+        <strong>Frame PLXDC2 as a microglial state recalibrator:</strong> Its therapeutic value may lie in restoring appropriate phagocytic and inflammatory balance rather than as a conventional amyloid-only target.
+      </li>
+      <li>
+        <strong>Evaluate safety rigorously before drug development:</strong> PLXDC2's documented roles in immune regulation, vascular remodeling, angiogenesis, proliferation, cancer invasion, viral entry, reproduction, and developmental processes demand careful preclinical safety assessment. Direct PLXDC2-targeted therapy should await evidence that manipulation improves amyloid/tau pathology, neuroinflammation, synaptic preservation, cognition, or neurodegeneration in AD-relevant systems.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="lead">
+        <strong>Overall Assessment —</strong>
+        PLXDC2 is a <strong>biologically compelling and increasingly supported Alzheimer's disease candidate</strong> that sits at the convergence of microglial immunobiology, amyloid-β phagocytosis, BACE1 substrate proteomics, and multi-omics biomarker evidence. Its <strong>upregulation in AD brain, CSF, and peripheral blood</strong>, combined with functional evidence that it reshapes microglial amyloid-β uptake and cytokine output, elevates it beyond a purely correlative finding. Its identification as a <strong>BACE1 substrate</strong> opens a near-term path as a pharmacodynamic biomarker. However, the <strong>apparent contradiction between AD and stroke data</strong> — where elevated PLXDC2 may impair amyloid clearance in AD, yet PLXDC2 loss worsens neuroinflammation in stroke — underscores that this is a <strong>context-dependent, pleiotropic molecule</strong> for which neither simple activation nor inhibition is currently justified. The most defensible near-term strategy is <strong>biomarker development and mechanistic validation</strong> in AD-specific models and cohorts, with direct therapeutic development contingent on evidence that PLXDC2 modulation delivers benefit across amyloid burden, neuroinflammation, synaptic integrity, and cognition in AD-relevant systems.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PLXDC2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

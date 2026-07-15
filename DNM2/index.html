@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNM2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2d6fa3;
+    --light: #e8f2fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(192,57,43,0.28);
+    border: 1px solid rgba(192,57,43,0.5);
+    color: #ffc9c4;
+  }
+
+  header h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 15px;
+    opacity: 0.72;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #f0c0bc;
+    border-left: 5px solid var(--danger-mid);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+
+  .callout strong {
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 6px;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 14.5px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.accent { border-left-color: var(--mid); background: var(--light); }
+  .card.danger { border-left-color: var(--danger-mid); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.slate { border-left-color: var(--neutral); background: var(--neutral-light); }
+  .card.blue { border-left-color: #1d4ed8; background: #eff6ff; }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways {
+    counter-reset: takeaway;
+    list-style: none;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 15.5px;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7fb8e0;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    opacity: 0.92;
+  }
+
+  .verdict strong {
+    color: #a8d4f5;
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DNM2 &nbsp;|&nbsp; Dynamin-2</span>
+    <span class="chip chip-danger">⚠ Safety: Ubiquitous — systemic toxicity risk</span>
+  </div>
+  <h1>DNM2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Key Safety Caveat</strong>
+      DNM2 is ubiquitous and essential for endocytosis, autophagy, receptor trafficking, cytoskeletal organization, mitochondrial dynamics, hematopoiesis, muscle function, peripheral nerve integrity, and endothelial biology. Systemic or non-specific modulation carries substantial risk of neuromuscular, hepatic, hematologic, vascular, and neuronal toxicity.
+    </div>
+
+    <div class="overview-text">
+      <p>DNM2 (dynamin-2) is a membrane-remodeling GTPase intersecting with Alzheimer's disease mechanisms through endocytosis, vesicle scission, autophagy, lysosomal clearance, blood–brain barrier transport, synaptic receptor trafficking, mitochondrial dynamics, inflammatory signaling, and BIN1-related membrane biology.</p>
+      <p>The strongest AD-specific evidence links DNM2 to: reduced expression in AD cortex/hippocampus and dementia blood; genetic association with late-onset AD especially in non-APOE-ε4 carriers; increased Aβ secretion when DNM2 function is impaired; DNM2-dependent amyloid-β internalization in brain endothelial cells; and BIN1-mediated regulation of DNM2-dependent autophagosome release in microglial pathways.</p>
+      <p>Overall, DNM2 is best framed as a <em>mechanistically plausible AD modifier and candidate pathway target</em>, not a fully validated stand-alone therapeutic target. Preserving or restoring specific DNM2-dependent clearance and trafficking functions may be beneficial, but broad DNM2 inhibition or activation is risky because both excessive and deficient activity can cause pathology.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;" aria-label="DNM2 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2d6fa3"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Inputs -->
+        <rect x="10" y="10" width="190" height="480" rx="12" fill="#e8f2fa" fill-opacity="0.6" stroke="#2d6fa3" stroke-width="1.2"/>
+        <text x="105" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="0.12em">UPSTREAM</text>
+
+        <!-- Node 1: BIN1 (AD risk gene) -->
+        <rect x="28" y="44" width="154" height="46" rx="7" fill="#ffffff" stroke="#2d6fa3" stroke-width="1.4"/>
+        <text x="105" y="63" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">BIN1</text>
+        <text x="105" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">(AD risk gene)</text>
+
+        <!-- Node 2: DNM2 Expression -->
+        <rect x="28" y="118" width="154" height="46" rx="7" fill="#ffffff" stroke="#2d6fa3" stroke-width="1.4"/>
+        <text x="105" y="137" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">DNM2 GTPase</text>
+        <text x="105" y="154" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">↓ in AD cortex/blood</text>
+
+        <!-- Node 3: APOE genotype -->
+        <rect x="28" y="194" width="154" height="46" rx="7" fill="#ffffff" stroke="#2d6fa3" stroke-width="1.4"/>
+        <text x="105" y="213" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Genetic Risk</text>
+        <text x="105" y="230" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">non-APOE-ε4 carriers</text>
+
+        <!-- Node 4: CME Hub -->
+        <rect x="28" y="268" width="154" height="46" rx="7" fill="#ffffff" stroke="#2d6fa3" stroke-width="1.4"/>
+        <text x="105" y="287" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">CME Hub Protein</text>
+        <text x="105" y="304" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">clathrin endocytosis</text>
+
+        <!-- Arrows within Panel A -->
+        <line x1="105" y1="90" x2="105" y2="118" stroke="#2d6fa3" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="105" y1="164" x2="105" y2="194" stroke="#2d6fa3" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Panel B: Core Mechanisms (center-left) -->
+        <rect x="218" y="10" width="230" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="333" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.12em">CLEARANCE MECHANISMS</text>
+
+        <!-- Node 5: Autophagosome Release -->
+        <rect x="236" y="44" width="194" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="333" y="63" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Autophagosome Release</text>
+        <text x="333" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">from recycling endosomes</text>
+
+        <!-- Node 6: Lysosomal Clearance -->
+        <rect x="236" y="120" width="194" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="333" y="139" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Lysosomal Clearance</text>
+        <text x="333" y="156" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">autophagic flux &amp; mitophagy</text>
+
+        <!-- Node 7: Mitochondrial Homeostasis -->
+        <rect x="236" y="196" width="194" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="333" y="215" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Mitochondrial Health</text>
+        <text x="333" y="232" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">↓ ROS, Ca²⁺ signaling</text>
+
+        <!-- Node 8: Microglial Phagocytosis -->
+        <rect x="236" y="272" width="194" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="333" y="291" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Microglial Phagocytosis</text>
+        <text x="333" y="308" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">neuroinflammation control</text>
+
+        <!-- Arrows Panel B -->
+        <line x1="333" y1="90" x2="333" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="333" y1="166" x2="333" y2="196" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C: APP/Aβ Trafficking -->
+        <rect x="466" y="10" width="210" height="480" rx="12" fill="#fdf0f0" fill-opacity="0.65" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="571" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="0.12em">APP / Aβ TRAFFICKING</text>
+
+        <!-- Node 9: APP Plasma Membrane -->
+        <rect x="484" y="44" width="174" height="46" rx="7" fill="#ffffff" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="571" y="63" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">APP at Membrane</text>
+        <text x="571" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">lipid raft / flotillin zones</text>
+
+        <!-- Node 10: Aβ Secretion -->
+        <rect x="484" y="120" width="174" height="46" rx="7" fill="#ffffff" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="571" y="139" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">↑ Aβ Secretion</text>
+        <text x="571" y="156" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">DNM2 loss-of-function</text>
+
+        <!-- Node 11: BBB Endocytosis -->
+        <rect x="484" y="196" width="174" height="46" rx="7" fill="#ffffff" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="571" y="215" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">BBB Endocytosis</text>
+        <text x="571" y="232" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">endothelial Aβ uptake</text>
+
+        <!-- Node 12: Brain Aβ Clearance -->
+        <rect x="484" y="272" width="174" height="46" rx="7" fill="#ffffff" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="571" y="291" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Brain Aβ Clearance</text>
+        <text x="571" y="308" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">sleep-linked waste removal</text>
+
+        <!-- Arrows Panel C -->
+        <line x1="571" y1="90" x2="571" y2="120" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="571" y1="166" x2="571" y2="196" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="571" y1="242" x2="571" y2="272" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel D: Synaptic / Downstream -->
+        <rect x="694" y="10" width="216" height="480" rx="12" fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="802" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="0.12em">SYNAPTIC &amp; SAFETY</text>
+
+        <!-- Node 13: AMPA Receptor Trafficking -->
+        <rect x="712" y="44" width="180" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="802" y="63" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">AMPA Receptor Traffic</text>
+        <text x="802" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">GluA1 ↓ at postsynapse</text>
+
+        <!-- Node 14: Synaptic Dysfunction -->
+        <rect x="712" y="120" width="180" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="802" y="139" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Synaptic Dysfunction</text>
+        <text x="802" y="156" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">↓ spine density, memory</text>
+
+        <!-- Node 15: Safety — Off-target Risks -->
+        <rect x="712" y="196" width="180" height="60" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.6"/>
+        <text x="802" y="219" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#8b1a1a" font-weight="600">Off-target Risks</text>
+        <text x="802" y="236" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">muscle, nerve, liver,</text>
+        <text x="802" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">blood, endothelium</text>
+
+        <!-- Node 16: Therapeutic Strategy -->
+        <rect x="712" y="286" width="180" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="802" y="305" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#1e293b" font-weight="600">Precision Modulation</text>
+        <text x="802" y="322" text-anchor="middle" font-family="Georgia" font-size="10" fill="#64748b">cell-type selective only</text>
+
+        <!-- Arrows Panel D -->
+        <line x1="802" y1="90" x2="802" y2="120" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+        <line x1="802" y1="256" x2="802" y2="286" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+        <!-- Cross-panel connectors: Panel A → Panel B (BIN1 → Autophagosome Release) -->
+        <!-- BIN1 right edge at x=182, y=67; Node5 left edge at x=236, y=67 -->
+        <line x1="182" y1="67" x2="236" y2="67" stroke="#2d6fa3" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- DNM2 → Panel B (DNM2 → Lysosomal Clearance, y=143) -->
+        <!-- DNM2 right edge x=182, y=141; Node6 left at x=236, y=143 -->
+        <line x1="182" y1="141" x2="236" y2="143" stroke="#2d6fa3" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- DNM2 → Panel C (APP/Aβ, y=67) routed through gutter -->
+        <!-- DNM2 right x=182, y=141; need to reach Node9 left x=484, y=67 -->
+        <!-- Route: go right to x=450, then up to y=67, then right to x=484 -->
+        <!-- But Panel B occupies x=218–448 in that row. Instead go: x=182,y=141 → x=448,y=141 → x=448,y=395 → gutter check -->
+        <!-- Simpler: Panel B right edge at x=448. Node9 at y=67. Route along bottom gutter below panels -->
+        <!-- Use path elbow: right along row y=141 to gutter x=451, then up to y=67, then right to x=484 -->
+        <path d="M182,141 L450,141 L450,67 L484,67" fill="none" stroke="#2d6fa3" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- CME Hub → Panel C BBB Endocytosis -->
+        <!-- Node4 right x=182, y=291; Node11 left x=484, y=219 — route through gutter at y=405 -->
+        <!-- Actually route along gutter below y=362 (last nodes end around y=318) -->
+        <!-- Node4 center-right x=182, y=291. Path: right to x=450, keep y=291, then right to x=484, y=291... but Node12 is at y=272-318 -->
+        <!-- Route around: x=182,y=291 right to gutter x=451, up to y=219, right to x=484 -->
+        <path d="M182,291 L451,291 L451,219 L484,219" fill="none" stroke="#2d6fa3" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Panel B Microglial → Panel D Synaptic (conceptual) -->
+        <!-- Node8 right x=430, y=295; Node14 left x=712, y=143 -->
+        <!-- Route: right from Node8 to gutter x=680, up to y=143, right to x=712 -->
+        <path d="M430,295 L680,295 L680,143 L712,143" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C Brain Aβ Clearance → Panel D Therapeutic Strategy -->
+        <!-- Node12 right x=658, y=295; Node16 left x=712, y=309 -->
+        <line x1="658" y1="295" x2="712" y2="309" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Shared outcome row: convergence annotation at bottom -->
+        <!-- Shared outcome box at y=390 spanning center panels -->
+        <rect x="236" y="388" width="448" height="44" rx="8" fill="#e8f2fa" stroke="#1e3a5f" stroke-width="1.6"/>
+        <text x="460" y="407" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1e3a5f" font-weight="600">AD Pathology Modification</text>
+        <text x="460" y="423" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#2d6fa3">endosomal stress · Aβ burden · synaptic loss · neuroinflammation</text>
+
+        <!-- Arrows converging into shared outcome -->
+        <line x1="333" y1="318" x2="333" y2="388" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="571" y1="318" x2="571" y2="388" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- DNM2 node arrow down to Microglial -->
+        <line x1="333" y1="242" x2="333" y2="272" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> Upstream inputs — BIN1 (AD risk gene) and DNM2 expression (reduced in AD tissue), genetic risk context, and CME hub role feed into downstream panels.
+      <strong>Panel B (teal, center-left):</strong> DNM2-dependent clearance mechanisms — autophagosome release, lysosomal degradation, mitochondrial homeostasis, and microglial phagocytosis/neuroinflammation — converging on the shared AD pathology outcome (bottom).
+      <strong>Panel C (red, center-right):</strong> APP/Aβ trafficking branch — impaired DNM2 promotes APP accumulation in lipid rafts and Aβ secretion (pathological), while endothelial DNM2 supports BBB transcytosis and sleep-linked brain Aβ clearance (protective), also feeding the shared outcome.
+      <strong>Panel D (amber, right):</strong> Synaptic consequences (GluA1 loss, spine/memory deficits) and the safety/therapeutic frame — off-target risks necessitate cell-type-selective precision modulation. Dashed connectors indicate cross-panel mechanistic links.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card accent">
+        <h3>APP/Aβ Biology &amp; Endocytosis</h3>
+        <p>Reduced or dominant-negative DNM2 increased Aβ secretion in neuroblastoma cells and caused APP to accumulate in flotillin-rich lipid raft regions at the plasma membrane, supporting a model in which impaired DNM2-dependent trafficking promotes amyloidogenic APP processing or Aβ release.</p>
+      </div>
+
+      <div class="card accent">
+        <h3>BIN1–DNM2 Axis in AD</h3>
+        <p>BIN1, a major AD risk gene, recruits, inhibits, or modulates DNM2-dependent membrane tubulation and fission. AD-risk-associated BIN1 overexpression in microglia can inhibit DNM2-mediated autophagosome release, reducing autophagic clearance and linking this axis to microglial senescence and neuroinflammation.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>BBB &amp; Sleep-Linked Aβ Clearance</h3>
+        <p>Brain endothelial DNM2 is required for clathrin-dependent amyloid-β uptake and sleep-enhanced endothelial endocytosis/transcytosis. Loss of endothelial DNM2 blocks this pathway and may impair sleep-linked brain waste removal including amyloid-β efflux.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Lysosomal &amp; Mitochondrial Homeostasis</h3>
+        <p>DNM2 depletion impairs autophagic lysosome reformation, reduces degradative capacity, impairs mitophagy, increases dysfunctional mitochondria, elevates ROS, and disturbs calcium signaling — overlapping substantially with known AD mechanisms involving lysosomal failure and oxidative stress.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Synaptic Dysfunction Overlap</h3>
+        <p>A DNM2 p.R465W knock-in mouse showed reduced hippocampal GluA1 AMPA receptor availability at postsynaptic densities. Other DNM2 mutation models show reduced dendritic arborization, spine density, excitatory synaptic transmission, and recognition memory — phenotypes strongly overlapping with AD synaptic failure, though not from AD models.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Safety: Ubiquitous Essential Functions</h3>
+        <p>DNM2 is essential for endocytosis, receptor trafficking, autophagy, cytoskeletal organization, mitochondrial dynamics, hematopoiesis, muscle function, peripheral nerve integrity, endothelial biology, and secretion. Both gain- and loss-of-function states cause pathology. Neuromuscular disease studies show DNM2 reduction rescues centronuclear myopathy, underscoring bidirectional risk from systemic modulation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Prioritize AD-specific validation first.</strong> Test whether DNM2 expression, localization, activity, or interaction with BIN1/ITSN1 is specifically altered in AD neurons, microglia, astrocytes, and brain endothelial cells before advancing therapeutic hypotheses.</li>
+      <li><strong>Test DNM2 effects across core AD endpoints.</strong> Key assays should cover APP trafficking, BACE1 localization, Aβ production and clearance, tau secretion/phosphorylation, endosomal enlargement, autophagic flux, lysosomal degradation, mitophagy, synaptic receptor trafficking, microglial phagocytosis, and BBB Aβ efflux.</li>
+      <li><strong>Avoid framing DNM2 as a simple inhibition target.</strong> The most defensible AD strategy is precision modulation: restore deficient DNM2-dependent clearance steps, relieve pathological BIN1-mediated DNM2 inhibition, preserve endothelial DNM2 function for Aβ transport, or normalize disease-specific localization and activity rather than changing global abundance.</li>
+      <li><strong>Pursue cell-type-specific therapeutic hypotheses.</strong> In microglia, restore DNM2-mediated autophagosome release when excess BIN1 suppresses it. In brain endothelium, preserve or enhance clathrin-mediated Aβ uptake/transcytosis. In neurons, determine whether DNM2 dysfunction drives APP trafficking defects, endosomal stress, AMPA receptor loss, or impaired autophagy.</li>
+      <li><strong>Explore indirect rescue strategies.</strong> Enhancing downstream lysosomal capacity via AMPK–TFEB activation, improving autophagic flux, correcting BIN1 isoform imbalance, or modulating scaffold interactions may be safer than directly altering global DNM2 abundance.</li>
+      <li><strong>Apply genetic and biomarker stratification.</strong> DNM2-linked AD mechanisms may be most relevant in non-APOE-ε4 carriers, individuals with DNM2 risk variants, or patients with BIN1-risk-associated microglial expression profiles.</li>
+      <li><strong>Require rigorous dose and safety controls.</strong> Any DNM2-directed AD therapy must be brain-targeted, cell-type-selective, partial, and biomarker-guided, with monitoring for muscle weakness, peripheral neuropathy, hematologic effects, hepatic toxicity, endothelial dysfunction, and impairment of normal endocytosis.</li>
+      <li><strong>Treat DNM2 as a candidate pathway node, not a validated drug target.</strong> The strongest current rationale is mechanistic: DNM2 links endocytosis, autophagy-lysosomal clearance, BBB amyloid handling, BIN1 biology, synaptic receptor trafficking, and mitochondrial/oxidative stress pathways. Direct AD-model evidence is still needed to determine whether modulation is beneficial, harmful, or stage-dependent.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — DNM2 in Alzheimer's Disease</span>
+      <p>DNM2 is a <strong>mechanistically compelling but unvalidated AD modifier</strong> whose relevance derives from its central role at the intersection of endocytosis, autophagy-lysosomal clearance, blood–brain barrier amyloid handling, BIN1-regulated membrane biology, and synaptic receptor trafficking. The most specific human AD evidence — <strong>reduced DNM2 expression in AD cortex and dementia blood, genetic association with late-onset AD in non-APOE-ε4 carriers, and increased Aβ secretion upon DNM2 impairment</strong> — is suggestive of a loss-of-function contribution but does not yet establish causality. Critically, <strong>both excessive and deficient DNM2 activity are pathological</strong> in different disease contexts, and the gene's ubiquitous essential functions create a substantial safety perimeter around any systemic modulation strategy. The most scientifically grounded path forward is <strong>precision, cell-type-selective restoration of specific impaired DNM2 functions</strong> — particularly microglial autophagosome release and endothelial Aβ transcytosis — validated in AD-relevant cellular and animal models before any therapeutic commitment.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DNM2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

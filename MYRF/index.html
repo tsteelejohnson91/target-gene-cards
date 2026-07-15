@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYRF — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfb;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: white;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.38);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #ffd5d5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2eaf4;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+    font-size: 0.97rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #e8b4b4;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #90bbdd;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    color: #d8eaf6;
+    font-size: 0.96rem;
+    margin-bottom: 0;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MYRF &nbsp;|&nbsp; Myelin Regulatory Factor</span>
+    <span class="chip chip-danger">⚠ Safety: Systemic MYRF variants → developmental defects</span>
+  </div>
+  <h1>MYRF &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety Caveat:</strong> Pathogenic human MYRF variants are associated with nanophthalmos, cardiac and genitourinary defects, congenital diaphragmatic hernia, leukoencephalopathy, and developmental syndromes. Broad systemic MYRF activation or inhibition would likely carry significant risk; any therapeutic strategy must be CNS-targeted, oligodendrocyte-lineage-specific, and temporally controlled.
+    </div>
+
+    <p>MYRF is most relevant to Alzheimer's disease (AD) as a master regulator of oligodendrocyte differentiation, myelin gene expression, myelin maintenance, and remyelination. The strongest AD-specific evidence links MYRF to tau-associated oligodendrocyte and myelination perturbations in human AD brain, and to amyloid-β-induced dysregulation of oligodendrocyte maturation in a zebrafish model. MYRF is not a classical amyloid- or tau-processing gene, and direct evidence that MYRF modulation changes AD outcomes is currently lacking.</p>
+
+    <p>The most defensible AD mechanism holds that amyloid-β and tau pathology may disrupt oligodendrocyte/myelin homeostasis, with MYRF positioned as a central transcriptional node controlling whether oligodendrocyte precursor cells (OPCs) mature properly and sustain myelin programs. White-matter damage, myelin breakdown, lipid dyshomeostasis, glial activation, impaired remyelination, and circuit conduction defects may all contribute to cognitive decline and neurodegenerative vulnerability in AD.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (viewBox 0 0 940 500):
+        Panel A (Upstream Signals): x=14, y=14, w=200, h=472
+        Panel B (MYRF Core / Branching): x=228, y=14, w=248, h=472
+        Panel C (Downstream Outcomes): x=490, y=14, w=210, h=472
+        Panel D (AD Context): x=714, y=14, w=212, h=472
+
+        NODE COUNT CHECK (must ≤ 16):
+        1. Aβ / soluble amyloid (A)
+        2. Tau pathology (A)
+        3. Neuroinflammation / miR-615 (A)
+        4. PKC signaling (A)
+        5. MYRF (B – central)
+        6. SOX10 / OLIG2 (B)
+        7. MBP · MAG · MOG (B branch 1)
+        8. OPC → OL maturation (B branch 2)
+        9. Remyelination (C)
+        10. Myelin sheath integrity (C)
+        11. Lipid homeostasis (C)
+        12. Axonal conduction (D)
+        13. Neuroinflammation↑ / apoptosis (D)
+        14. Cognitive decline (D)
+        15. White-matter damage (D)
+        16. AD epigenome / CpG methylation (A – top)
+
+        Total = 16 ✓
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" aria-label="MYRF pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: Upstream Signals ═══ -->
+        <rect x="14" y="14" width="200" height="472" rx="10" ry="10"
+              fill="rgba(230,242,255,0.55)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="114" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">UPSTREAM SIGNALS</text>
+
+        <!-- Node 1: AD epigenome / CpG -->
+        <rect x="30" y="48" width="168" height="46" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="114" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e3a5f" font-weight="700">AD Epigenome</text>
+        <text x="114" y="80" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">5,478 CpG sites · tau-linked</text>
+
+        <!-- Node 2: Tau pathology -->
+        <rect x="30" y="118" width="168" height="42" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>
+        <text x="114" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f" font-weight="700">Tau Pathology</text>
+        <text x="114" y="150" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">OL/myelin disruption</text>
+
+        <!-- Node 3: Aβ / soluble amyloid -->
+        <rect x="30" y="182" width="168" height="42" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="114" y="200" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#7f1d1d" font-weight="700">Aβ / Soluble Amyloid</text>
+        <text x="114" y="214" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">alters myrf/mbp in zebrafish</text>
+
+        <!-- Node 4: PKC signaling -->
+        <rect x="30" y="246" width="168" height="42" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2"/>
+        <text x="114" y="264" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#0c4a6e" font-weight="700">PKC Signaling</text>
+        <text x="114" y="278" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#0c4a6e">Gö6983 normalises Aβ effect</text>
+
+        <!-- Node 5: Neuroinflammation / miR-615 -->
+        <rect x="30" y="310" width="168" height="46" rx="6" fill="#fce7f3" stroke="#be185d" stroke-width="1.2"/>
+        <text x="114" y="328" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#831843" font-weight="700">Neuroinflammation</text>
+        <text x="114" y="342" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#831843">miR-615-5p · TNF-α/PAD4</text>
+        <text x="114" y="354" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#831843">suppress MYRF in OPCs</text>
+
+        <!-- Arrows Panel A → Panel B (to MYRF node) -->
+        <!-- Node 1 → MYRF: from right edge of node1 y=71 → left of MYRF -->
+        <line x1="198" y1="71" x2="244" y2="185" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Node 2 → MYRF -->
+        <line x1="198" y1="139" x2="244" y2="195" stroke="#d97706" stroke-width="1.4" marker-end="url(#arr-warn)"/>
+        <!-- Node 3 → MYRF -->
+        <line x1="198" y1="203" x2="244" y2="205" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-danger)"/>
+        <!-- Node 4 → MYRF (inhibitory dashed) -->
+        <line x1="198" y1="267" x2="244" y2="220" stroke="#0284c7" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <!-- Node 5 → MYRF suppression -->
+        <line x1="198" y1="330" x2="244" y2="235" stroke="#be185d" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-danger)"/>
+
+        <!-- ═══ PANEL B: MYRF Core Hub + Branches ═══ -->
+        <rect x="228" y="14" width="248" height="472" rx="10" ry="10"
+              fill="rgba(219,234,254,0.45)" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="352" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">MYRF CORE MECHANISM</text>
+
+        <!-- Node 6: MYRF (central hub) -->
+        <rect x="272" y="175" width="160" height="52" rx="8" fill="#1a3a5c" stroke="#0d1f33" stroke-width="1.5"/>
+        <text x="352" y="197" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="white" font-weight="700">MYRF</text>
+        <text x="352" y="213" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#90bbdd">Master TF · self-cleaving</text>
+
+        <!-- Node 7: SOX10 / OLIG2 co-factors -->
+        <rect x="244" y="80" width="168" height="42" rx="6" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="328" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e3a5f" font-weight="700">SOX10 · OLIG2</text>
+        <text x="328" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">co-activate myelin TF programs</text>
+
+        <!-- SOX10 → MYRF -->
+        <line x1="328" y1="122" x2="340" y2="175" stroke="#2563eb" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- BRANCH SPLIT: MYRF → Branch 1 (left) and Branch 2 (right) -->
+
+        <!-- Node 8: OPC → OL maturation (Branch 1 – left) -->
+        <rect x="236" y="290" width="156" height="46" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.2"/>
+        <text x="314" y="308" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#065f46" font-weight="700">OPC → OL Maturation</text>
+        <text x="314" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#065f46">differentiation transition</text>
+
+        <!-- Node 9: Myelin gene activation (Branch 2 – right) -->
+        <rect x="244" y="396" width="216" height="46" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+        <text x="352" y="413" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#14532d" font-weight="700">Myelin Gene Activation</text>
+        <text x="352" y="427" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#14532d">MBP · MAG · MOG · PLP1</text>
+
+        <!-- MYRF → OPC maturation -->
+        <line x1="330" y1="227" x2="314" y2="290" stroke="#059669" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- MYRF → Myelin genes (elbow: down then left-to-right through empty space) -->
+        <polyline points="352,227 352,360 352,396" fill="none" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- ═══ PANEL C: Downstream Cell Outcomes ═══ -->
+        <rect x="490" y="14" width="210" height="472" rx="10" ry="10"
+              fill="rgba(240,253,244,0.55)" stroke="#059669" stroke-width="1.2"/>
+        <text x="595" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#14532d" letter-spacing="1.5">CELLULAR OUTCOMES</text>
+
+        <!-- Node 10: Remyelination -->
+        <rect x="506" y="80" width="178" height="42" rx="6" fill="#a7f3d0" stroke="#059669" stroke-width="1.2"/>
+        <text x="595" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#064e3b" font-weight="700">Remyelination</text>
+        <text x="595" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#064e3b">repair of damaged sheaths</text>
+
+        <!-- Node 11: Myelin sheath integrity -->
+        <rect x="506" y="210" width="178" height="46" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.2"/>
+        <text x="595" y="228" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#14532d" font-weight="700">Myelin Sheath Integrity</text>
+        <text x="595" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#14532d">sheath length · paranodes</text>
+
+        <!-- Node 12: Lipid homeostasis -->
+        <rect x="506" y="340" width="178" height="46" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.2"/>
+        <text x="595" y="358" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#713f12" font-weight="700">Lipid Homeostasis</text>
+        <text x="595" y="372" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#713f12">cholesterol esters · ACAT1 · LCAT</text>
+
+        <!-- OPC maturation → Remyelination -->
+        <line x1="470" y1="308" x2="595" y2="308" stroke="transparent" stroke-width="0"/>
+        <!-- Route from Panel B node 8 right edge → Panel C node 10 -->
+        <polyline points="392,313 480,313 480,101 506,101" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- Myelin gene activation → Myelin sheath integrity -->
+        <polyline points="460,419 480,419 480,233 506,233" fill="none" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- Remyelination → Lipid homeostasis (within panel C) -->
+        <polyline points="595,122 595,210" fill="none" stroke="#ca8a04" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-warn)"/>
+        <!-- Gap between node 11 and 12 -->
+        <line x1="595" y1="256" x2="595" y2="340" stroke="#ca8a04" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-warn)"/>
+
+        <!-- ═══ PANEL D: AD Context / Neural Consequences ═══ -->
+        <rect x="714" y="14" width="212" height="472" rx="10" ry="10"
+              fill="rgba(255,241,242,0.5)" stroke="#be123c" stroke-width="1.2"/>
+        <text x="820" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#881337" letter-spacing="1.5">AD NEURAL CONSEQUENCES</text>
+
+        <!-- Node 13: Axonal conduction -->
+        <rect x="728" y="66" width="184" height="42" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+        <text x="820" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#14532d" font-weight="700">Axonal Conduction</text>
+        <text x="820" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#14532d">circuit function preserved</text>
+
+        <!-- Node 14: White-matter damage -->
+        <rect x="728" y="180" width="184" height="46" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.2"/>
+        <text x="820" y="198" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#7f1d1d" font-weight="700">White-Matter Damage</text>
+        <text x="820" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">impaired remyelination · glia</text>
+
+        <!-- Node 15: Neuroinflammation / apoptosis -->
+        <rect x="728" y="300" width="184" height="46" rx="6" fill="#fce7f3" stroke="#be185d" stroke-width="1.2"/>
+        <text x="820" y="318" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#831843" font-weight="700">Neuroinflammation ↑</text>
+        <text x="820" y="332" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#831843">DLK/c-Jun · microglial activ.</text>
+
+        <!-- Node 16: Cognitive decline -->
+        <rect x="728" y="406" width="184" height="46" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+        <text x="820" y="424" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d" font-weight="700">Cognitive Decline</text>
+        <text x="820" y="438" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">behavioral deficits · AD endpoint</text>
+
+        <!-- Panel C → Panel D connectors (through gutter x≈706 empty strip) -->
+        <!-- Remyelination → Axonal conduction (positive) -->
+        <polyline points="684,101 706,101 706,87 728,87" fill="none" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+        <!-- Myelin sheath integrity → White-matter damage (protective arrow) -->
+        <polyline points="684,233 706,233 706,203 728,203" fill="none" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-danger)"/>
+        <!-- Lipid homeostasis → Neuroinflammation -->
+        <polyline points="684,363 706,363 706,323 728,323" fill="none" stroke="#be185d" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-danger)"/>
+
+        <!-- Within Panel D: White-matter damage → Neuroinflammation → Cognitive decline -->
+        <line x1="820" y1="226" x2="820" y2="300" stroke="#be185d" stroke-width="1.4" marker-end="url(#arr-danger)"/>
+        <line x1="820" y1="346" x2="820" y2="406" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+        <!-- Axonal conduction (loss) → Cognitive decline (elbow along right edge) -->
+        <polyline points="820,108 820,152 900,152 900,429 912,429" fill="none" stroke="#dc2626" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-danger)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Signals:</strong> AD epigenomic tau-associated CpG changes (blue), tau pathology (amber), soluble Aβ (red), PKC signaling (dashed, normalizing effect of Gö6983), and neuroinflammation/miR-615-5p (pink) all converge on the MYRF transcriptional hub. Solid arrows indicate activation; dashed arrows indicate suppressive or modulatory inputs.
+      <strong>Panel B — MYRF Core Mechanism:</strong> SOX10/OLIG2 co-factors activate MYRF, which branches into two parallel outputs: OPC-to-oligodendrocyte maturation (left branch, green) and myelin gene activation (MBP, MAG, MOG, PLP1; lower branch).
+      <strong>Panel C — Cellular Outcomes:</strong> Successful MYRF activity drives remyelination, maintains myelin sheath integrity, and supports lipid homeostasis (cholesterol esters, ACAT1, LCAT). Dashed amber arrows indicate that disruption of these processes feeds lipid dysregulation.
+      <strong>Panel D — AD Neural Consequences:</strong> Intact MYRF output preserves axonal conduction (green); failed MYRF activity leads to white-matter damage, neuroinflammation/microglial activation (DLK/c-Jun), and ultimately cognitive decline. Dashed red arrows denote pathological cascades when myelin homeostasis is lost.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Human AD Epigenomic Evidence</h3>
+        <p>A study of 472 AD brains identified 5,478 significant regional CpG methylation associations, 99.7% tied to tau biochemical measures. Integrated methylome-transcriptome analysis highlighted oligodendrocyte and myelination genes including <em>MYRF</em>, <em>MBP</em>, <em>MAG</em>, and <em>BIN1</em>, supporting tau-associated oligodendrocyte molecular disruption as a pathomechanism.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Aβ-Driven Myelin Dysregulation</h3>
+        <p>Soluble Aβ altered <em>myrf</em> and <em>mbp</em> expression in zebrafish, increasing <em>myrf</em>+ and <em>mbp</em>+ oligodendrocytes, myelin sheaths, and myelinated axons. These changes were normalised by the pan-PKC inhibitor Gö6983, suggesting maladaptive or mistimed myelination rather than simple oligodendrocyte loss.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>MYRF as Master Regulator</h3>
+        <p>MYRF drives the transition from OPCs to mature myelinating oligodendrocytes and cooperates with SOX10 and other transcription factors to activate core myelin genes (<em>MBP</em>, <em>MAG</em>, <em>MOG</em>, <em>PLP1</em>). MYRF-dependent remyelination in non-AD models is neuroprotective: failed remyelination associates with neuronal apoptosis, microglial inflammation, DLK/c-Jun stress signaling, and persistent behavioral deficits.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Inflammation Suppresses MYRF Repair</h3>
+        <p>Microglial exosomal miR-615-5p suppresses MYRF in OPCs and inhibits maturation. TNF-α/PAD4 inflammatory-epigenetic pathways similarly reduce MyRF and impair white-matter repair. Chronic AD neuroinflammation could plausibly impair MYRF-dependent oligodendrocyte repair, though direct proof in AD is lacking.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Lipid Metabolism Intersection</h3>
+        <p>MYRF demyelination/remyelination models show cholesterol ester accumulation during demyelination, normalised with effective remyelination, and involving microglial ACAT1 and astrocytic LCAT. Given AD's lipid dyshomeostasis and myelin breakdown, MYRF-based injury models may identify AD-relevant lipid biomarkers and therapeutic targets.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Dosage Sensitivity &amp; Safety</h3>
+        <p>Too little MYRF impairs differentiation; poorly controlled MYRF activity produces abnormal sheath length, myelin outfolds, disrupted paranodes, and ectopic myelination. Pathogenic human MYRF variants cause nanophthalmos, cardiac/genitourinary defects, congenital diaphragmatic hernia, and leukoencephalopathy — making broad systemic manipulation risky.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat MYRF as a plausibility hypothesis, not a validated target.</strong> Current evidence supports biological plausibility for a MYRF-AD link but does not prove that MYRF modulation improves AD pathology or cognition. Further mechanistic validation is required before advancing this as a therapeutic target.</li>
+      <li><strong>Prioritise human AD tissue and single-cell/spatial datasets.</strong> Determine whether MYRF expression, methylation, cleavage/activity state, and downstream myelin genes correlate with tau burden, amyloid burden, white-matter damage, cognitive decline, and disease stage across patient cohorts.</li>
+      <li><strong>Test pathway-level interventions rather than direct MYRF overactivation.</strong> Promising upstream or adjacent strategies include PKC modulation for Aβ-induced myelin dysregulation, anti-inflammatory approaches that prevent MYRF suppression, pro-remyelinating agents, ERK1/2-linked differentiation pathways, and modulation of microglial lipid/debris clearance.</li>
+      <li><strong>Use MYRF as part of an oligodendrocyte/myelin biomarker panel.</strong> Pair it with MBP, MAG, MOG, PLP1, SOX10, OLIG2, BIN1, lipid markers (cholesterol esters, plasmalogens), and possibly NfL to identify AD patients with prominent oligodendrocyte or white-matter pathology who might benefit most from myelin-directed strategies.</li>
+      <li><strong>Aim to restore physiological myelin homeostasis, not maximise myelination.</strong> The Aβ-induced increase in myrf+ cells cautions against simply boosting MYRF. The therapeutic goal should be correct timing, localisation, and magnitude of MYRF-dependent oligodendrocyte maturation and repair.</li>
+      <li><strong>Ensure CNS-targeted, lineage-specific, and temporally controlled delivery.</strong> Any MYRF-directed strategy must minimise systemic exposure given the known developmental and organ-system risks associated with pathogenic MYRF variants in humans.</li>
+      <li><strong>Define highest-value validation experiments now.</strong> Test whether controlled enhancement or normalisation of MYRF-dependent oligodendrocyte programs improves myelin integrity, axonal function, neuroinflammation, tau-associated degeneration, and cognition in AD-relevant animal models and human-derived glial systems.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <p class="verdict-lead">Overall Assessment — MYRF in Alzheimer's Disease</p>
+      <p>
+        MYRF represents a <strong>biologically plausible but insufficiently validated</strong> glial/myelin-centered hypothesis in Alzheimer's disease. The strongest direct evidence comes from human AD epigenomics linking MYRF and co-expressed myelin genes to <strong>tau-associated oligodendrocyte molecular disruption</strong>, and from a zebrafish model in which Aβ dysregulates MYRF-linked oligodendrocyte programs in a PKC-dependent manner. Non-AD literature firmly establishes MYRF as the <strong>master transcriptional regulator of oligodendrocyte maturation and remyelination</strong>, and supports the concept that failed remyelination drives neuroinflammation, axonal injury, and behavioral deficits — a cascade with clear AD relevance. However, <strong>direct evidence that MYRF modulation alters AD outcomes is absent</strong>. The gene's dosage sensitivity, its role in maladaptive as well as adaptive myelination, and the serious developmental and systemic consequences of pathogenic MYRF variants collectively demand a <strong>cautious, CNS-targeted, oligodendrocyte-lineage-specific therapeutic approach</strong>. Immediate priorities should be human tissue validation, biomarker development, and pathway-level rather than direct MYRF manipulation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <p>MYRF · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical application</p>
+</footer>
+
+</body>
+</html>

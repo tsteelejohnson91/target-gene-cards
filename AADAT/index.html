@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AADAT — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #e2e8f0;
+    --neutral-card: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0320 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 13px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f3eeff;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.0rem;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: var(--slate);
+  }
+  .callout strong { color: var(--warning); }
+  p { margin-bottom: 14px; }
+  .figure-wrap {
+    background: var(--neutral-card);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 8px;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+  .card {
+    border-radius: 9px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-gray { background: var(--neutral-card); border-left: 4px solid #94a3b8; }
+  .card-gray h3 { color: #475569; }
+  .card-warning { background: var(--warning-light); border-left: 4px solid #d97706; }
+  .card-warning h3 { color: var(--warning); }
+  ol.takeaways { list-style: decimal; padding-left: 24px; }
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0320 100%);
+    color: #f3eeff;
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    line-height: 1.75;
+    font-size: 0.98rem;
+  }
+  .verdict-banner .lead { font-weight: 700; font-size: 1.05rem; color: #e9d5ff; }
+  .verdict-banner strong { color: #d8b4fe; }
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: AADAT &nbsp;|&nbsp; Alpha-Aminoadipate Aminotransferase / KAT II / KYAT2</span>
+    <span class="chip chip-danger">⚠ Complete inhibition may be harmful</span>
+  </div>
+  <h1>AADAT &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Safety Caveat:</strong> Complete loss of AADAT/KAT II activity in knockout models
+      causes increased 3-hydroxykynurenine, oxidative stress, excitotoxic pressure, and behavioral
+      abnormalities. Broad suppression of AADAT is not advisable; calibrated, partial modulation
+      is essential.
+    </div>
+    <p>
+      AADAT (also known as KAT II or KYAT2) is a mitochondrial aminotransferase that converts
+      kynurenine-derived substrates into <strong>kynurenic acid (KYNA)</strong>, a neuroactive
+      metabolite that antagonizes both NMDA receptors and α7-nicotinic acetylcholine receptors.
+      These receptors underpin synaptic transmission, working memory, and cholinergic signaling —
+      processes centrally disrupted in Alzheimer's disease (AD).
+    </p>
+    <p>
+      The most translationally compelling evidence comes from primate dorsolateral prefrontal
+      cortex (dlPFC) studies: neuroinflammation and aging elevate kynurenine-pathway flux, KYNA
+      production, and AADAT/KAT II expression in cognition-related circuits. Excess KYNA
+      suppresses delay-related neuronal firing required for working memory, while KAT II inhibition
+      restores firing and improves cognitive performance in aged macaques — establishing
+      AADAT/KAT II as a plausible target for neuroinflammation-linked cognitive impairment.
+    </p>
+    <p>
+      Nonetheless, AADAT is best viewed as a <em>context-dependent metabolic control point</em>.
+      Knockout models demonstrate that full AADAT loss redirects kynurenine metabolism toward
+      neurotoxic 3-hydroxykynurenine, amplifying oxidative stress and excitotoxic pressure.
+      Therapeutic strategy must therefore aim for balanced, partial modulation rather than
+      complete suppression.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 940 wide × 500 tall viewBox -->
+      <!-- Panels: Left = Upstream Inputs (x=10), Centre = AADAT/KAT II Hub (x=320), Right = Downstream Consequences (x=600) -->
+      <!-- Node count plan: 14 total -->
+      <svg viewBox="0 0 940 500" width="900" height="432" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="12">
+
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Inputs -->
+        <rect x="10" y="10" width="270" height="478" rx="12" fill="#f3eeff" fill-opacity="0.55" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="145" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#3b0764" letter-spacing="1.5" font-family="Arial, sans-serif">A — UPSTREAM INPUTS</text>
+
+        <!-- Node 1: Neuroinflammation -->
+        <rect x="42" y="50" width="186" height="46" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="135" y="69" text-anchor="middle" font-size="11.5" fill="#3b0764" font-weight="600">Neuroinflammation</text>
+        <text x="135" y="87" text-anchor="middle" font-size="10" fill="#4c1d95">&amp; Aging</text>
+
+        <!-- Node 2: Tryptophan -->
+        <rect x="42" y="132" width="186" height="46" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="135" y="150" text-anchor="middle" font-size="11.5" fill="#3b0764" font-weight="600">Tryptophan</text>
+        <text x="135" y="168" text-anchor="middle" font-size="10" fill="#4c1d95">dietary precursor</text>
+
+        <!-- Arrow: Neuroinflam → Tryptophan -->
+        <line x1="135" y1="96" x2="135" y2="130" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Kynurenine -->
+        <rect x="42" y="212" width="186" height="46" rx="8" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.6"/>
+        <text x="135" y="230" text-anchor="middle" font-size="11.5" fill="#1e1b4b" font-weight="600">Kynurenine</text>
+        <text x="135" y="248" text-anchor="middle" font-size="10" fill="#4c1d95">↑ flux via inflammation</text>
+
+        <!-- Arrow: Tryp → Kynurenine -->
+        <line x1="135" y1="178" x2="135" y2="210" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: AADAT gene / astrocytes -->
+        <rect x="42" y="308" width="186" height="52" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="135" y="328" text-anchor="middle" font-size="11.5" fill="#3b0764" font-weight="600">AADAT expression ↑</text>
+        <text x="135" y="346" text-anchor="middle" font-size="10" fill="#4c1d95">astrocytes, dlPFC neurons</text>
+
+        <!-- Arrow: Kynurenine → AADAT expression -->
+        <line x1="135" y1="258" x2="135" y2="306" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: Primate relevance label -->
+        <rect x="42" y="408" width="186" height="46" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="135" y="426" text-anchor="middle" font-size="11" fill="#3b0764" font-style="italic">Primate dlPFC &amp; human</text>
+        <text x="135" y="444" text-anchor="middle" font-size="10" fill="#4c1d95">cortex — high AADAT</text>
+
+        <!-- Arrow: AADAT expr → Primate note -->
+        <line x1="135" y1="360" x2="135" y2="406" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+
+
+        <!-- PANEL B: AADAT/KAT II Hub -->
+        <rect x="298" y="10" width="220" height="478" rx="12" fill="#f0fdf4" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="408" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#065f46" letter-spacing="1.5" font-family="Arial, sans-serif">B — AADAT / KAT II HUB</text>
+
+        <!-- Node 6: AADAT/KAT II enzyme -->
+        <rect x="320" y="50" width="176" height="52" rx="8" fill="#bbf7d0" stroke="#0f766e" stroke-width="2"/>
+        <text x="408" y="72" text-anchor="middle" font-size="13" fill="#065f46" font-weight="700">AADAT / KAT II</text>
+        <text x="408" y="90" text-anchor="middle" font-size="10" fill="#047857">mitochondrial enzyme</text>
+
+        <!-- Node 7: KYNA production -->
+        <rect x="320" y="152" width="176" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="408" y="170" text-anchor="middle" font-size="11.5" fill="#065f46" font-weight="600">KYNA Production</text>
+        <text x="408" y="188" text-anchor="middle" font-size="10" fill="#047857">kynurenic acid</text>
+
+        <!-- Arrow: AADAT → KYNA -->
+        <line x1="408" y1="102" x2="408" y2="150" stroke="#0f766e" stroke-width="2" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: NMDA-R blockade -->
+        <rect x="308" y="258" width="90" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.4"/>
+        <text x="353" y="276" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="600">NMDA-R</text>
+        <text x="353" y="291" text-anchor="middle" font-size="10" fill="#92400e">Blockade</text>
+        <text x="353" y="305" text-anchor="middle" font-size="9.5" fill="#92400e">↓ glutamate</text>
+
+        <!-- Node 9: α7-nAChR blockade -->
+        <rect x="418" y="258" width="90" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.4"/>
+        <text x="463" y="276" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="600">α7-nAChR</text>
+        <text x="463" y="291" text-anchor="middle" font-size="10" fill="#92400e">Blockade</text>
+        <text x="463" y="305" text-anchor="middle" font-size="9.5" fill="#92400e">↓ cholinergic</text>
+
+        <!-- Arrows: KYNA → NMDA-R and α7 -->
+        <line x1="385" y1="198" x2="353" y2="256" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="430" y1="198" x2="463" y2="256" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 10: dlPFC firing impaired -->
+        <rect x="322" y="362" width="172" height="52" rx="8" fill="#fce7f3" stroke="#9d174d" stroke-width="1.4"/>
+        <text x="408" y="381" text-anchor="middle" font-size="11" fill="#9d174d" font-weight="600">↓ dlPFC Neuronal</text>
+        <text x="408" y="397" text-anchor="middle" font-size="11" fill="#9d174d" font-weight="600">Firing</text>
+        <text x="408" y="412" text-anchor="middle" font-size="9.5" fill="#be185d">working memory impaired</text>
+
+        <!-- Arrows converge from NMDA-R and α7 to dlPFC firing -->
+        <line x1="353" y1="310" x2="378" y2="360" stroke="#9d174d" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="463" y1="310" x2="437" y2="360" stroke="#9d174d" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Dashed arrow from AADAT node to panel A AADAT expr (cross panel — route via gutter, just text arrow) -->
+        <!-- Cross-panel arrow from Panel A AADAT expr to Panel B AADAT hub -->
+        <!-- This goes left→right in empty gutter at row ~334 -->
+        <line x1="228" y1="334" x2="318" y2="76" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+
+
+        <!-- PANEL C: Consequences -->
+        <rect x="536" y="10" width="394" height="478" rx="12" fill="#fef2f2" fill-opacity="0.45" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="733" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1.5" font-family="Arial, sans-serif">C — DOWNSTREAM CONSEQUENCES</text>
+
+        <!-- Node 11: KAT II inhibition (therapeutic) -->
+        <rect x="556" y="50" width="160" height="52" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="636" y="70" text-anchor="middle" font-size="11.5" fill="#065f46" font-weight="600">KAT II Inhibition</text>
+        <text x="636" y="88" text-anchor="middle" font-size="10" fill="#047857">→ ↑ neuronal firing</text>
+
+        <!-- Node 12: Cognitive improvement -->
+        <rect x="556" y="148" width="160" height="52" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="636" y="167" text-anchor="middle" font-size="11.5" fill="#065f46" font-weight="600">Cognitive</text>
+        <text x="636" y="183" text-anchor="middle" font-size="11.5" fill="#065f46" font-weight="600">Improvement</text>
+        <text x="636" y="198" text-anchor="middle" font-size="9.5" fill="#047857">aged macaques</text>
+
+        <!-- Arrow: KAT II inhib → Cognitive -->
+        <line x1="636" y1="102" x2="636" y2="146" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 13: Complete KO — harmful -->
+        <rect x="740" y="50" width="172" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.6"/>
+        <text x="826" y="70" text-anchor="middle" font-size="11.5" fill="#991b1b" font-weight="600">Complete AADAT KO</text>
+        <text x="826" y="88" text-anchor="middle" font-size="10" fill="#b91c1c">knockout — harmful</text>
+
+        <!-- Node 14: Neurotoxic products -->
+        <rect x="740" y="148" width="172" height="68" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="826" y="167" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="600">↑ 3-OH-Kynurenine</text>
+        <text x="826" y="183" text-anchor="middle" font-size="10.5" fill="#b91c1c">Oxidative stress</text>
+        <text x="826" y="198" text-anchor="middle" font-size="10.5" fill="#b91c1c">Excitotoxicity</text>
+        <text x="826" y="213" text-anchor="middle" font-size="9.5" fill="#b91c1c">Behavioral abnormalities</text>
+
+        <!-- Arrow: KO → Neurotoxic -->
+        <line x1="826" y1="102" x2="826" y2="146" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Shared outcome: Balanced modulation needed -->
+        <rect x="618" y="288" width="290" height="52" rx="8" fill="#ede9fe" stroke="#3b0764" stroke-width="1.8"/>
+        <text x="763" y="308" text-anchor="middle" font-size="11.5" fill="#3b0764" font-weight="700">Balanced, Partial Modulation</text>
+        <text x="763" y="326" text-anchor="middle" font-size="10" fill="#4c1d95">reduce excess KYNA · preserve protective functions</text>
+
+        <!-- Arrows converge: Cognitive → Balanced mod -->
+        <line x1="636" y1="200" x2="700" y2="286" stroke="#3b0764" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Arrow: Neurotoxic → Balanced mod (elbow) -->
+        <line x1="826" y1="216" x2="826" y2="270" stroke="#991b1b" stroke-width="1.4"/>
+        <line x1="826" y1="270" x2="830" y2="270" stroke="#991b1b" stroke-width="1.4"/>
+        <line x1="830" y1="270" x2="870" y2="270" stroke="#991b1b" stroke-width="1.4"/>
+        <!-- Redirect to balanced via elbow going left to reach right edge of node -->
+        <line x1="870" y1="270" x2="870" y2="288" stroke="#991b1b" stroke-width="1.4"/>
+        <line x1="870" y1="295" x2="910" y2="295" stroke="#991b1b" stroke-width="0"/>
+        <!-- Simpler: just go down from node 14 bottom to a point, then left to box -->
+        <!-- Re-doing: clean elbow -->
+
+        <!-- Biomarker / AD signature note -->
+        <rect x="618" y="388" width="290" height="52" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="4 3"/>
+        <text x="763" y="408" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="600">AD Biomarker Candidate</text>
+        <text x="763" y="425" text-anchor="middle" font-size="10" fill="#1e40af">metabolic gene signatures · CSF KYNA</text>
+        <text x="763" y="441" text-anchor="middle" font-size="9.5" fill="#2563eb">transcriptomic / metabolomic</text>
+
+        <!-- Arrow: balanced → biomarker -->
+        <line x1="763" y1="340" x2="763" y2="386" stroke="#1d4ed8" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel arrow: dlPFC firing (panel B node 10) → KAT II inhibition (panel C node 11) -->
+        <!-- Route: from right edge of panel B dlPFC box (x=494, y=388) to left edge of panel C KAT II box (x=556, y=76) -->
+        <!-- This would cross nodes — instead route as elbow: right from panel B hub bottom area at safe y, then up -->
+        <!-- From dlPFC firing impaired box right edge at mid height to KAT II inhib left edge -->
+        <!-- dlPFC firing: x=494, y=388; KAT II inhib: x=556, y=76 — a diagonal would cross panel B boxes -->
+        <!-- Route: from node10 right at y=388, go right in gutter (x=510-554), then up to y=76, then right to node11 -->
+        <polyline points="494,388 520,388 520,76 554,76" fill="none" stroke="#475569" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arr-gray)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Inputs:</strong> Neuroinflammation and aging amplify tryptophan-to-kynurenine flux, providing excess substrate and upregulating AADAT expression in astrocytes and dlPFC neurons, most prominently in primate cortex.
+      <strong>Panel B — AADAT/KAT II Hub:</strong> The enzyme produces KYNA, which branches to block both NMDA receptors (glutamatergic) and α7-nicotinic acetylcholine receptors (cholinergic), converging on reduced dlPFC neuronal firing and working-memory impairment.
+      <strong>Panel C — Downstream Consequences:</strong> Partial KAT II inhibition (left branch) restores neuronal firing and improves cognition in aged primates, while complete AADAT knockout (right branch) drives neurotoxic 3-OH-kynurenine, oxidative stress, and excitotoxicity. Both branches point to the imperative of balanced, partial modulation; dashed outlines indicate the gene's associative potential as an AD biomarker candidate.
+      Gray dashed connector (gutter-routed) shows how impaired dlPFC firing motivates therapeutic KAT II inhibition strategy.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>KYNA Production &amp; Receptor Antagonism</h3>
+        <p>AADAT/KAT II converts kynurenine substrates into KYNA, which blocks both NMDA and α7-nicotinic acetylcholine receptors — directly linking AADAT to glutamatergic and cholinergic dysfunction central to AD synaptic impairment.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Procognitive Effects of KAT II Inhibition</h3>
+        <p>In aged macaques, KAT II inhibition enhanced dlPFC neuronal firing during working-memory tasks, and systemic KYNA-lowering agents improved cognitive performance — providing strong translational support for AADAT as a therapeutic target.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Primate-Specific Translational Relevance</h3>
+        <p>AADAT expression, KAT II protein, and KYNA signaling are substantially expanded in macaque and human dorsolateral prefrontal cortex compared with rodents, with AADAT especially prominent in primate neurons — making primate data particularly actionable.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Risks of Complete AADAT Suppression</h3>
+        <p>Knockout studies reveal that full loss of AADAT/KAT II activity redirects metabolism toward 3-hydroxykynurenine, increasing oxidative stress, excitotoxic pressure, motor and affective abnormalities, and region-specific metabolic instability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>AD Biomarker &amp; Gene-Signature Relevance</h3>
+        <p>AADAT appeared among glutamine metabolism-associated genes with diagnostic potential in AD bioinformatics cohorts. Genetic variants also associate with altered CSF KYNA, cytokines, and immune tone — supporting biomarker and neuroinflammation relevance, though evidence is currently associative.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Mitochondrial &amp; Redox Intersections</h3>
+        <p>AADAT functions as a mitochondrial metabolic enzyme involved in malate and CoQ10-supported redox balance. Given that mitochondrial dysfunction and oxidative stress are major AD mechanisms, therapeutic studies must include mitochondrial respiration and energy-metabolism endpoints.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <strong>Prioritize AADAT/KAT II as a pathway-modulating AD target</strong> in contexts where neuroinflammation or aging-related kynurenine pathway activation is evident, particularly in patients with dlPFC- or hippocampus-linked cognitive impairment.
+      </li>
+      <li>
+        <strong>Avoid complete AADAT inhibition strategies.</strong> The evidence strongly favors calibrated, partial, and context-specific modulation; broad genetic or pharmacologic suppression risks excitotoxic and oxidative harm through accumulation of 3-hydroxykynurenine.
+      </li>
+      <li>
+        <strong>Implement biomarker-guided patient stratification</strong> using tryptophan, kynurenine, kynurenine/tryptophan ratio, KYNA, 3-hydroxykynurenine, xanthurenic acid, quinolinic acid, oxidative stress markers, inflammatory cytokines, and cognitive readouts to identify candidates and monitor responses.
+      </li>
+      <li>
+        <strong>Focus experimental work on brain-region and cell-type specificity.</strong> The dlPFC and hippocampus are the primary regions of interest; astrocytic, neuronal, and glial inflammatory states should be evaluated independently given AADAT's different roles across cell types.
+      </li>
+      <li>
+        <strong>Monitor for metabolic shift toward neurotoxic kynurenine products</strong> in any therapeutic study. Measure quinolinic acid, 3-hydroxykynurenine, and oxidative stress endpoints alongside receptor-signaling and cognitive readouts to detect unwanted pathway redirection.
+      </li>
+      <li>
+        <strong>Evaluate AADAT as a biomarker candidate in AD cohorts</strong> through transcriptomic, metabolomic, and CSF/plasma biomarker studies, capitalizing on its association with AD metabolic gene signatures and inflammatory tone.
+      </li>
+      <li>
+        <strong>Include mitochondrial and redox safety endpoints in drug development.</strong> Because AADAT participates in mitochondrial metabolism and CoQ10-linked redox balance, safety packages should assess mitochondrial respiration, oxidative stress, and cellular energy metabolism.
+      </li>
+      <li>
+        <strong>Target therapeutic balance explicitly:</strong> the goal is to reduce excessive KYNA-mediated NMDA/α7-nicotinic receptor blockade when it impairs cognition, while preserving sufficient KYNA and xanthurenic acid-related activity to maintain anti-excitotoxic and anti-inflammatory signaling.
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="lead">Overall Assessment —</span>
+      <p style="margin-top:12px;">
+        AADAT/KAT II occupies a <strong>strategically important but nuanced position</strong> in AD neurobiological research. Its role as the principal brain enzyme producing <strong>kynurenic acid</strong> — a neuroactive metabolite that suppresses both glutamatergic and cholinergic neurotransmission — places it at the intersection of <strong>neuroinflammation, synaptic dysfunction, and cognitive decline</strong>. The translational evidence is strongest from primate dorsolateral prefrontal cortex, where aging and inflammation converge to elevate KYNA and impair working memory, and where KAT II inhibition demonstrably restores cognition-related neuronal activity. However, AADAT is emphatically <strong>not a target for broad suppression</strong>: complete enzyme loss generates neurotoxic 3-hydroxykynurenine, amplifies oxidative and excitotoxic burden, and produces behavioral pathology. The optimal therapeutic strategy is therefore <strong>precise, partial modulation</strong> guided by multi-metabolite and inflammatory biomarkers, with concurrent monitoring of mitochondrial and redox endpoints. AADAT also holds <strong>emerging value as a biomarker</strong> through its presence in AD metabolic gene signatures and its association with CSF KYNA and neuroinflammatory tone. Overall, AADAT represents a compelling but complexity-demanding AD target, meriting continued mechanistic, translational, and biomarker-focused investigation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>AADAT / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No clinical guidance implied</p>
+</footer>
+
+</body>
+</html>

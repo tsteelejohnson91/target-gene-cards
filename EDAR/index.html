@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDAR — Target Enabling Package Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1f6e;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0a2e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 28px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+    color: #78350f;
+    line-height: 1.65;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* PROSE */
+  p {
+    font-size: 0.97rem;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px 20px 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { margin-bottom: 0; font-size: 0.89rem; }
+
+  .card-accent    { background: var(--light);          border-color: var(--mid);      }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger    { background: var(--danger-light);   border-color: var(--danger);   }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive  { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning   { background: var(--warning-light);  border-color: #d97706; }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral   { background: var(--neutral-light);  border-color: var(--neutral);  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.93rem;
+  }
+
+  .takeaways ol li:last-child { border-bottom: none; }
+
+  .takeaways ol li::before {
+    content: counter(ta);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--white);
+    background: var(--mid);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0a2e 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: var(--white);
+  }
+
+  .verdict h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.65);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 7px;
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.97rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #d8b4fe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.77rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: EDAR &nbsp;|&nbsp; Ectodysplasin A Receptor</span>
+    <span class="chip chip-danger">⚠ Pleiotropic Safety Concern</span>
+  </div>
+  <h1>EDAR &amp; Ectodermal / Alzheimer's Disease Relevance</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Relevance Caveat</strong>
+      The supplied evidence base does not support EDAR as an Alzheimer's disease gene. EDAR is a developmental ectodermal receptor; any overlap with neurodegeneration is strictly theoretical, via shared broad pathways (NF-κB, TNF-family, Wnt). Treat any AD-directed hypothesis as speculative.
+    </div>
+    <p>EDAR (ectodysplasin A receptor) is a member of the TNF receptor superfamily that operates within the canonical <strong>EDA–EDAR–EDARADD signaling axis</strong>. Its principal, well-established role is in the patterning and development of ectodermal appendages — including teeth, hair follicles, sweat glands, sebaceous and salivary glands, mammary glands, feathers, scales, and craniofacial structures. Downstream of ligand binding, EDAR recruits the adaptor EDARADD through a death-domain interaction, assembles TRAF6/TAB2/TAK1 complexes, and drives NF-κB transcriptional output.</p>
+    <p>The supplied text provides <em>no direct evidence</em> linking EDAR to Alzheimer's disease mechanisms. There are no reports of EDAR expression in Alzheimer's brain tissue, no genetic associations with AD risk, and no functional studies of EDAR effects on amyloid-β, tau, microglia, synaptic integrity, or cognition. Alzheimer's-relevant biomarkers and genes cited in the same literature (TREM2, CD33, SCFD1, APOE, CSF Aβ42, CSF tau) are distinct from EDAR. Furthermore, several apparent mentions of "EDAR" in the source corpus reflect unrelated uses — author email addresses, cohort labels, engineering acronyms — not the receptor protein.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~960 wide × 490 tall. Three panels:
+             Panel A (left): EDA–EDAR axis upstream
+             Panel B (centre): branching downstream signaling
+             Panel C (right): disease/phenotype outputs -->
+        <svg viewBox="0 0 960 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A background: Ligand-Receptor Axis -->
+          <rect x="18" y="18" width="248" height="454" rx="12" fill="#f3eeff" stroke="#7c3aed" stroke-width="1.5" opacity="0.55"/>
+          <text x="142" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#4a1f6e" letter-spacing="1.5">A · LIGAND–RECEPTOR AXIS</text>
+
+          <!-- Panel B background: Downstream Signaling -->
+          <rect x="286" y="18" width="382" height="454" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5" opacity="0.5"/>
+          <text x="477" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.5">B · DOWNSTREAM SIGNALING BRANCHES</text>
+
+          <!-- Panel C background: Phenotypic Outputs -->
+          <rect x="688" y="18" width="256" height="454" rx="12" fill="#fff1f1" stroke="#991b1b" stroke-width="1.5" opacity="0.5"/>
+          <text x="816" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.5">C · DISEASE PHENOTYPES</text>
+
+          <!-- === PANEL A NODES === -->
+          <!-- Node A1: EDA Ligand -->
+          <rect x="68" y="55" width="148" height="44" rx="7" fill="#7c3aed" stroke="#4a1f6e" stroke-width="1.5"/>
+          <text x="142" y="74" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">EDA Ligand</text>
+          <text x="142" y="90" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#e9d5ff">(Ectodysplasin A)</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="142" y1="99" x2="142" y2="141" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node A2: EDAR Receptor -->
+          <rect x="60" y="142" width="164" height="44" rx="7" fill="#4a1f6e" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="142" y="161" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">EDAR Receptor</text>
+          <text x="142" y="177" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#d8b4fe">TNF-R Superfamily</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="142" y1="186" x2="142" y2="228" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node A3: EDARADD -->
+          <rect x="67" y="229" width="150" height="44" rx="7" fill="#6d28d9" stroke="#4a1f6e" stroke-width="1.5"/>
+          <text x="142" y="249" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">EDARADD</text>
+          <text x="142" y="265" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#ede9fe">Death-domain adaptor</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="142" y1="273" x2="142" y2="315" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node A4: TRAF6/TAB2/TAK1 -->
+          <rect x="52" y="316" width="180" height="44" rx="7" fill="#5b21b6" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="142" y="335" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">TRAF6 / TAB2 / TAK1</text>
+          <text x="142" y="351" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#ddd6fe">Signaling complex</text>
+
+          <!-- === PANEL B NODES === -->
+          <!-- Node B0: NF-κB (branch root) -->
+          <rect x="370" y="142" width="214" height="44" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+          <text x="477" y="161" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">NF-κB Activation</text>
+          <text x="477" y="177" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#99f6e4">Core transcriptional output</text>
+
+          <!-- Arrow TRAF6→NF-κB: horizontal from A4 right edge to B0 left edge -->
+          <!-- A4 right edge x=232, y centre=338. B0 left edge x=370, y centre=164 -->
+          <!-- Route: go right from A4, then up, then right into B0 via elbow -->
+          <polyline points="232,338 258,338 258,164 370,164" fill="none" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Branch left: NF-κB → Inflammatory signaling -->
+          <rect x="300" y="250" width="148" height="44" rx="7" fill="#0369a1" stroke="#0c4a6e" stroke-width="1.5"/>
+          <text x="374" y="269" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Inflammatory</text>
+          <text x="374" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#bae6fd">NF-κB / TNF-family</text>
+
+          <!-- Branch right: NF-κB → MAPK/JNK -->
+          <rect x="466" y="250" width="148" height="44" rx="7" fill="#0369a1" stroke="#0c4a6e" stroke-width="1.5"/>
+          <text x="540" y="269" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">MAPK / JNK</text>
+          <text x="540" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#bae6fd">Stress kinase cascade</text>
+
+          <!-- Arrows NF-κB to both branches -->
+          <line x1="424" y1="186" x2="374" y2="250" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+          <line x1="530" y1="186" x2="540" y2="250" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+          <!-- Left branch continued: Inflammatory → Dev Pathways -->
+          <rect x="300" y="348" width="148" height="44" rx="7" fill="#164e63" stroke="#0891b2" stroke-width="1.5"/>
+          <text x="374" y="365" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="white">Wnt / BMP / Shh</text>
+          <text x="374" y="381" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#a5f3fc">Dev. pathway crosstalk</text>
+
+          <!-- Right branch continued: MAPK → Apoptosis -->
+          <rect x="466" y="348" width="148" height="44" rx="7" fill="#164e63" stroke="#0891b2" stroke-width="1.5"/>
+          <text x="540" y="365" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Apoptotic signals</text>
+          <text x="540" y="381" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#a5f3fc">Cell fate / survival</text>
+
+          <!-- Arrows branch →continued -->
+          <line x1="374" y1="294" x2="374" y2="348" stroke="#0369a1" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+          <line x1="540" y1="294" x2="540" y2="348" stroke="#0369a1" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+          <!-- Converge to Ectodermal Output -->
+          <rect x="356" y="432" width="242" height="30" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+          <text x="477" y="452" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Ectodermal Patterning Output</text>
+
+          <!-- Converge arrows -->
+          <line x1="374" y1="392" x2="420" y2="432" stroke="#164e63" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+          <line x1="540" y1="392" x2="534" y2="432" stroke="#164e63" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+          <!-- === PANEL C NODES === -->
+          <!-- Phenotype node 1: Ectodermal Dysplasia -->
+          <rect x="704" y="80" width="220" height="44" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.5"/>
+          <text x="814" y="99" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Ectodermal Dysplasia</text>
+          <text x="814" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#fecaca">HED / anhidrotic type</text>
+
+          <!-- Phenotype node 2: Dental defects -->
+          <rect x="704" y="178" width="220" height="44" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+          <text x="814" y="197" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Dental Defects</text>
+          <text x="814" y="213" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#fde68a">Oligodontia / hypodontia</text>
+
+          <!-- Phenotype node 3: Glandular/Hair defects -->
+          <rect x="704" y="278" width="220" height="44" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+          <text x="814" y="296" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Glandular / Hair Defects</text>
+          <text x="814" y="312" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#fde68a">Sweat, sebaceous, salivary</text>
+
+          <!-- Phenotype node 4: Therapeutic context -->
+          <rect x="704" y="378" width="220" height="44" rx="7" fill="#475569" stroke="#334155" stroke-width="1.5"/>
+          <text x="814" y="397" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="white">Therapeutic Targets</text>
+          <text x="814" y="413" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#e2e8f0">Agonist Ab / rEDA (non-CNS)</text>
+
+          <!-- Arrows from Ectodermal Output → phenotypes via right panel -->
+          <!-- Route: from B output right edge to panel C nodes
+               B output right edge: x=598, y=447.
+               Panel C nodes: left edge x=704 -->
+          <!-- Arrow to Ectodermal Dysplasia: go right from 598,447, up to y=102, then right -->
+          <polyline points="598,447 644,447 644,102 704,102" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+          <!-- Arrow to Dental -->
+          <polyline points="644,200 704,200" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+          <!-- Arrow to Glandular -->
+          <polyline points="644,300 704,300" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+          <!-- Arrow to Therapeutic -->
+          <polyline points="644,400 704,400" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+          <!-- small annotation badge: "No AD evidence" in top-right -->
+          <rect x="770" y="442" width="108" height="22" rx="10" fill="#fecaca" stroke="#991b1b" stroke-width="1"/>
+          <text x="824" y="457" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#7f1d1d">No AD evidence</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> — The canonical EDA–EDAR–EDARADD axis: EDA ligand binds EDAR (TNF-R superfamily), recruits the death-domain adaptor EDARADD, and assembles the TRAF6/TAB2/TAK1 signaling complex.
+        <strong>Panel B</strong> — Downstream branching: the TRAF6 complex activates NF-κB as the principal output, which bifurcates into an inflammatory/TNF-family branch (further crosstalk with Wnt/BMP/Shh developmental pathways) and a MAPK/JNK stress-kinase branch (apoptotic signaling), both converging on ectodermal patterning output.
+        <strong>Panel C</strong> — Disease-relevant phenotypes and therapeutic contexts driven by EDAR pathway dysfunction, all non-CNS: ectodermal dysplasia (HED), dental/hair defects, glandular abnormalities, and agonist-antibody/recombinant-EDA therapeutic approaches.
+        The "No AD evidence" badge reflects the absence of any Alzheimer's-specific EDAR data in the source corpus.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Biology is Developmental</h3>
+        <p>EDAR's primary and repeatedly demonstrated role is in ectodermal and epithelial development — teeth, hair follicles, sweat, sebaceous, salivary, and mammary glands, feathers, scales, and craniofacial patterning. This is not an Alzheimer's disease biology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Loss-of-Function → Ectodermal Dysplasia</h3>
+        <p>EDAR mutations consistently cause hypohidrotic or anhidrotic ectodermal dysplasia, tooth agenesis (oligodontia/hypodontia), sparse hair, sweat-gland defects, dry skin, glandular abnormalities, and craniofacial or dental trait variation. These are the validated disease associations.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Signaling Mechanism is Well-Defined</h3>
+        <p>Functional EDAR signaling requires intact ligand–receptor binding, EDAR death-domain integrity, the EDAR–EDARADD interaction, assembly of TRAF6/TAB2/TAK1 complexes, and downstream NF-κB transcriptional output. This axis is the established molecular mechanism.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Pharmacological Tractability (Non-CNS)</h3>
+        <p>Therapeutic evidence is strongest outside the CNS: agonist anti-EDAR antibodies, recombinant EDA and EDA-like molecules, and pathway modulation have been explored for ectodermal dysplasia, glandular defects, wound repair, and developmental rescue — not for neurodegeneration.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Theoretical AD Overlap Only</h3>
+        <p>EDAR intersects with broad pathways (NF-κB, Wnt/β-catenin, BMP, Shh, FGF, TGFβ, Notch, MAPK/JNK, inflammatory signaling) that are relevant to neurodegeneration generally. However, the supplied text does not demonstrate that EDAR itself contributes to Alzheimer's disease via any of these routes.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Source Text Disambiguation Required</h3>
+        <p>Multiple non-gene uses of "EDAR" appear in the corpus — author emails, study cohort labels, wastewater/engineering acronyms. These must not be interpreted as evidence for EDAR receptor biology. Alzheimer's signals in the same literature involve TREM2, CD33, SCFD1, APOE, CSF Aβ42, and CSF tau — not EDAR.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Do not classify EDAR as an established AD mechanism gene.</strong> The supplied evidence base contains no direct link between EDAR and Alzheimer's disease mechanisms, expression in AD brain regions, or genetic association with AD risk.</div>
+      </li>
+      <li>
+        <div><strong>Do not prioritize EDAR as a validated AD therapeutic target.</strong> Without Alzheimer's-specific functional, genetic, or translational evidence, prioritization as an AD drug target is not justified by this data.</div>
+      </li>
+      <li>
+        <div><strong>Treat any EDAR–Alzheimer's hypothesis as strictly speculative.</strong> Any hypothesis must rest only on shared broad pathway biology — particularly NF-κB/TNF-family signaling and Wnt-related crosstalk — and must be explicitly framed as such.</div>
+      </li>
+      <li>
+        <div><strong>Key missing evidence required before AD exploration:</strong> (i) EDAR, EDA, and EDARADD expression mapping in neurons, astrocytes, microglia, endothelial cells, choroid plexus, and AD-vulnerable brain regions; (ii) human genetic association testing for EDAR variants vs. AD risk/progression with ancestry correction (EDAR variants are population-stratified); (iii) transcriptomic or proteomic evidence of EDAR pathway dysregulation in AD tissue; (iv) functional studies of EDAR modulation on amyloid-β, tau, neuroinflammation, synaptic integrity, neuronal survival, and cognition.</div>
+      </li>
+      <li>
+        <div><strong>Conduct pleiotropic safety assessment before any CNS investigation.</strong> EDAR has broad developmental roles in teeth, hair, skin, sweat, salivary, sebaceous, and mammary glands, and epithelial repair. Modulating this pathway carries substantial off-target risk that must be assessed independently of any potential CNS benefit.</div>
+      </li>
+      <li>
+        <div><strong>Regard EDAR primarily as a non-CNS developmental target.</strong> Based strictly on the supplied text, EDAR is best positioned as a druggable ectodermal signaling receptor with therapeutic relevance in ectodermal dysplasia and glandular repair — not as a current Alzheimer's disease target.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>EDAR is a well-characterized developmental receptor</strong> operating within the EDA–EDAR–EDARADD–NF-κB axis, with a validated disease role in <strong>hypohidrotic ectodermal dysplasia, dental agenesis, and glandular abnormalities</strong>. Its pharmacology has been meaningfully advanced for non-CNS ectodermal conditions. However, <strong>the supplied evidence base contains no direct support for EDAR as an Alzheimer's disease gene</strong>: no expression data in AD brain, no AD genetic association, no mechanistic data on amyloid-β or tau, and no AD translational studies. Any intersection with Alzheimer's biology is purely theoretical, arising only from EDAR's participation in broad signaling networks (NF-κB, Wnt, MAPK) that are not EDAR-specific. <strong>Further AD-specific investigation would require entirely new datasets</strong> — expression mapping, genetic association, functional perturbation in AD models — before EDAR could be meaningfully repositioned as a neurodegeneration target. Until then, EDAR should remain classified as a <strong>developmental ectodermal receptor with pleiotropic safety liabilities</strong> and no established Alzheimer's relevance.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  EDAR · Ectodysplasin A Receptor TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

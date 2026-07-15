@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMPO / TMPO-AS1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6b;
+    --mid: #6d3fc0;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #64748b;
+    --slate-light: #f8fafc;
+    --slate-border: #e2e8f0;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2d9f8;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(239,68,68,0.45);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #e2d9f8;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--light);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.92rem;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { line-height: 1.6; }
+  .card-accent  { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue    { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate   { background: var(--slate-light); border-color: var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 36px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #c4b5f8;
+    margin-bottom: 10px;
+  }
+  .verdict-banner p { color: #e9e4fb; }
+  .verdict-banner strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 22px 16px;
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TMPO / TMPO-AS1 &nbsp;|&nbsp; Thymopoietin / LAP2 &amp; Antisense lncRNA</span>
+    <span class="chip chip-danger">⚠ Therapeutic directionality uncertain</span>
+  </div>
+  <h1>TMPO &amp; TMPO-AS1 in Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong>&nbsp; TMPO and TMPO-AS1 are <em>not</em> validated Alzheimer's disease targets. All AD-relevant connections are indirect, hypothesis-generating, and cross-contextual. The supplied text contains no direct study of TMPO in AD brain, AD models, amyloid-β biology, or tau pathology. Therapeutic directionality is unknown and broad inhibition could compromise neuronal nuclear integrity.
+    </div>
+
+    <div class="overview-body">
+      <p>The supplied text does not establish <em>TMPO</em> as a direct Alzheimer's disease (AD) mechanism or validated therapeutic target. Across the records, TMPO most often refers to either thymopoietin/LAP2 — a nuclear-envelope and lamina-associated protein family — or <em>TMPO-AS1</em>, an antisense long non-coding RNA. Several other uses of "TMPO" in the literature represent unrelated chemical or clinical abbreviations and should not be interpreted as evidence about the TMPO gene or protein in AD.</p>
+      <p>No cited material directly links TMPO or TMPO-AS1 to amyloid-β production or clearance, tau phosphorylation or aggregation, synaptic degeneration, cognitive decline, or validated AD animal or patient models. Its AD relevance is therefore indirect and hypothesis-generating, based on overlap with mechanisms known to matter in neurodegeneration: nuclear-envelope integrity, chromatin organization, DNA damage response, aberrant cell-cycle activation, oxidative stress, inflammation, ferroptosis/redox biology, metabolic stress, autophagy/proteostasis, and immune aging.</p>
+      <p>TMPO/LAP2 is most plausibly relevant to AD through <strong>nuclear architecture and lamin-associated biology</strong>. TMPO-AS1 is most plausibly relevant through <strong>regulation of miRNA networks, cell-cycle pathways, inflammatory signaling, metabolic stress responses, and programmed-cell-death pathways</strong>. Neither entity is currently supported as an AD-specific drug target by the available evidence.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 950 wide × 490 tall. 4 panels. Count: 16 nodes max -->
+        <!-- PANELS:
+             Panel A (left): TMPO/LAP2 Nuclear Biology  — 4 nodes
+             Panel B (center-top): Cell-Cycle / DNA Damage Branch — 4 nodes (branching)
+             Panel C (center-bottom): TMPO-AS1 lncRNA Axes — 4 nodes (branching)
+             Panel D (right): AD-Relevant Outputs (shared outcomes) — 3 nodes
+             Total nodes: 15
+        -->
+        <svg viewBox="0 0 950 490" width="910" height="470" xmlns="http://www.w3.org/2000/svg" aria-label="TMPO mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+          </defs>
+
+          <!-- ═══════════════════════════════ PANEL A ═══════════════════════════════ -->
+          <!-- Panel A background: x=14, y=14, w=200, h=458 -->
+          <rect x="14" y="14" width="200" height="458" rx="12" fill="#ede8f9" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="114" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" letter-spacing="1.5" fill="#3b1f6b" text-decoration="none">PANEL A</text>
+          <text x="114" y="48" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#3b1f6b" font-weight="700" letter-spacing="0.8">TMPO / LAP2 Nuclear Biology</text>
+
+          <!-- Node A1: Lamin A/C Interactions -->
+          <rect x="30" y="60" width="168" height="46" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="114" y="80" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Lamin A/C Interactions</text>
+          <text x="114" y="97" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6b">(LAP2 isoforms)</text>
+
+          <!-- A1→A2 arrow -->
+          <line x1="114" y1="106" x2="114" y2="126" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Nuclear Envelope Organization -->
+          <rect x="30" y="126" width="168" height="46" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="114" y="146" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Nuclear Envelope</text>
+          <text x="114" y="163" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6b">Organization</text>
+
+          <!-- A2→A3 arrow -->
+          <line x1="114" y1="172" x2="114" y2="192" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Chromatin / Heterochromatin -->
+          <rect x="30" y="192" width="168" height="46" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="114" y="212" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Chromatin &amp; Spatial</text>
+          <text x="114" y="229" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6b">Genome Organization</text>
+
+          <!-- A3→A4 arrow -->
+          <line x1="114" y1="238" x2="114" y2="258" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4: Transcriptional Control -->
+          <rect x="30" y="258" width="168" height="46" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="114" y="278" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Transcriptional &amp;</text>
+          <text x="114" y="295" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6b">Stress Adaptation</text>
+
+          <!-- ═══════════════════════════════ PANEL B ═══════════════════════════════ -->
+          <!-- Panel B background: x=232, y=14, w=230, h=230 -->
+          <rect x="232" y="14" width="230" height="230" rx="12" fill="#fef9ff" fill-opacity="0.7" stroke="#9333ea" stroke-width="1.2"/>
+          <text x="347" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" letter-spacing="1.5" fill="#3b1f6b">PANEL B</text>
+          <text x="347" y="48" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#3b1f6b" font-weight="700" letter-spacing="0.8">Cell-Cycle &amp; DNA Damage</text>
+
+          <!-- Node B1: E2F/Rb Signaling (shared entry) -->
+          <rect x="264" y="60" width="166" height="46" rx="8" fill="#ffffff" stroke="#9333ea" stroke-width="1.5"/>
+          <text x="347" y="80" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">E2F / Rb Signaling</text>
+          <text x="347" y="97" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6d3fc0">Cell-cycle progression</text>
+
+          <!-- B1 branches to B2 (left) and B3 (right) -->
+          <!-- B1→B2 -->
+          <line x1="310" y1="106" x2="285" y2="126" stroke="#9333ea" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B1→B3 -->
+          <line x1="384" y1="106" x2="409" y2="126" stroke="#9333ea" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node B2: Neuronal Cell-Cycle Re-entry -->
+          <rect x="244" y="126" width="126" height="46" rx="8" fill="#ffffff" stroke="#9333ea" stroke-width="1.5"/>
+          <text x="307" y="145" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b" font-weight="bold">Neuronal Cell-</text>
+          <text x="307" y="162" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6d3fc0">Cycle Re-entry</text>
+
+          <!-- Node B3: DNA Damage / WRN Complexes -->
+          <rect x="384" y="126" width="62" height="46" rx="8" fill="#ffffff" stroke="#9333ea" stroke-width="1.5"/>
+          <text x="415" y="145" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b" font-weight="bold">DNA</text>
+          <text x="415" y="160" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6d3fc0">Damage/WRN</text>
+
+          <!-- B2→converge, B3→converge -->
+          <line x1="307" y1="172" x2="307" y2="193" stroke="#9333ea" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="415" y1="172" x2="375" y2="193" stroke="#9333ea" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node B4: Apoptosis / Neuronal Vulnerability -->
+          <rect x="260" y="193" width="174" height="44" rx="8" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.5"/>
+          <text x="347" y="211" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b" font-weight="bold">Apoptosis &amp; Neuronal</text>
+          <text x="347" y="228" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6d3fc0">Vulnerability</text>
+
+          <!-- ═══════════════════════════════ PANEL C ═══════════════════════════════ -->
+          <!-- Panel C background: x=232, y=262, w=230, h=210 -->
+          <rect x="232" y="262" width="230" height="210" rx="12" fill="#f0fdf4" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="347" y="283" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" letter-spacing="1.5" fill="#065f46">PANEL C</text>
+          <text x="347" y="295" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#065f46" font-weight="700" letter-spacing="0.8">TMPO-AS1 lncRNA Axes</text>
+
+          <!-- Node C1: miRNA Sponge (ceRNA) -->
+          <rect x="264" y="306" width="166" height="46" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="347" y="325" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">miRNA Sponge (ceRNA)</text>
+          <text x="347" y="342" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">let-7, E2F targets</text>
+
+          <!-- C1 branches to C2 and C3 -->
+          <line x1="315" y1="352" x2="292" y2="372" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="379" y1="352" x2="402" y2="372" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C2: Inflammatory / PI3K/Akt Signaling -->
+          <rect x="240" y="372" width="122" height="46" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="301" y="391" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b" font-weight="bold">PI3K/Akt/mTOR</text>
+          <text x="301" y="407" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#0f766e">Wnt/β-catenin</text>
+
+          <!-- Node C3: Ferroptosis / Redox -->
+          <rect x="374" y="372" width="74" height="46" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="411" y="391" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b" font-weight="bold">Ferroptosis</text>
+          <text x="411" y="407" text-anchor="middle" font-family="Georgia" font-size="9" fill="#0f766e">Redox / Iron</text>
+
+          <!-- Node C4: Inflammatory Signaling -->
+          <!-- No convergence node needed; C2 and C3 connect separately to panel D -->
+
+          <!-- ═══════════════════════════════ PANEL D ═══════════════════════════════ -->
+          <!-- Panel D background: x=482, y=14, w=452, h=458 -->
+          <rect x="482" y="14" width="452" height="458" rx="12" fill="#fff7ed" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="708" y="36" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" letter-spacing="1.5" fill="#78350f">PANEL D</text>
+          <text x="708" y="48" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#78350f" font-weight="700" letter-spacing="0.8">AD-Relevant Candidate Outputs</text>
+
+          <!-- Node D1: Heterochromatin Loss / Nuclear Morphology -->
+          <rect x="498" y="62" width="196" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="596" y="83" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Heterochromatin Loss &amp;</text>
+          <text x="596" y="100" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Nuclear Morphology (AD)</text>
+
+          <!-- Node D2: Neuroinflammation / Microglia -->
+          <rect x="706" y="62" width="206" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="809" y="83" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Neuroinflammation &amp;</text>
+          <text x="809" y="100" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Microglial Activation</text>
+
+          <!-- Node D3: Synaptic Dysfunction / Cognitive Decline -->
+          <rect x="498" y="192" width="196" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="596" y="213" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Synaptic Dysfunction</text>
+          <text x="596" y="230" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Cognitive Decline</text>
+
+          <!-- Node D4: Iron Dyshomeostasis / Lipid Peroxidation -->
+          <rect x="706" y="192" width="206" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="809" y="213" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b" font-weight="bold">Iron Dyshomeostasis &amp;</text>
+          <text x="809" y="230" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Lipid Peroxidation</text>
+
+          <!-- Node D5: Unvalidated in AD — Caution -->
+          <rect x="570" y="342" width="276" height="52" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.8"/>
+          <text x="708" y="363" text-anchor="middle" font-family="Georgia" font-size="11" fill="#991b1b" font-weight="bold">⚠ Causality Undemonstrated in AD</text>
+          <text x="708" y="380" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">All connections remain hypothesis-level</text>
+
+          <!-- D1→D3 arrow -->
+          <line x1="596" y1="114" x2="596" y2="192" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- D2→D4 arrow -->
+          <line x1="809" y1="114" x2="809" y2="192" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- D3→D5 arrow (left branch) -->
+          <line x1="596" y1="244" x2="640" y2="342" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- D4→D5 arrow (right branch) -->
+          <line x1="809" y1="244" x2="776" y2="342" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- ═══════ CROSS-PANEL CONNECTORS ═══════ -->
+          <!-- Panel A (A4) → Panel D (D1): route through gutter x=214 to x=498 at y=281 -->
+          <!-- A4 bottom-right: x=198, y=281. Go right along y=281 to x=498 entry of D3... 
+               But D3 is at y=192. Route: A4 right edge x=198 y=281 → elbow right to x=476 y=281 → up to y=218 → right to D3 left=498 y=218. 
+               Check: gutter between panel A (ends x=214) and panel B (starts x=232) is x=214..232. 
+               Gutter between panel B/C (ends x=462) and panel D (starts x=482) is x=462..482. 
+               Route A4→D1: go right from x=198 y=281 to x=476 (gutter), up to y=88, right to D1 x=498 y=88. -->
+          <path d="M198 281 H476 V88 H498" fill="none" stroke="#6d3fc0" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel B (B4) → Panel D (D1): B4 right edge x=434 y=215 → right gutter to D1 x=498 y=88 -->
+          <path d="M434 215 H476 V88 H498" fill="none" stroke="#9333ea" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel C (C2) → Panel D (D2): route through gutter -->
+          <!-- C2 right edge: x=362 y=395. Go right to x=476 y=395 → up to y=88 → right to D2 x=706 y=88 -->
+          <path d="M362 395 H476 V140 H706" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel C (C3) → Panel D (D4): C3 right edge x=448 y=395 → right to D4 x=706 y=218 -->
+          <path d="M448 395 H476 V218 H706" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> traces the TMPO/LAP2 nuclear biology axis: lamin A/C interactions → nuclear envelope organization → chromatin/genome organization → transcriptional and stress adaptation.
+        <strong>Panel B</strong> shows the cell-cycle and DNA damage branch: E2F/Rb signaling fans into two parallel sub-cascades — neuronal cell-cycle re-entry and WRN-associated DNA damage — converging on apoptosis and neuronal vulnerability.
+        <strong>Panel C</strong> captures TMPO-AS1 lncRNA axes: ceRNA/miRNA sponging branches into PI3K/Akt/mTOR-Wnt signaling and ferroptosis/redox pathways.
+        <strong>Panel D</strong> lists candidate AD-relevant outputs (heterochromatin loss, neuroinflammation, synaptic dysfunction, iron dyshomeostasis) converging on an unvalidated-causality warning node.
+        Dashed lines indicate cross-panel hypothesis-level connections, not demonstrated AD pathways. Node count: 15.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>Direct AD Evidence Is Absent</h3>
+        <p>No supplied study shows altered TMPO expression, mutation, phosphorylation, localization, or function in AD brain, AD models, amyloid-β biology, tau pathology, synaptic loss, or cognition. All AD connections are indirect and hypothesis-generating.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Nuclear Lamina: Strongest Mechanistic Bridge</h3>
+        <p>AD and brain aging involve heterochromatin disruption, transcriptional dysregulation, DNA damage accumulation, and impaired neuronal stress responses. TMPO/LAP2's role in lamin A/C-associated nuclear organization makes it a <em>plausible modifier</em> of neuronal vulnerability — but this is unproven.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Cell-Cycle Dysregulation: Recurring Theme</h3>
+        <p>TMPO and TMPO-AS1 are repeatedly linked to E2F/Rb signaling, mitotic genes, and cell-cycle progression in cancer systems. Aberrant neuronal cell-cycle re-entry is proposed in AD, but no supplied evidence demonstrates TMPO/TMPO-AS1 driving this in neurons.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>TMPO-AS1 Ferroptosis &amp; Redox Link</h3>
+        <p>TMPO-AS1 has been linked to ferroptosis resistance, lipid ROS, intracellular iron, and malondialdehyde in cancer contexts. Because AD involves iron dyshomeostasis and lipid peroxidation, this represents a credible but entirely unexplored research direction in neurons.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>TMPO-AS1 Signaling Pathway Overlap</h3>
+        <p>Reported TMPO-AS1-linked pathways — PI3K/Akt/mTOR, Wnt/β-catenin, TGF-β/Smad, HIF-1α, E2F, ferroptosis, and inflammatory signaling — are all relevant to AD. However, the evidence comes from cancer, wound healing, periodontitis, and ischemic injury, not AD contexts.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Therapeutic Directionality Is Unknown</h3>
+        <p>In cancer, inhibiting TMPO-AS1 or TMPO suppresses tumor growth. In AD, broad inhibition could be harmful if TMPO/LAP2 supports neuronal nuclear integrity, chromatin stability, DNA repair, or stress survival. Cell-type- and disease-stage-specific validation is essential before any therapeutic claim.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat as exploratory candidates only.</strong> TMPO and TMPO-AS1 are not validated AD targets. The current evidence supports biological plausibility only and does not justify therapeutic development claims.</li>
+      <li><strong>Prioritize AD-specific expression analyses.</strong> Measure TMPO isoforms and TMPO-AS1 in AD and control brain tissue across disease stages, vulnerable regions, and single-cell populations including neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and pericytes.</li>
+      <li><strong>Test association with core AD pathology.</strong> Determine whether TMPO/TMPO-AS1 levels correlate with amyloid plaque burden, tau pathology, Braak stage, synaptic markers, neuroinflammatory markers, DNA damage, nuclear morphology, heterochromatin loss, and cognitive decline.</li>
+      <li><strong>Define cell-type-specific function.</strong> Manipulate TMPO and TMPO-AS1 in iPSC-derived neurons, astrocytes, microglia, endothelial cells, and brain organoids to assess effects on survival, synaptic markers, inflammatory activation, mitochondrial function, oxidative stress, autophagy, ferroptosis, and DNA repair.</li>
+      <li><strong>Investigate nuclear-envelope mechanisms first for TMPO/LAP2.</strong> Focus on lamin interactions, nuclear morphology, chromatin accessibility, heterochromatin maintenance, DNA damage response, and stress-induced nuclear remodeling under amyloid-β, tau, oxidative, inflammatory, or metabolic stress conditions.</li>
+      <li><strong>Map brain-relevant lncRNA targets for TMPO-AS1.</strong> Do not assume cancer-derived ceRNA axes apply to AD. Candidate pathways include let-7-family miRNAs, E2F signaling, PI3K/Akt/mTOR, Wnt/β-catenin, TGF-β/Smad, ferroptosis, and inflammatory signaling in neural cell types.</li>
+      <li><strong>Demonstrate causality before advancing therapeutically.</strong> TMPO becomes a stronger AD target only if experiments show that its dysregulation causally affects amyloid/tau toxicity, neuroinflammation, synaptic dysfunction, neuronal death, ferroptosis, DNA repair failure, or nuclear-envelope instability in bona fide AD models.</li>
+      <li><strong>If therapeutic development is pursued, favor precision approaches.</strong> Potential strategies include isoform-specific modulation of TMPO/LAP2 interactions or antisense/siRNA approaches against maladaptive TMPO-AS1 activity — but only after determining whether TMPO/TMPO-AS1 is harmful, protective, or compensatory in AD-relevant cells.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — TMPO / TMPO-AS1 in Alzheimer's Disease</div>
+      <p>
+        <strong>TMPO and TMPO-AS1 are biologically plausible but entirely unvalidated candidates for Alzheimer's disease research.</strong> The protein TMPO/LAP2 participates in nuclear-envelope and chromatin biology — processes that are disrupted in aging and neurodegeneration — while the lncRNA TMPO-AS1 modulates miRNA networks, cell-cycle signaling, inflammatory pathways, and ferroptosis/redox biology, all of which are mechanistically relevant to AD. However, <strong>no direct evidence from AD brain, AD models, amyloid-β biology, or tau pathology</strong> is present in the supplied text. The cancer-derived functional literature for TMPO-AS1 demonstrates regulatory potency but cannot be extrapolated directly to neurons. <strong>Therapeutic directionality is genuinely uncertain</strong>: interventions that are beneficial in tumors may compromise neuronal nuclear integrity, chromatin stability, or stress resilience. A structured research program — beginning with AD-specific expression profiling, correlation with pathological hallmarks, and cell-type-specific functional manipulation — is the scientifically warranted next step before any therapeutic claim is entertained.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>TMPO / TMPO-AS1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

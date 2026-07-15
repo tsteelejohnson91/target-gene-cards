@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAMP5 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f8;
+    --danger-dark: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2d9f3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 28px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 1rem;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px 20px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left-color: var(--danger-dark);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left-color: var(--neutral-text);
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left-color: #2563eb;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+
+  .takeaways-list li {
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    border-radius: 12px;
+    padding: 40px 36px;
+    color: #e2d9f3;
+    line-height: 1.8;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #c4b5fd;
+  }
+
+  .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LAMP5 &nbsp;|&nbsp; Lysosomal Associated Membrane Protein Family Member 5</span>
+    <span class="chip chip-danger">⚠ Safety: systemic LAMP5 inhibition may be harmful</span>
+  </div>
+  <h1>LAMP5 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Existing AD-model evidence suggests that <em>reducing</em> LAMP5 worsens network dysfunction and functional deficits. Direct LAMP5 blockade or depletion strategies should be approached with caution. LAMP5 also has roles in immune/endosomal biology and cancer contexts that raise additional concerns for systemic targeting.
+    </div>
+
+    <div class="overview-body">
+      <p>LAMP5 is most relevant to Alzheimer's disease (AD) as a marker and functional component of specialized GABAergic inhibitory interneurons, especially cortical and entorhinal interneuron populations involved in circuit regulation. The strongest AD-specific evidence indicates that loss of LAMP5-positive interneurons contributes to neuronal network dysfunction, hyperexcitation, and hypersynchronicity in amyloid-β– and tau-driven disease models.</p>
+      <p>LAMP5 is not best supported as a conventional inhibitory target in AD. Instead, the evidence favors a protective or homeostatic role in inhibitory interneuron survival and synaptic function. Therapeutic relevance would most plausibly involve preserving LAMP5-positive interneurons, restoring inhibitory circuit stability, or modulating LAMP5-associated pathways such as synaptic transmission, lysosomal/autophagy biology, metabolic signaling, and neuroimmune crosstalk.</p>
+      <p>LAMP5 also has broader disease biology outside AD, including roles in lysosomal/autophagy pathways, immune/endosomal signaling, and cancer progression. These findings suggest biological activity and potential druggability in some contexts, but they do not directly validate LAMP5 as an AD therapeutic target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- PANEL A: AD Disease Context -->
+        <rect x="10" y="10" width="285" height="475" rx="12" fill="#ede8f8" fill-opacity="0.45" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="26" y="32" font-size="9" font-weight="bold" text-anchor="start" fill="#3b1f6e" letter-spacing="0.08em">A — AD DISEASE DRIVERS</text>
+
+        <!-- Amyloid-β node -->
+        <rect x="60" y="44" width="120" height="40" rx="7" fill="#c4b5fd" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="120" y="60" text-anchor="middle" fill="#1e293b" font-weight="bold">Amyloid-β</text>
+        <text x="120" y="76" text-anchor="middle" fill="#1e293b">deposition</text>
+
+        <!-- Tau node -->
+        <rect x="60" y="103" width="120" height="40" rx="7" fill="#c4b5fd" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="120" y="119" text-anchor="middle" fill="#1e293b" font-weight="bold">Tau</text>
+        <text x="120" y="135" text-anchor="middle" fill="#1e293b">pathology</text>
+
+        <!-- Arrow: Amyloid to Tau (left side, clear path) -->
+        <line x1="120" y1="84" x2="120" y2="103" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#tri-mid)"/>
+
+        <!-- E/I imbalance node -->
+        <rect x="45" y="168" width="150" height="40" rx="7" fill="#ddd6fe" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="120" y="184" text-anchor="middle" fill="#1e293b" font-weight="bold">E/I Imbalance &amp;</text>
+        <text x="120" y="200" text-anchor="middle" fill="#1e293b">Hyperexcitability</text>
+
+        <!-- Arrow: Tau to E/I -->
+        <line x1="120" y1="143" x2="120" y2="168" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#tri-mid)"/>
+
+        <!-- Synaptic dysfunction node -->
+        <rect x="45" y="232" width="150" height="40" rx="7" fill="#ddd6fe" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="120" y="248" text-anchor="middle" fill="#1e293b" font-weight="bold">Synaptic</text>
+        <text x="120" y="264" text-anchor="middle" fill="#1e293b">Dysfunction</text>
+
+        <!-- Arrow: E/I to Synaptic -->
+        <line x1="120" y1="208" x2="120" y2="232" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#tri-mid)"/>
+
+        <!-- Cognitive impairment node -->
+        <rect x="45" y="296" width="150" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="120" y="312" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Cognitive</text>
+        <text x="120" y="328" text-anchor="middle" fill="#7f1d1d">Impairment</text>
+
+        <!-- Arrow: Synaptic to Cognitive -->
+        <line x1="120" y1="272" x2="120" y2="296" stroke="#991b1b" stroke-width="1.5" marker-end="url(#tri-danger)"/>
+
+        <!-- Early EC vulnerability node -->
+        <rect x="30" y="368" width="185" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="122" y="384" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Entorhinal Cortex</text>
+        <text x="122" y="400" text-anchor="middle" fill="#7f1d1d">Early Vulnerability</text>
+
+        <!-- Arrow: Cognitive to EC vulnerability (slightly offset left) -->
+        <line x1="110" y1="336" x2="110" y2="368" stroke="#991b1b" stroke-width="1.5" marker-end="url(#tri-danger)"/>
+
+        <!-- PANEL B: LAMP5 Interneuron Hub -->
+        <rect x="315" y="10" width="295" height="475" rx="12" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="331" y="32" font-size="9" font-weight="bold" text-anchor="start" fill="#0f766e" letter-spacing="0.08em">B — LAMP5 INTERNEURON FUNCTION</text>
+
+        <!-- LAMP5+ Interneuron central node -->
+        <rect x="360" y="44" width="165" height="44" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="442" y="62" text-anchor="middle" fill="#134e4a" font-weight="bold" font-size="12">LAMP5+ GABAergic</text>
+        <text x="442" y="78" text-anchor="middle" fill="#134e4a" font-size="11">Interneurons</text>
+
+        <!-- Two sub-branches from LAMP5+ Interneuron -->
+        <!-- Branch 1: Synaptic regulation (left) -->
+        <rect x="330" y="122" width="130" height="40" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="395" y="138" text-anchor="middle" fill="#134e4a" font-weight="bold">Inhibitory</text>
+        <text x="395" y="154" text-anchor="middle" fill="#134e4a">Synaptic Control</text>
+
+        <!-- Branch 2: Subtypes/Diversity (right) -->
+        <rect x="476" y="122" width="115" height="40" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="533" y="138" text-anchor="middle" fill="#134e4a" font-weight="bold">Cell-type</text>
+        <text x="533" y="154" text-anchor="middle" fill="#134e4a">Diversity</text>
+
+        <!-- Arrows from central to branches -->
+        <line x1="415" y1="88" x2="395" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+        <line x1="469" y1="88" x2="514" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+
+        <!-- Branch 1 continuation: Short-term plasticity -->
+        <rect x="325" y="190" width="140" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="395" y="206" text-anchor="middle" fill="#134e4a">Short-term synaptic</text>
+        <text x="395" y="222" text-anchor="middle" fill="#134e4a">plasticity</text>
+
+        <line x1="395" y1="162" x2="395" y2="190" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+
+        <!-- Branch 2 continuation: Neurogliaform/Rosehip -->
+        <rect x="472" y="190" width="120" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="532" y="206" text-anchor="middle" fill="#134e4a">Neurogliaform /</text>
+        <text x="532" y="222" text-anchor="middle" fill="#134e4a">Rosehip cells</text>
+
+        <line x1="533" y1="162" x2="532" y2="190" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+
+        <!-- Converging node: Circuit Stability -->
+        <rect x="355" y="264" width="175" height="40" rx="8" fill="#6ee7b7" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="442" y="280" text-anchor="middle" fill="#134e4a" font-weight="bold">Inhibitory Circuit</text>
+        <text x="442" y="296" text-anchor="middle" fill="#134e4a">Stability</text>
+
+        <!-- Arrows converging to Circuit Stability -->
+        <line x1="395" y1="230" x2="405" y2="264" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+        <line x1="532" y1="230" x2="475" y2="264" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+
+        <!-- GLP1R / Insulin node -->
+        <rect x="340" y="336" width="205" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="442" y="352" text-anchor="middle" fill="#0f766e" font-weight="bold">GLP1R–Insulin</text>
+        <text x="442" y="368" text-anchor="middle" fill="#0f766e">Signaling Loop</text>
+
+        <line x1="442" y1="304" x2="442" y2="336" stroke="#0f766e" stroke-width="1.5" marker-end="url(#tri-pos)"/>
+
+        <!-- LAMP5 loss node -->
+        <rect x="340" y="408" width="205" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="442" y="424" text-anchor="middle" fill="#7f1d1d" font-weight="bold">LAMP5 Loss →</text>
+        <text x="442" y="440" text-anchor="middle" fill="#7f1d1d">Network Hypersynchrony</text>
+
+        <line x1="442" y1="376" x2="442" y2="408" stroke="#991b1b" stroke-width="1.5" marker-end="url(#tri-danger)"/>
+
+        <!-- PANEL C: Associated Pathways -->
+        <rect x="630" y="10" width="300" height="475" rx="12" fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="646" y="32" font-size="9" font-weight="bold" text-anchor="start" fill="#92400e" letter-spacing="0.08em">C — ASSOCIATED PATHWAYS &amp; CONTEXT</text>
+
+        <!-- Lysosomal/Autophagy node -->
+        <rect x="660" y="46" width="150" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="735" y="62" text-anchor="middle" fill="#78350f" font-weight="bold">Lysosomal /</text>
+        <text x="735" y="78" text-anchor="middle" fill="#78350f">Autophagy Function</text>
+
+        <!-- NF-κB signaling node -->
+        <rect x="660" y="116" width="150" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="735" y="132" text-anchor="middle" fill="#78350f" font-weight="bold">NF-κB &amp; Cell</text>
+        <text x="735" y="148" text-anchor="middle" fill="#78350f">Survival Signaling</text>
+
+        <line x1="735" y1="86" x2="735" y2="116" stroke="#b45309" stroke-width="1.5" marker-end="url(#tri-warn)"/>
+
+        <!-- Microglial crosstalk node -->
+        <rect x="655" y="190" width="160" height="40" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+        <text x="735" y="206" text-anchor="middle" fill="#78350f" font-weight="bold">Microglial</text>
+        <text x="735" y="222" text-anchor="middle" fill="#78350f">Inflammatory Crosstalk</text>
+
+        <line x1="735" y1="156" x2="735" y2="190" stroke="#b45309" stroke-width="1.5" marker-end="url(#tri-warn)"/>
+
+        <!-- Aging transcriptomics node -->
+        <rect x="655" y="262" width="160" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="735" y="278" text-anchor="middle" fill="#78350f" font-weight="bold">Aging-related</text>
+        <text x="735" y="294" text-anchor="middle" fill="#78350f">Transcriptomic Shift</text>
+
+        <line x1="735" y1="230" x2="735" y2="262" stroke="#b45309" stroke-width="1.5" marker-end="url(#tri-warn)"/>
+
+        <!-- Cancer/Oncology druggability node -->
+        <rect x="650" y="336" width="170" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="735" y="352" text-anchor="middle" fill="#78350f" font-weight="bold">Oncology /</text>
+        <text x="735" y="368" text-anchor="middle" fill="#78350f">Druggability Evidence</text>
+
+        <line x1="735" y1="302" x2="735" y2="336" stroke="#b45309" stroke-width="1.5" marker-end="url(#tri-warn)"/>
+
+        <!-- Systemic risk node -->
+        <rect x="650" y="410" width="170" height="40" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="735" y="426" text-anchor="middle" fill="#7f1d1d" font-weight="bold">Systemic Targeting</text>
+        <text x="735" y="442" text-anchor="middle" fill="#7f1d1d">Safety Risk</text>
+
+        <line x1="735" y1="376" x2="735" y2="410" stroke="#991b1b" stroke-width="1.5" marker-end="url(#tri-danger)"/>
+
+        <!-- CROSS-PANEL CONNECTORS (routed through gutters, no box overlap) -->
+        <!-- Panel A E/I imbalance → Panel B LAMP5+ Interneurons (via top gutter, elbow) -->
+        <!-- Route: right edge of panel A (x=295), row y=188 → gutter midpoint x=307 → then up to y=66 → then right to panel B node left edge x=360 -->
+        <polyline points="195,188 295,188 307,188 307,66 360,66" fill="none" stroke="#3b1f6e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#tri-dark)"/>
+
+        <!-- Panel B LAMP5 Loss → Panel A Cognitive (cross-panel outcome link) -->
+        <!-- Route: left edge of panel B node (x=340), y=428 → gutter x=308 → up to y=316 → left to Panel A right edge x=195 -->
+        <polyline points="340,428 308,428 308,316 195,316" fill="none" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#tri-danger)"/>
+
+        <!-- Defs -->
+        <defs>
+          <marker id="tri-mid" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#6d3fc0"/>
+          </marker>
+          <marker id="tri-pos" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="tri-danger" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#991b1b"/>
+          </marker>
+          <marker id="tri-warn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#b45309"/>
+          </marker>
+          <marker id="tri-dark" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#3b1f6e"/>
+          </marker>
+        </defs>
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — AD Disease Drivers:</strong> Sequential cascade from amyloid-β and tau pathology through excitation/inhibition (E/I) imbalance, synaptic dysfunction, and cognitive impairment, with early entorhinal cortex vulnerability at the foot. Dashed purple arrow indicates AD pathology driving LAMP5 interneuron loss (Panel B). 
+        <strong>Panel B — LAMP5 Interneuron Function:</strong> Central LAMP5+ GABAergic interneuron hub branching into two parallel sub-cascades — inhibitory synaptic control (short-term plasticity) and cell-type diversity (neurogliaform/rosehip cells) — reconverging at inhibitory circuit stability, leading to GLP1R–insulin signaling and, when disrupted, network hypersynchrony. Dashed red arrow shows how LAMP5 loss feeds back into AD-associated cognitive outcome. 
+        <strong>Panel C — Associated Pathways &amp; Context:</strong> Vertical cascade of LAMP5-linked pathways with therapeutic and safety relevance — lysosomal/autophagy function, NF-κB signaling, microglial inflammatory crosstalk, aging-related transcriptomic shifts, oncology druggability evidence, and systemic targeting safety risk.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Interneuron Vulnerability in AD Models</h3>
+        <p>In AD-relevant mouse models, synaptic LAMP5 is lost, LAMP5 interneurons degenerate, and genetic reduction of LAMP5 worsens functional deficits and increases network hypersynchronicity in both amyloid-β– and tau-driven models, establishing LAMP5 interneurons as a direct vulnerability node.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Inhibitory Circuit Homeostasis</h3>
+        <p>LAMP5 is expressed in GABAergic interneuron subclasses and inhibitory synaptic terminals, where it influences short-term synaptic plasticity and evoked GABAergic transmission — directly aligned with AD mechanisms involving excitation–inhibition imbalance, subclinical epileptiform activity, and cognitive impairment.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Entorhinal &amp; Specialized Cortical Subtypes</h3>
+        <p>LAMP5-positive populations include neurogliaform cells, rosehip cells, VIP/LAMP5, LAMP5/LHX6, and LAMP5+RELN+ interneurons. Entorhinal LAMP5+RELN+ interneurons are especially significant because the entorhinal cortex is affected early in AD and is critical for episodic memory and hippocampal input.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>GLP1R–Insulin &amp; Metabolic Signaling</h3>
+        <p>LAMP5-positive neurogliaform and rosehip interneurons co-express GLP1R and insulin transcripts, suggesting an intracortical GLP1R–insulin signaling loop. This is indirectly relevant to AD given the established roles of impaired glucose metabolism, insulin signaling, and GLP1R-linked neuroprotection.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Systemic Inhibition Carries Safety Risk</h3>
+        <p>Oncology findings show LAMP5 can be therapeutically tractable via knockdown or antibody–drug conjugate strategies, but these approaches are not transferable to AD because LAMP5-positive neurons are normal, potentially protective brain cells. LAMP5 roles in immune/endosomal biology further complicate systemic targeting.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>AD Genetic-Risk Mapping &amp; Downstream Role</h3>
+        <p>AD genetic-risk mapping in primate cortex points most strongly to microglial cis-regulatory elements, not LAMP5-expressing neurons, suggesting LAMP5 does not emerge as a primary genetic-risk hub. LAMP5 interneurons may nonetheless be affected downstream of inflammatory or degenerative processes, and non-AD studies document selective LAMP5 neuron–microglia crosstalk.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Reframe LAMP5 as a circuit marker, not a blockade target.</strong> Treat LAMP5 as an AD-relevant interneuron and circuit marker, not as a validated standalone drug target for inhibition.</li>
+      <li><strong>Prioritize interneuron preservation studies.</strong> Focus research on whether preserving LAMP5-positive interneurons reduces AD-associated hyperexcitability, synaptic failure, and cognitive impairment.</li>
+      <li><strong>Do not assume inhibition is beneficial.</strong> Existing AD-model evidence shows reduced LAMP5 worsens network dysfunction, so blockade or depletion strategies could be actively harmful.</li>
+      <li><strong>Characterize LAMP5 changes in human AD tissue.</strong> Test LAMP5 changes directly in human AD brain by region and cell type — especially in entorhinal cortex, hippocampus, and vulnerable cortical layers.</li>
+      <li><strong>Correlate interneuron loss with disease milestones.</strong> Determine whether LAMP5-positive interneuron loss correlates with amyloid burden, tau pathology, synaptic loss, seizures/subclinical epileptiform activity, cognitive decline, or disease stage.</li>
+      <li><strong>Explore the broader LAMP5-associated pathway network.</strong> Investigate inhibitory synaptic regulation, GLP1R–insulin signaling, lysosomal/autophagy function, nicotinic receptor trafficking, and microglial inflammatory crosstalk rather than LAMP5 alone.</li>
+      <li><strong>Exercise caution with systemic targeting.</strong> LAMP5 roles in immune/endosomal biology and cancer contexts, combined with the protective neuronal role in AD, mean that systemic LAMP5-targeting strategies carry meaningful safety risk.</li>
+      <li><strong>Frame the therapeutic concept around restoration, not suppression.</strong> The most plausible therapeutic direction is preservation or restoration of LAMP5-positive interneuron function to stabilize AD-affected neural networks.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — LAMP5 in Alzheimer's Disease</span>
+      <p>
+        LAMP5 is a <strong>biologically meaningful marker of vulnerable inhibitory interneurons</strong> in AD, not a conventional drug target for inhibition. The weight of evidence positions LAMP5-positive GABAergic interneurons as <strong>protective components of inhibitory circuit homeostasis</strong> whose loss — in both amyloid-β– and tau-driven disease models — drives network hyperexcitability and worsens cognitive outcomes. Therapeutic strategies aimed at <strong>preserving or restoring LAMP5-positive interneuron function</strong> align with this evidence and represent the most scientifically defensible direction. By contrast, <strong>direct LAMP5 suppression or systemic inhibition carries real risk</strong> of worsening AD circuit dysfunction and of off-target consequences in immune and oncological contexts. The strongest near-term priority is <strong>rigorous characterization of LAMP5 interneuron loss across human AD brain regions and disease stages</strong>, followed by mechanistic dissection of LAMP5-associated pathways — including GLP1R–insulin signaling, lysosomal/autophagy biology, and microglial crosstalk — as potential druggable nodes upstream or downstream of interneuron vulnerability.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>LAMP5 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

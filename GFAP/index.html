@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GFAP — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f8;
+    --danger: #991b1b;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #ffd7d7;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left: 4px solid #94a3b8;
+  }
+  .card-neutral h3 { color: #475569; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GFAP &nbsp;|&nbsp; Glial Fibrillary Acidic Protein</span>
+    <span class="chip chip-danger">⚠ Non-specific elevations — context required</span>
+  </div>
+  <h1>GFAP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Interpretive Caution:</strong> GFAP is <em>not</em> AD-specific. Elevations occur in traumatic brain injury, multiple sclerosis, autoimmune encephalitis, vascular disease, OSA, kidney dysfunction, aging, and systemic inflammation. Levels must always be interpreted alongside AD-specific biomarkers and adjusted for age, sex, BMI, and renal function.
+    </div>
+
+    <p>GFAP is primarily established as a marker of astrocyte activation, reactive astrogliosis, astroglial injury, and neuroinflammation across Alzheimer's disease (AD), preclinical AD, MCI, AD dementia, and AD-adjacent models. It is <strong>not</strong> established as a standalone causal AD driver or a validated direct drug target comparable to amyloid-β or tau. Its strongest role is as a biomarker and pharmacodynamic readout of astrocyte-state changes that intersect with amyloid, tau, vascular dysfunction, metabolic stress, oxidative injury, glymphatic impairment, synaptic loss, and cognitive decline.</p>
+
+    <p>Across human studies, plasma or serum GFAP frequently rises early in AD-risk states, associates with amyloid positivity, tau burden, cognitive decline, AD-signature atrophy, neuropsychiatric symptoms, vascular risk, sleep-disordered breathing, and dementia progression. GFAP often complements p-tau217, p-tau181, Aβ42/40, and NfL in multimarker panels, but is generally less AD-specific than phosphorylated tau and amyloid markers.</p>
+
+    <p>Across animal and cellular models, reduced GFAP or GFAP-positive astrogliosis often accompanies interventions that improve cognition, reduce amyloid or tau-related pathology, suppress inflammatory cytokines, improve mitochondrial or metabolic function, reduce oxidative stress, preserve synapses, or normalize vascular/glymphatic biology. These findings support astrocyte reactivity as therapeutically relevant, but the targetable biology is better defined as GFAP-associated astrocyte states and upstream/downstream pathways rather than GFAP protein itself.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2563eb"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="10" y="10" width="250" height="480" rx="12" fill="#ede8f8" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="135" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: Amyloid/Tau -->
+        <rect x="30" y="44" width="210" height="40" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="135" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Amyloid-β / Tau</text>
+        <text x="135" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Accumulation</text>
+
+        <!-- Node A2: Vascular/Metabolic -->
+        <rect x="30" y="110" width="98" height="40" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="79" y="126" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Vascular /</text>
+        <text x="79" y="141" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Metabolic Risk</text>
+
+        <!-- Node A3: Oxidative/Inflam -->
+        <rect x="142" y="110" width="98" height="40" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="191" y="126" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Oxidative /</text>
+        <text x="191" y="141" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Inflammatory</text>
+
+        <!-- Node A4: Sleep/OSA -->
+        <rect x="30" y="178" width="98" height="40" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="79" y="194" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Sleep / OSA /</text>
+        <text x="79" y="209" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Glymphatic</text>
+
+        <!-- Node A5: APOE ε4/Genetics -->
+        <rect x="142" y="178" width="98" height="40" rx="7" fill="#fff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="191" y="194" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">APOE ε4 /</text>
+        <text x="191" y="209" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Genetic Risk</text>
+
+        <!-- Arrows A1 -> A2, A1->A3 -->
+        <line x1="79" y1="84" x2="79" y2="110" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="191" y1="84" x2="191" y2="110" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Arrows A2->A4, A3->A5 -->
+        <line x1="79" y1="150" x2="79" y2="178" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="191" y1="150" x2="191" y2="178" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- convergence arrow down to GFAP node label area — converge at bottom of panel A -->
+        <!-- A4 -> shared convergence point -->
+        <line x1="79" y1="218" x2="79" y2="246" stroke="#6d3fc0" stroke-width="1.4"/>
+        <line x1="191" y1="218" x2="191" y2="246" stroke="#6d3fc0" stroke-width="1.4"/>
+        <line x1="79" y1="246" x2="191" y2="246" stroke="#6d3fc0" stroke-width="1.4"/>
+        <line x1="135" y1="246" x2="135" y2="264" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node A6: Reactive Astrogliosis / GFAP ↑ -->
+        <rect x="40" y="264" width="190" height="44" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.5"/>
+        <text x="135" y="282" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="bold" fill="#fff">Reactive Astrogliosis</text>
+        <text x="135" y="298" text-anchor="middle" font-family="Georgia" font-size="11" fill="#e9d5ff">Plasma GFAP ↑</text>
+
+        <!-- Panel B: Downstream Consequences -->
+        <rect x="278" y="10" width="274" height="480" rx="12" fill="#fff1f1" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="415" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">DOWNSTREAM CONSEQUENCES</text>
+
+        <!-- Node B1: Neuro-inflammation -->
+        <rect x="296" y="44" width="120" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="356" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Neuro-</text>
+        <text x="356" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">inflammation</text>
+
+        <!-- Node B2: Synaptic/Cog Loss -->
+        <rect x="432" y="44" width="104" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="484" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Synaptic /</text>
+        <text x="484" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Cognitive Loss</text>
+
+        <!-- Node B3: IL-6 / TNF-α / NF-κB -->
+        <rect x="296" y="118" width="120" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="356" y="134" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">IL-6 / TNF-α /</text>
+        <text x="356" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">NF-κB / NLRP3</text>
+
+        <!-- Node B4: BBB / Glymphatic -->
+        <rect x="432" y="118" width="104" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="484" y="134" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">BBB / AQP4 /</text>
+        <text x="484" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Glymphatic Fail</text>
+
+        <!-- Node B5: Neurodegeneration -->
+        <rect x="296" y="194" width="120" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="356" y="210" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Mitochondrial /</text>
+        <text x="356" y="225" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Oxidative Stress</text>
+
+        <!-- Node B6: Astrocyte EV Cargo -->
+        <rect x="432" y="194" width="104" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="484" y="210" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Astrocyte-EV</text>
+        <text x="484" y="225" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Tau Spread</text>
+
+        <!-- Arrows B1->B3->B5, B2->B4->B6 -->
+        <line x1="356" y1="84" x2="356" y2="118" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="484" y1="84" x2="484" y2="118" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="356" y1="158" x2="356" y2="194" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="484" y1="158" x2="484" y2="194" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- converge B5+B6 -> shared decline -->
+        <line x1="356" y1="234" x2="356" y2="262" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="484" y1="234" x2="484" y2="262" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="356" y1="262" x2="484" y2="262" stroke="#991b1b" stroke-width="1.3"/>
+        <line x1="420" y1="262" x2="420" y2="280" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Node B7: Dementia / Decline -->
+        <rect x="338" y="280" width="164" height="40" rx="8" fill="#991b1b" stroke="#991b1b"/>
+        <text x="420" y="296" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="bold" fill="#fff">Cognitive Decline</text>
+        <text x="420" y="311" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#ffd7d7">/ Dementia</text>
+
+        <!-- Panel C: Biomarker & Therapeutic -->
+        <rect x="570" y="10" width="320" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="730" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">BIOMARKER &amp; THERAPEUTIC</text>
+
+        <!-- Node C1: Multimarker Panel -->
+        <rect x="588" y="44" width="136" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="656" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Multimarker Panel</text>
+        <text x="656" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">p-tau / Aβ / NfL</text>
+
+        <!-- Node C2: Risk Stratification -->
+        <rect x="740" y="44" width="132" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="806" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Early Risk</text>
+        <text x="806" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Stratification</text>
+
+        <!-- Arrow C1->C2 -->
+        <line x1="724" y1="64" x2="740" y2="64" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C3: Target Pathways -->
+        <rect x="588" y="120" width="284" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="730" y="138" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Target Pathways: RPTPβ/ζ–PTN, CCR5,</text>
+        <text x="730" y="153" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">IDO1, PAR2, MAPK/MKP-1, AGE/RAGE</text>
+
+        <!-- Arrow panel A GFAP -> C3 via horizontal -->
+        <!-- Node C4: Anti-inflammatory -->
+        <rect x="588" y="196" width="130" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="653" y="212" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Anti-inflam /</text>
+        <text x="653" y="227" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Metabolic Tx</text>
+
+        <!-- Node C5: Lifestyle/Vascular -->
+        <rect x="742" y="196" width="130" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="807" y="212" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Lifestyle / Sleep /</text>
+        <text x="807" y="227" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Vascular Control</text>
+
+        <!-- C3 -> C4, C3 -> C5 -->
+        <line x1="653" y1="164" x2="653" y2="196" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <line x1="807" y1="164" x2="807" y2="196" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Converge C4+C5 -> PD Readout -->
+        <line x1="653" y1="236" x2="653" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+        <line x1="807" y1="236" x2="807" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+        <line x1="653" y1="258" x2="807" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+        <line x1="730" y1="258" x2="730" y2="276" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C6: PD Readout / Trial Enrichment -->
+        <rect x="614" y="276" width="232" height="44" rx="8" fill="#0f766e" stroke="#0f766e"/>
+        <text x="730" y="294" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="bold" fill="#fff">PD Readout / Trial Enrichment</text>
+        <text x="730" y="310" text-anchor="middle" font-family="Georgia" font-size="10" fill="#a7f3d0">Normalization of Astrocyte State</text>
+
+        <!-- Connector: Panel A GFAP node -> Panel B Node B1 -->
+        <!-- GFAP node right edge ~230, center y ~286; B1 left edge ~296, center y ~64 -->
+        <!-- Route: right from GFAP (230,286) -> right edge of panel A gutter (265,286) -> up (265,64) -> B1 left (296,64) -->
+        <polyline points="230,286 265,286 265,64 296,64" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Connector: Panel A GFAP node -> Panel C C3 -->
+        <!-- GFAP bottom center (135,308) ... go down to 360 then right to 588 then up to 142 center of C3 -->
+        <!-- Actually better: GFAP right (230,286) -> route below panel B bottom row area at y=370 -> across to C3 -->
+        <!-- Route: from (230,286) right to (265,286) already used. Use y=340 below B5/B6 -->
+        <!-- GFAP (230,286) down to (230,380), right to (588,380), up to C3 center right side (872,142) -->
+        <!-- Simpler: go from GFAP bottom (135,308) -> down to y=460 -> right to x=730 -> up to C3 bottom (730,164) -->
+        <polyline points="135,308 135,460 730,460 730,164" fill="none" stroke="#6d3fc0" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel labels bottom area -->
+        <!-- Node B1 arrow from GFAP already done above -->
+
+        <!-- B7 -> C6 connection: cognitive decline is worsened, interventions reduce it -->
+        <!-- B7 right edge ~502, center y ~300; C6 left edge 614, center y 298 -->
+        <line x1="502" y1="300" x2="614" y2="298" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Triggers:</strong> Amyloid-β/tau accumulation, vascular/metabolic risk, oxidative/inflammatory stress, sleep/OSA/glymphatic impairment, and APOE ε4 genetic risk converge to drive reactive astrogliosis and elevated plasma GFAP.
+      <strong>Panel B — Downstream Consequences:</strong> Reactive astrogliosis fans into two parallel sub-cascades — neuroinflammation (IL-6/TNF-α/NF-κB/NLRP3) and synaptic/cognitive loss on one branch; BBB/AQP4/glymphatic failure and astrocyte-EV tau spread on the other — both converging onto cognitive decline and dementia.
+      <strong>Panel C — Biomarker &amp; Therapeutic:</strong> Plasma GFAP feeds into multimarker panels for early risk stratification. Upstream target pathways (RPTPβ/ζ–PTN, CCR5, IDO1, PAR2, MAPK/MKP-1, AGE/RAGE) branch into anti-inflammatory/metabolic and lifestyle/vascular interventions, converging on pharmacodynamic readout and trial enrichment through normalization of astrocyte state. Dashed lines indicate biomarker/monitoring relationships.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>GFAP as Astrocytic Activation Marker</h3>
+        <p>Elevated GFAP consistently marks reactive astrocytes surrounding amyloid plaques, inflammatory glial responses, neurodegenerative stress, and cognitive impairment. It is a readout of astrocyte state, not a standalone causal AD driver or direct drug target.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Amyloid &amp; Tau Biology Connections</h3>
+        <p>Plasma GFAP predicts amyloid PET positivity — especially in APOE ε4 carriers — and associates with tau PET burden and neurofibrillary tangle density. Astrocyte-derived extracellular vesicles may influence tau pathology independently of GFAP staining levels.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Early, Accessible Blood Biomarker</h3>
+        <p>Plasma GFAP diverges years before clinical symptoms in longitudinal and autosomal-dominant AD cohorts. It is useful for early risk stratification when combined with p-tau217, Aβ42/40, NfL, APOE genotype, imaging, cognitive testing, gait, retinal OCT, and vascular measures.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Complements but Rarely Outperforms p-tau217</h3>
+        <p>Diagnostic and staging studies consistently show p-tau217 and amyloid ratios are stronger for AD classification. GFAP adds complementary glial/inflammatory information but does not replace tau PET, amyloid markers, or p-tau217 in multimarker panels.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Not AD-Specific — Requires Context</h3>
+        <p>GFAP rises in TBI, multiple sclerosis, autoimmune encephalitis, vascular disease, OSA, kidney dysfunction, aging, systemic inflammation, and retinal disease. Interpretation always requires age/sex/BMI/renal-function adjustment and use alongside AD-specific biomarkers.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Signals &amp; Modifiable Risk</h3>
+        <p>Interventions that reduced GFAP-positive astrogliosis include RPTPβ/ζ inhibition (MY10), CCR5 antagonism, IDO1 inhibition, PAR2 activation, pioglitazone-like metabolic approaches, curcumin/resveratrol, melatonin/exercise, and CPAP for OSA — supporting modifiable upstream contributors to reactive astrogliosis.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Biomarker role, not drug target:</strong> Treat GFAP as a marker of astrocyte-state activity. It is not a standalone AD diagnostic or a direct therapeutic target comparable to amyloid-β or tau.</li>
+      <li><strong>Always use combination panels:</strong> Combine GFAP with p-tau217 or p-tau181, Aβ42/40, NfL, APOE genotype, and clinical/imaging data to improve AD risk stratification and biological subtyping.</li>
+      <li><strong>Target astrocyte programs, not GFAP protein:</strong> Prioritize therapeutic strategies that modulate GFAP-associated reactive astrocyte programs — preserving homeostatic roles while reducing chronic neurotoxic astrogliosis — rather than suppressing GFAP indiscriminately.</li>
+      <li><strong>Prioritize upstream pathway candidates:</strong> Key candidate targets include RPTPβ/ζ–PTN signaling, CCR5-mediated inflammation, IL-6/TNF-α/NF-κB, NLRP3/caspase-1 inflammasome, MAPK/MKP-1, IDO1, PAR2, TRPC3, AGE/RAGE, AQP4/glymphatic biology, and metabolic or sleep-related drivers.</li>
+      <li><strong>Use plasma GFAP as a pharmacodynamic readout:</strong> Deploy it as an outcome measure in trials of astrocyte-targeted, anti-inflammatory, anti-amyloid, metabolic, vascular, sleep, or lifestyle interventions.</li>
+      <li><strong>Interpret elevations cautiously:</strong> Age, sex, kidney function, BMI, vascular disease, inflammation, trauma, autoimmune disease, and non-AD neurodegeneration all independently influence GFAP levels.</li>
+      <li><strong>Lower GFAP is not always beneficial:</strong> Early astrogliosis may attenuate amyloid effects on tau and memory; the goal is normalization and beneficial reprogramming, not wholesale suppression.</li>
+      <li><strong>Enrich high-value patient subgroups:</strong> GFAP is particularly informative in preclinical AD, MCI, APOE ε4 carriers, amyloid-positive individuals, mixed AD-vascular pathology, OSA-associated AD burden, and those at risk for faster cognitive decline.</li>
+      <li><strong>Near-term development role — enrichment and monitoring:</strong> The most realistic near-term applications are trial enrichment, patient stratification, treatment-response monitoring, and assessment of neuroinflammatory rebound after disease-modifying therapy cessation.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — GFAP in Alzheimer's Disease</span>
+      <p>GFAP occupies a well-defined but <strong>supporting, not leading</strong> role in the AD target landscape. Its greatest value lies in illuminating <strong>astrocyte reactivity as an active participant in AD pathophysiology</strong> — intersecting with amyloid and tau biology, vascular dysfunction, metabolic stress, neuroinflammation, glymphatic impairment, and cognitive decline. As a <strong>plasma biomarker</strong>, it offers early, accessible, and scalable signal for risk stratification and trial enrichment, most powerfully in combination with p-tau217, Aβ42/40, and NfL. As a <strong>pharmacodynamic readout</strong>, it can track astrocyte-state changes in response to diverse interventions — from RPTPβ/ζ inhibition and CCR5 antagonism to CPAP, exercise, and metabolic therapy. The actionable therapeutic goal is <strong>normalization of maladaptive reactive astrocyte states</strong> — not suppression of GFAP protein per se — preserving protective astrocyte functions while curtailing chronic neurotoxic astrogliosis. Caution is required because GFAP is non-specific, context-dependent, and influenced by age, comorbidity, and systemic factors. Used judiciously within multimarker frameworks, GFAP is a <strong>clinically meaningful and mechanistically informative</strong> component of the AD biomarker and therapeutic development toolkit.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>GFAP · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only</p>
+</footer>
+
+</body>
+</html>

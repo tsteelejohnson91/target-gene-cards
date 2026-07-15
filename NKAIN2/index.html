@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKAIN2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--white);
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #e2eaf4;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.5;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent   { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3{ color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3{ color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+  .card-warning  { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3{ color: var(--warning); }
+  .card-slate    { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card-slate h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: tko;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: tko;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(tko);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 32px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #90caf9;
+    margin-bottom: 10px;
+    display: block;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .verdict p {
+    color: #dbeafe;
+    margin: 0;
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NKAIN2 &nbsp;|&nbsp; Na⁺/K⁺ Transporting ATPase Interacting 2</span>
+    <span class="chip chip-danger">⚠ Unvalidated — Exploratory Candidate Only</span>
+  </div>
+  <h1>NKAIN2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> The available data do not establish NKAIN2 as a causal Alzheimer's disease gene or validated therapeutic target. Genetic associations are suggestive only, and no study demonstrates that NKAIN2 modulates amyloid-β, tau, neuroinflammation, synaptic loss, or clinical AD risk.
+    </div>
+
+    <p>NKAIN2 is a neurobiologically plausible but unvalidated Alzheimer's disease (AD) candidate. The supplied evidence links NKAIN2 most directly to AD through suggestive genetic associations with AD-related cognitive and neurodegeneration endophenotypes, rather than through demonstrated causal mechanisms. The strongest AD-relevant signal derives from an ADNI-based GWAS in which NKAIN2 was reported as a suggestive locus associated with ADAS13, an Alzheimer's cognitive outcome. A second ADNI study listed SNPs within NKAIN2 among candidate variants for rate of ventricular enlargement in nondemented elders — an imaging marker relevant to neurodegenerative progression.</p>
+
+    <p>Mechanistically, NKAIN2 encodes Na⁺/K⁺ Transporting ATPase Interacting 2, suggesting a relationship with Na⁺/K⁺-ATPase biology — a system supporting neuronal ion gradients, membrane potential, synaptic transmission, excitability, and brain energy use. Additional indirect support comes from associations with neurodevelopmental disorders, psychiatric traits, ADHD treatment-response modeling, schizophrenia symptom dimensions, alcohol dependence, neuroticism, insulin sensitivity, BMI, adiposity, lipid traits, and cancer-related cell survival pathways.</p>
+
+    <p>Its current AD relevance is best considered hypothesis-generating. No supplied study demonstrates that NKAIN2 drives amyloid-β accumulation, tau pathology, neuroinflammation, synaptic degeneration, neuronal death, or clinical AD risk.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: NKAIN2 Gene & Protein -->
+        <rect x="10" y="10" width="200" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="32" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">PANEL A · GENE &amp; PROTEIN</text>
+
+        <!-- Node 1: NKAIN2 Gene -->
+        <rect x="30" y="44" width="160" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c"/>
+        <text x="110" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="white">NKAIN2 Gene</text>
+        <text x="110" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#90caf9">Chromosome 6q22</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="110" y1="88" x2="110" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: NKAIN2 Protein -->
+        <rect x="30" y="112" width="160" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c"/>
+        <text x="110" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="white">NKAIN2 Protein</text>
+        <text x="110" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#bfdbfe">Na⁺/K⁺-ATPase Interactor</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="110" y1="156" x2="110" y2="178" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Na+/K+-ATPase Complex -->
+        <rect x="30" y="180" width="160" height="44" rx="7" fill="#1e4976" stroke="#2e6da4"/>
+        <text x="110" y="197" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Na⁺/K⁺-ATPase</text>
+        <text x="110" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#bfdbfe">Pump Complex</text>
+
+        <!-- Node 4: CNS Expression -->
+        <rect x="30" y="294" width="160" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4"/>
+        <text x="110" y="312" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1a3a5c">CNS Expression</text>
+        <text x="110" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#2e6da4">Fetal &amp; Adult Brain</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="110" y1="224" x2="110" y2="294" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Genetic Assoc badge -->
+        <rect x="30" y="398" width="160" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-dasharray="4,2"/>
+        <text x="110" y="416" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c">Genetic Associations</text>
+        <text x="110" y="431" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#2e6da4">ADAS13 · Ventricular Vol.</text>
+
+        <!-- Arrow A4→badge -->
+        <line x1="110" y1="338" x2="110" y2="398" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: Neuronal Physiology -->
+        <rect x="225" y="10" width="230" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="340" y="32" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#0f766e" letter-spacing="0.1em">PANEL B · NEURONAL PHYSIOLOGY</text>
+
+        <!-- Node 5: Ion Homeostasis -->
+        <rect x="243" y="44" width="194" height="44" rx="7" fill="#0f766e" stroke="#0a5c55"/>
+        <text x="340" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="white">Ion Homeostasis</text>
+        <text x="340" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#99f6e4">Na⁺/K⁺ Gradient Maintenance</text>
+
+        <!-- Arrow B5→B6 left branch -->
+        <line x1="295" y1="88" x2="265" y2="144" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Arrow B5→B7 right branch -->
+        <line x1="385" y1="88" x2="415" y2="144" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 6: Membrane Potential -->
+        <rect x="243" y="146" width="126" height="44" rx="7" fill="#14b8a6" stroke="#0f766e"/>
+        <text x="306" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Membrane</text>
+        <text x="306" y="179" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Potential</text>
+
+        <!-- Node 7: Synaptic Transmission -->
+        <rect x="381" y="146" width="66" height="44" rx="7" fill="#14b8a6" stroke="#0f766e"/>
+        <text x="414" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="white">Synaptic</text>
+        <text x="414" y="177" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="white">Trans.</text>
+
+        <!-- Arrow B6→B8 -->
+        <line x1="306" y1="190" x2="306" y2="222" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Arrow B7→B8 -->
+        <line x1="414" y1="190" x2="370" y2="222" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: Brain Energy Metabolism -->
+        <rect x="243" y="224" width="194" height="44" rx="7" fill="#0d9488" stroke="#0f766e"/>
+        <text x="340" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Brain Energy Metabolism</text>
+        <text x="340" y="257" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#99f6e4">Neuronal Excitability</text>
+
+        <!-- Arrow B8→B9 -->
+        <line x1="340" y1="268" x2="340" y2="298" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 9: AD-Overlap Processes -->
+        <rect x="243" y="300" width="194" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e"/>
+        <text x="340" y="318" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">AD-Overlap Processes</text>
+        <text x="340" y="333" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#0f766e">Amyloid/Tau Vulnerability?</text>
+
+        <!-- PANEL C: Indirect & Metabolic -->
+        <rect x="468" y="10" width="210" height="480" rx="12" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+        <text x="573" y="32" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#b45309" letter-spacing="0.1em">PANEL C · INDIRECT LINKS</text>
+
+        <!-- Node 10: Psychiatric Traits -->
+        <rect x="483" y="44" width="180" height="44" rx="7" fill="#b45309" stroke="#92400e"/>
+        <text x="573" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Psychiatric Associations</text>
+        <text x="573" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#fde68a">Schizophrenia · ADHD · Neuroticism</text>
+
+        <!-- Node 11: Metabolic Traits -->
+        <rect x="483" y="144" width="180" height="44" rx="7" fill="#d97706" stroke="#b45309"/>
+        <text x="573" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Metabolic Traits</text>
+        <text x="573" y="177" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#fef3c7">BMI · Insulin · Lipids</text>
+
+        <!-- Arrow C10→C11 -->
+        <line x1="573" y1="88" x2="573" y2="144" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Arrow C11→C12 -->
+        <line x1="573" y1="188" x2="573" y2="220" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 12: Vascular/Metabolic Risk -->
+        <rect x="483" y="222" width="180" height="44" rx="7" fill="#fef3c7" stroke="#b45309"/>
+        <text x="573" y="240" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Vascular–Metabolic Risk</text>
+        <text x="573" y="255" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#b45309">Obesity · Smoking · Dyslipidemia</text>
+
+        <!-- Arrow C12→C13 -->
+        <line x1="573" y1="266" x2="573" y2="298" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 13: Indirect Dementia Risk -->
+        <rect x="483" y="300" width="180" height="44" rx="7" fill="#fffbeb" stroke="#b45309"/>
+        <text x="573" y="318" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b45309">Indirect Dementia Risk</text>
+        <text x="573" y="333" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#92400e">Cognitive Decline Modifier?</text>
+
+        <!-- PANEL D: Evidence Status -->
+        <rect x="691" y="10" width="200" height="480" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="791" y="32" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#9b1c1c" letter-spacing="0.1em">PANEL D · EVIDENCE STATUS</text>
+
+        <!-- Node 14: Suggestive GWAS -->
+        <rect x="706" y="44" width="170" height="44" rx="7" fill="#9b1c1c" stroke="#7f1d1d"/>
+        <text x="791" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Suggestive GWAS</text>
+        <text x="791" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#fca5a5">ADAS13 · Ventricular Enl.</text>
+
+        <!-- Arrow D14→D15 -->
+        <line x1="791" y1="88" x2="791" y2="144" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 15: No Functional Validation -->
+        <rect x="706" y="146" width="170" height="44" rx="7" fill="#dc2626" stroke="#9b1c1c"/>
+        <text x="791" y="163" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">No Functional</text>
+        <text x="791" y="179" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white">Validation in AD</text>
+
+        <!-- Arrow D15→D16 -->
+        <line x1="791" y1="190" x2="791" y2="290" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 16: Exploratory Candidate -->
+        <rect x="706" y="292" width="170" height="54" rx="7" fill="#fef2f2" stroke="#9b1c1c"/>
+        <text x="791" y="312" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#9b1c1c">Exploratory Candidate</text>
+        <text x="791" y="327" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#7f1d1d">Not a Near-Term</text>
+        <text x="791" y="341" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#7f1d1d">Drug Target</text>
+
+        <!-- Cross-panel connectors (through empty gutters only) -->
+        <!-- Panel A node3 → Panel B node5: elbow through gutter -->
+        <polyline points="190,202 215,202 215,66 243,66" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+        <!-- Panel B node9 → Panel D node16: elbow through gutter at bottom -->
+        <polyline points="437,322 454,322 454,440 680,440 680,319 706,319" fill="none" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)" stroke-dasharray="5,3"/>
+
+        <!-- Panel C node13 → Panel D node16: horizontal connector at y=322 -->
+        <line x1="663" y1="322" x2="706" y2="322" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arr-amber)" stroke-dasharray="5,3"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue) — Gene &amp; Protein:</strong> NKAIN2 encodes a Na⁺/K⁺-ATPase interacting protein expressed in fetal and adult brain; suggestive GWAS links it to ADAS13 and ventricular enlargement.
+      <strong>Panel B (teal) — Neuronal Physiology:</strong> Na⁺/K⁺-ATPase activity branches into membrane potential and synaptic transmission sub-cascades that reconverge on brain energy metabolism and potential AD-overlap processes.
+      <strong>Panel C (amber) — Indirect Links:</strong> Psychiatric and metabolic trait associations implicate vascular–metabolic risk pathways that may indirectly modify dementia risk.
+      <strong>Panel D (red) — Evidence Status:</strong> Available data are confined to suggestive GWAS with no functional AD validation; NKAIN2 remains an exploratory candidate only. Dashed arrows indicate indirect or speculative connections between panels.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Signal — Cognitive Endophenotype</h3>
+        <p>NKAIN2 reached suggestive significance for ADAS13 in an ADNI GWAS, but it was not the genome-wide significant lead — <em>INSC</em> was the primary locus. No SNP IDs, effect sizes, or replication data are provided for the NKAIN2 signal.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neurodegeneration Imaging Link</h3>
+        <p>A second ADNI study flagged NKAIN2 SNPs as candidates for rate of ventricular enlargement in non-demented elders — an imaging marker of neurodegeneration — but NKAIN2 was again not the top signal and functional validation is absent.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Na⁺/K⁺-ATPase Mechanism</h3>
+        <p>The most coherent mechanistic hypothesis is that NKAIN2 modulates Na⁺/K⁺-ATPase activity, influencing neuronal ion homeostasis, membrane potential, synaptic transmission, excitability, and energy metabolism — processes that overlap with recognized AD mechanisms.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Broad CNS Biology</h3>
+        <p>Cytogenetic and expression data confirm CNS-enriched, fetal, and adult brain expression with evolutionary conservation. Disruptions and duplications at the locus produce neurological phenotypes, reinforcing biological plausibility in neural tissue.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Metabolic &amp; Psychiatric Associations</h3>
+        <p>NKAIN2 variants associate with insulin sensitivity (under smoking interaction), BMI, adiposity, lipid traits, neuroticism, schizophrenia negative symptoms, ADHD treatment response, and alcohol dependence — indirect pathways relevant to dementia risk but not AD-specific.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Causal AD Evidence</h3>
+        <p>No supplied study demonstrates that NKAIN2 drives amyloid-β accumulation, tau pathology, neuroinflammation, synaptic degeneration, or neuronal death. Cancer-context findings (apoptosis, migration, differentiation) may not translate to AD neurobiology.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat NKAIN2 as exploratory.</strong> Classify it as a hypothesis-generating candidate, not a validated therapeutic target, and design experiments accordingly.</li>
+      <li><strong>Replicate genetic associations.</strong> Prioritize replication of ADAS13, cognitive decline, and ventricular enlargement associations in larger, independent AD and dementia cohorts with full summary statistics.</li>
+      <li><strong>Benchmark against core AD biomarkers.</strong> Test NKAIN2 variant effects against amyloid-β, phosphorylated tau, total tau, neurodegeneration imaging, hippocampal atrophy, synaptic, and inflammatory markers.</li>
+      <li><strong>Map brain expression and regulation.</strong> Leverage AD-relevant eQTL, single-cell, and region-specific datasets — particularly hippocampus, cortex, neurons, astrocytes, oligodendrocytes, and microglia — to characterize expression and splicing effects of risk variants.</li>
+      <li><strong>Functionally evaluate Na⁺/K⁺-ATPase biology.</strong> Assess whether NKAIN2 perturbation alters Na⁺/K⁺-ATPase activity, neuronal excitability, synaptic transmission, calcium handling, mitochondrial energy metabolism, and vulnerability to amyloid-β or tau stress.</li>
+      <li><strong>Consider a stratification or modifier role.</strong> Explore NKAIN2 as a biomarker for predicting cognitive trajectory, ventricular enlargement, sex-specific risk, or metabolic vulnerability rather than as a direct therapeutic target.</li>
+      <li><strong>Examine gene–environment interactions.</strong> Specifically investigate interactions with smoking, insulin sensitivity, BMI, lipid metabolism, and vascular–metabolic risk factors, given existing association signals under these contexts.</li>
+      <li><strong>Defer direct therapeutic targeting.</strong> Do not advance NKAIN2-targeted therapy until causal biology is established; the most plausible future angles — ion-homeostasis/excitability pathways or metabolic-risk stratification — both require substantial further validation.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — NKAIN2 in Alzheimer's Disease</span>
+      <p>NKAIN2 represents a <strong>biologically plausible but evidence-limited</strong> Alzheimer's disease candidate. Its encoding of a Na⁺/K⁺-ATPase interacting protein situates it within neuronal ion homeostasis, synaptic physiology, and brain energy metabolism — pathways of genuine relevance to AD neurobiology. The genetic evidence, however, remains <strong>suggestive and unreplicated</strong>: associations with ADAS13 cognitive scores and ventricular enlargement in ADNI cohorts are notable leads but fall short of genome-wide significance and lack functional follow-up. Broad associations with psychiatric traits, metabolic risk factors, and cancer biology enrich the mechanistic landscape but do not establish AD specificity. <strong>No supplied evidence links NKAIN2 to amyloid, tau, neuroinflammation, synaptic loss, or clinical AD</strong>, precluding its use as a near-term drug target. The most productive near-term investment is rigorous replication of genetic signals, characterization of brain expression, and functional interrogation of Na⁺/K⁺-ATPase-related mechanisms in AD-relevant models — establishing whether NKAIN2 merits advancement from <strong>exploratory candidate to validated biological contributor</strong> in Alzheimer's pathogenesis.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  NKAIN2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

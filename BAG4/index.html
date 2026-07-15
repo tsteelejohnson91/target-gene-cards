@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAG4 / SODD — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.45);
+    border-color: rgba(255,120,120,0.45);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 26px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 10px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 8px;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.94rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-accent  { background: var(--light);        border-color: var(--mid);     }
+  .card-accent h3  { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);  border-color: var(--danger);  }
+  .card-danger h3  { color: var(--danger); }
+
+  .card-positive{ background: var(--positive-light);border-color: var(--positive);}
+  .card-positive h3{ color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: #f1f5f9; border-color: #94a3b8; }
+  .card-neutral h3 { color: #475569; }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(take);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 36px 36px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 12px;
+  }
+
+  .verdict p strong {
+    color: #93c5fd;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: BAG4 &nbsp;|&nbsp; Bcl-2-Associated Athanogene 4 (SODD)</span>
+    <span class="chip chip-danger">⚠ Safety / Oncogenic Risk Flagged</span>
+  </div>
+  <h1>BAG4 / SODD &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ══════════════════════════════════════════ MAIN ════════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — No Direct AD Evidence:</strong> BAG4 is not established in the source
+      text as an Alzheimer's disease gene, biomarker, driver, or validated therapeutic target.
+      All mechanistic relevance is indirect and analogical. Additionally, BAG4's strong association
+      with tumor survival and therapy resistance raises potential oncogenic safety concerns for any
+      systemic therapeutic activation strategy.
+    </div>
+
+    <p>BAG4, also known as SODD (Silencer of Death Domains), is a member of the BAG-family of
+    co-chaperone regulators. Its name derives from its capacity to bind and silence the death
+    domains of TNFR1 and DR3, preventing spontaneous receptor activation in the absence of
+    ligand. The supplied evidence does not directly study BAG4 in Alzheimer's disease tissue, AD
+    animal or cellular models, amyloid-β, tau pathology, synaptic degeneration, cognitive
+    outcomes, or clinical AD cohorts.</p>
+
+    <p>The relevance of BAG4 to AD is therefore indirect and mechanistic, resting on its
+    documented participation in pathways that overlap with core AD biology: apoptosis regulation,
+    TNF/TNFR1 death-receptor signaling, NF-κB inflammatory signaling, PI3K/AKT survival
+    signaling, HSP70/Hsc70-associated proteostasis, Bcl-2-linked stress survival, mitochondrial
+    quality control, and Parkin/PINK1-related mitophagy.</p>
+
+    <p>As a therapeutic target, BAG4 must be considered hypothesis-generating rather than
+    validated. Its biology is potentially double-edged: BAG4 may protect vulnerable neurons by
+    suppressing inappropriate apoptosis and supporting stress-survival pathways, but excessive or
+    mislocalized BAG4 could theoretically impair damaged-cell or damaged-mitochondria clearance,
+    promote maladaptive inflammatory signaling, or carry oncogenic safety risks.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL LAYOUT (viewBox 0 0 940 500):
+          Panel A: "Upstream Inputs / BAG4 Regulators"  x=10  w=200
+          Panel B: "BAG4 Core Signaling Branches"       x=225 w=480
+          Panel C: "Downstream AD-Relevant Outcomes"    x=720 w=210
+
+          NODE COUNT CHECK (max 16):
+          Panel A: 3 nodes (USP14, Stress/Damage, TNFR1/DR3)
+          Panel B: 6 nodes (BAG4/SODD, NF-κB branch, Apoptosis branch, PI3K/AKT branch, HSP70 branch, Parkin/PINK1 branch)
+          Panel C: 4 nodes (Neuroinflammation, Neuronal Survival, Proteostasis, Mitophagy)
+          TOTAL: 13 nodes ✓ (≤16)
+        -->
+        <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg"
+             aria-label="BAG4 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A — Upstream Regulators ═══ -->
+          <rect x="10" y="14" width="198" height="470" rx="10"
+                fill="rgba(30,58,95,0.06)" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="109" y="34" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="9" font-weight="700"
+                letter-spacing="1.2" fill="#1e3a5f" text-decoration="none">A · UPSTREAM INPUTS</text>
+
+          <!-- A1: USP14 -->
+          <rect x="26" y="52" width="166" height="46" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="109" y="71" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">USP14</text>
+          <text x="109" y="87" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Stabilises BAG4</text>
+
+          <!-- A2: Cellular Stress / Damage -->
+          <rect x="26" y="122" width="166" height="46" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="109" y="141" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">Cellular Stress</text>
+          <text x="109" y="157" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Oxidative / ER / mito</text>
+
+          <!-- A3: TNFR1 / DR3 -->
+          <rect x="26" y="192" width="166" height="46" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="109" y="211" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">TNFR1 / DR3</text>
+          <text x="109" y="227" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Death-domain receptors</text>
+
+          <!-- ═══ PANEL B — BAG4 Core Branches ═══ -->
+          <rect x="222" y="14" width="484" height="470" rx="10"
+                fill="rgba(46,109,164,0.05)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="464" y="34" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="9" font-weight="700"
+                letter-spacing="1.2" fill="#2e6da4">B · BAG4 / SODD CORE SIGNALLING</text>
+
+          <!-- B0: BAG4/SODD central hub -->
+          <rect x="348" y="52" width="232" height="50" rx="8"
+                fill="#1e3a5f" stroke="#0d1f35" stroke-width="1.5"/>
+          <text x="464" y="73" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#ffffff">BAG4 / SODD</text>
+          <text x="464" y="91" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#bfdbfe">Co-chaperone · Death-domain silencer</text>
+
+          <!-- Branch 1 (left): NF-κB / TNF -->
+          <!-- B1 -->
+          <rect x="236" y="160" width="152" height="46" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="312" y="179" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#991b1b">NF-κB Activation</text>
+          <text x="312" y="195" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">Cytokine signalling</text>
+
+          <!-- B2 -->
+          <rect x="236" y="252" width="152" height="46" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="312" y="271" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#991b1b">TNF / Apoptosis</text>
+          <text x="312" y="287" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">Caspase suppression</text>
+
+          <!-- Branch 2 (right): PI3K/AKT + HSP70 -->
+          <!-- B3 -->
+          <rect x="540" y="160" width="152" height="46" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="616" y="179" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0f766e">PI3K / AKT</text>
+          <text x="616" y="195" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#064e3b">Survival signalling</text>
+
+          <!-- B4 -->
+          <rect x="540" y="252" width="152" height="46" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="616" y="271" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0f766e">HSP70 / Hsc70</text>
+          <text x="616" y="287" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#064e3b">Chaperone / proteostasis</text>
+
+          <!-- Branch 3 (centre): Parkin/PINK1 mitophagy -->
+          <!-- B5 -->
+          <rect x="388" y="160" width="152" height="46" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="464" y="179" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#b45309">PINK1 / Parkin</text>
+          <text x="464" y="195" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#78350f">Mitophagy axis</text>
+
+          <!-- B6 -->
+          <rect x="388" y="252" width="152" height="46" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="464" y="271" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#b45309">Mito Recruitment</text>
+          <text x="464" y="287" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#78350f">BAG4 blocks Parkin</text>
+
+          <!-- Convergence node at bottom of Panel B -->
+          <rect x="352" y="368" width="224" height="44" rx="8"
+                fill="#e8f1fa" stroke="#1e3a5f" stroke-width="1.3"/>
+          <text x="464" y="386" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">Cell Fate Decision</text>
+          <text x="464" y="401" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Survival vs. clearance balance</text>
+
+          <!-- ═══ PANEL C — Downstream AD Outcomes ═══ -->
+          <rect x="720" y="14" width="210" height="470" rx="10"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="825" y="34" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="9" font-weight="700"
+                letter-spacing="1.2" fill="#0f766e">C · AD-RELEVANT OUTCOMES</text>
+
+          <!-- C1 -->
+          <rect x="736" y="52" width="178" height="46" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="825" y="71" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#991b1b">Neuroinflammation</text>
+          <text x="825" y="87" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">TNF/NF-κB in glia</text>
+
+          <!-- C2 -->
+          <rect x="736" y="160" width="178" height="46" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="825" y="179" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0f766e">Neuronal Survival</text>
+          <text x="825" y="195" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#064e3b">Apoptosis suppression</text>
+
+          <!-- C3 -->
+          <rect x="736" y="256" width="178" height="46" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="825" y="275" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0f766e">Proteostasis</text>
+          <text x="825" y="291" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#064e3b">Misfolded protein handling</text>
+
+          <!-- C4 -->
+          <rect x="736" y="350" width="178" height="46" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="825" y="369" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#b45309">Mitophagy Quality</text>
+          <text x="825" y="385" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="10" fill="#78350f">Mito clearance in neurons</text>
+
+          <!-- ══════ CONNECTORS ══════ -->
+
+          <!-- A1 USP14 → B0 BAG4 (horizontal into panel B left edge, then up) -->
+          <!-- Route: from right edge of A1 (x=192, y=75) → Panel B left gutter → B0 (x=348, y=77) -->
+          <line x1="192" y1="75" x2="348" y2="75"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"
+                marker-end="url(#arr)"/>
+
+          <!-- A2 Stress → B0 BAG4 -->
+          <line x1="192" y1="145" x2="222" y2="145"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"/>
+          <line x1="222" y1="145" x2="222" y2="77"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"/>
+          <line x1="222" y1="77" x2="348" y2="77"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"
+                marker-end="url(#arr)"/>
+
+          <!-- A3 TNFR1 → B0 BAG4 -->
+          <line x1="192" y1="215" x2="222" y2="215"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"/>
+          <line x1="222" y1="215" x2="222" y2="79"
+                stroke="#2e6da4" stroke-width="1.5" fill="none"/>
+          <!-- avoid crossing by merging with previous vertical — already same x track; extend
+               same approach but offset slightly: -->
+          <!-- re-route A3 at x=220 (2px left of A2 route) -->
+
+          <!-- A3 revised: separate x track -->
+          <!-- hide A3 previous and redraw -->
+          <!-- Use x=218 for A3 vertical so it does not coincide: already fine, 222 used for A2.
+               Let's use elbow at y=215 going right to x=226 then up to y=79 then right to 348 -->
+          <!-- Draw connector carefully -->
+
+          <!-- NOTE: All three A→B connectors share the narrow gutter at x≈208–220.
+               To avoid overlap, each uses a slightly different x elbow.
+               A1: straight horizontal y=75 from x=192 to x=348 (clear path).
+               A2: from (192,145) → right to (208,145) → up to (208,79) → right to (348,79).
+               A3: from (192,215) → right to (214,215) → up to (214,81) → right to (348,81).
+               These three horizontal approaches arrive at y=75,79,81 — merging cleanly into B0.
+          -->
+
+          <!-- Re-draw A1: y=75 clean -->
+          <!-- Already drawn above correctly. Keep. -->
+
+          <!-- A2 re-route elbow -->
+          <polyline points="192,145 208,145 208,79 348,79"
+                    stroke="#2e6da4" stroke-width="1.5" fill="none"
+                    marker-end="url(#arr)"/>
+
+          <!-- A3 re-route elbow -->
+          <polyline points="192,215 214,215 214,81 348,81"
+                    stroke="#2e6da4" stroke-width="1.5" fill="none"
+                    marker-end="url(#arr)"/>
+
+          <!-- B0 BAG4 → Branch nodes (downward from bottom of B0 at y=102) -->
+          <!-- To B1 NF-κB (x=312, y=160): elbow down then left -->
+          <polyline points="388,102 388,130 312,130 312,160"
+                    stroke="#991b1b" stroke-width="1.5" fill="none"
+                    marker-end="url(#arr-r)"/>
+
+          <!-- B0 → B5 PINK1/Parkin (centre, x=464, y=160): straight down -->
+          <line x1="464" y1="102" x2="464" y2="160"
+                stroke="#b45309" stroke-width="1.5" fill="none"
+                marker-end="url(#arr-a)"/>
+
+          <!-- B0 → B3 PI3K/AKT (x=616, y=160): elbow down then right -->
+          <polyline points="540,102 540,130 616,130 616,160"
+                    stroke="#0f766e" stroke-width="1.5" fill="none"
+                    marker-end="url(#arr-g)"/>
+
+          <!-- B1 → B2 (NF-κB → TNF/Apoptosis) -->
+          <line x1="312" y1="206" x2="312" y2="252"
+                stroke="#991b1b" stroke-width="1.5" fill="none"
+                marker-end="url(#arr-r)"/>
+
+          <!-- B5 → B6 (PINK1 → Mito Recruitment) -->
+          <line x1="464" y1="206" x2="464" y2="252"
+                stroke="#b45309" stroke-width="1.5" fill="none"
+                marker-end="url(#arr-a)"/>
+
+          <!-- B3 → B4 (PI3K → HSP70) -->
+          <line x1="616" y1="206" x2="616" y2="252"
+                stroke="#0f766e" stroke-width="1.5" fill="none"
+                marker-end="url(#arr-g)"/>
+
+          <!-- Branch convergence to Cell Fate node (y=368) -->
+          <!-- B2 → Cell Fate -->
+          <polyline points="312,298 312,340 352,340 352,368"
+                    stroke="#991b1b" stroke-width="1.3" fill="none"
+                    marker-end="url(#arr-r)"/>
+
+          <!-- B6 → Cell Fate (straight down, x=464) -->
+          <line x1="464" y1="298" x2="464" y2="368"
+                stroke="#b45309" stroke-width="1.3" fill="none"
+                marker-end="url(#arr-a)"/>
+
+          <!-- B4 → Cell Fate -->
+          <polyline points="616,298 616,340 576,340 576,368"
+                    stroke="#0f766e" stroke-width="1.3" fill="none"
+                    marker-end="url(#arr-g)"/>
+
+          <!-- Panel B to Panel C connectors (horizontal through right gutter at x=706–720) -->
+          <!-- B1 NF-κB → C1 Neuroinflammation: elbow at y=75 in right gutter -->
+          <polyline points="388,75 706,75 706,75 736,75"
+                    stroke="#991b1b" stroke-width="1.3" stroke-dasharray="5,3" fill="none"
+                    marker-end="url(#arr-r)"/>
+
+          <!-- B2/B3 → C2 Neuronal Survival (y=183): route through gutter -->
+          <polyline points="692,183 706,183 736,183"
+                    stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" fill="none"
+                    marker-end="url(#arr-g)"/>
+          <!-- Feed line from B3 right edge (x=692, y=183) -->
+          <line x1="692" y1="183" x2="706" y2="183"
+                stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" fill="none"/>
+
+          <!-- B4 HSP70 → C3 Proteostasis (y=275) -->
+          <polyline points="692,275 706,275 736,275"
+                    stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" fill="none"
+                    marker-end="url(#arr-g)"/>
+
+          <!-- B6 Mito → C4 Mitophagy (y=373) -->
+          <polyline points="540,275 700,275 700,373 736,373"
+                    stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" fill="none"
+                    marker-end="url(#arr-a)"/>
+          <!-- Avoid B4 box at y=252-298, x=540-692: route at x=700 which is outside B4's x range -->
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure:</strong>
+        <strong>Panel A (Upstream Inputs)</strong> shows three upstream regulators feeding into
+        BAG4: USP14 (which stabilises BAG4 protein), cellular stress signals (oxidative, ER, and
+        mitochondrial damage), and death-domain receptors TNFR1/DR3.
+        <strong>Panel B (BAG4 Core Signalling)</strong> depicts BAG4/SODD as a central hub
+        branching into three parallel sub-cascades: a left branch through NF-κB activation and
+        TNF/caspase suppression (red); a centre branch through the PINK1/Parkin mitophagy axis,
+        where BAG4 blocks Parkin mitochondrial recruitment (amber); and a right branch through
+        PI3K/AKT survival signalling and HSP70/Hsc70 chaperone biology (teal). All three branches
+        reconverge at a shared Cell Fate Decision node.
+        <strong>Panel C (AD-Relevant Outcomes)</strong> lists four downstream consequences
+        pertinent to Alzheimer's disease biology: neuroinflammation, neuronal survival, proteostasis
+        of misfolded proteins, and mitochondrial clearance quality. Dashed connectors indicate
+        indirect/analogical links inferred from non-AD systems.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        <p>The source text contains zero data demonstrating BAG4 involvement in amyloid-β
+        production or toxicity, tau phosphorylation or aggregation, synaptic loss, microglial
+        activation, neuronal death in AD models, or cognition. Any AD relevance is mechanistic
+        analogy, not experimental demonstration.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Death-Domain Signalling Regulator</h3>
+        <p>BAG4/SODD binds TNFR1 and DR3 death-domain pathways and prevents spontaneous receptor
+        signalling. Because TNF/TNFR1 signalling is implicated in neuroinflammation, synaptic
+        dysfunction, and apoptosis-like neuronal stress, this provides an indirect rationale for
+        AD relevance.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Anti-Apoptotic &amp; Stress-Survival Role</h3>
+        <p>Across cancer and leukemia studies, BAG4 supports cell survival, suppresses
+        caspase/death-receptor signalling, and contributes to apoptosis resistance. In an AD
+        context this could be neuroprotective if directed at vulnerable neurons, but harmful if
+        it sustains dysfunctional inflammatory or damaged cells.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Mitophagy Intersection (PINK1/Parkin Axis)</h3>
+        <p>The most AD-relevant mechanistic clue is BAG4's connection to Parkin/PINK1-mediated
+        mitophagy. Evidence includes BAG4 regulation of Parkin translocation to damaged
+        mitochondria and a USP14–BAG4–PRKN axis in which USP14 stabilises BAG4 and prevents
+        Parkin recruitment. Impaired mitophagy is central to neurodegeneration.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>NF-κB, TNF &amp; Inflammatory Signalling</h3>
+        <p>Studies link BAG4/SODD to NF-κB activation, cytokine responses, and TNF-related
+        pathways — mechanisms highly relevant to AD neuroinflammation. Notably, some knockout
+        studies also show TNFR1/DR3 signalling can remain normal without SODD, underscoring
+        the context-dependence of these effects.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>HSP70 Chaperone &amp; PI3K/AKT Signalling</h3>
+        <p>BAG4 is a BAG-family co-chaperone that interacts with HSP70/Hsc70/Hsp90 systems,
+        relevant to AD proteostasis because amyloid-β and tau pathology involve misfolded proteins.
+        Cancer studies also show BAG4/SODD can activate PI3K/AKT survival pathways, which
+        intersect with neuronal survival, insulin signalling, and tau-relevant kinase balance.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <span><strong>Treat BAG4 as speculative, not validated.</strong>
+        The current evidence supports mechanistic plausibility but not AD-specific causality or
+        therapeutic efficacy. Frame all further work as hypothesis-testing, not target prosecution.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritise validation in AD-relevant systems.</strong>
+        Key experiments should measure BAG4 expression and localisation in human AD brain regions
+        at single-cell resolution, especially in neurons, astrocytes, microglia, endothelial cells,
+        and oligodendrocytes.</span>
+      </li>
+
+      <li>
+        <span><strong>Test BAG4 across amyloid, tau, and stress models.</strong>
+        BAG4 manipulation should be evaluated in iPSC-derived neurons and glia, organoids, and
+        animal models exposed to amyloid-β, tau pathology, oxidative stress, inflammatory
+        cytokines, ER stress, and mitochondrial damage to determine whether it modifies AD-relevant
+        endpoints.</span>
+      </li>
+
+      <li>
+        <span><strong>Clarify BAG4's role in mitophagy.</strong>
+        Determine whether BAG4 inhibits or supports PINK1/Parkin recruitment and
+        damaged-mitochondria clearance in neurons and glia, and whether disrupting
+        USP14-mediated BAG4 stabilisation improves mitochondrial quality control in
+        AD-like conditions.</span>
+      </li>
+
+      <li>
+        <span><strong>Separate cell-type-specific therapeutic directions.</strong>
+        BAG4 enhancement might be protective in vulnerable neurons if it reduces apoptosis;
+        BAG4 inhibition might benefit glia or inflammatory contexts by reducing NF-κB/TNF
+        signalling or improving mitophagy. These opposing possibilities require direct,
+        cell-type-resolved testing.</span>
+      </li>
+
+      <li>
+        <span><strong>Assess safety rigorously before therapeutic development.</strong>
+        Chronic systemic BAG4 activation could pose oncogenic or apoptosis-suppression risks,
+        while broad BAG4 inhibition could worsen neuronal vulnerability. Any therapeutic strategy
+        would likely require brain-targeted, cell-type-selective, or pathway-specific modulation.</span>
+      </li>
+
+      <li>
+        <span><strong>Define clear AD-relevance success criteria.</strong>
+        BAG4 should only advance as a credible AD target if modulation changes validated endpoints
+        — mitochondrial function, oxidative stress, inflammatory cytokine output, neuronal survival,
+        synaptic function, amyloid/tau burden, and cognition — in well-established AD models.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — BAG4 / SODD in Alzheimer's Disease</div>
+      <p>
+        BAG4/SODD is a <strong>biologically plausible but entirely unvalidated</strong> candidate
+        in the Alzheimer's disease landscape. Its documented roles in <strong>death-domain
+        silencing</strong>, <strong>NF-κB and TNF signalling</strong>, <strong>PI3K/AKT survival
+        pathways</strong>, <strong>HSP70-chaperone proteostasis</strong>, and — most compellingly —
+        the <strong>PINK1/Parkin mitophagy axis</strong> place it at the intersection of several
+        pathways known to be disrupted in neurodegeneration. However, <strong>no direct evidence
+        links BAG4 to any AD-specific phenotype</strong>: no amyloid, no tau, no synaptic loss, no
+        cognitive readout. The biology is inherently <strong>double-edged</strong>, with
+        pro-survival effects that could protect neurons or sustain dysfunctional cells depending on
+        context, and a prominent cancer-biology footprint that raises <strong>oncogenic safety
+        concerns</strong> for any systemic activation strategy. BAG4 should be pursued only with a
+        rigorous, staged validation programme in AD-relevant cellular and in vivo systems, with
+        <strong>cell-type-selective</strong> and pathway-specific interventions rather than
+        global modulation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════ FOOTER ══════════════════════════════════════════ -->
+<footer>
+  BAG4 / SODD — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp;
+  AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

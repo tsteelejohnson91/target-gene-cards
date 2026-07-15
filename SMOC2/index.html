@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMOC2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0d6e6e;
+    --positive-light: #e6f5f5;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.38);
+    border-color: rgba(220,80,80,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f3c96b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.55rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.91rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue {
+    background: #eef4fb;
+    border-left: 4px solid #3b7dd8;
+  }
+  .card-blue h3 { color: #1e4a8a; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+    position: relative;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #93c5e8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SMOC2 &nbsp;|&nbsp; SPARC Related Modular Calcium Binding 2</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>SMOC2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety / Context-Dependence Caveat:</strong> SMOC2 has documented protective roles in certain injury contexts (e.g., kidney repair via integrin β3) alongside harmful roles in others (e.g., cardiac fibrosis via integrin αvβ5). Systemic inhibition may be beneficial in one AD-relevant compartment while harmful in another; therapeutic direction must be defined per cell type and disease stage.
+    </div>
+
+    <p>SMOC2 is a secreted extracellular/matricellular, calcium-binding, heparin-binding SPARC-family protein linked to extracellular matrix remodeling, vascular biology, inflammatory signaling, fibrosis-like tissue responses, WNT/BMP/TGF-β signaling, integrin-associated pathways, stem/progenitor states, and cell-cycle regulation. In the Alzheimer's disease literature, SMOC2 is supported primarily as an AD-associated biomarker and mechanistically plausible disease modifier rather than as a fully validated therapeutic target.</p>
+
+    <p>The strongest AD-specific evidence includes altered SMOC2 in CSF proteomic studies of amyloid-positive individuals and mild cognitive impairment due to AD; increased SMOC2 in autosomal dominant and sporadic AD CSF/plasma-related proteomic signatures; elevation in heparin-enriched AD plasma matrisome modules associated with Aβ and tau biomarkers; identification in cerebrovascular/matrisome modules linked to amyloid plaques, cerebral amyloid angiopathy (CAA), and tau pathology; predominant localization to CAA in one brain/cerebrovascular study; and one cell-based mechanistic study suggesting SMOC2 worsens Aβ-associated microglial dysfunction and neuroinflammation.</p>
+
+    <p>Overall, SMOC2 appears most relevant to AD through non-neuronal mechanisms: amyloid-associated extracellular matrix remodeling, cerebral amyloid angiopathy, blood-brain barrier/neurovascular dysfunction, microglial phagocytosis and inflammatory polarization, NF-κB/TGF-β-related immune signaling, integrin-linked signaling, and oxidative/lipid stress pathways. It is not established as a direct amyloid-production, tau-phosphorylation, synaptic, or neuron-intrinsic AD driver.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0d6e6e"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream / Biomarker Context -->
+        <rect x="10" y="10" width="270" height="470" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">A · BIOMARKER / EXPRESSION</text>
+
+        <!-- Node A1: AD CSF/Plasma -->
+        <rect x="42" y="46" width="170" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="127" y="65" text-anchor="middle" font-size="10" fill="#1e293b">AD CSF &amp; Plasma</text>
+        <text x="127" y="81" text-anchor="middle" font-size="10" fill="#1e293b">Proteomics ↑</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="127" y1="92" x2="127" y2="112" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: Matrisome Module -->
+        <rect x="42" y="112" width="170" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="127" y="131" text-anchor="middle" font-size="10" fill="#1e293b">Heparin-Enriched</text>
+        <text x="127" y="147" text-anchor="middle" font-size="10" fill="#1e293b">Matrisome Module</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="127" y1="158" x2="127" y2="178" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: CAA Localization -->
+        <rect x="42" y="178" width="170" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="127" y="197" text-anchor="middle" font-size="10" fill="#1e293b">Cerebral Amyloid</text>
+        <text x="127" y="213" text-anchor="middle" font-size="10" fill="#1e293b">Angiopathy (CAA)</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="127" y1="224" x2="127" y2="244" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4: BBB / Neurovasc -->
+        <rect x="42" y="244" width="170" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="127" y="263" text-anchor="middle" font-size="10" fill="#1e293b">BBB / Neurovascular</text>
+        <text x="127" y="279" text-anchor="middle" font-size="10" fill="#1e293b">Dysfunction</text>
+
+        <!-- Arrow A4→A5 -->
+        <line x1="127" y1="290" x2="127" y2="310" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: ECM Remodeling -->
+        <rect x="42" y="310" width="170" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="127" y="329" text-anchor="middle" font-size="10" fill="#1e293b">ECM Remodeling &amp;</text>
+        <text x="127" y="345" text-anchor="middle" font-size="10" fill="#1e293b">Amyloid Deposition</text>
+
+        <!-- PANEL B: Mechanism – Microglia branch -->
+        <rect x="300" y="10" width="280" height="300" rx="12" fill="#fdf0f0" fill-opacity="0.55" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="440" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1.2">B · MICROGLIAL MECHANISM</text>
+
+        <!-- Node B1: SMOC2 Elevated -->
+        <rect x="330" y="46" width="170" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="415" y="65" text-anchor="middle" font-size="10" fill="#1e293b">SMOC2 Elevated</text>
+        <text x="415" y="81" text-anchor="middle" font-size="10" fill="#1e293b">in Aβ Environment</text>
+
+        <!-- Arrow B1 down to branch point -->
+        <line x1="415" y1="92" x2="415" y2="118" stroke="#8b1a1a" stroke-width="1.5"/>
+
+        <!-- Branch line horizontal -->
+        <line x1="355" y1="118" x2="475" y2="118" stroke="#8b1a1a" stroke-width="1.5"/>
+
+        <!-- Left branch arrow -->
+        <line x1="355" y1="118" x2="355" y2="138" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Right branch arrow -->
+        <line x1="475" y1="118" x2="475" y2="138" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B2L: Reduced Phagocytosis -->
+        <rect x="313" y="138" width="124" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="375" y="157" text-anchor="middle" font-size="10" fill="#1e293b">↓ Microglial</text>
+        <text x="375" y="173" text-anchor="middle" font-size="10" fill="#1e293b">Phagocytosis</text>
+
+        <!-- Node B2R: NF-κB / Inflammatory -->
+        <rect x="450" y="138" width="112" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="506" y="157" text-anchor="middle" font-size="10" fill="#1e293b">↑ p-NF-κB</text>
+        <text x="506" y="173" text-anchor="middle" font-size="10" fill="#1e293b">TNF-α, IL-1β</text>
+
+        <!-- B2L down arrow -->
+        <line x1="375" y1="184" x2="375" y2="204" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B2R down arrow -->
+        <line x1="506" y1="184" x2="506" y2="204" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B3L: Aβ Accumulates -->
+        <rect x="313" y="204" width="124" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="375" y="223" text-anchor="middle" font-size="10" fill="#1e293b">↑ Aβ Levels</text>
+        <text x="375" y="239" text-anchor="middle" font-size="10" fill="#1e293b">Accumulate</text>
+
+        <!-- Node B3R: Reduced Repair Markers -->
+        <rect x="450" y="204" width="112" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="506" y="223" text-anchor="middle" font-size="10" fill="#1e293b">↓ TGF-β1</text>
+        <text x="506" y="239" text-anchor="middle" font-size="10" fill="#1e293b">CD163 / CD206</text>
+
+        <!-- Converge arrows to B4 -->
+        <line x1="375" y1="250" x2="375" y2="272" stroke="#8b1a1a" stroke-width="1.5"/>
+        <line x1="506" y1="250" x2="506" y2="272" stroke="#8b1a1a" stroke-width="1.5"/>
+        <line x1="375" y1="272" x2="440" y2="272" stroke="#8b1a1a" stroke-width="1.5"/>
+        <line x1="506" y1="272" x2="440" y2="272" stroke="#8b1a1a" stroke-width="1.5"/>
+        <line x1="440" y1="272" x2="440" y2="284" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B4: Neuroinflammation -->
+        <rect x="330" y="284" width="170" height="20" rx="7" fill="#fdd" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="415" y="298" text-anchor="middle" font-size="10" fill="#8b1a1a" font-weight="700">Neuroinflammation ↑</text>
+
+        <!-- PANEL C: Signaling Pathways -->
+        <rect x="600" y="10" width="310" height="300" rx="12" fill="#e6f5f5" fill-opacity="0.55" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="755" y="34" text-anchor="middle" font-size="9" font-weight="700" fill="#0d6e6e" letter-spacing="1.2">C · SIGNALING PATHWAYS</text>
+
+        <!-- Node C1: Integrin Signaling -->
+        <rect x="628" y="46" width="130" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="693" y="65" text-anchor="middle" font-size="10" fill="#1e293b">Integrin αvβ5 / β3</text>
+        <text x="693" y="81" text-anchor="middle" font-size="10" fill="#1e293b">ILK / p38</text>
+
+        <!-- Node C2: TGF-β / BMP -->
+        <rect x="782" y="46" width="112" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="838" y="65" text-anchor="middle" font-size="10" fill="#1e293b">TGF-β / BMP</text>
+        <text x="838" y="81" text-anchor="middle" font-size="10" fill="#1e293b">SMAD Signaling</text>
+
+        <!-- C1 down arrow -->
+        <line x1="693" y1="92" x2="693" y2="118" stroke="#0d6e6e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C2 down arrow -->
+        <line x1="838" y1="92" x2="838" y2="118" stroke="#0d6e6e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C3: MAPK/Akt -->
+        <rect x="628" y="118" width="130" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="693" y="137" text-anchor="middle" font-size="10" fill="#1e293b">MAPK / Akt</text>
+        <text x="693" y="153" text-anchor="middle" font-size="10" fill="#1e293b">Activation</text>
+
+        <!-- Node C4: WNT/β-catenin -->
+        <rect x="782" y="118" width="112" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="838" y="137" text-anchor="middle" font-size="10" fill="#1e293b">WNT / β-catenin</text>
+        <text x="838" y="153" text-anchor="middle" font-size="10" fill="#1e293b">cGMP-PKG</text>
+
+        <!-- C3 down arrow -->
+        <line x1="693" y1="164" x2="693" y2="188" stroke="#0d6e6e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C4 down arrow -->
+        <line x1="838" y1="164" x2="838" y2="188" stroke="#0d6e6e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C5: Oxidative/Lipid Stress -->
+        <rect x="628" y="188" width="130" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="693" y="207" text-anchor="middle" font-size="10" fill="#1e293b">Oxidative / Lipid</text>
+        <text x="693" y="223" text-anchor="middle" font-size="10" fill="#1e293b">Stress (LKB1/AMPK)</text>
+
+        <!-- Node C6: Stem/Progenitor -->
+        <rect x="782" y="188" width="112" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="838" y="207" text-anchor="middle" font-size="10" fill="#1e293b">Stem / Progenitor</text>
+        <text x="838" y="223" text-anchor="middle" font-size="10" fill="#1e293b">Niche States</text>
+
+        <!-- Converge C5+C6 to C7 -->
+        <line x1="693" y1="234" x2="693" y2="258" stroke="#0d6e6e" stroke-width="1.5"/>
+        <line x1="838" y1="234" x2="838" y2="258" stroke="#0d6e6e" stroke-width="1.5"/>
+        <line x1="693" y1="258" x2="755" y2="258" stroke="#0d6e6e" stroke-width="1.5"/>
+        <line x1="838" y1="258" x2="755" y2="258" stroke="#0d6e6e" stroke-width="1.5"/>
+        <line x1="755" y1="258" x2="755" y2="272" stroke="#0d6e6e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C7: Tissue Remodeling -->
+        <rect x="660" y="272" width="190" height="26" rx="7" fill="#d0edec" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="755" y="289" text-anchor="middle" font-size="10" fill="#0d6e6e" font-weight="700">Tissue Remodeling / Repair</text>
+
+        <!-- PANEL D: Context-Dependent Outcome -->
+        <rect x="10" y="388" width="900" height="90" rx="12" fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="460" y="410" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.2">D · CONTEXT-DEPENDENT OUTCOME</text>
+
+        <!-- Node D1 -->
+        <rect x="28" y="420" width="168" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="112" y="439" text-anchor="middle" font-size="10" fill="#1e293b">CAA / Vascular</text>
+        <text x="112" y="455" text-anchor="middle" font-size="10" fill="#1e293b">Amyloid Burden ↑</text>
+
+        <!-- Node D2 -->
+        <rect x="214" y="420" width="168" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="298" y="439" text-anchor="middle" font-size="10" fill="#1e293b">Microglial Aβ</text>
+        <text x="298" y="455" text-anchor="middle" font-size="10" fill="#1e293b">Clearance ↓</text>
+
+        <!-- Node D3 -->
+        <rect x="400" y="420" width="168" height="46" rx="7" fill="#ffffff" stroke="#0d6e6e" stroke-width="1.3"/>
+        <text x="484" y="439" text-anchor="middle" font-size="10" fill="#1e293b">Kidney / Injury:</text>
+        <text x="484" y="455" text-anchor="middle" font-size="10" fill="#1e293b">Protective (β3)</text>
+
+        <!-- Node D4 -->
+        <rect x="586" y="420" width="168" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="670" y="439" text-anchor="middle" font-size="10" fill="#1e293b">Cardiac Fibrosis:</text>
+        <text x="670" y="455" text-anchor="middle" font-size="10" fill="#1e293b">Harmful (αvβ5)</text>
+
+        <!-- Node D5 -->
+        <rect x="772" y="420" width="128" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="836" y="439" text-anchor="middle" font-size="10" fill="#1e293b">Context-Specific</text>
+        <text x="836" y="455" text-anchor="middle" font-size="10" fill="#1e293b">Inhibition Needed</text>
+
+        <!-- Connector: Panel A bottom (ECM) to Panel D (D1) — vertical through left gutter -->
+        <line x1="127" y1="356" x2="127" y2="375" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="127" y1="375" x2="112" y2="375" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="112" y1="375" x2="112" y2="420" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Connector: Panel B (Neuroinflammation) to D2 -->
+        <line x1="415" y1="304" x2="415" y2="360" stroke="#8b1a1a" stroke-width="1.3"/>
+        <line x1="415" y1="360" x2="298" y2="360" stroke="#8b1a1a" stroke-width="1.3"/>
+        <line x1="298" y1="360" x2="298" y2="420" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Connector: Panel C (Tissue Remodel) to D3 -->
+        <line x1="755" y1="298" x2="755" y2="360" stroke="#0d6e6e" stroke-width="1.3"/>
+        <line x1="755" y1="360" x2="484" y2="360" stroke="#0d6e6e" stroke-width="1.3"/>
+        <line x1="484" y1="360" x2="484" y2="420" stroke="#0d6e6e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Biomarker / Expression):</strong> SMOC2 is elevated in AD CSF and plasma proteomics, clusters within heparin-enriched matrisome modules, and localizes prominently to CAA and neurovascular compartments.
+      <strong>Panel B (Microglial Mechanism):</strong> Elevated SMOC2 in an Aβ environment branches into two parallel cascades — reduced microglial phagocytosis (leading to Aβ accumulation) and increased NF-κB / inflammatory cytokine signaling (with loss of TGF-β1/CD163/CD206 repair markers) — converging on amplified neuroinflammation.
+      <strong>Panel C (Signaling Pathways):</strong> Two parallel signaling branches (integrin/ILK/MAPK–Akt and TGF-β/BMP/WNT–cGMP-PKG) converge on tissue remodeling and repair outputs, with oxidative-stress and stem/progenitor state regulation as intermediate nodes.
+      <strong>Panel D (Context-Dependent Outcome):</strong> Downstream consequences depend on compartment — worsened CAA and impaired Aβ clearance in AD-relevant contexts vs. protective effects in kidney injury, harmful fibrotic effects in cardiac tissue, underscoring the need for cell-type-specific rather than systemic inhibition.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Biofluid Biomarker Evidence</h3>
+        SMOC2 is consistently altered in AD CSF and plasma across multiple proteomic studies — in amyloid-positive individuals, MCI due to AD, autosomal dominant AD, and sporadic AD heparin-enriched plasma. These findings suggest SMOC2 reflects AD-associated extracellular matrix, immune, vascular, or tissue-remodeling biology rather than representing a standalone marker.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Microglial Dysfunction &amp; Neuroinflammation</h3>
+        The most direct mechanistic AD evidence shows SMOC2 overexpression increases Aβ levels, reduces TGF-β1 and repair-associated markers CD163 and CD206, and increases p-NF-κB, TNF-α, and IL-1β. Conversely, SMOC2 interference in Aβ-treated microglial cells improved microglial activity and phagocytosis, supporting a model in which elevated SMOC2 reduces Aβ clearance while amplifying inflammatory signaling.
+      </div>
+
+      <div class="card card-accent">
+        <h3>CAA &amp; Neurovascular Pathology</h3>
+        Cerebrovascular AD proteomics highlighted SMOC2 (alongside SMOC1) as increased in CSF, plasma, and brain in AD, with overlap between cerebrovascular modules and fluid biomarkers. Immunohistochemical evidence localizes SMOC2 predominantly to CAA, suggesting a closer relationship to vascular amyloid pathology than to generalized plaque burden.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Matrisome &amp; ECM Module Membership</h3>
+        Heparin-enriched plasma proteomics grouped SMOC2 with matrisome proteins that accumulate with Aβ deposits — including SMOC1, SPON1, MDK, OLFML3, FRZB, GPNMB, and APOE-related signals. This positions SMOC2 as part of an amyloid-associated ECM signature and may help explain its co-elevation with Aβ and tau biomarkers.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Safety Risk</h3>
+        In cardiac fibrosis, SMOC2 promoted oxidative stress, lipid peroxidation, inflammation, and fibrosis through integrin αvβ5 and suppression of LKB1/AMPKα/FOXO3 signaling. In kidney injury, recombinant SMOC2 was protective through integrin β3, G1 arrest, DNA repair, and reduced apoptosis. Systemic SMOC2 inhibition could be beneficial in one AD-relevant compartment but harmful in another, demanding cell-type- and stage-specific strategies.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Accessibility &amp; Pathway Targets</h3>
+        As a secreted, heparin-binding extracellular protein, SMOC2 could in principle be targeted by antibodies, ligand traps, or aptamers. Downstream pathways — including SMOC2–integrin signaling, LKB1/AMPKα/FOXO3, TGF-β/SMAD, BMP, WNT/β-catenin, ILK/p38, MAPK/Akt, NF-κB, and cGMP-PKG — also represent alternative intervention points, though therapeutic direction remains context-dependent.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Position SMOC2 as an emerging AD biomarker candidate</strong> — especially for ECM, neurovascular, CAA, and inflammatory disease dimensions not fully captured by Aβ/tau biomarkers alone.</li>
+      <li><strong>Prioritize human AD tissue validation</strong> — confirm SMOC2 levels and localization in brain, CSF, plasma, isolated cerebrovasculature, CAA lesions, plaque-associated matrix, choroid plexus, meninges, and BBB compartments.</li>
+      <li><strong>Determine cellular source using single-cell and spatial methods</strong> — focus on endothelial cells, pericytes, vascular smooth muscle cells, astrocytes, microglia, fibroblast-like perivascular/meningeal cells, choroid plexus cells, and infiltrating immune cells.</li>
+      <li><strong>Correlate SMOC2 with AD pathological measures</strong> — test associations with amyloid burden, CAA severity, tau pathology, pTau biomarkers, vascular leakage, neuroinflammation, microglial activation states, synaptic loss, cortical atrophy, and cognitive decline.</li>
+      <li><strong>Functionally evaluate SMOC2 inhibition in AD and CAA models</strong> — especially for effects on microglial Aβ phagocytosis, NF-κB activation, TNF-α/IL-1β production, TGF-β1 signaling, CD163/CD206 repair-associated states, BBB integrity, vascular amyloid burden, and cognition.</li>
+      <li><strong>Do not assume systemic inhibition is always beneficial</strong> — because SMOC2 can be protective in some injury contexts, therapeutic development should be cell-type-specific and disease-stage-specific rather than based on blanket suppression.</li>
+      <li><strong>Investigate downstream pathways as alternative targets</strong> — including SMOC2–integrin signaling, LKB1/AMPKα/FOXO3 oxidative-stress regulation, TGF-β/SMAD, BMP, WNT/β-catenin, ILK/p38, MAPK/Akt, NF-κB, and cGMP-PKG pathways.</li>
+      <li><strong>Deploy SMOC2 most immediately for patient stratification</strong> — its best near-term application may be identifying AD subgroups with strong matrisome/CAA/neurovascular remodeling signatures rather than as a primary drug target.</li>
+      <li><strong>Establish therapeutic safety early</strong> — SMOC2 has roles in fibrosis, angiogenesis, stem-cell niches, bone/cartilage biology, kidney repair, cardiovascular remodeling, neuronal excitability, and cancer-associated stromal biology, so systemic modulation may carry significant off-target risks.</li>
+      <li><strong>Replicate genetic and RNA-network findings</strong> — the association of SMOC2 with immediate recall in an AD-enriched GWAS, and its appearance as a downstream node in a novel_circ_0003012/mmu-miR-298-3p/Smoc2 axis in APP/PS1 mouse hippocampus, require functional validation before drawing mechanistic conclusions.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment —</span>
+      SMOC2 is a <strong>mechanistically credible but still incompletely validated Alzheimer's disease target</strong>. It has consistent, replicated evidence as an AD-associated biomarker in CSF and plasma proteomic studies, and its biology — secreted extracellular/matricellular, heparin-binding, matricellular — is well-matched to the known roles of the <strong>extracellular matrix in CAA, BBB dysfunction, and neuroinflammation</strong>. The strongest rationale for therapeutic inhibition comes from microglial and inflammatory findings suggesting that reduced SMOC2 may improve Aβ phagocytosis and suppress <strong>NF-κB-driven neuroinflammation</strong>. Biomarker and cerebrovascular studies further highlight particular relevance to <strong>CAA and perivascular ECM remodeling</strong>. However, SMOC2 is not an established direct driver of amyloid production, tau phosphorylation, or neuronal loss, and its <strong>context-dependent protective vs. harmful roles</strong> across tissue compartments mean that any therapeutic program will require careful, compartment-specific target engagement and thorough off-target safety profiling before clinical advancement.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SMOC2 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

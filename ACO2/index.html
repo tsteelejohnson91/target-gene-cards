@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACO2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 1.0rem;
+    opacity: 0.72;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  p {
+    margin-bottom: 16px;
+    font-size: 1.0rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { margin-bottom: 0; font-size: 0.93rem; }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 40px;
+  }
+
+  .verdict h2 {
+    color: #93c5fd;
+    border-bottom-color: rgba(147,197,253,0.4);
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    color: #e2eaf4;
+    font-size: 1.02rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ACO2 &nbsp;|&nbsp; Aconitase 2, Mitochondrial</span>
+    <span class="chip chip-danger">⚠ Therapeutic Caution: Dual Risk of Deficiency &amp; Overactivation</span>
+  </div>
+  <h1>ACO2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Therapeutic Caution:</strong> Both deficiency and excessive or misregulated ACO2 activity can be harmful in some models. Strategies should aim to <em>restore</em> physiological ACO2 activity and TCA-cycle flux — not indiscriminate activation or inhibition.
+    </div>
+
+    <p>ACO2 (mitochondrial aconitase 2) is a TCA/Krebs cycle enzyme that catalyzes the interconversion of citrate and isocitrate. Its catalytic function depends on a vulnerable iron–sulfur [4Fe-4S] cluster, making it acutely sensitive to oxidative and nitrosative stress. In the context of Alzheimer's disease, ACO2 is relevant across multiple intersecting pathological axes: mitochondrial dysfunction, impaired TCA-cycle flux, oxidative/nitrosative stress, iron and redox imbalance, apoptosis, mtDNA maintenance, neuroinflammation-linked metabolic remodeling, and progressive neuronal vulnerability.</p>
+
+    <p>The strongest AD-specific evidence is a 2015 <em>Journal of Alzheimer's Disease</em> study demonstrating significantly reduced lymphocytic mitochondrial aconitase activity in both Alzheimer's disease and mild cognitive impairment (MCI). Activity followed a stepwise pattern — lowest in AD, intermediate in MCI, higher in cognitively normal controls — and correlated strongly with Mini-Mental State Examination scores and plasma vitamin E levels. AD samples were also more vulnerable to free-radical-induced ACO2 activity loss. Additional AD-context evidence situates ACO2 within mitochondrial dysfunction, citrate cycle disruption, oxidative phosphorylation impairment, and hippocampal vulnerability networks, though most of this evidence remains indirect or systems-level rather than causal.</p>
+
+    <p>Overall, ACO2 is best interpreted as a <strong>mitochondrial resilience and redox-sensitive metabolic node</strong> — mechanistically compelling for AD given the disease's hallmarks of mitochondrial hypometabolism, oxidative stress, iron dyshomeostasis, neuroinflammation, and synaptic energy failure — but not yet a validated amyloid- or tau-directed therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Stressors -->
+          <rect x="10" y="10" width="220" height="480" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="120" y="34" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">A · UPSTREAM STRESSORS</text>
+
+          <!-- Node A1: Oxidative ROS/RNS -->
+          <rect x="30" y="50" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="120" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Oxidative / Nitrosative</text>
+          <text x="120" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Stress (ROS / RNS)</text>
+
+          <!-- Node A2: Iron Dyshomeostasis -->
+          <rect x="30" y="118" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="120" y="136" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Iron / Fe-S Cluster</text>
+          <text x="120" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Dyshomeostasis</text>
+
+          <!-- Node A3: Neuroinflammation -->
+          <rect x="30" y="186" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="120" y="204" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Microglial Activation /</text>
+          <text x="120" y="218" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Neuroinflammation</text>
+
+          <!-- Node A4: Mito Hypometabolism -->
+          <rect x="30" y="254" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="120" y="272" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Mitochondrial</text>
+          <text x="120" y="286" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#1a3a5c">Hypometabolism</text>
+
+          <!-- Arrows within A (top-down, no cross) -->
+          <line x1="120" y1="94" x2="120" y2="116" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="120" y1="162" x2="120" y2="184" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="120" y1="230" x2="120" y2="252" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Panel B: ACO2 Central Node -->
+          <rect x="248" y="10" width="200" height="480" rx="12" fill="#dbeafe" fill-opacity="0.45" stroke="#1a3a5c" stroke-width="1.5"/>
+          <text x="348" y="34" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">B · ACO2 ENZYME HUB</text>
+
+          <!-- Node B1: ACO2 [4Fe-4S] -->
+          <rect x="268" y="110" width="160" height="50" rx="8" fill="#1a3a5c" stroke="#0c1f33" stroke-width="1.5"/>
+          <text x="348" y="131" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#ffffff">ACO2 [4Fe-4S]</text>
+          <text x="348" y="147" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#bfdbfe">Mitochondrial Aconitase</text>
+
+          <!-- Node B2: Citrate → Isocitrate -->
+          <rect x="268" y="210" width="160" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="348" y="228" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#ffffff">Citrate ⇌ Isocitrate</text>
+          <text x="348" y="243" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#bfdbfe">TCA-Cycle Flux</text>
+
+          <!-- Node B3: NADH/FADH2 -->
+          <rect x="268" y="300" width="160" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="348" y="318" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#ffffff">NADH / FADH₂</text>
+          <text x="348" y="333" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#bfdbfe">Electron Donors → OxPhos</text>
+
+          <!-- Node B4: ATP Production -->
+          <rect x="268" y="390" width="160" height="44" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+          <text x="348" y="408" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#ffffff">ATP Production</text>
+          <text x="348" y="423" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#ccfbf1">Neuronal Energy Supply</text>
+
+          <!-- Arrows Panel B -->
+          <line x1="348" y1="160" x2="348" y2="208" stroke="#1a3a5c" stroke-width="1.6" marker-end="url(#arr)"/>
+          <line x1="348" y1="254" x2="348" y2="298" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="348" y1="344" x2="348" y2="388" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel arrows A → B (from Stressors to ACO2 node) -->
+          <!-- A1 ROS → B ACO2: from right edge of A1 (210,72) to left edge of B1 (268,135) via elbow -->
+          <polyline points="210,72 229,72 229,135 268,135" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- A2 Iron → B ACO2 -->
+          <polyline points="210,140 237,140 237,145 268,145" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- A3 Neuroinflamm → B ACO2: elbow through gutter -->
+          <polyline points="210,208 238,208 238,152 268,152" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+          <!-- A4 Hypometab → B ACO2: elbow -->
+          <polyline points="210,276 238,276 238,158 268,158" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Panel C: Downstream Consequences (two branches) -->
+          <rect x="466" y="10" width="444" height="480" rx="12" fill="#f0fdf4" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="688" y="34" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="9" font-weight="700" fill="#065f46" letter-spacing="1.5">C · DOWNSTREAM CONSEQUENCES &amp; INTERVENTIONS</text>
+
+          <!-- Branch label left -->
+          <text x="565" y="60" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#991b1b" letter-spacing="1">DYSFUNCTION BRANCH</text>
+          <!-- Branch label right -->
+          <text x="800" y="60" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#0f766e" letter-spacing="1">PROTECTIVE BRANCH</text>
+
+          <!-- Dysfunction branch nodes (left of panel C) -->
+          <!-- C1: ACO2 Inactivation -->
+          <rect x="486" y="72" width="158" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="565" y="90" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#7f1d1d">ACO2 Inactivation</text>
+          <text x="565" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#991b1b">Fe-S Cluster Damage</text>
+
+          <!-- C2: TCA Bottleneck + Citrate Accum -->
+          <rect x="486" y="152" width="158" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="565" y="170" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#7f1d1d">TCA Bottleneck /</text>
+          <text x="565" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#991b1b">Citrate Accumulation</text>
+
+          <!-- C3: Amplified ROS + Synaptic Failure -->
+          <rect x="486" y="232" width="158" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="565" y="250" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#78350f">Amplified ROS /</text>
+          <text x="565" y="264" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#92400e">Synaptic Energy Failure</text>
+
+          <!-- C4: Neuronal Vulnerability / mtDNA -->
+          <rect x="486" y="312" width="158" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="565" y="330" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#78350f">Neuronal Vulnerability /</text>
+          <text x="565" y="344" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#92400e">mtDNA Impairment</text>
+
+          <!-- Protective branch nodes (right of panel C) -->
+          <!-- C5: Antioxidants / Mito Protection -->
+          <rect x="720" y="72" width="172" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="806" y="90" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#065f46">Antioxidants / Mito-</text>
+          <text x="806" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#0f766e">Protective Compounds</text>
+
+          <!-- C6: ACO2 Overexpression / Fe-S Repair -->
+          <rect x="720" y="152" width="172" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="806" y="170" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#065f46">ACO2 Restoration /</text>
+          <text x="806" y="184" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#0f766e">Fe-S Cluster Repair</text>
+
+          <!-- C7: Metabolic Bypass (Isocitrate/αKG) -->
+          <rect x="720" y="232" width="172" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="806" y="250" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" fill="#065f46">Isocitrate / α-KG</text>
+          <text x="806" y="264" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#0f766e">Metabolic Bypass</text>
+
+          <!-- Shared outcome node -->
+          <rect x="586" y="400" width="244" height="50" rx="9" fill="#1a3a5c" stroke="#0c1f33" stroke-width="1.5"/>
+          <text x="708" y="420" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#ffffff">Cognitive / AD Outcome</text>
+          <text x="708" y="438" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#bfdbfe">Neurodegeneration or Resilience</text>
+
+          <!-- Dysfunction branch arrows -->
+          <line x1="565" y1="116" x2="565" y2="150" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="565" y1="196" x2="565" y2="230" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="565" y1="276" x2="565" y2="310" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <!-- C4 → shared outcome -->
+          <polyline points="565,356 565,375 708,375 708,399" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Protective branch arrows -->
+          <line x1="806" y1="116" x2="806" y2="150" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="806" y1="196" x2="806" y2="230" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- C7 → shared outcome -->
+          <polyline points="806,276 806,375 708,375" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="0"/>
+          <!-- avoid double arrowhead on shared segment — draw arrow from C7 bottom to elbow only -->
+          <line x1="806" y1="276" x2="806" y2="373" stroke="#0f766e" stroke-width="1.4"/>
+          <polyline points="806,375 708,375 708,399" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel connectors: Panel B → Panel C branches -->
+          <!-- B1 ACO2 → C1 Dysfunction (right edge of B1 to left edge of C1) -->
+          <polyline points="428,128 457,128 457,94 486,94" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- B2 Citrate → C2 (elbow through gutter) -->
+          <polyline points="428,232 457,232 457,174 486,174" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+          <!-- B4 ATP → Shared outcome (elbow) -->
+          <polyline points="428,412 457,412 457,425 586,425" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- B ACO2 → C5 Protective -->
+          <polyline points="428,132 457,132 457,94 720,94" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A — Upstream Stressors:</strong> Four converging AD-associated stressors (ROS/RNS, iron/Fe-S dyshomeostasis, neuroinflammation, and mitochondrial hypometabolism) funnel into the ACO2 enzyme hub via solid (direct) and dashed (indirect/contextual) arrows.
+        <strong>Panel B — ACO2 Enzyme Hub:</strong> ACO2's [4Fe-4S] cluster catalyzes citrate ⇌ isocitrate conversion, feeding NADH/FADH₂ generation and ultimately ATP production; stressor input can inactivate this cascade.
+        <strong>Panel C — Downstream Consequences &amp; Interventions:</strong> Two parallel branches emerge from ACO2 dysfunction or protection. The <em>dysfunction branch</em> (left, red/amber) shows Fe-S damage → TCA bottleneck → amplified ROS/synaptic failure → neuronal vulnerability. The <em>protective branch</em> (right, teal) shows antioxidants → ACO2 restoration → metabolic bypass strategies. Both branches converge on a shared AD cognitive outcome node.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Stepwise Activity Reduction in AD &amp; MCI</h3>
+        <p>Lymphocytic ACO2 activity was lowest in AD, intermediate in MCI, and highest in controls — correlating significantly with MMSE scores and plasma vitamin E. AD samples showed greater vulnerability to free-radical-induced ACO2 inactivation, underscoring its potential as a staged cognitive biomarker.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Core Role in Neuronal Energy Metabolism</h3>
+        <p>As a TCA-cycle enzyme, ACO2 underpins citrate/isocitrate conversion, NADH/FADH₂ generation, oxidative phosphorylation, and ATP synthesis. Reduced ACO2 activity could directly impair neuronal energy supply and degrade synaptic resilience in metabolically demanding circuits.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Acute Sensitivity to Oxidative &amp; Nitrosative Stress</h3>
+        <p>The [4Fe-4S] cluster can be damaged by ROS and RNS, converting active enzyme to inactive forms. In AD, chronic oxidative stress may progressively inhibit ACO2, create TCA-cycle bottlenecks, increase mitochondrial inefficiency, and amplify ROS generation in a self-reinforcing cycle.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>ACO2 Variants Cause Severe Neurological Disease</h3>
+        <p>Human ACO2 mutations are associated with optic atrophy, infantile cerebellar-retinal degeneration, cortical atrophy, seizures, and spastic paraplegia. While not AD, these disorders confirm that nervous-system tissues are exquisitely sensitive to ACO2 dysfunction.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Strategies: Restore, Don't Overactivate</h3>
+        <p>Protective effects documented in non-AD models include ACO2 overexpression improving mitochondrial function, downstream metabolites (isocitrate, α-ketoglutarate) bypassing metabolic bottlenecks, antioxidants preserving ACO2 activity, and mitochondrial-protective compounds restoring TCA flux. Caution is required because misregulated ACO2 activity can also be harmful.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammatory Metabolic Switching</h3>
+        <p>In macrophage and inflammatory models, nitric oxide or itaconate can inhibit aconitase, disrupt Fe-S clusters, promote citrate accumulation, alter iron metabolism, and affect IL-1β/caspase-1 signaling. This mechanism is directly relevant to AD microglial activation and inflammatory metabolic remodeling.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <span><strong>Treat ACO2 as a candidate AD mitochondrial biomarker.</strong> Enzyme activity may be more informative than mRNA or protein abundance, because oxidative Fe-S cluster damage can inactivate ACO2 without eliminating the protein. It is especially relevant as a marker of oxidative mitochondrial injury and impaired TCA-cycle function.</span>
+      </li>
+      <li>
+        <span><strong>Prioritize AD-specific validation in brain tissue and disease models.</strong> Key studies should measure ACO2 activity, expression, oxidation/nitrosylation status, Fe-S cluster integrity, citrate/isocitrate balance, and relationships to amyloid-β, tau, synaptic markers, cognition, and disease stage.</span>
+      </li>
+      <li>
+        <span><strong>Investigate ACO2 in the most vulnerable AD cell types and regions.</strong> Hippocampal CA1 neurons, synapses, astrocytes, microglia, and myeloid cells are especially relevant because ACO2 biology intersects with high energy demand, chronic oxidative stress, and inflammatory metabolic switching.</span>
+      </li>
+      <li>
+        <span><strong>Explore therapeutic strategies that preserve ACO2 function rather than simply increase expression.</strong> Candidate approaches include mitochondrial antioxidants, Fe-S cluster protection or repair, iron/redox homeostasis modulation, mitochondrial proteostasis enhancement, and prevention of ROS/RNS-mediated aconitase inactivation.</span>
+      </li>
+      <li>
+        <span><strong>Test metabolic bypass strategies.</strong> Isocitrate, α-ketoglutarate, triheptanoin-like anaplerotic approaches, or other downstream TCA-supporting interventions may be useful if ACO2 impairment creates a metabolic bottleneck that cannot be readily reversed.</span>
+      </li>
+      <li>
+        <span><strong>Evaluate upstream regulators of ACO2 stability and activity.</strong> LONP1, frataxin/Fe-S cluster repair pathways, SIRT3/acetylation, histidine phosphorylation, oxidative modifications, nitric oxide, itaconate, and iron/copper balance are all plausible regulatory points for therapeutic intervention.</span>
+      </li>
+      <li>
+        <span><strong>Use ACO2 as part of a mitochondrial pathway panel, not as a standalone AD marker.</strong> It should be assessed alongside citrate synthase, SDHA/SDHB, NDUFS proteins, ATP synthase components, mtDNA copy number, oxidative phosphorylation measures, ROS/RNS markers, and TCA metabolites for meaningful interpretation.</span>
+      </li>
+      <li>
+        <span><strong>Maintain a cautious therapeutic framing.</strong> The available evidence supports ACO2 as a mechanistically compelling and AD-relevant mitochondrial node and potential biomarker, but not yet as a confirmed disease-modifying therapeutic target. Direct AD experimental validation is required before clinical targeting can be justified.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>Overall Assessment —</strong> ACO2 represents a <strong>mechanistically plausible, redox-sensitive mitochondrial node</strong> in Alzheimer's disease pathophysiology, situated at the intersection of TCA-cycle metabolism, iron–sulfur cluster biology, oxidative stress, neuroinflammation, and neuronal energy failure. The most direct AD evidence — a stepwise reduction in lymphocytic ACO2 activity tracking with cognitive decline and vitamin E status — is compelling but preliminary and indirect. <strong>Broader AD systems-level analyses</strong> consistently situate ACO2 within mitochondrial dysfunction and citrate-cycle networks, reinforcing mechanistic plausibility. Human loss-of-function mutations causing severe neurodegeneration confirm the nervous system's sensitivity to ACO2 impairment. <strong>Therapeutically, the priority should be functional restoration of physiological ACO2 activity</strong> — via antioxidant protection, Fe-S cluster repair, iron homeostasis modulation, and metabolic bypass strategies — rather than nonspecific overactivation or inhibition. ACO2 is best advanced as a <strong>mitochondrial biomarker candidate and mechanistic hypothesis</strong> requiring targeted brain-tissue and AD-model validation before it can be considered a confirmed disease-modifying target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ACO2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

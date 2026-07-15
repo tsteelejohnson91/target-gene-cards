@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VIM / Vimentin — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #7c3aed;
+    --light: #ede9fe;
+    --danger: #991b1b;
+    --danger-light: #fee2e2;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #ccfbf1;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-card: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #dbeafe;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e0d7ff;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,160,160,0.3);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.65;
+    font-size: 0.95rem;
+    color: #e0d7ff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+
+  section { margin-bottom: 54px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: #f8f7fc;
+    border: 1px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 24px 16px 16px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .cards { grid-template-columns: 1fr; } }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid transparent;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 0.88rem; line-height: 1.65; margin-bottom: 0; }
+
+  .card-accent  { background: var(--light);         border-left-color: var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-left-color: var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light);border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue    { background: var(--blue-light);    border-left-color: var(--blue);     }
+  .card-blue    h3 { color: var(--blue); }
+  .card-neutral { background: var(--neutral-card);  border-left-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-warning { background: var(--warning-light); border-left-color: var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways { padding-left: 0; list-style: none; counter-reset: takeaway; }
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-size: 0.93rem;
+  }
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--mid);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    border-radius: 14px;
+    color: #e0d7ff;
+    padding: 36px 36px 34px;
+    line-height: 1.8;
+    font-size: 0.96rem;
+  }
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .verdict strong { color: #fff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: VIM &nbsp;|&nbsp; Vimentin (Intermediate Filament Protein)</span>
+    <span class="chip chip-danger">⚠ Ambiguous symbol — non-vimentin uses not AD-relevant</span>
+  </div>
+  <h1>VIM / Vimentin &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Interpretive Caution:</strong> "VIM" carries multiple unrelated meanings in the literature — including bacterial metallo-β-lactamases, thalamic surgical targets, and statistical variability metrics. Only the vimentin (cytoskeletal intermediate filament) interpretation is relevant to Alzheimer's disease research. Non-vimentin uses of "VIM" must not be conflated with AD molecular evidence.
+    </div>
+
+    <p>Vimentin (VIM) is a type III intermediate filament protein with established roles in cytoskeletal integrity, cellular stress responses, and tissue remodeling. Within the Alzheimer's disease context, the most direct evidence centers on a structurally <em>abnormal</em> vimentin species detected by the form-specific 84-1 antibody — a species with low affinity for standard vimentin antibodies, suggesting it would be missed by conventional assays.</p>
+
+    <p>This 84-1-reactive vimentin is enriched in neurodegenerative brain tissue, forms deposits in affected Alzheimer's disease regions that often colocalize with pathological protein aggregates, and is elevated in cerebrospinal fluid of AD patients. Human astrocytes exposed to amyloid-β fibrils release increased amounts of this abnormal vimentin form, implicating reactive glial biology as the cellular source.</p>
+
+    <p>VIM/vimentin is not a validated Alzheimer's therapeutic target. The current evidence positions it primarily as an emerging biomarker and a marker of reactive astrocytic stress, with therapeutic relevance remaining preliminary and hypothesis-generating.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; font-family: Arial, Helvetica, sans-serif;">
+
+        <!-- Panel definitions -->
+        <!-- Panel A: Upstream trigger -->
+        <rect x="14" y="14" width="196" height="452" rx="12" fill="#ede9fe" fill-opacity="0.55" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="112" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">UPSTREAM TRIGGER</text>
+
+        <!-- Panel B: Astrocyte Response -->
+        <rect x="222" y="14" width="218" height="452" rx="12" fill="#dbeafe" fill-opacity="0.45" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="331" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">ASTROCYTE RESPONSE</text>
+
+        <!-- Panel C: Abnormal VIM Species -->
+        <rect x="452" y="14" width="210" height="452" rx="12" fill="#ccfbf1" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="557" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">ABNORMAL VIM SPECIES</text>
+
+        <!-- Panel D: Downstream Readouts -->
+        <rect x="674" y="14" width="212" height="452" rx="12" fill="#fee2e2" fill-opacity="0.4" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="780" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">DISEASE READOUTS</text>
+
+        <!-- ============ NODES ============ -->
+
+        <!-- Panel A nodes -->
+        <!-- A1: Amyloid-β Fibrils -->
+        <rect x="34" y="58" width="156" height="46" rx="8" fill="#7c3aed" stroke="none"/>
+        <text x="112" y="78" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Amyloid-β</text>
+        <text x="112" y="93" text-anchor="middle" font-size="10" fill="#e0d7ff">Fibrils</text>
+
+        <!-- A2: Proteostatic Stress -->
+        <rect x="34" y="134" width="156" height="46" rx="8" fill="#5b21b6" stroke="none"/>
+        <text x="112" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Proteostatic</text>
+        <text x="112" y="167" text-anchor="middle" font-size="10" fill="#ddd6fe">Disruption</text>
+
+        <!-- A3: Neuroinflammatory Milieu -->
+        <rect x="34" y="218" width="156" height="46" rx="8" fill="#4c1d95" stroke="none"/>
+        <text x="112" y="236" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Neuroinflam-</text>
+        <text x="112" y="251" text-anchor="middle" font-size="10" fill="#ddd6fe">matory Milieu</text>
+
+        <!-- Panel B nodes -->
+        <!-- B1: Reactive Astrocyte Activation -->
+        <rect x="240" y="58" width="182" height="46" rx="8" fill="#1d4ed8" stroke="none"/>
+        <text x="331" y="78" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Reactive Astrocyte</text>
+        <text x="331" y="93" text-anchor="middle" font-size="10" fill="#bfdbfe">Activation</text>
+
+        <!-- B2: Cytoskeletal Remodeling -->
+        <rect x="240" y="142" width="182" height="44" rx="8" fill="#1e40af" stroke="none"/>
+        <text x="331" y="161" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Cytoskeletal</text>
+        <text x="331" y="175" text-anchor="middle" font-size="10" fill="#bfdbfe">Remodeling</text>
+
+        <!-- B3a: Proteolytic Cleavage branch -->
+        <rect x="240" y="224" width="82" height="44" rx="8" fill="#2563eb" stroke="none"/>
+        <text x="281" y="243" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">Proteolytic</text>
+        <text x="281" y="257" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Cleavage</text>
+
+        <!-- B3b: Aggregation / Crosslinking -->
+        <rect x="340" y="224" width="82" height="44" rx="8" fill="#2563eb" stroke="none"/>
+        <text x="381" y="240" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">Aggregation /</text>
+        <text x="381" y="254" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Crosslinking</text>
+
+        <!-- B4: Extracellular Release -->
+        <rect x="240" y="306" width="182" height="44" rx="8" fill="#1e3a8a" stroke="none"/>
+        <text x="331" y="325" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Extracellular</text>
+        <text x="331" y="340" text-anchor="middle" font-size="10" fill="#bfdbfe">VIM Release</text>
+
+        <!-- Panel C nodes -->
+        <!-- C1: 84-1-Reactive VIM Species -->
+        <rect x="468" y="58" width="178" height="46" rx="8" fill="#0f766e" stroke="none"/>
+        <text x="557" y="78" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">84-1-Reactive</text>
+        <text x="557" y="93" text-anchor="middle" font-size="10" fill="#ccfbf1">Vimentin Species</text>
+
+        <!-- C2: Cleaved Proteoforms -->
+        <rect x="468" y="142" width="82" height="44" rx="8" fill="#0d9488" stroke="none"/>
+        <text x="509" y="161" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">Cleaved</text>
+        <text x="509" y="175" text-anchor="middle" font-size="9.5" fill="#ccfbf1">Proteoforms</text>
+
+        <!-- C3: Reduction-resistant Aggregates -->
+        <rect x="558" y="142" width="86" height="44" rx="8" fill="#0d9488" stroke="none"/>
+        <text x="601" y="158" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Reduction-</text>
+        <text x="601" y="172" text-anchor="middle" font-size="9" fill="#ccfbf1">resistant Agg.</text>
+
+        <!-- C4: Colocalizes with Pathological Aggregates -->
+        <rect x="468" y="226" width="178" height="44" rx="8" fill="#115e59" stroke="none"/>
+        <text x="557" y="244" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">Colocalizes w/</text>
+        <text x="557" y="259" text-anchor="middle" font-size="9.5" fill="#ccfbf1">Pathological Aggregates</text>
+
+        <!-- Panel D nodes -->
+        <!-- D1: Brain Deposits (AD Regions) -->
+        <rect x="690" y="58" width="178" height="44" rx="8" fill="#991b1b" stroke="none"/>
+        <text x="779" y="77" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Brain Deposits</text>
+        <text x="779" y="91" text-anchor="middle" font-size="9.5" fill="#fecaca">in AD Regions</text>
+
+        <!-- D2: Elevated CSF VIM -->
+        <rect x="690" y="142" width="178" height="44" rx="8" fill="#b91c1c" stroke="none"/>
+        <text x="779" y="161" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Elevated CSF</text>
+        <text x="779" y="175" text-anchor="middle" font-size="10" fill="#fecaca">VIM (AD &amp; PD)</text>
+
+        <!-- D3: Emerging Biomarker -->
+        <rect x="690" y="228" width="178" height="44" rx="8" fill="#dc2626" stroke="none"/>
+        <text x="779" y="247" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Emerging Biomarker</text>
+        <text x="779" y="261" text-anchor="middle" font-size="9.5" fill="#fecaca">Candidate (not AD-specific)</text>
+
+        <!-- D4: Not Validated Therapeutic Target -->
+        <rect x="690" y="310" width="178" height="44" rx="8" fill="#7f1d1d" stroke="none"/>
+        <text x="779" y="329" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">No Validated AD</text>
+        <text x="779" y="343" text-anchor="middle" font-size="9.5" fill="#fecaca">Therapeutic Target</text>
+
+        <!-- ============ ARROWS ============ -->
+        <defs>
+          <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- A1 -> A2 -->
+        <line x1="112" y1="104" x2="112" y2="132" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+        <!-- A2 -> A3 -->
+        <line x1="112" y1="180" x2="112" y2="216" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+
+        <!-- A1 -> B1 (horizontal, row 58-104) -->
+        <line x1="190" y1="81" x2="238" y2="81" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+        <!-- A2 -> B2 (horizontal, row 142-188) -->
+        <line x1="190" y1="165" x2="238" y2="165" stroke="#5b21b6" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+        <!-- A3 -> B4 via elbow: down then right -->
+        <polyline points="112,264 112,328 238,328" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- B1 -> B2 -->
+        <line x1="331" y1="104" x2="331" y2="140" stroke="#1d4ed8" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- B2 -> B3a (left branch) -->
+        <line x1="281" y1="186" x2="281" y2="222" stroke="#1d4ed8" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+        <!-- B2 -> B3b (right branch) -->
+        <line x1="381" y1="186" x2="381" y2="222" stroke="#1d4ed8" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- B3a -> B4 -->
+        <line x1="281" y1="268" x2="281" y2="304" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+        <!-- B3b -> B4 -->
+        <line x1="381" y1="268" x2="381" y2="304" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- B4 -> C4 (horizontal row 306-350 area, going right) -->
+        <line x1="422" y1="328" x2="466" y2="270" stroke="#1e3a8a" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- B1/B3 -> C1 (from B1 node top right to C1) via horizontal -->
+        <line x1="422" y1="81" x2="466" y2="81" stroke="#1d4ed8" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- C1 -> C2 -->
+        <line x1="509" y1="104" x2="509" y2="140" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+        <!-- C1 -> C3 -->
+        <line x1="601" y1="104" x2="601" y2="140" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- C2 -> C4 -->
+        <line x1="509" y1="186" x2="509" y2="224" stroke="#0d9488" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+        <!-- C3 -> C4 -->
+        <line x1="601" y1="186" x2="601" y2="224" stroke="#0d9488" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- C1 -> D1 -->
+        <line x1="646" y1="81" x2="688" y2="81" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <!-- C4 -> D2 via elbow -->
+        <polyline points="646,248 667,248 667,164 688,164" fill="none" stroke="#115e59" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- D1 -> D2 -->
+        <line x1="779" y1="102" x2="779" y2="140" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <!-- D2 -> D3 -->
+        <line x1="779" y1="186" x2="779" y2="226" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <!-- D3 -> D4 -->
+        <line x1="779" y1="272" x2="779" y2="308" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Node count annotation (hidden, for developer reference): 
+             A1,A2,A3 (3) + B1,B2,B3a,B3b,B4 (5) + C1,C2,C3,C4 (4) + D1,D2,D3,D4 (4) = 16 total -->
+
+      </svg>
+
+      <p class="figure-caption"><strong>Panel 1 — Upstream Trigger</strong> (purple): Amyloid-β fibrils initiate proteostatic disruption and a neuroinflammatory milieu, feeding into the astrocyte response.&ensp;<strong>Panel 2 — Astrocyte Response</strong> (blue): Reactive astrocyte activation drives cytoskeletal remodeling, which branches into two parallel pathways — proteolytic cleavage and aggregation/crosslinking — both converging on extracellular VIM release.&ensp;<strong>Panel 3 — Abnormal VIM Species</strong> (teal): The 84-1-reactive vimentin species comprises cleaved proteoforms and reduction-resistant aggregates, which reconverge to colocalize with pathological protein aggregates.&ensp;<strong>Panel 4 — Disease Readouts</strong> (red): Abnormal VIM forms brain deposits in AD regions, elevates CSF levels (also in PD), establishes a biomarker candidate signal, but does not constitute a validated therapeutic target.</p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card card-accent">
+        <h3>Structurally Abnormal, Not Simply Elevated</h3>
+        <p>The Alzheimer's-relevant vimentin signal is structurally distinct — not merely overexpressed total VIM. The 84-1 antibody recognizes a modified population with low affinity for standard antibodies, meaning conventional VIM assays likely undercount the disease-enriched species.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Cleaved &amp; Aggregation-Prone Proteoforms</h3>
+        <p>The abnormal VIM pool is composed mainly of cleaved proteoforms and reduction-resistant aggregates, indicating proteolytic processing, conformational alteration, and possible crosslinked states arising under neurodegenerative stress conditions.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Astrocytes as the Cellular Source</h3>
+        <p>Human astrocytes exposed to amyloid-β fibrils release elevated 84-1-reactive vimentin into culture medium, supporting a model in which amyloid pathology induces reactive astrocyte cytoskeletal remodeling and abnormal extracellular VIM discharge.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Biomarker Potential in CSF</h3>
+        <p>84-1-reactive vimentin is elevated in CSF from AD patients, conferring biomarker candidacy. However, elevation is also observed in Parkinson's disease, so the signal is not AD-specific and requires validation alongside amyloid, tau, and neurodegeneration markers.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Validated AD Therapeutic Target</h3>
+        <p>Existing therapeutic evidence for vimentin-targeted strategies comes almost entirely from cancer, fibrosis, inflammatory, and infection models. None demonstrates improvement of amyloid burden, tau pathology, synaptic function, or cognition in AD systems.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Broader VIM Biology Supports Plausibility</h3>
+        <p>Non-AD vimentin studies link VIM to inflammation, fibrosis, epithelial-to-mesenchymal transition, immune regulation, and oxidative stress — themes with conceptual relevance to AD reactive glia biology, but not a substitute for AD-specific mechanistic validation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat VIM as a biomarker candidate, not a therapeutic target:</strong> Prioritize the abnormal 84-1-reactive vimentin form as an emerging AD biomarker rather than assuming therapeutic utility without AD-specific interventional evidence.</li>
+      <li><strong>Use form-selective assays:</strong> Distinguish modified vimentin proteoforms — cleaved, aggregation-prone, reduction-resistant — from total VIM, as the disease signal resides in the abnormal species that standard antibodies may miss.</li>
+      <li><strong>Expand cohort validation:</strong> Validate 84-1-reactive vimentin in larger AD cohorts across brain tissue, CSF, and ideally plasma, benchmarking against established amyloid, tau, neurodegeneration, and inflammatory biomarkers.</li>
+      <li><strong>Determine cell-type of origin:</strong> Establish whether abnormal VIM originates from reactive astrocytes, microglia, vascular cells, pericytes, choroid plexus cells, or other glial populations in AD tissue.</li>
+      <li><strong>Test causality in AD-relevant models:</strong> Modulate VIM expression, cleavage, post-translational modification, aggregation, or extracellular release in amyloid-β and tau model systems to establish mechanistic and causal relationships.</li>
+      <li><strong>Evaluate AD-relevant functional endpoints:</strong> Assess effects on amyloid plaque-associated gliosis, tau pathology, neuroinflammation, synaptic integrity, blood–brain barrier function, neuronal survival, and cognition before advancing VIM as a target.</li>
+      <li><strong>Require selectivity in any therapeutic approach:</strong> Strategies should selectively target pathological VIM states rather than broadly suppressing vimentin, which performs essential normal functions in cytoskeletal integrity, stress response, and wound repair.</li>
+      <li><strong>Exclude non-vimentin VIM uses from AD interpretation:</strong> Bacterial blaVIM lactamases, thalamic VIM neurosurgical coordinates, and statistical VIM variability metrics are unrelated to vimentin's role as an AD molecular mechanism.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — VIM / Vimentin in Alzheimer's Disease</span>
+      VIM/vimentin occupies a <strong>preliminary, hypothesis-generating position</strong> in the Alzheimer's disease research landscape. The central finding — a structurally abnormal, 84-1-reactive vimentin species enriched in AD brain tissue, colocalized with pathological aggregates, and elevated in patient CSF — establishes <strong>biological plausibility and biomarker potential</strong>, particularly within a framework of reactive astrocytic stress triggered by amyloid-β. However, <strong>no AD therapeutic validation exists</strong>: vimentin-targeting studies have been conducted in cancer, fibrosis, and inflammatory settings, not in amyloid or tau model systems with functional endpoints. The evidence therefore supports investment in <strong>biomarker development and mechanistic dissection</strong> — especially studies resolving cell-type origin, proteoform identity, and causal relationships to amyloid and tau pathology — while deferring therapeutic claims until AD-specific interventional data are available. Researchers must also rigorously disambiguate "VIM" in the literature, excluding bacterial, neurosurgical, and statistical uses to avoid conflating unrelated evidence with vimentin's molecular role in neurodegeneration.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  VIM / Vimentin &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAML3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-accent: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,100,100,0.45);
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+  }
+
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 14px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent   { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger   { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue     { background: var(--blue-light);    border-left: 4px solid var(--blue-accent); }
+  .card-blue h3  { color: var(--blue-accent); }
+
+  .card-neutral  { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-warning  { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: ta;
+  }
+
+  .takeaways-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(ta);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.77rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MAML3 &nbsp;|&nbsp; Mastermind-Like Transcriptional Coactivator 3</span>
+    <span class="chip chip-danger">⚠ No direct AD evidence — exploratory candidate only</span>
+  </div>
+  <h1>MAML3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Evidence Caveat</span>
+      MAML3 is <strong>not directly established</strong> as an Alzheimer's disease mechanism gene or validated therapeutic target. The supplied corpus contains no AD patient studies, AD model systems, amyloid-β data, tau pathology findings, or direct evidence of MAML3 modulation improving neurodegenerative phenotypes. All AD-relevant framing is indirect and hypothesis-generating.
+    </div>
+
+    <div class="overview-text">
+      <p>MAML3 is consistently described in the source literature as a <strong>Mastermind-like transcriptional coactivator</strong>, most strongly linked to the Notch signaling pathway, with additional context-dependent roles in Wnt/β-catenin, Hedgehog/SMO, hypoxia responses, angiogenesis/eNOS regulation, immune and inflammatory networks, and developmental cell-fate programs.</p>
+      <p>These pathways intersect <em>conceptually</em> with Alzheimer's disease biology — particularly neurovascular dysfunction, γ-secretase/Notch signaling, glial or immune activation, aging-related stress responses, and transcriptional remodeling — but the molecular links remain undemonstrated in AD-relevant experimental systems.</p>
+      <p>Based strictly on the available evidence, MAML3 should be classified as an <strong>exploratory candidate for AD-related mechanistic validation</strong>, not a validated therapeutic target for Alzheimer's disease.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — MAML3 Pathway Architecture</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- Panel A: Core Notch Coactivator Complex -->
+        <rect x="10" y="10" width="270" height="460" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="22" y="30" font-size="9" font-weight="700" fill="#1e3a5f" text-anchor="start" letter-spacing="1">A — NOTCH COACTIVATOR CORE</text>
+
+        <!-- Node 1: Notch ICD -->
+        <rect x="75" y="46" width="120" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="62" text-anchor="middle" fill="#1e3a5f" font-weight="700">Notch ICD</text>
+        <text x="135" y="76" text-anchor="middle" fill="#475569">(receptor signal)</text>
+
+        <!-- Arrow down -->
+        <line x1="135" y1="86" x2="135" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 2: MAML3 + CSL/RBPJ -->
+        <rect x="55" y="108" width="160" height="40" rx="7" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.8"/>
+        <text x="135" y="124" text-anchor="middle" fill="#1e3a5f" font-weight="700">MAML3 / CSL·RBPJ</text>
+        <text x="135" y="138" text-anchor="middle" fill="#1e293b">Nuclear complex</text>
+
+        <!-- Arrow down -->
+        <line x1="135" y1="148" x2="135" y2="170" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 3: HES1 / HES5 -->
+        <rect x="70" y="170" width="130" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="186" text-anchor="middle" fill="#1e3a5f" font-weight="700">HES1 / HES5</text>
+        <text x="135" y="200" text-anchor="middle" fill="#475569">Notch target genes</text>
+
+        <!-- Branch arrows: two sub-nodes -->
+        <line x1="110" y1="210" x2="90" y2="248" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="160" y1="210" x2="180" y2="248" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 4: Cell Fate / Neurogenesis -->
+        <rect x="26" y="248" width="118" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="85" y="264" text-anchor="middle" fill="#1e3a5f" font-weight="700">Cell Fate /</text>
+        <text x="85" y="278" text-anchor="middle" fill="#1e3a5f">Neurogenesis</text>
+
+        <!-- Node 5: Glial Biology / Vascular -->
+        <rect x="155" y="248" width="118" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="214" y="264" text-anchor="middle" fill="#1e3a5f" font-weight="700">Glial Biology /</text>
+        <text x="214" y="278" text-anchor="middle" fill="#1e3a5f">Vascular Function</text>
+
+        <!-- Converge arrows -->
+        <line x1="85" y1="288" x2="105" y2="322" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="214" y1="288" x2="175" y2="322" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 6: γ-Secretase/AD interface -->
+        <rect x="68" y="322" width="144" height="40" rx="7" fill="#e8f1f9" stroke="#1e3a5f" stroke-width="1.8"/>
+        <text x="140" y="338" text-anchor="middle" fill="#1e3a5f" font-weight="700">γ-Secretase /</text>
+        <text x="140" y="352" text-anchor="middle" fill="#1e3a5f">AD Conceptual Link</text>
+
+        <!-- Panel A label node count note: 6 nodes -->
+
+        <!-- Panel B: Vascular / eNOS Axis -->
+        <rect x="295" y="10" width="265" height="290" rx="10" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="308" y="30" font-size="9" font-weight="700" fill="#0f766e" text-anchor="start" letter-spacing="1">B — NEUROVASCULAR AXIS</text>
+
+        <!-- Node 7: miR-486-5p -->
+        <rect x="350" y="46" width="120" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="410" y="62" text-anchor="middle" fill="#0f766e" font-weight="700">miR-486-5p</text>
+        <text x="410" y="76" text-anchor="middle" fill="#475569">upstream repressor</text>
+
+        <!-- Arrow down: suppresses MAML3 -->
+        <line x1="410" y1="86" x2="410" y2="113" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- Node 8: MAML3 (endothelial) -->
+        <rect x="350" y="113" width="120" height="40" rx="7" fill="#bfdbfe" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="410" y="129" text-anchor="middle" fill="#1e3a5f" font-weight="700">MAML3</text>
+        <text x="410" y="143" text-anchor="middle" fill="#1e293b">Endothelial context</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="153" x2="410" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 9: eNOS expression -->
+        <rect x="350" y="178" width="120" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="410" y="194" text-anchor="middle" fill="#0f766e" font-weight="700">eNOS Expression</text>
+        <text x="410" y="208" text-anchor="middle" fill="#475569">NO signaling</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="218" x2="410" y2="243" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Angiogenesis / BBB -->
+        <rect x="336" y="243" width="148" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="410" y="259" text-anchor="middle" fill="#0f766e" font-weight="700">Angiogenesis /</text>
+        <text x="410" y="273" text-anchor="middle" fill="#0f766e">BBB Integrity (AD-relevant)</text>
+
+        <!-- Panel C: Wnt & Hypoxia / Oncology -->
+        <rect x="295" y="315" width="265" height="155" rx="10" fill="#fffbeb" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+        <text x="308" y="334" font-size="9" font-weight="700" fill="#b45309" text-anchor="start" letter-spacing="1">C — WNT / HYPOXIA (TUMOR CONTEXT)</text>
+
+        <!-- Node 11: MAML3 Fusions / Overexpression -->
+        <rect x="310" y="345" width="140" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="380" y="361" text-anchor="middle" fill="#92400e" font-weight="700">MAML3 Fusions /</text>
+        <text x="380" y="375" text-anchor="middle" fill="#92400e">Overexpression</text>
+
+        <!-- Arrow right to Wnt -->
+        <line x1="450" y1="365" x2="477" y2="365" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 12: Wnt/β-catenin -->
+        <rect x="477" y="345" width="72" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="513" y="361" text-anchor="middle" fill="#92400e" font-weight="700">Wnt/</text>
+        <text x="513" y="375" text-anchor="middle" fill="#92400e">β-catenin</text>
+
+        <!-- Arrow down from MAML3 fusions to Hedgehog -->
+        <line x1="380" y1="385" x2="380" y2="418" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 13: Hedgehog/SMO + Hypoxia -->
+        <rect x="305" y="418" width="148" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="379" y="433" text-anchor="middle" fill="#92400e" font-weight="700">Hedgehog/SMO +</text>
+        <text x="379" y="447" text-anchor="middle" fill="#92400e">Hypoxia/HIF Programs</text>
+
+        <!-- Panel D: Immune / Broader Networks -->
+        <rect x="575" y="10" width="315" height="460" rx="10" fill="#f1f5f9" fill-opacity="0.7" stroke="#475569" stroke-width="1.2"/>
+        <text x="588" y="30" font-size="9" font-weight="700" fill="#475569" text-anchor="start" letter-spacing="1">D — IMMUNE &amp; TRANSLATIONAL CONTEXT</text>
+
+        <!-- Node 14: Tumor Immune Microenvironment -->
+        <rect x="598" y="46" width="160" height="40" rx="7" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+        <text x="678" y="62" text-anchor="middle" fill="#1e293b" font-weight="700">Tumor Immune</text>
+        <text x="678" y="76" text-anchor="middle" fill="#475569">Microenvironment</text>
+
+        <!-- Arrow down -->
+        <line x1="678" y1="86" x2="678" y2="113" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- Node 15: TNF/MAPK/Notch Immune Networks -->
+        <rect x="596" y="113" width="164" height="40" rx="7" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+        <text x="678" y="129" text-anchor="middle" fill="#1e293b" font-weight="700">TNF/MAPK/Notch</text>
+        <text x="678" y="143" text-anchor="middle" fill="#475569">Immune Networks</text>
+
+        <!-- Arrow down -->
+        <line x1="678" y1="153" x2="678" y2="193" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- Node 16: AD Validation Gap -->
+        <rect x="594" y="193" width="168" height="50" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.8"/>
+        <text x="678" y="211" text-anchor="middle" fill="#9b1c1c" font-weight="700">AD Validation Gap</text>
+        <text x="678" y="225" text-anchor="middle" fill="#9b1c1c">No microglia/astrocyte/</text>
+        <text x="678" y="238" text-anchor="middle" fill="#9b1c1c">AD cytokine evidence</text>
+
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+          </marker>
+        </defs>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (blue):</strong> Core Notch coactivator function — MAML3 assembles with Notch intracellular domain and CSL/RBPJ to activate HES1/HES5, branching into cell-fate/neurogenesis and glial/vascular outputs that converge on a conceptual γ-secretase/AD interface.
+        <strong>Panel B (teal):</strong> Neurovascular axis — miR-486-5p (dashed red, suppressive) represses MAML3 in endothelial cells, reducing eNOS and angiogenesis; this AD-relevant vascular biology is the most concrete functional bridge identified.
+        <strong>Panel C (amber):</strong> Tumor-context Wnt/hypoxia links — MAML3 fusions or overexpression enhance Wnt/β-catenin and Hedgehog/SMO/HIF programs in cancer, with conceptual but undemonstrated relevance to AD.
+        <strong>Panel D (slate):</strong> Immune and translational context — MAML3 appears in immune network classifiers and TNF/MAPK/Notch datasets, but a critical AD validation gap exists: no microglia, astrocyte, or AD-specific neuroinflammatory evidence.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Notch Signaling — Core Mechanism</h3>
+        <p>The strongest recurring theme in the evidence is MAML3's role as a nuclear transcriptional coactivator within Notch complexes (Notch ICD + CSL/RBPJ), activating target genes such as HES1/HES5. Notch intersects with cell fate, neurodevelopment, glial biology, vascular function, and γ-secretase biology — giving MAML3 plausible but <em>untested</em> relevance to AD mechanisms.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence Exists</h3>
+        <p>The supplied text contains no AD patient studies, no AD model experiments, and no data linking MAML3 to amyloid-β processing, tau phosphorylation, synaptic maintenance, neuronal death, microglial activation, astrocyte states, blood–brain barrier function, or cognitive outcomes. This is a fundamental evidential gap.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurovascular Axis — Best AD Bridge</h3>
+        <p>An endothelial-cell study showed that miR-486-5p suppresses MAML3, reducing eNOS expression and impairing angiogenesis; eNOS rescue reversed this effect. Given that cerebral endothelial dysfunction, nitric oxide impairment, and neurovascular uncoupling are important in AD, this MAML3 → eNOS/angiogenesis pathway is the most concrete and AD-relevant functional connection identified — though not yet tested in brain microvascular or AD model systems.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Wnt/β-Catenin Links in Cancer</h3>
+        <p>In pheochromocytoma/paraganglioma and other cancers, MAML3 fusions or overexpression can enhance β-catenin/TCF-LEF transcription, invasion, tumorigenicity, and aggressive disease. Wnt signaling is relevant to neuronal survival, synaptic biology, and AD pathophysiology, but the supplied text does not demonstrate that MAML3 regulates Wnt signaling in AD brain cells.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Hypoxia, Hedgehog/SMO — Cancer-Specific</h3>
+        <p>In pancreatic and gallbladder cancers, MAML3/RBPJ signaling under hypoxia increased SMO/GLI1, invasion, and tumorigenicity. PPGL tumors showed hypoxia/HIF and neoangiogenic signatures linked to MAML3. These findings overlap conceptually with AD-relevant vascular insufficiency and hypoxic stress, but remain cancer-specific and require independent AD-context validation.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Pleiotropic Oncology Risk</h3>
+        <p>Recurrent MAML3 fusions (PAX3::MAML3, UBTF::MAML3, BCOR::MAML3, KMT2A::MAML3) drive aggressive transcriptional states in multiple cancers. This establishes MAML3 as a potent regulatory component but also cautions that broad MAML3 modulation could have pleiotropic effects on proliferation, differentiation, and cell identity — a key safety consideration for any future therapeutic strategy.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span><strong>Reclassify appropriately.</strong> Do not describe MAML3 as a validated Alzheimer's disease therapeutic target based on this evidence. The correct classification is "hypothesis-generating candidate with indirect pathway relevance."</span>
+      </li>
+      <li>
+        <span><strong>Prioritize AD-specific validation first.</strong> Key studies should test whether MAML3 expression or activity is altered in AD brain tissue, single-cell/nucleus datasets, and AD-relevant cell types: neurons, astrocytes, microglia, oligodendrocytes, pericytes, and brain endothelial cells.</span>
+      </li>
+      <li>
+        <span><strong>Focus on neurovascular mechanisms.</strong> The MAML3–eNOS/angiogenesis axis is the most concrete functional bridge to AD-relevant biology. Follow-up should examine MAML3 in human brain microvascular endothelial cells, blood–brain barrier models, cerebral organoid vascular systems, and amyloid/tau-associated neurovascular models.</span>
+      </li>
+      <li>
+        <span><strong>Test AD-relevant Notch transcriptional output.</strong> Experiments should determine whether MAML3 alters Notch target gene expression, γ-secretase/Notch downstream signaling, APP-processing-related pathways, glial activation states, neurogenesis markers, and vascular repair responses in disease-relevant systems.</span>
+      </li>
+      <li>
+        <span><strong>Evaluate Wnt/β-catenin and hypoxia links with caution.</strong> MAML3 can enhance these programs in tumors, but effects may be harmful or beneficial depending on AD cell type, disease stage, and signaling context. Avoid assuming directionality without AD-specific data.</span>
+      </li>
+      <li>
+        <span><strong>Do not assume systemic modulation is safe.</strong> Cancer fusion studies show abnormal MAML3-containing complexes can drive aggressive transcriptional states. Any future strategy would likely require cell-type-specific, pathway-specific, or context-dependent modulation approaches.</span>
+      </li>
+      <li>
+        <span><strong>Establish formal target-validation criteria.</strong> Required evidence before advancing MAML3 as an AD target: MAML3 dysregulation in AD; correlation with amyloid, tau, vascular, inflammatory, or cognitive measures; causal effects in AD models; rescue of disease-relevant phenotypes after modulation; and acceptable safety given Notch/Wnt pathway roles.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — MAML3 in Alzheimer's Disease</span>
+      <p>
+        MAML3 is best framed as a <strong>Notch-associated transcriptional coactivator with indirect and unvalidated relevance to Alzheimer's disease</strong>. The current evidence base supports exploratory mechanistic investigation — not therapeutic validation. The most promising mechanistic bridge is the <strong>MAML3 → eNOS/angiogenesis/neurovascular axis</strong>, with secondary hypotheses anchored in Notch/γ-secretase biology, Wnt/β-catenin signaling, and hypoxia-response programs. All of these connections require direct testing in AD-relevant experimental systems before any translational conclusions can be drawn. <strong>Pleiotropic oncology evidence further underscores the need for careful, context-specific approaches</strong> to any future MAML3 modulation strategy.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MAML3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

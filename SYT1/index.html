@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYT1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    color: white;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    letter-spacing: 0.03em;
+    color: #e2eaf3;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.9rem, 4vw, 2.75rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway-counter;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway-counter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p {
+    font-size: 1rem;
+    color: #e2eaf3;
+    margin: 0;
+  }
+
+  .verdict p strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 0;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SYT1 &nbsp;|&nbsp; Synaptotagmin-1</span>
+    <span class="chip chip-danger">⚠ Safety: Essential Neurotransmission — Targeting Risk</span>
+  </div>
+  <h1>SYT1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> SYT1 is essential for normal neurotransmission. Broad inhibition could worsen synaptic failure; indiscriminate activation risks hyperexcitability or excitotoxicity. Human SYT1 mutations cause severe neurodevelopmental synaptopathies, reinforcing that precise SYT1 function is required for neural circuit stability. Safety monitoring for seizure risk, E/I balance, and glutamate release is essential.
+    </div>
+
+    <p>SYT1 (synaptotagmin-1) is a core presynaptic synaptic-vesicle protein and the principal Ca²⁺ sensor for fast, synchronous neurotransmitter release. Its relevance to Alzheimer's disease (AD) centers on synaptic failure rather than on being a classical amyloid- or tau-directed target. SYT1 is linked to vesicle docking, priming, SNARE-mediated fusion, vesicle recycling and endocytosis, glutamatergic transmission, synaptic plasticity, and hippocampal and prefrontal circuit function — all processes compromised early in AD.</p>
+
+    <p>The strongest AD-specific evidence positions SYT1 as both a <em>biomarker of synaptic injury</em> and a <em>treatment-responsive synaptic mechanism node</em>. SYT1 is reduced with advancing Braak stage, altered in amyloid/tau contexts, suppressed by disease-relevant miRNAs (miR-34c, miR-153), and restored by multiple cognition-improving interventions including exercise, lactate, tDCS, BG45, vortioxetine, BMSC-derived exosomes, and Ganoderma lucidum extracts.</p>
+
+    <p>SYT1 also connects to canonical AD biology through interactions with APP and presenilin-1 (PS1), influencing APP processing, Aβ generation, BACE1/PS1 compartmentalization, and the Aβ42/40 ratio. Overall, the evidence supports SYT1 most strongly as a synaptic dysfunction marker, synaptic resilience pathway component, and therapeutic-response readout, rather than as a validated standalone AD drug target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 4 panels, ~14 nodes total -->
+        <svg viewBox="0 0 920 500" width="880" height="476" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- PANEL A: Upstream Regulators -->
+          <rect x="10" y="10" width="195" height="475" rx="10" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="107" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">A · UPSTREAM SIGNALS</text>
+
+          <!-- Node 1: Amyloid/Tau Pathology -->
+          <rect x="27" y="44" width="162" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="108" y="60" text-anchor="middle" font-weight="700" fill="#1a3a5c">Aβ / Tau</text>
+          <text x="108" y="74" text-anchor="middle" fill="#334155">Pathology</text>
+
+          <!-- Node 2: miR-34c / miR-153 -->
+          <rect x="27" y="112" width="162" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="108" y="128" text-anchor="middle" font-weight="700" fill="#1a3a5c">miR-34c / miR-153</text>
+          <text x="108" y="142" text-anchor="middle" fill="#334155">miRNA Suppression</text>
+
+          <!-- Node 3: ROS–JNK–p53 -->
+          <rect x="27" y="183" width="162" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="108" y="199" text-anchor="middle" font-weight="700" fill="#92400e">ROS–JNK–p53</text>
+          <text x="108" y="213" text-anchor="middle" fill="#78350f">Oxidative Signaling</text>
+
+          <!-- Node 4: Ca²⁺ / ER Stress -->
+          <rect x="27" y="254" width="162" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="108" y="270" text-anchor="middle" font-weight="700" fill="#92400e">Ca²⁺ Dyshomeostasis</text>
+          <text x="108" y="284" text-anchor="middle" fill="#78350f">ER Stress</text>
+
+          <!-- Arrows within Panel A (vertical) -->
+          <!-- Aβ/Tau → miR-34c/153 -->
+          <line x1="108" y1="86" x2="108" y2="111" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+          <!-- miR-34c → ROS-JNK -->
+          <line x1="108" y1="154" x2="108" y2="182" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+          <!-- ROS → Ca2+ -->
+          <line x1="108" y1="225" x2="108" y2="253" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- PANEL B: SYT1 Core Function -->
+          <rect x="225" y="10" width="215" height="330" rx="10" fill="#e8f2fb" fill-opacity="0.45" stroke="#1a3a5c" stroke-width="1.5"/>
+          <text x="332" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">B · SYT1 CORE FUNCTION</text>
+
+          <!-- Node 5: SYT1 (central hub) -->
+          <rect x="258" y="42" width="150" height="46" rx="8" fill="#1a3a5c" stroke="#2e6da4" stroke-width="2"/>
+          <text x="333" y="60" text-anchor="middle" font-weight="700" fill="white" font-size="13">SYT1</text>
+          <text x="333" y="76" text-anchor="middle" fill="#93c5fd" font-size="10">Ca²⁺ Sensor · C2 Domains</text>
+
+          <!-- Branch left: SNARE/Fusion -->
+          <!-- Node 6 -->
+          <rect x="233" y="125" width="128" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="297" y="141" text-anchor="middle" font-weight="700" fill="#1a3a5c">SNARE Complex</text>
+          <text x="297" y="155" text-anchor="middle" fill="#334155">SNAP25 · VAMP2</text>
+
+          <!-- Node 7 -->
+          <rect x="233" y="199" width="128" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="297" y="215" text-anchor="middle" font-weight="700" fill="#1a3a5c">Vesicle Fusion</text>
+          <text x="297" y="229" text-anchor="middle" fill="#334155">Exocytosis · Release</text>
+
+          <!-- Branch right: Endocytosis -->
+          <!-- Node 8 -->
+          <rect x="374" y="125" width="054" height="42" rx="7" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+          <text x="401" y="141" text-anchor="middle" font-weight="700" fill="#0c4a6e">SV2A</text>
+          <text x="401" y="155" text-anchor="middle" fill="#075985">Recycling</text>
+
+          <!-- Node 9 -->
+          <rect x="362" y="199" width="070" height="42" rx="7" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+          <text x="397" y="215" text-anchor="middle" font-weight="700" fill="#0c4a6e">Endocytosis</text>
+          <text x="397" y="229" text-anchor="middle" fill="#075985">Stonin/SGIP1α</text>
+
+          <!-- Node 10: Shared outcome -->
+          <rect x="257" y="272" width="152" height="42" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+          <text x="333" y="288" text-anchor="middle" font-weight="700" fill="white">Vesicle Cycling</text>
+          <text x="333" y="302" text-anchor="middle" fill="#a7f3d0">Synaptic Homeostasis</text>
+
+          <!-- Arrows Panel B -->
+          <!-- SYT1 → SNARE -->
+          <line x1="308" y1="88" x2="290" y2="124" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+          <!-- SYT1 → SV2A -->
+          <line x1="358" y1="88" x2="398" y2="124" stroke="#0369a1" stroke-width="1.5" marker-end="url(#arr-lblue)"/>
+          <!-- SNARE → Fusion -->
+          <line x1="297" y1="167" x2="297" y2="198" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+          <!-- SV2A → Endocytosis -->
+          <line x1="397" y1="167" x2="397" y2="198" stroke="#0369a1" stroke-width="1.5" marker-end="url(#arr-lblue)"/>
+          <!-- Fusion → Vesicle Cycling -->
+          <line x1="297" y1="241" x2="310" y2="271" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- Endocytosis → Vesicle Cycling -->
+          <line x1="397" y1="241" x2="380" y2="271" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- PANEL C: AD Biology Links -->
+          <rect x="460" y="10" width="210" height="280" rx="10" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="565" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">C · AD BIOLOGY LINKS</text>
+
+          <!-- Node 11: APP/PS1 Interaction -->
+          <rect x="476" y="44" width="178" height="42" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="565" y="60" text-anchor="middle" font-weight="700" fill="#7f1d1d">APP · PS1 Interaction</text>
+          <text x="565" y="74" text-anchor="middle" fill="#991b1b">BACE1 Compartment'n</text>
+
+          <!-- Node 12: Aβ42/40 Ratio -->
+          <rect x="476" y="115" width="178" height="42" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="565" y="131" text-anchor="middle" font-weight="700" fill="#7f1d1d">Aβ42/40 Ratio</text>
+          <text x="565" y="145" text-anchor="middle" fill="#991b1b">PS1 Conformation Shift</text>
+
+          <!-- Node 13: Braak Stage Decline -->
+          <rect x="476" y="186" width="178" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="565" y="202" text-anchor="middle" font-weight="700" fill="#92400e">SYT1 ↓ Braak Stage</text>
+          <text x="565" y="216" text-anchor="middle" fill="#78350f">Synaptic Gene Dropout</text>
+
+          <!-- Arrows Panel C -->
+          <line x1="565" y1="86" x2="565" y2="114" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="565" y1="157" x2="565" y2="185" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- PANEL D: Therapeutic Response -->
+          <rect x="690" y="10" width="220" height="475" rx="10" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="800" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#065f46" letter-spacing="1">D · THERAPEUTIC RESPONSE</text>
+
+          <!-- Node 14: Interventions cluster -->
+          <rect x="706" y="44" width="188" height="60" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="800" y="62" text-anchor="middle" font-weight="700" fill="#065f46">Cognition-Improving</text>
+          <text x="800" y="76" text-anchor="middle" fill="#065f46">Interventions</text>
+          <text x="800" y="90" text-anchor="middle" fill="#0f766e" font-size="9">tDCS · Exercise · Lactate · BG45</text>
+
+          <!-- Node 15: SYT1 Restoration -->
+          <rect x="706" y="138" width="188" height="42" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="800" y="154" text-anchor="middle" font-weight="700" fill="#065f46">SYT1 Restored / ↑</text>
+          <text x="800" y="168" text-anchor="middle" fill="#0f766e">SNARE · SNAP25 Rescue</text>
+
+          <!-- Node 16: CSF/Plasma Biomarker -->
+          <rect x="706" y="212" width="188" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="800" y="228" text-anchor="middle" font-weight="700" fill="#1a3a5c">CSF / Plasma SYT1</text>
+          <text x="800" y="242" text-anchor="middle" fill="#334155">Biomarker of Injury</text>
+
+          <!-- Arrows Panel D -->
+          <line x1="800" y1="104" x2="800" y2="137" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="800" y1="180" x2="800" y2="211" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- CROSS-PANEL CONNECTORS -->
+          <!-- Panel A (miR-34c) → Panel B (SYT1): route through gutter x=210-225 -->
+          <!-- From right edge of Node 2 (miR) at y=133 → left edge of SYT1 at y=65 -->
+          <!-- Elbow: right from node2 to x=218, then up to y=65, then right to SYT1 -->
+          <polyline points="189,133 218,133 218,65 257,65" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+          <!-- Panel A (Ca2+ node) → Panel B (SYT1): right edge of node4 y=275, elbow to SYT1 bottom -->
+          <!-- Route: right from node4 to x=218, then up to y=76, right to SYT1 -->
+          <polyline points="189,275 218,275 218,76 257,76" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel B (SYT1) → Panel C (APP/PS1): right edge of SYT1 at y=65, gutter x=440-460 -->
+          <polyline points="408,65 440,65 440,65 475,65" fill="none" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B Vesicle Cycling → Panel D Interventions: route through gutter 440-460 bottom -->
+          <!-- Vesicle Cycling right edge y=291, to gutter x=450, up to y=74, right to panel D -->
+          <polyline points="409,291 450,291 450,74 705,74" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- DEFS for arrowheads -->
+          <defs>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-lblue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0369a1"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Signals):</strong> Aβ/tau pathology drives miRNA upregulation (miR-34c, miR-153) and feeds into ROS–JNK–p53 oxidative signaling and Ca²⁺ dyshomeostasis/ER stress, all converging on SYT1 suppression.
+        <strong>Panel B (SYT1 Core Function):</strong> SYT1 acts as a central Ca²⁺ sensor that branches into two parallel sub-cascades — SNARE-mediated vesicle fusion (exocytosis) and SV2A/stonin-mediated endocytosis — converging on synaptic vesicle cycling homeostasis.
+        <strong>Panel C (AD Biology Links):</strong> SYT1 interacts with APP and PS1 to influence BACE1 compartmentalization, the Aβ42/40 ratio, and PS1 conformation; SYT1 also declines progressively with Braak stage.
+        <strong>Panel D (Therapeutic Response):</strong> Multiple cognition-improving interventions restore SYT1 and SNARE machinery; CSF/plasma SYT1 serves as a biomarker of synaptic injury and treatment response.
+        Dashed arrows indicate cross-panel regulatory or informational links.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Ca²⁺-Dependent Release Regulator</h3>
+        SYT1 binds Ca²⁺ via C2 domains, interacts with anionic lipids, PIP2, and SNARE machinery, and triggers rapid synchronous neurotransmitter release. This directly intersects with AD because synaptic dysfunction is one of the earliest and strongest correlates of cognitive decline.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Exocytosis and Endocytosis Roles</h3>
+        Beyond triggering vesicle fusion, SYT1 regulates docking, fusion-pore dynamics, compensatory endocytosis, phosphatidylserine/PIP2-linked membrane retrieval, SV2A-dependent recycling, stonin/SGIP1α-mediated retrieval, and synaptic vesicle protein sorting — all relevant to early AD endosomal trafficking defects.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Treatment-Response Biomarker</h3>
+        SYT1 is restored or increased by exercise, lactate, tDCS, BG45, vortioxetine, BMSC-derived exosomes, CEGI, Ganoderma lucidum, and Vitis vinifera flavones in parallel with cognitive improvement. tDCS in 5×FAD mice directly placed SYT1/SNARE vesicle release within a causal treatment-response pathway.
+      </div>
+
+      <div class="card card-positive">
+        <h3>CSF &amp; Plasma Biomarker Potential</h3>
+        CSF SYT1 correlates with tau, p-tau181, tau PET uptake, and cognition in preclinical AD-risk cohorts, peaking when amyloid and tau pathology coexist. Large plasma proteomics datasets identify SYT1 among early proteins predicting future AD risk up to 15 years before diagnosis.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Amyloid Biology Connections</h3>
+        SYT1 interacts with APP and PS1, influencing APP-CTFs, sAPP, secreted Aβ, and the Aβ42/40 ratio. Weakened PS1–SYT1 interaction in sporadic AD may promote pathogenic PS1 conformation; SYT1 overexpression in mouse hippocampus favors a more protective PS1 conformation.
+      </div>
+
+      <div class="card card-warning">
+        <h3>miRNA Regulation &amp; E/I Balance</h3>
+        miR-34c (downstream of ROS–JNK–p53) and miR-153 suppress SYT1; inhibiting either restores SYT1 and improves cognition. Loss of SYT1 also shifts the balance from synchronous evoked release toward spontaneous/asynchronous release, potentially worsening hyperexcitability and circuit instability in AD.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Biomarker first, drug target second.</strong> Treat SYT1 primarily as a synaptic mechanism node and marker of presynaptic integrity rather than a validated standalone AD drug target. Current evidence strongly supports biological plausibility and biomarker value, but AD-specific causal studies are still needed.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize pathway-level modulation.</strong> More plausible strategies include preserving SYT1 localization, stabilizing SYT1–SNARE coupling, restoring vesicle recycling, normalizing Ca²⁺-dependent release, and protecting SYT1-containing synapses from amyloid, tau, inflammatory, oxidative, and metabolic insults — rather than global SYT1 activation or inhibition.</div>
+      </li>
+      <li>
+        <div><strong>Explore upstream regulatory axes.</strong> Priority targets include miR-34c/SYT1, miR-153/SYT1, miR-128/SYT1/SNAP25, SV2A–SYT1 trafficking, BDNF/CREB/ERK signaling, CaMKII/ITPKA/Ca²⁺ pathways, AMPK/AKT/GSK-3β, LXR signaling, and metabolic support such as lactate or α-ketoglutarate.</div>
+      </li>
+      <li>
+        <div><strong>Test synaptic restoration independent of amyloid reduction.</strong> Several interventions improved cognition and SYT1 without necessarily lowering amyloid, suggesting synaptic restoration may confer therapeutic benefit even when canonical pathology remains.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate selective AD-specific SYT1 interactions.</strong> Blocking pathological SYT1–APP-mediated amyloidogenic processing or preserving protective PS1–SYT1 interactions may be more viable and safer than altering SYT1's core neurotransmitter-release function.</div>
+      </li>
+      <li>
+        <div><strong>Account for disease stage and compartment.</strong> SYT1 may decrease in brain with synapse loss, rise in CSF/plasma during active synaptic injury, or increase compensatorily in some aging or amyloid models. Interpretation must depend on tissue, biofluid, disease stage, and whether SYT1 reflects functional synapses or degenerating terminals.</div>
+      </li>
+      <li>
+        <div><strong>Mandate safety endpoints for excitability.</strong> Any SYT1-directed strategy must monitor seizure risk, glutamate release, spontaneous/asynchronous release, excitatory/inhibitory balance, and cognitive effects, given the essential role of SYT1 in normal neurotransmission.</div>
+      </li>
+      <li>
+        <div><strong>Validate causality in human AD models.</strong> Longitudinal biomarker cohorts and AD-specific causal studies are needed to determine whether correcting SYT1 expression, trafficking, post-translational modification, or interaction networks can slow disease progression or improve cognition.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="label">Overall Assessment — SYT1 in Alzheimer's Disease</span>
+      <p>
+        SYT1 is <strong>a compelling but complex node in AD biology</strong>. Its primary value lies in its role as a <strong>marker of presynaptic integrity</strong> — decreasing with Braak stage progression in brain tissue while elevating in CSF and plasma during active synaptic injury — and as a <strong>reliable readout of therapeutic response</strong> across diverse cognition-improving interventions. Mechanistically, SYT1 sits at the convergence of <strong>Ca²⁺-dependent vesicle release, SNARE-complex function, endocytosis, and vesicle recycling</strong>, with additional tentacles into APP processing, Aβ42/40 regulation, and PS1 conformation. The most tractable near-term strategies involve <strong>upstream miRNA inhibition (miR-34c, miR-153), pathway-level synaptic protection, and selective targeting of AD-specific SYT1–APP or SYT1–PS1 interactions</strong>, rather than global SYT1 activation or inhibition. The essential nature of SYT1 for normal neural circuit function demands <strong>precise, context-aware therapeutic strategies</strong> and robust safety monitoring, particularly for excitability and E/I balance. Human causal validation remains the critical next step.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SYT1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

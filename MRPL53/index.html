@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRPL53 — Mitochondrial Translation & Alzheimer's Disease</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2b7ab0;
+    --light: #e8f4fd;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chips {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.76rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf2;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: #e2eaf2;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+  /* PROSE */
+  p {
+    margin-bottom: 14px;
+    font-size: 0.97rem;
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: #f8fafc;
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.65rem; }
+  }
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-color: var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f30 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.75;
+  }
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #7dd3fc;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .verdict p {
+    color: #cbd5e1;
+    font-size: 0.96rem;
+    margin-bottom: 0;
+  }
+  .verdict strong {
+    color: #e0f2fe;
+  }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: MRPL53 &nbsp;|&nbsp; Mitochondrial Ribosomal Protein L53</span>
+    <span class="chip chip-danger">⚠ Inhibition May Be Harmful</span>
+  </div>
+  <h1>MRPL53 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Essentiality Risk:</strong> Mitochondrial ribosomal proteins are broadly expressed, essential, and non-redundant. Direct inhibition of MRPL53 could impair oxidative phosphorylation and worsen mitochondrial failure. Therapeutic strategies should focus on <em>restoration</em> rather than inhibition.
+    </div>
+
+    <p>MRPL53 is a mitochondrial ribosomal large-subunit protein whose primary role is mitochondrial protein translation. The available literature does not directly link MRPL53 to Alzheimer's disease, amyloid-β, tau pathology, synaptic dysfunction, or neurodegeneration. Its potential relevance to Alzheimer's disease is therefore <strong>inferential</strong>.</p>
+
+    <p>The strongest Alzheimer's-related rationale is that MRPL53 forms part of the core mitoribosomal machinery responsible for synthesizing mitochondrially encoded oxidative phosphorylation proteins. Mitochondrial dysfunction, impaired oxidative phosphorylation, reduced ATP production, oxidative stress, lipid dysregulation, and metabolic failure are all central themes in Alzheimer's biology — altered MRPL53 expression or function could plausibly contribute to neuronal or glial vulnerability if demonstrated in Alzheimer's-relevant systems.</p>
+
+    <p>As a therapeutic target, MRPL53 must be considered <strong>hypothesis-generating rather than validated</strong>. More plausible approaches would involve restoring abnormal MRPL53 expression, supporting mitoribosome function, improving mitochondrial translation or RNA handling, or targeting upstream stressors that disrupt mitochondrial translation machinery.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;" font-family="Arial, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2b7ab0"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream / Core Function -->
+          <rect x="14" y="14" width="390" height="468" rx="12" fill="rgba(232,244,253,0.55)" stroke="#2b7ab0" stroke-width="1.2"/>
+          <text x="24" y="34" font-size="9" font-weight="700" fill="#1a4a6b" letter-spacing="1.5">A — CORE MITORIBOSOMAL FUNCTION</text>
+
+          <!-- Node 1: Metabolic Stress (top) -->
+          <rect x="130" y="48" width="148" height="42" rx="8" fill="#1a4a6b" stroke="#1a4a6b"/>
+          <text x="204" y="65" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Metabolic / Oxidative</text>
+          <text x="204" y="80" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Stress Signal</text>
+
+          <!-- Arrow down to MRPL53 -->
+          <line x1="204" y1="90" x2="204" y2="118" stroke="#2b7ab0" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node 2: MRPL53 -->
+          <rect x="130" y="118" width="148" height="42" rx="8" fill="#2b7ab0" stroke="#1a4a6b"/>
+          <text x="204" y="135" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">MRPL53</text>
+          <text x="204" y="150" text-anchor="middle" font-size="10" fill="#e2eaf2">Mitoribosome (LSU)</text>
+
+          <!-- Arrow down to Mitoribosome assembly -->
+          <line x1="204" y1="160" x2="204" y2="188" stroke="#2b7ab0" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Mitoribosome Assembly -->
+          <rect x="118" y="188" width="172" height="42" rx="8" fill="#1d4ed8" stroke="#1a4a6b"/>
+          <text x="204" y="205" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Mitoribosome Assembly</text>
+          <text x="204" y="220" text-anchor="middle" font-size="10" fill="#e2eaf2">MRPL10, MRPL12</text>
+
+          <!-- BRANCH from Node 3: left to RNA handling, right to translation -->
+          <!-- Left branch arrow -->
+          <line x1="118" y1="209" x2="70" y2="209" stroke="#2b7ab0" stroke-width="1.5"/>
+          <line x1="70" y1="209" x2="70" y2="268" stroke="#2b7ab0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 4: RNA Metabolism (left branch) -->
+          <rect x="24" y="268" width="138" height="42" rx="8" fill="#e8f4fd" stroke="#2b7ab0"/>
+          <text x="93" y="285" text-anchor="middle" font-size="10" fill="#1a4a6b" font-weight="700">mt-RNA Metabolism</text>
+          <text x="93" y="300" text-anchor="middle" font-size="9.5" fill="#1a4a6b">LRPPRC, SLIRP</text>
+
+          <!-- Right branch arrow from Node 3 -->
+          <line x1="290" y1="209" x2="336" y2="209" stroke="#2b7ab0" stroke-width="1.5"/>
+          <line x1="336" y1="209" x2="336" y2="268" stroke="#2b7ab0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 5: mt-Translation (right branch) -->
+          <rect x="263" y="268" width="130" height="42" rx="8" fill="#e8f4fd" stroke="#2b7ab0"/>
+          <text x="328" y="285" text-anchor="middle" font-size="10" fill="#1a4a6b" font-weight="700">mt-Protein</text>
+          <text x="328" y="300" text-anchor="middle" font-size="10" fill="#1a4a6b">Translation</text>
+
+          <!-- Converge both branches to Node 6: OXPHOS proteins -->
+          <!-- Left branch converge arrow -->
+          <line x1="93" y1="310" x2="93" y2="360" stroke="#2b7ab0" stroke-width="1.5"/>
+          <line x1="93" y1="360" x2="168" y2="360" stroke="#2b7ab0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Right branch converge arrow -->
+          <line x1="328" y1="310" x2="328" y2="360" stroke="#2b7ab0" stroke-width="1.5"/>
+          <line x1="328" y1="360" x2="250" y2="360" stroke="#2b7ab0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 6: OXPHOS Proteins (convergence) -->
+          <rect x="168" y="340" width="150" height="42" rx="8" fill="#0f766e" stroke="#065f46"/>
+          <text x="243" y="357" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">OXPHOS Proteins</text>
+          <text x="243" y="372" text-anchor="middle" font-size="10" fill="#d1fae5">Respiratory Chain</text>
+
+          <!-- Arrow to Node 7: ATP / Energy -->
+          <line x1="243" y1="382" x2="243" y2="416" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 7: ATP Production -->
+          <rect x="168" y="416" width="150" height="42" rx="8" fill="#f0fdfa" stroke="#0f766e"/>
+          <text x="243" y="433" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="700">ATP Production</text>
+          <text x="243" y="448" text-anchor="middle" font-size="10" fill="#134e4a">Neuronal Energy Supply</text>
+
+          <!-- PANEL B: Downstream Disease Contexts -->
+          <rect x="422" y="14" width="486" height="468" rx="12" fill="rgba(255,245,235,0.45)" stroke="#b45309" stroke-width="1.2"/>
+          <text x="432" y="34" font-size="9" font-weight="700" fill="#78350f" letter-spacing="1.5">B — DISEASE CONTEXTS &amp; DOWNSTREAM CONSEQUENCES</text>
+
+          <!-- Node 8: Mitochondrial Dysfunction -->
+          <rect x="510" y="48" width="162" height="42" rx="8" fill="#b45309" stroke="#78350f"/>
+          <text x="591" y="65" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Mitochondrial</text>
+          <text x="591" y="80" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Dysfunction</text>
+
+          <!-- Arrow to Node 9: ROS / Oxidative Stress -->
+          <line x1="591" y1="90" x2="591" y2="120" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 9: ROS / Redox -->
+          <rect x="510" y="120" width="162" height="42" rx="8" fill="#fffbeb" stroke="#b45309"/>
+          <text x="591" y="137" text-anchor="middle" font-size="10.5" fill="#78350f" font-weight="700">↑ ROS / Redox</text>
+          <text x="591" y="152" text-anchor="middle" font-size="10" fill="#78350f">Imbalance</text>
+
+          <!-- Branch left: Lipid Dysregulation -->
+          <line x1="510" y1="141" x2="460" y2="141" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="460" y1="141" x2="460" y2="198" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 10: Lipid / Metabolic -->
+          <rect x="430" y="198" width="140" height="42" rx="8" fill="#fffbeb" stroke="#b45309"/>
+          <text x="500" y="215" text-anchor="middle" font-size="10" fill="#78350f" font-weight="700">Lipid &amp; Metabolic</text>
+          <text x="500" y="230" text-anchor="middle" font-size="10" fill="#78350f">Dysregulation</text>
+
+          <!-- Branch right from ROS: Immune/Cuproptosis -->
+          <line x1="672" y1="141" x2="730" y2="141" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="730" y1="141" x2="730" y2="198" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 11: Immune / Cuproptosis -->
+          <rect x="668" y="198" width="148" height="42" rx="8" fill="#fffbeb" stroke="#b45309"/>
+          <text x="742" y="215" text-anchor="middle" font-size="10" fill="#78350f" font-weight="700">Immune / Cu</text>
+          <text x="742" y="230" text-anchor="middle" font-size="10" fill="#78350f">Dyshomeostasis</text>
+
+          <!-- Arrows from Node 10 and 11 converging down to Node 12 -->
+          <line x1="500" y1="240" x2="500" y2="290" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="500" y1="290" x2="590" y2="290" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <line x1="742" y1="240" x2="742" y2="290" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="742" y1="290" x2="660" y2="290" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 12: Neuroinflammation / AD Vulnerability -->
+          <rect x="500" y="278" width="232" height="42" rx="8" fill="#991b1b" stroke="#7f1d1d"/>
+          <text x="616" y="295" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">Neuroinflammation /</text>
+          <text x="616" y="310" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">AD Vulnerability</text>
+
+          <!-- Arrow to cluster row: 3 context nodes -->
+          <line x1="616" y1="320" x2="616" y2="358" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+          <!-- Node 13, 14, 15 cluster side by side -->
+          <!-- Node 13: Diabetes/Cancer context -->
+          <rect x="430" y="358" width="142" height="42" rx="8" fill="#fef2f2" stroke="#991b1b"/>
+          <text x="501" y="375" text-anchor="middle" font-size="9.5" fill="#991b1b" font-weight="700">Diabetes / Cancer</text>
+          <text x="501" y="390" text-anchor="middle" font-size="9.5" fill="#991b1b">Transcriptional Context</text>
+
+          <!-- Node 14: Proteostatic Stress -->
+          <rect x="588" y="358" width="142" height="42" rx="8" fill="#fef2f2" stroke="#991b1b"/>
+          <text x="659" y="375" text-anchor="middle" font-size="9.5" fill="#991b1b" font-weight="700">Proteostatic</text>
+          <text x="659" y="390" text-anchor="middle" font-size="9.5" fill="#991b1b">Stress / Aggregation</text>
+
+          <!-- Node 13 arrow from base -->
+          <line x1="501" y1="358" x2="501" y2="358" stroke="none"/>
+          <!-- use the downward line from 12 splitting left/right -->
+          <line x1="616" y1="358" x2="501" y2="358" stroke="#991b1b" stroke-width="1.3"/>
+          <line x1="501" y1="358" x2="501" y2="358" stroke="none"/>
+          <!-- straight arrows already from 616,358 outward; lines to nodes 13,14 -->
+
+          <!-- Arrow connector from split point to node 13 top -->
+          <line x1="501" y1="358" x2="501" y2="358" stroke="none"/>
+
+          <!-- Node 16: No validated AD link -->
+          <rect x="466" y="428" width="300" height="38" rx="8" fill="#e8f4fd" stroke="#2b7ab0"/>
+          <text x="616" y="444" text-anchor="middle" font-size="10" fill="#1a4a6b" font-weight="700">No Validated AD Driver / Biomarker</text>
+          <text x="616" y="459" text-anchor="middle" font-size="9.5" fill="#1a4a6b">Hypothesis-generating only</text>
+
+          <!-- Arrows from nodes 13,14 to node 16 -->
+          <line x1="501" y1="400" x2="501" y2="428" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+          <line x1="659" y1="400" x2="659" y2="428" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+
+          <!-- Cross-panel connector: Node 7 (ATP) to Node 8 (Mitochondrial Dysfunction) via gutter -->
+          <!-- Node 7 right edge: x=318, y=437; Node 8 left edge: x=510, y=69 -->
+          <!-- Route: right edge of node 7 → gutter x=400 → up → enter panel B at node 8 top -->
+          <line x1="318" y1="437" x2="400" y2="437" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,3"/>
+          <line x1="400" y1="437" x2="400" y2="69" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,3"/>
+          <line x1="400" y1="69" x2="510" y2="69" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure.</strong>
+        <strong>Panel A (left, blue)</strong> traces MRPL53's core function: metabolic/oxidative stress signals impinge on MRPL53 within the mitoribosome large subunit; MRPL53 participates in mitoribosome assembly (with partners MRPL10, MRPL12), which then branches into two parallel routes — mitochondrial RNA metabolism (via LRPPRC/SLIRP) and mitochondrial protein translation — that converge on OXPHOS respiratory-chain protein synthesis, ultimately sustaining neuronal ATP production.
+        <strong>Panel B (right, amber/red)</strong> shows disease-context consequences: when mitochondrial dysfunction arises, it elevates ROS/redox imbalance, which branches into lipid &amp; metabolic dysregulation and immune/copper dyshomeostasis; these converge on neuroinflammation and AD vulnerability, feeding context-specific nodes (diabetes/cancer transcriptional programs; proteostatic stress/aggregation) that collectively reflect a hypothesis-generating — not validated — link to Alzheimer's disease.
+        The dashed cross-panel connector indicates that impaired ATP production (Panel A) can feed back into mitochondrial dysfunction (Panel B).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card card-accent">
+        <h3>Core Mitoribosomal Role</h3>
+        <p>MRPL53 is consistently associated with mitochondrial translation, mitoribosome integrity, oxidative phosphorylation, and cellular energy metabolism. Complexome profiling places it near MRPL10, MRPL12, LRPPRC, and SLIRP, implicating involvement in mitochondrial RNA metabolism and respiratory-chain assembly.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Essentiality &amp; Safety Concern</h3>
+        <p>Mitochondrial ribosomal proteins are broadly expressed, essential, and non-redundant. Direct inhibition of MRPL53 could impair mitochondrial protein synthesis and worsen energetic failure — the opposite of a therapeutic goal in Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Cross-Disease Metabolic Context</h3>
+        <p>MRPL53 appeared differentially expressed in diabetic versus non-diabetic colon cancer tissue and in a microplastics liver model linked to lipid biomarkers, cholesterol metabolism, redox state, and protein aggregation — findings that overlap conceptually with Alzheimer's metabolic themes even though they are not brain-specific.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Immune &amp; Cuproptosis Signature</h3>
+        <p>MRPL53 featured in an allergic rhinitis cuproptosis-related immune gene signature. This indirectly touches Alzheimer's themes — copper dyshomeostasis, mitochondrial dysfunction, and neuroinflammation — but does not constitute direct Alzheimer's evidence.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Plausible Rescue Strategies</h3>
+        <p>Because MRPL53 is essential rather than dispensable, therapeutic interest lies in <em>restoration</em>: normalizing abnormal expression, stabilizing mitoribosome function, preserving mitochondrial RNA translation, and protecting oxidative phosphorylation under Alzheimer's-related stress conditions.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Validation Gap</h3>
+        <p>No supplied study validates MRPL53 as an Alzheimer's disease driver, biomarker, or therapeutic target. Relevance remains inferential, based solely on the centrality of mitochondrial dysfunction in Alzheimer's biology. Direct validation in brain tissue, iPSC models, and Alzheimer's-relevant systems is an essential next step.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat as hypothesis-generating.</strong> Consider MRPL53 a candidate mitochondrial translation node for Alzheimer's research — not an established target — until direct validation is achieved.</li>
+      <li><strong>Prioritize in-context validation.</strong> Test MRPL53 expression and function in Alzheimer's brain tissue, single-cell datasets, neurons, astrocytes, microglia, iPSC-derived models, and animal models.</li>
+      <li><strong>Probe disease-relevant stressors.</strong> Determine whether MRPL53 expression or function changes upon amyloid-β exposure, tau pathology, oxidative stress, insulin resistance, lipid dysregulation, or neuroinflammatory stimulation.</li>
+      <li><strong>Measure functional downstream consequences.</strong> Assess mitochondrial protein synthesis, respiratory-chain assembly, oxygen consumption, ATP production, ROS generation, lipid metabolism, proteostatic stress, synaptic function, and neuronal survival following MRPL53 perturbation.</li>
+      <li><strong>Avoid inhibitory strategies.</strong> Because mitoribosomal proteins may be essential, loss-of-function approaches could worsen mitochondrial failure. Inhibition should not be assumed therapeutic.</li>
+      <li><strong>Consider biomarker utility first.</strong> Evaluate MRPL53 initially as a biomarker of mitochondrial translation stress or mitochondrial remodeling rather than as a primary drug target.</li>
+      <li><strong>Focus on modulation and rescue.</strong> If therapeutic development is pursued, prioritize strategies that normalize abnormal MRPL53 expression, stabilize mitoribosome function, or preserve mitochondrial RNA translation under Alzheimer's-related stress.</li>
+      <li><strong>Establish directionality of effect.</strong> Determine whether MRPL53 alterations are causal, compensatory, or merely correlative in any Alzheimer's-relevant context before advancing it as a therapeutic candidate.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment</span>
+      <p>MRPL53 is a <strong>structurally and functionally important mitoribosomal protein</strong> whose role in oxidative phosphorylation and mitochondrial translation gives it <strong>plausible, conceptual relevance to Alzheimer's disease</strong> — a condition in which mitochondrial dysfunction, metabolic failure, and bioenergetic collapse are recurring pathological themes. However, <strong>no direct evidence connects MRPL53 to Alzheimer's pathology, amyloid, tau, or neurodegeneration</strong>. Its appearance in metabolic-stress, cuproptosis, and cancer transcriptional contexts provides useful mechanistic scaffolding but does not substitute for disease-specific validation. The gene's apparent essentiality means that <strong>direct pharmacological inhibition carries genuine risk of harm</strong>, and any future therapeutic strategy should be oriented toward <strong>restoration and stabilization of mitoribosomal function</strong> rather than suppression. At this stage, MRPL53 is best positioned as a <strong>hypothesis-generating mitochondrial translation node</strong> warranting rigorous, Alzheimer's-focused experimental investigation before any translational commitment is made.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MRPL53 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

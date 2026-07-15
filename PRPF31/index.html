@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRPF31 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-card: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,30,30,0.28);
+    border: 1px solid rgba(255,120,120,0.38);
+    color: #ffcccc;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+    color: #c9d9ec;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: #f4f7fa;
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.92rem;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.neutral {
+    border-left-color: #94a3b8;
+    background: var(--neutral-card);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    color: var(--dark);
+  }
+
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway-counter;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway-counter;
+    padding: 14px 0 14px 52px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li:last-child { border-bottom: none; }
+
+  .takeaways ol li::before {
+    content: counter(takeaway-counter);
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .takeaways .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e33 100%);
+    border-radius: 12px;
+    padding: 36px 36px;
+    color: #e2eaf4;
+    margin-bottom: 56px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: #d4e4f5;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #7db8e8;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict strong {
+    color: #a8d4f5;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PRPF31 &nbsp;|&nbsp; Pre-mRNA Processing Factor 31</span>
+    <span class="chip chip-danger">⚠ Not an established AD target</span>
+  </div>
+  <h1>PRPF31 &amp; Spliceosome-Linked Neurodegeneration</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Important Caveat:</span>
+      The supplied literature provides <strong>no direct evidence</strong> linking PRPF31 to Alzheimer's disease. PRPF31 is a validated target for <strong>PRPF31-associated retinal degeneration</strong>; its Alzheimer's relevance is indirect, pathway-level, and requires independent validation.
+    </div>
+
+    <p>PRPF31 is a ubiquitously expressed pre-mRNA splicing factor and core component of the U4/U6.U5 tri-snRNP spliceosome whose mutations cause <strong>autosomal dominant retinitis pigmentosa</strong>. The supplied literature provides no direct evidence that PRPF31 contributes to Alzheimer's disease risk, amyloid-β processing, tau pathology, synaptic dysfunction, microglial activation, neuroinflammation, cognitive decline, or Alzheimer's therapeutic response.</p>
+
+    <p>Alzheimer's relevance is therefore indirect and mechanistic. The principal conceptual overlaps lie in pathways broadly implicated in neurodegeneration: RNA splicing disruption, nonsense-mediated decay, proteostasis failure, autophagy/lysosomal dysfunction, mitophagy impairment, mitochondrial stress, oxidative stress, DNA damage responses, ciliary abnormalities, and selective cellular vulnerability despite ubiquitous expression of core machinery.</p>
+
+    <p>PRPF31 is best characterized as a <strong>validated therapeutic target for PRPF31-associated retinal degeneration</strong> and as a possible exploratory node for studying spliceosome-linked neurodegeneration. It should not be presented as an established Alzheimer's therapeutic target without independent Alzheimer's-specific validation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview — PRPF31 Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Spliceosome & Gene -->
+          <rect x="12" y="12" width="230" height="476" rx="10" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="127" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#2e6da4" text-decoration="none" letter-spacing="1">PANEL A · GENE &amp; SPLICEOSOME</text>
+
+          <!-- PRPF31 Gene -->
+          <rect x="52" y="44" width="150" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="127" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">PRPF31</text>
+          <text x="127" y="76" text-anchor="middle" font-family="Georgia" font-size="9" font-style="italic" fill="#c9d9ec">Splicing Factor Gene</text>
+
+          <!-- Variants -->
+          <rect x="32" y="116" width="190" height="36" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1"/>
+          <text x="127" y="130" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c">Haploinsufficiency /</text>
+          <text x="127" y="144" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">Loss-of-Function Variants</text>
+
+          <!-- Tri-snRNP -->
+          <rect x="32" y="184" width="190" height="36" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1"/>
+          <text x="127" y="198" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c">U4/U6.U5 Tri-snRNP</text>
+          <text x="127" y="212" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">Assembly Disrupted</text>
+
+          <!-- Spliceosome Assembly -->
+          <rect x="32" y="252" width="190" height="36" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1"/>
+          <text x="127" y="266" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c">Spliceosome Activity</text>
+          <text x="127" y="280" text-anchor="middle" font-family="Arial" font-size="9" fill="#1a3a5c">Kinetics Impaired</text>
+
+          <!-- NMD -->
+          <rect x="32" y="320" width="190" height="36" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1"/>
+          <text x="127" y="334" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">Nonsense-Mediated</text>
+          <text x="127" y="348" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">Decay (NMD) Burden ↑</text>
+
+          <!-- Alt Splicing defects -->
+          <rect x="32" y="388" width="190" height="36" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1"/>
+          <text x="127" y="402" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">Alternative Splicing</text>
+          <text x="127" y="416" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">Defects — Selective</text>
+
+          <!-- Panel A arrows -->
+          <line x1="127" y1="84" x2="127" y2="116" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="127" y1="152" x2="127" y2="184" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="127" y1="220" x2="127" y2="252" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="127" y1="288" x2="127" y2="320" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+          <line x1="127" y1="356" x2="127" y2="388" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel B: Cellular Stress Cascades -->
+          <rect x="258" y="12" width="400" height="476" rx="10" fill="rgba(139,26,26,0.05)" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="458" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">PANEL B · CELLULAR STRESS CASCADES</text>
+
+          <!-- Shared upstream node in panel B -->
+          <rect x="358" y="44" width="200" height="40" rx="7" fill="#8b1a1a" stroke="#5c0f0f" stroke-width="1.2"/>
+          <text x="458" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">PRPF31 Deficiency</text>
+          <text x="458" y="76" text-anchor="middle" font-family="Georgia" font-size="9" font-style="italic" fill="#ffcccc">Retinal / Cellular Context</text>
+
+          <!-- Branch left: Mitochondrial -->
+          <rect x="268" y="144" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="347" y="158" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">Mitochondrial Stress</text>
+          <text x="347" y="172" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Structural Abnormalities</text>
+
+          <rect x="268" y="212" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="347" y="226" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">ATP Deficit &amp;</text>
+          <text x="347" y="240" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">ROS Accumulation</text>
+
+          <rect x="268" y="280" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="347" y="294" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">ULK1 Mis-splicing →</text>
+          <text x="347" y="308" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Mitophagy Defects</text>
+
+          <!-- Branch right: Autophagy/Proteostasis -->
+          <rect x="450" y="144" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="529" y="158" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">TFEB Nuclear</text>
+          <text x="529" y="172" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Translocation ↑</text>
+
+          <rect x="450" y="212" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="529" y="226" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">Autophagy/Lysosomal</text>
+          <text x="529" y="240" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Hyperactivation</text>
+
+          <rect x="450" y="280" width="158" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+          <text x="529" y="294" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">Protein Aggregates /</text>
+          <text x="529" y="308" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">Proteostasis Stress</text>
+
+          <!-- Shared convergence node -->
+          <rect x="338" y="358" width="240" height="40" rx="7" fill="#6b0f0f" stroke="#3d0a0a" stroke-width="1.2"/>
+          <text x="458" y="374" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Selective Cell Degeneration</text>
+          <text x="458" y="390" text-anchor="middle" font-family="Georgia" font-size="9" font-style="italic" fill="#ffcccc">RPE &amp; Photoreceptors (Retina)</text>
+
+          <!-- Ciliary / Inflammation row -->
+          <rect x="268" y="432" width="115" height="36" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1"/>
+          <text x="325" y="446" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">Ciliary /</text>
+          <text x="325" y="460" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">Cytoskeletal Defects</text>
+
+          <rect x="403" y="432" width="115" height="36" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1"/>
+          <text x="460" y="446" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">Inflammatory /</text>
+          <text x="460" y="460" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">Glial Activation</text>
+
+          <rect x="538" y="432" width="108" height="36" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1"/>
+          <text x="592" y="446" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">DNA Repair</text>
+          <text x="592" y="460" text-anchor="middle" font-family="Arial" font-size="9" fill="#b45309">Gene Mis-splicing</text>
+
+          <!-- Panel B connector lines -->
+          <!-- From PRPF31 Deficiency down to left branch -->
+          <line x1="418" y1="84" x2="347" y2="144" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- From PRPF31 Deficiency down to right branch -->
+          <line x1="498" y1="84" x2="529" y2="144" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Left branch down -->
+          <line x1="347" y1="180" x2="347" y2="212" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="347" y1="248" x2="347" y2="280" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Right branch down -->
+          <line x1="529" y1="180" x2="529" y2="212" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="529" y1="248" x2="529" y2="280" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Left branch to convergence -->
+          <line x1="347" y1="316" x2="390" y2="358" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Right branch to convergence -->
+          <line x1="529" y1="316" x2="510" y2="358" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Convergence to bottom row -->
+          <line x1="395" y1="398" x2="340" y2="432" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+          <line x1="458" y1="398" x2="460" y2="432" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+          <line x1="510" y1="398" x2="570" y2="432" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel C: Therapeutic -->
+          <rect x="674" y="12" width="234" height="476" rx="10" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="791" y="33" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C · THERAPEUTIC APPROACHES</text>
+
+          <!-- Retinal Target node -->
+          <rect x="700" y="44" width="178" height="40" rx="7" fill="#0f766e" stroke="#064e3b" stroke-width="1.2"/>
+          <text x="789" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">PRPF31-RP</text>
+          <text x="789" y="76" text-anchor="middle" font-family="Georgia" font-size="9" font-style="italic" fill="#a7f3d0">Validated Retinal Target</text>
+
+          <!-- Therapeutic approaches -->
+          <rect x="700" y="118" width="178" height="36" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="789" y="132" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e">ASO Splice Correction</text>
+          <text x="789" y="146" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Exon Skipping / ORF Restore</text>
+
+          <rect x="700" y="186" width="178" height="36" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="789" y="200" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e">AAV Gene Augmentation</text>
+          <text x="789" y="214" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Non-viral Nanoparticles</text>
+
+          <rect x="700" y="254" width="178" height="36" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="789" y="268" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e">Gene Editing /</text>
+          <text x="789" y="282" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">WT Allele Dosage Increase</text>
+
+          <rect x="700" y="322" width="178" height="36" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="789" y="336" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e">Rapamycin / Autophagy</text>
+          <text x="789" y="350" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Aggregates ↓, Cell Survival ↑</text>
+
+          <!-- AD gap box -->
+          <rect x="700" y="404" width="178" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="789" y="422" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a">Alzheimer's Evidence:</text>
+          <text x="789" y="438" text-anchor="middle" font-family="Arial" font-size="9" fill="#8b1a1a">NOT YET ESTABLISHED</text>
+          <text x="789" y="452" text-anchor="middle" font-family="Georgia" font-size="8.5" font-style="italic" fill="#b45309">Independent validation needed</text>
+
+          <!-- Panel C arrows -->
+          <line x1="789" y1="84" x2="789" y2="118" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="789" y1="154" x2="789" y2="186" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="789" y1="222" x2="789" y2="254" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="789" y1="290" x2="789" y2="322" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="789" y1="358" x2="789" y2="404" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel connector: Panel A NMD → Panel B Deficiency via gutter (elbow) -->
+          <polyline points="222,406 242,406 242,64 358,64" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> traces the molecular origin: PRPF31 gene variants cause haploinsufficiency, disrupting tri-snRNP assembly, spliceosome kinetics, and triggering NMD burden and alternative-splicing defects (dashed elbow connector from Panel A feeds into Panel B as contextual input).
+        <strong>Panel B</strong> shows how PRPF31 deficiency in cellular models branches into two parallel stress cascades — a <em>left branch</em> (mitochondrial stress → ATP/ROS deficit → ULK1 mis-splicing/mitophagy defects) and a <em>right branch</em> (TFEB activation → autophagy-lysosomal hyperactivation → proteostasis stress/aggregates) — reconverging at selective retinal cell degeneration, with downstream ciliary, inflammatory, and DNA-repair consequences.
+        <strong>Panel C</strong> summarises validated therapeutic strategies (ASO, AAV, gene editing, rapamycin) for PRPF31-associated retinitis pigmentosa, with the terminal red box flagging the absence of established Alzheimer's disease evidence.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card danger">
+        <h3>No Direct Alzheimer's Evidence</h3>
+        <p>The supplied text provides no evidence of PRPF31 alteration in Alzheimer's brain, association with Alzheimer's cohorts, effects on amyloid-β or tau, or benefit from PRPF31-targeted therapy in any Alzheimer's model. Classification as an AD target is not supported.</p>
+      </div>
+
+      <div class="card">
+        <h3>Core Spliceosome Function</h3>
+        <p>PRPF31 participates in U4/U6.U5 tri-snRNP formation and spliceosome assembly. Dysfunction impairs spliceosome activity, alters snRNP composition, disturbs assembly kinetics, and causes selective splicing defects — processes broadly relevant to neurodegeneration by analogy.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Haploinsufficiency is the Dominant Mechanism</h3>
+        <p>Many PRPF31 variants reduce functional gene dosage through NMD, splice defects, deletions, promoter/UTR changes, copy-number variation, or unstable/mislocalized protein. Disease penetrance frequently depends on residual expression from the wild-type allele and penetrance modifiers such as CNOT3/MSR1.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Selective Vulnerability Despite Ubiquitous Expression</h3>
+        <p>Although PRPF31 is broadly expressed, partial loss preferentially damages retinal pigment epithelium and photoreceptors. This parallels an Alzheimer's concept — broadly expressed pathways producing selective vulnerability — but the supplied text does not prove this occurs for PRPF31 in brain.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Autophagy/Mitochondrial Pathways — Strongest AD-Adjacent Rationale</h3>
+        <p>PRPF31 deficiency links to PLK4 downregulation, TFEB nuclear translocation, autophagy/lysosomal hyperactivation, mitochondrial structural abnormalities, respiratory deficits, ATP deficiency, ROS accumulation, and ULK1 mis-splicing driving mitophagy defects. These pathways meaningfully overlap with Alzheimer's disease mechanisms.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Therapeutic Evidence — Retinal, Not Alzheimer's</h3>
+        <p>Validated approaches include ASO splice correction, exon skipping, AAV gene augmentation, non-viral nanoparticle delivery, gene editing, and strategies increasing wild-type PRPF31 expression. Rapamycin reduced aggregates and improved retinal cell survival in PRPF31-mutant models. None of these are established in Alzheimer's contexts.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <span class="lead">Do not classify PRPF31 as a validated Alzheimer's target.</span>
+        The evidence supports only indirect pathway convergence with Alzheimer's-relevant mechanisms. Presenting it otherwise would misrepresent the current literature.
+      </li>
+      <li>
+        <span class="lead">Treat PRPF31 as an exploratory spliceosome/RNA-homeostasis candidate.</span>
+        Priority questions should include whether PRPF31 expression, spliceosome incorporation, or PRPF31-dependent splicing is altered in Alzheimer's-vulnerable neurons, astrocytes, microglia, oligodendrocytes, or vascular/barrier cells.
+      </li>
+      <li>
+        <span class="lead">Query Alzheimer's datasets before therapeutic development.</span>
+        Relevant analyses should test PRPF31 expression and splicing activity in Alzheimer's brain regions, single-cell RNA-seq data, proteomic datasets, genetic association studies, and longitudinal cognitive/pathology cohorts.
+      </li>
+      <li>
+        <span class="lead">Focus mechanistic validation on convergent pathways.</span>
+        Key nodes include PRPF31-dependent mis-splicing, NMD burden, ULK1/autophagy initiation, mitophagy, TFEB/autophagy-lysosomal regulation, mitochondrial respiration, ROS accumulation, proteostasis stress, and inflammatory/glial responses.
+      </li>
+      <li>
+        <span class="lead">Avoid PRPF31 inhibition as a therapeutic concept.</span>
+        PRPF31 is a ubiquitous core splicing factor; the disease literature primarily supports loss-of-function/haploinsufficiency. Rational strategies, if Alzheimer's relevance is ever demonstrated, would involve restoring normal dosage, stabilizing PRPF31 complexes, correcting specific downstream splicing defects, or targeting downstream autophagy/mitophagy consequences.
+      </li>
+      <li>
+        <span class="lead">Use retinal PRPF31 models as mechanistic templates only.</span>
+        Patient-derived iPSCs, retinal organoids, RPE systems, and PRPF31 animal models can inform how partial spliceosome dysfunction causes selective neurodegeneration, but Alzheimer's-specific neuronal and glial models are required before therapeutic claims are justified.
+      </li>
+      <li>
+        <span class="lead">Require direct Alzheimer's proof before prioritization.</span>
+        Minimum evidence should include PRPF31 dysregulation in Alzheimer's tissue, PRPF31-dependent mis-splicing of Alzheimer's-relevant transcripts, association with disease risk or progression, and rescue of Alzheimer's-relevant phenotypes such as amyloid/tau pathology, synaptic survival, mitochondrial function, neuroinflammation, or neuronal viability.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <span class="verdict-lead">Overall Assessment — PRPF31 &amp; Alzheimer's Disease</span>
+    <p>
+      Based on the supplied literature, <strong>PRPF31 is a well-validated therapeutic target for autosomal dominant retinitis pigmentosa</strong>, not an established Alzheimer's disease target. Its Alzheimer's relevance is <strong>entirely indirect</strong>, resting on conceptual pathway overlap: spliceosome disruption, NMD burden, mitochondrial dysfunction, mitophagy defects, autophagy-lysosomal dysregulation, proteostasis stress, and selective cellular vulnerability are all themes shared with neurodegeneration broadly. <strong>No direct evidence</strong> links PRPF31 to amyloid-β, tau, synaptic dysfunction, neuroinflammation, or Alzheimer's genetic risk in the supplied material. The strongest mechanistic rationale for further investigation centres on <strong>ULK1 mis-splicing, TFEB/autophagy-lysosomal pathways, and mitophagy impairment</strong> as convergence points between retinal PRPF31 biology and Alzheimer's disease mechanisms. Any progression toward Alzheimer's-directed research must first establish PRPF31 dysregulation in Alzheimer's tissue and PRPF31-dependent mis-splicing of disease-relevant transcripts before therapeutic hypotheses can be responsibly advanced.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p>PRPF31 / Retinitis Pigmentosa — Spliceosome-Linked Neurodegeneration TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only</p>
+</footer>
+
+</body>
+</html>

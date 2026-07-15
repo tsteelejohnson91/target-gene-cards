@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLFM1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-card: #dbeafe;
+    --blue-card-border: #1e40af;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.15rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  p { margin-bottom: 1em; }
+  p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 0.89rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+  .card-accent { background: var(--light); border-left-color: var(--dark); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-card); border-left-color: var(--blue-card-border); }
+  .card-blue h3 { color: var(--blue-card-border); }
+  .card-neutral { background: var(--neutral-light); border-left-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-warning { background: var(--warning-light); border-left-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .takeaways .lead { color: var(--dark); font-weight: 700; }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 56px;
+  }
+  .verdict h2 {
+    color: #93c5fd;
+    border-bottom-color: rgba(147,197,253,0.4);
+    margin-bottom: 18px;
+  }
+  .verdict p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: #e2eaf4;
+    margin-bottom: 0;
+  }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 18px 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: OLFM1 &nbsp;|&nbsp; Olfactomedin-1</span>
+    <span class="chip chip-danger">⚠ Unvalidated Target — Speculative Therapeutic Implications</span>
+  </div>
+  <h1>OLFM1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Important Caveat:</strong> No supplied evidence demonstrates that OLFM1 modulation alters amyloid-β, tau pathology, neuroinflammation, synapse loss, cognition, or AD progression. Therapeutic implications remain hypothesis-generating only.
+    </div>
+
+    <p>OLFM1 is presented as a <strong>promising but unvalidated</strong> Alzheimer's disease (AD)-related biomarker and mechanistic candidate. The most direct AD evidence comes from a 2025 <em>Translational Psychiatry</em> study in which serum OLFM1 was significantly lower in AD patients than in healthy controls and was associated with worse cognition and AD-relevant regional brain atrophy.</p>
+
+    <p>Mechanistically, OLFM1 is a brain-enriched, secreted neuronal glycoprotein localized to synaptic compartments, where it regulates AMPA receptor complex organization, GluR2 trafficking, synaptic microdomain composition, and possibly presynaptic APP clustering. Its links to APOE ε4-dependent cognition, hippocampal and angular gyrus atrophy, AMPA receptor biology, APP-associated synaptic organization, calcium signaling, Wnt signaling, axon growth, and inflammatory pathways make it biologically plausible as a future therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL A (left): Biomarker / Clinical Evidence  — 4 nodes
+          PANEL B (top-right): Synaptic Biology — branching, 6 nodes
+          PANEL C (bottom-right): Broader Signaling — 4 nodes
+          Total nodes: 14  ✓ (≤16)
+        -->
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="900" height="490" aria-label="OLFM1 mechanism diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#1a3a5c"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Clinical / Biomarker Evidence -->
+          <rect x="12" y="20" width="238" height="460" rx="12" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.5" opacity="0.55"/>
+          <text x="131" y="42" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">CLINICAL EVIDENCE</text>
+
+          <!-- Node A1: AD Patients vs Controls -->
+          <rect x="28" y="54" width="206" height="54" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="131" y="73" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a3a5c">Serum OLFM1↓ in AD</text>
+          <text x="131" y="88" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">750 vs 804 pg/mL</text>
+          <text x="131" y="101" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(p &lt; 0.05)</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="131" y1="108" x2="131" y2="128" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Cognitive Correlates -->
+          <rect x="28" y="130" width="206" height="54" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="131" y="150" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a3a5c">Cognitive Correlates</text>
+          <text x="131" y="165" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">MMSE, MoCA, MES</text>
+          <text x="131" y="178" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">stronger in APOE ε4 carriers</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="131" y1="184" x2="131" y2="204" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Brain Atrophy -->
+          <rect x="28" y="206" width="206" height="54" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="131" y="226" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a3a5c">Regional Atrophy</text>
+          <text x="131" y="241" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Hippocampus &amp;</text>
+          <text x="131" y="254" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Angular Gyrus↓</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="131" y1="260" x2="131" y2="280" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4: Diagnostic Panel -->
+          <rect x="28" y="282" width="206" height="54" rx="8" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.5"/>
+          <text x="131" y="302" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a3a5c">Diagnostic Model</text>
+          <text x="131" y="317" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">OLFM1 + Clinical Vars</text>
+          <text x="131" y="330" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e" font-weight="700">AUC = 0.881</text>
+
+          <!-- PANEL B: Synaptic Biology (top-right) -->
+          <rect x="268" y="20" width="390" height="290" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5" opacity="0.6"/>
+          <text x="463" y="42" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">SYNAPTIC BIOLOGY</text>
+
+          <!-- Node B1: OLFM1 at Synapse (shared root) -->
+          <rect x="350" y="54" width="226" height="52" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="463" y="74" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#0f766e">OLFM1 at Synapse</text>
+          <text x="463" y="89" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Synaptosome-localized glycoprotein</text>
+          <text x="463" y="102" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Ca²⁺-stabilized V-shaped tetramers</text>
+
+          <!-- Branch left arrow: B1→B2 -->
+          <line x1="400" y1="106" x2="346" y2="164" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- Branch right arrow: B1→B4 -->
+          <line x1="526" y1="106" x2="580" y2="164" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B2: AMPA/GluR2 -->
+          <rect x="276" y="166" width="160" height="60" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="356" y="186" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#0f766e">AMPA/GluR2</text>
+          <text x="356" y="201" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">GluR2 trafficking &amp;</text>
+          <text x="356" y="214" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">palmitoylation altered</text>
+
+          <!-- Node B4: APP Clustering -->
+          <rect x="494" y="166" width="154" height="60" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="571" y="186" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#0f766e">APP Clustering</text>
+          <text x="571" y="201" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Presynaptic APP</text>
+          <text x="571" y="214" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">organization</text>
+
+          <!-- Arrow B2→B3 -->
+          <line x1="356" y1="226" x2="356" y2="250" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B3: Microdomain -->
+          <rect x="276" y="252" width="160" height="46" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="356" y="270" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#0f766e">Synaptic Microdomains</text>
+          <text x="356" y="285" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">SNAP25, flotillin1, VAMP2</text>
+
+          <!-- Arrow B4→B3 elbow: go down from B4 then left to B3 -->
+          <polyline points="571,226 571,275 436,275" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- PANEL C: Broader Signaling (bottom-right) -->
+          <rect x="268" y="328" width="640" height="150" rx="12" fill="#fffbeb" stroke="#b45309" stroke-width="1.5" opacity="0.55"/>
+          <text x="588" y="350" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">BROADER SIGNALING PATHWAYS</text>
+
+          <!-- Node C1: Ca / ERK -->
+          <rect x="280" y="360" width="148" height="54" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="354" y="379" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#b45309">Ca²⁺ / ERK Signaling</text>
+          <text x="354" y="394" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">ERK1/2, MEK1, CaMKII</text>
+          <text x="354" y="407" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">hippocampus &amp; OB</text>
+
+          <!-- Node C2: Nogo / Axon -->
+          <rect x="448" y="360" width="148" height="54" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="522" y="379" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#b45309">Nogo / Axon Growth</text>
+          <text x="522" y="394" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">NgR1/p75NTR/LINGO-1</text>
+          <text x="522" y="407" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">inhibition attenuated</text>
+
+          <!-- Node C3: Wnt / WIF-1 -->
+          <rect x="616" y="360" width="148" height="54" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="690" y="379" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#b45309">Wnt / WIF-1</text>
+          <text x="690" y="394" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Amyloid toxicity,</text>
+          <text x="690" y="407" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">tau phosphorylation</text>
+
+          <!-- Node C4: NF-κB / Inflammation -->
+          <rect x="784" y="360" width="114" height="54" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="841" y="379" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#991b1b">NF-κB / Inflam.</text>
+          <text x="841" y="394" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Suppression</text>
+          <text x="841" y="407" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(unvalidated CNS)</text>
+
+          <!-- Connector: Panel B (B3) down into Panel C area — vertical elbow -->
+          <!-- B3 bottom at y=298, Panel C top at y=328; route down through gutter -->
+          <polyline points="356,298 356,320 354,320 354,360" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-dark)"/>
+
+          <!-- Connector: Panel A (A4) right → Panel C (C1) left via gutter below panel B -->
+          <polyline points="234,309 253,309 253,387 280,387" fill="none" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Clinical Evidence):</strong> OLFM1 serum levels are reduced in AD, correlating with worse cognitive scores (particularly in APOE ε4 carriers), hippocampal and angular gyrus atrophy, and contributing to a diagnostic model with AUC = 0.881.
+        <strong>Panel B (Synaptic Biology):</strong> OLFM1 localizes to synapses as Ca²⁺-stabilized tetramers and branches into two parallel cascades — (left) AMPA/GluR2 trafficking and synaptic microdomain regulation (SNAP25, flotillin1, VAMP2), and (right) presynaptic APP organization and clustering.
+        <strong>Panel C (Broader Signaling):</strong> OLFM1 also influences Ca²⁺/ERK/CaMKII cascades, attenuates Nogo receptor-mediated axon growth inhibition, interacts with Wnt signaling via WIF-1, and may suppress NF-κB-related inflammation (dashed lines indicate hypothetical or unvalidated CNS links).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Biomarker Signal in AD</h3>
+        <p>Serum OLFM1 was significantly lower in AD patients (749.8 ± 42.3 pg/mL) versus healthy controls (804.4 ± 45.7 pg/mL). When combined with clinical characteristics, a diagnostic model achieved AUC = 0.881, suggesting utility in multi-marker panels. OLFM1 is detectable in peripheral serum, making it blood-accessible.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>APOE ε4 Modulation</h3>
+        <p>In APOE ε4 carriers, serum OLFM1 correlated positively with MMSE, MoCA, and MES scores. This suggests that OLFM1's relationship to cognition may be genotype-dependent, and future studies should stratify analyses by ε4 status.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Synaptic Mechanism</h3>
+        <p>OLFM1 co-immunoprecipitates with GluR2 and SNARE-complex proteins. Its loss altered GluR2 palmitoylation and internalization, VAMP2 localization, and abundance of SNAP25 and flotillin1. Structurally, it forms Ca²⁺-stabilized V-shaped tetramers supporting possible extracellular receptor clustering and trans-synaptic tethering.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>APP &amp; Axon Growth Links</h3>
+        <p>OLFM1 may cluster presynaptic APP, making it relevant to AD synaptic dysfunction — though direct effects on amyloid production are not shown. Separately, OLFM1 promotes axon growth by attenuating NgR1/p75NTR/LINGO-1-mediated inhibition, suggesting possible relevance to impaired plasticity and neurite dystrophy in AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Broader Signaling Pathways</h3>
+        <p>OLFM1-related changes involve intracellular Ca²⁺, ERK1/2, MEK1, and CaMKII in hippocampus and olfactory bulb, overlapping with AD-relevant calcium dyshomeostasis. It interacts with Wnt signaling through WIF-1, and may suppress NF-κB-related inflammatory signaling — though this has not been validated in CNS or AD models.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Critical Evidence Gap</h3>
+        <p>No supplied evidence demonstrates that OLFM1 modulation changes amyloid-β levels, tau pathology, neuroinflammation, synapse loss, cognition, or AD progression in any model system. Therapeutic implications are speculative; no AD animal models, intervention studies, or OLFM1-directed therapies are described.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><span><span class="lead">Biomarker, not therapeutic target:</span> Treat OLFM1 as a candidate AD biomarker rather than a validated therapeutic target until mechanistic intervention data are available.</span></li>
+      <li><span><span class="lead">Longitudinal studies are essential:</span> Prioritize longitudinal designs to determine whether serum OLFM1 predicts cognitive decline, MCI-to-AD conversion, or progression of hippocampal and angular gyrus atrophy over time.</span></li>
+      <li><span><span class="lead">Compare against established markers:</span> Benchmark OLFM1 against amyloid-β, phosphorylated tau, total tau, neurofilament light, GFAP, and imaging-based neurodegeneration markers to assess its incremental diagnostic value.</span></li>
+      <li><span><span class="lead">Validate peripheral–central correspondence:</span> Test whether serum OLFM1 reflects brain or CSF OLFM1 levels, since peripheral measurements may not directly represent CNS activity.</span></li>
+      <li><span><span class="lead">Stratify by APOE ε4 status:</span> OLFM1–cognition associations appear stronger in ε4 carriers; future analyses should explicitly stratify by genotype to avoid confounding.</span></li>
+      <li><span><span class="lead">Investigate human AD brain tissue:</span> Study OLFM1 in hippocampus, angular gyrus, cortex, and synaptosome-enriched fractions from regions with early synaptic loss.</span></li>
+      <li><span><span class="lead">Test synaptic modulation experimentally:</span> Determine whether OLFM1 manipulation affects AMPA receptor trafficking, GluR2 localization, synaptic vesicle proteins, synaptic plasticity, and neuronal survival under amyloid-β or tau stress.</span></li>
+      <li><span><span class="lead">Clarify APP relationship:</span> Determine whether OLFM1 alters APP localization, clustering, processing, or amyloidogenic cleavage before pursuing APP-related therapeutic strategies.</span></li>
+      <li><span><span class="lead">Validate anti-inflammatory potential in CNS:</span> Any NF-κB-related findings must be reproduced in microglia, astrocytes, neurons, and organoid or animal AD models before drawing conclusions.</span></li>
+      <li><span><span class="lead">Do not assume increasing OLFM1 is beneficial:</span> Isoform-specific, dose-specific, and disease-stage-specific effects must be clarified before pursuing OLFM1-augmentation strategies.</span></li>
+      <li><span><span class="lead">Develop isoform-resolving tools:</span> Total OLFM1 measurement may not capture functional activity — tools distinguishing OLFM1 isoforms, oligomeric states, and receptor-binding domains are needed.</span></li>
+      <li><span><span class="lead">Prioritize risk stratification in the near term:</span> Consider OLFM1 most immediately useful for AD risk stratification, disease monitoring, or multi-marker diagnostic panel inclusion, while therapeutic targeting remains hypothesis-generating.</span></li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <h2>Overall Assessment</h2>
+    <p><strong>Overall Assessment —</strong> OLFM1 is a <strong>biologically plausible and mechanistically interesting</strong> candidate in Alzheimer's disease, supported by a 2025 clinical study showing significantly reduced serum levels in AD patients alongside associations with <strong>cognitive decline, APOE ε4-dependent cognition, and hippocampal/angular gyrus atrophy</strong>. Its deep involvement in synaptic AMPA receptor biology, GluR2 trafficking, APP clustering, Ca²⁺/ERK signaling, axon growth, and Wnt signaling pathways provides a rich mechanistic framework for future investigation. However, the current evidence base is <strong>associative and descriptive</strong> — no causal, interventional, or disease-modifying evidence exists. The most defensible near-term role for OLFM1 is as a <strong>blood-accessible biomarker for AD risk stratification and multi-marker diagnostic panels</strong>. Therapeutic targeting should be pursued only after rigorous mechanistic validation in AD-relevant model systems.</p>
+  </div>
+
+</main>
+
+<footer>
+  OLFM1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

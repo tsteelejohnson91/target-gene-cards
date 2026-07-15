@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCL2 in Alzheimer's Disease — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e32 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(192,57,43,0.55);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #e0a0a0;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    color: #5a1a1a;
+    line-height: 1.65;
+  }
+
+  /* BODY TEXT */
+  p {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    line-height: 1.75;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger-mid);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway-counter;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway-counter);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  ol.takeaways li p {
+    margin: 0;
+    font-size: 0.96rem;
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e32 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 40px 40px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+  }
+
+  .verdict p strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: BCL2 &nbsp;|&nbsp; B-cell lymphoma 2 / Anti-apoptotic regulator</span>
+    <span class="chip chip-danger">⚠ Oncogenic safety concern</span>
+  </div>
+  <h1>BCL2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Safety Concern: Oncogenic Risk of Systemic BCL2 Activation</div>
+      <p>BCL2 is an established oncogenic survival factor in multiple malignancies. BCL2 inhibitors (venetoclax, navitoclax) are used clinically to induce tumor-cell apoptosis. Chronic or systemic BCL2 enhancement in an Alzheimer's disease context therefore carries meaningful cancer-risk concern, and any therapeutic strategy must account for brain-targeted delivery, temporal control, and long-term safety monitoring.</p>
+    </div>
+
+    <p>BCL2 is presented primarily as an anti-apoptotic, mitochondria-linked survival regulator relevant to Alzheimer's disease (AD) mainly through mechanistic inference rather than consistent direct AD validation. BCL2/Bcl-2 generally opposes Bax, BAD, BID, cytochrome c release, caspase-8, caspase-9, and caspase-3 activation. Injury, toxic stress, oxidative damage, inflammatory signaling, ER stress, and mitochondrial dysfunction commonly reduce BCL2 or increase the Bax/BCL2 ratio, while protective interventions often restore BCL2 and suppress apoptotic markers.</p>
+
+    <p>The most direct AD-related evidence includes neuronal models exposed to amyloid-β and inflammatory stress. In SH-SY5Y cells exposed to LPS plus Aβ42, sodium butyrate improved viability, reduced Bax, caspase-3, and FOXO3a, and significantly increased Bcl-2 while also activating BDNF, Nrf2, SIRT1, and CREB. In an Aβ25–35 model, circ_0092222 knockdown reduced apoptosis and inflammatory cytokines while increasing BCL2 and cell viability via a miR-331-3p/SEC61A1 axis.</p>
+
+    <p>BCL2 should therefore be viewed as an AD-relevant survival and apoptosis-control node, not as an established standalone AD drug target. Its therapeutic relevance is strongest as part of broader pathway modulation—such as PI3K/Akt, Nrf2/HO-1, SIRT1/CREB, BDNF/TrkB, NF-κB/NLRP3 suppression, ER-stress reduction, mitophagy support, and anti-inflammatory or antioxidant interventions—rather than broad direct BCL2 activation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:640px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#c0392b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream Stress Inputs -->
+          <rect x="10" y="10" width="200" height="480" rx="12" fill="rgba(30,58,92,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">A · UPSTREAM STRESSORS</text>
+
+          <!-- Node A1: Aβ Toxicity -->
+          <rect x="30" y="44" width="160" height="42" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="62" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1a3a5c">Aβ / Tau Toxicity</text>
+          <text x="110" y="77" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e3a5c">(amyloid stress)</text>
+
+          <!-- Node A2: Neuroinflammation -->
+          <rect x="30" y="112" width="160" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="110" y="130" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#78350f">Neuroinflammation</text>
+          <text x="110" y="145" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#78350f">NF-κB, NLRP3, TNF-α</text>
+
+          <!-- Node A3: Oxidative Stress -->
+          <rect x="30" y="180" width="160" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="110" y="198" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#78350f">Oxidative Stress</text>
+          <text x="110" y="213" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#78350f">ROS, MDA, lipid perox.</text>
+
+          <!-- Node A4: ER Stress / Mitochon. Dysfn -->
+          <rect x="30" y="248" width="160" height="42" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="110" y="264" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">ER Stress / Mito.</text>
+          <text x="110" y="279" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#7f1d1d">Dysfunction</text>
+
+          <!-- Node A5: circ_0092222 axis -->
+          <rect x="30" y="316" width="160" height="42" rx="7" fill="#f5f3ff" stroke="#6d28d9" stroke-width="1.2"/>
+          <text x="110" y="334" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#4c1d95">circ_0092222 axis</text>
+          <text x="110" y="349" text-anchor="middle" font-family="Arial" font-size="9" fill="#4c1d95">miR-331-3p / SEC61A1</text>
+
+          <!-- Arrows A1→A4 (vertical connectors in panel A) -->
+          <line x1="110" y1="86" x2="110" y2="112" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="110" y1="154" x2="110" y2="180" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+          <line x1="110" y1="222" x2="110" y2="248" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- PANEL B: BCL2 Balance Node -->
+          <rect x="225" y="10" width="200" height="480" rx="12" fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="325" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">B · BCL2 BALANCE</text>
+
+          <!-- Node B1: BAX / BID / BAD -->
+          <rect x="245" y="44" width="160" height="42" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="325" y="62" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">↑ Bax / BAD / BID</text>
+          <text x="325" y="77" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#7f1d1d">pro-apoptotic shift</text>
+
+          <!-- Node B2: BCL2 (central) -->
+          <rect x="245" y="142" width="160" height="50" rx="9" fill="#1a3a5c" stroke="#0f766e" stroke-width="2"/>
+          <text x="325" y="163" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="white">BCL2</text>
+          <text x="325" y="180" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#bfdbfe">survival regulator</text>
+
+          <!-- Node B3: BCL2/Bax Ratio -->
+          <rect x="245" y="248" width="160" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="325" y="266" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">BCL2 / Bax Ratio</text>
+          <text x="325" y="281" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#134e4a">functional vulnerability</text>
+
+          <!-- Node B4: Protective Inputs -->
+          <rect x="245" y="354" width="160" height="42" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="325" y="372" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1d4ed8">Protective Interventions</text>
+          <text x="325" y="387" text-anchor="middle" font-family="Arial" font-size="9" fill="#1d4ed8">NaButyrate, antioxidants</text>
+
+          <!-- Arrows B panel -->
+          <line x1="325" y1="86" x2="325" y2="142" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="325" y1="192" x2="325" y2="248" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="325" y1="396" x2="325" y2="290" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel arrows: A→B (stress → Bax) -->
+          <line x1="190" y1="65" x2="245" y2="65" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="190" y1="133" x2="245" y2="65" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <!-- circ axis → BCL2 -->
+          <line x1="190" y1="337" x2="245" y2="192" stroke="#6d28d9" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- PANEL C: Mitochondrial Apoptosis Cascade -->
+          <rect x="440" y="10" width="210" height="270" rx="12" fill="rgba(139,26,26,0.05)" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="545" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">C · APOPTOSIS CASCADE</text>
+
+          <!-- Node C1: Cytochrome c release -->
+          <rect x="460" y="44" width="170" height="42" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="545" y="62" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">Cytochrome c Release</text>
+          <text x="545" y="77" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#7f1d1d">MOMP activation</text>
+
+          <!-- Node C2: Caspase-9 -->
+          <rect x="460" y="112" width="170" height="38" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="545" y="130" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">Caspase-9 Activation</text>
+          <text x="545" y="145" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">intrinsic pathway</text>
+
+          <!-- Node C3: Caspase-3 / Cleaved -->
+          <rect x="460" y="176" width="170" height="38" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="545" y="194" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">Cleaved Caspase-3</text>
+          <text x="545" y="209" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">executioner caspase</text>
+
+          <!-- Node C4: Neuronal Death -->
+          <rect x="460" y="234" width="170" height="36" rx="7" fill="#7f1d1d" stroke="#5a0b0b" stroke-width="1.5"/>
+          <text x="545" y="252" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="white">Neuronal Death</text>
+          <text x="545" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">apoptosis outcome</text>
+
+          <!-- Arrows C cascade -->
+          <line x1="545" y1="86" x2="545" y2="112" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="545" y1="150" x2="545" y2="176" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="545" y1="214" x2="545" y2="234" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- BCL2 ratio → SUPPRESSES Cytochrome c (cross-panel, inhibitory elbow) -->
+          <path d="M405,269 L430,269 L430,65 L460,65" fill="none" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- PANEL D: Downstream Neuroprotection -->
+          <rect x="665" y="10" width="245" height="480" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">D · DOWNSTREAM OUTCOMES</text>
+
+          <!-- Node D1: Nrf2/HO-1/SOD -->
+          <rect x="682" y="44" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="62" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">Nrf2 / HO-1 / SOD</text>
+          <text x="787" y="77" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#134e4a">antioxidant defense ↑</text>
+
+          <!-- Node D2: BDNF / TrkB / CREB -->
+          <rect x="682" y="112" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="130" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">BDNF / TrkB / CREB</text>
+          <text x="787" y="145" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#134e4a">neurotrophic signaling ↑</text>
+
+          <!-- Node D3: PI3K/Akt/SIRT1 -->
+          <rect x="682" y="180" width="210" height="42" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="787" y="198" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1d4ed8">PI3K / Akt / SIRT1</text>
+          <text x="787" y="213" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1d4ed8">survival signalling ↑</text>
+
+          <!-- Node D4: Mito. Membrane Potential -->
+          <rect x="682" y="248" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="266" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">Mitochondrial ΔΨm</text>
+          <text x="787" y="281" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#134e4a">membrane potential preserved</text>
+
+          <!-- Node D5: Synaptic / Cognitive Resilience -->
+          <rect x="682" y="316" width="210" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="334" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">Synaptic / Cognitive</text>
+          <text x="787" y="349" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#134e4a">Resilience ↑</text>
+
+          <!-- Node D6: BBB Integrity -->
+          <rect x="682" y="384" width="210" height="42" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="787" y="402" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#78350f">BBB Integrity</text>
+          <text x="787" y="417" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#78350f">astrocytic BCL2 → BBB</text>
+
+          <!-- Arrows D panel -->
+          <line x1="787" y1="86" x2="787" y2="112" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="787" y1="154" x2="787" y2="180" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="787" y1="222" x2="787" y2="248" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="787" y1="290" x2="787" y2="316" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="787" y1="358" x2="787" y2="384" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+          <!-- BCL2 Ratio → Panel D (elbow right from B bottom to D left) -->
+          <path d="M405,269 L435,269 L435,450 L650,450 L650,65 L682,65" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Caspase-3 → Neuronal Death also implicit; Neuronal Death → reverse of D -->
+          <!-- Arrow from Neuronal Death outcome to BCL2 implication label -->
+
+          <!-- Panel C outcomes arrow to D5 (elbow below panels, avoiding boxes) -->
+          <path d="M545,270 L545,460 L650,460 L650,337 L682,337" fill="none" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Stressors):</strong> Amyloid-β/tau toxicity, neuroinflammation (NF-κB/NLRP3/TNF-α), oxidative stress (ROS/MDA), ER stress/mitochondrial dysfunction, and the circ_0092222/miR-331-3p/SEC61A1 axis each drive pro-apoptotic signalling.
+        <strong>Panel B (BCL2 Balance):</strong> Upstream stressors elevate Bax/BAD/BID, which suppresses BCL2; the BCL2/Bax ratio is the functional readout of survival vs. apoptotic bias. Protective interventions (e.g. sodium butyrate, antioxidants) restore BCL2.
+        <strong>Panel C (Apoptosis Cascade):</strong> Low BCL2 permits cytochrome c release → caspase-9 → cleaved caspase-3 → neuronal death. A favorable BCL2/Bax ratio (dashed teal line) suppresses cytochrome c release.
+        <strong>Panel D (Downstream Neuroprotection):</strong> When BCL2 is preserved, five protective outcomes emerge: Nrf2/HO-1/SOD antioxidant defence, BDNF/TrkB/CREB neurotrophic signalling, PI3K/Akt/SIRT1 survival signalling, maintained mitochondrial membrane potential, synaptic/cognitive resilience, and astrocytic BCL2-dependent BBB integrity.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Mitochondrial Apoptosis Control Is BCL2's Core AD Role</h3>
+        <p>Higher BCL2 or a higher BCL2/Bax ratio is associated with resistance to mitochondrial outer membrane permeabilization, cytochrome c release, caspase-9/caspase-3 activation, and neuronal death — the central apoptotic axis in AD-relevant neurodegeneration.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Direct AD-Like Neuronal Evidence Supports a Protective Pattern</h3>
+        <p>Sodium butyrate protected SH-SY5Y neurons from LPS + Aβ42 toxicity by increasing Bcl-2 while reducing Bax, caspase-3, and FOXO3a, and activating BDNF, Nrf2, SIRT1, and CREB. Circ_0092222 knockdown in Aβ25–35-injured neurons also increased BCL2 and reduced apoptotic markers.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>BCL2/Bax Ratio Is More Informative Than BCL2 Alone</h3>
+        <p>The Bax/BCL2 balance repeatedly functions as the key indicator of whether cells are biased toward survival or apoptosis. In AD models, this ratio may be more relevant than absolute BCL2 expression levels as both a biomarker and a therapeutic readout.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>BCL2 Intersects with Oxidative-Stress Defence</h3>
+        <p>Multiple neuronal models show BCL2 restoration alongside reduced ROS, MDA, mitochondrial superoxide, and lipid peroxidation, plus increased SOD, CAT, GPx, GSH, Nrf2, and HO-1, positioning BCL2 at the junction of apoptotic and oxidative-stress control.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Neuroinflammation–Apoptosis Coupling via BCL2</h3>
+        <p>Models involving NF-κB, NLRP3, TNF-α, IL-1β, IL-6, iNOS, and microglial activation demonstrate that inflammatory signalling can shift cells toward Bax/caspase activation, while protective interventions restore BCL2-associated survival signalling — linking neuroinflammation directly to the apoptotic axis.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Oncogenic Safety Concern Limits Systemic BCL2 Enhancement</h3>
+        <p>BCL2 is an established oncogenic survival factor; venetoclax and navitoclax target it to induce tumour-cell apoptosis. Chronic systemic BCL2 activation in AD therefore carries meaningful cancer risk, requiring brain-targeted delivery, temporal control, and long-term safety monitoring before any therapeutic application.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div>
+          <p><span class="lead">Use BCL2 as a mechanistic neuroprotection marker.</span> Measure BCL2 alongside Bax, cleaved caspase-3, cleaved caspase-9, cytochrome c, mitochondrial membrane potential, ROS, inflammatory cytokines, and synaptic markers to provide a composite picture of apoptotic vulnerability in AD research.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Prioritise the BCL2/Bax ratio as the primary readout.</span> The ratio, rather than absolute BCL2 expression, is the functional indicator of mitochondrial apoptotic vulnerability in AD models and should anchor endpoint selection.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Validate BCL2 modulation in AD-specific systems.</span> Move beyond generic neuronal models to Aβ and tau models, hippocampal neurons, human iPSC-derived neurons, astrocytes, microglia, endothelial/BBB models, and animal models with cognitive endpoints.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Test effects on core AD outcomes, not apoptosis markers alone.</span> Evaluate amyloid-β accumulation, tau phosphorylation and aggregation, synaptic density, dendritic spine integrity, neuroinflammation, mitochondrial function, BBB integrity, and memory performance alongside BCL2/Bax measurements.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Pursue indirect, pathway-level modulation over broad BCL2 activation.</span> Candidate approaches include PI3K/Akt, Nrf2/HO-1, SIRT1/CREB, BDNF/TrkB, AMPK-related metabolic resilience, ER-stress reduction, mitophagy/autophagy normalisation, and NF-κB/NLRP3 suppression.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Consider upstream regulatory axes as intervention points.</span> Investigate circ_0092222/miR-331-3p/SEC61A1, p53/FoxO, miRNA-mediated BCL2 suppression, and inflammatory NF-κB/NLRP3 pathways as tractable upstream nodes that feed into BCL2 regulation.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Design cell-type-specific strategies.</span> Neuronal or astrocytic BCL2 preservation may be beneficial — including a possible role in BBB maintenance — while broad BCL2 enhancement in immune, senescent, or proliferative cells could be harmful.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <p><span class="lead">Account rigorously for the cancer-risk concern.</span> Because BCL2 is an oncogenic survival factor in many malignancies, chronic systemic BCL2 activation is unlikely to be viable without brain-targeted delivery, temporal control, and long-term safety monitoring integrated from the outset of any development programme.</p>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — BCL2 in Alzheimer's Disease</div>
+      <p>
+        BCL2 represents a <strong>plausible and mechanistically well-grounded survival node</strong> in Alzheimer's disease pathobiology, but it is <strong>not yet a validated standalone therapeutic target</strong>. The available evidence consistently positions BCL2 as a downstream indicator of neuroprotection — one that is suppressed by amyloid-β, neuroinflammation, oxidative stress, and ER/mitochondrial dysfunction, and restored by diverse protective interventions including sodium butyrate, antioxidants, and pathway modulators such as PI3K/Akt, Nrf2/HO-1, SIRT1/CREB, and BDNF/TrkB activators. The <strong>BCL2/Bax ratio, not absolute BCL2 expression</strong>, is the more informative readout of mitochondrial apoptotic vulnerability. Direct AD-specific causal validation — demonstrating that BCL2 modulation improves amyloid burden, tau pathology, synaptic function, cognition, or clinical progression — <strong>remains absent</strong>. Furthermore, BCL2's established role as an <strong>oncogenic survival factor</strong> imposes a significant safety constraint on any strategy involving systemic or prolonged BCL2 enhancement, making brain-targeted, cell-type-specific, and temporally controlled approaches a prerequisite for translation. The most pragmatic near-term use of BCL2 in AD research is as a <strong>mechanistic neuroprotection biomarker</strong> embedded within broader pathway-level intervention studies.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  BCL2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

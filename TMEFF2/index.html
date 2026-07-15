@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMEFF2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(180,50,50,0.28);
+    border-color: rgba(255,140,140,0.35);
+    color: #ffc9c9;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); }
+  p { margin-bottom: 1em; }
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 12px 10px;
+    margin: 0 0 10px 0;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    text-align: center;
+    margin-bottom: 0;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .cards-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 14px;
+    border-left: 4px solid;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-color: var(--blue-mid); }
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-text); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-warning h3 { color: var(--warning); }
+  .card p { font-size: 0.91rem; line-height: 1.65; margin-bottom: 0; color: var(--slate); }
+  ol.takeaways { padding-left: 0; list-style: none; counter-reset: takeaway; }
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+  }
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 34px 36px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+  .verdict-banner .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+  .verdict-banner strong { color: #bfdbfe; }
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TMEFF2 &nbsp;|&nbsp; Tomoregulin-2 / Transmembrane protein with EGF-like and two follistatin-like domains 2</span>
+    <span class="chip chip-danger">⚠ Unvalidated target — safety &amp; directionality unresolved</span>
+  </div>
+  <h1>TMEFF2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Caution — Early-Stage Target:</strong> TMEFF2 lacks causal in vivo AD efficacy data, human clinical validation, and CNS safety characterisation. The optimal direction of modulation (enhance, mimic, inhibit) remains undetermined. Many findings are preclinical, in vitro, network-based, or derived from non-AD contexts.
+    </div>
+    <p>TMEFF2 is an emerging Alzheimer's disease (AD)-relevant transmembrane and extracellular-domain protein rather than a validated therapeutic target. Its AD relevance converges around amyloid-β (Aβ) biology, APP processing, innate immune and phagocytic regulation, oxidative stress, plaque association, neuroprotection, and regulated ectodomain shedding.</p>
+    <p>The strongest AD-specific evidence indicates that TMEFF2 (also called tomoregulin-2, TR2, TENB2, TPEF, or HPP1) can bind Aβ and Aβ oligomers with nanomolar affinity (K<sub>D</sub> = 76.8 nM), promote non-amyloidogenic α-secretase cleavage of APP, co-localise with amyloid pathology in the 5xFAD mouse model and human AD tissue, and protect neurons from Aβ oligomer-induced death. Additional evidence places TMEFF2 within an AD-associated extracellular/transmembrane protein co-expression network (Module 42, including APP and APOE), and identifies TMEFF2-C80 cysteine oxidation as strongly associated with amyloid-β burden in human prefrontal cortex (β = 1.64, P = 1.1 × 10<sup>−8</sup>).</p>
+    <p>Therapeutically, TMEFF2 is plausible because it is brain-enriched, membrane-associated, shed into soluble extracellular forms, functionally active through its ectodomain, and technically targetable by biologics. The leading therapeutic concept is modulation or mimicry of TMEFF2 extracellular-domain functions to reduce Aβ toxicity, shift APP processing toward non-amyloidogenic cleavage, and/or recalibrate innate immune phagocytic responses.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN (16 nodes max):
+        Panel A (left): TMEFF2 Protein & Processing — 3 nodes vertically
+        Panel B (centre-top): Amyloid / APP Branch — 4 nodes (shared → 2 branches → shared)
+        Panel C (centre-bottom): Immune / Oxidative Branch — 4 nodes
+        Panel D (right): Outcomes — 3 nodes
+        Cross-panel arrows only through clear gutters.
+        Total boxes: 3 + 4 + 4 + 3 = 14  ✓ under 16
+      -->
+      <svg viewBox="0 0 960 490" width="900" height="459" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="12">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- ══ Panel A: TMEFF2 Protein & Processing ══ -->
+        <rect x="14" y="30" width="195" height="430" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="111" y="52" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">TMEFF2 PROTEIN</text>
+
+        <!-- A1: TMEFF2 Structure -->
+        <rect x="28" y="64" width="167" height="58" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="111" y="84" text-anchor="middle" font-weight="700" fill="#1a3a5c">TMEFF2</text>
+        <text x="111" y="99" text-anchor="middle" fill="#334155">EGF-like + 2 Follistatin</text>
+        <text x="111" y="113" text-anchor="middle" fill="#334155">domains · Type I TM</text>
+
+        <!-- A1→A2 arrow -->
+        <line x1="111" y1="122" x2="111" y2="152" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: Ectodomain Shedding -->
+        <rect x="28" y="152" width="167" height="58" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="111" y="172" text-anchor="middle" font-weight="700" fill="#1a3a5c">Ectodomain Shedding</text>
+        <text x="111" y="187" text-anchor="middle" fill="#334155">ADAM17 / ADAM family</text>
+        <text x="111" y="201" text-anchor="middle" fill="#334155">γ-secretase processing</text>
+
+        <!-- A2→A3 arrow -->
+        <line x1="111" y1="210" x2="111" y2="240" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: Regulatory Signals -->
+        <rect x="28" y="240" width="167" height="68" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="111" y="260" text-anchor="middle" font-weight="700" fill="#1a3a5c">Shedding Regulators</text>
+        <text x="111" y="275" text-anchor="middle" fill="#334155">IL-1β · TNF-α · NF-κB</text>
+        <text x="111" y="290" text-anchor="middle" fill="#334155">Oxidative stress / JNK</text>
+        <text x="111" y="305" text-anchor="middle" fill="#334155">Metalloproteinases</text>
+
+        <!-- ══ Panel B: Amyloid / APP Branch ══ -->
+        <rect x="228" y="30" width="340" height="250" rx="12" fill="#eff6ff" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="398" y="52" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">AMYLOID / APP PATHWAY</text>
+
+        <!-- B1: Shared node — Aβ / APP Binding -->
+        <rect x="298" y="64" width="198" height="52" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="397" y="84" text-anchor="middle" font-weight="700" fill="#1a3a5c">Aβ &amp; APP Binding</text>
+        <text x="397" y="100" text-anchor="middle" fill="#334155">KD = 76.8 nM (oligomers)</text>
+
+        <!-- B1 → B2 (left branch) -->
+        <line x1="350" y1="116" x2="290" y2="150" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B1 → B3 (right branch) -->
+        <line x1="444" y1="116" x2="504" y2="150" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B2: α-secretase shift -->
+        <rect x="242" y="150" width="148" height="52" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="316" y="170" text-anchor="middle" font-weight="700" fill="#1a3a5c">↑ α-secretase</text>
+        <text x="316" y="185" text-anchor="middle" fill="#334155">Non-amyloidogenic APP</text>
+
+        <!-- B3: Plaque co-localisation -->
+        <rect x="402" y="150" width="152" height="52" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="478" y="170" text-anchor="middle" font-weight="700" fill="#1a3a5c">Plaque Co-localisation</text>
+        <text x="478" y="185" text-anchor="middle" fill="#334155">5xFAD + human AD</text>
+
+        <!-- B2 → B4 (converge) -->
+        <line x1="316" y1="202" x2="316" y2="232" stroke="#1d4ed8" stroke-width="1.4"/>
+        <line x1="316" y1="232" x2="378" y2="248" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B3 → B4 (converge) -->
+        <line x1="478" y1="202" x2="478" y2="232" stroke="#1d4ed8" stroke-width="1.4"/>
+        <line x1="478" y1="232" x2="420" y2="248" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B4: Reduced Aβ generation -->
+        <rect x="300" y="248" width="196" height="20" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="398" y="262" text-anchor="middle" font-weight="700" font-size="11" fill="#1a3a5c">↓ Intact Aβ generation</text>
+
+        <!-- ══ Panel C: Immune / Oxidative Branch ══ -->
+        <rect x="228" y="295" width="340" height="165" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="398" y="315" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">IMMUNE &amp; OXIDATIVE</text>
+
+        <!-- C1: Immune activation (shared) -->
+        <rect x="248" y="325" width="168" height="52" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="332" y="345" text-anchor="middle" font-weight="700" fill="#0f766e">iPSC-Macrophage</text>
+        <text x="332" y="360" text-anchor="middle" fill="#334155">Ectodomain stimulation</text>
+
+        <!-- C2: Phagocytosis branch -->
+        <rect x="248" y="397" width="152" height="52" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="324" y="417" text-anchor="middle" font-weight="700" fill="#0f766e">↑ Phagocytosis</text>
+        <text x="324" y="432" text-anchor="middle" fill="#334155">↑ Ca²⁺ signalling</text>
+
+        <!-- C1 → C2 -->
+        <line x1="300" y1="377" x2="300" y2="397" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- C3: Syk suppression -->
+        <rect x="412" y="325" width="142" height="52" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="483" y="345" text-anchor="middle" font-weight="700" fill="#0f766e">↓ Syk Kinase</text>
+        <text x="483" y="360" text-anchor="middle" fill="#334155">Immune tuning</text>
+
+        <!-- C1 → C3 -->
+        <line x1="416" y1="351" x2="412" y2="351" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- C4: TMEFF2-C80 oxidation -->
+        <rect x="412" y="397" width="142" height="52" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="483" y="417" text-anchor="middle" font-weight="700" fill="#b45309">TMEFF2-C80 Oxidation</text>
+        <text x="483" y="432" text-anchor="middle" fill="#334155">β=1.64 · P=1.1×10⁻⁸</text>
+
+        <!-- C3 → C4 -->
+        <line x1="483" y1="377" x2="483" y2="397" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ══ Panel D: Outcomes ══ -->
+        <rect x="587" y="30" width="360" height="430" rx="12" fill="#f0fdf4" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="767" y="52" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">OUTCOMES &amp; ASSOCIATIONS</text>
+
+        <!-- D1: Neuroprotection -->
+        <rect x="603" y="64" width="326" height="58" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="766" y="84" text-anchor="middle" font-weight="700" fill="#0f766e">Neuroprotection</text>
+        <text x="766" y="99" text-anchor="middle" fill="#334155">Protects N2a cells from Aβ oligomer death</text>
+        <text x="766" y="113" text-anchor="middle" fill="#334155">↑ Hippocampal &amp; mesencephalic survival</text>
+
+        <!-- D2: AD Network / Genetics -->
+        <rect x="603" y="158" width="326" height="68" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="766" y="178" text-anchor="middle" font-weight="700" fill="#1d4ed8">AD Network &amp; Genetics</text>
+        <text x="766" y="193" text-anchor="middle" fill="#334155">Module 42 (APP · APOE co-expression)</text>
+        <text x="766" y="208" text-anchor="middle" fill="#334155">MTOR-APP AD-risk node (ML screen)</text>
+        <text x="766" y="222" text-anchor="middle" fill="#334155">Early biomarker: blood unfolded p53</text>
+
+        <!-- D3: Therapeutic Concept -->
+        <rect x="603" y="262" width="326" height="68" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.4"/>
+        <text x="766" y="282" text-anchor="middle" font-weight="700" fill="#1a3a5c">Therapeutic Concept</text>
+        <text x="766" y="297" text-anchor="middle" fill="#334155">Ectodomain mimicry / biologics</text>
+        <text x="766" y="312" text-anchor="middle" fill="#334155">CNS-selective · biologic-accessible</text>
+        <text x="766" y="327" text-anchor="middle" fill="#334155">Directionality: NOT YET CLEAR</text>
+
+        <!-- D4: Limitations -->
+        <rect x="603" y="366" width="326" height="68" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.4"/>
+        <text x="766" y="386" text-anchor="middle" font-weight="700" fill="#8b1a1a">Key Limitations</text>
+        <text x="766" y="401" text-anchor="middle" fill="#5c1717">No in vivo AD efficacy demonstrated</text>
+        <text x="766" y="416" text-anchor="middle" fill="#5c1717">Many findings preclinical / associative</text>
+        <text x="766" y="431" text-anchor="middle" fill="#5c1717">CNS safety uncharacterised</text>
+
+        <!-- ══ Cross-panel connectors ══ -->
+        <!-- A2 (ectodomain) → B1 (Aβ binding): horizontal through gutter at y=183 -->
+        <line x1="195" y1="183" x2="298" y2="90" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- A2 → C1: path south then east via gutter y=351 -->
+        <line x1="195" y1="181" x2="248" y2="351" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-pos)"/>
+
+        <!-- B4 → D1: horizontal through gutter -->
+        <line x1="568" y1="258" x2="603" y2="93" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Panel B → D2 connector -->
+        <line x1="568" y1="200" x2="603" y2="192" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- C2 → D1 connector (phagocytosis → neuroprotection context) -->
+        <line x1="568" y1="423" x2="603" y2="400" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- C4 → D4 connector: oxidation → limitations -->
+        <line x1="554" y1="423" x2="603" y2="400" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- D3 therapeutic → D4 limitations vertical connector inside panel -->
+        <line x1="766" y1="330" x2="766" y2="366" stroke="#8b1a1a" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> TMEFF2 protein structure (type I transmembrane, EGF-like + follistatin domains), proteolytic ectodomain shedding via ADAM17/γ-secretase, and upstream regulatory signals (IL-1β, TNF-α, NF-κB, oxidative stress/JNK).
+      <strong>Panel B (light blue, upper centre):</strong> Amyloid/APP pathway — TMEFF2 binds Aβ oligomers (K<sub>D</sub> = 76.8 nM) and fans into two branches: left, enhanced α-secretase (non-amyloidogenic APP processing); right, plaque co-localisation in 5xFAD and human AD tissue — both converging on reduced intact Aβ generation.
+      <strong>Panel C (teal, lower centre):</strong> Immune and oxidative branch — iPSC-macrophage ectodomain stimulation fans into increased phagocytosis/Ca²⁺ signalling and suppressed Syk kinase (immune tuning); TMEFF2-C80 oxidation strongly associates with amyloid burden (β = 1.64).
+      <strong>Panel D (right):</strong> Outcomes — neuroprotection of neuronal cultures, placement in AD genetic/network evidence (Module 42, MTOR-APP, unfolded p53 biomarker), leading therapeutic concept (ectodomain mimicry), and key limitations including absent in vivo efficacy and uncharacterised CNS safety.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Protein Biology &amp; Expression</h3>
+        <p>TMEFF2 is a type I transmembrane protein with one EGF-like domain and two follistatin-like domains, strongly expressed in brain and prostate. It undergoes proteolytic ectodomain shedding via ADAM-family proteases (including ADAM17) and γ-secretase, releasing a soluble extracellular form that may act at a distance from the producing cell.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Direct Aβ &amp; APP Interactions</h3>
+        <p>The extracellular domain binds Aβ, Aβ oligomers, and APP/AβPP. Binding of Aβ oligomers occurs with high affinity (K<sub>D</sub> = 76.8 nM). TMEFF2 enhances α-secretase cleavage of APP, suggesting a shift toward non-amyloidogenic processing and potentially reduced generation of intact amyloid-β peptides.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuroprotection &amp; Plaque Association</h3>
+        <p>Cellular TMEFF2 expression and recombinant ectodomain protect N2a neuronal cells from Aβ oligomer-induced death. Recombinant TMEFF2 also increased survival of hippocampal and mesencephalic neurons in culture. TMEFF2 co-localises with amyloid plaques and intraneuronal Aβ in 5xFAD mice, and TR2/TMEFF2 is distributed throughout plaques in human AD tissue.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Innate Immune Modulation</h3>
+        <p>In human iPSC-derived macrophages, recombinant TMEFF2 ectodomain simultaneously increased phagocytosis, promoted intracellular calcium signalling, and suppressed Syk kinase activity — without reducing viability. This combination suggests TMEFF2 tunes innate immune signalling rather than simply activating immune cells globally, with potential relevance to amyloid and debris clearance in AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Oxidative Modification &amp; Network Evidence</h3>
+        <p>Proteome-wide post-translational modification analysis identified TMEFF2-C80 cysteine oxidation as strongly and positively correlated with amyloid-β burden in human prefrontal cortex (β = 1.64, P = 1.1 × 10<sup>−8</sup>). TMEFF2 also appears in an AD-associated extracellular/transmembrane co-expression network (Module 42, including APP and APOE) and was prioritised in a machine-learning screen connected to MTOR-APP AD-risk nodes.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Limitations &amp; Safety Concerns</h3>
+        <p>No supplied evidence demonstrates that TMEFF2 modulation improves cognition or robustly reduces amyloid/tau pathology in vivo. Many findings are preclinical, in vitro, associative, or from non-AD contexts (cancer, prostate). CNS safety of chronic TMEFF2 modulation is uncharacterised. The optimal direction of modulation — enhance, mimic, normalise, or inhibit — remains undetermined. Oncology-style targeting (ADC, T-cell redirecting) is not appropriate for neurodegeneration without major redesign.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat TMEFF2 as a promising but unvalidated AD target</strong> positioned at the intersection of amyloid toxicity, APP processing, innate immune phagocytosis, oxidative modification, and extracellular signalling — not yet ready for clinical translation.</li>
+      <li><strong>Prioritise the TMEFF2 extracellular domain</strong> as the primary focus of mechanistic and therapeutic work: it directly binds Aβ oligomers at nanomolar affinity, protects neurons in culture, and is accessible to biologic or mimetic strategies.</li>
+      <li><strong>Test ectodomain and derived peptides in human neuronal systems</strong> to determine whether soluble TMEFF2 ectodomain reduces Aβ oligomer toxicity, alters Aβ aggregation kinetics, or promotes non-amyloidogenic APP processing beyond what has been observed in mouse cell lines.</li>
+      <li><strong>Conduct in vivo disease-modification studies</strong> measuring amyloid clearance, plaque burden, soluble oligomer levels, synaptic integrity, tau pathology, and cognition in AD-relevant animal models before escalating therapeutic investment.</li>
+      <li><strong>Validate microglial immune function</strong> in human microglia or microglia-containing co-culture systems, clarifying whether TMEFF2-enhanced phagocytosis is net beneficial or potentially harmful (e.g., contribution to synapse loss), and dissecting the mechanistic basis of increased phagocytosis despite reduced Syk activity.</li>
+      <li><strong>Investigate TMEFF2-C80 cysteine oxidation experimentally</strong> to determine whether oxidation changes Aβ binding, ectodomain shedding, immune signalling, APP interaction, protein conformation, or plaque association — distinguishing whether it is a driver, consequence, compensatory response, or biomarker of amyloid pathology.</li>
+      <li><strong>Profile TMEFF2 across human AD tissue</strong> measuring expression, localisation, shedding products, oxidation status, and methylation at multiple disease stages and brain regions, incorporating single-cell and spatial transcriptomic approaches to identify the primary cell types driving AD-associated TMEFF2 signals (neurons, astrocytes, microglia, plaque-associated glia, vascular cells).</li>
+      <li><strong>Compare across model systems carefully</strong> — one report found TMEFF2 present in human AD plaques but absent from a presenilin-1/APP mouse model, highlighting potential species or model discordance that must be resolved before in vivo validation studies are designed.</li>
+      <li><strong>Favour CNS-selective, ectodomain-specific approaches</strong> over broad systemic targeting because TMEFF2 has substantial biology in prostate, cancer, reproductive, and growth signalling contexts. Oncology antibody-drug-conjugate or T-cell-redirecting strategies must not be assumed to translate to neurodegeneration without major redesign.</li>
+      <li><strong>Define key validation milestones</strong> including human AD biomarker confirmation, mechanistic studies of Aβ/APP/TMEFF2 interactions, microglial functional testing, oxidation-state analysis, in vivo disease-modification data, and systematic assessment of chronic CNS TMEFF2 modulation safety before advancing to translational stages.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — TMEFF2 in Alzheimer's Disease</span>
+      TMEFF2 represents a <strong>biologically plausible but early-stage AD target</strong> whose therapeutic relevance rests on a convergent body of evidence spanning direct Aβ and APP interactions, nanomolar-affinity oligomer binding, neuroprotection of neuronal cultures, co-localisation with amyloid pathology in 5xFAD and human AD tissue, innate immune modulation in macrophages, and a strong proteome-wide association between TMEFF2-C80 cysteine oxidation and amyloid burden in human prefrontal cortex. Its brain-enriched expression, <strong>ectodomain accessibility to biologics</strong>, and placement within AD genetic and co-expression networks (Module 42, MTOR-APP risk nodes) make it worthy of continued investigation. However, the target is constrained by the absence of causal in vivo efficacy data, the lack of human clinical validation, undetermined optimal direction of modulation, and uncharacterised CNS safety. The most credible near-term path forward involves <strong>rigorous mechanistic characterisation of ectodomain–Aβ–APP interactions</strong>, microglial phagocytosis and Syk-signalling studies in human systems, experimental dissection of TMEFF2-C80 oxidation consequences, and well-powered in vivo AD model studies — before any commitment to a specific therapeutic modality. TMEFF2 is <strong>not ready for clinical development</strong>, but the quality and consistency of preclinical evidence justifies a focused Target Enabling Package to resolve the critical unknowns.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TMEFF2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

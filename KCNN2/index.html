@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCNN2 / SK2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf3;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180, 40, 40, 0.28);
+    border: 1px solid rgba(255,160,160,0.35);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #cfe2f3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 20px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #d97706;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.97rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.87rem;
+    color: var(--neutral);
+    margin-top: 13px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-slate h3 { color: var(--neutral); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  .takeaways li {
+    margin-bottom: 18px;
+    font-size: 1rem;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 38px;
+    line-height: 1.75;
+    font-size: 1.02rem;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #93c5e8;
+    display: block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .verdict p {
+    color: #daeaf7;
+    opacity: 0.93;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 16px;
+    margin-top: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: KCNN2 &nbsp;|&nbsp; Small Conductance Ca²⁺-Activated K⁺ Channel SK2 (KCa2.2)</span>
+    <span class="chip chip-danger">⚠ Peripheral safety concerns: cardiac, auditory, endothelial</span>
+  </div>
+  <h1>KCNN2 / SK2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caveat — Unvalidated Target</span>
+      The supplied literature supports KCNN2/SK2 as <em>mechanistically relevant</em> to Alzheimer's disease, but not yet as a validated AD therapeutic target. Most evidence is indirect. No cited paper directly demonstrates that KCNN2 modulation improves amyloid burden, tau pathology, neuroinflammation, clinical progression, or cognition in an AD model or AD patient cohort.
+    </div>
+
+    <div class="overview-text">
+      <p>KCNN2 encodes SK2 (KCa2.2), a small-conductance Ca²⁺-activated potassium channel gated through Ca²⁺-calmodulin. It regulates neuronal intrinsic excitability, afterhyperpolarization, firing frequency, dendritic excitatory postsynaptic responses, spike timing-dependent plasticity, long-term potentiation (LTP), memory encoding and retrieval, sleep-related oscillations, and neuronal survival pathways.</p>
+      <p>SK2 sits at the intersection of several AD-associated processes: hippocampal CA3–CA1 synaptic failure, impaired LTP, memory encoding deficits, calcium dyshomeostasis, neuronal and network hyperexcitability, mitochondrial and ER stress, oxidative injury, altered BDNF/NMDAR signaling, sleep disruption, and neuroinflammatory signaling. KCNN2 is therefore best characterized as a circuit- and calcium-homeostasis modulator that could influence AD-related cognitive dysfunction, rather than a direct amyloid- or tau-targeting mechanism.</p>
+      <p>A concrete AD-specific finding is the increased expression of a shorter, nonfunctional SK2 isoform (SK2-sh) in human AD cortical tissue, generated by alternative splicing at exon 3, lacking transmembrane domains S3–S5, and induced by cytokine exposure — suggesting a neuroinflammation-linked isoform switch in AD.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — SK2 in AD-Relevant Circuits</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 920 wide × 490 tall. Four panels. Node count tracked below. -->
+      <!-- Panel A: Upstream triggers (left, y=20–470, x=10–220) — 3 nodes -->
+      <!-- Panel B: Synaptic / LTP branch (center-left, y=20–470, x=230–490) — 5 nodes -->
+      <!-- Panel C: Mitochondria/ER branch (center-right, y=20–470, x=500–710) — 4 nodes -->
+      <!-- Panel D: Outputs (right, y=20–470, x=720–910) — 3 nodes -->
+      <!-- Total nodes: 3+5+4+3 = 15 ✓ ≤16 -->
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;" aria-label="SK2 mechanism diagram">
+        <defs>
+          <marker id="arrowB" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arrowR" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arrowD" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arrowN" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: AD-Associated Triggers ===== -->
+        <rect x="10" y="14" width="200" height="462" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">A · AD TRIGGERS</text>
+
+        <!-- Node A1: Ca²⁺ Dyshomeostasis -->
+        <rect x="28" y="50" width="164" height="46" rx="8" fill="#cce0f4" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="69" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#1a3a5c" font-weight="600">Ca²⁺ Dyshomeostasis</text>
+        <text x="110" y="83" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c">&amp; Mitochondrial Stress</text>
+
+        <!-- Node A2: Neuroinflammation / Cytokines -->
+        <rect x="28" y="165" width="164" height="46" rx="8" fill="#cce0f4" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="183" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#1a3a5c" font-weight="600">Neuroinflammation</text>
+        <text x="110" y="197" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c">Cytokine Exposure</text>
+
+        <!-- Node A3: BDNF / NMDAR Impairment -->
+        <rect x="28" y="282" width="164" height="46" rx="8" fill="#cce0f4" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="300" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#1a3a5c" font-weight="600">BDNF / NMDAR</text>
+        <text x="110" y="314" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c">Signaling Impairment</text>
+
+        <!-- ===== PANEL B: Synaptic / LTP Cascade ===== -->
+        <rect x="222" y="14" width="262" height="462" rx="12" fill="#e8f1f9" fill-opacity="0.38" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="353" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">B · SYNAPTIC &amp; LTP REGULATION</text>
+
+        <!-- Node B1: SK2 Channel (central) -->
+        <rect x="270" y="48" width="164" height="46" rx="8" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="352" y="67" text-anchor="middle" font-family="Arial" font-size="11.5" fill="#ffffff" font-weight="700">SK2 Channel</text>
+        <text x="352" y="82" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#cfe2f3">CA1 Dendritic Spines</text>
+
+        <!-- Node B2a: Branch — SK2 Overactive -->
+        <rect x="234" y="160" width="116" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="292" y="177" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="600">SK2 Overactive</text>
+        <text x="292" y="190" text-anchor="middle" font-family="Arial" font-size="9" fill="#1d4ed8">Suppresses NMDAR</text>
+
+        <!-- Node B2b: Branch — SK2 Loss -->
+        <rect x="364" y="160" width="106" height="44" rx="8" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="417" y="177" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">SK2 Loss</text>
+        <text x="417" y="190" text-anchor="middle" font-family="Arial" font-size="9" fill="#991b1b">Hyperexcitability</text>
+
+        <!-- Node B3a: Impaired LTP / Memory -->
+        <rect x="234" y="264" width="116" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="292" y="281" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="600">Impaired LTP</text>
+        <text x="292" y="294" text-anchor="middle" font-family="Arial" font-size="9" fill="#1d4ed8">Memory Encoding ↓</text>
+
+        <!-- Node B3b: Epileptiform / Network Failure -->
+        <rect x="364" y="264" width="106" height="44" rx="8" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="417" y="281" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">Epileptiform</text>
+        <text x="417" y="294" text-anchor="middle" font-family="Arial" font-size="9" fill="#991b1b">Network Failure</text>
+
+        <!-- ===== PANEL C: Mitochondria / ER Stress ===== -->
+        <rect x="496" y="14" width="210" height="462" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="601" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">C · MITO / ER STRESS</text>
+
+        <!-- Node C1: Mito SK2 Activation -->
+        <rect x="516" y="50" width="170" height="44" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="601" y="68" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#065f46" font-weight="600">Mitochondrial SK2</text>
+        <text x="601" y="81" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#065f46">Activation</text>
+
+        <!-- Node C2: ROS / Depolarization Reduction -->
+        <rect x="516" y="157" width="170" height="44" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="601" y="175" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#065f46" font-weight="600">ROS ↓, Ca²⁺ Uptake ↓</text>
+        <text x="601" y="188" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#065f46">Mito Depol. ↓</text>
+
+        <!-- Node C3: ER SK2 — UPR / ER Stress -->
+        <rect x="516" y="260" width="170" height="44" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="601" y="278" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#065f46" font-weight="600">ER-Localized SK2</text>
+        <text x="601" y="291" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#065f46">Limits ER Stress / UPR</text>
+
+        <!-- Node C4: SK2-sh Isoform (AD cortex) -->
+        <rect x="516" y="360" width="170" height="44" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.3"/>
+        <text x="601" y="378" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#78350f" font-weight="600">SK2-sh Isoform</text>
+        <text x="601" y="391" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#78350f">Non-functional (AD cortex)</text>
+
+        <!-- ===== PANEL D: Downstream Outputs ===== -->
+        <rect x="718" y="14" width="192" height="462" rx="12" fill="#f1f5f9" fill-opacity="0.65" stroke="#64748b" stroke-width="1.2"/>
+        <text x="814" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#475569" letter-spacing="1">D · OUTPUTS</text>
+
+        <!-- Node D1: Neuronal Survival -->
+        <rect x="736" y="50" width="156" height="44" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.3"/>
+        <text x="814" y="68" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#065f46" font-weight="600">Neuronal Survival</text>
+        <text x="814" y="81" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#065f46">Neuroprotection</text>
+
+        <!-- Node D2: Cognitive / Memory -->
+        <rect x="736" y="207" width="156" height="44" rx="8" fill="#cce0f4" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="814" y="225" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#1a3a5c" font-weight="600">Cognitive Function</text>
+        <text x="814" y="238" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1a3a5c">Memory / LTP</text>
+
+        <!-- Node D3: Sleep Architecture -->
+        <rect x="736" y="360" width="156" height="44" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="814" y="378" text-anchor="middle" font-family="Arial" font-size="10.5" fill="#4c1d95" font-weight="600">Sleep Architecture</text>
+        <text x="814" y="391" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#4c1d95">Spindles / non-REM</text>
+
+        <!-- ========== ARROWS ========== -->
+
+        <!-- Panel A → Panel B (SK2 central): A1→B1 via top route -->
+        <line x1="192" y1="73" x2="270" y2="71" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arrowB)"/>
+        <!-- A2→B1 (neuroinflammation → SK2 isoform switch note): route through center -->
+        <line x1="192" y1="188" x2="244" y2="188" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrowB)"/>
+        <!-- Actually route A2 to C4 (SK2-sh) via a path below panel B; use elbow -->
+        <!-- A2 → SK2-sh: go right from A2 to x=218 then down to y=382 then right to C4 -->
+        <polyline points="192,188 218,188 218,382 516,382" fill="none" stroke="#ca8a04" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arrowN)"/>
+        <!-- A3→B1: BDNF impairment → SK2 -->
+        <polyline points="192,305 240,305 240,94" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrowB)"/>
+
+        <!-- B1 → B2a (left branch) -->
+        <polyline points="305,94 292,94 292,160" fill="none" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arrowB)"/>
+        <!-- B1 → B2b (right branch) -->
+        <polyline points="402,94 417,94 417,160" fill="none" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arrowD)"/>
+
+        <!-- B2a → B3a -->
+        <line x1="292" y1="204" x2="292" y2="264" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arrowB)"/>
+        <!-- B2b → B3b -->
+        <line x1="417" y1="204" x2="417" y2="264" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arrowD)"/>
+
+        <!-- B3a + B3b → D2 (Cognitive) via elbow through gutter at y=229 -->
+        <polyline points="292,308 292,338 700,338 700,229 736,229" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arrowB)"/>
+        <polyline points="417,308 417,338" fill="none" stroke="#b91c1c" stroke-width="1.2"/>
+
+        <!-- Panel C: C1→C2→C3 vertical chain -->
+        <line x1="601" y1="94" x2="601" y2="157" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowR)"/>
+        <line x1="601" y1="201" x2="601" y2="260" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+        <!-- C2 → D1 (neuroprotection) -->
+        <polyline points="686,179 710,179 710,72 736,72" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#arrowR)"/>
+
+        <!-- C3 → D1 also -->
+        <polyline points="686,282 710,282 710,88 736,88" fill="none" stroke="#059669" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowR)"/>
+
+        <!-- C4 (SK2-sh) → D3 (Sleep) — route through right gutter -->
+        <polyline points="686,382 710,382 736,382" fill="none" stroke="#7c3aed" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arrowN)"/>
+
+        <!-- A1 → C1 (Ca2+ stress → mito SK2) via top elbow -->
+        <polyline points="192,73 462,73 462,72 516,72" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrowR)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (blue, left)</strong> — Three major AD-associated upstream triggers: Ca²⁺ dyshomeostasis/mitochondrial stress, neuroinflammation/cytokine exposure (dashed line to SK2-sh isoform in Panel C), and BDNF/NMDAR signaling impairment.
+        <strong>Panel B (center)</strong> — SK2 channel in CA1 dendritic spines branches into two parallel sub-cascades: an overactivity branch (blue) suppressing NMDAR → impairing LTP and memory encoding, and a loss-of-function branch (red) driving hyperexcitability → epileptiform network failure; both converge on cognitive output (Panel D).
+        <strong>Panel C (teal, center-right)</strong> — Mitochondrial and ER-localized SK2 activation reduces ROS, mitochondrial depolarization, and ER stress; the SK2-sh nonfunctional isoform (amber) is induced by neuroinflammation in AD cortex.
+        <strong>Panel D (right)</strong> — Key downstream outputs: neuronal survival/neuroprotection, cognitive function/LTP, and sleep architecture/non-REM spindles.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>⚠ Direct AD Evidence Is Limited</h3>
+        <p>The strongest explicit AD-specific finding is increased expression of the nonfunctional SK2-sh isoform in human AD cortical tissue. SK2-sh lacks transmembrane domains S3–S5, produces no functional channel activity, and is induced by cytokine exposure — suggesting a neuroinflammation-linked isoform switch. No study directly links KCNN2 modulation to amyloid, tau, or clinical AD progression.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>⚡ Bidirectional Control of Hippocampal Plasticity</h3>
+        <p>SK2 acts as a bidirectional gate: excessive synaptic SK2 activity suppresses NMDAR signaling and impairs LTP and memory encoding (as shown in SK2-overexpression and UBE3A-deficient models), while loss of SK2 activity promotes abnormal excitability and worsens injury-related plasticity deficits. This makes KCNN2 a context-dependent, not simply activate-or-inhibit, target.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>🛡 Neuroprotection via Mitochondrial &amp; ER SK2</h3>
+        <p>Mitochondrial SK2 activation reduces Ca²⁺ uptake, complex I activity, ROS formation, mitochondrial depolarization, fission, and proapoptotic signaling. ER-localized SK2 preserves ER Ca²⁺ load, limits cytosolic Ca²⁺ elevation, and modulates unfolded protein response — mechanisms directly relevant to AD-related calcium dyshomeostasis and neuronal vulnerability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>🔗 BDNF, NMDAR &amp; Synaptic Resilience</h3>
+        <p>BDNF facilitates theta-burst LTP partly by reducing SK2-mediated afterhyperpolarization. If BDNF signaling is impaired in AD, persistent SK2 braking could contribute to weakened theta-burst facilitation and impaired LTP — placing SK2 downstream of a key AD-relevant synaptic resilience pathway and at the CA3–CA1 synapse central to AD-related memory loss.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>💊 Pharmacologically Tractable with Subtype Selectivity</h3>
+        <p>SK2 can be blocked by apamin, UCL1684, Lei-Dab7, and AP30663/AP14145-like pore blockers, and potentiated by 1-EBIO, NS309, CyPPA, riluzole, CAD-1883, and rimtuzalcap. Structural work demonstrates that selective KCa2.2/SK2 modulation is achievable, distinguishing it from KCa3.1 and other SK-family channels — critical given cardiac, auditory, endothelial, and smooth muscle SK2 roles.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>🧬 Genetic &amp; Phenotypic Context</h3>
+        <p>KCNN2 variants or altered function associate with neurodevelopmental movement disorders, myoclonus-dystonia, tremor, language impairment, and intellectual disability. An APOE-stratified genome-wide meta-analysis identified a sub-threshold association near YTHDC2/KCNN2 for language decline in APOE2 carriers, placing the locus near age-related cognitive decline signals in an AD-risk-relevant framework — though not establishing KCNN2 as an AD gene.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat KCNN2/SK2 as a plausible but unvalidated AD target.</strong> Current evidence supports mechanistic relevance to AD-related synaptic and circuit dysfunction, but AD-specific validation in appropriate models is still required before therapeutic investment is justified.</li>
+
+      <li><strong>Prioritize functional readouts over expression alone.</strong> Key measurements should include SK2 current amplitude, synaptic localization, isoform expression (SK2 vs. SK2-sh), trafficking, calmodulin/CK2 phosphorylation state, PIP2 sensitivity, and mitochondrial/ER localization — not merely total KCNN2 transcript or protein levels.</li>
+
+      <li><strong>Test both activation and inhibition in AD-relevant contexts.</strong> SK2 blockers should be evaluated for restoring LTP and memory encoding when SK2 is excessive; SK2 potentiators should be tested for reducing hyperexcitability, excitotoxic Ca²⁺ entry, mitochondrial ROS, ER stress, and neuronal death when SK2 function is deficient.</li>
+
+      <li><strong>Investigate SK2-sh as a biomarker and mechanistic node.</strong> Studies should determine whether cytokine-induced SK2-sh expression reduces functional SK2 signaling, correlates with AD stage or neuroinflammatory burden, and can be normalized by anti-inflammatory, splicing-directed, or KCNN2-regulatory interventions.</li>
+
+      <li><strong>Include safety screens early in development.</strong> KCNN2/SK2 has roles in cardiac electrophysiology, auditory efferent synapses, endothelial function, smooth muscle, and possibly immune/microglial activity. Brain-penetrant, SK2-selective compounds with limited peripheral exposure or targeted delivery should be prioritized.</li>
+
+      <li><strong>Use cognition-relevant functional endpoints.</strong> AD-focused KCNN2 studies should assess hippocampal LTP, CA3–CA1 synaptic strength, NMDAR-dependent plasticity, theta-burst responses, memory encoding/retrieval, cognitive flexibility, network hyperexcitability, sleep spindles, mitochondrial/ER stress markers, and neuronal survival in parallel.</li>
+
+      <li><strong>Stratify by mechanism and possibly genotype.</strong> APOE-stratified cognitive decline signals near KCNN2 suggest that genotype- or cognitive-domain-specific analyses may reveal subpopulations most likely to benefit, particularly for language decline, episodic memory, and resilience-associated trajectories.</li>
+
+      <li><strong>Develop and compare subtype-selective modulators.</strong> Structural data support rational design of SK2-specific inhibitors and positive allosteric modulators. Therapeutic development should compare synaptic SK2 blockers, PAMs, mitochondrial/ER-directed activators, and isoform/splicing-targeted strategies systematically.</li>
+
+      <li><strong>Frame the therapeutic goal as KCNN2 normalization, not simple activation or blockade.</strong> If AD circuits show excessive synaptic SK2 braking, partial inhibition may restore plasticity; if they show SK2 loss, isoform replacement, or misgating, restoration or potentiation may protect neurons and stabilize circuits. The optimal intervention will be region-, cell-type-, compartment-, and disease-stage-specific.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — KCNN2 / SK2 in Alzheimer's Disease</span>
+      <p>
+        KCNN2/SK2 is a <strong>biologically compelling but insufficiently validated</strong> Alzheimer's disease target. Its position at the intersection of hippocampal CA3–CA1 synaptic failure, LTP impairment, calcium dyshomeostasis, neuronal hyperexcitability, mitochondrial/ER stress, BDNF–NMDAR signaling, and sleep disruption gives it broad mechanistic relevance to AD pathophysiology. The discovery of a <strong>nonfunctional SK2-sh isoform in human AD cortical tissue</strong>, induced by neuroinflammatory cytokines, provides the most concrete AD-specific molecular finding. However, <strong>no direct evidence yet links KCNN2 modulation to improvements in amyloid burden, tau pathology, neuroinflammation, or cognition in an AD model or patient cohort</strong>. The bidirectional nature of SK2 function — where both excess and deficit are pathological in different contexts — means that therapeutic strategy must be <strong>context-sensitive, mechanism-driven, and precision-targeted</strong>. The existence of subtype-selective pharmacological tools and structural binding-site data means that this challenge is tractable, but only with careful circuit-level and disease-stage-specific experimental design. KCNN2/SK2 warrants <strong>focused mechanistic investigation in AD models</strong> before advancing toward therapeutic development.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  KCNN2 / SK2 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

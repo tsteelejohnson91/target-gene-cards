@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STOM / Stomatin — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.02em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.38);
+    border: 1px solid rgba(220,80,80,0.45);
+    color: #ffd5d5;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.68);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+  section { margin-bottom: 54px; }
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW prose */
+  .prose p { margin-bottom: 1em; }
+  .prose p:last-child { margin-bottom: 0; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+  /* INSIGHT CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card-accent  { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+  .card-pos     { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-pos     h3 { color: var(--positive); }
+  .card-warn    { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warn    h3 { color: var(--warning); }
+  .card-slate   { background: #f1f5f9;              border-left: 4px solid #64748b;         }
+  .card-slate   h3 { color: #334155; }
+  .card-blue    { background: #eff6ff;              border-left: 4px solid #3b82f6;         }
+  .card-blue    h3 { color: #1d4ed8; }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; padding: 0; counter-reset: take; }
+  .takeaways ol li {
+    counter-increment: take;
+    padding: 0 0 0 42px;
+    margin-bottom: 18px;
+    position: relative;
+    font-size: 0.94rem;
+  }
+  .takeaways ol li::before {
+    content: counter(take);
+    position: absolute; left: 0; top: 2px;
+    width: 26px; height: 26px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+  .verdict .label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .verdict p { color: rgba(255,255,255,0.88); }
+  .verdict strong { color: #bfdbfe; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: STOM &nbsp;|&nbsp; Stomatin</span>
+    <span class="chip chip-danger">⚠ Pleiotropic expression — systemic targeting risk</span>
+  </div>
+  <h1>STOM / Stomatin &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caution — Limited Direct AD Evidence:</strong> STOM is not established as a validated Alzheimer's disease therapeutic target. Direct AD evidence is sparse and inconsistent; the mechanistic links below are largely inferred from non-AD systems. Systemic modulation carries pleiotropic risk given broad tissue expression.
+    </div>
+
+    <div class="prose">
+      <p>STOM (stomatin) is a membrane-associated, lipid raft/microdomain scaffold protein belonging to the SPFH-domain superfamily. It forms oligomeric ring/cage-like assemblies that stiffen and organize local membrane domains, regulate transporter and channel complexes, and couple membranes to the cytoskeleton. These properties intersect conceptually with several Alzheimer's disease mechanisms, including cholesterol-rich lipid raft organization, APP-processing compartment biology, endosomal/lysosomal trafficking, synaptic membrane architecture, ion-channel homeostasis, glucose hypometabolism, oxidative stress, neuroinflammation, and neurovascular dysfunction.</p>
+      <p>The most defensible interpretation of the available evidence is that STOM is an <em>AD-associated biomarker candidate</em> and a <em>mechanistically plausible modifier</em> of AD-relevant pathways — not a proven AD driver or validated therapeutic target. No supplied study demonstrates that STOM modulation alters amyloid-β, tau, synaptic degeneration, cognition, or AD progression in a disease-relevant model.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        Layout plan (16 nodes max):
+        Panel A (left, upstream): Membrane scaffold context — 3 nodes in a column
+        Panel B (centre): Two branches from STOM central node, reconverging at AD Relevance node
+          Branch 1: GLUT1 → Glucose Hypometabolism
+          Branch 2: ASIC/Panx1 → Ion/pH Stress
+        Panel C (right, downstream): AD-relevant outcomes — 3 nodes
+        Plus STOM central node, panel labels don't count.
+        Nodes: 1.Lipid Raft, 2.Oligomeric Assembly, 3.STOM (central), 4.GLUT1 Axis,
+               5.Glucose Hypometab., 6.ASIC/Panx1, 7.Ion & pH Stress,
+               8.ERK/VEGFA, 9.ROS/Prdx1, 10.Endosome/Lysosome, 11.Neuroinflammation,
+               12.BBB Dysfunction, 13.AD Relevance
+        Total = 13 nodes — within limit.
+      -->
+      <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL A: Membrane Scaffold Context ── -->
+        <rect x="12" y="22" width="200" height="436" rx="12"
+              fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="112" y="42" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#1a3a5c" letter-spacing="0.09em">A · MEMBRANE SCAFFOLD</text>
+
+        <!-- Node 1: Lipid Raft/Microdomain -->
+        <rect x="30" y="58" width="164" height="48" rx="7"
+              fill="#fff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="112" y="77" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Lipid Raft /</text>
+        <text x="112" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Microdomain</text>
+
+        <!-- arrow A1→A2 -->
+        <line x1="112" y1="106" x2="112" y2="148" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: Oligomeric Assembly -->
+        <rect x="30" y="150" width="164" height="48" rx="7"
+              fill="#fff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="112" y="169" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Oligomeric Ring/</text>
+        <text x="112" y="184" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Cage Assembly</text>
+
+        <!-- arrow A2→A3 -->
+        <line x1="112" y1="198" x2="112" y2="240" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Cytoskeletal Coupling -->
+        <rect x="30" y="242" width="164" height="48" rx="7"
+              fill="#fff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="112" y="261" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Cytoskeletal</text>
+        <text x="112" y="276" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Coupling</text>
+
+        <!-- arrow A3→STOM (goes right into Panel B) -->
+        <line x1="194" y1="266" x2="270" y2="266" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+
+        <!-- ── PANEL B: STOM Central + Branching Pathways ── -->
+        <rect x="224" y="22" width="444" height="436" rx="12"
+              fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="446" y="42" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#0f5c55" letter-spacing="0.09em">B · STOM SIGNALLING BRANCHES</text>
+
+        <!-- Node 4: STOM (central) -->
+        <rect x="354" y="240" width="184" height="52" rx="9"
+              fill="#1a3a5c" stroke="#0d1f33" stroke-width="1.8"/>
+        <text x="446" y="261" text-anchor="middle" font-family="Georgia" font-size="13"
+              font-weight="bold" fill="#ffffff">STOM</text>
+        <text x="446" y="279" text-anchor="middle" font-family="Georgia" font-size="10"
+              fill="#bfdbfe">SPFH-domain scaffold</text>
+
+        <!-- BRANCH 1 (left of centre): GLUT1 Axis -->
+        <!-- arrow STOM → GLUT1 Axis (up-left) via elbow: right then up -->
+        <polyline points="354,266 314,266 314,168 340,168"
+                  fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: GLUT1 Axis -->
+        <rect x="242" y="144" width="158" height="48" rx="7"
+              fill="#fff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="321" y="163" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">GLUT1 Binding &amp;</text>
+        <text x="321" y="178" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Transport Inhibition</text>
+
+        <!-- arrow GLUT1 → Glucose Hypometabolism -->
+        <line x1="321" y1="192" x2="321" y2="334" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 6: Glucose Hypometabolism -->
+        <rect x="242" y="336" width="158" height="48" rx="7"
+              fill="#fff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="321" y="355" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Glucose</text>
+        <text x="321" y="370" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Hypometabolism</text>
+
+        <!-- BRANCH 2 (right of centre): ASIC/Panx1 -->
+        <!-- arrow STOM → ASIC/Panx1 (up-right) via elbow -->
+        <polyline points="538,266 578,266 578,168 552,168"
+                  fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node 7: ASIC / Panx1 -->
+        <rect x="492" y="144" width="158" height="48" rx="7"
+              fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="571" y="163" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">ASIC Gating &amp;</text>
+        <text x="571" y="178" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Panx1 Inhibition</text>
+
+        <!-- arrow ASIC/Panx1 → Ion & pH Stress -->
+        <line x1="571" y1="192" x2="571" y2="334" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node 8: Ion & pH Stress -->
+        <rect x="492" y="336" width="158" height="48" rx="7"
+              fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="571" y="355" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Ion &amp; pH</text>
+        <text x="571" y="370" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Dyshomeostasis</text>
+
+        <!-- Convergence arrows from both branches to AD Relevance (in Panel C) -->
+        <!-- These go right, handled by Panel C below -->
+
+
+        <!-- ── PANEL C: AD-Relevant Downstream Outcomes ── -->
+        <rect x="682" y="22" width="206" height="436" rx="12"
+              fill="#fdf0f0" fill-opacity="0.55" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="785" y="42" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#8b1a1a" letter-spacing="0.09em">C · AD-RELEVANT OUTCOMES</text>
+
+        <!-- Node 9: ROS / Oxidative Stress -->
+        <rect x="698" y="58" width="172" height="48" rx="7"
+              fill="#fff" stroke="#8b1a1a" stroke-width="1.4"/>
+        <text x="784" y="77" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">ROS / Oxidative</text>
+        <text x="784" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Stress (Prdx1↓)</text>
+
+        <!-- Node 10: Neuroinflammation -->
+        <rect x="698" y="152" width="172" height="48" rx="7"
+              fill="#fff" stroke="#8b1a1a" stroke-width="1.4"/>
+        <text x="784" y="171" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Neuroinflammation</text>
+        <text x="784" y="186" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">&amp; Glial Activation</text>
+
+        <!-- Node 11: BBB / Endosomal Trafficking -->
+        <rect x="698" y="246" width="172" height="48" rx="7"
+              fill="#fff" stroke="#8b1a1a" stroke-width="1.4"/>
+        <text x="784" y="265" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">BBB &amp; Endosomal/</text>
+        <text x="784" y="280" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Lysosomal Trafficking</text>
+
+        <!-- Node 12: AD Biomarker Candidate -->
+        <rect x="698" y="340" width="172" height="52" rx="7"
+              fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.8"/>
+        <text x="784" y="359" text-anchor="middle" font-family="Georgia" font-size="11"
+              font-weight="bold" fill="#8b1a1a">AD Biomarker</text>
+        <text x="784" y="374" text-anchor="middle" font-family="Georgia" font-size="11"
+              font-weight="bold" fill="#8b1a1a">Candidate</text>
+
+        <!-- Internal Panel C arrows (vertical) -->
+        <line x1="784" y1="106" x2="784" y2="150" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="784" y1="200" x2="784" y2="244" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="784" y1="294" x2="784" y2="338" stroke="#8b1a1a" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Connector: STOM central → ROS (Panel C) via elbow through gutter -->
+        <!-- Goes up from STOM top, then right into Panel C Node 9 -->
+        <polyline points="446,240 446,82 696,82"
+                  fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-warn)"/>
+
+        <!-- Connector: Glucose Hypometabolism → BBB/Endosomal (Panel C) -->
+        <!-- Goes right from Node 6, enters Panel C at Node 11 level -->
+        <polyline points="400,360 446,360 446,412 666,412 666,270 696,270"
+                  fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Connector: Ion & pH → Neuroinflammation (Panel C) -->
+        <polyline points="650,360 666,360 666,176 696,176"
+                  fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-pos)"/>
+
+        <!-- Panel B node label: STOM → ERK/VEGFA annotation badge (only if space clear) -->
+        <!-- Badge placed below STOM node, within Panel B empty area -->
+        <rect x="354" y="304" width="184" height="26" rx="13"
+              fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+        <text x="446" y="321" text-anchor="middle" font-family="Arial" font-size="9.5"
+              fill="#b45309" font-weight="700">ERK1/2 · VEGFA · Endothelial</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue tint, left):</strong> STOM's upstream membrane context — lipid raft/microdomain association → oligomeric ring assembly → cytoskeletal coupling — feeding into the central STOM node. <strong>Panel B (green tint, centre):</strong> Two parallel signalling branches from STOM: <em>left branch</em> — GLUT1 binding and transport inhibition leading to glucose hypometabolism; <em>right branch</em> — ASIC gating and pannexin-1 inhibition leading to ion/pH dyshomeostasis. The amber annotation badge notes ERK1/2·VEGFA·endothelial activity. <strong>Panel C (red tint, right):</strong> AD-relevant downstream outcomes — ROS/oxidative stress (Prdx1↓), neuroinflammation &amp; glial activation, BBB &amp; endosomal/lysosomal trafficking — converging on an AD Biomarker Candidate designation. Dashed arrows denote inferred cross-panel connections supported by non-AD model evidence only.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Proteomics Signal</h3>
+        STOM appeared in a large AD brain proteomics/machine-learning classifier (6 cohorts, 620 subjects, 3,334 proteins) predicting AD versus control status, alongside APP, NRXN1, RABEP1, and VGF. The classifier was enriched for sugar metabolism, suggesting STOM may reflect metabolic remodelling in clinically apparent AD rather than a causal mechanism.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Tauopathy-Adjacent Evidence</h3>
+        A progressive supranuclear palsy systems-biology study prioritised glial DDR2, STOM, and KANK2 as therapeutic targets. PSP is a tauopathy with glial involvement, lending indirect plausibility to STOM's relevance in AD tau pathology and glial dysfunction hypotheses — though no direct AD-tau evidence is provided.
+      </div>
+
+      <div class="card card-blue">
+        <h3>STOM–GLUT1 Axis &amp; Glucose Hypometabolism</h3>
+        STOM can bind GLUT1 and reduce glucose transport activity without reducing membrane GLUT1 abundance. Because cerebral glucose hypometabolism is a core AD phenotype and GLUT1 is critical at the blood-brain barrier, STOM could theoretically contribute to AD-related energy deficits in endothelial, astrocytic, or neuronal contexts — an untested but mechanistically strong hypothesis.
+      </div>
+
+      <div class="card card-pos">
+        <h3>Channel &amp; Transporter Regulation</h3>
+        STOM regulates ASIC gating and inhibits pannexin-1 currents in primary mouse astrocytes without altering surface Panx1 abundance. It also interacts with aquaporin-1, AE1/SLC4A1, NTCP, and others — intersecting with AD-related ionic dyshomeostasis, astrocyte ATP signalling, pH stress, and excitotoxicity mechanisms.
+      </div>
+
+      <div class="card card-warn">
+        <h3>Oxidative Stress &amp; Mitochondrial Links</h3>
+        In non-AD models, STOM appears among mitochondria-related inflammatory gene signatures and can promote ROS accumulation, including via Prdx1 degradation in osteoclasts. Since oxidative stress and mitochondrial dysfunction are central to AD pathology, this constitutes a plausible but entirely unvalidated STOM–ROS hypothesis.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Major Limitations &amp; Therapeutic Risk</h3>
+        No evidence demonstrates STOM manipulation alters Aβ production, APP processing, tau phosphorylation, synaptic toxicity, neuronal survival, microglial phagocytosis, or cognitive decline. STOM's broad expression in erythrocytes, platelets, immune cells, and epithelia means systemic modulation could produce substantial pleiotropic off-target effects.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <strong>Treat STOM as a hypothesis-generating candidate.</strong> Do not advance it as a validated therapeutic target. Current evidence supports mechanistic exploration, not clinical translation.
+      </li>
+      <li>
+        <strong>Establish cell-type-specific AD expression profiles.</strong> Measure STOM expression and localisation in AD versus control brain across neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and pericytes in hippocampus, temporal cortex, frontal cortex, and vascular compartments.
+      </li>
+      <li>
+        <strong>Map colocalisation with AD membrane machinery.</strong> Determine whether STOM colocalises with APP, BACE1, γ-secretase/presenilin complexes, cholesterol-rich rafts, GM1 domains, endosomes, lysosomes, Rab11/Rab7 vesicles, and extracellular vesicle compartments.
+      </li>
+      <li>
+        <strong>Test STOM modulation on core AD phenotypes.</strong> Assess effects on Aβ generation, aggregation, secretion, uptake, and clearance; tau phosphorylation, aggregation, and spreading; synaptic function; neuronal survival; glial cytokine release; lysosomal/autophagic flux; and cognition in validated AD models.
+      </li>
+      <li>
+        <strong>Investigate the STOM–GLUT1 mechanism in AD-relevant cells.</strong> Focus on brain endothelial cells and astrocytes to determine whether STOM contributes to cerebral glucose hypometabolism or blood-brain barrier energy deficits under AD-like conditions.
+      </li>
+      <li>
+        <strong>Evaluate STOM in glial biology.</strong> Examine microglial phagocytosis, phagosome maturation, lysosomal handling, inflammatory activation, and astrocytic pannexin-1/ATP signalling — each plausible STOM-regulated process relevant to AD neuroinflammation.
+      </li>
+      <li>
+        <strong>Explore the oxidative-stress axis in neural cells.</strong> Test whether STOM regulates Prdx1, ROS accumulation, mitochondrial function, or cellular vulnerability to Aβ/tau-associated oxidative injury in neurons and glia.
+      </li>
+      <li>
+        <strong>Assess neurovascular relevance.</strong> Determine whether STOM alters brain endothelial barrier integrity, VEGFA/ERK signalling, inflammatory adhesion, angiogenic responses, and vascular permeability under AD-like metabolic or inflammatory stress.
+      </li>
+      <li>
+        <strong>Consider therapeutic risk from the outset.</strong> STOM's broad expression profile in erythrocytes, platelets, immune cells, and epithelia demands that any therapeutic strategy employ cell-specific or pathway-specific targeting rather than systemic modulation.
+      </li>
+      <li>
+        <strong>Use current evidence only to justify mechanistic studies.</strong> The critical next step is determining whether STOM is causal, compensatory, or merely a biomarker within AD-relevant membrane, metabolic, inflammatory, and tau/glial pathways.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="label">Overall Assessment</span>
+      <p>
+        STOM / stomatin is a <strong>biologically compelling but evidentially immature</strong> Alzheimer's disease candidate. Its core identity as a <strong>lipid raft scaffold, oligomeric membrane organizer, and transporter/channel regulator</strong> places it at the intersection of multiple AD-relevant processes — cholesterol membrane dynamics, glucose hypometabolism, ionic dyshomeostasis, neuroinflammation, oxidative stress, and neurovascular dysfunction. Its appearance in an AD brain proteomics classifier and its prioritisation in a tauopathy systems-biology study provide limited but non-trivial signals. However, <strong>no direct evidence links STOM to Aβ, tau, synaptic degeneration, or cognitive decline</strong>, and the mechanistic inferences draw almost entirely from erythrocyte, osteoclast, endothelial, and immune-cell systems. Therapeutic potential exists conceptually, but broad expression across non-neural tissues introduces <strong>substantial pleiotropic risk</strong>. The justified next step is rigorous AD-specific mechanistic validation — not target advancement.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  STOM / Stomatin — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMNC / GemC1 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--white);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,100,100,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--neutral);
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* PROSE */
+  .prose p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GMNC | GemC1 (Geminin Coiled-Coil Domain Containing)</span>
+    <span class="chip chip-danger">⚠ Therapeutic targeting: safety concerns noted</span>
+  </div>
+  <h1>GMNC / GemC1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Causal Evidence Gap &amp; Safety Caveat:</strong> GMNC is a developmental transcriptional master regulator with broad roles in cell fate, multiciliogenesis, and proliferation pathways. Direct causal evidence linking GMNC to AD pathology is absent, and therapeutic targeting carries substantial risk without precise cell-type and temporal control.
+    </div>
+
+    <div class="prose">
+      <p>GMNC/GemC1 is most strongly supported as an Alzheimer's disease-relevant genetic locus and mechanistic candidate linked to cerebrospinal fluid (CSF) tau biology, rather than as a validated causal AD gene or therapeutic target. Human genetic studies repeatedly associate the GMNC/CCDC50 region with CSF total tau and phosphorylated tau, including large biomarker GWAS/meta-analyses and sex-stratified analyses showing stronger tau-related effects in females.</p>
+      <p>The main mechanistic hypothesis connects GMNC's developmental role as a master regulator of multiciliated cell differentiation to ependymal and choroid plexus function, CSF flow, ventricular volume, glymphatic clearance, and brain waste removal — processes increasingly implicated in AD progression through impaired clearance of tau, amyloid-β, and other toxic solutes. GMNC is also linked to brain aging, structural connectivity, fornix microstructure, hippocampal neurovascular coupling, and cortical/hippocampal developmental programs.</p>
+      <p>Despite these converging signals, the evidence remains largely associative and inferential. The GMNC locus may affect GMNC itself, CCDC50, OSTN, CLDN16, or other nearby genes. Direct evidence that GMNC expression or function drives AD pathology, modifies amyloid/tau burden, or improves cognition when manipulated is not established.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:Arial,Helvetica,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-neutral" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Genetics (left) -->
+        <rect x="12" y="12" width="248" height="462" rx="10" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="136" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">PANEL A — GENETIC LOCUS</text>
+
+        <!-- Node 1: GMNC/CCDC50 Locus -->
+        <rect x="44" y="44" width="152" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="120" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">GMNC / CCDC50</text>
+        <text x="120" y="78" text-anchor="middle" font-size="10" fill="#dbeafe">Chr 3q28 Locus</text>
+
+        <!-- Node 2: CSF tau GWAS -->
+        <rect x="28" y="116" width="120" height="40" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="88" y="131" text-anchor="middle" font-size="10" fill="#1e293b">CSF t-tau &amp;</text>
+        <text x="88" y="147" text-anchor="middle" font-size="10" fill="#1e293b">p-tau GWAS</text>
+
+        <!-- Node 3: Sex-stratified -->
+        <rect x="164" y="116" width="80" height="40" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="204" y="131" text-anchor="middle" font-size="10" fill="#1e293b">Sex-specific</text>
+        <text x="204" y="147" text-anchor="middle" font-size="10" fill="#1e293b">τ effect (♀)</text>
+
+        <!-- Node 4: AD risk endophenotypes -->
+        <rect x="28" y="192" width="120" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="88" y="207" text-anchor="middle" font-size="10" fill="#7f1d1d">AD Risk &amp;</text>
+        <text x="88" y="223" text-anchor="middle" font-size="10" fill="#7f1d1d">Endophenotypes</text>
+
+        <!-- Node 5: Causal gene uncertainty -->
+        <rect x="164" y="192" width="80" height="40" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="204" y="207" text-anchor="middle" font-size="9.5" fill="#78350f">OSTN/CLDN16</text>
+        <text x="204" y="223" text-anchor="middle" font-size="9.5" fill="#78350f">uncertainty</text>
+
+        <!-- Node 6: Glymphatic GWAS overlap -->
+        <rect x="44" y="270" width="152" height="40" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="120" y="285" text-anchor="middle" font-size="10" fill="#0f766e">Glymphatic GWAS</text>
+        <text x="120" y="301" text-anchor="middle" font-size="10" fill="#0f766e">ALPS / Vent. Vol. overlap</text>
+
+        <!-- Node 7: Structural brain aging -->
+        <rect x="44" y="346" width="152" height="40" rx="6" fill="#fff" stroke="#475569" stroke-width="1.2"/>
+        <text x="120" y="361" text-anchor="middle" font-size="10" fill="#475569">Structural Aging &amp;</text>
+        <text x="120" y="377" text-anchor="middle" font-size="10" fill="#475569">Fornix Microstructure</text>
+
+        <!-- Node 8: Neurovascular / hippocampal -->
+        <rect x="44" y="422" width="152" height="40" rx="6" fill="#fff" stroke="#475569" stroke-width="1.2"/>
+        <text x="120" y="437" text-anchor="middle" font-size="10" fill="#475569">Hippocampal</text>
+        <text x="120" y="453" text-anchor="middle" font-size="10" fill="#475569">Neurovascular Coupling</text>
+
+        <!-- Panel A connectors -->
+        <!-- Locus → CSF tau GWAS (left branch) -->
+        <line x1="88" y1="88" x2="88" y2="116" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Locus → Sex-specific (right branch) -->
+        <line x1="152" y1="88" x2="204" y2="116" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- CSF tau → AD Risk -->
+        <line x1="88" y1="156" x2="88" y2="192" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Sex → Causal uncertainty -->
+        <line x1="204" y1="156" x2="204" y2="192" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- AD Risk → Glymphatic (left) -->
+        <line x1="88" y1="232" x2="88" y2="270" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Causal uncertainty → Glymphatic (right elbow) -->
+        <polyline points="204,232 204,252 120,252 120,270" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Glymphatic → Structural aging -->
+        <line x1="120" y1="310" x2="120" y2="346" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-neutral)"/>
+        <!-- Structural aging → Neurovascular -->
+        <line x1="120" y1="386" x2="120" y2="422" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-neutral)"/>
+
+        <!-- Panel B: GMNC Biology (middle) -->
+        <rect x="276" y="12" width="216" height="462" rx="10" fill="#e8f1f8" fill-opacity="0.45" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="384" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">PANEL B — GMNC BIOLOGY</text>
+
+        <!-- Node 9: GMNC Master Regulator -->
+        <rect x="296" y="44" width="160" height="44" rx="7" fill="#1a3a5c" stroke="#0d1f30" stroke-width="1"/>
+        <text x="376" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">GMNC / GemC1</text>
+        <text x="376" y="78" text-anchor="middle" font-size="10" fill="#bfdbfe">Master Regulator</text>
+
+        <!-- Node 10: Multiciliogenesis program -->
+        <rect x="296" y="120" width="160" height="40" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="376" y="135" text-anchor="middle" font-size="10" fill="#1e293b">MCIDAS / FOXJ1 /</text>
+        <text x="376" y="151" text-anchor="middle" font-size="10" fill="#1e293b">p73 / E2F4-5 / CCNO</text>
+
+        <!-- Node 11: Ependymal cells -->
+        <rect x="292" y="196" width="104" height="40" rx="6" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="344" y="211" text-anchor="middle" font-size="10" fill="#1a3a5c">Ependymal</text>
+        <text x="344" y="227" text-anchor="middle" font-size="10" fill="#1a3a5c">Multiciliation</text>
+
+        <!-- Node 12: Choroid plexus -->
+        <rect x="408" y="196" width="78" height="40" rx="6" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="447" y="211" text-anchor="middle" font-size="10" fill="#1a3a5c">Choroid</text>
+        <text x="447" y="227" text-anchor="middle" font-size="10" fill="#1a3a5c">Plexus</text>
+
+        <!-- Node 13: Developmental programs -->
+        <rect x="296" y="272" width="160" height="40" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="376" y="287" text-anchor="middle" font-size="10" fill="#78350f">Cortical / Hippocampal</text>
+        <text x="376" y="303" text-anchor="middle" font-size="10" fill="#78350f">Development (CR cells)</text>
+
+        <!-- Node 14: DNA replication / cell cycle -->
+        <rect x="296" y="346" width="160" height="40" rx="6" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+        <text x="376" y="361" text-anchor="middle" font-size="10" fill="#475569">DNA Replication /</text>
+        <text x="376" y="377" text-anchor="middle" font-size="10" fill="#475569">TopBP1, Cdc45, Cdk2</text>
+
+        <!-- Panel B connectors -->
+        <line x1="376" y1="88" x2="376" y2="120" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Multiciliogenesis → Ependymal branch -->
+        <line x1="344" y1="160" x2="344" y2="196" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Multiciliogenesis → Choroid branch -->
+        <line x1="408" y1="160" x2="447" y2="196" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- GMNC → Developmental (elbow around ependymal/choroid) -->
+        <polyline points="376,88 376,104 472,104 472,314 456,314" stroke="#b45309" stroke-width="1.3" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <!-- Ependymal → Developmental (left branch converge) -->
+        <polyline points="344,236 344,254 376,254 376,272" stroke="#b45309" stroke-width="1.3" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <!-- Choroid → Developmental (right branch converge) -->
+        <polyline points="447,236 447,254 376,254 376,272" stroke="#b45309" stroke-width="1.3" fill="none" stroke-dasharray="4,3"/>
+        <!-- GMNC → DNA replication (side) -->
+        <line x1="376" y1="308" x2="376" y2="346" stroke="#475569" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-neutral)"/>
+
+        <!-- Panel C: AD Mechanism & Consequences (right) -->
+        <rect x="508" y="12" width="226" height="462" rx="10" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="621" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C — AD MECHANISM</text>
+
+        <!-- Node 15: CSF flow / Ventricular -->
+        <rect x="524" y="44" width="194" height="44" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="621" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CSF Flow &amp;</text>
+        <text x="621" y="78" text-anchor="middle" font-size="10" fill="#d1fae5">Ventricular Homeostasis</text>
+
+        <!-- Node 16: Glymphatic clearance -->
+        <rect x="524" y="120" width="194" height="40" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="621" y="135" text-anchor="middle" font-size="10" fill="#1e293b">Glymphatic Clearance</text>
+        <text x="621" y="151" text-anchor="middle" font-size="10" fill="#1e293b">τ, Aβ, Toxic Solutes</text>
+
+        <!-- Now we have 16 nodes planned — stop here -->
+        <!-- "Tau accumulation / AD" shown as outcome in panel C row 3 -->
+        <!-- Actually count: Nodes 1-16. We have 15 so far, let's check:
+             1. GMNC/CCDC50 Locus, 2. CSF tau GWAS, 3. Sex-specific, 4. AD Risk, 5. Causal uncertainty,
+             6. Glymphatic GWAS, 7. Structural Aging, 8. Neurovascular,
+             9. GMNC master reg, 10. Multiciliogenesis, 11. Ependymal, 12. Choroid,
+             13. Developmental, 14. DNA replication,
+             15. CSF Flow, 16. Glymphatic clearance
+             That's 16. Do NOT add more boxes. -->
+
+        <!-- Panel C connector: CSF flow → Glymphatic -->
+        <line x1="621" y1="88" x2="621" y2="120" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Ependymal → CSF Flow (cross-panel connector via gutter) -->
+        <polyline points="396,216 494,216 494,66 524,66" stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Glymphatic clearance outcome label area -->
+        <rect x="524" y="200" width="194" height="40" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="621" y="215" text-anchor="middle" font-size="10" fill="#7f1d1d">Impaired Clearance →</text>
+        <text x="621" y="231" text-anchor="middle" font-size="10" fill="#7f1d1d">τ Accumulation / AD Risk</text>
+        <!-- Glymphatic → Tau accumulation -->
+        <line x1="621" y1="160" x2="621" y2="200" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Downstream pathways label -->
+        <rect x="524" y="276" width="194" height="40" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="621" y="291" text-anchor="middle" font-size="10" fill="#0f766e">Blood–CSF Barrier &amp;</text>
+        <text x="621" y="307" text-anchor="middle" font-size="10" fill="#0f766e">Neurovascular Coupling</text>
+        <!-- Tau accum → Downstream -->
+        <line x1="621" y1="240" x2="621" y2="276" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Therapeutic note -->
+        <rect x="524" y="352" width="194" height="60" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="621" y="369" text-anchor="middle" font-size="10" fill="#78350f">Therapeutic Entry Points</text>
+        <text x="621" y="384" text-anchor="middle" font-size="9.5" fill="#78350f">FOXJ1/MCIDAS/p73 ciliary</text>
+        <text x="621" y="399" text-anchor="middle" font-size="9.5" fill="#78350f">programs; ubiquitin/autophagy</text>
+        <!-- Downstream → Therapeutic -->
+        <line x1="621" y1="316" x2="621" y2="352" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Panel gutter cross-connector: Locus → GMNC biology panel (A→B) -->
+        <line x1="260" y1="66" x2="296" y2="66" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Panel labels (already embedded in rects above) -->
+
+        <!-- Legend strip at bottom -->
+        <rect x="12" y="476" width="876" height="0" rx="0" fill="none"/>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Genetic Locus):</strong> The GMNC/CCDC50 region at 3q28 is associated with CSF tau/p-tau GWAS signals, sex-specific tau effects (stronger in females), AD endophenotypes, glymphatic GWAS overlap, and structural brain aging/neurovascular coupling — though the causal effector gene (GMNC, CCDC50, OSTN, or CLDN16) remains uncertain.
+      <strong>Panel B (GMNC Biology):</strong> GMNC acts as a master regulator of multiciliogenesis, driving MCIDAS/FOXJ1/p73/E2F4-5/CCNO programs that branch into ependymal multiciliation and choroid plexus formation, converging on cortical/hippocampal developmental programs; separate dashed lines indicate cell-cycle/DNA replication roles.
+      <strong>Panel C (AD Mechanism):</strong> Ependymal cell function feeds into CSF flow and ventricular homeostasis, which drives glymphatic clearance of tau and amyloid-β; impaired clearance elevates AD risk through tau accumulation, with blood–CSF barrier and neurovascular coupling as downstream modifiable nodes, and FOXJ1/MCIDAS/p73-dependent ciliary programs as speculative therapeutic entry points.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Tau-Centred Genetic Signal</h3>
+        <p>The most consistent AD-related finding at this locus is its repeated association with CSF total tau and phosphorylated tau, replicated in large 2022 and 2026 biomarker meta-analyses. This makes GMNC a credible tau-endophenotype locus even absent direct causal proof.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Sex-Specific Association &amp; Causal Gene Uncertainty</h3>
+        <p>Variant rs1393060 shows stronger CSF total tau association in females and female-specific neurofibrillary tangle density effects. However, expression analyses at this locus implicate <em>OSTN</em> and <em>CLDN16</em> more than GMNC itself, leaving the causal effector unresolved.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Master Regulator of Multiciliogenesis</h3>
+        <p>GMNC acts upstream of MCIDAS/MCI, FOXJ1, p73/TP73, CCNO, and E2F4/5-dependent transcriptional programs. It is required for brain multiciliated ependymal cell formation; its disruption causes impaired multiciliation and hydrocephalus/enlarged ventricles in model systems.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Glymphatic &amp; CSF Biology Link</h3>
+        <p>A 2025 glymphatic activity GWAS reported genetic overlap among ALPS index, ventricular volumes, and CSF tau levels, identifying GMNC at 3q28 as a shared genetic basis. This strengthens the hypothesis that GMNC-region biology modulates tau accumulation via glymphatic clearance.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Broader Structural &amp; Developmental Relevance</h3>
+        <p>The GMNC region is implicated in local brain aging, white matter brain age gap, structural connectome traits, fornix microstructure, hippocampal neurovascular coupling, Cajal–Retzius cell identity, cortical radial migration, and hippocampal CA1 folding — all relevant to AD vulnerability.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Potential: Speculative &amp; Risky</h3>
+        <p>Reactivation of the GMNC–MCIDAS program suppressed tumour proliferation in choroid plexus carcinoma, but this does not establish AD efficacy. Broad GMNC activation is hazardous given its roles in cell fate and proliferation; downstream pathway targeting is a safer research direction.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><strong>Position GMNC as a mechanistic candidate, not a drug target.</strong> Prioritise it for biomarker-stratification research and mechanistic investigation rather than treating it as a validated Alzheimer's therapeutic target at this stage.</div>
+      </li>
+      <li>
+        <div><strong>Fine-map the 3q28 locus urgently.</strong> Future work must determine whether GMNC, CCDC50, OSTN, CLDN16, or another nearby gene is the true effector driving the CSF tau associations observed across multiple GWAS.</div>
+      </li>
+      <li>
+        <div><strong>Validate in AD-relevant human systems.</strong> Functional studies should use human ependymal cells, choroid plexus models, iPSC-derived multiciliated cells, organoids, and postmortem AD tissue to test GMNC's role in ciliary programmes and CSF biology.</div>
+      </li>
+      <li>
+        <div><strong>Investigate sex-specific mechanisms.</strong> Available evidence consistently suggests stronger tau and neurofibrillary tangle associations near the GMNC locus in females; targeted sex-stratified analyses and mechanistic studies are warranted.</div>
+      </li>
+      <li>
+        <div><strong>Target downstream pathways rather than GMNC directly.</strong> Safer therapeutic entry points include ependymal/choroid plexus multiciliation programmes (FOXJ1/MCIDAS/p73), CSF/glymphatic clearance mechanisms, blood–CSF barrier integrity, neurovascular coupling, autophagy, and ubiquitin/proteolysis pathways.</div>
+      </li>
+      <li>
+        <div><strong>Avoid overinterpreting GMNC as causal.</strong> Current evidence lacks allele-specific functional effects, AD-tissue validation, established directionality of GMNC expression changes, and any intervention data showing that GMNC modulation alters amyloid, tau, neurodegeneration, or cognition.</div>
+      </li>
+      <li>
+        <div><strong>Separate GMNC gene literature from acronym noise.</strong> References to Greater Manchester Neurosciences Centre, gastrointestinal or gingival mononuclear cells, giant multinucleated cells, or other unrelated "GMNC" usages must be excluded from evidence synthesis.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — GMNC / GemC1 in Alzheimer's Disease</span>
+      GMNC is a <strong>repeatedly implicated AD-relevant locus</strong> most consistently tied to <strong>CSF tau and phosphorylated tau biology</strong>, with plausible mechanistic links to <strong>CSF flow, glymphatic clearance, ventricular structure, neurovascular coupling, and brain developmental architecture</strong>. Its therapeutic potential is best viewed as <strong>hypothesis-generating</strong>: GMNC-linked pathways may reveal modifiable mechanisms of tau-associated brain vulnerability — particularly through ependymal multiciliation and glymphatic biology — but <strong>GMNC itself is not a validated Alzheimer's therapeutic target</strong>. The causal effector gene within the 3q28 locus remains unresolved, direct functional evidence in AD tissue is absent, and broad GMNC manipulation carries developmental safety risk. The immediate research priority should be <strong>fine-mapping, sex-stratified functional validation, and downstream pathway interrogation</strong> rather than GMNC-directed intervention.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>GMNC / GemC1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CERS6 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1a6b;
+    --mid: #7c3aad;
+    --light: #f3eafa;
+    --danger: #991b1b;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--slate);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0630 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 5px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.45);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card-blue { background: #eff6ff; border-color: #2563eb; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li:last-child { border-bottom: none; }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--light);
+    color: var(--dark);
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0630 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 40px 44px;
+    line-height: 1.8;
+  }
+
+  .verdict h2 {
+    color: #d8b4fe;
+    border-bottom-color: rgba(216,180,254,0.4);
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    font-size: 1rem;
+    opacity: 0.93;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CERS6 &nbsp;|&nbsp; Ceramide Synthase 6</span>
+    <span class="chip chip-danger">⚠ Systemic inhibition safety concern</span>
+  </div>
+  <h1>CERS6 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Broad systemic CERS6 inhibition may worsen certain colitis and EAE phenotypes and alter sphingosine-1-phosphate balance. Evidence supports selective, context-aware modulation rather than blanket suppression.
+    </div>
+
+    <p>CERS6 (ceramide synthase 6) is most consistently described as an enzyme that generates <strong>C16:0 ceramide</strong>, a sphingolipid species repeatedly linked to mitochondrial dysfunction, oxidative stress, inflammatory signaling, ER stress, apoptosis, impaired autophagy/mitophagy, insulin resistance, and metabolic injury. These mechanisms overlap strongly with Alzheimer's disease (AD) biology, but the direct AD-specific evidence remains limited and heterogeneous.</p>
+
+    <p>The strongest AD-related evidence includes: early upregulation of CERS6 in AβPP mouse hippocampus as part of a ceramide-biased sphingolipid shift; increased hepatic <em>cers6</em> expression in AD mouse models alongside elevated serum ceramide, phosphorylated tau, and cognitive impairment; and an aging T-cell study in which AD-associated APP/Aβ40 inhibited CerS6 mitochondrial trafficking, suppressing ceramide-dependent mitophagy and preserving fumarate metabolism. CERS6-AS1 also appears as a potential AD biomarker in a ceRNA-network study, though this is network-level rather than functional proof.</p>
+
+    <p>Overall, CERS6 is best viewed as a <strong>plausible but not yet validated AD therapeutic target</strong>. The rationale is strongest where AD pathology intersects with C16 ceramide accumulation, mitochondrial injury, neuroinflammation, metabolic dysfunction, tau phosphorylation, ER stress, and maladaptive mitophagy. The text does not establish that CERS6 inhibition improves amyloid burden, tau pathology, synaptic function, neuronal survival, or cognition in AD models.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 960 wide x 500 tall, 4 panels -->
+        <svg viewBox="0 0 960 500" width="920" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aad"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2563eb"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- === PANEL A: UPSTREAM ACTIVATION === -->
+          <rect x="10" y="10" width="220" height="478" rx="12" fill="#f3eafa" fill-opacity="0.55" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="120" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1a6b" letter-spacing="1.2">A · UPSTREAM</text>
+
+          <!-- Node A1: AD Pathology -->
+          <rect x="30" y="44" width="180" height="44" rx="7" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="120" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#4a1a6b">AD Pathology</text>
+          <text x="120" y="78" text-anchor="middle" font-size="10" fill="#4a1a6b">Aβ / APP / p-tau</text>
+
+          <!-- Arrow A1 -> A2 -->
+          <line x1="120" y1="88" x2="120" y2="108" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: CERS6 Upregulation -->
+          <rect x="30" y="108" width="180" height="44" rx="7" fill="#c4b5fd" stroke="#4a1a6b" stroke-width="1.5"/>
+          <text x="120" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#2e1065">CERS6 Upregulated</text>
+          <text x="120" y="142" text-anchor="middle" font-size="10" fill="#2e1065">Hippocampus / Liver</text>
+
+          <!-- Arrow A2 -> A3 -->
+          <line x1="120" y1="152" x2="120" y2="172" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: C16:0 Ceramide -->
+          <rect x="30" y="172" width="180" height="44" rx="7" fill="#ddd6fe" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="120" y="191" text-anchor="middle" font-size="11" font-weight="700" fill="#4a1a6b">C16:0 Ceramide</text>
+          <text x="120" y="206" text-anchor="middle" font-size="10" fill="#4a1a6b">Accumulates</text>
+
+          <!-- Node A4: CERS6-AS1 -->
+          <rect x="30" y="238" width="180" height="44" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1"/>
+          <text x="120" y="257" text-anchor="middle" font-size="11" font-weight="700" fill="#4a1a6b">CERS6-AS1</text>
+          <text x="120" y="272" text-anchor="middle" font-size="10" fill="#4a1a6b">lncRNA / ceRNA biomarker</text>
+
+          <!-- Arrow A4 -> A2 (stabilizes mRNA) -->
+          <path d="M 210 260 Q 230 200 210 130" fill="none" stroke="#7c3aad" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+          <!-- Node A5: Metabolic Triggers -->
+          <rect x="30" y="398" width="180" height="44" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1"/>
+          <text x="120" y="417" text-anchor="middle" font-size="11" font-weight="700" fill="#4a1a6b">Metabolic Triggers</text>
+          <text x="120" y="432" text-anchor="middle" font-size="10" fill="#4a1a6b">Obesity / Diabetes / NAFLD</text>
+
+          <!-- Arrow A5 -> A2 via left gutter -->
+          <path d="M 30 420 Q 14 280 30 130" fill="none" stroke="#7c3aad" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+          <!-- === PANEL B: MITOCHONDRIAL MECHANISMS === -->
+          <rect x="248" y="10" width="222" height="310" rx="12" fill="#fff1f1" fill-opacity="0.5" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="359" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.2">B · MITOCHONDRIA</text>
+
+          <!-- Node B1: Mito Fragmentation -->
+          <rect x="264" y="44" width="190" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="359" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Mito Fragmentation</text>
+          <text x="359" y="78" text-anchor="middle" font-size="10" fill="#7f1d1d">Mff-dependent / ROS↑</text>
+
+          <!-- Arrow B1 -> B2 -->
+          <line x1="359" y1="88" x2="359" y2="108" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B2: Complex III / Calcium -->
+          <rect x="264" y="108" width="190" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="359" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Complex III ↓</text>
+          <text x="359" y="142" text-anchor="middle" font-size="10" fill="#7f1d1d">Ca²⁺ dysregulation</text>
+
+          <!-- Arrow B2 -> B3 left branch -->
+          <line x1="310" y1="152" x2="288" y2="172" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <!-- Arrow B2 -> B4 right branch -->
+          <line x1="408" y1="152" x2="430" y2="172" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+          <!-- Node B3: Apoptosis -->
+          <rect x="264" y="172" width="86" height="44" rx="7" fill="#fca5a5" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="307" y="191" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Apoptosis</text>
+          <text x="307" y="206" text-anchor="middle" font-size="9" fill="#7f1d1d">Cytochrome C</text>
+
+          <!-- Node B4: Impaired Mitophagy -->
+          <rect x="358" y="172" width="100" height="44" rx="7" fill="#fca5a5" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="408" y="191" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Impaired</text>
+          <text x="408" y="206" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Mitophagy</text>
+
+          <!-- Converge arrows to B5 -->
+          <line x1="307" y1="216" x2="307" y2="250" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <line x1="408" y1="216" x2="408" y2="250" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+          <!-- Node B5: Neuronal Injury -->
+          <rect x="264" y="250" width="190" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="359" y="269" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Neuronal Injury</text>
+          <text x="359" y="284" text-anchor="middle" font-size="10" fill="#7f1d1d">ER stress / Oxidative damage</text>
+
+          <!-- === PANEL C: INFLAMMATORY SIGNALING === -->
+          <rect x="488" y="10" width="222" height="310" rx="12" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="599" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.2">C · INFLAMMATION</text>
+
+          <!-- Node C1: NF-κB / p38 MAPK -->
+          <rect x="504" y="44" width="190" height="44" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+          <text x="599" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#78350f">NF-κB / p38 MAPK</text>
+          <text x="599" y="78" text-anchor="middle" font-size="10" fill="#78350f">Activated</text>
+
+          <!-- Arrow C1 -> C2 left -->
+          <line x1="552" y1="88" x2="530" y2="108" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+          <!-- Arrow C1 -> C3 right -->
+          <line x1="646" y1="88" x2="668" y2="108" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C2: TNF-α / IL-1β / IL-6 -->
+          <rect x="504" y="108" width="116" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="562" y="124" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">TNF-α / IL-1β</text>
+          <text x="562" y="139" text-anchor="middle" font-size="10" fill="#78350f">IL-6 / iNOS</text>
+
+          <!-- Node C3: NLRP3 / STING -->
+          <rect x="628" y="108" width="70" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="663" y="127" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">NLRP3</text>
+          <text x="663" y="142" text-anchor="middle" font-size="10" fill="#78350f">STING</text>
+
+          <!-- Converge to C4 -->
+          <line x1="562" y1="152" x2="562" y2="172" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+          <line x1="663" y1="152" x2="663" y2="172" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C4: Neuroinflammation -->
+          <rect x="504" y="172" width="194" height="44" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>
+          <text x="601" y="191" text-anchor="middle" font-size="11" font-weight="700" fill="#78350f">Neuroinflammation</text>
+          <text x="601" y="206" text-anchor="middle" font-size="10" fill="#78350f">Microglia / Macrophage</text>
+
+          <!-- Arrow C4 -> C5 -->
+          <line x1="601" y1="216" x2="601" y2="250" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C5: Tau / Insulin -->
+          <rect x="504" y="250" width="194" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="601" y="269" text-anchor="middle" font-size="11" font-weight="700" fill="#78350f">Tau Hyperphosphorylation</text>
+          <text x="601" y="284" text-anchor="middle" font-size="10" fill="#78350f">GSK-3β / PP2A / Akt↓</text>
+
+          <!-- === PANEL D: THERAPEUTIC / CONTEXT === -->
+          <rect x="728" y="10" width="222" height="478" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="839" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">D · THERAPEUTIC</text>
+
+          <!-- Node D1: APP/Aβ40 (protective) -->
+          <rect x="744" y="44" width="190" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="839" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#134e4a">APP/Aβ40 (T cells)</text>
+          <text x="839" y="78" text-anchor="middle" font-size="10" fill="#134e4a">Blocks CerS6 mito trafficking</text>
+
+          <!-- Arrow D1 -> D2 -->
+          <line x1="839" y1="88" x2="839" y2="108" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D2: TOMM Complex -->
+          <rect x="744" y="108" width="190" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="839" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#134e4a">TOMM Complex</text>
+          <text x="839" y="142" text-anchor="middle" font-size="10" fill="#134e4a">CerS6 import reduced</text>
+
+          <!-- Arrow D2 -> D3 -->
+          <line x1="839" y1="152" x2="839" y2="172" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D3: Mitophagy reduced -->
+          <rect x="744" y="172" width="190" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="839" y="191" text-anchor="middle" font-size="11" font-weight="700" fill="#134e4a">Mitophagy Reduced</text>
+          <text x="839" y="206" text-anchor="middle" font-size="10" fill="#134e4a">Fumarate preserved</text>
+
+          <!-- Arrow D3 -> D4 -->
+          <line x1="839" y1="216" x2="839" y2="250" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D4: T-cell function restored -->
+          <rect x="744" y="250" width="190" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="839" y="269" text-anchor="middle" font-size="11" font-weight="700" fill="#134e4a">T-cell Antitumor ↑</text>
+          <text x="839" y="284" text-anchor="middle" font-size="10" fill="#134e4a">Immune function restored</text>
+
+          <!-- Node D5: Therapeutic Strategies -->
+          <rect x="744" y="398" width="190" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="839" y="417" text-anchor="middle" font-size="11" font-weight="700" fill="#134e4a">Selective Inhibition</text>
+          <text x="839" y="432" text-anchor="middle" font-size="10" fill="#134e4a">ASO / small-mol / brain-pen.</text>
+
+          <!-- === CROSS-PANEL CONNECTORS (routed through gutters) === -->
+          <!-- A3 (C16 ceramide) -> B1 (Mito Frag) via gutter between A and B -->
+          <path d="M 210 194 Q 238 68 264 66" fill="none" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- A3 -> C1 via bottom of A panel through gutter -->
+          <path d="M 210 194 Q 238 160 504 66" fill="none" stroke="#7c3aad" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+
+          <!-- B5 -> Outcome box -->
+          <!-- C5 -> Outcome box -->
+          <!-- Shared outcome node bottom center -->
+          <!-- Node OUT: AD Progression -->
+          <rect x="334" y="338" width="292" height="44" rx="8" fill="#e9d5ff" stroke="#4a1a6b" stroke-width="2"/>
+          <text x="480" y="357" text-anchor="middle" font-size="12" font-weight="700" fill="#2e1065">AD Progression Risk</text>
+          <text x="480" y="372" text-anchor="middle" font-size="10" fill="#2e1065">Amyloid · Tau · Synaptic loss · Cognition↓</text>
+
+          <!-- B5 -> OUT -->
+          <path d="M 359 294 L 359 326 Q 359 338 371 338" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- C5 -> OUT -->
+          <path d="M 601 294 L 601 326 Q 601 338 589 338" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- OUT -> D5 Therapeutic intervention -->
+          <path d="M 626 360 Q 710 360 744 420" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream):</strong> AD pathology (Aβ/APP/p-tau) and metabolic triggers (obesity, diabetes) converge to upregulate CERS6, driving C16:0 ceramide accumulation; CERS6-AS1 lncRNA may further stabilize CERS6 mRNA.
+        <strong>Panel B (Mitochondria):</strong> C16 ceramide induces mitochondrial fragmentation and Complex III impairment, branching into apoptosis and impaired mitophagy, reconverging at neuronal injury/ER stress.
+        <strong>Panel C (Inflammation):</strong> NF-κB/p38 MAPK activation branches into cytokine release (TNF-α/IL-1β/IL-6) and inflammasome signaling (NLRP3/STING), reconverging at neuroinflammation and tau hyperphosphorylation via GSK-3β/PP2A/Akt suppression.
+        <strong>Panel D (Therapeutic Context):</strong> In aging T cells, mitochondrial APP/Aβ40 blocks CerS6 TOMM trafficking, reducing hyperactive mitophagy and restoring antitumor function — a context-dependent protective axis. The shared Outcome node summarizes converging AD progression risk, and the dashed arrow points toward selective therapeutic intervention strategies.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>C16:0 Ceramide Is the Central Effector</h3>
+        <p>Across the literature, CERS6 is repeatedly linked to production of C16 ceramide, which is framed as more pathogenic than very-long-chain ceramides such as C22/C24. Selective CERS6 modulation may therefore be preferable to broad suppression of all ceramide synthesis.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Early AD-Model Upregulation</h3>
+        <p>In an AβPP mouse model, CERS2, CERS4, and CERS6 were elevated at 3 months, but CERS6 was the <em>only</em> ceramide synthase still elevated at 6 months — suggesting a sustained, CERS6-specific contribution to early AD-associated ceramide signaling in hippocampus.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Systemic Inhibition Safety Risk</h3>
+        <p>CERS6 can be pathogenic in some contexts but protective or compensatory in others. CERS6 deficiency can worsen colitis and EAE phenotypes and may alter sphingosine-1-phosphate balance. Brain- or cell-selective targeting is likely safer than systemic suppression.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Peripheral Ceramide Links to Tau &amp; Cognition</h3>
+        <p>In Aβ1-42-injected and APP/PS1 mice, cognitive deficits, elevated serum p-tau, and elevated serum ceramide were accompanied by increased hepatic <em>cers6</em> expression. GSK-3β and PP2A regulation suggests an indirect route from CERS6-associated ceramide to tau hyperphosphorylation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Context-Dependent Mitophagy Role</h3>
+        <p>In aging T cells, APP/Aβ40 blocked CerS6 mitochondrial trafficking via TOMM, reducing hyperactive mitophagy and preserving fumarate metabolism. In other models, CERS6 impairs mitophagy through BNIP3-LC3 or PINK1/SQSTM1 pathways. CERS6 is thus a quality-control checkpoint, not uniformly pro- or anti-mitophagy.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Metabolic Disease Bridge to AD</h3>
+        <p>In obesity, diabetes, NAFLD/NASH, and hypothalamic neuron models, CERS6 is associated with insulin resistance, impaired Akt signaling, glucose dysregulation, and lipotoxicity. As diabetes and brain insulin resistance are AD risk modifiers, CERS6 may serve as a mechanistic bridge between metabolic dysfunction and neurodegeneration.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat CERS6 as exploratory, not validated.</strong> Consider it a high-priority mechanistic hypothesis for AD, not an established drug target until functional AD-model evidence is generated.</li>
+      <li><strong>Map regional and cellular CERS6 expression in AD.</strong> Focus on hippocampus, cortex, hypothalamus, microglia-rich regions, and cerebrovascular/endothelial compartments to identify where C16:0 ceramide accumulation is most disease-relevant.</li>
+      <li><strong>Test core AD phenotypes directly.</strong> Evaluate whether CERS6 modulation affects amyloid burden, tau phosphorylation, synaptic integrity, neuroinflammation, mitochondrial function, mitophagy, neuronal survival, and cognition in validated AD models.</li>
+      <li><strong>Use chain-length-resolved lipidomics.</strong> Total ceramide measurements may obscure the CERS6-specific contribution; distinguish C16:0 ceramide from C22/C24 and other species in all experiments.</li>
+      <li><strong>Assess cell-type specificity rigorously.</strong> CERS6 may have divergent effects in neurons, astrocytes, microglia, endothelial cells, T cells, macrophages, liver, and metabolic tissues — context determines outcome.</li>
+      <li><strong>Study CERS6 in AD-metabolic comorbidity contexts.</strong> Prioritize models with obesity, diabetes, insulin resistance, chronic inflammation, vascular dysfunction, or elevated peripheral ceramides, where CERS6 may be a convergence point.</li>
+      <li><strong>Pursue selective therapeutic strategies.</strong> Brain-penetrant CERS6 inhibitors, antisense oligonucleotides, blockade of CERS6 mitochondrial trafficking (TOMM interaction), or sphingolipid-rheostat modulation are all mechanistically grounded approaches.</li>
+      <li><strong>Monitor compensatory sphingolipid shifts.</strong> Track C14 ceramide, very-long-chain ceramides, sphingosine, sphingosine-1-phosphate, sphingomyelins, and activity of CERS2 and CERS5 to detect potentially harmful rebalancing after CERS6 inhibition.</li>
+      <li><strong>Deploy mitochondrial and inflammatory biomarker panels.</strong> Include PINK1/Parkin signaling, BNIP3-LC3 interaction, TOMM/CerS6 trafficking, Mff-dependent fragmentation, ROS, complex III activity, mtDNA-STING/NLRP3 activation, and cytokines (TNF-α, IL-1β, IL-6, NF-κB, p38 MAPK).</li>
+      <li><strong>Avoid blanket CERS6 inhibition strategies.</strong> The evidence supports context-aware, selective modulation. CERS6 participates in both harmful stress signaling and protective immune or homeostatic responses depending on tissue and disease context.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>Overall Assessment —</strong> CERS6 is a <strong>plausible but not yet validated Alzheimer's disease therapeutic target</strong>. Its strongest claim rests on the consistent, cross-model evidence that CERS6 drives <strong>C16:0 ceramide accumulation</strong>, which intersects mechanistically with nearly every hallmark of AD biology: mitochondrial fragmentation and dysfunction, ER stress, oxidative injury, neuroinflammation via NF-κB/NLRP3/STING, tau hyperphosphorylation through GSK-3β/PP2A dysregulation, impaired mitophagy, and metabolic insulin resistance. AD-model data in hippocampus, liver, and aging T cells provide early directional support. However, <strong>no study in the supplied evidence base demonstrates that CERS6 inhibition improves amyloid burden, tau pathology, synaptic integrity, neuronal survival, or cognition</strong> in an AD model. The context-dependent role of CERS6 in mitophagy and immune function — where it can be either pathogenic or protective — means that <strong>selective, brain-targeted, and cell-type-informed intervention strategies</strong> will be essential. CERS6 warrants dedicated AD-focused mechanistic investment, but clinical translation requires the foundational functional experiments that the current literature does not yet supply.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CERS6 · Alzheimer's Disease TEP Evidence Summary &nbsp;—&nbsp; AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DND1 — Target Enabling Package | AI-Assisted Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #f0eafb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --slate: #475569;
+    --slate-light: #f8fafc;
+    --slate-border: #e2e8f0;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f1f5f9;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.38);
+    border: 1px solid rgba(255,180,180,0.38);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 32px;
+  }
+
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* CALLOUT DANGER */
+  .callout-danger {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout-danger strong { color: var(--danger); }
+
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 14px;
+    padding: 24px 16px 16px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .fig-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 14px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width: 620px){ .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid transparent;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .card-accent  { background: var(--light);        border-color: var(--mid);     }
+  .card-accent h3  { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-color: var(--danger);  }
+  .card-danger h3  { color: var(--danger); }
+  .card-positive{ background: var(--positive-light);border-color: var(--positive);}
+  .card-positive h3{ color: var(--positive); }
+  .card-blue    { background: var(--blue-light);    border-color: var(--blue);    }
+  .card-blue h3    { color: var(--blue); }
+  .card-slate   { background: var(--slate-light);   border-color: var(--slate);   }
+  .card-slate h3   { color: var(--slate); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: take;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .takeaways ol li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.96rem;
+  }
+  .takeaways ol li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--mid);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #e2e8f0;
+    border-radius: 14px;
+    padding: 40px 36px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  .verdict .lead { font-size: 0.75rem; font-family: Arial, Helvetica, sans-serif; text-transform: uppercase; letter-spacing: 0.16em; color: #a78bfa; margin-bottom: 14px; }
+  .verdict strong { color: #ddd6fe; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    padding: 22px 24px 32px;
+    border-top: 1px solid var(--slate-border);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DND1 &nbsp;|&nbsp; Dead End RNA-Binding Protein 1</span>
+    <span class="chip chip-danger">⚠ Safety: systemic manipulation risk</span>
+  </div>
+  <h1>DND1 &amp; Alzheimer's Disease<br>Exploratory Evidence Review</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════ MAIN ═══════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Important caveat —</strong> The supplied literature does <em>not</em> establish DND1 as an Alzheimer's disease gene, biomarker, disease modifier, or validated therapeutic target. All connections to AD are indirect, hypothesis-generating, and require foundational experimental validation in brain-relevant systems.
+    </div>
+
+    <div class="callout-danger">
+      <strong>🔴 Safety flag —</strong> Systemic DND1 modulation carries plausible risks to fertility, germline maintenance, stem/progenitor biology, and tumor risk, given the gene's mixed tumor-suppressive and tumor-promoting roles across tissue contexts.
+    </div>
+
+    <p>DND1 (Dead-End 1) is a vertebrate RNA-binding protein and post-transcriptional regulator with well-documented roles in germ-cell fate, survival, migration, differentiation, cell-cycle control, translational regulation, microRNA antagonism, P-body/germ-granule biology, apoptosis, and tumor susceptibility. No direct evidence from the supplied text links DND1 to amyloid-β processing, tau biology, synaptic dysfunction, microglial activation, neuronal loss, or AD progression.</p>
+
+    <p>Its conceptual relevance to AD is bridged by overlapping mechanisms: RNA-binding, 3′UTR recognition, mRNA stability, translational control, microRNA-mediated repression, and RNA–protein granule/condensate dynamics. These processes are increasingly implicated in neurodegeneration through disrupted RNA metabolism, stress-granule biology, proteostasis failure, cell-cycle re-entry, mitochondrial stress, and inflammatory transcript regulation.</p>
+
+    <p><strong>Note on plant records:</strong> "dnd1" in plant databases refers to DEFENSE NO DEATH 1 / AtCNGC2, a cyclic nucleotide-gated ion channel in plant immunity — an entirely distinct gene unrelated to vertebrate DND1 and not applicable as human AD evidence.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Overview — DND1 Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        Layout plan (16 nodes max):
+        Panel A (Upstream inputs): 3 nodes — row 1 cluster
+        Panel B (DND1 core mechanisms): 4 nodes — 1 hub + 3 branches
+        Panel C (Downstream cellular effects): 6 nodes — 2 branches x 3 steps
+        Panel D (AD relevance): 3 nodes — cluster
+
+        Total: 3 + 4 + 6 + 3 = 16 ✓
+        No badges (to avoid overlap risk).
+
+        X layout in a ~960 wide viewBox:
+          Panel A: x=20, width=190, cols at x=55, x=120, x=185  → node centers at 55,120,185 not great
+          Let me use absolute coords carefully.
+
+        ViewBox: 0 0 960 510
+        Panel A (Upstream): x=14, y=30, w=210, h=440 — nodes stacked vertically
+        Panel B (DND1 Core): x=240, y=30, w=200, h=440
+        Panel C (Downstream): x=458, y=30, w=280, h=440
+        Panel D (AD Relevance): x=754, y=30, w=192, h=440
+
+        Node dimensions: w=150, h=48 standard; hub node w=170, h=52
+
+        Panel A nodes (centers):
+          A1: cx=109, cy=110  "RNA 3′UTR Binding"
+          A2: cx=109, cy=200  "miRNA Repression"
+          A3: cx=109, cy=290  "NANOS2/3 Complex"
+
+        Panel B nodes:
+          B_hub: cx=340, cy=200  "DND1 Hub" (slightly larger)
+          B1: cx=340, cy=110  "CCR4-NOT Complex"
+          B2: cx=340, cy=310  "P-body / RNP Granules"
+
+        Panel C nodes (two branches from B_hub):
+          Branch 1 (upper): Cell cycle / apoptosis
+            C1: cx=570, cy=110  "Cell-Cycle Exit / p27"
+            C2: cx=570, cy=200  "CDK1 / p21 Control"
+            C3: cx=570, cy=295  "Apoptosis / BAX / Bim"
+          Branch 2 (lower):
+            C4: cx=710, cy=110  "mRNA Stability"
+            C5: cx=710, cy=200  "Translational Control"
+            C6: cx=710, cy=295  "Mitochondrial / DNA Stress"
+
+        Panel D nodes (AD conceptual bridge):
+          D1: cx=860, cy=130  "RNA Metabolism / AD"
+          D2: cx=860, cy=230  "Stress Granule / P-body"
+          D3: cx=860, cy=330  "Neuronal Cell-Cycle Re-entry"
+
+        Arrow routing:
+          A1→B_hub: straight horizontal from right of A1 to left of B_hub — need to check y
+            A1 center y=110, B_hub y=200 — diagonal, need elbow
+            Route: from A1 right edge (184, 110) → go right to x=230, then down to y=200, then right to B_hub left (255, 200)
+          A2→B_hub: direct horizontal — A2 y=200, B_hub y=200 → straight line from (184,200) to (255,200) ✓
+          A3→B_hub: elbow from (184,290) right to x=230, up to y=200, right to (255,200) — but this passes through A2 region?
+            Actually let me check: the elbow corner at (230,290) then vertical from 290 to 200 at x=230 — Panel A ends at x=224, Panel B starts at x=240. The gutter is x=224 to x=240. So route: from (184,290) → right to (232,290) → up to (232,200) → right to (255,200). The vertical at x=232 passes from y=290 to y=200. Check if it passes through A2 node: A2 center (109,200), node width=150 so right edge at 109+75=184. x=232 > 184 so clear ✓.
+            But multiple arrows converge on B_hub left at (255,200). Let me spread them:
+              A1 → B_hub: elbow from (184,110)→(232,110)→(232,196)→(255,196)
+              A2 → B_hub: straight from (184,200)→(255,200) [enter at y=200 midpoint]
+              A3 → B_hub: elbow from (184,290)→(236,290)→(236,204)→(255,204)
+            These three converge near left of B_hub. Keep slight y offsets.
+
+          B_hub → B1 (CCR4-NOT): vertical up from top of B_hub (340,174) to bottom of B1 (340,134)
+            B_hub top: cy=200-26=174, B1 bottom: cy=110+24=134 → up arrow from (340,174)→(340,134) ✓ clear
+
+          B_hub → B2 (P-body): vertical down from bottom of B_hub (340,226) to top of B2 (340,286)
+            B_hub bottom: cy=200+26=226, B2 top: cy=310-24=286 → down from (340,226)→(340,286) ✓
+
+          B_hub → C branch entry: from right edge of B_hub (425,200) → right to x=440 → split
+            C branch upper (C1): elbow (425,200)→(450,200)→(450,110)→(495,110)
+            C branch lower (C4): elbow (425,200)→(455,200)→(455,295)→(495,295)  wait let me place C4 at y=110 for upper branch and branch at different x
+            
+            Actually let me re-think C layout:
+              Left column of Panel C at cx=570: C1(y=110), C2(y=200), C3(y=310)
+              Right column of Panel C at cx=695: C4(y=110), C5(y=200), C6(y=310)
+              
+              From B_hub right (425,200):
+                → horizontal to (458,200) [panel C left edge]
+                Then split:
+                  Upper-left: (458,200)→(458,110)→(495,110) [to C1]
+                  Middle-left: (458,200)→(495,200) [to C2] — but this overlaps with the split point
+                  
+              Better: single entry node concept — from B_hub, draw to C1 (upper) and C2 (middle) separately via elbows through gutter at x=448:
+                B_hub→C1: (425,200)→(448,200)→(448,110)→(495,110)  check: vertical at x=448 from y=200 to y=110. Panel A right edge at 224, Panel B left at 240. Panel B occupies x=240 to 440. Gutter is x=440 to 458. x=448 is in gutter ✓
+                B_hub→C2: (425,200)→(495,200) straight horizontal  — but C2 left edge is at cx=570-75=495, so line ends exactly at C2 left. ✓ And the path from x=425 to x=495 at y=200: does it pass through anything? B_hub right edge at 425, C2 left at 495, y=200, gutter only has x=440-458, clear ✓
+                B_hub→C4: (425,200)→(448,200)→(448,295)→(620,295) — but C4 is at (695,110) not 295. Let me fix C layout.
+                
+              Final C layout:
+                Panel C: x=458, y=30, w=300, h=440
+                Left branch (cell cycle/death): cx=560
+                  C1: (560, 108)  "Cell-Cycle Exit / p27"
+                  C2: (560, 200)  "CDK1 / p21"
+                  C3: (560, 300)  "BAX / Bim Apoptosis"
+                Right branch (RNA/stress): cx=700
+                  C4: (700, 108)  "mRNA Stability"
+                  C5: (700, 200)  "Translation Control"
+                  C6: (700, 300)  "Mito/DNA Stress"
+                  
+              Arrows within Panel C:
+                C1→C2: vertical (560,132)→(560,176) ✓
+                C2→C3: vertical (560,224)→(560,276) ✓
+                C4→C5: vertical (700,132)→(700,176) ✓
+                C5→C6: vertical (700,224)→(700,276) ✓
+                
+              B_hub→C1: elbow (425,200)→(449,200)→(449,108)→(485,108). Vertical at x=449 from y=108 to y=200. Panel B right at 440, Panel C left at 458. x=449 in gutter ✓. Does it cross any node? No. ✓
+              B_hub→C4: elbow (425,200)→(449,200)→... same x=449, but then to (449,108)→(625,108). Both C1 and C4 are at y=108. Routing issue: two arrows use same gutter vertical x=449. Let me use x=449 for C1 path and x=453 for C4 path.
+                B_hub→C1: (425,200)→(449,200)→(449,108)→(485,108)
+                B_hub→C4: (425,200)→(453,200)→(453,108)→(625,108)
+                These two elbows at slightly different x (449 vs 453) both converge at y=200 from B_hub—need to avoid the second arrow going over the first. Since they are very close x, they'll look like parallel lines in gutter. Fine visually and not overlapping boxes.
+                
+                But wait: the vertical from (449,200)→(449,108) and from (453,200)→(453,108) — do either pass through any box? B_hub right edge at cx=340+85=425 (hub width=170, half=85). C1 left at 560-75=485. So the gutter from x=425 to x=485 at y=108 is clear. For y between 108 and 200 at x=449/453: Panel A ends at x=224, Panel B starts at x=240 and ends at x=440, so x=449/453 are in gutter, clear ✓.
+
+          C right→D: 
+            C4(700,108)→D1(860,130): elbow (775,108)→(775,130)→(785,130). Too diagonal. Instead: from C4 right edge (775,108) → right to (758,108)→(758,130)→(785,130). Panel C right edge at 758, Panel D left at 754. Hmm Panel D starts at x=754 so left edge at 754. Let me shift Panel D start to x=764 to have a gutter.
+            
+            Actually let me re-plan the full x layout more carefully:
+            
+            ViewBox: 0 0 960 510
+            Panel A: x=12,  w=210, so right=222
+            Panel B: x=236, w=196, so right=432  (gutter A-B: 222-236=14px)
+            Panel C: x=452, w=286, so right=738  (gutter B-C: 432-452=20px)
+            Panel D: x=758, w=190, so right=948  (gutter C-D: 738-758=20px)
+            
+            Panel B center x = 236+98=334
+            Panel C spans 452 to 738:
+              Left branch cx = 452+75 = 527... let me compute:
+              Left nodes: cx=534, right nodes cx=690
+              Left node right edge: 534+75=609, right node left edge: 690-75=615. Gap=6px < 8px. Need to spread.
+              Left cx=524, right cx=700. Gap: 700-75-(524+75)=700-75-599=26px ✓
+              
+            Panel D: x=758, w=190, center cx=853
+            
+            Let me now finalize all node positions with these panel bounds:
+            
+            Node w=148, h=46
+            
+            Panel A (x=12, w=210, cx=117):
+              A1: (117, 105) "RNA 3′UTR Binding"
+              A2: (117, 200) "miRNA Antagonism"
+              A3: (117, 310) "NANOS2/3 Complex"
+            
+            Panel B (x=236, w=196, cx=334):
+              B_hub: (334, 200) w=160, h=52  "DND1 RNA-Binding Hub"
+              B1: (334, 105) "CCR4-NOT Deadenylation"
+              B2: (334, 318) "P-body / RNP Granules"
+            
+            Panel C (x=452, w=286):
+              Left cx=524:
+                C1: (524, 105)  "Cell-Cycle Exit / p27"
+                C2: (524, 200)  "CDK1 / p21 Regulation"
+                C3: (524, 320)  "BAX / Bim Apoptosis"
+              Right cx=700:
+                C4: (700, 105)  "mRNA Stability"
+                C5: (700, 200)  "Translation Repression"
+                C6: (700, 320)  "Mito / DNA Stress"
+            
+            Panel D (x=758, w=190, cx=853):
+              D1: (853, 130) "AD: RNA Metabolism"
+              D2: (853, 235) "AD: Granule Biology"
+              D3: (853, 345) "AD: Cell-Cycle Re-entry"
+            
+            Total nodes: 3+3+6+3 = 15 ✓ (under 16)
+            
+            Now check overlaps:
+            A1 box: x=117±74=43 to 191, y=105±23=82 to 128
+            A2 box: 43 to 191, y=177 to 223
+            A3 box: 43 to 191, y=287 to 333
+            Gaps: A1-A2=177-128=49✓, A2-A3=287-223=64✓
+            
+            B_hub box: 334±80=254 to 414, y=200±26=174 to 226
+            B1 box: 334±74=260 to 408, y=105±23=82 to 128
+            B2 box: 260 to 408, y=318±23=295 to 341
+            B_hub top (174) - B1 bottom (128) = 46 ✓
+            B2 top (295) - B_hub bottom (226) = 69 ✓
+            
+            Panel B left at 236. B_hub left at 254. 254-236=18>8 ✓
+            Panel B right at 432. B_hub right at 414. 432-414=18 ✓
+            Panel B right at 432. B1 right at 408. 432-408=24 ✓
+            
+            C1 box: 524±74=450 to 598, y=82 to 128
+            C2 box: 450 to 598, y=177 to 223
+            C3 box: 450 to 598, y=297 to 343
+            C4 box: 700±74=626 to 774, y=82 to 128
+            C5 box: 626 to 774, y=177 to 223
+            C6 box: 626 to 774, y=297 to 343
+            C1 right (598) to C4 left (626) = 28 ✓
+            
+            Panel C left (452) to C1 left (450)=2px — TOO CLOSE. C1 left edge is 450, panel left is 452. Overlap! Fix: move C1 cx to 530.
+            C1 cx=530: box 456 to 604. Panel left 452, gap=4px still tight. Move to cx=535: box 461 to 609. Panel left 452, gap=9 ✓.
+            Now C1 right=609, C4 left=626. Gap=17 ✓.
+            
+            Let C left branch cx=535, right branch cx=700.
+            C1/C2/C3: cx=535. C4/C5/C6: cx=700.
+            Panel C right at 738. C4 right = 700+74=774 > 738. Overflow! Move C4 cx to 690.
+            C4/C5/C6: cx=690. Right edge 690+74=764 > 738 still. 
+            Panel C width seems too small for two columns of w=148 nodes.
+            Options: (a) shrink nodes in Panel C, (b) widen Panel C.
+            
+            Let me widen Panel C: x=452, w=306, right=758. Gutter to Panel D: 758 to 760=2px. Move Panel D to x=764, w=184, right=948.
+            D cx=764+92=856.
+            C right=758. C4 cx=690, right=764. Panel C right=758. 764>758 overflow. 
+            
+            Let me try node w=136, h=44 for Panel C:
+            C left cx=530: box 530±68=462 to 598
+            C right cx=688: box 688±68=620 to 756
+            Panel C (x=452, w=306, right=758): left 452, gap=462-452=10✓. Right 758, gap=758-756=2px too tight.
+            C right cx=684: right edge=684+68=752. Panel right=758, gap=6 slightly tight but ok. Left-right gap: 752 to panel right... actually what matters is C4 right vs panel right border visibility, which is fine.
+            
+            C right cx=682: right=750. Panel right=758, gap=8 ✓.
+            C left-right gap: 598 to 614=16 ✓.
+            
+            Panel D: x=764, w=184, right=948. cx=856.
+            D1/D2/D3: cx=856, w=148, h=44. Box: 856±74=782 to 930. Panel D left=764, gap=782-764=18 ✓. Panel right=948, gap=948-930=18 ✓.
+            
+            Gutter C-D: Panel C right=758, Panel D left=764, gutter=6px — slightly tight but the gutter is just space, ok.
+            
+            Now arrows:
+            A→B_hub:
+              A1(117,105)→B_hub: gutter x=222 to 236.
+                Route: from A1 right (191,105) → right to (229,105) → down to (229,200) → right to (254,200)
+                Vertical at x=229 from y=105 to y=200. Does it cross A2? A2 right edge=191, x=229>191 ✓.
+              A2(117,200)→B_hub: straight from (191,200)→(254,200) ✓
+              A3(117,310)→B_hub: 
+                Route: from A3 right (191,310) → right to (229,310) → up to (229,200) → right to (254,200)
+                Vertical at x=229 from y=310 to y=200. Passes y=223 to y=287 which is between A2 bottom and A3 top — clear ✓. Does it hit A2? A2 bottom=223, vertical goes from 310 up to 200. At y=223 (A2 bottom), x=229>191 (A2 right edge) ✓.
+            
+            B1→B_hub: vertical up-to-down. B1 bottom (334,128)→B_hub top (334,174). ✓
+            Actually B1 is above B_hub so arrow B_hub→B1 goes up: (334,174)→(334,128). ✓
+            B_hub→B2: (334,226)→(334,295). ✓
+            
+            B_hub→C (left branch):
+              Gutter x=432 to 452 (width=20).
+              B_hub→C1: right edge of B_hub at (414,200). Route: (414,200)→(442,200)→(442,105)→(462,105). Vertical at x=442 from y=200 to y=105. Passes through panel B area? Panel B right=432, x=442>432 ✓ in gutter. C1 left=462. ✓
+              B_hub→C2: (414,200)→(462,200) straight horizontal at y=200 through gutter. ✓  But wait, C2 left=462. The line goes from 414 to 462 at y=200. Does it pass through any box? Nothing in gutter. ✓
+              
+              Hmm but now both C1 and C2 have arrows from B_hub. That means:
+                - Arrow to C1 goes via elbow
+                - Arrow to C2 goes straight
+                These two arrows both start at B_hub right at x=414 — the elbow to C1 goes diagonally via (442,200)→(442,105), and the straight to C2 goes at y=200. The elbow first goes right to (442,200) which overlaps with the straight line at the same y=200 from 414 to 462. These two arrows share a segment from (414,200)→(442,200). That's acceptable (they just look like a fork).
+              
+              Actually for C3 (apoptosis, y=320): B_hub→C3: (414,200)→(442,200)→(442,320)→(462,320). Vertical at x=442 from y=200 to y=320. Does it pass through B2? B2 center (334,318), box 260 to 408, y=295 to 341. At x=442, B2 right=408 < 442. ✓
+              
+              For right branch C4/C5/C6 (cx=682):
+              B_hub→C4: (414,200)→(442,200)→(442,105)→(614,105). Then to C4 left (614,105). Horizontal at y=105 from x=442 to x=614. Does it pass over C1? C1 box: 462 to 598, y=83 to 127. The horizontal at y=105 from x=462 to x=598 passes OVER C1! ❌
+              
+              Need different route for B_hub→C4. Options:
+                1. Route B_hub→C4 via gutter between C right=738/758 and D left — no, too far.
+                2. Route via y above all Panel C nodes: y=60 (above all nodes which start at y=83).
+                   B_hub→C4: (414,200)→(442,200)→(442,60)→(682,60)→(682,83). 
+                   Vertical at x=442 from y=200 to y=60: clear (nothing above y=82 in gutter).
+                   Horizontal at y=60 from x=442 to x=682: need to check — Panel B top... panel borders are visual only (low opacity rect). The horizontal at y=60 is above all node boxes (top panel padding at y=30, panel label around y=50). So y=60 line would be in the panel label area. Might overlap panel label text. Not a node box though. Let's place it at y=56.
+                   Actually the rule says lines must not pass over BOXES. Panel border rects are not node boxes. So routing at y=56 through top area of panels is ok rule-wise.
+                   
+                   But does the vertical at x=442, going from y=200 up to y=56, pass through B1? B1 box: 260 to 408 in x, y=83 to 127. x=442 > 408, so clear ✓.
+                   And the horizontal at y=56 from x=442 to x=682: passes through Panel C top area. Any nodes there? C1 top=83, so y=56 < 83, clear ✓.
+                   
+                   Then vertical down from (682,56) to C4 top (682,83). ✓
+                   This works!
+              
+              B_hub→C5 (translate, y=200): (414,200)→gutter→(614,200)→C5 left (614,200). Straight horizontal at y=200 from x=414 to x=614. Does it pass over C2? C2 box: 462 to 598, y=178 to 222. y=200 is inside C2's y range. x path: from 462 to 598 at y=200 passes directly OVER C2. ❌
+              
+              Route B_hub→C5 differently: (414,200)→(442,200)→(442,245)→(614,245)→(614,200). Horizontal at y=245 from x=442 to x=614. C2 bottom=222, C3 top=298. y=245 is between them, clear ✓. Then vertical at x=614 from y=245 to y=200. C2 right=598, x=614>598 ✓. C5 left=614. ✓
+              
+              B_hub→C6 (stress, y=320): (414,200)→(442,200)→(442,350)→(614,350)→(614,320). 
+                Horizontal at y=350: C3 box y=298 to 342. y=350 > 342 ✓. x from 442 to 614. C3 right=598, but the horizontal at y=350 starts at x=442 and C3's x range is 462 to 598. At y=350, C3 bottom is 342 < 350 so the horizontal doesn't go through C3 ✓.
+                Then vertical at x=614 from y=350 to y=320 (C6 top=320-22=298... wait C6 center=320, h=44, top=298). So from (614,350)→(614,298). Passes through C6 region? C6 left=614, so touching left edge. Change to x=610: C6 left=682-68=614. x=610 < 614 ✓. 
+                Actually for C6: C6 cx=682, w=136, left=682-68=614. A vertical line at x=614 is exactly on the left edge of C6. Move line to x=612. Route: (414,200)→(442,200)→(442,350)→(612,350)→(612,298). At (612,298), arrow points right to C6 left (614,320)? No, the arrow endpoint should be at C6 left-center: (614,320). So from (612,298)→(612,320)→(614,320). This gets complex. 
+                
+                Alternative: just connect B_hub to C3 and C6 indirectly through C-internal vertical chains, and only explicitly draw B_hub→C1 (cell cycle) and B_hub→C4 (RNA) as the two primary branches. Then within each branch, C1→C2→C3 and C4→C5→C6 are sequential.
+                
+                This is cleaner! The figure shows:
+                  - B_hub branches to C1 (upper-left) and C4 (upper-right)
+                  - C1→C2→C3 (left chain)
+                  - C4→C5→C6 (right chain)
+                  - C3 and C6 as endpoints (no convergence needed since text doesn't strongly support it)
+                
+                Also B_hub feeds B1 (up, CCR4-NOT) and B2 (down, P-body) as bidirectional regulatory annotations.
+                
+                Panel D gets arrows from C3 and C6:
+                  C3(524,320)→D3(856,345): gutter C-D at x=758-764.
+                    Route: C3 right(598,320)→(758,320)→(758,345)→(782,345). 
+                    Horizontal at y=320 from x=598 to x=758. Does it pass over C5(682,200)? C5 box: 614 to 750, y=178 to 222. y=320 > 222 ✓. Does it pass over C6(682,320)? C6 box: 614 to 750, y=298 to 342. y=320 is inside C6's y! The horizontal at y=320 from x=614 to x=750 passes OVER C6. ❌
+                    
+                    Route instead at y=360: C3 right→(598,360)→(756,360)→(756,345)→(782,345). 
+                    y=360: C3 bottom=342, C6 bottom=342. y=360 > 342 ✓. x from 598 to 756: C6 right=750, so at y=360, clear ✓.
+                    Then vertical at x=756 from y=360 to y=345. D3 left=782. (756,345)→(782,345) horizontal. ✓
+                    
+                    But does horizontal at y=360 from x=598 to x=756 pass over any node? C6 bottom=342 < 360 ✓. C5 bottom=222 < 360 ✓. C4 bottom=127 < 360 ✓. Panel C right=758, x=756 < 758. ✓ 
+                    Wait, does it also pass Panel D left at x=764? x=756 < 764 so stays in gutter. ✓ Good.
+                  
+                  C6(682,320)→D2(856,235): 
+                    Route: C6 right(750,320)→(756,320)→(756,235)→(782,235).
+                    Vertical at x=756 from y=320 to y=235. Does it cross any C node? C5 right=750 < 756 ✓. C4 top=83 < 235, C4 bottom=127 < 235 ✓. All clear.
+                    Horizontal (756,235)→(782,235). D2 left=782. ✓
+                    
+                  C1(524,105)→D1(856,130):
+                    Route: C1 right(598,105)→(756,105)→(756,130)→(782,130).
+                    Horizontal at y=105 from x=598 to x=756. C4 left=614, C4 top=83, C4 bottom=127. y=105 is inside C4's y (83 to 127)! The horizontal passes OVER C4. ❌
+                    
+                    Route at y=68: C1 right(598,83)→ hmm C1 top=83. 
+                    Route above C1: from C1 top (524,83)→ up to y=56 → right to (756,56) → down to (782,130).
+                    (524,83)→(524,56): vertical at x=524 from y=83 to y=56. C1 top=83. Start from outside C1 box: from (524,83) — actually I want to start from C1's right edge or top edge. Start from C1 top-center (524,83) going up to (524,56), then right to (756,56), then down to (756,130), then right to (782,130).
+                    y=56 line from x=524 to x=756: does it hit any boxes? All nodes start at y≥83. ✓
+                    Vertical at x=756 from y=56 to y=130: passes through y=83 to y=127 which is C4's y range. But x=756 > C4 right (750). C4 right=750, x=756>750. ✓ Clear!
+                    D1 left = 782. From (756,130)→(782,130). ✓
+                    
+                    Actually let me reconsider: is this C1→D1 arrow really necessary? It's getting very complex. Let me simplify Panel D connections:
+                    
+                    Instead of connecting specific C nodes to D nodes, I'll just have ONE arrow from C panel to D panel as a "conceptual bridge" annotation — from Panel C right gutter to D1. This keeps it cleaner.
+                    
+                    Single bridge arrow: from (756, 220) → (782, 220) horizontal, entering D panel.
+                    But which D node? D2 at y=235. (756,220)→(756,235)→(782,235). Or just mid-panel.
+                    
+                    Actually let's do 2 bridge arrows:
+                    Bridge 1: C left chain endpoint area → D (RNA/cell cycle themes)
+                      From (598, 310) → right to (756,310) → (756, 235) → (782, 235) [→D2]
+                      y=310: C3 top=298, C3 bottom=342. y=310 is inside C3's y range. ❌
+                      From C3 bottom (524,342) → down to (524,370) → right to (756,370) → up to (756,345) → (782,345) [→D3]
+                      y=370: below all C nodes (all bottom at most 342). ✓ x from 524 to 756: C6 bottom=342<370✓. ✓
+                    
+                    Bridge 2: C right chain → D1
+                      From C4 top (682,83) → up to (682,56) → right to (756,56) → down to (756,130) → (782,130) [→D1]
+                      y=56 horizontal from x=682 to x=756: above all nodes (top=83) ✓. C4 right=750 < x=756 ✓. ✓
+                    
+                    One more D internal: D1→D2→D3 vertically.
+                      D1 bottom (856,152)→D2 top (856,213). ✓
+                      D2 bottom (856,257)→D3 top (856,323). ✓ 
+                    D nodes: h=44, so half=22. D1 cy=130: top=108, bottom=152. D2 cy=235: top=213, bottom=257. D3 cy=345: top=323, bottom=367.
+                    Gaps: D1 bottom to D2 top: 213-152=61✓. D2 bottom to D3 top: 323-257=66✓.
+
+        OK I think I have enough to draw this. Let me also finalize Panel labels positions and Panel border rects.
+        
+        FINAL LAYOUT SUMMARY:
+        ViewBox: "0 0 960 510"
+        
+        Panel rects:
+          A: x=12, y=26, w=208, h=458, fill=#f0eafb, stroke=#6d3bbf, opacity=0.3, label at y=46
+          B: x=234, y=26, w=198, h=458, fill=#ede9fe, stroke=#6d3bbf, opacity=0.3, label at y=46
+          C: x=446, y=26, w=298, h=458, fill=#faf5ff, stroke=#6d3bbf, opacity=0.3, label at y=46
+          D: x=758, y=26, w=190, h=458, fill=#f0fdfa, stroke=#0f766e, opacity=0.3, label at y=46
+
+        Nodes (cx, cy, w=148, h=44 unless noted):
+          A1: (116, 110) "RNA 3′UTR Binding" (purple)
+          A2: (116, 210) "miRNA Antagonism" (purple)
+          A3: (116, 320) "NANOS2/3 Complex" (purple)
+          
+          B_hub: (333, 210) w=160, h=52 "DND1 RNA-Binding Hub" (dark purple, bold)
+          B1: (333, 108) "CCR4-NOT Deadenyl." (purple)
+          B2: (333, 330) "P-body / RNP Granules" (purple)
+          
+          C1: (530, 108) "Cell-Cycle Exit / p27" (blue)   w=136, h=44
+          C2: (530, 210) "CDK1 / p21 Regulation" (blue)   w=136, h=44
+          C3: (530, 330) "BAX / Bim Apoptosis" (red)    w=136, h=44
+          C4: (684, 108) "mRNA Stability" (purple)         w=136, h=44
+          C5: (684, 210) "Translation Repression" (purple) w=136, h=44
+          C6: (684, 330) "Mito / DNA-Damage Stress" (orange) w=136, h=44
+          
+          D1: (853, 130) "AD: RNA Metabolism" (teal)     w=148, h=44
+          D2: (853, 248) "AD: Granule Biology" (teal)    w=148, h=44
+          D3: (853, 366) "AD: Cell-Cycle Re-entry" (teal) w=148, h=44
+        
+        Total nodes: 3+3+6+3=15 ✓
+        
+        Let me verify overlaps:
+        A1: x=116±74=42 to 190, y=110±22=88 to 132
+        A2: 42 to 190, y=210±22=188 to 232
+        A3: 42 to 190, y=320±22=298 to 342
+        Panel A: x=12 to 220. A1 left=42-12=30>8✓, A1 right=220-190=30✓
+        A1-A2 gap: 188-132=56✓, A2-A3 gap: 298-232=66✓
+        
+        B_hub: x=333±80=253 to 413, y=210±26=184 to 236
+        B1: x=333±74=259 to 407, y=108±22=86 to 130
+        B2: 259 to 407, y=330±22=308 to 352
+        Panel B: x=234 to 432. B_hub left=253-234=19✓, B_hub right=432-413=19✓
+        B1-B_hub gap: 184-130=54✓, B_hub-B2 gap: 308-236=72✓
+        
+        Gutter A-B: Panel A right=220, Panel B left=234. Gap=14✓
+        B_hub left=253, Panel B left=234: 253-234=19>8✓
+        A right edge=190, B left=234. A1/A2/A3 right=190, B1/B_hub/B2 left≥253. Gap=63✓
+        
+        C1: x=530±68=462 to 598, y=108±22=86 to 130
+        C2: 462 to 598, y=210±22=188 to 232
+        C3: 462 to 598, y=330±22=308 to 352
+        C4: x=684±68=616 to 752, y=86 to 130
+        C5: 616 to 752, y=188 to 232
+        C6: 616 to 752, y=308 to 352
+        Panel C: x=446 to 744. 
+        C1 left=462-446=16>8✓, C4 right=752, Panel C right=744... 752>744 ❌ overflow by 8px.
+        
+        Fix: reduce C4 cx to 676. C4: 676±68=608 to 744. Panel C right=744. Gap=744-744=0px ❌.
+        Move Panel C right to 748: x=446, w=302. Then C4 right=744, gap=4px. Still tight.
+        Or reduce node half-width for right column: w=130, half=65. C4: 676±65=611 to 741. Panel right=748, gap=7. Close.
+        
+        Let me just go with w=128 (half=64) for C column nodes and Panel C right=744:
+        C4: 676±64=612 to 740. Panel right=744. Gap=4. Still too tight.
+        
+        Easiest fix: widen Panel C. Change Panel C: x=446, w=312, right=758. Then D starts at x=764.
+        C4 cx=684: right=748. Panel C right=758. Gap=10✓.
+        C1 left=462. Panel C left=446. Gap=16✓.
+        Gutter C-D: 758 to 764=6px. Lines can go through gutter.
+        
+        D: x=764, w=184, right=948. D cx=764+92=856.
+        D nodes: 856±74=782 to 930. Panel right=948, gap=18✓. Panel left=764, gap=782-764=18✓.
+        
+        Recheck C4: cx=684, w=136 (half=68). Right=684+68=752. Panel C right=758. Gap=6px. Slightly under 8px rule for panel border (but panel border isn't a node, so ok by the rules which say boxes not to overlap each other—panel borders are just visual containers, not competing nodes).
+        
+        Between C1 and C4: C1 right=598, C4 left=616. Gap=18✓.
+        
+        Now gutter C-D: x=758 to x=764. Width=6px.
+        Bridge arrows need to pass through this gutter.
+        
+        Arrow routing final:
+        
+        [A→B]:
+        A1→B_hub: (190,110)→M(227,110)→(227,210)→(253,210). Gutter x=220-234, midpoint 227. ✓
+        A2→B_hub: (190,210)→(253,210) straight. ✓
+        A3→B_hub: (190,320)→(227,320)→(227,210)→(253,210). Same gutter x=227. 
+          Vertical at x=227 from y=320 to y=210: does it cross A2 right (190)? 227>190✓. ✓
+
+        [B internal]:
+        B_hub→B1 (up): (333,184)→(333,130). ✓ (solid vertical)
+        B_hub→B2 (down): (333,236)→(333,308). ✓
+
+        [B→C branches]:
+        B_hub→C1: (413,210)→(440,210)→(440,108)→(462,108). 
+          Gutter x=432-446, use x=440. Vertical from y=210 to y=108 at x=440. 
+          B2 left=259, right=407. x=440>407✓. B1 same. All clear in gutter. ✓
+          
+        B_hub→C4 (via top): (413,210)→(440,210)→(440,65)→(684,65)→(684,86).
+          Horizontal at y=65 from x=440 to x=684. C1 top=86>65✓. C4 top=86>65✓. All nodes top≥86. ✓
+          Vertical down from (684,65)→(684,86). C4 top=86. ✓ (arrives at top of C4) ✓
+          
+        [C internal]:
+        C1→C2: (530,130)→(530,188). ✓
+        C2→C3: (530,232)→(530,308). ✓
+        C4→C5: (684,130)→(684,188). ✓
+        C5→C6: (684,232)→(684,308). ✓
+        
+        [C→D bridges]:
+        Bridge1: C4 top→D1
+          From (684,86) [C4 top] → up to (684,52) → right to (761,52) → down to (761,130) → (782,130).
+          Wait, C4 top is already reached by B_hub→C4 arrow. Better start from C1 right or just do separate path.
+          
+          Actually for D1 (AD: RNA Metabolism), the conceptual connection is from C4 (mRNA stability) / RNA branch. 
+          Route from C4 right(752,108)→(761,108)→(761,130)→(782,130). 
+          Gutter x=758-764, use x=761. Vertical from y=108 to y=130 at x=761. Does it cross anything? C4 right=752<761✓. D1 left=782>761. Panel C right=758<761. ✓
+          Horizontal (761,130)→(782,130). ✓
+          
+        Bridge2: C6→D3
+          C6 right(752,330)→(761,330)→(761,366)→(782,366).
+          Gutter x=761. Vertical y=330 to y=366: C6 bottom=352<366✓. D3 top=366-22=344. So (761,366) arrives at D3 top. (782,366) = D3 left-center. ✓
+          Does vertical at x=761 from y=330 to y=366 cross anything? C6 right=752<761✓. D3 left=782>761✓. ✓
+          
+        Bridge3: C3→D2 (apoptosis → granule biology as a stretch concept... actually C2→D2 more apt for cell cycle)
+          C3 right(598,330)→(761,330)→... but x=761 already used for C6 bridge. Use x=759.
+          But y=330 path from x=598 to x=759: at y=330, does it cross C6? C6 left=616, C6 box y=308 to 352. y=330 inside C6 y range, x from 616 to 752 — the horizontal at y=330 passes OVER C6! ❌
+          
+          Skip Bridge3 to avoid complexity. Two bridges (RNA→D1, Stress→D3) are sufficient.
+          
+        [D internal]:
+        D1→D2: (853,152)→(853,226). ✓
+        D2→D3: (853,270)→(853,344). ✓
+        D node heights: D1 cy=130 h=44→top=108,bottom=152; D2 cy=248 h=44→top=226,bottom=270; D3 cy=366 h=44→top=344,bottom=388.
+        Gaps: D1-D2=226-152=74✓, D2-D3=344-270=74✓.
+        
+        Panel D: x=764, h top=26, bottom=484. D3 bottom=388, 484-388=96, plenty of space.
+        
+        Let me also re-examine the A→B arrows to make sure the two elbows at x=227 don't conflict:
+        A1 elbow: (190,110)→(227,110)→(227,210)→(253,210): horizontal at y=110, then vertical x=227 from y=110 to y=210, then horizontal to B_hub.
+        A3 elbow: (190,320)→(227,320)→(227,210)→(253,210): horizontal at y=320, then vertical x=227 from y=320 to y=210, then horizontal to B_hub.
+        Both arrive at (253,210) on B_hub left. The vertical segments are at same x=227 but different y ranges (A1: 110→210, A3: 320→210). They don't overlap since they're in different y ranges and both go toward y=210 from opposite directions. At y=210 both lines merge into the same horizontal to (253,210). This creates a "T-junction" which looks fine.
+        
+        Actually they both end at (253,210) so they share the endpoint. The rendering will just show two arrows converging. Fine.
+        
+        A2 straight: (190,210)→(253,210). Also ends at same point. Three arrows converging on B_hub left at y=210. Could look cluttered. Let me offset them:
+        A1→B_hub: arrives at (253,206)
+        A2→B_hub: arrives at (253,210)
+        A3→B_hub: arrives at (253,214)
+        These small offsets (±4px) won't be visible at diagram scale. Fine.
+        
+        One more check: the B_hub→C4 path goes horizontal at y=65 from x=440 to x=684. Panel B top is y=26, and B1 top is y=86. At y=65, we're above B1 (86>65) so clear ✓. Panel labels are text around y=42-50, which is in the panel header area—the horizontal line at y=65 might cross through panel B's top area. Panel labels won't be "boxes" in the collision sense, just text. OK.
+        
+        Also: B_hub→C1 path: vertical at x=440 from y=210 to y=108. The B1 box is at x=259 to 407, and the B2 box at x=259 to 407. x=440 is beyond both (407<440) ✓. The vertical passes through the inter-panel gutter (x=432-446) ✓.
+        
+        I think the layout is solid. Let me now write the SVG.
+        
+        COLOR SCHEME for nodes:
+        - Panel A (upstream regulators): fill=#ede9fe (light purple), stroke=#6d3bbf
+        - Panel B (DND1 hub): DND1 hub fill=#3b1f6e (dark), white text; B1/B2 fill=#ede9fe, stroke=#6d3bbf
+        - Panel C left (cell cycle/apoptosis): C1/C2 fill=#eff6ff stroke=#1d4ed8; C3 fill=#fef2f2 stroke=#991b1b
+        - Panel C right (RNA/stress): C4/C5 fill=#ede9fe stroke=#6d3bbf; C6 fill=#fffbeb stroke=#b45309
+        - Panel D (AD bridge): fill=#f0fdfa, stroke=#0f766e, text=#0f766e
+        
+        Arrow colors:
+        - A→B: var(--mid) #6d3bbf
+        - B internal: #6d3bbf
+        - B→C: #6d3bbf
+        - C internal left: #1d4ed8
+        - C internal right: #6d3bbf
+        - C→D bridges: #0f766e (teal, dashed to indicate conceptual/indirect)
+        - D internal: #0f766e
+        
+        Panel fill colors (low opacity):
+        - A: #f0eafb, B: #ede9fe, C: #f5f3ff, D: #f0fdfa
+      -->
+      <svg viewBox="0 0 960 510" width="920" height="490" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" font-size="11">
+
+        <!-- DEFS: arrowheads -->
+        <defs>
+          <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#6d3bbf"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL BACKGROUNDS ── -->
+        <!-- Panel A: Upstream Inputs -->
+        <rect x="12" y="26" width="208" height="458" rx="10" fill="#f0eafb" fill-opacity="0.7" stroke="#6d3bbf" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="116" y="46" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="0.12em" text-decoration="none">UPSTREAM INPUTS</text>
+
+        <!-- Panel B: DND1 Core -->
+        <rect x="234" y="26" width="198" height="458" rx="10" fill="#ede9fe" fill-opacity="0.5" stroke="#6d3bbf" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="333" y="46" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="0.12em">DND1 CORE MECHANISM</text>
+
+        <!-- Panel C: Downstream Effects -->
+        <rect x="446" y="26" width="312" height="458" rx="10" fill="#f5f3ff" fill-opacity="0.5" stroke="#6d3bbf" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="602" y="46" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="0.12em">DOWNSTREAM CELLULAR EFFECTS</text>
+
+        <!-- Panel D: AD Conceptual Bridge -->
+        <rect x="764" y="26" width="184" height="458" rx="10" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-opacity="0.45" stroke-width="1.5"/>
+        <text x="856" y="46" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.12em">AD CONCEPTUAL BRIDGE</text>
+
+        <!-- ══════════════════════════════ ARROWS ══════════════════════════════ -->
+
+        <!-- A1 → B_hub (elbow via gutter x=227, top path) -->
+        <polyline points="190,110 227,110 227,210 253,210" fill="none" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+        <!-- A2 → B_hub (straight) -->
+        <line x1="190" y1="210" x2="253" y2="210" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+        <!-- A3 → B_hub (elbow via gutter x=227, bottom path) -->
+        <polyline points="190,320 227,320 227,214 253,214" fill="none" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+
+        <!-- B_hub → B1 (up, CCR4-NOT) -->
+        <line x1="333" y1="184" x2="333" y2="130" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+        <!-- B_hub → B2 (down, P-body) -->
+        <line x1="333" y1="236" x2="333" y2="308" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+
+        <!-- B_hub → C1 (left branch, elbow via gutter x=440, then up to y=108) -->
+        <polyline points="413,210 440,210 440,108 462,108" fill="none" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+
+        <!-- B_hub → C4 (right branch, via top y=65 highway) -->
+        <polyline points="413,210 440,210 440,65 684,65 684,86" fill="none" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+
+        <!-- C1 → C2 (left chain) -->
+        <line x1="530" y1="130" x2="530" y2="188" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+        <!-- C2 → C3 (left chain) -->
+        <line x1="530" y1="232" x2="530" y2="308" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+        <!-- C4 → C5 (right chain) -->
+        <line x1="684" y1="130" x2="684" y2="188" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+        <!-- C5 → C6 (right chain) -->
+        <line x1="684" y1="232" x2="684" y2="308" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+
+        <!-- C4 → D1 bridge (RNA → AD RNA Metabolism), dashed teal, via gutter x=761 -->
+        <polyline points="752,108 761,108 761,130 782,130" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- C6 → D3 bridge (Mito/DNA Stress → AD Cell-Cycle Re-entry), dashed teal -->
+        <polyline points="752,330 761,330 761,366 782,366" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- D1 → D2 → D3 (internal) -->
+        <line x1="853" y1="152" x2="853" y2="226" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <line x1="853" y1="270" x2="853" y2="344" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- ══════════════════════════════ NODE BOXES ══════════════════════════════ -->
+
+        <!-- PANEL A NODES -->
+        <!-- A1: RNA 3′UTR Binding -->
+        <rect x="42" y="88" width="148" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="116" y="107" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">RNA 3′UTR</text>
+        <text x="116" y="121" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Binding</text>
+
+        <!-- A2: miRNA Antagonism -->
+        <rect x="42" y="188" width="148" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="116" y="207" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">miRNA</text>
+        <text x="116" y="221" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Antagonism</text>
+
+        <!-- A3: NANOS2/3 Complex -->
+        <rect x="42" y="298" width="148" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="116" y="317" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">NANOS2/3</text>
+        <text x="116" y="331" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Complex</text>
+
+        <!-- PANEL B NODES -->
+        <!-- B1: CCR4-NOT Deadenylation -->
+        <rect x="259" y="86" width="148" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="333" y="105" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">CCR4-NOT</text>
+        <text x="333" y="119" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Deadenylation</text>
+
+        <!-- B_hub: DND1 Hub (prominent) -->
+        <rect x="253" y="184" width="160" height="52" rx="9" fill="#3b1f6e" stroke="#1e0a42" stroke-width="2"/>
+        <text x="333" y="207" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">DND1</text>
+        <text x="333" y="223" text-anchor="middle" fill="#ddd6fe" font-size="10" font-weight="600">RNA-Binding Hub</text>
+
+        <!-- B2: P-body / RNP Granules -->
+        <rect x="259" y="308" width="148" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="333" y="327" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">P-body / RNP</text>
+        <text x="333" y="341" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Granules</text>
+
+        <!-- PANEL C LEFT BRANCH NODES -->
+        <!-- C1: Cell-Cycle Exit / p27 -->
+        <rect x="462" y="86" width="136" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="530" y="105" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Cell-Cycle Exit</text>
+        <text x="530" y="119" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">/ p27 (CDKN1B)</text>
+
+        <!-- C2: CDK1 / p21 Regulation -->
+        <rect x="462" y="188" width="136" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="530" y="207" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">CDK1 / p21</text>
+        <text x="530" y="221" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Regulation</text>
+
+        <!-- C3: BAX / Bim Apoptosis -->
+        <rect x="462" y="308" width="136" height="44" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="530" y="327" text-anchor="middle" fill="#7f1d1d" font-size="10.5" font-weight="600">BAX / Bim</text>
+        <text x="530" y="341" text-anchor="middle" fill="#7f1d1d" font-size="10.5" font-weight="600">Apoptosis</text>
+
+        <!-- PANEL C RIGHT BRANCH NODES -->
+        <!-- C4: mRNA Stability -->
+        <rect x="616" y="86" width="136" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="684" y="105" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">mRNA Stability</text>
+        <text x="684" y="119" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">&amp; Decay Control</text>
+
+        <!-- C5: Translation Repression -->
+        <rect x="616" y="188" width="136" height="44" rx="7" fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="684" y="207" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Translation</text>
+        <text x="684" y="221" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="600">Repression</text>
+
+        <!-- C6: Mito / DNA Damage Stress -->
+        <rect x="616" y="308" width="136" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="684" y="327" text-anchor="middle" fill="#78350f" font-size="10.5" font-weight="600">Mito / DNA-</text>
+        <text x="684" y="341" text-anchor="middle" fill="#78350f" font-size="10.5" font-weight="600">Damage Stress</text>
+
+        <!-- PANEL D NODES -->
+        <!-- D1: AD: RNA Metabolism -->
+        <rect x="782" y="108" width="148" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="856" y="127" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">AD: RNA</text>
+        <text x="856" y="141" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">Metabolism</text>
+
+        <!-- D2: AD: Granule Biology -->
+        <rect x="782" y="226" width="148" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="856" y="245" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">AD: Stress-</text>
+        <text x="856" y="259" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">Granule Biology</text>
+
+        <!-- D3: AD: Cell-Cycle Re-entry -->
+        <rect x="782" y="344" width="148" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="856" y="363" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">AD: Neuronal</text>
+        <text x="856" y="377" text-anchor="middle" fill="#134e4a" font-size="10.5" font-weight="600">Cell-Cycle Re-entry</text>
+
+        <!-- Panel sub-labels for branches in Panel C -->
+        <text x="530" y="74" text-anchor="middle" font-size="8.5" fill="#1d4ed8" font-style="italic">Cell-Cycle / Death Branch</text>
+        <text x="684" y="74" text-anchor="middle" font-size="8.5" fill="#6d3bbf" font-style="italic">RNA / Stress Branch</text>
+
+        <!-- "Indirect" label on dashed arrows -->
+        <text x="762" y="102" font-size="8" fill="#0f766e" font-style="italic">indirect</text>
+        <text x="762" y="324" font-size="8" fill="#0f766e" font-style="italic">indirect</text>
+
+      </svg>
+
+      <p class="fig-caption"><strong>Panel A — Upstream Inputs:</strong> DND1 engages RNA through 3′UTR binding, antagonizes miRNA-mediated silencing, and cooperates with NANOS2/3 protein complexes. <strong>Panel B — DND1 Core Mechanism:</strong> The central DND1 RNA-binding hub recruits the CCR4-NOT deadenylation complex (upward) and localizes to P-body/RNP granule structures (downward). <strong>Panel C — Downstream Cellular Effects (branched):</strong> From DND1, two parallel branches fan out — a left cell-cycle/apoptosis branch (p27→CDK1/p21→BAX/Bim apoptosis, blue) and a right RNA-stability/stress branch (mRNA stability→translation repression→mitochondrial/DNA-damage stress, purple/amber). <strong>Panel D — AD Conceptual Bridge (indirect):</strong> Dashed teal arrows mark purely conceptual, hypothesis-generating links: DND1's RNA-decay arm maps onto AD-relevant RNA metabolism disruption; its stress branch parallels AD-associated stress-granule pathology and aberrant neuronal cell-cycle re-entry. No direct AD evidence is established.</p>
+    </div>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        The supplied literature does not establish DND1 as an AD gene, biomarker, disease modifier, or validated therapeutic target. All connections to Alzheimer's disease are indirect and hypothesis-generating only.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Post-Transcriptional RNA Regulation</h3>
+        DND1's core mechanistic identity is RNA binding at 3′UTRs, modulating mRNA stability, translation, and miRNA-mediated repression. In different contexts it either protects transcripts from miRNA silencing or promotes repression and deadenylation via the CCR4-NOT complex.
+      </div>
+
+      <div class="card card-accent">
+        <h3>NANOS Cooperation &amp; Granule Biology</h3>
+        DND1 cooperates with NANOS2 and NANOS3, forming sequence-specific RNA regulatory complexes that operate through P-bodies or ribonucleoprotein condensates to repress translation or drive target mRNA decay — mechanisms analogous to those implicated in neurodegeneration.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Cell-Cycle &amp; Apoptosis Regulation</h3>
+        DND1 is associated with reduced proliferation, nuclear p27/CDKN1B accumulation, CDK1 and p21 pathway control, and context-dependent apoptosis. It can promote BAX-mediated germ-cell death or stabilize pro-apoptotic <em>Bim</em> transcripts — its survival/death role is strongly context-dependent.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Stress, Mitochondria &amp; Necroptosis Links</h3>
+        Low DND1 expression is associated with mitochondrial dysfunction, DNA damage, and MLKL phosphorylation (a necroptosis marker) in germ-cell contexts. DND1 expression changes also appear in iPSC cardiomyocytes under toxicity and in ethanol-exposed rat neural-lineage cells.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cancer Context-Dependence &amp; Safety Risk</h3>
+        DND1 can behave as tumor-suppressive or tumor-promoting depending on tissue context, affecting proliferation, migration, EMT, PI3K/AKT, and Hippo/YAP signaling. Systemic modulation risks fertility loss, stem-cell disruption, and unpredictable oncogenic effects — a strong safety concern.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat DND1 as exploratory only.</strong> Do not prioritize DND1 as a validated AD therapeutic target without foundational brain-specific evidence. Its role in AD is currently a conceptual hypothesis, not an established mechanism.</div>
+      </li>
+      <li>
+        <div><strong>Determine brain expression and dysregulation first.</strong> Priority analyses must include human AD versus control brain tissue, region-specific profiling, and single-nucleus RNA-seq across neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, and disease-associated cell states.</div>
+      </li>
+      <li>
+        <div><strong>Map DND1 protein localization in brain cells.</strong> Experiments should test whether DND1 localizes to neuronal or glial P-bodies, stress granules, or RNP condensates under basal conditions and after amyloid, tau, oxidative, mitochondrial, inflammatory, or proteostatic stress.</div>
+      </li>
+      <li>
+        <div><strong>Identify brain-specific DND1-bound RNAs.</strong> CLIP-seq or RIP-seq in neurons and glia should determine whether DND1 binds AD-relevant transcripts — <em>APP</em>, <em>BACE1</em>, <em>PSEN1/2</em>, <em>MAPT</em>, <em>APOE</em>, <em>TREM2</em>, cytokines, complement, synaptic, mitochondrial, or apoptosis regulators.</div>
+      </li>
+      <li>
+        <div><strong>Test causality in AD models before considering therapy.</strong> DND1 gain- and loss-of-function studies in iPSC-derived neurons/glia, organoids, and animal models should evaluate amyloid production/clearance, tau phosphorylation/aggregation, synaptic markers, mitochondrial function, inflammatory cytokines, and neuronal survival.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize cell-type-specific approaches if DND1 proves relevant.</strong> Because DND1 exerts broad context-dependent effects on RNA networks, cell cycle, apoptosis, and cancer pathways, any therapeutic strategy would require targeted delivery in specific brain cell types, not systemic activation or inhibition.</div>
+      </li>
+      <li>
+        <div><strong>Apply strong safety caution throughout.</strong> Systemic DND1 manipulation could plausibly affect fertility, germline maintenance, stem/progenitor biology, differentiation programs, and tumor risk. The mixed tumor-suppressive and tumor-promoting profile makes nonspecific DND1 modulation especially hazardous.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — DND1 &amp; Alzheimer's Disease</div>
+      <p>DND1 is a <strong>biologically powerful post-transcriptional RNA regulator</strong> with conceptual overlap across several mechanisms increasingly implicated in neurodegeneration: <strong>RNA metabolism, translational control, microRNA regulation, stress-granule and P-body dynamics, cell-cycle re-entry, apoptosis, mitochondrial and DNA-damage stress, and inflammatory cell-state regulation</strong>. The NANOS-cooperative, CCR4-NOT-recruiting, P-body-associated activity of DND1 maps onto a rich landscape of RNA-binding protein biology relevant to modern neurodegeneration models.</p>
+      <p style="margin-top:14px;">However, <strong>the supplied text provides no direct evidence</strong> linking DND1 to Alzheimer's disease mechanisms, pathology, biomarkers, or therapeutic vulnerability. The closest neural hints — an ethanol-exposure study in rat neural stem cells and a primate genomic duplication of a DND1-derived promoter near the MAPT locus — remain indirect and do not constitute mechanistic or clinical evidence. <strong>Plant DND1/dnd1 (AtCNGC2)</strong> records must be treated as entirely distinct and not extrapolated to human AD biology. Until foundational brain-expression, localization, target-RNA, and causal studies are completed in AD-relevant systems, DND1 should be classified as a <strong>speculative, hypothesis-generating candidate</strong> requiring extensive experimental validation before any translational consideration.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>DND1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only &middot; Not for clinical or diagnostic application</p>
+</footer>
+
+</body>
+</html>

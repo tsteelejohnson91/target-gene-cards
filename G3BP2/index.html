@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G3BP2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #f0eafa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #e2e8f0;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.94rem;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: G3BP2 &nbsp;|&nbsp; GTPase-activating protein SH3 domain-binding protein 2</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Risk — Not a Simple Target</span>
+  </div>
+  <h1>G3BP2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Caveat — Dual-Role Complexity:</strong> G3BP2 is not uniformly protective or harmful. While it functions as an endogenous anti-tau aggregation factor, it is simultaneously a core stress-granule scaffold that can become maladaptive under chronic AD-like stress. Simple activation or suppression strategies risk unintended consequences; selective functional modulation is required.
+    </div>
+    <p>G3BP2 is an emerging Alzheimer's disease (AD)-relevant RNA-binding and stress-granule scaffold protein. Its strongest disease-specific links center on <strong>tau aggregation</strong>, <strong>stress-granule persistence</strong>, <strong>RNA metabolism</strong>, and <strong>neuronal survival</strong>. The most compelling AD-focused evidence indicates that G3BP2 directly binds tau, masks tau's microtubule-binding region, and inhibits tau aggregation; loss of G3BP2 increases tau pathology in human neurons and brain organoids.</p>
+    <p>Additional human AD-related evidence reports reduced neuronal G3BP2 expression in sporadic AD brains, alongside reduced PSF, suggesting loss of a protective RNA-stabilizing program in aging and AD. G3BP2 cooperates with PSF in the nucleus to bind pre-mRNAs and enhance post-transcriptional mRNA stability of genes linked to neuronal viability and AD-relevant pathways.</p>
+    <p>G3BP2 is best understood as a <strong>context-dependent modulator of the tau–stress-granule–RNA homeostasis axis</strong> rather than a validated standalone AD therapeutic target. Its therapeutic potential lies in selective functional modulation — preserving its anti-tau and RNA-stabilizing roles while limiting maladaptive chronic stress-granule assembly.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 510" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Tau Interaction (left) -->
+          <rect x="14" y="14" width="265" height="482" rx="12" fill="#f0eafa" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="146" y="35" font-family="Arial,sans-serif" font-size="9" font-weight="700" text-anchor="middle" fill="#3b1f6e" letter-spacing="0.10em">PANEL A — TAU INTERACTION</text>
+
+          <!-- G3BP2 node -->
+          <rect x="72" y="48" width="148" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.8"/>
+          <text x="146" y="63" font-family="Georgia,serif" font-size="11" font-weight="700" text-anchor="middle" fill="#3b1f6e">G3BP2</text>
+          <text x="146" y="78" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#3b1f6e">Stress-Granule Scaffold</text>
+
+          <!-- Arrow G3BP2 → Tau Binding -->
+          <line x1="146" y1="88" x2="146" y2="108" stroke="#6d3fc0" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Tau Binding node -->
+          <rect x="60" y="108" width="172" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="146" y="123" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#1e293b">Binds Tau Directly</text>
+          <text x="146" y="138" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#1e293b">Masks MT-binding region</text>
+
+          <!-- Arrow Tau Binding → Inhibits Aggregation -->
+          <line x1="146" y1="148" x2="146" y2="168" stroke="#6d3fc0" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Inhibits Aggregation -->
+          <rect x="52" y="168" width="188" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="146" y="183" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#0f766e">Inhibits Tau Aggregation</text>
+          <text x="146" y="198" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#0f766e">Anti-aggregation function</text>
+
+          <!-- Arrow → Loss of G3BP2 -->
+          <line x1="146" y1="208" x2="146" y2="228" stroke="#991b1b" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Loss node -->
+          <rect x="52" y="228" width="188" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="146" y="243" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#991b1b">G3BP2 Loss / Reduction</text>
+          <text x="146" y="258" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#991b1b">In sporadic AD &amp; aged brain</text>
+
+          <!-- Arrow Loss → Worse Tau Pathology -->
+          <line x1="146" y1="268" x2="146" y2="288" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- Worse tau pathology -->
+          <rect x="44" y="288" width="204" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="146" y="303" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#991b1b">↑ Tau Pathology</text>
+          <text x="146" y="318" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#991b1b">neurons &amp; brain organoids</text>
+
+          <!-- Arrow → PSF cooperation -->
+          <line x1="146" y1="328" x2="146" y2="348" stroke="#6d3fc0" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- PSF nuclear coop -->
+          <rect x="40" y="348" width="212" height="40" rx="7" fill="#f0eafa" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="146" y="363" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#3b1f6e">Nuclear PSF–G3BP2</text>
+          <text x="146" y="378" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#3b1f6e">pre-mRNA binding &amp; stability</text>
+
+          <!-- Arrow → Neuronal Survival -->
+          <line x1="146" y1="388" x2="146" y2="408" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Neuronal Survival -->
+          <rect x="52" y="408" width="188" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="146" y="423" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#0f766e">Neuronal Survival</text>
+          <text x="146" y="438" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#0f766e">mRNA stability programs</text>
+
+          <!-- PANEL B: Stress Granule (center) -->
+          <rect x="297" y="14" width="275" height="482" rx="12" fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+          <text x="434" y="35" font-family="Arial,sans-serif" font-size="9" font-weight="700" text-anchor="middle" fill="#92400e" letter-spacing="0.10em">PANEL B — STRESS GRANULES</text>
+
+          <!-- Stress node -->
+          <rect x="334" y="48" width="200" height="40" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.8"/>
+          <text x="434" y="63" font-family="Georgia,serif" font-size="10.5" font-weight="700" text-anchor="middle" fill="#92400e">Cellular Stress / AD</text>
+          <text x="434" y="78" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#92400e">Chronic Stress Stimulus</text>
+
+          <!-- Arrow → SG Assembly -->
+          <line x1="434" y1="88" x2="434" y2="108" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+
+          <!-- SG Assembly node -->
+          <rect x="322" y="108" width="224" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+          <text x="434" y="123" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#92400e">G3BP1/2 SG Assembly</text>
+          <text x="434" y="138" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#92400e">RNA condensation &amp; translational control</text>
+
+          <!-- Branch: left to RNA Sequestration, right to Phase Separation -->
+          <!-- Arrow left branch -->
+          <line x1="390" y1="148" x2="355" y2="178" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+          <!-- Arrow right branch -->
+          <line x1="478" y1="148" x2="513" y2="178" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- RNA Sequestration -->
+          <rect x="304" y="178" width="168" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="388" y="193" font-family="Georgia,serif" font-size="10" text-anchor="middle" fill="#92400e">AD Transcript</text>
+          <text x="388" y="208" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#92400e">Sequestration</text>
+
+          <!-- Phase Separation -->
+          <rect x="480" y="178" width="76" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="518" y="193" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#92400e">LLPS</text>
+          <text x="518" y="208" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#92400e">Phase Sep.</text>
+
+          <!-- Convergence arrows → Proteostatic Failure -->
+          <line x1="388" y1="218" x2="398" y2="248" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="518" y1="218" x2="470" y2="248" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Proteostatic Failure -->
+          <rect x="322" y="248" width="224" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="434" y="263" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#991b1b">Proteostatic Failure</text>
+          <text x="434" y="278" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#991b1b">impaired autophagy &amp; translation</text>
+
+          <!-- Arrow → downstream harms -->
+          <line x1="434" y1="288" x2="434" y2="308" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- SUMOylation intervention -->
+          <rect x="314" y="308" width="240" height="40" rx="7" fill="#f0eafa" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="434" y="323" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#3b1f6e">SUMOylation K281</text>
+          <text x="434" y="338" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#3b1f6e">RanBP2/TRIM28 → SG disassembly</text>
+
+          <!-- Arrow SUMOylation → G3BP2 Solubility -->
+          <line x1="434" y1="348" x2="434" y2="368" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- G3BP2 Solubility -->
+          <rect x="322" y="368" width="224" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="434" y="383" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#0f766e">↑ G3BP2 Solubility</text>
+          <text x="434" y="398" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#0f766e">Promotes SG disassembly</text>
+
+          <!-- Arrow → Therapeutic node -->
+          <line x1="434" y1="408" x2="434" y2="428" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Therapeutic Modulation -->
+          <rect x="322" y="428" width="224" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="434" y="445" font-family="Georgia,serif" font-size="10.5" text-anchor="middle" fill="#0f766e">Selective Modulation</text>
+          <text x="434" y="460" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#0f766e">Retain anti-tau · limit chronic SG</text>
+
+          <!-- PANEL C: Broader Pathways (right) -->
+          <rect x="590" y="14" width="295" height="482" rx="12" fill="#eff6ff" fill-opacity="0.55" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="737" y="35" font-family="Arial,sans-serif" font-size="9" font-weight="700" text-anchor="middle" fill="#1e3a8a" letter-spacing="0.10em">PANEL C — BROADER AD PATHWAYS</text>
+
+          <!-- Pathway cluster nodes (grid 2x4) -->
+          <!-- Row 1 -->
+          <rect x="604" y="48" width="124" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="666" y="63" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">mTOR / Autophagy</text>
+          <text x="666" y="77" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">signaling</text>
+
+          <rect x="742" y="48" width="128" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="806" y="63" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">Oxidative Stress</text>
+          <text x="806" y="77" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">&amp; Apoptosis</text>
+
+          <!-- Row 2 -->
+          <rect x="604" y="106" width="124" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="666" y="121" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">NF-κB / Innate</text>
+          <text x="666" y="135" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">Immune Signaling</text>
+
+          <rect x="742" y="106" width="128" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="806" y="121" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">Interferon</text>
+          <text x="806" y="135" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">Signaling</text>
+
+          <!-- Row 3 -->
+          <rect x="604" y="164" width="124" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="666" y="179" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">p38 MAPK</text>
+          <text x="666" y="193" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">signaling</text>
+
+          <rect x="742" y="164" width="128" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="806" y="179" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">Wnt / β-catenin</text>
+          <text x="806" y="193" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">signaling</text>
+
+          <!-- Row 4 -->
+          <rect x="604" y="222" width="266" height="38" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="737" y="237" font-family="Georgia,serif" font-size="9.5" text-anchor="middle" fill="#1e40af">Mitochondrial Quality Control</text>
+          <text x="737" y="251" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">&amp; Synaptic / Axonal RNA Granules</text>
+
+          <!-- Connecting lines from cluster to shared outcome -->
+          <line x1="737" y1="260" x2="737" y2="290" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Targetability node -->
+          <rect x="613" y="290" width="248" height="38" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+          <text x="737" y="306" font-family="Georgia,serif" font-size="10" text-anchor="middle" fill="#1e40af">Chemical Targetability</text>
+          <text x="737" y="320" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#1e40af">inhibitors · degraders · peptide modulators</text>
+
+          <!-- Arrow → Evidence Limitation -->
+          <line x1="737" y1="328" x2="737" y2="358" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Evidence Limitation -->
+          <rect x="613" y="358" width="248" height="38" rx="7" fill="#f8fafc" stroke="#64748b" stroke-width="1.4"/>
+          <text x="737" y="373" font-family="Georgia,serif" font-size="10" text-anchor="middle" fill="#64748b">Evidence Limitation</text>
+          <text x="737" y="387" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#64748b">many links from non-AD models</text>
+
+          <!-- Arrow → Research Priority -->
+          <line x1="737" y1="396" x2="737" y2="416" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Research Priority -->
+          <rect x="613" y="416" width="248" height="56" rx="7" fill="#f8fafc" stroke="#64748b" stroke-width="1.4"/>
+          <text x="737" y="434" font-family="Georgia,serif" font-size="10" text-anchor="middle" fill="#64748b">AD Validation Needed</text>
+          <text x="737" y="449" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#64748b">iPSC neurons · organoids</text>
+          <text x="737" y="463" font-family="Georgia,serif" font-size="8.5" text-anchor="middle" fill="#64748b">animal models · AD stage mapping</text>
+
+          <!-- Cross-panel connector: Neuronal Survival (Panel A) to Targetability (Panel C) via gutter -->
+          <!-- Route: from Panel A bottom (x=279, y=428) → gutter right of Panel A → up to Panel B boundary... -->
+          <!-- We'll skip cross-panel connector to avoid rule violations -->
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (left, purple):</strong> G3BP2's protective tau axis — from direct tau binding and microtubule-region masking, through anti-aggregation activity, to nuclear PSF–G3BP2 mRNA stabilization supporting neuronal survival. Dashed red arrows indicate consequences of G3BP2 loss observed in sporadic AD and aged brains.
+        <strong>Panel B (center, amber/red):</strong> The stress-granule axis — chronic stress triggers G3BP1/2-driven SG assembly, which branches into transcript sequestration and liquid–liquid phase separation (LLPS), converging on proteostatic failure. SUMOylation at K281 by RanBP2/TRIM28 offers an intervention point promoting SG disassembly and G3BP2 solubility toward selective therapeutic modulation.
+        <strong>Panel C (right, blue):</strong> Broader AD-relevant pathways in which G3BP2 participates (mTOR/autophagy, oxidative stress, NF-κB, interferon, p38 MAPK, Wnt/β-catenin, mitochondrial quality control, synaptic RNA granules), alongside the chemical targetability landscape and current evidence limitations requiring direct AD validation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Protective Tau-Binding Mechanism</h3>
+        G3BP2 directly interacts with tau in human neurons and tauopathy brains including AD, inhibiting tau aggregation by masking tau's microtubule-binding region. This interaction is increased in tauopathies, suggesting a compensatory or defensive response rather than a mere byproduct of mature tangles.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Loss of G3BP2 Worsens Pathology</h3>
+        Loss of G3BP2 increases tau pathology in human neurons and brain organoids, confirming a functional anti-aggregation role. Neuronal G3BP2 expression is also reduced in sporadic AD brains and aged mouse brains — particularly alongside reduced PSF — implying that diminished G3BP2 contributes to neuronal vulnerability.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Nuclear PSF–G3BP2 RNA Stabilization</h3>
+        G3BP2 cooperates with PSF in the nucleus to bind pre-mRNAs and enhance post-transcriptional mRNA stability of genes linked to neuronal viability and AD-relevant pathways. Loss of this axis may underlie transcript instability in aging and sporadic AD neurons.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Maladaptive Stress-Granule Scaffold</h3>
+        G3BP2 is a core stress-granule component. Under chronic AD-like stress, G3BP1/2-containing stress granules can sequester AD-associated transcripts, disrupt translation, impair autophagy, and drive proteostatic collapse — a potentially harmful consequence of an otherwise adaptive response.
+      </div>
+
+      <div class="card card-blue">
+        <h3>SUMOylation as Therapeutic Lever</h3>
+        SUMOylation of G3BP2 at K281 by RanBP2 or TRIM28 increases G3BP2 solubility, inhibits stress-granule formation, and promotes SG disassembly. This post-translational modification represents a tractable intervention point for modulating G3BP2 activity without broadly eliminating protective functions.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Evidence Gaps &amp; Broader Context</h3>
+        Evidence for G3BP2 in broader AD-relevant pathways — oxidative stress, mTOR/autophagy, NF-κB, interferon, p38 MAPK, Wnt/β-catenin, mitochondrial quality control — is largely extrapolated from non-AD models. Direct AD validation remains the critical gap before G3BP2 can be considered a validated therapeutic target.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><strong>Enhance, don't ablate:</strong> Prioritize therapeutic strategies that enhance or mimic G3BP2's tau-binding anti-aggregation function rather than globally inhibiting or degrading G3BP2, which would remove endogenous protection against tau pathology.</div>
+      </li>
+      <li>
+        <div><strong>Test the anti-aggregation hypothesis directly:</strong> Determine whether stabilizing the G3BP2–tau interaction reduces tau oligomerization, aggregation, and neurotoxicity in AD-relevant human iPSC neurons, brain organoids, and animal models.</div>
+      </li>
+      <li>
+        <div><strong>Investigate causal role of G3BP2 loss:</strong> Establish whether G3BP2 reduction in sporadic AD neurons causally contributes to transcript instability, impaired neuronal survival programs, or increased tau vulnerability — rather than being merely correlative.</div>
+      </li>
+      <li>
+        <div><strong>Adopt subcellularly selective strategies:</strong> Enhancing nuclear PSF–G3BP2 RNA-stabilizing activity is likely beneficial, while indiscriminately increasing cytoplasmic stress-granule assembly could be harmful. Subcellular compartment specificity is essential.</div>
+      </li>
+      <li>
+        <div><strong>Exploit K281 SUMOylation:</strong> Explore G3BP2 K281 SUMOylation as an intervention point to promote G3BP2 solubility and stress-granule disassembly without eliminating protective tau binding or nuclear RNA-stabilizing functions.</div>
+      </li>
+      <li>
+        <div><strong>Avoid broad degradation strategies:</strong> Avoid G3BP2 degradation or pan-inhibition as a first-line AD approach; this risks removing anti-tau protection and disrupting essential neuronal RNA stress-responses, innate immunity, and translational control.</div>
+      </li>
+      <li>
+        <div><strong>Use available chemical tools to disentangle functions:</strong> Employ G3BP1/2 stress-granule modulators, degraders, and condensate-targeting tools experimentally to separate the protective G3BP2–tau effects from potentially harmful chronic SG persistence.</div>
+      </li>
+      <li>
+        <div><strong>Map G3BP2 across AD stages and cell types:</strong> Measure G3BP2 expression, localization, post-translational modifications, tau binding, and SG association across disease stages, brain regions, and cell types to build a mechanistic map of when G3BP2 is protective versus harmful.</div>
+      </li>
+      <li>
+        <div><strong>Determine temporal context of SG effects:</strong> Test whether G3BP2-containing stress granules are protective early in disease but harmful when persistent, aging-associated, or resistant to autophagy-mediated clearance.</div>
+      </li>
+      <li>
+        <div><strong>Frame G3BP2 as a complex modulator:</strong> Treat G3BP2 as a promising but context-dependent candidate: the most rational therapeutic direction is selective functional modulation, not simple activation or suppression of the full protein.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — G3BP2 in Alzheimer's Disease</span>
+      G3BP2 is a <strong>biologically credible and mechanistically interesting</strong> AD-relevant protein whose value as a therapeutic target rests primarily on its direct, functionally confirmed role as an <strong>endogenous inhibitor of tau aggregation</strong> — acting by masking tau's microtubule-binding region — and on its contribution to neuronal RNA homeostasis through nuclear cooperation with PSF. Loss of G3BP2 worsens tau pathology in human cellular models, and its expression is reduced in sporadic AD brains, lending clinical relevance to its protective function. However, G3BP2 is simultaneously a <strong>core stress-granule scaffold</strong> that under chronic AD-like conditions may become maladaptive — sequestering disease-associated transcripts, impairing autophagy, and contributing to proteostatic collapse. This duality means that <strong>simple activation or suppression strategies carry meaningful risk</strong> of exacerbating the very pathologies they aim to treat. The most defensible therapeutic direction is <strong>selective functional modulation</strong>: preserving or reinforcing the tau-binding and RNA-stabilizing activities while limiting chronic cytoplasmic stress-granule assembly, potentially through SUMOylation at K281 or compartment-selective tools. Many mechanistic links remain extrapolated from non-AD contexts, and <strong>direct AD validation in human models and appropriate animal systems remains the most urgent research priority</strong> before G3BP2 can be advanced as a validated drug target.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  G3BP2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

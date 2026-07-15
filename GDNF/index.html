@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDNF — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2e7eb8;
+    --light: #e8f3fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2438 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+    color: #e8f3fb;
+  }
+
+  .chip-danger {
+    background: rgba(180, 30, 30, 0.28);
+    border: 1px solid rgba(255,160,160,0.35);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 0;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  .overview-body ul {
+    margin: 0 0 16px 1.4em;
+    font-size: 0.93rem;
+  }
+
+  .overview-body ul li {
+    margin-bottom: 10px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.79rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaway-num {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: var(--mid);
+    min-width: 24px;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2438 100%);
+    border-radius: 12px;
+    color: #e8f3fb;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+    margin-bottom: 56px;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #7dc4f0;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GDNF &nbsp;|&nbsp; Glial Cell Line-Derived Neurotrophic Factor</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Context-Dependent Off-Target Effects</span>
+  </div>
+  <h1>GDNF &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Translational Caveat:</strong> Evidence strength is limited. One Aβ/GDNF paper was retracted and should not be used as reliable support. Strongest AD-specific evidence involves complex multi-target interventions, not isolated GDNF therapy. Excess or poorly targeted GDNF has been linked to pain hypersensitivity, fibrotic remodeling, tumor invasion, and maladaptive tissue responses.
+    </div>
+
+    <div class="overview-body">
+      <p>GDNF is described as a <em>biologically plausible but not yet established</em> therapeutic target for Alzheimer's disease. Across the supplied material, it appears primarily as a neurotrophic, neuroprotective, gliomodulatory, synaptotrophic, antioxidant, anti-apoptotic, and regenerative factor. Direct AD-specific evidence is limited and heterogeneous, but several AD-relevant studies and models repeatedly associate GDNF restoration or upregulation with improved cognition, synaptic preservation, reduced neuroinflammation, enhanced antioxidant signaling, amyloid-related benefit in some APP/PS1 models, and astrocyte-mediated circuit support.</p>
+
+      <p>Key AD-relevant experimental findings include:</p>
+      <ul>
+        <li><strong>Scopolamine-induced cognitive impairment models:</strong> Cognitive deficits were associated with reduced hippocampal GDNF, BDNF, PSD95, and synaptophysin, alongside increased GFAP, IL-6, TNF-α, NF-κB p65, and COX-2. Vitexin restored GDNF/BDNF, preserved synaptic markers, reduced inflammatory signaling, activated Nrf2/HO-1, and improved learning and memory.</li>
+        <li><strong>APP/PS1 mouse studies:</strong> HSN-G1 increased GDNF together with BDNF and CNTF while reducing brain Aβ by ~45%. AD808 increased GDNF by 275.9%, reduced Aβ plaques by 90%, lowered TNF-α and IL-1β, activated PI3K/AKT, increased TREM2, promoted microglial M2 polarization, and improved cognition.</li>
+        <li><strong>Astrocyte-targeted AD models:</strong> AAV9/GFAP-driven GDNF overexpression in an STZ Alzheimer's-like rat model increased astrocyte branching and process length and partially preserved hippocampal-dependent spatial behavior, although it did not reduce microglial activation or rescue all memory domains.</li>
+        <li><strong>GSK3β inhibitor / scopolamine AD model:</strong> Isoorientin and TFGF-18 improved cognition while increasing GDNF and BDNF, suppressing TLR4/NF-κB, increasing p-GSK3β/GSK3β, β-catenin, Nrf2, and HO-1, and improving gut and BBB barrier integrity.</li>
+      </ul>
+
+      <p>Overall, GDNF is best positioned as part of a broader neurotrophic-glial-synaptic rescue program. Its therapeutic relevance to AD is strongest for downstream degenerative mechanisms: synaptic dysfunction, hippocampal circuit failure, neuroinflammation, oxidative stress, mitochondrial dysfunction, apoptosis, impaired neurotrophic support, glial activation, BBB dysfunction, and cognitive decline.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e7eb8"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream / Receptor Activation -->
+        <rect x="14" y="14" width="262" height="472" rx="14" fill="#e8f3fb" fill-opacity="0.55" stroke="#2e7eb8" stroke-width="1.2"/>
+        <text x="145" y="36" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a4a6b" letter-spacing="0.1em">PANEL A — RECEPTOR &amp; CONTEXT</text>
+
+        <!-- Node 1: GDNF -->
+        <rect x="68" y="50" width="154" height="42" rx="8" fill="#2e7eb8" stroke="#1a4a6b" stroke-width="1.3"/>
+        <text x="145" y="67" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">GDNF</text>
+        <text x="145" y="82" text-anchor="middle" font-size="9.5" fill="#d6eaf8">Neurotrophic Factor</text>
+
+        <!-- Arrow A1->A2 -->
+        <line x1="145" y1="92" x2="145" y2="112" stroke="#2e7eb8" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 2: GFRα1/RET Receptor -->
+        <rect x="60" y="112" width="170" height="42" rx="8" fill="#fff" stroke="#2e7eb8" stroke-width="1.3"/>
+        <text x="145" y="129" text-anchor="middle" font-size="11" fill="#1a4a6b" font-weight="bold">GFRα1 / RET</text>
+        <text x="145" y="144" text-anchor="middle" font-size="9.5" fill="#475569">Receptor Complex</text>
+
+        <!-- Arrow A2->A3 -->
+        <line x1="145" y1="154" x2="145" y2="174" stroke="#2e7eb8" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 3: PI3K/AKT -->
+        <rect x="38" y="174" width="110" height="42" rx="8" fill="#fff" stroke="#2e7eb8" stroke-width="1.2"/>
+        <text x="93" y="191" text-anchor="middle" font-size="11" fill="#1a4a6b" font-weight="bold">PI3K / AKT</text>
+        <text x="93" y="206" text-anchor="middle" font-size="9" fill="#475569">Pro-survival</text>
+
+        <!-- Node 4: MAPK/ERK -->
+        <rect x="162" y="174" width="110" height="42" rx="8" fill="#fff" stroke="#2e7eb8" stroke-width="1.2"/>
+        <text x="217" y="191" text-anchor="middle" font-size="11" fill="#1a4a6b" font-weight="bold">MAPK / ERK</text>
+        <text x="217" y="206" text-anchor="middle" font-size="9" fill="#475569">Plasticity</text>
+
+        <!-- Branch arrows from GFRα1 to PI3K and MAPK -->
+        <line x1="110" y1="154" x2="93" y2="174" stroke="#2e7eb8" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="178" y1="154" x2="217" y2="174" stroke="#2e7eb8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node 5: AKT/GSK3β -->
+        <rect x="38" y="244" width="110" height="42" rx="8" fill="#fff" stroke="#2e7eb8" stroke-width="1.2"/>
+        <text x="93" y="261" text-anchor="middle" font-size="11" fill="#1a4a6b" font-weight="bold">AKT / GSK3β</text>
+        <text x="93" y="276" text-anchor="middle" font-size="9" fill="#475569">Tau / Apoptosis</text>
+
+        <!-- Node 6: CREB -->
+        <rect x="162" y="244" width="110" height="42" rx="8" fill="#fff" stroke="#2e7eb8" stroke-width="1.2"/>
+        <text x="217" y="261" text-anchor="middle" font-size="11" fill="#1a4a6b" font-weight="bold">CREB</text>
+        <text x="217" y="276" text-anchor="middle" font-size="9" fill="#475569">Gene expression</text>
+
+        <!-- Arrows PI3K->GSK3β and MAPK->CREB -->
+        <line x1="93" y1="216" x2="93" y2="244" stroke="#2e7eb8" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="217" y1="216" x2="217" y2="244" stroke="#2e7eb8" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node 7: Bcl-2/Bax anti-apoptosis -->
+        <rect x="38" y="316" width="110" height="42" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="93" y="332" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="bold">Bcl-2 / Bax</text>
+        <text x="93" y="347" text-anchor="middle" font-size="9" fill="#0f766e">Anti-apoptotic</text>
+
+        <!-- Arrow GSK3β->Bcl2 -->
+        <line x1="93" y1="286" x2="93" y2="316" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: Nrf2/HO-1 -->
+        <rect x="162" y="316" width="110" height="42" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="217" y="332" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="bold">Nrf2 / HO-1</text>
+        <text x="217" y="347" text-anchor="middle" font-size="9" fill="#0f766e">Antioxidant</text>
+
+        <!-- Arrow CREB->Nrf2 -->
+        <line x1="217" y1="286" x2="217" y2="316" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Converging arrows to Panel B from Node 7 and 8 handled via horizontal connector below panels -->
+
+        <!-- Panel B: Neuroinflammation & Glial -->
+        <rect x="300" y="14" width="278" height="330" rx="14" fill="#fdf0f0" fill-opacity="0.5" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="439" y="36" text-anchor="middle" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="0.1em">PANEL B — NEURO­INFLAMMATION &amp; GLIA</text>
+
+        <!-- Node 9: Neuroinflammation -->
+        <rect x="330" y="50" width="218" height="42" rx="8" fill="#8b1a1a" stroke="#5c0a0a" stroke-width="1.2"/>
+        <text x="439" y="67" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#fff">Neuroinflammation</text>
+        <text x="439" y="82" text-anchor="middle" font-size="9.5" fill="#ffc9c9">NF-κB, IL-6, TNF-α, IL-1β</text>
+
+        <!-- Arrow down to two branches -->
+        <line x1="380" y1="92" x2="360" y2="120" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="498" y1="92" x2="518" y2="120" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 10: Astrocyte response -->
+        <rect x="318" y="120" width="120" height="44" rx="8" fill="#fff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="378" y="138" text-anchor="middle" font-size="10.5" fill="#8b1a1a" font-weight="bold">Astrocytes</text>
+        <text x="378" y="153" text-anchor="middle" font-size="9" fill="#475569">GFAP↑, GDNF src</text>
+
+        <!-- Node 11: Microglia -->
+        <rect x="452" y="120" width="114" height="44" rx="8" fill="#fff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="509" y="138" text-anchor="middle" font-size="10.5" fill="#8b1a1a" font-weight="bold">Microglia</text>
+        <text x="509" y="153" text-anchor="middle" font-size="9" fill="#475569">TREM2, M2 polz.</text>
+
+        <!-- Arrow astrocyte down -->
+        <line x1="378" y1="164" x2="378" y2="198" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Arrow microglia down -->
+        <line x1="509" y1="164" x2="509" y2="198" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 12: GDNF overexpression (AAV9) -->
+        <rect x="316" y="198" width="140" height="44" rx="8" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="386" y="215" text-anchor="middle" font-size="10" fill="#8b1a1a" font-weight="bold">AAV9/GFAP-GDNF</text>
+        <text x="386" y="230" text-anchor="middle" font-size="9" fill="#475569">Astrocyte branching↑</text>
+
+        <!-- Node 13: PI3K/AKT/TREM2 -->
+        <rect x="470" y="198" width="96" height="44" rx="8" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="518" y="215" text-anchor="middle" font-size="10" fill="#8b1a1a" font-weight="bold">PI3K/AKT</text>
+        <text x="518" y="230" text-anchor="middle" font-size="9" fill="#475569">TREM2↑, Aβ↓</text>
+
+        <!-- Converging arrows to Aβ/Cognition -->
+        <line x1="386" y1="242" x2="390" y2="278" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="518" y1="242" x2="512" y2="278" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 14: Aβ Plaque reduction / Cognition -->
+        <rect x="330" y="278" width="218" height="44" rx="8" fill="#fff" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="439" y="295" text-anchor="middle" font-size="11" fill="#8b1a1a" font-weight="bold">Aβ Plaque Reduction</text>
+        <text x="439" y="310" text-anchor="middle" font-size="9" fill="#475569">Cognition improved (APP/PS1)</text>
+
+        <!-- Panel C: Synaptic & Circuit Rescue -->
+        <rect x="604" y="14" width="322" height="330" rx="14" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="765" y="36" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="0.1em">PANEL C — SYNAPTIC &amp; CIRCUIT RESCUE</text>
+
+        <!-- Node 15: Synaptic Markers -->
+        <rect x="636" y="50" width="258" height="42" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="765" y="67" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#fff">Synaptic Preservation</text>
+        <text x="765" y="82" text-anchor="middle" font-size="9.5" fill="#ccfbf1">PSD95, Synaptophysin, BDNF</text>
+
+        <!-- Arrow down to two branches -->
+        <line x1="710" y1="92" x2="690" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="820" y1="92" x2="840" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 16 (final node): Hippocampal Plasticity -->
+        <rect x="636" y="120" width="136" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="704" y="138" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="bold">Hippocampal</text>
+        <text x="704" y="153" text-anchor="middle" font-size="9" fill="#475569">Plasticity &amp; SWR</text>
+
+        <!-- Node BBB (within panel C) -->
+        <rect x="786" y="120" width="124" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="848" y="138" text-anchor="middle" font-size="10.5" fill="#0f766e" font-weight="bold">BBB Integrity</text>
+        <text x="848" y="153" text-anchor="middle" font-size="9" fill="#475569">Claudin-5, VE-cadherin</text>
+
+        <!-- Converging arrows to Cognitive Recovery -->
+        <line x1="704" y1="164" x2="720" y2="198" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="848" y1="164" x2="832" y2="198" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Cognitive Recovery node -->
+        <rect x="660" y="198" width="210" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="765" y="216" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="bold">Cognitive Recovery</text>
+        <text x="765" y="231" text-anchor="middle" font-size="9" fill="#475569">Spatial memory, Oscillations</text>
+
+        <!-- Mitochondrial / Oxidative node -->
+        <rect x="660" y="268" width="210" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="765" y="285" text-anchor="middle" font-size="11" fill="#0f766e" font-weight="bold">Mitochondrial Health</text>
+        <text x="765" y="300" text-anchor="middle" font-size="9" fill="#475569">PGC-1α, SOD/GSH, ROS↓</text>
+
+        <!-- Arrow Cog->Mito -->
+        <line x1="765" y1="242" x2="765" y2="268" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel D: Delivery & Safety strip at bottom -->
+        <rect x="14" y="362" width="912" height="124" rx="14" fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="470" y="384" text-anchor="middle" font-size="9" font-weight="bold" fill="#b45309" letter-spacing="0.1em">PANEL D — DELIVERY STRATEGIES &amp; SAFETY CONSIDERATIONS</text>
+
+        <!-- Delivery boxes side by side -->
+        <rect x="30" y="396" width="140" height="36" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.1"/>
+        <text x="100" y="410" text-anchor="middle" font-size="9.5" fill="#92400e" font-weight="bold">AAV9 / Gene Therapy</text>
+        <text x="100" y="424" text-anchor="middle" font-size="8.5" fill="#475569">GFAP-targeted CNS</text>
+
+        <rect x="182" y="396" width="130" height="36" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.1"/>
+        <text x="247" y="410" text-anchor="middle" font-size="9.5" fill="#92400e" font-weight="bold">Nanoparticles /</text>
+        <text x="247" y="424" text-anchor="middle" font-size="8.5" fill="#475569">Exosomes / Hydrogels</text>
+
+        <rect x="324" y="396" width="130" height="36" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.1"/>
+        <text x="389" y="410" text-anchor="middle" font-size="9.5" fill="#92400e" font-weight="bold">Peptide Mimetics /</text>
+        <text x="389" y="424" text-anchor="middle" font-size="8.5" fill="#475569">RET Agonists</text>
+
+        <rect x="466" y="396" width="130" height="36" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.1"/>
+        <text x="531" y="410" text-anchor="middle" font-size="9.5" fill="#92400e" font-weight="bold">Stem-Cell /</text>
+        <text x="531" y="424" text-anchor="middle" font-size="8.5" fill="#475569">Secretome Platforms</text>
+
+        <rect x="608" y="396" width="130" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+        <text x="673" y="410" text-anchor="middle" font-size="9.5" fill="#8b1a1a" font-weight="bold">⚠ Pain / Fibrosis</text>
+        <text x="673" y="424" text-anchor="middle" font-size="8.5" fill="#8b1a1a">Off-target risk</text>
+
+        <rect x="750" y="396" width="160" height="36" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.1"/>
+        <text x="830" y="410" text-anchor="middle" font-size="9.5" fill="#8b1a1a" font-weight="bold">⚠ Tumor / Glial</text>
+        <text x="830" y="424" text-anchor="middle" font-size="8.5" fill="#8b1a1a">Remodeling risk</text>
+
+        <!-- Delivery label row -->
+        <text x="100" y="455" text-anchor="middle" font-size="8" fill="#b45309" font-style="italic">CNS Delivery</text>
+        <text x="247" y="455" text-anchor="middle" font-size="8" fill="#b45309" font-style="italic">Nanocarriers</text>
+        <text x="389" y="455" text-anchor="middle" font-size="8" fill="#b45309" font-style="italic">Small Molecules</text>
+        <text x="531" y="455" text-anchor="middle" font-size="8" fill="#b45309" font-style="italic">Cell-based</text>
+        <text x="673" y="455" text-anchor="middle" font-size="8" fill="#8b1a1a" font-style="italic">Sensory / Fibrosis</text>
+        <text x="830" y="455" text-anchor="middle" font-size="8" fill="#8b1a1a" font-style="italic">Proliferative risk</text>
+
+        <!-- Cross-panel connector: Panel A Nrf2 -> Panel C Mito (routed through gutter) -->
+        <path d="M 272 337 L 290 337 L 290 455 L 620 455 L 620 290 L 660 290" stroke="#0f766e" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (blue) — Receptor &amp; Signaling:</strong> GDNF binds GFRα1/RET, activating two parallel branches — PI3K/AKT (leading to AKT/GSK3β modulation and Bcl-2 anti-apoptotic protection) and MAPK/ERK (leading to CREB-dependent gene expression and Nrf2/HO-1 antioxidant activation).
+        <strong>Panel B (red) — Neuroinflammation &amp; Glia:</strong> Neuroinflammatory signaling (NF-κB, IL-6, TNF-α) branches into astrocyte (AAV9/GFAP-GDNF overexpression) and microglia (PI3K/AKT/TREM2) arms that converge on Aβ plaque reduction and cognitive improvement in APP/PS1 models.
+        <strong>Panel C (teal) — Synaptic &amp; Circuit Rescue:</strong> Synaptic marker preservation (PSD95, synaptophysin, BDNF) branches into hippocampal plasticity/sharp-wave ripple restoration and BBB integrity (claudin-5, VE-cadherin), converging on cognitive recovery and mitochondrial health (PGC-1α, SOD/GSH, ROS↓). A dashed connector indicates the Nrf2/HO-1 antioxidant pathway feeding into mitochondrial health.
+        <strong>Panel D (amber) — Delivery &amp; Safety:</strong> Candidate delivery platforms (AAV9 gene therapy, nanocarriers, peptide mimetics/RET agonists, stem-cell secretomes) alongside flagged context-dependent safety risks (pain/fibrosis and tumor/glial remodeling).
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Synaptic &amp; Neuronal Resilience</h3>
+        <p>Reduced GDNF in cognitive impairment models co-occurs with loss of PSD95 and synaptophysin. Interventions that restore GDNF also preserve synaptic proteins and improve memory. Because synaptic dysfunction is one of the strongest correlates of AD cognitive decline, this represents one of the most important mechanistic links.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Glia-Centered Neuroprotection</h3>
+        <p>Astrocytes and microglia are repeatedly implicated as sources, responders, or mediators of GDNF-related effects. AAV9/GFAP-driven overexpression preserves astrocytic structure and partially supports hippocampal function. Microglial PI3K/AKT/TREM2 activation coincides with large GDNF increases, Aβ plaque reduction, and M2 anti-inflammatory polarization.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Anti-Inflammatory Mechanisms</h3>
+        <p>GDNF restoration frequently accompanies suppression of GFAP, IL-6, TNF-α, IL-1β, NF-κB, COX-2, iNOS, and NLRP3/TXNIP inflammasome activity. This positions GDNF as a possible modulator of neuroinflammatory circuits central to AD progression.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Oxidative Stress &amp; Mitochondrial Overlap</h3>
+        <p>GDNF-associated interventions activate Nrf2/HO-1 signaling, reduce ROS/MDA/NO, increase SOD/GSH antioxidant capacity, preserve mitochondrial membrane potential, and engage PGC-1α or mitochondrial biogenesis pathways — all core features of AD pathology.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Pro-Survival Signaling Convergence</h3>
+        <p>Key pathways include GDNF/GFRα1/RET, PI3K/AKT, MAPK/ERK, CREB, AKT/GSK3β, Nrf2/HO-1, and Bcl-2/Bax/caspase regulation. The AKT/GSK3β connection is especially AD-relevant because GSK3β contributes to tau phosphorylation, synaptic dysfunction, and neuronal death.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Delivery &amp; Safety Barriers</h3>
+        <p>GDNF does not readily cross the BBB, and AD poses a greater challenge than Parkinson's because pathology is diffuse across hippocampal and cortical networks. Excess or poorly targeted GDNF has been linked to pain hypersensitivity, fibrotic remodeling, tumor invasion, and maladaptive proliferative responses — requiring dose-, region-, and timing-specific control.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <span class="takeaway-num">01</span>
+        <span><strong>Prioritize GDNF as a downstream neuroprotective and synaptic-rescue target,</strong> not as a primary standalone amyloid or tau therapy. The most defensible AD rationale is restoration of trophic support, synaptic integrity, astrocyte-neuron communication, inflammatory balance, antioxidant defenses, and hippocampal circuit function.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">02</span>
+        <span><strong>Test causality directly in validated AD models.</strong> Future studies should determine whether blocking GDNF or GFRα1/RET signaling reduces the benefits of multi-target interventions such as vitexin, HSN-G1, AD808, isoorientin, TFGF-18, stem-cell secretomes, or exosome platforms.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">03</span>
+        <span><strong>Measure whether GDNF is deficient or dysregulated in human AD.</strong> Key questions include whether GDNF is altered in hippocampus, cortex, CSF, plasma, astrocyte-derived extracellular vesicles, or microglial/astrocytic compartments; whether changes occur early enough to be therapeutically actionable; and whether GDNF correlates with synaptic loss, cognition, inflammation, amyloid, tau, or BBB injury.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">04</span>
+        <span><strong>Confirm receptor-pathway competence before therapeutic development.</strong> GDNF-based approaches require intact or restorable GFRα1/RET signaling, receptor trafficking, PI3K/AKT and MAPK/ERK activation, and appropriate downstream responses. Ligand augmentation may fail if receptor expression or signaling is impaired in AD tissue.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">05</span>
+        <span><strong>Focus on hippocampal and cortical targeting.</strong> AD-relevant use would likely require delivery to hippocampal/subicular/cortical networks, astrocytes, neurons, microglia, or neurovascular units — rather than the focal putaminal-style delivery used in Parkinson's disease trials.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">06</span>
+        <span><strong>Explore astrocyte-centered strategies.</strong> The most compelling AD-specific glial evidence supports astrocyte-targeted GDNF expression, astrocytic mitochondrial modulation, and restoration of astrocyte structural and functional support. Combining GDNF enhancement with anti-inflammatory microglial modulation may be necessary, because astrocytic GDNF alone did not fully suppress microglial activation in the STZ AD model.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">07</span>
+        <span><strong>Investigate GDNF in combination therapies.</strong> GDNF may be most effective when combined with BDNF/CNTF/NGF support, anti-inflammatory agents, Nrf2/HO-1 activators, GSK3β modulators, TREM2/microglial reprogramming strategies, BBB/gut-barrier protectants, or amyloid/tau-directed therapies.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">08</span>
+        <span><strong>Use biomarkers to guide development.</strong> Candidate readouts include GDNF protein/mRNA, GFRα1/RET expression, p-AKT, p-ERK, p-GSK3β, CREB, Nrf2/HO-1, PSD95, synaptophysin, BDNF, GFAP, Iba1, IL-1β, IL-6, TNF-α, NF-κB, COX-2, NLRP3, TREM2, claudin-5, VE-cadherin, Aβ burden, tau phosphorylation, synaptic density, hippocampal oscillations, and cognitive endpoints.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">09</span>
+        <span><strong>Address delivery early.</strong> Promising platforms include AAV9/GFAP-targeted astrocyte expression, engineered exosomes, nanoparticles, hydrogels, biomaterial depots, peptide mimetics, RET agonists, and endogenous GDNF inducers. Delivery systems should be evaluated for distribution, durability, reversibility, immune response, and off-target exposure.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">10</span>
+        <span><strong>Build safety controls into any GDNF strategy.</strong> AD programs should use localized or regulated expression, avoid chronic systemic elevation, define therapeutic windows, and monitor for aberrant glial proliferation, sensory/pain effects, tumor-supportive signaling, and peripheral remodeling.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">11</span>
+        <span><strong>Treat current evidence as hypothesis-generating.</strong> The supplied literature supports GDNF as a strong mechanistic candidate for AD-related neuroprotection, synaptic preservation, glial modulation, and circuit support, but does not prove that GDNF augmentation alone modifies human AD progression, amyloid pathology, tau pathology, or durable cognitive decline.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — GDNF in Alzheimer's Disease</div>
+      <p>GDNF emerges from the available evidence as a <strong>biologically plausible but not yet validated</strong> therapeutic target for Alzheimer's disease. Its strongest rationale lies in restoring <strong>neurotrophic support, synaptic integrity, astrocyte-neuron communication, and hippocampal circuit function</strong> — all downstream mechanisms deeply implicated in AD cognitive decline. Across AD-relevant experimental models, GDNF restoration or upregulation consistently accompanies <strong>preservation of synaptic markers, suppression of neuroinflammation (NF-κB, IL-6, TNF-α), activation of antioxidant pathways (Nrf2/HO-1), pro-survival signaling (PI3K/AKT, AKT/GSK3β), and improved spatial memory</strong>. In APP/PS1 models, multi-target interventions that substantially elevate GDNF also reduce Aβ burden and promote microglial M2 polarization, though causality attributable to GDNF alone is not established. Key translational barriers include the <strong>BBB impermeability of GDNF protein</strong>, the diffuse nature of AD neuropathology compared to focal Parkinson's targets, context-dependent risks of excess signaling (pain, fibrosis, tumor promotion), and the absence of direct human AD evidence. GDNF should be advanced as a <strong>mechanistic hypothesis</strong> warranting rigorous target validation, human biomarker studies, receptor competence assessment, and carefully controlled delivery strategies — not as a standalone disease-modifying agent ready for clinical translation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GDNF / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

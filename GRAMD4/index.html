@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAMD4 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW BODY */
+  .overview-body p {
+    margin-bottom: 18px;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  .takeaways ol li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    border-radius: 14px;
+    padding: 36px 36px 32px;
+    color: var(--white);
+  }
+
+  .verdict-banner p {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+  }
+
+  .verdict-banner strong {
+    color: var(--white);
+  }
+
+  .verdict-lead {
+    font-size: 1.08rem;
+    font-weight: bold;
+    color: var(--white);
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════  HEADER  ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GRAMD4 &nbsp;|&nbsp; GRAM Domain Containing 4 (aka KIAA0767 / DIP / AB-DIP)</span>
+    <span class="chip chip-danger">⚠ Safety: systemic inhibition may impair apoptosis &amp; immune defense</span>
+  </div>
+  <h1>GRAMD4 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════  MAIN  ═══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ─────────────────────────────────────────────── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Validation Gap &amp; Safety Caveat:</strong> The Alzheimer's-relevant evidence for GRAMD4 is currently limited to cell-based studies. No efficacy data exist from Alzheimer's animal models, patient brain tissue, or clinical cohorts. Additionally, systemic GRAMD4 inhibition risks disrupting normal apoptotic homeostasis, immune-cell survival, stress responses, and host defense — requiring careful context-specific therapeutic design.
+    </div>
+
+    <div class="overview-body">
+      <p>GRAMD4 — also designated KIAA0767, Death-Inducing Protein (DIP), and amyloid beta-related DIP (AB-DIP) — is a stress-responsive, mitochondria-associated pro-apoptotic protein. Its Alzheimer's disease relevance is centered on amyloid beta (Aβ)-induced neuronal death: amyloid beta peptide directly binds AB-DIP/GRAMD4, enhances GRAMD4-mediated cell death, promotes caspase-dependent cleavage of GRAMD4 into a 62-kDa fragment, and siRNA knockdown of GRAMD4 significantly protects neuroblastoma cells from amyloid beta neurotoxicity.</p>
+      <p>GRAMD4 appears most plausibly positioned as a downstream mediator or amplifier of amyloid beta toxicity operating through mitochondrial apoptosis, ER-stress-linked signaling, caspase activation, and Bcl-2/Bax imbalance. Beyond the amyloid beta axis, GRAMD4 participates in p53-independent/p73-linked apoptosis downstream of E2F1, negatively regulates TLR9-mediated innate immune responses via an ER-resident Nogo-B pathway, modulates TAK1/ITCH-dependent NF-κB and MAPK signaling, and has its own translation repressed by HNRNPD sequestration in stress granules.</p>
+      <p>As a therapeutic target, GRAMD4 is mechanistically attractive but not validated. Inhibiting GRAMD4 expression, blocking the amyloid beta–GRAMD4 interaction, preventing caspase-dependent p62 cleavage, or disrupting its mitochondrial pro-apoptotic function could theoretically protect neurons, but all evidence remains cell-based and no in vivo or human-tissue validation has been provided.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>Mechanism Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (16 node max):
+          Panel A (left, blue): Upstream triggers/inputs — 4 nodes in 2 columns
+          Panel B (center, purple): GRAMD4 core + apoptotic cascade — 5 nodes branching
+          Panel C (right, teal): Downstream / parallel outputs — 4 nodes in 2 columns
+          Panel D (bottom strip, slate): Regulatory / modulatory layer — 3 nodes
+          Total planned: 4 + 5 + 4 + 3 = 16 nodes exactly.
+          Badges: NOT counted as separate boxes, embedded as text inside panels only.
+        -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 520" width="100%" style="max-width:950px;font-family:Georgia,serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-t" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-s" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: UPSTREAM TRIGGERS ═══ -->
+          <!-- x:12 y:14 w:218 h:330 -->
+          <rect x="12" y="14" width="218" height="330" rx="12" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.5" opacity="0.6"/>
+          <text x="121" y="36" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">UPSTREAM TRIGGERS</text>
+
+          <!-- Node A1: Amyloid Beta (Aβ) x:28 y:50 w:186 h:44 -->
+          <rect x="28" y="50" width="186" height="44" rx="8" fill="#c7dff5" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="121" y="68" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="bold">Amyloid Beta (Aβ)</text>
+          <text x="121" y="83" text-anchor="middle" font-size="9.5" fill="#1a3a5c">direct binding to GRAMD4</text>
+
+          <!-- Node A2: DNA Damage / E2F1 x:28 y:114 w:186 h:44 -->
+          <rect x="28" y="114" width="186" height="44" rx="8" fill="#c7dff5" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="121" y="132" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="bold">DNA Damage / E2F1</text>
+          <text x="121" y="147" text-anchor="middle" font-size="9.5" fill="#1a3a5c">p53-independent pathway</text>
+
+          <!-- Node A3: p73 Signaling x:28 y:178 w:186 h:44 -->
+          <rect x="28" y="178" width="186" height="44" rx="8" fill="#c7dff5" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="121" y="196" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="bold">p73 Signaling</text>
+          <text x="121" y="211" text-anchor="middle" font-size="9.5" fill="#1a3a5c">cell-fate / apoptosis</text>
+
+          <!-- Node A4: ER Stress x:28 y:242 w:186 h:44 -->
+          <rect x="28" y="242" width="186" height="44" rx="8" fill="#c7dff5" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="121" y="260" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="bold">ER Stress / UPR</text>
+          <text x="121" y="275" text-anchor="middle" font-size="9.5" fill="#1a3a5c">GRP78, PERK, IRE1, CHOP</text>
+
+          <!-- ═══ PANEL B: GRAMD4 CORE + APOPTOTIC CASCADE ═══ -->
+          <!-- x:244 y:14 w:238 h:390 -->
+          <rect x="244" y="14" width="238" height="390" rx="12" fill="#ede9f6" stroke="#6d28d9" stroke-width="1.5" opacity="0.55"/>
+          <text x="363" y="36" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4c1d95" letter-spacing="1.2">GRAMD4 CORE</text>
+
+          <!-- Node B1: GRAMD4 / AB-DIP (97 kDa) x:260 y:50 w:206 h:52 -->
+          <rect x="260" y="50" width="206" height="52" rx="8" fill="#c4b5fd" stroke="#6d28d9" stroke-width="2"/>
+          <text x="363" y="72" text-anchor="middle" font-size="12" fill="#2e1065" font-weight="bold">GRAMD4 / AB-DIP</text>
+          <text x="363" y="88" text-anchor="middle" font-size="9.5" fill="#2e1065">97 kDa · mitochondria-associated</text>
+
+          <!-- Node B2: Caspase Cleavage x:260 y:130 w:206 h:44 -->
+          <rect x="260" y="130" width="206" height="44" rx="8" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1.5"/>
+          <text x="363" y="148" text-anchor="middle" font-size="11" fill="#2e1065" font-weight="bold">Caspase Cleavage</text>
+          <text x="363" y="163" text-anchor="middle" font-size="9.5" fill="#2e1065">→ p62 fragment (Aβ-enhanced)</text>
+
+          <!-- Branch left: Mitochondrial arm -->
+          <!-- Node B3: Mito. Membrane Permeab. x:260 y:214 w:94 h:50 -->
+          <rect x="260" y="214" width="94" height="50" rx="8" fill="#ede9f6" stroke="#6d28d9" stroke-width="1.3"/>
+          <text x="307" y="234" text-anchor="middle" font-size="9.5" fill="#2e1065" font-weight="bold">Mito. Membrane</text>
+          <text x="307" y="249" text-anchor="middle" font-size="9.5" fill="#2e1065">Permeabilization</text>
+
+          <!-- Branch right: Bcl-2/Bax arm -->
+          <!-- Node B4: Bax / Bcl-2 Imbalance x:372 y:214 w:94 h:50 -->
+          <rect x="372" y="214" width="94" height="50" rx="8" fill="#ede9f6" stroke="#6d28d9" stroke-width="1.3"/>
+          <text x="419" y="234" text-anchor="middle" font-size="9.5" fill="#2e1065" font-weight="bold">Bax Relocaliz.</text>
+          <text x="419" y="249" text-anchor="middle" font-size="9.5" fill="#2e1065">Bcl-2 ↓</text>
+
+          <!-- Node B5: Convergence: Caspase-3/PARP x:260 y:306 w:206 h:44 -->
+          <rect x="260" y="306" width="206" height="44" rx="8" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1.8"/>
+          <text x="363" y="324" text-anchor="middle" font-size="11" fill="#2e1065" font-weight="bold">Caspase-3 / PARP Cleavage</text>
+          <text x="363" y="339" text-anchor="middle" font-size="9.5" fill="#2e1065">converged apoptotic execution</text>
+
+          <!-- ═══ PANEL C: DOWNSTREAM OUTPUTS ═══ -->
+          <!-- x:496 y:14 w:218 h:390 -->
+          <rect x="496" y="14" width="218" height="390" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5" opacity="0.6"/>
+          <text x="605" y="36" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46" letter-spacing="1.2">DOWNSTREAM OUTPUTS</text>
+
+          <!-- Node C1: Cytochrome c / Smac Release x:512 y:50 w:186 h:44 -->
+          <rect x="512" y="50" width="186" height="44" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="605" y="68" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">Cytochrome c / Smac</text>
+          <text x="605" y="83" text-anchor="middle" font-size="9.5" fill="#065f46">mitochondrial release</text>
+
+          <!-- Node C2: Neuronal Apoptosis x:512 y:114 w:186 h:44 -->
+          <rect x="512" y="114" width="186" height="44" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="605" y="132" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">Neuronal Apoptosis</text>
+          <text x="605" y="147" text-anchor="middle" font-size="9.5" fill="#065f46">Aβ-driven neurodegeneration</text>
+
+          <!-- Node C3: TLR9 Suppression x:512 y:178 w:186 h:44 -->
+          <rect x="512" y="178" width="186" height="44" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="605" y="196" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">TLR9 Suppression</text>
+          <text x="605" y="211" text-anchor="middle" font-size="9.5" fill="#065f46">Nogo-B / ER pathway</text>
+
+          <!-- Node C4: NF-κB / MAPK Suppression x:512 y:242 w:186 h:44 -->
+          <rect x="512" y="242" width="186" height="44" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="605" y="260" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">NF-κB / MAPK ↓</text>
+          <text x="605" y="275" text-anchor="middle" font-size="9.5" fill="#065f46">TAK1 via ITCH ubiquitination</text>
+
+          <!-- ═══ PANEL D: REGULATORY LAYER ═══ -->
+          <!-- x:12 y:358 w:468 h:148 -->
+          <rect x="12" y="358" width="702" height="148" rx="12" fill="#f8fafc" stroke="#475569" stroke-width="1.5" opacity="0.7"/>
+          <text x="363" y="378" text-anchor="middle" font-size="9.5" font-weight="700" fill="#334155" letter-spacing="1.2">REGULATORY &amp; MODULATORY LAYER</text>
+
+          <!-- Node D1: HNRNPD / Stress Granules x:28 y:390 w:200 h:50 -->
+          <rect x="28" y="390" width="200" height="50" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="1.3"/>
+          <text x="128" y="410" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="bold">HNRNPD / Stress Granules</text>
+          <text x="128" y="426" text-anchor="middle" font-size="9.5" fill="#334155">mRNA sequestration → translation ↓</text>
+
+          <!-- Node D2: Epigenetic Regulation x:248 y:390 w:200 h:50 -->
+          <rect x="248" y="390" width="200" height="50" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="1.3"/>
+          <text x="348" y="410" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="bold">Epigenetic Regulation</text>
+          <text x="348" y="426" text-anchor="middle" font-size="9.5" fill="#334155">methylation, lactylation changes</text>
+
+          <!-- Node D3: siRNA Knockdown (protective) x:468 y:390 w:200 h:50 -->
+          <rect x="468" y="390" width="200" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.3"/>
+          <text x="568" y="410" text-anchor="middle" font-size="10.5" fill="#14532d" font-weight="bold">siRNA Knockdown</text>
+          <text x="568" y="426" text-anchor="middle" font-size="9.5" fill="#14532d">protects neurons from Aβ toxicity</text>
+
+          <!-- ═══ PANEL E: THERAPEUTIC IMPLICATIONS ═══ -->
+          <!-- x:728 y:14 w:210 h:492 -->
+          <rect x="728" y="14" width="210" height="492" rx="12" fill="#fff7ed" stroke="#b45309" stroke-width="1.5" opacity="0.65"/>
+          <text x="833" y="36" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e" letter-spacing="1.2">THERAPEUTIC CONCEPTS</text>
+
+          <!-- Node T1: Block Aβ–GRAMD4 Binding x:742 y:50 w:182 h:50 -->
+          <rect x="742" y="50" width="182" height="50" rx="8" fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+          <text x="833" y="70" text-anchor="middle" font-size="10.5" fill="#7c2d12" font-weight="bold">Block Aβ–GRAMD4</text>
+          <text x="833" y="85" text-anchor="middle" font-size="9.5" fill="#7c2d12">binding interaction</text>
+
+          <!-- Node T2: Prevent p62 Cleavage x:742 y:122 w:182 h:50 -->
+          <rect x="742" y="122" width="182" height="50" rx="8" fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+          <text x="833" y="142" text-anchor="middle" font-size="10.5" fill="#7c2d12" font-weight="bold">Prevent p62 Cleavage</text>
+          <text x="833" y="157" text-anchor="middle" font-size="9.5" fill="#7c2d12">caspase site inhibition</text>
+
+          <!-- Node T3: Inhibit Mito. Apoptosis x:742 y:194 w:182 h:50 -->
+          <rect x="742" y="194" width="182" height="50" rx="8" fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+          <text x="833" y="214" text-anchor="middle" font-size="10.5" fill="#7c2d12" font-weight="bold">Inhibit Mito. Apoptosis</text>
+          <text x="833" y="229" text-anchor="middle" font-size="9.5" fill="#7c2d12">neuroprotection strategy</text>
+
+          <!-- Node T4: Immune Modulation x:742 y:266 w:182 h:50 -->
+          <rect x="742" y="266" width="182" height="50" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="833" y="286" text-anchor="middle" font-size="10.5" fill="#7c2d12" font-weight="bold">Immune Modulation</text>
+          <text x="833" y="301" text-anchor="middle" font-size="9.5" fill="#7c2d12">TLR9 / NF-κB in microglia</text>
+
+          <!-- Node T5: Safety Concern x:742 y:338 w:182 h:50 -->
+          <rect x="742" y="338" width="182" height="50" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="833" y="358" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="bold">⚠ Safety Concern</text>
+          <text x="833" y="373" text-anchor="middle" font-size="9.5" fill="#7f1d1d">systemic inhibition risks</text>
+
+          <!-- ═══ CONNECTORS — Panel A → Panel B ═══ -->
+          <!-- A1 → B1 (Aβ binds GRAMD4) -->
+          <line x1="214" y1="72" x2="260" y2="72" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+          <!-- A2 → B1 (DNA damage → GRAMD4) -->
+          <polyline points="214,136 237,136 237,76 260,76" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- A3 → B1 (p73 → GRAMD4) -->
+          <polyline points="214,200 237,200 237,80 260,80" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- A4 → B1 (ER stress → GRAMD4) -->
+          <polyline points="214,264 237,264 237,84 260,84" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ═══ CONNECTORS — within Panel B ═══ -->
+          <!-- B1 → B2 -->
+          <line x1="363" y1="102" x2="363" y2="130" stroke="#6d28d9" stroke-width="1.8" marker-end="url(#arr)"/>
+          <!-- B2 → B3 (left branch) -->
+          <polyline points="307,174 307,214" fill="none" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B2 → B4 (right branch) -->
+          <polyline points="419,174 419,214" fill="none" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B3 → B5 -->
+          <polyline points="307,264 307,285 363,285 363,306" fill="none" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B4 → B5 -->
+          <polyline points="419,264 419,285 363,285 363,306" fill="none" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ═══ CONNECTORS — Panel B → Panel C ═══ -->
+          <!-- B1 → C1 (mito release) -->
+          <line x1="466" y1="72" x2="512" y2="72" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-t)"/>
+          <!-- B5 → C2 (neuronal apoptosis) -->
+          <polyline points="466,328 489,328 489,136 512,136" fill="none" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-r)"/>
+          <!-- B1 → C3 (TLR9) -->
+          <polyline points="466,86 489,86 489,200 512,200" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+          <!-- B1 → C4 (NF-kB) -->
+          <polyline points="466,90 491,90 491,264 512,264" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-t)"/>
+
+          <!-- ═══ CONNECTORS — Panel C → Panel E ═══ -->
+          <!-- C2 → T3 (neuronal apoptosis → mito inhibition concept) -->
+          <line x1="698" y1="136" x2="742" y2="219" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+          <!-- C3 → T4 (TLR9 → immune modulation concept) -->
+          <line x1="698" y1="200" x2="742" y2="291" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- ═══ CONNECTORS — Panel D → Panel B (regulatory) ═══ -->
+          <!-- D1 (HNRNPD) → B1 (represses translation) -->
+          <polyline points="128,390 128,376 363,376 363,354" fill="none" stroke="#475569" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-s)"/>
+
+          <!-- D3 (siRNA) → B1 (protective knockdown) -->
+          <polyline points="568,390 568,376 461,376 461,102 466,102" fill="none" stroke="#16a34a" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-t)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> Upstream triggers feeding into GRAMD4, including direct amyloid beta (Aβ) binding, DNA-damage/E2F1 and p73 apoptotic signals, and ER-stress/UPR inputs.&nbsp;
+        <strong>Panel B (purple, center):</strong> GRAMD4 core mechanism — the 97-kDa protein undergoes caspase-dependent cleavage to a p62 fragment (enhanced by Aβ co-exposure), then branches into parallel mitochondrial membrane permeabilization and Bax/Bcl-2 imbalance arms that reconverge on caspase-3/PARP execution.&nbsp;
+        <strong>Panel C (teal, right):</strong> Downstream outputs including cytochrome c/Smac release, Aβ-driven neuronal apoptosis, TLR9 suppression via Nogo-B, and NF-κB/MAPK attenuation via TAK1/ITCH.&nbsp;
+        <strong>Panel D (slate, bottom):</strong> Regulatory layer — HNRNPD stress-granule sequestration represses GRAMD4 translation (dashed), epigenetic modifications modulate expression, and siRNA knockdown (green dashed) provides neuroprotection.&nbsp;
+        <strong>Panel E (amber, right):</strong> Therapeutic concepts derived from the mechanism, culminating in a safety-concern node for systemic inhibition risks.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ───────────────────────────────────────────── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Direct Amyloid Beta Interaction</h3>
+        A 2005 <em>FASEB Journal</em> yeast two-hybrid screen of a human brain cDNA library identified GRAMD4/AB-DIP as an amyloid beta-binding protein, subsequently confirmed by coimmunoprecipitation. Overexpression of AB-DIP induced cell death, and co-expression with Aβ significantly enhanced this death — establishing a direct mechanistic link.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Rationale: siRNA Knockdown</h3>
+        The strongest evidence for therapeutic relevance is that siRNA-mediated knockdown of AB-DIP/GRAMD4 significantly protected neuroblastoma cells from amyloid beta-induced neurotoxicity. This positions GRAMD4 inhibition as a plausible neuroprotective strategy, though validation beyond cell models is required.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Caspase-Dependent Cleavage &amp; p62 Fragment</h3>
+        During apoptosis, full-length 97-kDa GRAMD4 is cleaved at a caspase recognition site to produce an AB-DIP p62 fragment. Amyloid beta co-transfection with GRAMD4 specifically produces this p62 fragment, directly linking Aβ exposure to apoptotic GRAMD4 processing and suggesting the cleavage site as a potential intervention point.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Mitochondrial Apoptosis Mechanism</h3>
+        GRAMD4/DIP localizes to mitochondria and orchestrates a broad apoptotic program: caspase-3 activation, PARP cleavage, mitochondrial membrane permeabilization, cytochrome c and Smac release, Bax mitochondrial relocalization and oligomerization, and direct interaction with Bcl-2. This positions GRAMD4 as a central amplifier of mitochondrial apoptosis.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Innate Immune &amp; Inflammatory Modulation</h3>
+        GRAMD4 negatively regulates TLR9-mediated innate immune responses via an ER-resident Nogo-B/RTN4-B pathway, and suppresses NF-κB and MAPK signaling by promoting TAK1 degradation through ITCH ubiquitination. In microglia, this could influence responses to mitochondrial DNA, damaged-cell debris, and chronic neuroinflammatory stimuli relevant to Alzheimer's disease.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Regulatory Complexity: RNA &amp; Epigenetics</h3>
+        HNRNPD can sequester GRAMD4 mRNA in stress-granule compartments, repressing translation and raising the apoptotic threshold. Additionally, GRAMD4 expression is associated with methylation and lactylation-linked transcriptional changes. These regulatory layers may modulate neuronal vulnerability to Aβ in disease-relevant ways, though Alzheimer's-specific evidence is absent.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ────────────────────────────────────── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong style="color:var(--dark)">Stage the target appropriately.</strong> Treat GRAMD4 as a plausible but early-stage Alzheimer's disease candidate — not an established disease gene or validated therapeutic target. All direct Alzheimer's evidence is currently cell-based.</li>
+      <li><strong style="color:var(--dark)">Validate the Aβ–GRAMD4 interaction in disease-relevant systems.</strong> Priority experiments should use human iPSC-derived neurons, primary neurons, astrocytes, microglia, and established Alzheimer's mouse models to confirm binding, co-localization, and functional consequences.</li>
+      <li><strong style="color:var(--dark)">Test knockdown and inhibition across apoptotic endpoints.</strong> Determine whether GRAMD4 knockdown or small-molecule inhibition protects neurons from Aβ-induced apoptosis, mitochondrial dysfunction, Bax activation, cytochrome c release, caspase activation, and loss of viability in vivo.</li>
+      <li><strong style="color:var(--dark)">Target the p62 cleavage site.</strong> Investigate whether blocking the amyloid beta–GRAMD4 binding interface or preventing caspase-dependent cleavage into the p62 fragment reduces neuronal death, as this would directly interrupt the Aβ-amplification mechanism.</li>
+      <li><strong style="color:var(--dark)">Profile GRAMD4 in human Alzheimer's brain tissue.</strong> Measure GRAMD4 expression levels, protein localization, cleavage-product abundance, methylation, splicing, and translation status in Alzheimer's patient brain regions versus controls. Correlate with amyloid burden, tau pathology, synaptic loss, neuroinflammation, disease stage, and cognitive decline.</li>
+      <li><strong style="color:var(--dark)">Separate neuron-focused and immune-focused hypotheses.</strong> In neurons, GRAMD4 inhibition may be protective by reducing apoptosis. In microglia or peripheral immune cells, GRAMD4 modulation could suppress harmful inflammation or impair beneficial clearance — these must be investigated and addressed independently in therapeutic design.</li>
+      <li><strong style="color:var(--dark)">Probe microglial TLR9 and inflammatory functions.</strong> Examine whether GRAMD4 regulates microglial TLR9 signaling, cytokine production, phagocytosis, antigen presentation, and responses to mitochondrial DNA or damaged-cell debris in neuroinflammatory contexts.</li>
+      <li><strong style="color:var(--dark)">Assess safety rigorously before advancing.</strong> Systemic GRAMD4 inhibition could disrupt normal apoptosis, immune-cell homeostasis, stress responses, and host defense. Context-specific delivery strategies (neuronal targeting) and careful safety profiling are essential prerequisites for any drug development program.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — Early-Stage but Mechanistically Compelling</span>
+      <p>
+        GRAMD4 represents a <strong>mechanistically coherent but evidence-limited</strong> candidate for Alzheimer's disease therapeutic development. The most compelling finding — that <strong>siRNA knockdown of GRAMD4 protects neuroblastoma cells from amyloid beta-induced neurotoxicity</strong> — provides a clear biological rationale: GRAMD4 acts as a downstream amplifier of Aβ toxicity, coupling amyloid beta binding to a cascade of <strong>mitochondrial membrane permeabilization, Bax activation, cytochrome c release, and caspase-3-dependent neuronal death</strong>. The identification of caspase-dependent p62 cleavage as an Aβ-enhanced processing event adds a further potential intervention point. Beyond neurons, GRAMD4's roles in <strong>TLR9 suppression, NF-κB/MAPK modulation, and RNA-regulated apoptotic thresholds</strong> suggest additional disease-relevant biology in neuroinflammatory and stress contexts. However, the target currently lacks validation in animal models, human brain tissue, or clinical cohorts, and the <strong>safety implications of systemic GRAMD4 inhibition</strong> on apoptotic homeostasis and immune function remain uncharacterized. The most justified next step is systematic validation of the Aβ–GRAMD4 axis in human iPSC-derived neurons and Alzheimer's mouse models before any commitment to drug development.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════  FOOTER  ═══════════════════════════ -->
+<footer>
+  GRAMD4 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YARS1 / TyrRS — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #f1e8ff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.45);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #e2d9f3;
+  }
+
+  /* ===== MAIN ===== */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* ===== CALLOUT ===== */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.96rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* ===== FIGURE ===== */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.87rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* ===== CARDS ===== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: #f1f5f9; border-color: #94a3b8; }
+  .card-neutral h3 { color: #475569; }
+
+  /* ===== TAKEAWAYS ===== */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* ===== VERDICT ===== */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1e 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    font-size: 1.03rem;
+    line-height: 1.8;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: YARS1 &nbsp;|&nbsp; Tyrosyl-tRNA Synthetase 1 (TyrRS)</span>
+    <span class="chip chip-danger">⚠ Caution: Target not yet validated for AD</span>
+  </div>
+  <h1>YARS1 / TyrRS &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Interpretive Tension:</strong> One strand of the supplied literature reports direct AD evidence (reduced YARS1 in AD brains, links to tau and Aβ-induced neurite degeneration); another states the available literature lacks direct AD evidence and supports only indirect relevance from inherited neuropathy and multisystem YARS1 disorders. Both are noted and reconciled below.
+    </div>
+
+    <p>YARS1/TyrRS is an emerging Alzheimer's disease (AD)-relevant mechanistic node, but it is <em>not yet a validated therapeutic target</em>. The strongest AD-specific evidence indicates that TyrRS/YARS1 is reduced in AD brains and can be suppressed in neurons by elevated tyrosine and phenylalanine — aromatic amino acids that accumulate during aging and age-related disorders. YARS1's links to AD mechanisms operate primarily through neuronal stress biology, tau regulation, transcription and DNA-repair disruption, cytoskeletal maintenance, tubulin tyrosination, and neurite integrity rather than through classic amyloid-processing pathways.</p>
+
+    <p>The most balanced interpretation is that YARS1 has credible AD-relevant mechanistic signals but remains unproven as a causal AD driver or clinically validated drug target. Taken together, the evidence situates YARS1 at the intersection of amino acid metabolism, neuronal transcriptional homeostasis, and cytoskeletal integrity — pathways that plausibly converge on AD vulnerability without yet being causally established in human disease.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- Defs -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3bbf"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream Regulators -->
+          <rect x="10" y="10" width="210" height="480" rx="12" fill="#ede8f9" fill-opacity="0.55" stroke="#6d3bbf" stroke-width="1.2"/>
+          <text x="115" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#3b1f6e" letter-spacing="1.5">A · UPSTREAM REGULATORS</text>
+
+          <!-- Aging node -->
+          <rect x="30" y="42" width="170" height="40" rx="7" fill="#6d3bbf" stroke="#3b1f6e" stroke-width="1"/>
+          <text x="115" y="59" text-anchor="middle" fill="white" font-weight="700">Aging / Age-Related</text>
+          <text x="115" y="73" text-anchor="middle" fill="#e9d5ff">Metabolic Stress</text>
+
+          <!-- Arrow aging -> Tyr/Phe -->
+          <line x1="115" y1="82" x2="115" y2="104" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Tyr/Phe elevation -->
+          <rect x="30" y="104" width="170" height="40" rx="7" fill="#7c3aed" stroke="#3b1f6e" stroke-width="1"/>
+          <text x="115" y="121" text-anchor="middle" fill="white" font-weight="700">↑ Tyr &amp; Phe</text>
+          <text x="115" y="135" text-anchor="middle" fill="#ede8f9">Aromatic AA elevation</text>
+
+          <!-- Arrow Tyr/Phe -> YARS1 -->
+          <line x1="115" y1="144" x2="115" y2="166" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- YARS1 suppressed -->
+          <rect x="30" y="166" width="170" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="115" y="183" text-anchor="middle" fill="#991b1b" font-weight="700">↓ YARS1 / TyrRS</text>
+          <text x="115" y="197" text-anchor="middle" fill="#7f1d1d">Neuronal suppression</text>
+
+          <!-- Tau suppresses YARS1 -->
+          <rect x="30" y="230" width="170" height="40" rx="7" fill="#fef2f2" stroke="#b45309" stroke-width="1.2"/>
+          <text x="115" y="247" text-anchor="middle" fill="#92400e" font-weight="700">Tau (negative reg.)</text>
+          <text x="115" y="261" text-anchor="middle" fill="#92400e">↓ cortical TyrRS</text>
+
+          <!-- Arrow Tau -> YARS1 suppressed (left side elbow) -->
+          <polyline points="115,230 115,206" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Estrogen / Leucine -->
+          <rect x="30" y="294" width="170" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="115" y="311" text-anchor="middle" fill="#0f766e" font-weight="700">Estrogen / Leucine</text>
+          <text x="115" y="325" text-anchor="middle" fill="#134e4a">Positive regulators</text>
+
+          <!-- Arrow Estrogen -> YARS1 (up) -->
+          <polyline points="115,294 115,272 115,206" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- AD Brain context note -->
+          <rect x="30" y="358" width="170" height="40" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="115" y="375" text-anchor="middle" fill="#1e40af" font-weight="700">↓ YARS1 in AD Brains</text>
+          <text x="115" y="389" text-anchor="middle" fill="#1e3a8a">Direct AD observation</text>
+
+          <!-- PANEL B: Downstream Disruption -->
+          <rect x="238" y="10" width="220" height="480" rx="12" fill="#fff7ed" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="348" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#92400e" letter-spacing="1.5">B · DOWNSTREAM DISRUPTION</text>
+
+          <!-- TOP1/TOP2 branch header -->
+          <rect x="258" y="42" width="180" height="40" rx="7" fill="#b45309" stroke="#78350f" stroke-width="1"/>
+          <text x="348" y="59" text-anchor="middle" fill="white" font-weight="700">DNA Repair &amp;</text>
+          <text x="348" y="73" text-anchor="middle" fill="#fef3c7">Transcription Hub</text>
+
+          <!-- Arrow YARS1 -> DNA hub (cross-panel, via gutter x=228) -->
+          <polyline points="200,186 228,186 228,62 258,62" stroke="#991b1b" stroke-width="1.5" fill="none" marker-end="url(#arr-red)"/>
+
+          <!-- Tyr branch: TOP1 -->
+          <rect x="258" y="110" width="82" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1"/>
+          <text x="299" y="126" text-anchor="middle" fill="#991b1b" font-weight="700">Tyr → TOP1</text>
+          <text x="299" y="140" text-anchor="middle" fill="#7f1d1d">↓ transcription</text>
+
+          <!-- Phe branch: TOP2β -->
+          <rect x="356" y="110" width="82" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="397" y="126" text-anchor="middle" fill="#92400e" font-weight="700">Phe → TOP2β</text>
+          <text x="397" y="140" text-anchor="middle" fill="#78350f">↑ transcription</text>
+
+          <!-- Arrows from hub to two branches -->
+          <line x1="299" y1="82" x2="299" y2="110" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <line x1="397" y1="82" x2="397" y2="110" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- DNA damage outcome -->
+          <rect x="258" y="172" width="82" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1"/>
+          <text x="299" y="188" text-anchor="middle" fill="#991b1b" font-weight="700">↓ DNA fragments</text>
+          <text x="299" y="202" text-anchor="middle" fill="#7f1d1d">(Tyr effect)</text>
+
+          <rect x="356" y="172" width="82" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="397" y="188" text-anchor="middle" fill="#92400e" font-weight="700">↑ DNA fragments</text>
+          <text x="397" y="202" text-anchor="middle" fill="#78350f">(Phe effect)</text>
+
+          <line x1="299" y1="148" x2="299" y2="172" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <line x1="397" y1="148" x2="397" y2="172" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Tubulin tyrosination -->
+          <rect x="278" y="234" width="160" height="38" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="358" y="250" text-anchor="middle" fill="#78350f" font-weight="700">↓ Tubulin Tyrosination</text>
+          <text x="358" y="264" text-anchor="middle" fill="#92400e">Cytoskeletal disruption</text>
+
+          <!-- Converge arrows to tubulin -->
+          <polyline points="299,210 299,253 278,253" stroke="#991b1b" stroke-width="1.2" fill="none" marker-end="url(#arr-red)"/>
+          <polyline points="397,210 397,253 438,253" stroke="#b45309" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Tau / cytoskeletal -->
+          <rect x="278" y="296" width="160" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="358" y="312" text-anchor="middle" fill="#991b1b" font-weight="700">Tau / Cytoskeletal</text>
+          <text x="358" y="326" text-anchor="middle" fill="#7f1d1d">Dysfunction</text>
+
+          <line x1="358" y1="272" x2="358" y2="296" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Neurite vulnerability -->
+          <rect x="278" y="358" width="160" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="358" y="374" text-anchor="middle" fill="#991b1b" font-weight="700">Neurite Degeneration</text>
+          <text x="358" y="388" text-anchor="middle" fill="#7f1d1d">&amp; Aβ toxicity</text>
+
+          <line x1="358" y1="334" x2="358" y2="358" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- PANEL C: Protective / Therapeutic -->
+          <rect x="476" y="10" width="210" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="581" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#134e4a" letter-spacing="1.5">C · PROTECTIVE SIGNALS</text>
+
+          <!-- cis-resveratrol node -->
+          <rect x="496" y="42" width="170" height="40" rx="7" fill="#0f766e" stroke="#134e4a" stroke-width="1"/>
+          <text x="581" y="59" text-anchor="middle" fill="white" font-weight="700">cis-Resveratrol</text>
+          <text x="581" y="73" text-anchor="middle" fill="#ccfbf1">Key protective compound</text>
+
+          <!-- cis-resv effects — two parallel -->
+          <rect x="496" y="106" width="78" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="535" y="122" text-anchor="middle" fill="#0f766e" font-weight="700">↑ TOP1 &amp; TOP2β</text>
+          <text x="535" y="136" text-anchor="middle" fill="#134e4a">chromatin recruit.</text>
+
+          <rect x="588" y="106" width="78" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="627" y="122" text-anchor="middle" fill="#0f766e" font-weight="700">↑ Tubulin</text>
+          <text x="627" y="136" text-anchor="middle" fill="#134e4a">tyrosination</text>
+
+          <line x1="535" y1="82" x2="535" y2="106" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+          <line x1="627" y1="82" x2="627" y2="106" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Tau lowering -->
+          <rect x="496" y="168" width="170" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="581" y="184" text-anchor="middle" fill="#0f766e" font-weight="700">↓ Total &amp; p-Tau</text>
+          <text x="581" y="198" text-anchor="middle" fill="#134e4a">Tau normalization</text>
+
+          <polyline points="535,144 535,187 496,187" stroke="#0f766e" stroke-width="1.2" fill="none" marker-end="url(#arr-teal)"/>
+          <polyline points="627,144 627,187 666,187" stroke="#0f766e" stroke-width="1.2" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- Neuroprotection -->
+          <rect x="496" y="230" width="170" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="581" y="246" text-anchor="middle" fill="#0f766e" font-weight="700">Neuroprotection</text>
+          <text x="581" y="260" text-anchor="middle" fill="#134e4a">vs. Aβ &amp; DNA damage</text>
+
+          <line x1="581" y1="206" x2="581" y2="230" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- trans-resveratrol warning -->
+          <rect x="496" y="292" width="170" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="581" y="309" text-anchor="middle" fill="#92400e" font-weight="700">trans-Resveratrol ⚠</text>
+          <text x="581" y="323" text-anchor="middle" fill="#78350f">AD-like gene signature</text>
+
+          <!-- PANEL D: Noncanonical Functions -->
+          <rect x="704" y="10" width="186" height="480" rx="12" fill="#eff6ff" fill-opacity="0.6" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="797" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#1e3a8a" letter-spacing="1.2">D · NONCANONICAL</text>
+
+          <rect x="722" y="42" width="150" height="40" rx="7" fill="#1e40af" stroke="#1e3a8a" stroke-width="1"/>
+          <text x="797" y="59" text-anchor="middle" fill="white" font-weight="700">YARS1 Beyond</text>
+          <text x="797" y="73" text-anchor="middle" fill="#bfdbfe">tRNA Charging</text>
+
+          <rect x="722" y="106" width="150" height="36" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+          <text x="797" y="121" text-anchor="middle" fill="#1e40af" font-weight="700">Actin Organization</text>
+          <text x="797" y="135" text-anchor="middle" fill="#1e3a8a">&amp; Axonal Transport</text>
+
+          <rect x="722" y="158" width="150" height="36" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+          <text x="797" y="173" text-anchor="middle" fill="#1e40af" font-weight="700">Neurotrophin</text>
+          <text x="797" y="187" text-anchor="middle" fill="#1e3a8a">Signaling</text>
+
+          <rect x="722" y="210" width="150" height="36" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+          <text x="797" y="225" text-anchor="middle" fill="#1e40af" font-weight="700">Nuclear / Cytokine</text>
+          <text x="797" y="239" text-anchor="middle" fill="#1e3a8a">Transcriptional Roles</text>
+
+          <rect x="722" y="262" width="150" height="36" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+          <text x="797" y="277" text-anchor="middle" fill="#1e40af" font-weight="700">Mitochondrial OXPHOS</text>
+          <text x="797" y="291" text-anchor="middle" fill="#1e3a8a">Lipid / Ferroptosis</text>
+
+          <rect x="722" y="314" width="150" height="36" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1"/>
+          <text x="797" y="329" text-anchor="middle" fill="#991b1b" font-weight="700">Inherited YARS1</text>
+          <text x="797" y="343" text-anchor="middle" fill="#7f1d1d">Neuropathy ≠ AD model</text>
+
+          <!-- Connector arrows panel D -->
+          <line x1="797" y1="82" x2="797" y2="106" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="797" y1="142" x2="797" y2="158" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="797" y1="194" x2="797" y2="210" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="797" y1="246" x2="797" y2="262" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="797" y1="298" x2="797" y2="314" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel: YARS1 suppressed -> DNA hub (already drawn above) -->
+          <!-- Cross-panel: Neuroprotection (C) echoes Neurite Degeneration (B) via note below -->
+          <!-- Protective arrow cis-resv -> neurite degeneration panel B (cross-panel teal, via gutter at x=468) -->
+          <polyline points="496,377 468,377 468,377" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- AD Brain -> YARS1 suppressed arrow (within panel A, from row 358 to 166) -->
+          <polyline points="115,358 115,345 22,345 22,186 30,186" stroke="#1e40af" stroke-width="1.2" fill="none" marker-end="url(#arr-blue)" stroke-dasharray="4,3"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (purple) — Upstream Regulators:</strong> Aging-driven elevation of aromatic amino acids (Tyr &amp; Phe) suppresses neuronal YARS1/TyrRS (red arrow). Tau is a negative regulator of TyrRS; estrogen and leucine are positive regulators. Reduced YARS1 is also directly observed in AD brains (dashed blue feedback).
+        <strong>Panel B (amber) — Downstream Disruption:</strong> YARS1 suppression converges on a DNA-repair/transcription hub. Tyr routes through TOP1 (reducing transcription and DNA breaks), while Phe routes through TOP2β (increasing transcription and DNA breaks), demonstrating divergent genome-integrity effects. Both branches converge to reduce tubulin tyrosination, leading to tau/cytoskeletal dysfunction and neurite degeneration.
+        <strong>Panel C (teal) — Protective Signals:</strong> cis-Resveratrol promotes TOP1/TOP2β chromatin recruitment, increases tubulin tyrosination, lowers total and phosphorylated tau, and provides neuroprotection against Aβ and DNA damage. trans-Resveratrol shows an opposing AD-like gene-expression profile (warning).
+        <strong>Panel D (blue) — Noncanonical YARS1 Functions:</strong> Beyond tRNA charging, YARS1 participates in actin organization, axonal transport, neurotrophin signaling, nuclear/cytokine roles, and mitochondrial/lipid metabolism. Inherited YARS1 neuropathy is noted as a mechanistic tool but not a direct AD model.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>YARS1 Reduction in AD Brains</h3>
+        <p>TyrRS/YARS1 is reported to be reduced in AD brains, suggesting involvement in neuronal vulnerability beyond housekeeping translation. Elevated aromatic amino acids during aging may create a metabolic stress route that chronically suppresses YARS1, contributing to AD-like neuronal dysfunction.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Tau &amp; Sex-Specific Regulation</h3>
+        <p>Tau negatively regulates TyrRS/YARS1: young Tau knockout male mice show increased cortical TyrRS. Middle-aged female mice appear more resilient to tau-associated TyrRS reduction, and estrogen and leucine are described as positive regulators, hinting at sex-specific neuronal resilience mechanisms.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Divergent DNA &amp; Transcriptional Effects</h3>
+        <p>Tyrosine promotes TOP1 chromatin recruitment and inhibits global transcription, reducing DNA strand breaks in comet assays. Phenylalanine recruits TOP2β and stimulates global transcription while increasing DNA breaks. These opposing effects reflect fundamentally different impacts on genome integrity driven by each amino acid.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>cis-Resveratrol as Protective Modulator</h3>
+        <p>cis-Resveratrol is the most directly supported protective compound. It restores transcription, promotes chromatin recruitment of TOP1 and TOP2β, increases tubulin tyrosination, lowers total and phosphorylated tau, and protects neurons from Aβ-induced neurite degeneration and DNA damage — all within this YARS1-linked pathway.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>trans-Resveratrol: An Opposing Profile</h3>
+        <p>trans-Resveratrol mimics phenylalanine-induced gene expression, downregulates long genes, and induces an AD-like gene-expression signature. Protective effects are therefore specific to <em>cis</em>-resveratrol-like modulation — treating "resveratrol" as a single entity in experimental or translational planning would be a serious error.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Inherited YARS1 Deficiency ≠ AD Context</h3>
+        <p>In genetic YARS1 deficiency, tyrosine supplementation restores TyrRS activity in patient fibroblasts. In the AD-relevant neuronal context, elevated tyrosine <em>suppresses</em> TyrRS and inhibits transcription. These opposing dynamics mean that findings from neuropathy models must not be directly transposed to AD without careful mechanistic bridging.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat YARS1 as an emerging candidate, not a validated target.</strong> The current evidence supports mechanistic relevance to AD but does not establish causal primacy or clinical utility. Frame all downstream work accordingly.</li>
+      <li><strong>Validate reduced YARS1 in independent AD cohorts.</strong> Prioritize region-specific, cell-type-specific, disease-stage-specific, sex-stratified, and tau-burden-stratified analyses to determine whether YARS1 reduction is reproducible, consistent, and quantitatively meaningful in human AD brain tissue.</li>
+      <li><strong>Test YARS1/TyrRS restoration in disease models.</strong> Experiments should measure effects on tau phosphorylation, Aβ toxicity, neurite degeneration, synaptic integrity, DNA damage, transcriptional stability, microtubule function, and cognition to establish whether restoring YARS1 is genuinely protective.</li>
+      <li><strong>Investigate the full proposed pathway causally.</strong> The chain — aging-associated Tyr/Phe elevation → neuronal YARS1 suppression → TOP1/TOP2β and transcriptional disruption → reduced tubulin tyrosination → tau/cytoskeletal dysfunction and neurite vulnerability — must be validated step by step, not assumed as a unit.</li>
+      <li><strong>Avoid simplistic therapeutic assumptions.</strong> Broad YARS1 inhibition is likely hazardous because YARS1 is essential for global protein synthesis. Tyrosine supplementation may benefit inherited YARS1 deficiency but could be harmful in AD-like neuronal stress contexts. Therapeutic precision is essential.</li>
+      <li><strong>Focus on preserving neuronal TyrRS/YARS1 homeostasis.</strong> Rather than inhibiting or grossly perturbing YARS1, explore how to maintain or restore its physiological level and correct the downstream transcriptional, DNA-repair, cytoskeletal, tau, and neurite-maintenance defects it subtends.</li>
+      <li><strong>Prioritize cis-resveratrol-like compounds as the most actionable intervention class.</strong> Recognize that the current evidence is preclinical and cellular. Distinguish rigorously between cis- and trans-resveratrol in every experimental and translational context, since their neuronal gene-expression profiles diverge sharply.</li>
+      <li><strong>Use inherited YARS1 neuropathy models cautiously.</strong> These models are useful mechanistic tools for studying neuronal maintenance, axonal vulnerability, actin organization, and transcriptional regulation, but they do not recapitulate AD and should not be treated as direct AD models.</li>
+      <li><strong>Define key next experiments precisely.</strong> Determine (i) whether YARS1 restoration is protective in AD-relevant models, (ii) whether aromatic amino acid imbalance causally suppresses YARS1 <em>in vivo</em>, and (iii) whether cis-resveratrol's protective effects depend on YARS1/TyrRS normalization as a mechanistic requirement.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — YARS1 / TyrRS in Alzheimer's Disease</div>
+      <p>YARS1/TyrRS occupies a <strong>biologically credible but mechanistically unproven position</strong> in Alzheimer's disease research. Its reduction in AD brains, suppression by aging-associated aromatic amino acids, and downstream connections to <strong>tau regulation, transcriptional homeostasis, DNA integrity, tubulin tyrosination, and neurite maintenance</strong> form a coherent mechanistic narrative that warrants serious investigation. The most actionable finding is the protective profile of <strong>cis-resveratrol</strong> — distinct from and opposed to trans-resveratrol — which converges on multiple nodes of this pathway in cellular and preclinical models. However, no causal human genetic evidence, no validated biomarker, and no clinical data yet establish YARS1 as an AD driver or therapeutic target. The field's immediate priority should be <strong>independent replication of YARS1 reduction in AD brain</strong>, rigorous causal pathway dissection in vivo, and mechanistically anchored preclinical testing of compounds that restore YARS1 homeostasis — before any translational investment in this target is justified.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  YARS1 / TyrRS — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

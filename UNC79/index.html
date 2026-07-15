@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNC79 | NALCN Channelosome — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-tint: #fef2f2;
+    --danger-border: #fca5a5;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(252, 165, 165, 0.45);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1.0rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-tint);
+    border: 1.5px solid var(--danger-border);
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--danger);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-tint);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-tint);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-tint);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.96rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #e2eaf4;
+    line-height: 1.75;
+    font-size: 0.98rem;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: UNC79 &nbsp;|&nbsp; Unc-79 Homolog, NALCN Channel Complex Subunit</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Loss-of-function risk</span>
+  </div>
+  <h1>UNC79 &amp; the NALCN Channelosome</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Critical Safety Caveat:</strong> UNC79 is essential to normal neuronal function. Loss-of-function variants cause epilepsy, behavioral abnormalities, learning and memory impairment, and neurodevelopmental disease. Broad pharmacological inhibition or activation carries significant risk; any therapeutic strategy requires precise, circuit-specific, or state-dependent modulation.
+    </div>
+
+    <p>UNC79 is a core cytoplasmic auxiliary subunit of the NALCN sodium leak channelosome — a multiprotein complex comprising NALCN, UNC80, FAM155A/NLF-1, and UNC79 itself. It is <em>not</em> a validated Alzheimer's disease (AD) gene or established AD therapeutic target. Its relevance to AD is indirect and mechanistic: UNC79 helps regulate neuronal resting membrane potential, background sodium/cation leak currents, excitability, sleep and circadian physiology, arousal, synaptic signaling, dendritic localization of NALCN activity, and cognition-related behaviors.</p>
+
+    <p>The strongest AD-relevant overlap is with processes known to influence AD progression or symptoms — neuronal network hyperexcitability, seizures or epileptiform activity, sleep fragmentation, circadian disruption, synaptic dysfunction, cognitive impairment, and ion-homeostasis abnormalities. The supplied evidence does not demonstrate that UNC79 directly alters amyloid-β, tau, neuroinflammation, synaptic loss, or neurodegeneration in AD models.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="11">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Channelosome Assembly -->
+          <rect x="10" y="10" width="260" height="480" rx="12" fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1" font-family="Arial, sans-serif">A · CHANNELOSOME ASSEMBLY</text>
+
+          <!-- Node A1: FAM155A -->
+          <rect x="80" y="44" width="120" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="60" text-anchor="middle" font-weight="700" fill="#1a3a5c">FAM155A</text>
+          <text x="140" y="74" text-anchor="middle" fill="#1a3a5c">(NLF-1)</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="140" y1="84" x2="140" y2="104" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: NALCN channel -->
+          <rect x="72" y="104" width="136" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="120" text-anchor="middle" font-weight="700" fill="#1a3a5c">NALCN Channel</text>
+          <text x="140" y="134" text-anchor="middle" fill="#1a3a5c">Na⁺ / cation leak</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="140" y1="144" x2="140" y2="164" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: UNC79 scaffold -->
+          <rect x="72" y="164" width="136" height="40" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="140" y="180" text-anchor="middle" font-weight="700" fill="#ffffff">UNC79</text>
+          <text x="140" y="194" text-anchor="middle" fill="#c7ddf0">Cytoplasmic scaffold</text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="140" y1="204" x2="140" y2="224" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4: UNC80 -->
+          <rect x="72" y="224" width="136" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="240" text-anchor="middle" font-weight="700" fill="#1a3a5c">UNC80</text>
+          <text x="140" y="254" text-anchor="middle" fill="#1a3a5c">Scaffold partner</text>
+
+          <!-- Arrow A4→A5 -->
+          <line x1="140" y1="264" x2="140" y2="284" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A5: Complex outcome -->
+          <rect x="52" y="284" width="176" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="140" y="300" text-anchor="middle" font-weight="700" fill="#ffffff">Gating &amp; Trafficking</text>
+          <text x="140" y="314" text-anchor="middle" fill="#daeaf7">Surface localization</text>
+
+          <!-- Arrow A5→A6 -->
+          <line x1="140" y1="324" x2="140" y2="344" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A6: Resting Vm -->
+          <rect x="52" y="344" width="176" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="140" y="360" text-anchor="middle" font-weight="700" fill="#1a3a5c">Resting Membrane</text>
+          <text x="140" y="374" text-anchor="middle" fill="#1a3a5c">Potential Set Point</text>
+
+          <!-- Panel B: Downstream Physiology (branching) -->
+          <rect x="285" y="10" width="295" height="480" rx="12" fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="432" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1" font-family="Arial, sans-serif">B · DOWNSTREAM PHYSIOLOGY</text>
+
+          <!-- Shared upstream node B0 -->
+          <rect x="352" y="44" width="160" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+          <text x="432" y="60" text-anchor="middle" font-weight="700" fill="#ffffff">Neuronal Excitability</text>
+          <text x="432" y="74" text-anchor="middle" fill="#a7f3d0">Firing threshold</text>
+
+          <!-- Branch left: Sleep/Circadian -->
+          <line x1="392" y1="82" x2="340" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <rect x="294" y="112" width="130" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="359" y="128" text-anchor="middle" font-weight="700" fill="#065f46">Sleep &amp; Circadian</text>
+          <text x="359" y="143" text-anchor="middle" fill="#065f46">Arousal / rhythm</text>
+
+          <line x1="359" y1="150" x2="359" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <rect x="294" y="178" width="130" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="359" y="194" text-anchor="middle" font-weight="700" fill="#065f46">Glymphatic &amp;</text>
+          <text x="359" y="208" text-anchor="middle" fill="#065f46">Amyloid clearance</text>
+
+          <!-- Branch right: Synaptic/Dendritic -->
+          <line x1="472" y1="82" x2="510" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <rect x="442" y="112" width="128" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="506" y="128" text-anchor="middle" font-weight="700" fill="#065f46">Dendritic NALCN</text>
+          <text x="506" y="143" text-anchor="middle" fill="#065f46">Localization</text>
+
+          <line x1="506" y1="150" x2="506" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <rect x="442" y="178" width="128" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="506" y="194" text-anchor="middle" font-weight="700" fill="#065f46">Synaptic Signal</text>
+          <text x="506" y="208" text-anchor="middle" fill="#065f46">Propagation</text>
+
+          <!-- Converging arrows to shared outcome -->
+          <line x1="359" y1="216" x2="359" y2="264" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="359" y1="264" x2="432" y2="264" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="506" y1="216" x2="506" y2="264" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="506" y1="264" x2="432" y2="264" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="432" y1="264" x2="432" y2="282" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Convergence node -->
+          <rect x="342" y="282" width="180" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+          <text x="432" y="298" text-anchor="middle" font-weight="700" fill="#ffffff">Cognition &amp; Network</text>
+          <text x="432" y="312" text-anchor="middle" fill="#a7f3d0">Behavior / memory</text>
+
+          <!-- Panel C: AD Risk Interface + Safety -->
+          <rect x="596" y="10" width="294" height="480" rx="12" fill="rgba(155,28,28,0.04)" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="743" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1" font-family="Arial, sans-serif">C · AD INTERFACE &amp; SAFETY</text>
+
+          <!-- Node C1: AD overlap -->
+          <rect x="618" y="44" width="250" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="743" y="60" text-anchor="middle" font-weight="700" fill="#9b1c1c">AD-Relevant Overlap</text>
+          <text x="743" y="74" text-anchor="middle" fill="#7f1d1d">Hyperexcitability / sleep loss</text>
+
+          <!-- Arrow C1 → C2 -->
+          <line x1="743" y1="84" x2="743" y2="108" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node C2: Epilepsy -->
+          <rect x="618" y="108" width="115" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="675" y="124" text-anchor="middle" font-weight="700" fill="#9b1c1c">Epilepsy /</text>
+          <text x="675" y="138" text-anchor="middle" fill="#7f1d1d">Seizure risk</text>
+
+          <!-- Node C3: Cognitive -->
+          <rect x="751" y="108" width="117" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="809" y="124" text-anchor="middle" font-weight="700" fill="#9b1c1c">Cognitive /</text>
+          <text x="809" y="138" text-anchor="middle" fill="#7f1d1d">Dev. impairment</text>
+
+          <!-- Arrows from C1 to C2/C3 -->
+          <line x1="700" y1="84" x2="675" y2="108" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="786" y1="84" x2="809" y2="108" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Arrows C2, C3 → C4 -->
+          <line x1="675" y1="148" x2="675" y2="188" stroke="#9b1c1c" stroke-width="1.4"/>
+          <line x1="675" y1="188" x2="743" y2="188" stroke="#9b1c1c" stroke-width="1.4"/>
+          <line x1="809" y1="148" x2="809" y2="188" stroke="#9b1c1c" stroke-width="1.4"/>
+          <line x1="809" y1="188" x2="743" y2="188" stroke="#9b1c1c" stroke-width="1.4"/>
+          <line x1="743" y1="188" x2="743" y2="200" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node C4: No direct AD causality -->
+          <rect x="618" y="200" width="250" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+          <text x="743" y="216" text-anchor="middle" font-weight="700" fill="#b45309">No Direct AD Causality</text>
+          <text x="743" y="230" text-anchor="middle" fill="#92400e">Aβ / tau unchanged</text>
+
+          <!-- Arrow C4 → C5 -->
+          <line x1="743" y1="240" x2="743" y2="264" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C5: Therapeutic -->
+          <rect x="618" y="264" width="250" height="40" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="743" y="280" text-anchor="middle" font-weight="700" fill="#1d4ed8">Structural Templates</text>
+          <text x="743" y="294" text-anchor="middle" fill="#1d4ed8">Drug discovery scaffold</text>
+
+          <!-- Arrow C5 → C6 -->
+          <line x1="743" y1="304" x2="743" y2="328" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node C6 -->
+          <rect x="618" y="328" width="250" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="743" y="344" text-anchor="middle" font-weight="700" fill="#9b1c1c">Safety: LOF Variants</text>
+          <text x="743" y="358" text-anchor="middle" fill="#7f1d1d">Epilepsy · ID · Dev. delay</text>
+
+          <!-- Cross-panel connector: Panel B convergence → Panel C AD overlap (via gutter, elbow) -->
+          <line x1="432" y1="320" x2="432" y2="420" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="432" y1="420" x2="580" y2="420" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="580" y1="420" x2="580" y2="64" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="580" y1="64" x2="618" y2="64" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel connector: Panel A Vm → Panel B Excitability (via gutter) -->
+          <line x1="228" y1="364" x2="268" y2="364" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="268" y1="364" x2="268" y2="63" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="268" y1="63" x2="352" y2="63" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — Channelosome Assembly:</strong> FAM155A, NALCN, UNC79, and UNC80 assemble into a multiprotein complex; UNC79/UNC80 form the cytoplasmic scaffold that controls NALCN gating, trafficking, and surface localization, ultimately setting the neuronal resting membrane potential.
+        <strong>Panel B (teal) — Downstream Physiology:</strong> Neuronal excitability fans into two parallel branches — sleep/circadian regulation (leading to glymphatic and amyloid-clearance implications) and dendritic NALCN localization (supporting synaptic signal propagation) — reconverging on cognition and network behavior.
+        <strong>Panel C (red/amber/blue) — AD Interface &amp; Safety:</strong> AD-relevant overlap (hyperexcitability, sleep loss) branches into epilepsy/seizure risk and cognitive/developmental impairment; the complex provides structural templates for drug discovery, but loss-of-function variants underscore a critical safety liability, and no direct Aβ/tau causality is established.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS CARDS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Channelosome Structure &amp; Function</h3>
+        UNC79 is a <strong>required regulatory component</strong> of the NALCN channelosome. Together with UNC80, FAM155A/NLF-1, and NALCN, it supports depolarizing background sodium/cation leak currents that set neuronal resting membrane potential and excitability. Structural studies confirm UNC79/UNC80 form a large intracellular scaffold contacting NALCN cytoplasmic loops — making UNC79 a <em>functional regulator</em>, not a passive accessory protein.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Sleep, Circadian &amp; AD-Adjacent Overlap</h3>
+        Model-organism studies link unc79/NALCN-complex disruption to altered <strong>sleep duration, sleep stability, sleep fragmentation, arousal thresholds, starvation resistance, and circadian locomotor rhythmicity</strong>. These processes are highly relevant to AD because sleep and circadian disruption can worsen amyloid/tau burden, impair glymphatic clearance, promote neuroinflammation, and degrade cognition — although the supplied UNC79 studies do not directly test these AD outcomes.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Excitability &amp; Network Hyperexcitability</h3>
+        NALCN-mediated leak conductance influences neuronal firing thresholds, and UNC79 loss is linked to <strong>epilepsy, seizure-like phenotypes, and altered neuronal responsiveness</strong>. This is directly relevant to AD, which often involves network hyperexcitability and subclinical epileptiform activity. No direct AD evidence is provided, but the mechanistic bridge is biologically plausible.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ion Homeostasis: Plausible but Unproven</h3>
+        NALCN conducts depolarizing sodium leak currents and is modulated by extracellular divalent cations including calcium. Reduced extracellular calcium can increase excitability through NALCN-dependent mechanisms. Since <strong>calcium and cation dysregulation are AD-relevant</strong>, UNC79 may be mechanistically interesting, but no UNC79-driven calcium dyshomeostasis in AD has been demonstrated.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Therapeutic Structural Templates</h3>
+        High-resolution structures of the NALCN–FAM155A–UNC79–UNC80 channelosome provide <strong>rational drug-discovery templates</strong>, identifying interaction interfaces involved in localization, gating, and current regulation. However, the text notes a lack of specific NALCN blockers or agonists suitable for in vitro and in vivo use, and therapeutic potential remains preliminary.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neurodevelopmental Safety Liability</h3>
+        Human ultrarare heterozygous loss-of-function UNC79 variants are linked to <strong>intellectual disability, developmental delay, epilepsy, autistic features, and behavioral abnormalities</strong>. Mouse heterozygous models show impaired learning and memory. These findings establish cognition and excitability relevance, but they describe neurodevelopmental — not neurodegenerative — disease, and signal a major safety concern for any therapeutic intervention.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div><strong>Treat UNC79 as hypothesis-generating, not validated.</strong> Current evidence supports mechanistic plausibility through excitability, sleep, circadian, synaptic, and ion-homeostasis pathways, but does not establish direct AD causality.</div>
+      </li>
+
+      <li>
+        <div><strong>Prioritize AD-model validation before therapeutic development.</strong> Key experiments should test whether UNC79 or NALCN-channelosome expression/function changes in AD brain tissue, AD mouse models, human iPSC-derived neurons, or aging-related systems.</div>
+      </li>
+
+      <li>
+        <div><strong>Test UNC79 modulation against AD-relevant phenotypes.</strong> Critical readouts include amyloid-β accumulation, tau phosphorylation/spreading, synaptic loss, neuroinflammation, neuronal loss, sleep architecture, epileptiform activity, and memory decline.</div>
+      </li>
+
+      <li>
+        <div><strong>Focus on network and sleep phenotypes as the most plausible entry points.</strong> UNC79/NALCN may be most relevant to AD-associated hyperexcitability, seizures, sleep fragmentation, arousal instability, and circadian dysfunction — rather than amyloid or tau production directly.</div>
+      </li>
+
+      <li>
+        <div><strong>Use structural data to guide selective modulation.</strong> The resolved NALCN–FAM155A–UNC79–UNC80 architecture identifies interaction interfaces involved in localization, gating, and current regulation that could support rational drug design.</div>
+      </li>
+
+      <li>
+        <div><strong>Avoid assuming simple inhibition or activation will be beneficial.</strong> Because UNC79/NALCN function is circuit- and state-dependent, both loss and excess activity may cause adverse effects. Therapeutic exploration should emphasize partial, context-specific modulation.</div>
+      </li>
+
+      <li>
+        <div><strong>Monitor safety endpoints rigorously in any target-validation program.</strong> Essential readouts should include seizure liability, sleep disruption, learning and memory effects, locomotor changes, autonomic effects, and developmental or cognitive toxicity.</div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — UNC79 as an AD-Adjacent Target</span>
+      UNC79 is a <strong>biologically important regulator of neuronal excitability and sleep/circadian circuitry</strong> through its essential role in the NALCN channelosome. Its functions — setting resting membrane potential, supporting background sodium leak currents, regulating NALCN trafficking and gating, shaping arousal and sleep stability, and influencing dendritic and synaptic signal propagation — overlap meaningfully with processes that are <strong>perturbed in Alzheimer's disease</strong>, including network hyperexcitability, sleep fragmentation, circadian disruption, and synaptic dysfunction. However, the evidence linking UNC79 to AD remains entirely indirect: <strong>no UNC79-driven changes in amyloid-β, tau, neuroinflammation, or neurodegeneration in AD models have been demonstrated</strong>. The association with epilepsy, intellectual disability, and neurodevelopmental disease in human loss-of-function carriers adds both biological credibility and a substantial safety liability. UNC79 should be considered a <strong>mechanistically plausible candidate for AD-related network and sleep dysfunction</strong> — warranting focused experimental validation — but it cannot currently be classified as an established Alzheimer's therapeutic target.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>UNC79 / NALCN Channelosome TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADI2/PAD2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #4a1a6e;
+    --mid: #7c3aad;
+    --light: #f3eafc;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #e2e8f0;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0730 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #f1e8ff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e9d5ff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 0.98rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.91rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card p { margin-bottom: 0; font-size: 0.91rem; }
+
+  .card-accent   { background: var(--light);         border-color: var(--mid);     }
+  .card-accent   h3 { color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);  }
+  .card-danger   h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-color: var(--positive);}
+  .card-positive h3 { color: var(--positive); }
+  .card-blue     { background: var(--blue-light);    border-color: var(--blue);    }
+  .card-blue     h3 { color: var(--blue); }
+  .card-slate    { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-slate    h3 { color: var(--neutral); }
+  .card-warning  { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning  h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0730 100%);
+    border-radius: 14px;
+    padding: 36px 40px;
+    color: #ffffff;
+  }
+
+  .verdict p {
+    color: #e9d5ff;
+    margin-bottom: 0;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  .verdict .verdict-lead {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 12px;
+    letter-spacing: 0.01em;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PADI2 | Peptidylarginine Deiminase Type II</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Systemic inhibition risks</span>
+  </div>
+  <h1>PADI2 / PAD2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety Note:</strong> Broad chronic PAD2 inhibition carries risks including impaired host defence, disrupted oligodendrocyte differentiation and myelination, altered antibody responses, vascular effects, and loss of potentially compensatory repair pathways. PAD2-selective, brain-penetrant inhibitors are preferred over pan-PAD blockade.
+    </div>
+
+    <p>
+      PADI2/PAD2 is a calcium-dependent peptidylarginine deiminase that converts protein arginine residues to citrulline, altering protein charge, structure, stability, interactions, antigenicity, inflammatory signalling, and chromatin regulation. In Alzheimer's disease (AD), the strongest evidence supports an <strong>astrocyte-centred mechanism</strong> in which PAD2 is upregulated in plaque-associated or hippocampal glial cells and drives pathological citrullination of intermediate filament proteins — especially vimentin and GFAP.
+    </p>
+    <p>
+      The most compelling AD-specific model proceeds as follows: an amyloid-β plaque environment or amyloid-related injury triggers PAD2 upregulation in astrocytes (and in some models microglia), leading to citrullination of astrocytic vimentin at residues 175/184 (Cit-Vim175/184) and/or GFAP. Released or accumulated citrullinated glial proteins then drive TLR4-dependent microglial inflammatory activation, which reduces microglial Aβ phagocytosis and clearance, thereby increasing amyloid pathology and cognitive dysfunction.
+    </p>
+    <p>
+      Human AD hippocampus and cortex show increased PAD2/PADI2 and abnormal accumulation of citrullinated proteins including citrullinated GFAP and vimentin. In a directly relevant AD study, PAD2 was selectively upregulated in plaque-associated astrocytes in human AD cortex and multiple APP-based AD mouse models. Both genetic astrocyte-specific <em>Padi2</em> deletion and pharmacological PAD2 inhibition improved AD-like outcomes in mice, supporting PAD2 as a <strong>modifiable disease driver</strong> rather than merely a marker.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:640px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#7c3aad"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-slate" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- ============================================================
+               PANEL A — UPSTREAM TRIGGER (left)
+               ============================================================ -->
+          <rect x="10" y="10" width="195" height="460" rx="12" ry="12"
+                fill="#f3eafc" fill-opacity="0.55" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="107" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="8.5" font-weight="bold" letter-spacing="1.2" fill="#4a1a6e">UPSTREAM TRIGGER</text>
+
+          <!-- Node A1: Aβ Plaque -->
+          <rect x="30" y="44" width="154" height="44" rx="8" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.4"/>
+          <text x="107" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Aβ Plaque</text>
+          <text x="107" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#4a1a6e">Environment / Injury</text>
+
+          <!-- Node A2: PAD2 upregulation -->
+          <rect x="30" y="116" width="154" height="44" rx="8" fill="#ddd6fe" stroke="#7c3aad" stroke-width="1.4"/>
+          <text x="107" y="135" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">PAD2 Upregulation</text>
+          <text x="107" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#4a1a6e">Plaque-assoc. Astrocytes</text>
+
+          <!-- A1 → A2 -->
+          <line x1="107" y1="88" x2="107" y2="110" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Ca2+ activation badge area -->
+          <rect x="30" y="190" width="154" height="40" rx="8" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="107" y="208" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Ca²⁺-Dependent</text>
+          <text x="107" y="223" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#4a1a6e">Arg → Cit Conversion</text>
+
+          <!-- A2 → A3 -->
+          <line x1="107" y1="160" x2="107" y2="184" stroke="#7c3aad" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- ============================================================
+               PANEL B — CITRULLINATION MECHANISM (centre-top)
+               ============================================================ -->
+          <rect x="220" y="10" width="450" height="240" rx="12" ry="12"
+                fill="#fef9ee" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="445" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="8.5" font-weight="bold" letter-spacing="1.2" fill="#b45309">CITRULLINATION SUBSTRATES &amp; RELEASE</text>
+
+          <!-- Node B1: shared — citrullination event -->
+          <rect x="338" y="44" width="154" height="40" rx="8" fill="#fde68a" stroke="#b45309" stroke-width="1.4"/>
+          <text x="415" y="61" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">PAD2 Citrullination</text>
+          <text x="415" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">of Glial Proteins</text>
+
+          <!-- Branch left: Vimentin -->
+          <rect x="234" y="122" width="150" height="42" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="309" y="141" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Cit-Vimentin</text>
+          <text x="309" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">Residues 175 / 184</text>
+
+          <!-- Branch right: GFAP -->
+          <rect x="446" y="122" width="150" height="42" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="521" y="141" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Cit-GFAP</text>
+          <text x="521" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">R270Cit, R416Cit</text>
+
+          <!-- B1 → left branch -->
+          <line x1="390" y1="84" x2="340" y2="116" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-slate)"/>
+          <!-- B1 → right branch -->
+          <line x1="440" y1="84" x2="490" y2="116" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-slate)"/>
+
+          <!-- Converge node: Released Cit Proteins -->
+          <rect x="325" y="198" width="178" height="40" rx="8" fill="#fed7aa" stroke="#b45309" stroke-width="1.4"/>
+          <text x="414" y="216" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Released Cit Proteins</text>
+          <text x="414" y="231" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">Accumulate in AD Brain</text>
+
+          <!-- left branch → converge -->
+          <line x1="309" y1="164" x2="360" y2="193" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-slate)"/>
+          <!-- right branch → converge -->
+          <line x1="521" y1="164" x2="468" y2="193" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-slate)"/>
+
+          <!-- Connector from Panel A (A3) → Panel B (B1): horizontal line in gutter -->
+          <line x1="184" y1="210" x2="184" y2="64" stroke="#7c3aad" stroke-width="1.4" stroke-dasharray="4,3"/>
+          <line x1="184" y1="64" x2="332" y2="64" stroke="#7c3aad" stroke-width="1.4" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+          <!-- ============================================================
+               PANEL C — NEUROINFLAMMATORY CONSEQUENCES (centre-bottom)
+               ============================================================ -->
+          <rect x="220" y="264" width="450" height="205" rx="12" ry="12"
+                fill="#fef2f2" fill-opacity="0.65" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="445" y="283" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="8.5" font-weight="bold" letter-spacing="1.2" fill="#991b1b">NEUROINFLAMMATORY CONSEQUENCES</text>
+
+          <!-- Node C1: TLR4 activation -->
+          <rect x="325" y="294" width="178" height="40" rx="8" fill="#fecaca" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="414" y="311" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">TLR4-Dependent</text>
+          <text x="414" y="326" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#991b1b">Microglial Activation</text>
+
+          <!-- Released Cit → TLR4: vertical connector crossing panel boundary -->
+          <line x1="414" y1="238" x2="414" y2="259" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Branch C-left: Impaired phagocytosis -->
+          <rect x="234" y="356" width="150" height="42" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="309" y="375" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Impaired Aβ</text>
+          <text x="309" y="390" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#991b1b">Phagocytosis</text>
+
+          <!-- Branch C-right: Pro-inflammatory phenotype -->
+          <rect x="446" y="356" width="150" height="42" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="521" y="375" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Pro-inflammatory</text>
+          <text x="521" y="390" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#991b1b">Microglial Phenotype</text>
+
+          <!-- C1 → left -->
+          <line x1="386" y1="334" x2="336" y2="350" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- C1 → right -->
+          <line x1="442" y1="334" x2="492" y2="350" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Converge C: Increased Aβ burden -->
+          <rect x="325" y="418" width="178" height="40" rx="8" fill="#fca5a5" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="414" y="436" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d" font-weight="bold">↑ Aβ Burden &amp;</text>
+          <text x="414" y="451" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#7f1d1d" font-weight="bold">Cognitive Decline</text>
+
+          <!-- left → outcome -->
+          <line x1="309" y1="398" x2="360" y2="413" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- right → outcome -->
+          <line x1="521" y1="398" x2="468" y2="413" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- ============================================================
+               PANEL D — THERAPEUTIC / PROTECTIVE (right)
+               ============================================================ -->
+          <rect x="685" y="10" width="204" height="460" rx="12" ry="12"
+                fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="787" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="8.5" font-weight="bold" letter-spacing="1.2" fill="#0f766e">THERAPEUTIC INTERVENTION</text>
+
+          <!-- Node D1: PAD2 inhibition -->
+          <rect x="702" y="44" width="168" height="42" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="786" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">PAD2-Selective</text>
+          <text x="786" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Inhibition / KO</text>
+
+          <!-- Node D2: Genetic deletion -->
+          <rect x="702" y="118" width="168" height="42" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="786" y="135" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Astrocyte-Specific</text>
+          <text x="786" y="151" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Padi2 Deletion (5xFAD)</text>
+
+          <line x1="786" y1="86" x2="786" y2="112" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D3: Normalised glial states -->
+          <rect x="702" y="192" width="168" height="42" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="786" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Normalised Glial</text>
+          <text x="786" y="226" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Signatures &amp; Proteome</text>
+
+          <line x1="786" y1="160" x2="786" y2="186" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D4: Restored phagocytosis -->
+          <rect x="702" y="266" width="168" height="42" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="786" y="284" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Restored Microglial</text>
+          <text x="786" y="299" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Aβ Phagocytosis</text>
+
+          <line x1="786" y1="234" x2="786" y2="260" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Node D5: Outcome -->
+          <rect x="702" y="340" width="168" height="44" rx="8" fill="#5eead4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="786" y="359" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#134e4a" font-weight="bold">↓ Aβ Burden</text>
+          <text x="786" y="375" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#134e4a" font-weight="bold">Improved Cognition</text>
+
+          <line x1="786" y1="308" x2="786" y2="334" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel D caveat node -->
+          <rect x="702" y="414" width="168" height="44" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+          <text x="786" y="431" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Caution: Physiological</text>
+          <text x="786" y="447" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">Roles (myelin, repair)</text>
+
+          <line x1="786" y1="384" x2="786" y2="408" stroke="#b45309" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arr-slate)"/>
+
+          <!-- Cross-connector: Cit proteins panel B → Panel D via gutter (horizontal at y=218 then down) -->
+          <line x1="670" y1="218" x2="696" y2="218" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Trigger, purple):</strong> Aβ plaque environment activates calcium-dependent PAD2 upregulation in plaque-associated astrocytes, initiating arginine-to-citrulline conversion.
+        <strong>Panel B (Citrullination Substrates, amber):</strong> PAD2 branches to citrullinate two key glial cytoskeletal proteins — vimentin (Cit-Vim175/184, left branch) and GFAP (R270Cit / R416Cit, right branch) — which converge into a pool of released citrullinated proteins accumulating in AD brain.
+        <strong>Panel C (Neuroinflammatory Consequences, red):</strong> Released citrullinated proteins activate microglia via TLR4, branching into impaired Aβ phagocytosis (left) and a pro-inflammatory microglial phenotype (right), converging on increased amyloid burden and cognitive decline.
+        <strong>Panel D (Therapeutic Intervention, teal):</strong> PAD2-selective inhibition or astrocyte-specific genetic deletion normalises glial signatures, restores microglial phagocytosis, and reduces Aβ burden with cognitive improvement in mouse models; a caveat node (amber) flags physiological PAD2 roles in myelination and tissue repair.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Plaque-Associated Astrocyte Pathology</h3>
+        <p>PAD2 upregulation is localised to astrocytes surrounding amyloid-β plaques in human AD cortex and multiple APP-based mouse models — not a diffuse whole-brain increase — indicating a spatially restricted pathological niche.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Glial Inflammatory Signalling Axis</h3>
+        <p>PAD2 citrullinates astrocytic vimentin at residues 175/184; the resulting Cit-Vim is released from astrocytes and activates microglia through TLR4-dependent signalling, creating a glial-to-glial inflammatory relay.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Worsened Amyloid Pathology</h3>
+        <p>Released citrullinated vimentin promotes a pro-inflammatory microglial phenotype while impairing Aβ phagocytosis and clearance, directly contributing to higher amyloid burden and cognitive impairment in AD models.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Genetic Causality (5×FAD)</h3>
+        <p>Astrocyte-specific deletion of <em>Padi2</em> in 5×FAD mice rescued learning and memory, reduced Aβ burden, restrained pro-inflammatory microglial activation, and restored microglial phagocytosis — demonstrating causal involvement.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Pharmacological Druggability</h3>
+        <p>PAD2 inhibition reproduced the protective effects of genetic deletion, including normalisation of glial signatures and cognitive improvement, supporting PAD2 as a pharmacologically tractable target in AD models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Physiological Roles &amp; Safety</h3>
+        <p>PAD2 has beneficial physiological functions in CNS myelination, oligodendrocyte differentiation, transcriptional regulation, host defence, angiogenesis, and tissue repair. Broad chronic inhibition risks disrupting these functions; isoform-selective brain-penetrant inhibitors are required.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <span><strong>Prioritise PAD2 as an AD target</strong> in astrocyte–microglia inflammatory niches, with a focus on the peri-plaque microenvironment where PAD2 upregulation is most strongly evidenced.</span>
+      </li>
+      <li>
+        <span><strong>Validate the core pathway:</strong> PAD2 → Cit-Vim175/184 and/or citrullinated GFAP → TLR4-linked microglial activation → impaired Aβ clearance → cognitive decline should be the primary mechanistic hypothesis for translational experiments.</span>
+      </li>
+      <li>
+        <span><strong>Use citrullinated vimentin and citrullinated GFAP as pharmacodynamic biomarkers</strong> for PAD2 target engagement in AD mouse models and human tissue studies.</span>
+      </li>
+      <li>
+        <span><strong>Develop brain-penetrant, PAD2-selective inhibitors</strong> rather than pan-PAD agents to minimise off-target effects on PAD4 (NET/histone-associated) and to clarify PAD2-specific mechanisms in the CNS.</span>
+      </li>
+      <li>
+        <span><strong>Determine cell-type specificity across disease stages:</strong> assess whether pathogenic PAD2 activity is primarily astrocytic, microglial, oligodendroglial, neuronal, vascular, or peripheral immune-derived at early versus late AD.</span>
+      </li>
+      <li>
+        <span><strong>Broaden efficacy endpoints beyond amyloid burden</strong> to include cognition, microglial phagocytosis, inflammatory cytokines (IL-1β, IL-6, TNF-α), TLR4 signalling, astrocyte reactivity, synaptic integrity, myelin/white-matter integrity, and citrullinated protein load.</span>
+      </li>
+      <li>
+        <span><strong>Prospectively monitor safety risks</strong> from systemic PAD2 inhibition, including impaired host defence, altered antibody responses, disrupted myelination, vascular effects, and loss of compensatory aging or repair pathways.</span>
+      </li>
+      <li>
+        <span><strong>Treat PADI2 as a promising but validation-dependent target:</strong> the strongest mouse data support causality and druggability, but broader context-dependent biology demands careful translational scrutiny before clinical advancement.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PAD2/PADI2 in Alzheimer's Disease</span>
+      <p>
+        PAD2/PADI2 occupies a compelling mechanistic position at the intersection of <strong>astrocyte pathology, glial citrullination, and neuroinflammation</strong> in Alzheimer's disease. The convergence of human AD tissue data, multiple APP-based mouse models, astrocyte-specific genetic deletion, and pharmacological rescue experiments collectively support PAD2 as a <strong>modifiable causal contributor</strong> rather than an incidental marker. The central pathway — plaque-driven PAD2 upregulation → Cit-Vim175/184 and Cit-GFAP → TLR4-dependent microglial activation → impaired Aβ clearance and cognitive decline — is mechanistically coherent and supported by independent experimental approaches. <strong>Druggability is demonstrated in mice.</strong> Key outstanding requirements include isoform-selective, brain-penetrant PAD2 inhibitor development; cell-type-resolved validation in human AD tissue; careful monitoring of physiological PAD2 functions in myelination and host defence; and biomarker qualification of citrullinated glial proteins for target engagement. PAD2 merits prioritisation as an <strong>astrocyte-centred, inflammation-linked AD therapeutic target</strong>, contingent on further translational validation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PADI2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAMB2 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1628 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(220,100,100,0.4);
+  }
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.0rem;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+  .card-accent  { border-color: var(--mid);     background: var(--light); }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { border-color: var(--danger);   background: var(--danger-light); }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ border-color: var(--positive); background: var(--positive-light); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue    { border-color: #3b6cb5;         background: #eef3fb; }
+  .card-blue    h3 { color: #3b6cb5; }
+  .card-gray    { border-color: #64748b;         background: #f1f5f9; }
+  .card-gray    h3 { color: #475569; }
+  .card-warning { border-color: var(--warning);  background: var(--warning-light); }
+  .card-warning h3 { color: var(--warning); }
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 1.4rem;
+  }
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1628 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 0.98rem;
+  }
+  .verdict-banner .lead {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .verdict-banner strong { color: #bfdbfe; }
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LAMB2 &nbsp;|&nbsp; Laminin Subunit Beta-2</span>
+    <span class="chip chip-danger">⚠ Systemic loss-of-function: multi-organ risk</span>
+  </div>
+  <h1>LAMB2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety Caveat:</strong> Severe LAMB2 loss-of-function causes Pierson syndrome, with disrupted glomerular basement membrane, nephrotic syndrome, ocular malformations, and neurodevelopmental defects. Broad systemic suppression of LAMB2 carries substantial biological risk and should be avoided in any therapeutic strategy.
+    </div>
+
+    <p>LAMB2 encodes <strong>laminin subunit beta-2 (laminin β2)</strong>, an extracellular matrix and basement-membrane chain repeatedly linked to tissue integrity, cell adhesion, specialized barrier function, synaptic organization, vascular basement membranes, astrocyte/endothelial interactions, integrin/dystroglycan signaling, and extracellular matrix remodeling.</p>
+
+    <p>The Alzheimer's disease evidence is <strong>mixed in strength</strong>. The strongest direct AD-specific signal comes from a 2024 basement membrane biomarker study identifying LAMB2 as one of four candidate genes — alongside VCAN, TIMP1, and SMC3 — in AD temporal cortex, with individual AUC values exceeding 0.8 and a four-gene model AUC range of 0.688–1.0. A secondary computational signal identified the LAMB2 E987K variant as one of five predicted deleterious AD-associated nsSNPs, but this remains prediction-based and unvalidated <em>in vitro</em> or <em>in vivo</em>.</p>
+
+    <p>The strongest non-AD mechanistic evidence concerns LAMB2 localization at blood-brain barrier sites: complete vascular coverage in normal brain microvasculature (primarily by BBB-associated pericytes and endothelial cells) and disrupted ensheathment in pathological vessels with increased permeability. This supports a plausible role in BBB integrity and neurovascular-unit stability, both central to AD pathophysiology, though the BBB study was not conducted in AD.</p>
+
+    <p>Overall, LAMB2 is best interpreted as an <strong>AD-relevant ECM/basement-membrane and neurovascular candidate</strong> rather than a validated therapeutic target. Its most plausible AD mechanisms involve neurovascular integrity, vascular basement membrane remodeling, BBB permeability, synaptic stability, glial repair, oxidative stress, and immune dysregulation — rather than direct amyloid-β or tau modification.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: LAMB2 Core & Expression -->
+          <rect x="10" y="10" width="250" height="468" rx="12" fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="135" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PANEL A · LAMB2 EXPRESSION</text>
+
+          <!-- Node A1: LAMB2 Gene -->
+          <rect x="55" y="44" width="160" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="135" y="63" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">LAMB2 Gene</text>
+          <text x="135" y="80" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">Laminin β2 protein</text>
+
+          <!-- A1 -> A2 -->
+          <line x1="135" y1="90" x2="135" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: ECM / Basement Membrane -->
+          <rect x="55" y="110" width="160" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="135" y="129" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">ECM / Basement</text>
+          <text x="135" y="146" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">Membrane Assembly</text>
+
+          <!-- A2 -> A3 -->
+          <line x1="135" y1="156" x2="135" y2="176" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Pericyte & Endothelial Expression -->
+          <rect x="40" y="176" width="190" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="135" y="195" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">Pericyte &amp; Endothelial</text>
+          <text x="135" y="212" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">BBB expression</text>
+
+          <!-- A3 -> A4 -->
+          <line x1="135" y1="222" x2="135" y2="242" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A4: Integrin / Dystroglycan -->
+          <rect x="40" y="242" width="190" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="135" y="261" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">Integrin / Dystroglycan</text>
+          <text x="135" y="278" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">Receptor signaling</text>
+
+          <!-- A4 -> A5 -->
+          <line x1="135" y1="288" x2="135" y2="308" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A5: Synaptic Basal Lamina -->
+          <rect x="40" y="308" width="190" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="135" y="327" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">Synaptic Basal Lamina</text>
+          <text x="135" y="344" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">Ca²⁺ channel clustering</text>
+
+          <!-- Node A6: AD Biomarker Signal -->
+          <rect x="40" y="398" width="190" height="46" rx="7" fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.6"/>
+          <text x="135" y="417" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">AD Biomarker Signal</text>
+          <text x="135" y="434" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">AUC &gt;0.8 temporal cortex</text>
+
+          <!-- A5 -> A6 with elbow (to avoid gap) -->
+          <polyline points="135,354 135,370 135,398" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Badge: E987K -->
+          <rect x="42" y="367" width="58" height="20" rx="5" fill="#1e3a5f"/>
+          <text x="71" y="381" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#ffffff">E987K SNP</text>
+
+          <!-- Panel B: BBB & Neurovascular -->
+          <rect x="275" y="10" width="260" height="298" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="405" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL B · BBB / NEUROVASCULAR</text>
+
+          <!-- Node B1: Normal BBB Coverage -->
+          <rect x="295" y="44" width="220" height="46" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="405" y="63" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">Normal BBB Coverage</text>
+          <text x="405" y="80" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e3a5f">Complete vascular ensheathment</text>
+
+          <!-- B1 branches to B2 and B3 -->
+          <line x1="350" y1="90" x2="333" y2="116" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="460" y1="90" x2="477" y2="116" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B2: Intact / Stable -->
+          <rect x="285" y="116" width="120" height="46" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="345" y="135" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Intact / Stable</text>
+          <text x="345" y="152" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">Quiescent state</text>
+
+          <!-- Node B3: Disrupted / Leaky -->
+          <rect x="415" y="116" width="110" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="470" y="135" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Disrupted / Leaky</text>
+          <text x="470" y="152" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">MRI enhancement</text>
+
+          <!-- B2 -> B4 -->
+          <line x1="345" y1="162" x2="345" y2="186" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- B3 -> B4 -->
+          <line x1="470" y1="162" x2="470" y2="186" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B4: Perivascular Clearance -->
+          <rect x="285" y="186" width="140" height="46" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="355" y="205" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#134e4a">Perivascular Aβ</text>
+          <text x="355" y="221" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a5f">Clearance capacity</text>
+
+          <!-- Node B5: Neuroinflammation -->
+          <rect x="435" y="186" width="090" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="480" y="205" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">Neuro-</text>
+          <text x="480" y="221" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">inflammation</text>
+
+          <!-- B4 -> B6, B5 -> B6 -->
+          <line x1="355" y1="232" x2="380" y2="252" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="480" y1="232" x2="456" y2="252" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B6: Neurovascular Outcome -->
+          <rect x="305" y="252" width="200" height="46" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.6"/>
+          <text x="405" y="271" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">AD Neurovascular</text>
+          <text x="405" y="287" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e3a5f">Vulnerability / Progression</text>
+
+          <!-- Panel C: Astrocyte & Pathway -->
+          <rect x="275" y="320" width="260" height="158" rx="12" fill="rgba(180,83,9,0.05)" stroke="#b45309" stroke-width="1.2"/>
+          <text x="405" y="341" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">PANEL C · ASTROCYTE / PATHWAY</text>
+
+          <!-- Node C1: Astrocyte LAMB2 -->
+          <rect x="285" y="350" width="110" height="46" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+          <text x="340" y="369" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#78350f">Astrocyte LAMB2</text>
+          <text x="340" y="385" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">VEGF/HIF axis</text>
+
+          <!-- Node C2: Focal Adhesion / ECM -->
+          <rect x="407" y="350" width="118" height="46" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+          <text x="466" y="369" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#78350f">Focal Adhesion</text>
+          <text x="466" y="385" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">PI3K/MAPK/TGF-β</text>
+
+          <!-- C1 -> C3 -->
+          <line x1="340" y1="396" x2="370" y2="416" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- C2 -> C3 -->
+          <line x1="466" y1="396" x2="436" y2="416" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node C3: Reparative / Anti-inflam -->
+          <rect x="305" y="416" width="200" height="46" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.4"/>
+          <text x="405" y="435" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#78350f">Reparative ECM State</text>
+          <text x="405" y="451" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">↓IL1B/IL6/NF-κB</text>
+
+          <!-- Panel D: Safety / Risk -->
+          <rect x="550" y="10" width="360" height="468" rx="12" fill="rgba(139,26,26,0.05)" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="730" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1">PANEL D · SAFETY / DISEASE CONTEXT</text>
+
+          <!-- Node D1: Pierson Syndrome -->
+          <rect x="566" y="44" width="155" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="643" y="63" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Pierson Syndrome</text>
+          <text x="643" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">LAMB2 mutations</text>
+
+          <!-- Node D2: Nephrotic / Ocular -->
+          <rect x="736" y="44" width="155" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="813" y="63" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Nephrotic / Ocular</text>
+          <text x="813" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Glomerular barrier loss</text>
+
+          <!-- D1 -> D3 -->
+          <line x1="643" y1="90" x2="643" y2="116" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- D2 -> D3 -->
+          <line x1="813" y1="90" x2="813" y2="116" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node D3: Barrier Integrity Principle -->
+          <rect x="566" y="116" width="155" height="46" rx="7" fill="#fecaca" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="643" y="135" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">Barrier Integrity</text>
+          <text x="643" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Principle (multi-organ)</text>
+
+          <!-- Node D4: Neuromuscular / NMJ -->
+          <rect x="736" y="116" width="155" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="813" y="135" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">NMJ / Synaptic</text>
+          <text x="813" y="151" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Active-zone structure</text>
+
+          <!-- D3 -> D5 -->
+          <line x1="643" y1="162" x2="643" y2="186" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- D4 -> D5 -->
+          <line x1="813" y1="162" x2="813" y2="186" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node D5: Oxidative Stress -->
+          <rect x="566" y="186" width="155" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="643" y="205" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">Oxidative Stress</text>
+          <text x="643" y="221" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Immune dysregulation</text>
+
+          <!-- Node D6: Immune / Macrophage -->
+          <rect x="736" y="186" width="155" height="46" rx="7" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.4"/>
+          <text x="813" y="205" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d">Macrophage / Repair</text>
+          <text x="813" y="221" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">ECM remodeling programs</text>
+
+          <!-- D5 -> D7 -->
+          <line x1="643" y1="232" x2="700" y2="256" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- D6 -> D7 -->
+          <line x1="813" y1="232" x2="756" y2="256" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node D7: Therapeutic Warning -->
+          <rect x="580" y="256" width="330" height="46" rx="7" fill="#fca5a5" stroke="#8b1a1a" stroke-width="1.6"/>
+          <text x="745" y="275" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#7f1d1d">Avoid Systemic Inhibition</text>
+          <text x="745" y="291" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#7f1d1d">Restore / stabilize function; do not block</text>
+
+          <!-- Node D8: Therapeutic Strategy -->
+          <rect x="580" y="352" width="330" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="745" y="371" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#1e3a5f">Pathway-Level Strategy</text>
+          <text x="745" y="387" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#334155">Integrin/dystroglycan · HIF · ECM stabilization</text>
+
+          <!-- Node D9: Biomarker First -->
+          <rect x="580" y="416" width="330" height="46" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="745" y="435" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#134e4a">Biomarker Priority</text>
+          <text x="745" y="451" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e3a5f">Multi-gene ECM panel; not standalone drug target</text>
+
+          <!-- D7 -> D8 with gap for empty space at y=310 -->
+          <line x1="745" y1="302" x2="745" y2="352" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- D8 -> D9 -->
+          <line x1="745" y1="398" x2="745" y2="416" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel connector: B6 (Panel B) -> D8 (Panel D), routed through gutter -->
+          <!-- B6 right edge at x=505, y=275; D8 left edge at x=580, y=375 -->
+          <!-- Route: right from B6 to x=540, then down to y=375, then right to D8 -->
+          <polyline points="505,275 540,275 540,375 580,375" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: A6 (Panel A) -> D9 (Panel D), routed through gutter -->
+          <!-- A6 right edge at x=230, y=421; D9 left edge at x=580, y=439 -->
+          <!-- Route: right from A6 to x=260, then down to y=470, then right along bottom to x=745, then up to D9 -->
+          <polyline points="230,421 260,421 260,462 745,462 745,462" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — LAMB2 Expression &amp; Signaling:</strong> LAMB2 encodes laminin β2, which assembles into ECM/basement membranes and is expressed by pericytes and endothelial cells at the BBB; it engages integrin/dystroglycan receptors and organizes synaptic basal laminae. The AD biomarker signal (AUC &gt;0.8) and the predicted E987K deleterious SNP are highlighted at the base.
+        <strong>Panel B (teal) — BBB / Neurovascular Cascade:</strong> Normal BBB coverage branches into two sub-cascades — intact/quiescent (teal) supporting perivascular Aβ clearance, and disrupted/leaky (red) driving neuroinflammation — converging on AD neurovascular vulnerability.
+        <strong>Panel C (amber) — Astrocyte / Pathway:</strong> Astrocyte LAMB2 (VEGF/HIF axis) and focal adhesion/PI3K/MAPK/TGF-β signaling converge on a reparative ECM state with suppression of inflammatory genes.
+        <strong>Panel D (red/blue/teal) — Safety &amp; Therapeutic Context:</strong> Loss-of-function causes Pierson/nephrotic syndrome and NMJ disruption; oxidative stress and immune dysregulation compound the AD-relevant risk. Systemic inhibition is contraindicated; preferred strategies involve pathway-level ECM stabilization, with LAMB2 positioned as a biomarker priority within a multi-gene panel.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Biomarker Signature</h3>
+        <p>LAMB2 was selected from 222 basement membrane-related genes via differential expression analysis, WGCNA, and machine-learning filtering in AD temporal cortex. Together with VCAN, TIMP1, and SMC3, it achieved individual AUC values &gt;0.8 and a four-gene model AUC of 0.688–1.0, with verification in a murine AD model and correlations with AD pathology progression.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>BBB Integrity &amp; Neurovascular Role</h3>
+        <p>LAMB2 provides complete vascular ensheathment in normal brain microvasculature (expressed primarily by pericytes and endothelial cells). Pathological vessels with MRI gadolinium enhancement showed disrupted LAMB2 coverage consistent with increased permeability — directly relevant to the BBB breakdown that characterizes AD, though not yet studied in AD tissue.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Synaptic &amp; Calcium-Channel Biology</h3>
+        <p>Laminin β2 organizes neuromuscular junction active zones, clusters presynaptic voltage-gated calcium channels, and maintains retinal and CNS synaptosome structural integrity. Given that synapse loss is a major correlate of cognitive decline in AD, LAMB2-containing laminins could plausibly influence synaptic resilience, though no direct AD-synaptic evidence was supplied.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Reparative Astrocyte &amp; ECM State</h3>
+        <p>LAMB2 upregulation in neural scaffold conditions co-occurred with focal adhesion pathway activation and simultaneous downregulation of inflammatory genes including IL1B, IL6, HLA-B, HLA-DMB, HLA-DPA1, and HLA-DRA. This suggests LAMB2 may participate in a reparative astrocyte or ECM-stabilizing phenotype relevant to AD neuroinflammation, though causality is not established.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety Constraint: Loss-of-Function Severity</h3>
+        <p>LAMB2 mutations in Pierson syndrome disrupt glomerular basement membrane filtration, ocular development, neuromuscular structures, and neurodevelopmental outcomes across multiple organ systems. This makes systemic LAMB2 suppression biologically hazardous. Any therapeutic approach must pursue restoration or stabilization of normal basement membrane function rather than blockade.</p>
+      </div>
+
+      <div class="card card-gray">
+        <h3>Computational Variant &amp; Unvalidated Status</h3>
+        <p>The LAMB2 E987K variant was identified as one of five predicted deleterious AD-associated nsSNPs in an in-silico analysis (alongside ACKR2, APOE, ATP8B4, TOMM40). This supports LAMB2 as a possible AD modifier candidate but remains entirely prediction-based, requiring in vitro and in vivo validation for laminin β2 folding, secretion, basement membrane assembly, and BBB function.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong style="color:var(--dark)">Prioritize AD-specific validation first.</strong> Measure LAMB2 expression, protein localization, and vascular/synaptic deposition in AD temporal cortex, hippocampus, cerebral microvessels, choroid plexus, CSF, plasma, and single-cell datasets before advancing to target development.</li>
+      <li><strong style="color:var(--dark)">Test pathology correlations rigorously.</strong> Required associations include amyloid plaque burden, cerebral amyloid angiopathy, tau stage, synapse loss, BBB leakage markers, vascular basement membrane thickening, neuroinflammation, oxidative stress signatures, and cognitive decline.</li>
+      <li><strong style="color:var(--dark)">Investigate LAMB2 at the neurovascular unit.</strong> The most mechanistically justified hypothesis is that endothelial/pericyte-derived laminin β2 networks support BBB and vascular basement membrane stability. AD models should test whether LAMB2 loss or mislocalization increases BBB permeability, impairs Aβ clearance, or worsens neuroinflammation.</li>
+      <li><strong style="color:var(--dark)">Evaluate the E987K variant experimentally.</strong> The predicted deleterious nsSNP should be tested for effects on laminin β2 folding, secretion, stability, basement membrane assembly, receptor binding, endothelial/pericyte function, and BBB permeability in cell and model systems.</li>
+      <li><strong style="color:var(--dark)">Treat LAMB2 as a biomarker candidate first.</strong> Its near-term translational value is strongest as part of a multi-gene basement membrane/ECM signature. Validation should determine whether LAMB2 improves diagnostic or progression models beyond established AD biomarkers such as amyloid-PET, tau, and CSF markers.</li>
+      <li><strong style="color:var(--dark)">Avoid broad systemic inhibition.</strong> Given the severity of LAMB2 loss-of-function disease across kidney, eye, neuromuscular, and neurodevelopmental systems, any therapeutic modulation must favor restoration or stabilization of normal LAMB2-containing basement membrane architecture.</li>
+      <li><strong style="color:var(--dark)">Consider pathway-level rather than direct targeting.</strong> More feasible strategies include preserving laminin β2-containing vascular basement membranes, modulating integrin/dystroglycan signaling, supporting astrocyte-endothelial repair programs, regulating HIF-linked vascular stabilization, or correcting maladaptive ECM remodeling via PI3K-Akt, MAPK, or TGF-β axes.</li>
+      <li><strong style="color:var(--dark)">Define directionality in AD tissue.</strong> LAMB2 could be protective, compensatory, maladaptive, or stage-dependent. Therapeutic design requires knowing whether LAMB2 is reduced, displaced, fragmented, overdeposited, or functionally impaired in AD-relevant compartments before any intervention is designed.</li>
+      <li><strong style="color:var(--dark)">Use cell-type-specific model systems.</strong> Relevant platforms include human iPSC-derived endothelial cells, pericytes, astrocytes, organoids, BBB-on-chip models, AD mouse models with vascular readouts, and synapse-focused neuronal/glial co-cultures to resolve cell-autonomous contributions of LAMB2.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="lead">Overall Assessment —</span>
+      LAMB2 is a <strong>biologically plausible AD-relevant ECM and neurovascular candidate</strong> supported by a direct 2024 AD temporal cortex biomarker study (AUC &gt;0.8; four-gene model), a computational AD-associated variant prediction (E987K), and compelling non-AD evidence linking laminin β2 to BBB pericyte/endothelial coverage, synaptic active-zone organization, astrocyte vascular-stabilization programs, and multi-organ basement membrane integrity. Its most defensible AD mechanisms involve <strong>neurovascular unit stability, vascular basement membrane remodeling, BBB permeability, glial repair, oxidative stress, and immune dysregulation</strong> — not direct amyloid-β or tau biology. LAMB2 is not a validated Alzheimer's disease mechanism or drug target: no supplied evidence shows it regulates amyloid-β production, tau phosphorylation, synaptic loss in AD models, or cognitive decline. <strong>The immediate priority is biomarker validation</strong> within a multi-gene ECM/basement membrane panel, followed by mechanistic studies at the neurovascular unit. Any therapeutic modulation must be approached cautiously given the severe multi-organ consequences of LAMB2 loss-of-function, favoring restoration of normal basement membrane function over systemic inhibition.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  LAMB2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

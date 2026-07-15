@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNDA — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 1.01rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-color: var(--neutral-text);
+  }
+  .card-slate h3 { color: var(--slate-dark); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 12px 0 12px 48px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 1rem;
+  }
+
+  .takeaway-list li:last-child { border-bottom: none; }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1.02rem;
+    line-height: 1.78;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .verdict-banner p strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 18px 24px;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: MNDA &nbsp;|&nbsp; Myeloid Cell Nuclear Differentiation Antigen</span>
+    <span class="chip chip-danger">⚠ Exploratory — No Direct AD Evidence</span>
+  </div>
+  <h1>MNDA &amp; Neuroinflammation in Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Interpretive Caution:</strong> No supplied study directly tests MNDA in Alzheimer's disease patients, brain tissue, amyloid-β pathology, tau pathology, or Alzheimer's models. All Alzheimer's relevance is <em>indirect</em> and hypothesis-generating only.
+    </div>
+
+    <div class="overview-text">
+      <p>MNDA (Myeloid Cell Nuclear Differentiation Antigen) is primarily characterized as a myeloid/innate-immune, interferon-inducible PYHIN-family factor. Its core biology encompasses granulocyte-monocyte lineage expression, type I interferon induction, cytosolic/nuclear nucleic-acid sensing, transcriptional regulation, macrophage polarization, apoptosis, and inflammatory resolution — placing it squarely in innate immune space rather than established Alzheimer's disease mechanisms.</p>
+      <p>Its Alzheimer's relevance rests on pathway overlap: MNDA's biology intersects with aging-related neuroinflammation, microglial and myeloid dysfunction, innate immune activation, interferon responses, vascular inflammation, metabolic risk, and cellular senescence — all increasingly implicated in Alzheimer's pathogenesis. MNDA is most frequently identified as a biomarker or network node in transcriptomic, methylation, proteomic, WGCNA, and machine-learning studies across systemic inflammatory and vascular-metabolic disease contexts.</p>
+      <p>The most defensible interpretation is that MNDA may serve as a candidate biomarker or mechanistic probe of Alzheimer's-relevant immune states, not a confirmed disease driver. Its therapeutic potential remains exploratory; no evidence in the supplied text demonstrates that MNDA modulation improves amyloid burden, tau pathology, microglial phagocytosis, synaptic integrity, neuronal survival, or cognitive outcomes.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (4 panels, left to right):
+        Panel A (x=10): Upstream Triggers — 3 nodes stacked
+        Panel B (x=210): MNDA Core Biology — 3 nodes (branching from MNDA hub)
+        Panel C (x=490): Downstream Effectors — 4 nodes (2 branches, 2 each)
+        Panel D (x=720): AD-Relevant Consequences — 3 nodes
+        Total nodes: 3+1+3+4+3 = 14 (within limit, counting MNDA as 1)
+        Badges: 0 (too risky to place safely)
+      -->
+      <svg viewBox="0 0 960 490" width="900" height="460" xmlns="http://www.w3.org/2000/svg" aria-label="MNDA pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1e3a5f"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Triggers -->
+        <rect x="10" y="20" width="185" height="450" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="102" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: Aging/Senescence -->
+        <rect x="26" y="58" width="153" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="102" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Aging &amp;</text>
+        <text x="102" y="95" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Senescence</text>
+
+        <!-- Node A2: DNA Damage/Leakage -->
+        <rect x="26" y="138" width="153" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="102" y="159" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Mito/Nuclear</text>
+        <text x="102" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">DNA Leakage</text>
+
+        <!-- Node A3: cGAS-STING -->
+        <rect x="26" y="218" width="153" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="102" y="239" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">cGAS-STING</text>
+        <text x="102" y="255" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Activation</text>
+
+        <!-- Node A4: Type I IFN Signal -->
+        <rect x="26" y="298" width="153" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="102" y="319" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Type I IFN</text>
+        <text x="102" y="335" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Signaling</text>
+
+        <!-- Arrows within Panel A -->
+        <line x1="102" y1="110" x2="102" y2="134" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <line x1="102" y1="190" x2="102" y2="214" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <line x1="102" y1="270" x2="102" y2="294" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+
+        <!-- PANEL B: MNDA Hub -->
+        <rect x="210" y="20" width="185" height="450" rx="12" fill="#e0f2fe" fill-opacity="0.45" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="302" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">MNDA CORE BIOLOGY</text>
+
+        <!-- MNDA Hub node (center of panel B) -->
+        <rect x="228" y="198" width="149" height="60" rx="9" fill="#1e3a5f" stroke="#0d1f35" stroke-width="1.5"/>
+        <text x="302" y="222" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#ffffff" font-weight="bold">MNDA</text>
+        <text x="302" y="240" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">PYHIN-family protein</text>
+
+        <!-- Node B1: Interferon Induction / IRF7 -->
+        <rect x="228" y="68" width="149" height="52" rx="8" fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="302" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">IRF7 / IFNα</text>
+        <text x="302" y="105" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Induction</text>
+
+        <!-- Node B2: HIN Domain / dsDNA Binding -->
+        <rect x="228" y="340" width="149" height="52" rx="8" fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="302" y="361" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">HIN Domain</text>
+        <text x="302" y="377" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">dsDNA Binding</text>
+
+        <!-- Node B3: Transcriptional Regulation -->
+        <rect x="228" y="410" width="149" height="48" rx="8" fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="302" y="430" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Transcriptional</text>
+        <text x="302" y="446" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Regulation (STAT2)</text>
+
+        <!-- Arrow: Type I IFN (Panel A) → MNDA Hub: cross-panel horizontal -->
+        <line x1="179" y1="324" x2="200" y2="324" stroke="#2e6da4" stroke-width="1.6"/>
+        <line x1="200" y1="324" x2="200" y2="228" stroke="#2e6da4" stroke-width="1.6"/>
+        <line x1="200" y1="228" x2="225" y2="228" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Arrow: MNDA Hub → IRF7/IFNα (upward) -->
+        <line x1="302" y1="198" x2="302" y2="124" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+        <!-- Arrow: MNDA Hub → HIN Domain (downward) -->
+        <line x1="302" y1="258" x2="302" y2="336" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+        <!-- Arrow: HIN Domain → Transcriptional Regulation -->
+        <line x1="302" y1="392" x2="302" y2="406" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+
+        <!-- PANEL C: Downstream Effectors (2 branches) -->
+        <rect x="410" y="20" width="280" height="450" rx="12" fill="#f0fdf4" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="550" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">DOWNSTREAM EFFECTORS</text>
+
+        <!-- Branch connector from MNDA hub -->
+        <!-- Left branch: Macrophage Polarization -->
+        <!-- Right branch: Apoptosis/Resolution -->
+
+        <!-- Branch split line from Panel B to Panel C -->
+        <!-- Horizontal from MNDA hub right edge (377) to gutter x=397, then to Panel C -->
+        <!-- Left sub-branch to C1/C2 -->
+        <!-- Right sub-branch to C3/C4 -->
+
+        <!-- Connector: MNDA → split point in gutter -->
+        <line x1="377" y1="228" x2="405" y2="228" stroke="#0f766e" stroke-width="1.5"/>
+        <!-- split down-left to C1 -->
+        <line x1="405" y1="228" x2="405" y2="138" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="405" y1="138" x2="425" y2="138" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- split down-right to C3 -->
+        <line x1="405" y1="228" x2="405" y2="318" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="405" y1="318" x2="425" y2="318" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C1: Macrophage Polarization (M2/MDSC) -->
+        <rect x="425" y="110" width="150" height="56" rx="8" fill="#bbf7d0" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="500" y="132" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Macrophage</text>
+        <text x="500" y="148" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Polarization (M2)</text>
+
+        <!-- Node C2: EP300/H3K18/CXCR2 -->
+        <rect x="425" y="196" width="150" height="56" rx="8" fill="#bbf7d0" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="500" y="218" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">EP300 / H3K18</text>
+        <text x="500" y="234" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Lactylation / CXCR2</text>
+
+        <!-- Node C3: Apoptosis Regulation -->
+        <rect x="425" y="290" width="150" height="56" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+        <text x="500" y="312" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">MCL1 / BCL2</text>
+        <text x="500" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">↓ Anti-apoptotic</text>
+
+        <!-- Node C4: Inflammatory Resolution -->
+        <rect x="425" y="375" width="150" height="56" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+        <text x="500" y="397" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Apoptotic</text>
+        <text x="500" y="413" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Clearance / Resolution</text>
+
+        <!-- Arrows within branches C -->
+        <line x1="500" y1="166" x2="500" y2="192" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="500" y1="346" x2="500" y2="371" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+
+        <!-- PANEL D: AD-Relevant Consequences -->
+        <rect x="705" y="20" width="245" height="450" rx="12" fill="#fff1f2" fill-opacity="0.5" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="827" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">AD-RELEVANT CONSEQUENCES</text>
+
+        <!-- Node D1: Neuroinflammatory Tone -->
+        <rect x="722" y="68" width="211" height="56" rx="8" fill="#fecdd3" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="827" y="90" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Chronic Neuro-</text>
+        <text x="827" y="106" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">inflammatory Tone</text>
+
+        <!-- Node D2: Microglial/Myeloid State -->
+        <rect x="722" y="200" width="211" height="56" rx="8" fill="#fecdd3" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="827" y="222" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Microglial / Myeloid</text>
+        <text x="827" y="238" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Cell-State Shift</text>
+
+        <!-- Node D3: Biomarker Candidate -->
+        <rect x="722" y="336" width="211" height="56" rx="8" fill="#fecdd3" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="827" y="358" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Exploratory</text>
+        <text x="827" y="374" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Biomarker Candidate</text>
+
+        <!-- Connectors Panel C → Panel D -->
+        <!-- C1/C2 → D1 -->
+        <line x1="575" y1="138" x2="650" y2="138" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="650" y1="138" x2="650" y2="96" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="650" y1="96" x2="719" y2="96" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- C2 → D2 via gutter -->
+        <line x1="575" y1="224" x2="660" y2="224" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="660" y1="224" x2="660" y2="228" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="660" y1="228" x2="719" y2="228" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- C4 → D3 -->
+        <line x1="575" y1="403" x2="650" y2="403" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="650" y1="403" x2="650" y2="364" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="650" y1="364" x2="719" y2="364" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow D1 → D2 -->
+        <line x1="827" y1="124" x2="827" y2="196" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Arrow D2 → D3 -->
+        <line x1="827" y1="256" x2="827" y2="332" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (Upstream Triggers):</strong> Aging and cellular senescence drive mitochondrial/nuclear DNA leakage, activating cGAS-STING and downstream type I interferon signaling — the proposed trigger of MNDA induction.
+        <strong>Panel B (MNDA Core Biology):</strong> MNDA, a PYHIN-family protein, is induced by type I IFN and reciprocally amplifies IFNα production via IRF7/STAT2; its HIN domain binds dsDNA and supports downstream transcriptional regulation.
+        <strong>Panel C (Downstream Effectors — two branches):</strong> Upper branch: MNDA promotes M2 macrophage polarization and EP300/H3K18 lactylation-driven CXCR2 transcription. Lower branch: MNDA downregulates MCL1/BCL2 to promote apoptotic clearance and inflammatory resolution.
+        <strong>Panel D (AD-Relevant Consequences):</strong> These effector programs converge on chronic neuroinflammatory tone, microglial/myeloid cell-state shifts, and MNDA's candidacy as an exploratory biomarker of Alzheimer's-relevant immune states.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Myeloid &amp; Interferon Identity</h3>
+        <p>MNDA is defined by expression in granulocyte-monocyte lineage cells — neutrophils, monocytes, macrophages, and some B-cell contexts. It is interferon-inducible and, in human monocytes, required for proper IFNα production by regulating IRF7 expression, STAT2 recruitment, and RNA polymerase II loading at the IRF7 promoter.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>PYHIN / Nucleic-Acid Sensing</h3>
+        <p>MNDA belongs to the PYHIN family alongside AIM2, IFI16, and PYHIN1. Its HIN domain binds double-stranded DNA sequence-independently, providing a mechanistic bridge to sterile inflammation driven by mitochondrial or nuclear DNA leakage and cGAS-STING activation — processes increasingly linked to brain aging and neurodegeneration.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Senescence–IFN Axis Overlap</h3>
+        <p>The strongest indirect Alzheimer's link is the proposed axis: aging → senescence → cytosolic DNA sensing → cGAS-STING → type I IFN → MNDA induction. Because this axis is operative in peripheral and brain myeloid compartments, MNDA may report on — or modulate — chronic neuroinflammatory states relevant to Alzheimer's, though direct evidence in the brain is absent.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Macrophage Polarization &amp; Immunoregulation</h3>
+        <p>MNDA is enriched in M2 macrophages and myeloid-derived suppressor cells, and in cancer contexts it can drive M2 polarization via EP300 recruitment, H3K18 lactylation, and CXCR2-mediated PMN-MDSC recruitment. In Alzheimer's, such immune-state remodeling could be protective (reducing damaging inflammation) or harmful (impairing amyloid/tau clearance).</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Dual Role: Apoptosis vs. Survival</h3>
+        <p>MNDA downregulates anti-apoptotic proteins MCL1 and BCL2, promoting clearance of activated myeloid or lymphoid cells under stress. This yields a dual therapeutic interpretation: MNDA may resolve inflammation by eliminating activated immune cells, but misplaced activity could also impair beneficial immune-cell survival or tissue repair in neurodegeneration contexts.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Biomarker Node, Not Validated Target</h3>
+        <p>Across the supplied studies, MNDA is identified primarily through transcriptomics, methylomics, proteomics, WGCNA network analyses, machine-learning panels, and immunohistochemistry — spanning atherosclerosis, diabetes, NAFLD, atrial fibrillation, autoimmune disease, and infection. Direct perturbation evidence is limited and entirely outside Alzheimer's disease; MNDA remains a candidate probe rather than a validated causal or therapeutic target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Treat MNDA as exploratory, not validated.</strong> MNDA should be classified as a hypothesis-generating candidate biomarker of Alzheimer's-relevant immune states, not an established disease driver or therapeutic target, until direct evidence in Alzheimer's disease is produced.</li>
+      <li><strong>Prioritize cell-type localization and biomarker studies first.</strong> Key next steps should test MNDA expression in Alzheimer's brain single-cell/single-nucleus RNA-seq, spatial transcriptomics, CSF, plasma, circulating monocytes, infiltrating macrophages, and microglia before any therapeutic claims are made.</li>
+      <li><strong>Test MNDA against Alzheimer's-relevant immune signatures.</strong> Useful comparisons include MNDA expression versus IRF7/type I IFN modules, cGAS-STING activation markers, senescence biomarkers, disease-associated microglial states, TLR/NF-κB activity, S100A8/A9/MMP9 inflammatory modules, and vascular-inflammatory markers.</li>
+      <li><strong>Perform functional perturbation in disease-relevant models.</strong> MNDA knockdown, overexpression, or pathway modulation should be tested in human iPSC-derived microglia, monocyte-derived macrophages, microglia-neuron co-cultures, and amyloid/tau exposure systems. Endpoints must include cytokine production, interferon-stimulated gene expression, phagocytosis of amyloid/tau material, apoptosis, oxidative stress, and synaptic effects.</li>
+      <li><strong>Avoid assuming MNDA inhibition is straightforwardly beneficial.</strong> MNDA may amplify chronic interferon/myeloid inflammation, but it may equally support inflammatory resolution, antiviral defense, retroelement control, apoptotic clearance of activated immune cells, or immunoregulatory states — opposing roles that must be disentangled empirically.</li>
+      <li><strong>Consider upstream or downstream pathway targeting before direct MNDA targeting.</strong> More immediately tractable intervention points include cGAS-STING, type I IFN/JAK-STAT signaling, IRF7-dependent interferon amplification, TLR/NF-κB signaling, senescence-associated DNA leakage, macrophage/microglial polarization pathways, and EP300/lactylation-CXCR2 immune recruitment mechanisms.</li>
+      <li><strong>Formally test the core Alzheimer's hypothesis.</strong> The key testable proposition is: aging and senescence drive mitochondrial/nuclear DNA leakage → cGAS-STING → type I IFN induction of MNDA in brain or peripheral myeloid cells → MNDA modulates inflammatory transcription, apoptotic resolution, and macrophage/microglial polarization → altered chronic neuroinflammatory tone and Alzheimer's disease progression. Whether this axis is protective or pathogenic remains wholly unresolved by the available evidence.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — MNDA in Alzheimer's Disease</span>
+      <p>
+        <strong>MNDA is an intriguing but entirely unvalidated Alzheimer's disease candidate.</strong> Its core identity as a <strong>myeloid-restricted, interferon-inducible PYHIN-family nucleic-acid sensor</strong> positions it at the intersection of several pathways now recognized as central to Alzheimer's pathogenesis — including <strong>innate immune activation, type I interferon signaling, cGAS-STING-driven sterile inflammation, macrophage polarization, and cellular senescence</strong>. However, <strong>no supplied evidence directly implicates MNDA in Alzheimer's brain pathology, amyloid or tau biology, neuronal dysfunction, or cognitive decline</strong>. The most accurate framing is that MNDA may serve as a <strong>candidate biomarker or mechanistic probe of Alzheimer's-relevant immune states</strong>, contingent on validation in Alzheimer's-specific biological systems. Its <strong>dual regulatory role</strong> — potentially amplifying harmful chronic interferon/myeloid inflammation while also supporting beneficial inflammatory resolution and apoptotic clearance — introduces genuine therapeutic uncertainty that cannot be resolved without targeted functional experiments. <strong>Upstream pathway nodes such as cGAS-STING and JAK-STAT remain more immediately actionable targets</strong> than MNDA itself at this stage of evidence.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MNDA / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

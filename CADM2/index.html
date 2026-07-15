@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CADM2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+  .chip-warning {
+    background: rgba(180,83,9,0.28);
+    border-color: rgba(251,191,36,0.45);
+    color: #fde68a;
+  }
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 54px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .fig-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid transparent;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { font-size: 0.9rem; margin-bottom: 0; line-height: 1.65; }
+  .card-accent  { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-color: #d97706; }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-blue { background: #eff6ff; border-color: #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list { list-style: none; counter-reset: takeaway; }
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .takeaways-list li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  .verdict .verdict-lead {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .verdict strong { color: #93c5fd; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CADM2 &nbsp;|&nbsp; Cell Adhesion Molecule 2</span>
+    <span class="chip chip-warning">⚠ Broad modulation safety concern</span>
+  </div>
+  <h1>CADM2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Hypothesis-Generating Only:</strong> CADM2 is <em>not</em> a validated Alzheimer's disease gene, biomarker, or therapeutic target. All links described here are indirect, biologically plausible associations. Direct evidence on amyloid-β, tau, plaques, or neurofibrillary tangles is absent from the available literature.
+    </div>
+
+    <p>CADM2 (Cell Adhesion Molecule 2, also known as SynCAM-2 / Necl-3) is a brain-expressed neuronal immunoglobulin-superfamily adhesion molecule implicated in synapse formation, axon–glia interactions, neuronal connectivity, sleep/arousal regulation, cognition, executive function, and metabolic risk biology. Its relevance to Alzheimer's disease is <strong>indirect but biologically plausible</strong>.</p>
+
+    <p>The most Alzheimer's-relevant mechanistic link is CADM2's role in synaptic adhesion and hippocampal–entorhinal circuit integrity. In a mouse dentate gyrus entorhinal denervation model, <em>Cadm2</em> appeared among downregulated synaptic adhesion mediators following perforant path transection — a lesion that models the loss of entorhinal input to the dentate gyrus, a circuit disrupted prominently in early Alzheimer's disease.</p>
+
+    <p>CADM2 is best regarded as a <strong>candidate modifier of Alzheimer's-relevant neuronal resilience</strong>, with potential roles spanning synaptic maintenance, circuit remodeling, cognitive reserve, sleep-dependent brain homeostasis, blood–brain barrier integrity, axon–myelin organization, and metabolic risk. No direct CADM2 effects on amyloid-β, tau phosphorylation or spread, or clinical Alzheimer's progression have been reported.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANELS:
+        A (left): Upstream — CADM2 Molecular Identity & Regulators (4 nodes)
+        B (center): Core Biology — two branches from CADM2 hub (5 nodes)
+        C (right): AD-Relevant Downstream Effects (5 nodes)
+        Total = 14 nodes — within 16-node limit.
+        Layout: 3 panels side by side, nodes on fixed rows.
+      -->
+      <svg viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg" width="920" height="440" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Identity & Regulators -->
+        <rect x="10" y="20" width="225" height="420" rx="12" fill="#e8f1f8" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="122" y="44" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">A · CADM2 IDENTITY</text>
+
+        <!-- A1: IgSF / SynCAM Family -->
+        <rect x="30" y="58" width="185" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="122" y="77" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">IgSF / SynCAM-2</text>
+        <text x="122" y="93" text-anchor="middle" font-size="10" fill="#334155">Neuronal adhesion molecule</text>
+
+        <!-- arrow A1 -> A2 -->
+        <line x1="122" y1="106" x2="122" y2="130" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: Regulators -->
+        <rect x="30" y="130" width="185" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="122" y="149" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">Regulatory Control</text>
+        <text x="122" y="165" text-anchor="middle" font-size="10" fill="#334155">miRNA · lncRNA · methylation</text>
+
+        <!-- arrow A2 -> A3 -->
+        <line x1="122" y1="178" x2="122" y2="202" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: PI3K/AKT & FAK signaling -->
+        <rect x="30" y="202" width="185" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="122" y="221" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">PI3K/AKT · FAK/AKT</text>
+        <text x="122" y="237" text-anchor="middle" font-size="10" fill="#334155">Downstream signaling hubs</text>
+
+        <!-- arrow A3 -> A4 -->
+        <line x1="122" y1="250" x2="122" y2="274" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A4: Metabolic / BMI domain -->
+        <rect x="30" y="274" width="185" height="48" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="122" y="293" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">Metabolic Risk Domain</text>
+        <text x="122" y="309" text-anchor="middle" font-size="10" fill="#334155">BMI · insulin · glucose · T2D</text>
+
+        <!-- PANEL B: Core Biology (hub + 2 branches) -->
+        <rect x="250" y="20" width="285" height="420" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="392" y="44" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">B · CORE NEURAL BIOLOGY</text>
+
+        <!-- B0: CADM2 Hub -->
+        <rect x="305" y="58" width="175" height="48" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="392" y="77" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="700">CADM2</text>
+        <text x="392" y="93" text-anchor="middle" font-size="10" fill="#ccfbf1">Synaptic adhesion hub</text>
+
+        <!-- Hub → Branch 1 (Synapse/Circuit) -->
+        <line x1="355" y1="106" x2="320" y2="148" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Branch 1 Node 1: Synapse Formation -->
+        <rect x="265" y="148" width="150" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="340" y="167" text-anchor="middle" font-size="11" fill="#134e4a" font-weight="700">Synapse Formation</text>
+        <text x="340" y="183" text-anchor="middle" font-size="10" fill="#334155">Neuron–neuron adhesion</text>
+
+        <!-- Branch 1 Node 1 → Node 2 -->
+        <line x1="340" y1="196" x2="340" y2="228" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Branch 1 Node 2: Hippocampal Circuit -->
+        <rect x="265" y="228" width="150" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="340" y="247" text-anchor="middle" font-size="11" fill="#134e4a" font-weight="700">Hippocampal Circuit</text>
+        <text x="340" y="263" text-anchor="middle" font-size="10" fill="#334155">Entorhinal–DG integrity</text>
+
+        <!-- Hub → Branch 2 (Sleep/Cognition) -->
+        <line x1="430" y1="106" x2="464" y2="148" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Branch 2 Node 1: Sleep/Arousal -->
+        <rect x="420" y="148" width="100" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="470" y="167" text-anchor="middle" font-size="11" fill="#134e4a" font-weight="700">Sleep/Arousal</text>
+        <text x="470" y="183" text-anchor="middle" font-size="10" fill="#334155">NPY circuitry</text>
+
+        <!-- Branch 2 Node 1 → Node 2 -->
+        <line x1="470" y1="196" x2="470" y2="228" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Branch 2 Node 2: Cognition/Exec. Function -->
+        <rect x="420" y="228" width="100" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="470" y="247" text-anchor="middle" font-size="11" fill="#134e4a" font-weight="700">Cognition</text>
+        <text x="470" y="263" text-anchor="middle" font-size="10" fill="#334155">Exec. function</text>
+
+        <!-- Both branches converge to shared outcome: Axon-Glia -->
+        <line x1="340" y1="276" x2="340" y2="310" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="470" y1="276" x2="470" y2="295" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="470" y1="295" x2="392" y2="310" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Convergence: Axon-Glia / Myelin -->
+        <rect x="302" y="310" width="180" height="48" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="392" y="329" text-anchor="middle" font-size="11" fill="#134e4a" font-weight="700">Axon–Glia Organization</text>
+        <text x="392" y="345" text-anchor="middle" font-size="10" fill="#334155">Myelination · paranodal arch.</text>
+
+        <!-- PANEL C: AD-Relevant Downstream -->
+        <rect x="550" y="20" width="400" height="420" rx="12" fill="#fef2f2" fill-opacity="0.5" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="750" y="44" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.2">C · AD-RELEVANT DOWNSTREAM</text>
+
+        <!-- C1: Perforant Path Denervation -->
+        <rect x="570" y="58" width="360" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="750" y="77" text-anchor="middle" font-size="11" fill="#7f1d1d" font-weight="700">Perforant Path Denervation Model</text>
+        <text x="750" y="93" text-anchor="middle" font-size="10" fill="#334155">Cadm2 ↓ among synaptic adhesion mediators</text>
+
+        <!-- C1 → C2 -->
+        <line x1="750" y1="106" x2="750" y2="130" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C2: Reactive Gliosis -->
+        <rect x="570" y="130" width="360" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="750" y="149" text-anchor="middle" font-size="11" fill="#7f1d1d" font-weight="700">Reactive Astro- &amp; Microgliosis</text>
+        <text x="750" y="165" text-anchor="middle" font-size="10" fill="#334155">Inflammatory remodeling after EC input loss</text>
+
+        <!-- C2 → C3a and C3b branches -->
+        <line x1="700" y1="178" x2="670" y2="210" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="800" y1="178" x2="830" y2="210" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C3a: Glutamatergic Dysfunction -->
+        <rect x="572" y="210" width="170" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="657" y="229" text-anchor="middle" font-size="11" fill="#7f1d1d" font-weight="700">Glutamatergic Failure</text>
+        <text x="657" y="245" text-anchor="middle" font-size="10" fill="#334155">↓ Excitatory transmission</text>
+
+        <!-- C3b: BBB / Barrier Loss -->
+        <rect x="758" y="210" width="170" height="48" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="843" y="229" text-anchor="middle" font-size="11" fill="#7f1d1d" font-weight="700">BBB / Junctional Loss</text>
+        <text x="843" y="245" text-anchor="middle" font-size="10" fill="#334155">CADM2 ↓ in brain capillaries</text>
+
+        <!-- Both converge to C4 -->
+        <line x1="657" y1="258" x2="657" y2="290" stroke="#991b1b" stroke-width="1.5"/>
+        <line x1="843" y1="258" x2="843" y2="275" stroke="#991b1b" stroke-width="1.5"/>
+        <line x1="657" y1="290" x2="750" y2="310" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="843" y1="275" x2="750" y2="310" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C4: Synapse Loss / Network Disconnection -->
+        <rect x="590" y="310" width="320" height="48" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.8"/>
+        <text x="750" y="329" text-anchor="middle" font-size="11" fill="#7f1d1d" font-weight="700">Synapse Loss · Network Disconnection</text>
+        <text x="750" y="345" text-anchor="middle" font-size="10" fill="#334155">Cognitive decline correlate — AD-relevant</text>
+
+        <!-- C4 → C5 -->
+        <line x1="750" y1="358" x2="750" y2="382" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C5: Research Priority -->
+        <rect x="590" y="382" width="320" height="44" rx="7" fill="#7f1d1d" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="750" y="402" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="700">Research Priority: Synaptic Resilience</text>
+        <text x="750" y="418" text-anchor="middle" font-size="10" fill="#fecaca">Not yet a therapeutic target</text>
+
+        <!-- Cross-panel connector: Panel B Axon-Glia → Panel C Perforant Path (routed through gutter) -->
+        <!-- Route: from right edge of B convergence node (x=482, y=334) → right through gutter → into C1 left edge -->
+        <polyline points="482,334 530,334 530,82 570,82" fill="none" stroke="#475569" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: Panel A Metabolic → Panel C (gutter route) -->
+        <polyline points="215,298 235,298 235,420 580,420 580,406 590,406" fill="none" stroke="#b45309" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="fig-caption">
+      <strong>Panel A</strong> (blue): CADM2 molecular identity (IgSF/SynCAM-2 family), upstream regulatory mechanisms (miRNA, lncRNA, methylation, PI3K/AKT, FAK/AKT signaling), and metabolic risk domain associations (BMI, insulin, glucose, type 2 diabetes).
+      <strong>Panel B</strong> (teal): Core neural biology, showing the CADM2 synaptic hub branching into two parallel sub-cascades — synapse formation → hippocampal–entorhinal circuit integrity (left), and sleep/arousal (NPY circuitry) → executive function/cognition (right) — reconverging at axon–glia organization and myelination.
+      <strong>Panel C</strong> (red): Alzheimer's-relevant downstream consequences, branching from reactive gliosis after entorhinal denervation into glutamatergic failure and BBB/junctional loss, converging on synapse loss and network disconnection.
+      Dashed grey connector: axon–glia biology feeding into the denervation model context. Dashed amber connector: metabolic risk as an upstream modifier of research priority.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>🔗 Synaptic &amp; Circuit Adhesion</h3>
+        <p>CADM2 is a neuronal IgSF adhesion molecule involved in synapse formation, synaptic plasticity, neuron–neuron adhesion, axon guidance, and neuronal connectivity — processes that closely overlap with Alzheimer's mechanisms where synapse loss strongly correlates with cognitive impairment.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚡ Entorhinal Denervation Link</h3>
+        <p>In a mouse dentate gyrus entorhinal denervation model, <em>Cadm2</em> was found among downregulated synaptic adhesion mediators after perforant path transection. This is the most direct mechanistic bridge to Alzheimer's disease, which prominently involves entorhinal cortex degeneration and perforant path disruption.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>🧠 Cognition &amp; Processing Speed</h3>
+        <p>The CHARGE consortium GWAS identified rs17518584 in CADM2 as associated with executive function and information-processing speed in non-demented older adults, also linked to CADM2 expression in cingulate cortex. These findings suggest a role in cognitive reserve or neural-network efficiency, without establishing Alzheimer's causality.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>😴 Sleep/Arousal Circuitry</h3>
+        <p>Loss of beat-Ia/CADM2 caused excessive sleepiness in flies and fish. Mechanistically, CADM2-related signaling affected NPY-related arousal circuitry, and an NPY receptor agonist rescued abnormal sleep in CADM2-deficient zebrafish — relevant as sleep disturbance can affect amyloid/tau dynamics and glymphatic clearance.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>⚙ Excitatory/Inhibitory Neurotransmission</h3>
+        <p>CADM2-associated biology was linked to glutamate signaling, GABA transport, and neuron cell-cell adhesion. This is relevant because Alzheimer's disease involves glutamatergic dysfunction, altered inhibitory tone, network hyperexcitability, and synaptic failure — all domains where CADM2 may act as a modifier.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚠ Safety &amp; Therapeutic Caution</h3>
+        <p>CADM2 effects vary by tissue and disease context: increasing CADM2 appears protective in cancer/adhesion models, but reducing <em>Cadm2</em> improved metabolic syndrome in obese mice. Broad modulation risks neuropsychiatric, metabolic, sleep, and peripheral tissue effects. Direction of modulation must be defined before any therapeutic strategy is considered.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Treat CADM2 as hypothesis-generating, not target-ready.</strong> Current evidence supports biological plausibility around synaptic adhesion, circuit resilience, sleep/arousal, cognition, axon–myelin organization, inflammation, and metabolism — but direct Alzheimer's disease evidence is absent.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize human Alzheimer's brain validation.</strong> Key studies should test whether CADM2 expression, methylation, splicing, or isoform usage is altered in Alzheimer's-vulnerable regions — especially the entorhinal cortex, hippocampus, dentate gyrus, cingulate cortex, and connected cortical networks.</div>
+      </li>
+      <li>
+        <div><strong>Test CADM2 against Alzheimer's-relevant endophenotypes.</strong> Important endpoints include synapse density, perforant path integrity, hippocampal atrophy, white matter injury, cognitive decline, executive dysfunction, processing speed, sleep disruption, neuroinflammatory markers, and neuropathological amyloid/tau burden.</div>
+      </li>
+      <li>
+        <div><strong>Perform causal experiments in Alzheimer's model systems.</strong> CADM2 gain- and loss-of-function studies should determine whether CADM2 manipulation modifies amyloid-β accumulation, tau phosphorylation or spread, synapse loss, neuronal survival, microglial activation, network dysfunction, or memory performance.</div>
+      </li>
+      <li>
+        <div><strong>Investigate splicing and regulatory mechanisms.</strong> Because cognition-associated CADM2 variants may affect expression or transcript usage, studies should examine noncoding regulation, alternative splicing, and CADM2-targeting microRNAs or lncRNAs in neurons, glia, and vascular cells.</div>
+      </li>
+      <li>
+        <div><strong>Explore hippocampal–entorhinal synaptic remodeling models.</strong> The dentate gyrus denervation findings make perforant path and entorhinal–hippocampal circuit models especially important for testing whether CADM2 supports synaptic stabilization after afferent loss — the most direct AD-relevant experimental entry point.</div>
+      </li>
+      <li>
+        <div><strong>Consider sleep/arousal pathways as an indirect angle.</strong> The NPY receptor agonist rescue in CADM2-deficient zebrafish suggests downstream NPY-related circuitry may be targetable if CADM2-linked sleep disruption is shown to worsen Alzheimer's pathology or cognition in mammalian models.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate safety risks of systemic CADM2 targeting carefully.</strong> Because CADM2 is linked to cognition, impulsivity, mood, addiction-related traits, metabolism, sleep/arousal, and cell adhesion, broad modulation could produce neuropsychiatric, metabolic, or peripheral tissue effects that must be characterized before clinical translation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — CADM2 in Alzheimer's Disease</span>
+      CADM2 emerges from the available evidence as a <strong>biologically plausible but unvalidated candidate modifier</strong> of Alzheimer's-relevant neuronal resilience. Its strongest disease-relevant linkage runs through <strong>synaptic adhesion and hippocampal–entorhinal circuit integrity</strong>, anchored by the observation that <em>Cadm2</em> is downregulated among synaptic adhesion mediators following perforant path denervation — a lesion mirroring early Alzheimer's pathology. Secondary relevance comes from associations with <strong>cognitive reserve, executive function, sleep/arousal circuitry, axon–glia organization, neuroinflammatory signaling, and metabolic risk</strong>. Critically, no direct CADM2 effects on amyloid-β, tau, plaques, or neurofibrillary tangles have been demonstrated, and the direction of any beneficial therapeutic modulation remains undefined and tissue-dependent. The most credible near-term use of CADM2 is as a <strong>research priority for synaptic resilience and cognitive vulnerability in Alzheimer's disease</strong>, warranting systematic validation in human brain tissue and disease-relevant model systems before any therapeutic strategy is entertained.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CADM2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

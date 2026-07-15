@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLCG2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-tint: #fdf0f0;
+    --danger-border: #d9534f;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --slate: #64748b;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 5px 14px;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,50,50,0.28);
+    border-color: rgba(220,100,100,0.45);
+    color: #ffd0d0;
+  }
+
+  header h1 {
+    font-size: clamp(26px, 4.5vw, 42px);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.68;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-tint);
+    border: 1.5px solid var(--danger-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .callout .callout-label {
+    font-weight: bold;
+    color: var(--danger);
+    margin-right: 6px;
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-top: 4px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12.5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-tint);
+    border-color: var(--danger-border);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-tint);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-color: var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning {
+    background: var(--warning-tint);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  ol.takeaways li {
+    margin-bottom: 20px;
+    font-size: 15.5px;
+    line-height: 1.75;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: var(--white);
+    line-height: 1.8;
+    font-size: 15.5px;
+  }
+
+  .verdict .verdict-lead {
+    font-size: 17px;
+    font-weight: bold;
+    color: #a8d4f5;
+    display: block;
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .verdict strong {
+    color: #a8d4f5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    margin-top: 60px;
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PLCG2 &nbsp;|&nbsp; Phospholipase Cγ2</span>
+    <span class="chip chip-danger">⚠ Safety: Systemic Immune Risks</span>
+  </div>
+  <h1>PLCG2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ────────────────────────────────────────────────────── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Notice:</span>
+      PLCG2 is a potent systemic immune signalling enzyme active in B cells, mast cells, NK cells, platelets, and myeloid cells. Strong gain-of-function or dysregulated PLCγ2 activity is linked to autoinflammation, antibody deficiency, immune dysregulation, cold urticaria syndromes, infection susceptibility, and BTK-inhibitor resistance in malignancy. Brain- and microglia-selective pharmacology is considered essential.
+    </div>
+
+    <p>PLCG2 encodes phospholipase Cγ2 (PLCγ2), an immune- and microglia-linked signalling enzyme increasingly implicated in Alzheimer's disease (AD) through human genetics, microglial biology, amyloid plaque response, tau-related progression, synaptic preservation, calcium/phosphoinositide signalling, inflammatory regulation, and endolysosomal function.</p>
+
+    <p>The strongest AD-specific evidence centres on the rare protective variant <strong>PLCG2 p.P522R / rs72824905-G</strong>, repeatedly associated with reduced late-onset AD risk, delayed AD onset, slower cognitive decline in amyloid-positive mild cognitive impairment, lower CSF pTau181, reduced tau burden in neuropathological contexts, dementia resilience, and longevity. Functionally, P522R is a mild hypermorphic variant — a modest gain-of-function, not a strongly activating mutation.</p>
+
+    <p>Mechanistically, PLCγ2 sits downstream of TREM2 and related immune-receptor pathways (BTK/SYK-linked signalling), regulating PIP2 hydrolysis, IP3/DAG production, intracellular calcium release, lysosomal and phagocytic programs, lipid mediator signalling, survival, migration, endocytosis, cytokine/chemokine responses, antigen presentation, and plaque-associated microglial states. Protective PLCG2 signalling appears to improve how microglia respond to amyloid pathology rather than simply reducing total amyloid burden.</p>
+
+    <p>As a therapeutic target, PLCG2 is best viewed as a <em>precision-modulation</em> target. Human genetics provides a natural protective model — mild PLCγ2 activation resembling P522R may enhance beneficial microglial responses — but broad systemic activation risks autoinflammation, immune deficiency, and oncogenic signalling.</p>
+  </section>
+
+  <!-- ── FIGURE ──────────────────────────────────────────────────────── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="12">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: UPSTREAM RECEPTORS ══ -->
+        <rect x="10" y="10" width="200" height="480" rx="10" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="28" text-anchor="middle" font-size="9" font-weight="bold" fill="#2e6da4" letter-spacing="1">UPSTREAM RECEPTORS</text>
+
+        <!-- TREM2 node -->
+        <rect x="35" y="38" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="110" y="56" text-anchor="middle" font-weight="bold" fill="#1a3a5c" font-size="12">TREM2</text>
+        <text x="110" y="72" text-anchor="middle" fill="#1a3a5c" font-size="10">Microglial AD risk gene</text>
+
+        <!-- BTK/SYK node -->
+        <rect x="35" y="106" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="110" y="124" text-anchor="middle" font-weight="bold" fill="#1a3a5c" font-size="12">BTK / SYK</text>
+        <text x="110" y="140" text-anchor="middle" fill="#1a3a5c" font-size="10">Immune receptor kinases</text>
+
+        <!-- Arrow TREM2 -> BTK/SYK -->
+        <line x1="110" y1="82" x2="110" y2="106" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- PLCγ2 / PLCG2 node -->
+        <rect x="35" y="174" width="150" height="52" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1.8"/>
+        <text x="110" y="196" text-anchor="middle" font-weight="bold" fill="white" font-size="13">PLCγ2</text>
+        <text x="110" y="213" text-anchor="middle" fill="#a8d4f5" font-size="10">PLCG2 enzyme</text>
+
+        <!-- Arrow BTK->PLCγ2 -->
+        <line x1="110" y1="150" x2="110" y2="174" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- P522R variant badge -->
+        <rect x="40" y="242" width="140" height="28" rx="6" fill="#0f766e" stroke="#0f766e" stroke-width="1"/>
+        <text x="110" y="261" text-anchor="middle" font-size="10" font-weight="bold" fill="white">P522R: mild gain-of-fn</text>
+
+        <!-- D65 loss-of-fn badge -->
+        <rect x="40" y="282" width="140" height="28" rx="6" fill="#8b1a1a" stroke="#8b1a1a" stroke-width="1"/>
+        <text x="110" y="301" text-anchor="middle" font-size="10" font-weight="bold" fill="white">D65-PLCG2: loss-of-fn</text>
+
+        <!-- PIP2 hydrolysis node -->
+        <rect x="35" y="326" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="110" y="344" text-anchor="middle" font-weight="bold" fill="#1a3a5c" font-size="12">PIP2 Hydrolysis</text>
+        <text x="110" y="360" text-anchor="middle" fill="#1a3a5c" font-size="10">IP3 + DAG production</text>
+
+        <!-- Arrow PLCγ2 -> PIP2 -->
+        <line x1="110" y1="226" x2="110" y2="242" stroke="transparent" stroke-width="0"/>
+        <line x1="110" y1="310" x2="110" y2="326" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Calcium node -->
+        <rect x="35" y="390" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="110" y="408" text-anchor="middle" font-weight="bold" fill="#1a3a5c" font-size="12">Ca²⁺ Release</text>
+        <text x="110" y="424" text-anchor="middle" fill="#1a3a5c" font-size="10">Intracellular Ca²⁺ flux</text>
+
+        <!-- Arrow PIP2 -> Ca2+ -->
+        <line x1="110" y1="370" x2="110" y2="390" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+
+        <!-- ══ PANEL B: MICROGLIAL EFFECTOR BRANCHES ══ -->
+        <rect x="222" y="10" width="430" height="480" rx="10" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="437" y="28" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1">MICROGLIAL EFFECTOR BRANCHES</text>
+
+        <!-- Shared branch entry node -->
+        <rect x="322" y="40" width="230" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="437" y="58" text-anchor="middle" font-weight="bold" fill="white" font-size="12">Microglial Activation State</text>
+        <text x="437" y="74" text-anchor="middle" fill="#ccfbf1" font-size="10">TREM2-dependent signalling</text>
+
+        <!-- Horizontal connector from PLCγ2 to Microglial node -->
+        <line x1="185" y1="200" x2="280" y2="200" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="280" y1="200" x2="280" y2="62" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="280" y1="62" x2="322" y2="62" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Branch A: Plaque Response -->
+        <rect x="237" y="120" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="322" y="138" text-anchor="middle" font-weight="bold" fill="#064e3b" font-size="12">Plaque Response</text>
+        <text x="322" y="154" text-anchor="middle" fill="#064e3b" font-size="10">Compaction &amp; containment</text>
+
+        <!-- Branch B: Phagocytosis/Lysosomal -->
+        <rect x="427" y="120" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="512" y="138" text-anchor="middle" font-weight="bold" fill="#064e3b" font-size="12">Phagocytosis &amp; Lyso.</text>
+        <text x="512" y="154" text-anchor="middle" fill="#064e3b" font-size="10">CD68, endocytosis, lipids</text>
+
+        <!-- Arrows from Microglial -> branches -->
+        <line x1="390" y1="84" x2="322" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+        <line x1="484" y1="84" x2="512" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- Branch A cont: Synaptic Prot -->
+        <rect x="237" y="196" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="322" y="214" text-anchor="middle" font-weight="bold" fill="#064e3b" font-size="12">Synaptic Protection</text>
+        <text x="322" y="230" text-anchor="middle" fill="#064e3b" font-size="10">↓ synapse engulfment</text>
+
+        <!-- Branch B cont: Cytokine/Immune -->
+        <rect x="427" y="196" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="512" y="214" text-anchor="middle" font-weight="bold" fill="#064e3b" font-size="12">Cytokine Signalling</text>
+        <text x="512" y="230" text-anchor="middle" fill="#064e3b" font-size="10">Chemokines, T-cell recruit.</text>
+
+        <!-- Arrows between branch nodes -->
+        <line x1="322" y1="164" x2="322" y2="196" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+        <line x1="512" y1="164" x2="512" y2="196" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- Converge node: Tau/Cognitive -->
+        <rect x="317" y="280" width="240" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="437" y="298" text-anchor="middle" font-weight="bold" fill="white" font-size="12">Tau Progression &amp; Cognition</text>
+        <text x="437" y="314" text-anchor="middle" fill="#ccfbf1" font-size="10">↓ pTau181, ↓ Braak stage</text>
+
+        <!-- Arrows converging to Tau node -->
+        <line x1="322" y1="240" x2="322" y2="280" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+        <line x1="512" y1="240" x2="512" y2="262" stroke="#0f766e" stroke-width="1.4"/>
+        <line x1="512" y1="262" x2="457" y2="280" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+        <!-- AD Resilience outcome node -->
+        <rect x="317" y="356" width="240" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.6"/>
+        <text x="437" y="374" text-anchor="middle" font-weight="bold" fill="white" font-size="12">AD Resilience &amp; Longevity</text>
+        <text x="437" y="390" text-anchor="middle" fill="#a8d4f5" font-size="10">P522R carriers: ↓ risk, delayed onset</text>
+
+        <!-- Arrow Tau -> Resilience -->
+        <line x1="437" y1="324" x2="437" y2="356" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- PLCG2 expression note -->
+        <rect x="252" y="430" width="370" height="40" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="437" y="447" text-anchor="middle" font-size="10" fill="#92400e">PLCG2 expression ↑ with amyloid burden (AMP-AD RNA-seq)</text>
+        <text x="437" y="462" text-anchor="middle" font-size="10" fill="#92400e">enriched in NF-κB / plaque-associated microglial modules</text>
+
+
+        <!-- ══ PANEL C: SAFETY RISKS ══ -->
+        <rect x="664" y="10" width="228" height="480" rx="10" fill="rgba(139,26,26,0.06)" stroke="#d9534f" stroke-width="1.2"/>
+        <text x="778" y="28" text-anchor="middle" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="1">SAFETY / RISK</text>
+
+        <!-- Strong GoF node -->
+        <rect x="682" y="38" width="192" height="44" rx="7" fill="#fee2e2" stroke="#d9534f" stroke-width="1.3"/>
+        <text x="778" y="56" text-anchor="middle" font-weight="bold" fill="#8b1a1a" font-size="12">Strong GoF Variants</text>
+        <text x="778" y="72" text-anchor="middle" fill="#8b1a1a" font-size="10">S707Y, APLAID/PLAID</text>
+
+        <!-- Autoinflammation -->
+        <rect x="682" y="106" width="192" height="44" rx="7" fill="#fee2e2" stroke="#d9534f" stroke-width="1.3"/>
+        <text x="778" y="124" text-anchor="middle" font-weight="bold" fill="#8b1a1a" font-size="12">Autoinflammation</text>
+        <text x="778" y="140" text-anchor="middle" fill="#8b1a1a" font-size="10">NLRP3/IL-1β, cold urticaria</text>
+
+        <!-- Arrow GoF -> Autoinflammation -->
+        <line x1="778" y1="82" x2="778" y2="106" stroke="#d9534f" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Ab deficiency -->
+        <rect x="682" y="174" width="192" height="44" rx="7" fill="#fee2e2" stroke="#d9534f" stroke-width="1.3"/>
+        <text x="778" y="192" text-anchor="middle" font-weight="bold" fill="#8b1a1a" font-size="12">Antibody Deficiency</text>
+        <text x="778" y="208" text-anchor="middle" fill="#8b1a1a" font-size="10">B-cell dysregulation</text>
+
+        <!-- Arrow autoinfl -> Ab -->
+        <line x1="778" y1="150" x2="778" y2="174" stroke="#d9534f" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- BTK resistance -->
+        <rect x="682" y="242" width="192" height="44" rx="7" fill="#fee2e2" stroke="#d9534f" stroke-width="1.3"/>
+        <text x="778" y="260" text-anchor="middle" font-weight="bold" fill="#8b1a1a" font-size="12">BTKi Resistance</text>
+        <text x="778" y="276" text-anchor="middle" fill="#8b1a1a" font-size="10">B-cell malignancy acquired mut.</text>
+
+        <!-- Arrow Ab -> BTKi -->
+        <line x1="778" y1="218" x2="778" y2="242" stroke="#d9534f" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Systemic exposure warning -->
+        <rect x="682" y="316" width="192" height="60" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="778" y="334" text-anchor="middle" font-weight="bold" fill="#92400e" font-size="11">Systemic Exposure Risk</text>
+        <text x="778" y="351" text-anchor="middle" fill="#92400e" font-size="10">Mast cell, NK cell,</text>
+        <text x="778" y="366" text-anchor="middle" fill="#92400e" font-size="10">platelet, cardiac effects</text>
+
+        <!-- Arrow BTKi -> Systemic -->
+        <line x1="778" y1="286" x2="778" y2="316" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-warn)"/>
+
+        <!-- Precision target badge -->
+        <rect x="682" y="400" width="192" height="52" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="778" y="422" text-anchor="middle" font-weight="bold" fill="white" font-size="11">→ Precision Modulation</text>
+        <text x="778" y="439" text-anchor="middle" fill="#a8d4f5" font-size="10">CNS/microglia-selective</text>
+        <text x="778" y="453" text-anchor="middle" fill="#a8d4f5" font-size="10">pharmacology required</text>
+
+        <!-- Arrow Systemic -> Precision -->
+        <line x1="778" y1="376" x2="778" y2="400" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-warn)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure: PLCG2 Mechanistic Overview.</strong>
+      <em>Panel A (left, blue):</em> Upstream receptor cascade — TREM2 and BTK/SYK converge on PLCγ2, driving PIP2 hydrolysis and intracellular Ca²⁺ release. The P522R protective variant (green badge) confers mild gain-of-function; the D65-PLCG2 splice isoform (red badge) represents a loss-of-function risk allele.
+      <em>Panel B (centre, teal):</em> Effector branches from microglial activation state — the pathway bifurcates into a plaque-response/synaptic-protection branch and a phagocytosis-lysosomal/cytokine branch, reconverging on reduced tau progression and, ultimately, AD resilience. Amber box notes PLCG2 upregulation with amyloid burden in human transcriptomics.
+      <em>Panel C (right, red):</em> Safety risk cascade — strong gain-of-function variants drive autoinflammation, antibody deficiency, and BTK-inhibitor resistance, highlighting the need for precision CNS-selective modulation rather than broad activation.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ───────────────────────────────────────────────── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Support in AD</h3>
+        The rare <strong>P522R / rs72824905-G</strong> variant is repeatedly associated with reduced late-onset AD risk, delayed onset, slower cognitive decline in amyloid-positive MCI, lower CSF pTau181, reduced Braak neurofibrillary tangle stage, dementia resilience, and longevity. Ultra-rare loss-of-function variants are associated with markedly increased AD risk.
+      </div>
+
+      <div class="card card-accent">
+        <h3>TREM2–Microglial Pathway</h3>
+        Multiple studies place PLCγ2 downstream of TREM2, one of the strongest microglial AD risk genes. PLCG2 deficiency impairs TREM2-linked Ca²⁺/IP1 signalling, weakens microglial plaque responses, and worsens neuronal pathology. The P522R variant is mildly hyperfunctional — modestly enhancing calcium responses, PIP2 metabolism, and microglial-like functions — but is not equivalent to strongly activating pathogenic mutations.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Plaque Biology &amp; Synaptic Protection</h3>
+        The P522R-equivalent variant does not necessarily reduce total plaque burden, but <strong>increases plaque compaction, improves containment</strong> of less compact plaques, and reduces synaptotoxic diffuse amyloid effects. R522 models show protection from amyloid-induced synapse loss and reduced microglial engulfment of synaptic material. Human iPSC-microglia data also suggest heterozygous P522R can increase Aβ clearance while preserving synapses.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Microglial State &amp; Transcriptomics</h3>
+        Beneficial PLCγ2 activity is associated with lysosomal CD68 expression, phagocytic/endocytic competence, lipid handling, antigen presentation, chemokine signalling, T-cell recruitment, survival, and motility. Human AMP-AD brain RNA-seq and mouse amyloid models show increased PLCG2/Plcg2 expression with AD and amyloid burden, enriched in NF-κB-related microglial co-expression modules.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Systemic Immune Risks</h3>
+        PLCG2 is active in B cells, myeloid cells, mast cells, NK cells, and platelets. Pathogenic variants cause <strong>autoinflammation, antibody deficiency, cold urticaria syndromes, immune dysregulation, and infection susceptibility</strong>. Acquired PLCG2 mutations mediate BTK-inhibitor resistance in B-cell malignancies. Broad systemic modulation could provoke inflammation, immune deficiency, abnormal B-cell activation, cardiac/vascular liabilities, or oncogenic signalling.
+      </div>
+
+      <div class="card card-slate">
+        <h3>Dose, Context &amp; Tractability</h3>
+        PLCG2 effects are dose- and context-sensitive: heterozygous P522R is beneficial, whereas homozygous P522R or strongly hypermorphic variants may not reproduce the same protective state. Risk alleles such as M28L and D65-PLCG2 splicing shifts represent loss-like states. Small-molecule activator discovery is underway using high-throughput lipid-vesicle assays, affinity-selection mass spectrometry, and fluorogenic substrates (C8CF3-coumarin), aiming to mimic P522R-like activity in wild-type PLCγ2.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ───────────────────────────────────────── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Prioritise precision microglial targeting.</strong> The most consistent therapeutic rationale is enhancing microglial plaque containment, synapse protection, lysosomal/endolysosomal competence, lipid handling, and repair programs — not direct amyloid lowering.</li>
+      <li><strong>Mimic heterozygous P522R biology.</strong> Therapeutic modulation should seek mild, regulated PLCγ2 activation calibrated to receptor-coupled signalling in appropriate microglial states — not strong constitutive activation.</li>
+      <li><strong>Avoid blanket activation or inhibition.</strong> Both insufficient and excessive PLCG2 signalling can be harmful. Broad inhibition impairs TREM2-dependent microglial survival and plaque response; broad activation risks autoinflammation or immune dysregulation.</li>
+      <li><strong>Develop brain- and microglia-selective strategies.</strong> Delivery, exposure, and pathway bias should minimise peripheral B-cell, mast-cell, NK-cell, platelet, and systemic myeloid effects. CNS-biased pharmacology is likely essential for safety.</li>
+      <li><strong>Apply genotype and disease-stage stratification.</strong> Interventions may be most relevant in amyloid-positive prodromal or early symptomatic AD. APOE ε4, TREM2 status, PLCG2 splice/risk variants, sex, age, and amyloid/tau biomarker status should all be considered.</li>
+      <li><strong>Track multi-modal pharmacodynamic biomarkers.</strong> Candidate markers include PLCγ2 phosphorylation, Ca²⁺ flux, PIP2/DAG/IP1 pathway activity, CD68/lysosomal markers, microglial activation PET, CSF pTau181, amyloid plaque compaction metrics, and synaptic injury markers.</li>
+      <li><strong>Measure amyloid, tau, and synapse outcomes together.</strong> PLCG2 modulation may improve plaque containment without reducing total amyloid burden; preclinical and clinical studies should assess plaque architecture, tau spread/phosphorylation, synapse preservation, microglial synapse engulfment, cognition, and neuroinflammation.</li>
+      <li><strong>Investigate splicing and loss-of-function mechanisms.</strong> Risk alleles that shift PLCG2 toward nonfunctional isoforms (D65-PLCG2) suggest therapeutic opportunities in correcting splicing or restoring canonical PLCγ2 expression in genetically defined subgroups.</li>
+      <li><strong>Build explicit safety screens around immune dysregulation.</strong> AD-directed PLCG2 programmes should monitor autoinflammatory cytokines, NLRP3/IL-1β signalling, antibody levels, B-cell activation, infection susceptibility, mast-cell/allergy phenotypes, platelet/cardiovascular effects, and malignancy-related signalling risks.</li>
+      <li><strong>Consider combination strategies.</strong> PLCG2 modulation may be most useful as an adjunct to amyloid-targeting therapies, improving microglial plaque handling, reducing synaptic toxicity, and supporting resilience even if it does not directly remove plaques or tangles.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ────────────────────────────────────────────────────── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PLCG2 as an AD Precision Target</span>
+      PLCG2 is one of the more compelling immune/microglial AD targets because <strong>protective human genetics, mechanistic studies, mouse models, iPSC-microglia data, transcriptomics, and drug-discovery feasibility</strong> converge on a coherent model: optimal PLCγ2 activity promotes protective microglial responses to AD pathology. The P522R variant establishes a naturally occurring proof-of-concept for mild hypermorphic benefit — improving plaque containment, synaptic preservation, and tau trajectory without simply removing amyloid. The central translational challenge is <strong>achieving the right magnitude, timing, cell type, and pathway context</strong> of PLCG2 activation. Given the substantial systemic safety liabilities of dysregulated PLCγ2 activity, success will depend on CNS- and microglia-selective pharmacology, rigorous genotype-stratified trial design, and multi-modal biomarker monitoring spanning amyloid architecture, tau biomarkers, synaptic integrity, microglial state, and immune safety endpoints.
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  PLCG2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

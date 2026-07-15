@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRKCA — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f36 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.30);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: 2.15rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: #c8daf0;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  p { margin-bottom: 1em; }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 14px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.slate { border-left-color: #64748b; background: #f1f5f9; }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+    color: var(--slate-dark);
+  }
+  .card p { font-size: 0.90rem; margin-bottom: 0; color: var(--slate-dark); }
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 12px 0 12px 44px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.94rem;
+  }
+  .takeaway-list li:last-child { border-bottom: none; }
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .takeaway-lead {
+    font-weight: 700;
+    color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.83rem;
+  }
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f36 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .verdict strong { color: #bfdbfe; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: PRKCA &nbsp;|&nbsp; Protein Kinase C Alpha</span>
+    <span class="chip chip-danger">⚠ Directionally Complex Target — Safety Caveat</span>
+  </div>
+  <h1>PRKCA &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Therapeutic Caution</div>
+      PRKCA is not a simple global inhibition or activation target. In AD-relevant contexts, PKCα activity can be protective (synaptic plasticity, non-amyloidogenic APP processing) or pathogenic (inflammatory/vascular/oxidative injury). Broad ATP-competitive kinase inhibitors may cause unexpected PRKCA relocalization and non-catalytic effects. Cell-type-specific, pathway-biased approaches are required.
+    </div>
+
+    <p>PRKCA encodes <strong>protein kinase C alpha (PKCα)</strong>, a calcium- and diacylglycerol-responsive serine/threonine kinase. In the evidence surveyed, PRKCA is best characterized as a <strong>pleiotropic signaling hub</strong> rather than a uniformly validated Alzheimer's disease (AD) causal gene. Evidence spans direct AD-related network or mechanistic studies, cognition and hippocampal plasticity studies, and numerous indirect non-AD studies involving pathways that overlap with AD biology.</p>
+
+    <p>The strongest AD-specific signals include: (1) the <strong>ICA1/PICK1/PKCα axis</strong> promoting non-amyloidogenic APP processing; (2) a <strong>female-specific CSF proteomic network hub</strong> linking PRKCA to Aβ42/p-tau via endothelial and synaptic biology; (3) <strong>human genetic associations</strong> of PRKCA variants with mild cognitive impairment; and (4) essential roles in <strong>hippocampal memory, dendritic-spine structural plasticity, and LSD1-dependent presynaptic gene regulation</strong>. PRKCA also appears across calcium signaling, neuroinflammation, NF-κB/TNF pathways, AGE-RAGE/MAPK, lipid/sphingolipid metabolism, autophagy/proteostasis, and neurovascular biology — all relevant to AD pathogenesis.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:640px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-s" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Upstream Activators -->
+          <rect x="10" y="10" width="200" height="480" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">UPSTREAM SIGNALS</text>
+
+          <!-- Node A1: Ca2+/DAG -->
+          <rect x="30" y="42" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.13" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="58" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Ca²⁺ / DAG</text>
+          <text x="110" y="72" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">PLC / GPCR / NMDAR</text>
+
+          <!-- Node A2: ICA1/PICK1 -->
+          <rect x="30" y="100" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.13" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="116" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">ICA1 / PICK1</text>
+          <text x="110" y="130" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">scaffold complex</text>
+
+          <!-- Node A3: BDNF-TrkB -->
+          <rect x="30" y="158" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.13" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="174" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">BDNF-TrkB</text>
+          <text x="110" y="188" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">signaling</text>
+
+          <!-- Node A4: AGE-RAGE -->
+          <rect x="30" y="216" width="160" height="38" rx="7" fill="#2e6da4" fill-opacity="0.13" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="232" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">AGE-RAGE</text>
+          <text x="110" y="246" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">axis</text>
+
+          <!-- Node A5: miR-23a-3p -->
+          <rect x="30" y="274" width="160" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.10" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="110" y="290" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">miR-23a-3p</text>
+          <text x="110" y="304" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">suppressor (aging)</text>
+
+          <!-- Arrows into PRKCA node (panel B) — from right edge of panel A, x=190 -->
+          <!-- A1 → PKCα -->
+          <line x1="190" y1="61" x2="243" y2="195" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A2 → PKCα -->
+          <line x1="190" y1="119" x2="243" y2="200" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A3 → PKCα -->
+          <line x1="190" y1="177" x2="243" y2="205" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A4 → PKCα -->
+          <line x1="190" y1="235" x2="243" y2="210" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- A5 -| PKCα (suppression) -->
+          <line x1="190" y1="293" x2="243" y2="215" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+
+          <!-- PANEL B: PKCα HUB -->
+          <rect x="218" y="165" width="145" height="65" rx="10" fill="#1a3a5c" fill-opacity="0.88" stroke="#1a3a5c" stroke-width="1.5"/>
+          <text x="290" y="188" text-anchor="middle" font-family="Georgia" font-size="13" fill="#ffffff" font-weight="bold">PKCα</text>
+          <text x="290" y="205" text-anchor="middle" font-family="Georgia" font-size="10" fill="#bfdbfe">(PRKCA)</text>
+          <text x="290" y="220" text-anchor="middle" font-family="Georgia" font-size="9" fill="#93c5fd">Ser/Thr kinase hub</text>
+
+          <!-- PANEL C: Downstream Branches — two sub-panels -->
+          <!-- C-top panel: Protective branch -->
+          <rect x="390" y="10" width="245" height="235" rx="12" fill="#f0fdfa" fill-opacity="0.70" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="512" y="29" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PROTECTIVE OUTPUTS</text>
+
+          <!-- C1: APP/ADAM10/17 -->
+          <rect x="406" y="40" width="145" height="38" rx="7" fill="#0f766e" fill-opacity="0.12" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="478" y="56" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">APP / ADAM10</text>
+          <text x="478" y="70" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">ADAM17 ↑</text>
+
+          <!-- C2: Non-amyloidogenic -->
+          <rect x="406" y="98" width="145" height="38" rx="7" fill="#0f766e" fill-opacity="0.12" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="478" y="114" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Non-amyloidogenic</text>
+          <text x="478" y="128" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">APP cleavage</text>
+
+          <!-- C3: Dendritic spine / LTP -->
+          <rect x="406" y="156" width="145" height="38" rx="7" fill="#0f766e" fill-opacity="0.12" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="478" y="172" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Spine plasticity</text>
+          <text x="478" y="186" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">LTP / LSD1-p</text>
+
+          <!-- Arrows inside protective panel -->
+          <line x1="478" y1="78" x2="478" y2="96" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+          <line x1="478" y1="136" x2="478" y2="154" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+          <!-- C-bottom panel: Pathogenic / Inflammatory branch -->
+          <rect x="390" y="258" width="245" height="232" rx="12" fill="#fef2f2" fill-opacity="0.70" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="512" y="277" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">INFLAMMATORY OUTPUTS</text>
+
+          <!-- C4: NF-κB / TNF -->
+          <rect x="406" y="288" width="145" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.10" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="478" y="304" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">NF-κB / TNF-α</text>
+          <text x="478" y="318" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">IL-1β / IL-6</text>
+
+          <!-- C5: p38 MAPK / ROS -->
+          <rect x="406" y="346" width="145" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.10" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="478" y="362" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">p38 MAPK / ROS</text>
+          <text x="478" y="376" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">NOX / barrier injury</text>
+
+          <!-- C6: Endothelial/BBB -->
+          <rect x="406" y="404" width="145" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.10" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="478" y="420" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">VE-cadherin disruption</text>
+          <text x="478" y="434" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">BBB leakage</text>
+
+          <!-- Arrows inside inflammatory panel -->
+          <line x1="478" y1="326" x2="478" y2="344" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+          <line x1="478" y1="384" x2="478" y2="402" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- PKCα → protective panel (top branch) -->
+          <line x1="363" y1="185" x2="404" y2="120" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+          <!-- PKCα → inflammatory panel (bottom branch) -->
+          <line x1="363" y1="205" x2="404" y2="320" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+          <!-- PANEL D: Converging Outcomes -->
+          <rect x="660" y="10" width="250" height="480" rx="12" fill="#f1f5f9" fill-opacity="0.70" stroke="#64748b" stroke-width="1.2"/>
+          <text x="785" y="29" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#475569" letter-spacing="1">AD-RELEVANT OUTCOMES</text>
+
+          <!-- D1: Aβ / tau -->
+          <rect x="676" y="42" width="218" height="38" rx="7" fill="#2e6da4" fill-opacity="0.11" stroke="#2e6da4" stroke-width="1.1"/>
+          <text x="785" y="58" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Aβ production / tau</text>
+          <text x="785" y="72" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">phosphorylation</text>
+
+          <!-- D2: Synaptic failure -->
+          <rect x="676" y="100" width="218" height="38" rx="7" fill="#2e6da4" fill-opacity="0.11" stroke="#2e6da4" stroke-width="1.1"/>
+          <text x="785" y="116" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Synaptic failure</text>
+          <text x="785" y="130" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">memory impairment</text>
+
+          <!-- D3: Female-specific networks -->
+          <rect x="676" y="158" width="218" height="38" rx="7" fill="#2e6da4" fill-opacity="0.11" stroke="#2e6da4" stroke-width="1.1"/>
+          <text x="785" y="174" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Female-specific CSF</text>
+          <text x="785" y="188" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">network (Aβ42 / p-tau)</text>
+
+          <!-- D4: Autophagy/proteostasis -->
+          <rect x="676" y="216" width="218" height="38" rx="7" fill="#2e6da4" fill-opacity="0.11" stroke="#2e6da4" stroke-width="1.1"/>
+          <text x="785" y="232" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Autophagy / lysosomal</text>
+          <text x="785" y="246" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">proteostasis</text>
+
+          <!-- D5: Neuroinflammation -->
+          <rect x="676" y="274" width="218" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.09" stroke="#9b1c1c" stroke-width="1.1"/>
+          <text x="785" y="290" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Neuroinflammation</text>
+          <text x="785" y="304" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">microglial activation</text>
+
+          <!-- D6: Vascular / MCI risk -->
+          <rect x="676" y="332" width="218" height="38" rx="7" fill="#9b1c1c" fill-opacity="0.09" stroke="#9b1c1c" stroke-width="1.1"/>
+          <text x="785" y="348" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Vascular dysfunction</text>
+          <text x="785" y="362" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">MCI genetic risk</text>
+
+          <!-- D7: Lipid/sphingolipid -->
+          <rect x="676" y="390" width="218" height="38" rx="7" fill="#64748b" fill-opacity="0.10" stroke="#64748b" stroke-width="1.1"/>
+          <text x="785" y="406" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Lipid / sphingolipid</text>
+          <text x="785" y="420" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">metabolism</text>
+
+          <!-- Arrows: protective panel → outcome nodes in panel D -->
+          <!-- C1(APP/ADAM) → D1(Aβ/tau): right edge of C1 is x=551, y=59; left edge D1 is x=676 -->
+          <line x1="551" y1="59" x2="674" y2="61" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+          <!-- C3(spine/LTP) → D2(synaptic failure) -->
+          <line x1="551" y1="175" x2="674" y2="119" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+          <!-- Arrows: inflammatory panel → outcome nodes in panel D -->
+          <!-- C4(NF-kB) → D5(Neuroinflam): right x=551 y=307; left D5 x=676 y=293 -->
+          <line x1="551" y1="307" x2="674" y2="293" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+          <!-- C6(BBB) → D6(Vascular): right x=551 y=423; left D6 x=676 y=351 -->
+          <line x1="551" y1="423" x2="674" y2="351" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- Connecting PKCα area to D3 (female network) and D4 (autophagy) via gutter -->
+          <!-- Route through gap between panels: from bottom of PKCα box x=290 y=230 down to y=430, across to D4 -->
+          <polyline points="335,230 370,390 675,235" fill="none" stroke="#64748b" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arr-s)"/>
+
+          <!-- Small label for dashed line -->
+          <text x="490" y="445" text-anchor="middle" font-family="Arial" font-size="8" fill="#64748b" font-style="italic">proteostasis / lipid link</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Signals):</strong> Key activators feeding into PKCα — Ca²⁺/DAG via GPCR/NMDAR/PLC, the ICA1/PICK1 scaffold, BDNF-TrkB co-signaling, AGE-RAGE axis, and miR-23a-3p (dashed red = suppressor in aging/estrogen deficiency).
+        <strong>Panel B (PKCα hub):</strong> PRKCA as the central serine/threonine kinase integrator.
+        <strong>Panel C — Protective branch (teal):</strong> PKCα promotes ADAM10/ADAM17 and non-amyloidogenic APP cleavage, and supports dendritic spine plasticity and LSD1-phosphorylation-dependent LTP.
+        <strong>Panel C — Inflammatory branch (red):</strong> Excessive PKCα drives NF-κB/cytokine output, p38 MAPK/ROS cascades, and VE-cadherin disruption with BBB leakage.
+        <strong>Panel D (AD-Relevant Outcomes):</strong> Converging consequences across Aβ/tau biology, synaptic failure, female-specific CSF networks, autophagy/proteostasis, neuroinflammation, vascular/MCI risk, and lipid metabolism.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card positive">
+        <h3>ICA1/PICK1/PKCα → Non-Amyloidogenic APP Processing</h3>
+        <p>ICA1 is reduced in AD brains and an AD mouse model. ICA1 overexpression raises PKCα abundance and phosphorylation, increasing APP, ADAM10, and ADAM17 protein levels. This shifts APP processing toward the non-amyloidogenic route — arguing against assuming PKCα inhibition is therapeutically desirable in AD.</p>
+      </div>
+
+      <div class="card">
+        <h3>Female-Specific CSF Proteomic Network Hub</h3>
+        <p>A large CSF proteomics study identified PRKCA as a hub in female-specific protein interaction networks associated with Aβ42 and/or p-tau, enriched for endothelial-cell biology, protein metabolic regulation, synaptic plasticity, and responses to external stimuli — connecting vascular and synaptic AD biology in a sex-stratified manner.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Hippocampal Memory &amp; Synaptic Plasticity</h3>
+        <p>PKCα is required for structural plasticity in dendritic spines, integrating NMDA receptor Ca²⁺ influx with BDNF-TrkB signaling. PKCα-mediated phosphorylation of LSD1 underpins hippocampus-dependent memory and presynaptic gene regulation. In aged estrogen-deficient mice, miR-23a-3p suppresses PKCα and impairs LTP/memory; miR-23a-3p inhibition rescues these deficits.</p>
+      </div>
+
+      <div class="card">
+        <h3>Genetic Variation &amp; Cognitive Impairment Risk</h3>
+        <p>PRKCA-rs2286674 and PRKCA polygenic risk scores associate with mild cognitive impairment in elderly cohorts. Each unit increase in PRKCA PRS corresponded to substantially higher MCI risk in one dataset. PRKCA effects also interacted with lipid/lipoprotein and bone-mineral-density variables, supporting its role as a modifier of cognitive vulnerability.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Inflammatory / NF-κB / AGE-RAGE Pathogenic Axis</h3>
+        <p>Across inflammatory models, PRKCA drives cytokine output (IL-1β, IL-6, TNF-α), NF-κB activation, p38 MAPK, and ROS cascades. In AGE-RAGE signaling — relevant to AD through glycation, oxidative stress, RAGE-mediated Aβ transport, and vascular dysfunction — PKCα may amplify injury, especially in metabolic or vascular AD subtypes.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Therapeutic Complexity &amp; ATP-Inhibitor Caveats</h3>
+        <p>PKCα has both protective roles (synaptic plasticity, non-amyloidogenic APP processing, pericyte remodeling) and pathogenic roles (inflammatory activation, barrier injury, oxidative stress). ATP-competitive kinase inhibitors can induce PRKCA relocalization and non-catalytic effects, making broad inhibition potentially counterproductive. Pathway-biased, substrate-selective, or allosteric strategies are preferred.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span class="takeaway-lead">Prioritize AD-specific validation.</span>
+        Test PRKCA directly in AD brain tissue, CSF, iPSC-derived neurons/glia/endothelial cells, organoids, and animal models — measuring expression, phosphorylation, activity, localization, splice isoforms, ubiquitination, methylation, and protein-interaction state.
+      </li>
+      <li>
+        <span class="takeaway-lead">Test the ICA1–PICK1–PKCα–APP axis as the most direct AD mechanism.</span>
+        Determine whether restoring ICA1 or modulating PICK1–PKCα signaling increases ADAM10/ADAM17 activity, enhances non-amyloidogenic APP cleavage, lowers Aβ generation, and improves synaptic or cognitive outcomes in AD models.
+      </li>
+      <li>
+        <span class="takeaway-lead">Treat PRKCA as a precision target, not a global on/off switch.</span>
+        Define whether PKCα activity is deficient or excessive in specific AD-relevant compartments (hippocampal neurons, synapses, microglia, astrocytes, endothelial cells, pericytes). Activation may suit synaptic/non-amyloidogenic contexts; inhibition may suit inflammatory/vascular injury contexts.
+      </li>
+      <li>
+        <span class="takeaway-lead">Stratify by sex, vascular-metabolic status, and disease stage.</span>
+        Given PRKCA's emergence as a female-specific CSF network hub and its links to estrogen deficiency, lipid metabolism, diabetes, AGE-RAGE signaling, and vascular dysfunction, studies must stratify by sex, menopausal status, APOE/lipid status, insulin resistance, and early versus late disease stage.
+      </li>
+      <li>
+        <span class="takeaway-lead">Focus on synaptic-plasticity endpoints.</span>
+        Evaluate NMDA receptor-linked Ca²⁺ signaling, BDNF-TrkB responses, dendritic spine structural plasticity, hippocampal LTP, presynaptic function, LSD1 phosphorylation, synaptic gene expression, and memory behavior as primary readouts.
+      </li>
+      <li>
+        <span class="takeaway-lead">Assess neuroinflammation and vascular-barrier endpoints in parallel.</span>
+        Test whether PRKCA modulation changes microglial polarization, TNF-α, IL-1β, IL-6, NF-κB, p38 MAPK, ROS/NOX activity, endothelial VE-cadherin/p120-catenin integrity, blood-brain barrier leakage, cerebral perfusion, and pericyte resilience.
+      </li>
+      <li>
+        <span class="takeaway-lead">Include proteostasis and tau/amyloid readouts.</span>
+        Test autophagic flux, lysosomal biogenesis, TFEB signaling, ubiquitinated protein accumulation, tau phosphorylation/aggregation, APP cleavage products, soluble/insoluble Aβ, and plaque/tangle phenotypes.
+      </li>
+      <li>
+        <span class="takeaway-lead">Avoid relying solely on expression data.</span>
+        PKCα biology depends on phosphorylation, Ca²⁺/DAG activation, membrane translocation, scaffold interactions, and conformational state. Activity-based phosphoproteomics, localization assays, and protein-protein interaction profiling are more informative than PRKCA mRNA abundance alone.
+      </li>
+      <li>
+        <span class="takeaway-lead">Explore noncoding RNA and epigenetic modulation.</span>
+        The AhR/miR-23a-3p/PKCα axis is a strong cognitive-aging mechanism. PRKCA methylation, m6A regulation, and miRNA control should be explored in AD — especially in contexts of aging, estrogen deficiency, metabolic stress, and nutritional deficiency.
+      </li>
+      <li>
+        <span class="takeaway-lead">Develop pathway-biased or substrate-selective modulators.</span>
+        If PRKCA is validated in AD, favor brain-penetrant, isoform-selective, cell-type-targeted, and pathway-biased modulators. Substrate-selective or allosteric approaches are preferable to broad ATP-competitive inhibition, which causes unexpected PRKCA relocalization and non-catalytic effects.
+      </li>
+      <li>
+        <span class="takeaway-lead">Evaluate systemic safety rigorously.</span>
+        PRKCA has broad roles in cancer, immune activation, vascular remodeling, platelet function, cardiac signaling, mitochondrial recovery, and normal development. Any AD therapy targeting PRKCA must assess cardiovascular effects, tumor/proliferation risk, immune consequences, and long-term effects of partial inhibition or activation.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — PRKCA in Alzheimer's Disease</div>
+      <p>
+        The assembled evidence positions <strong>PRKCA as a high-priority candidate AD-modifying signaling hub</strong>, not yet a broadly validated therapeutic target. Its most compelling AD-specific mechanism is the <strong>ICA1/PICK1/PKCα axis promoting non-amyloidogenic APP processing</strong> via ADAM10/ADAM17, which cautions against reflexive kinase inhibition. <strong>Hippocampal synaptic plasticity</strong> — involving NMDA receptor–Ca²⁺ integration, BDNF-TrkB signaling, LSD1 phosphorylation, LTP, and memory — is a second core node of AD relevance. The emergence of PRKCA as a <strong>female-specific CSF network hub</strong> linking endothelial biology, protein metabolic regulation, and synaptic plasticity to Aβ42/p-tau underscores the importance of sex-stratified analyses. Across inflammatory, vascular, oxidative-stress, lipid/sphingolipid, and proteostasis contexts, PKCα's role is <strong>directionally context-dependent</strong>: restorative in some compartments, pathogenic in others. Therapeutic development, if warranted after rigorous AD-specific mechanistic validation, must pursue <strong>isoform-selective, cell-type-specific, pathway-biased, and brain-penetrant modalities</strong> — with full systemic safety evaluation — rather than broad ATP-competitive kinase inhibition.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PRKCA / Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

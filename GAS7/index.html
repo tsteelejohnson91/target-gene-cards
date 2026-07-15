@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAS7 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6c3fc5;
+    --light: #ede8fa;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --body-text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--body-text);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0e0a24 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+  }
+
+  /* OVERVIEW PROSE */
+  .prose p {
+    margin-bottom: 1rem;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.5;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger-dark); }
+  .card-danger h3 { color: var(--danger-dark); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-neutral { background: var(--neutral-bg); border-left: 4px solid var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 0.94rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0e0a24 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GAS7 &nbsp;|&nbsp; Growth Arrest-Specific 7</span>
+    <span class="chip chip-danger">⚠ Unvalidated AD Target — Safety Caveats Apply</span>
+  </div>
+  <h1>GAS7 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Caution — Unproven Target with Context-Dependent Risks:</strong> GAS7 has not been established as an AD therapeutic target. Broad GAS7 activation may be hazardous given its roles in apoptosis, immune activation, cancer biology, and cell migration. Excess hGas7b may interfere with kinesin motility, making precise dosage critical. No supplied study demonstrates that GAS7 modulation improves cognition, reduces amyloid-β, prevents tau pathology in vivo, or slows AD progression in patients.
+    </div>
+
+    <div class="prose">
+      <p>GAS7 (growth arrest-specific 7) is a brain-enriched cytoskeletal, membrane-remodeling, and neuronal differentiation-associated gene with plausible relevance to Alzheimer's disease (AD), primarily through tau–microtubule biology, dendritic spine and neurite structural plasticity, mitochondrial quality control, and gene-regulatory networks in AD-vulnerable regions.</p>
+      <p>The strongest AD-specific or AD-adjacent evidence includes: GAS7/GAS7b binding phosphorylated tau, promoting or stabilizing microtubule polymerization, and being reported at low levels in AD brains; inclusion of GAS7 in an AD entorhinal-cortex gene-interaction network with APP and other AD-relevant genes; and evidence that GAS7 supports dendritic spine initiation, neurite outgrowth, cytoskeletal organization, learning-related hippocampal proteome remodeling, and neuronal mitochondrial homeostasis.</p>
+      <p>Most findings are biochemical, cellular, computational, or derived from non-AD disease contexts. GAS7 is best understood as a mechanistically compelling but unvalidated candidate node for synaptic resilience and tau-associated cytoskeletal stability that requires rigorous AD-specific validation before it can be considered a credible drug target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- DEFS: arrowhead markers -->
+        <defs>
+          <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6c3fc5"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: UPSTREAM / GAS7 ISOFORMS ===== -->
+        <rect x="10" y="10" width="210" height="480" rx="10" ry="10" fill="#ede8fa" fill-opacity="0.5" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="115" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#2d1b69" letter-spacing="1">PANEL A — GAS7 GENE</text>
+
+        <!-- GAS7 gene node -->
+        <rect x="30" y="38" width="150" height="38" rx="7" fill="#6c3fc5" stroke="#2d1b69" stroke-width="1.2"/>
+        <text x="105" y="54" text-anchor="middle" font-weight="700" fill="#fff" font-size="11">GAS7 Gene</text>
+        <text x="105" y="68" text-anchor="middle" fill="#e9d5ff" font-size="9">(brain-enriched)</text>
+
+        <!-- GAS7b isoform -->
+        <rect x="30" y="108" width="150" height="38" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="105" y="124" text-anchor="middle" font-weight="700" fill="#2d1b69" font-size="11">GAS7b / hGAS7b</text>
+        <text x="105" y="138" text-anchor="middle" fill="#64748b" font-size="9">F-BAR + WW domain isoform</text>
+
+        <!-- arrow gene -> isoform -->
+        <line x1="105" y1="76" x2="105" y2="106" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+        <!-- Region specificity node -->
+        <rect x="30" y="178" width="150" height="38" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="105" y="194" text-anchor="middle" fill="#2d1b69" font-size="10">Region-Specific</text>
+        <text x="105" y="208" text-anchor="middle" fill="#64748b" font-size="9">Isoform Usage (EC, Hipp)</text>
+
+        <line x1="105" y1="146" x2="105" y2="176" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+        <!-- AD network node -->
+        <rect x="30" y="248" width="150" height="38" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="105" y="264" text-anchor="middle" fill="#2d1b69" font-size="10">AD Entorhinal</text>
+        <text x="105" y="278" text-anchor="middle" fill="#64748b" font-size="9">Network (APP, AKT3…)</text>
+
+        <line x1="105" y1="216" x2="105" y2="246" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+        <!-- Low in AD badge -->
+        <rect x="38" y="310" width="134" height="22" rx="11" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="105" y="325" text-anchor="middle" fill="#9b1c1c" font-size="9" font-weight="700">↓ Reduced in AD Brain</text>
+
+
+        <!-- ===== PANEL B: TAU / CYTOSKELETON ===== -->
+        <rect x="235" y="10" width="210" height="480" rx="10" ry="10" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="340" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#0f766e" letter-spacing="1">PANEL B — TAU &amp; CYTOSKELETON</text>
+
+        <!-- GAS7b binds p-tau -->
+        <rect x="255" y="38" width="170" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="340" y="54" text-anchor="middle" font-weight="700" fill="#fff" font-size="11">GAS7b Binds p-Tau</text>
+        <text x="340" y="68" text-anchor="middle" fill="#ccfbf1" font-size="9">F-BAR domain interaction</text>
+
+        <!-- Arrow from Panel A GAS7b to here — elbow routing through gutter -->
+        <!-- Route: right edge of GAS7b node (180,127) → right to gutter x=225 → down to y=57 → right to Panel B node left edge (255,57) -->
+        <polyline points="180,127 225,127 225,57 253,57" fill="none" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+        <!-- Reduces fibrillogenesis -->
+        <rect x="255" y="108" width="170" height="38" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="340" y="124" text-anchor="middle" fill="#065f46" font-size="10">↓ Tau Fibrillogenesis</text>
+        <text x="340" y="138" text-anchor="middle" fill="#64748b" font-size="9">Alters tau conformation</text>
+
+        <line x1="340" y1="76" x2="340" y2="106" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Microtubule polymerization -->
+        <rect x="255" y="178" width="170" height="38" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="340" y="194" text-anchor="middle" fill="#065f46" font-size="10">Microtubule</text>
+        <text x="340" y="208" text-anchor="middle" fill="#64748b" font-size="9">Polymerization &amp; Stability</text>
+
+        <line x1="340" y1="146" x2="340" y2="176" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Actin / cytoskeletal org -->
+        <rect x="255" y="248" width="170" height="38" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="340" y="264" text-anchor="middle" fill="#065f46" font-size="10">Actin Assembly &amp;</text>
+        <text x="340" y="278" text-anchor="middle" fill="#64748b" font-size="9">Cytoskeletal Coordination</text>
+
+        <line x1="340" y1="216" x2="340" y2="246" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Neurite outgrowth -->
+        <rect x="255" y="318" width="170" height="38" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="340" y="334" text-anchor="middle" fill="#065f46" font-size="10">Neurite Outgrowth &amp;</text>
+        <text x="340" y="348" text-anchor="middle" fill="#64748b" font-size="9">Neuronal Maturation</text>
+
+        <line x1="340" y1="286" x2="340" y2="316" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- ===== PANEL C: SYNAPTIC / MITOCHONDRIAL ===== -->
+        <rect x="460" y="10" width="210" height="480" rx="10" ry="10" fill="#eff6ff" fill-opacity="0.5" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="565" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#1d4ed8" letter-spacing="1">PANEL C — SYNAPTIC &amp; MITO</text>
+
+        <!-- Dendritic spine initiation -->
+        <rect x="480" y="38" width="170" height="38" rx="7" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.2"/>
+        <text x="565" y="54" text-anchor="middle" font-weight="700" fill="#fff" font-size="11">Dendritic Spine</text>
+        <text x="565" y="68" text-anchor="middle" fill="#bfdbfe" font-size="9">Initiation (PI3K, N-WASP)</text>
+
+        <!-- Arrow from Panel B Actin node to Panel C spine node — route through gutter -->
+        <!-- Gutter between panel B and C is x=435 to x=460 -->
+        <polyline points="425,267 450,267 450,57 478,57" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Spine density up/down -->
+        <rect x="480" y="108" width="170" height="38" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="565" y="122" text-anchor="middle" fill="#1e3a8a" font-size="10">↑ Spine Density</text>
+        <text x="565" y="137" text-anchor="middle" fill="#64748b" font-size="9">(OE); ↓ on knockdown</text>
+
+        <line x1="565" y1="76" x2="565" y2="106" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Synaptic proteome remodeling -->
+        <rect x="480" y="178" width="170" height="38" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="565" y="194" text-anchor="middle" fill="#1e3a8a" font-size="10">Learning-Related</text>
+        <text x="565" y="208" text-anchor="middle" fill="#64748b" font-size="9">Synaptic Proteome Remodeling</text>
+
+        <line x1="565" y1="146" x2="565" y2="176" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Mitochondrial dynamics -->
+        <rect x="480" y="248" width="170" height="38" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="565" y="264" text-anchor="middle" fill="#1e3a8a" font-size="10">Mitochondrial</text>
+        <text x="565" y="278" text-anchor="middle" fill="#64748b" font-size="9">Dynamics &amp; Distribution</text>
+
+        <line x1="565" y1="216" x2="565" y2="246" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- PINK1/Parkin -->
+        <rect x="480" y="318" width="170" height="38" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="565" y="334" text-anchor="middle" fill="#1e3a8a" font-size="10">PINK1/Parkin Signaling</text>
+        <text x="565" y="348" text-anchor="middle" fill="#64748b" font-size="9">(Drp1, Mfn2, mitophagy)</text>
+
+        <line x1="565" y1="286" x2="565" y2="316" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- ===== PANEL D: DOWNSTREAM OUTCOMES ===== -->
+        <rect x="685" y="10" width="205" height="480" rx="10" ry="10" fill="#fff7ed" fill-opacity="0.5" stroke="#b45309" stroke-width="1.2"/>
+        <text x="787" y="28" text-anchor="middle" font-weight="700" font-size="9" fill="#b45309" letter-spacing="1">PANEL D — AD OUTCOMES</text>
+
+        <!-- Synaptic resilience -->
+        <rect x="700" y="38" width="175" height="38" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1.2"/>
+        <text x="787" y="54" text-anchor="middle" font-weight="700" fill="#fff" font-size="11">Synaptic Resilience</text>
+        <text x="787" y="68" text-anchor="middle" fill="#fde68a" font-size="9">Structural plasticity</text>
+
+        <!-- Arrow from spine density to synaptic resilience — through gutter x=655-685 -->
+        <polyline points="650,127 668,127 668,57 698,57" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Tau pathology risk -->
+        <rect x="700" y="108" width="175" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="787" y="124" text-anchor="middle" fill="#92400e" font-size="10">↓ Tau Aggregation</text>
+        <text x="787" y="138" text-anchor="middle" fill="#64748b" font-size="9">Anti-fibrillogenic (early)</text>
+
+        <!-- Arrow from tau fibrillogenesis node to here — route: right edge of Panel B node (425,127) → gutter → up is blocked; go through x=450 col up to y=127, then right through gutter x=668 — but need to go to y=127 in Panel D -->
+        <!-- Direct route from Panel B fibrillogenesis right (425,127) → Panel D tau (700,127) passes through Panel C. Route via bottom gutter y=490 -->
+        <!-- Actually simpler: route through top gutter strip above all panels y=5, or through gap between panels at y=127 we must check Panel C occupancy. Panel C starts at x=460. So x=425 to 460 is gutter, then Panel C rect 460-670 blocks y=38 to 490. So we must go around via bottom -->
+        <!-- Route: (425,127) → down to y=478 (below all nodes in Panel C) → right to x=698 → up to (698,127) -->
+        <polyline points="425,127 443,127 443,478 698,478 698,127 698,146" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Neuronal survival -->
+        <rect x="700" y="178" width="175" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="787" y="194" text-anchor="middle" fill="#92400e" font-size="10">Neuronal Survival &amp;</text>
+        <text x="787" y="208" text-anchor="middle" fill="#64748b" font-size="9">Axonal Transport</text>
+
+        <line x1="787" y1="146" x2="787" y2="176" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Mitophagy / energy -->
+        <rect x="700" y="248" width="175" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="787" y="264" text-anchor="middle" fill="#92400e" font-size="10">Mitophagy &amp; Synaptic</text>
+        <text x="787" y="278" text-anchor="middle" fill="#64748b" font-size="9">Energy Homeostasis</text>
+
+        <line x1="787" y1="216" x2="787" y2="246" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Arrow from PINK1/Parkin to Mitophagy — gutter route -->
+        <polyline points="650,337 668,337 668,267 698,267" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Microglial remodeling -->
+        <rect x="700" y="318" width="175" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="787" y="334" text-anchor="middle" fill="#92400e" font-size="10">Microglial Phagocytosis</text>
+        <text x="787" y="348" text-anchor="middle" fill="#64748b" font-size="9">&amp; NF-κB Polarization</text>
+
+        <line x1="787" y1="286" x2="787" y2="316" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Cognitive decline risk node at bottom -->
+        <rect x="700" y="388" width="175" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="787" y="404" text-anchor="middle" fill="#9b1c1c" font-weight="700" font-size="11">AD Cognitive Decline</text>
+        <text x="787" y="418" text-anchor="middle" fill="#64748b" font-size="9">Risk (if GAS7 ↓ in AD)</text>
+
+        <line x1="787" y1="356" x2="787" y2="386" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+      </svg>
+
+      <p class="figure-caption"><strong>Panel A (purple) — GAS7 Gene:</strong> GAS7 generates multiple isoforms (including GAS7b with F-BAR + WW domains) with region-specific expression in AD-vulnerable areas; the gene appears in an AD entorhinal-cortex regulatory network and is reported at reduced levels in AD brain. <strong>Panel B (teal) — Tau &amp; Cytoskeleton:</strong> GAS7b binds phosphorylated tau and reduces fibrillogenesis, stabilizes microtubule polymerization, and coordinates actin/cytoskeletal organization, supporting neurite outgrowth and neuronal maturation. <strong>Panel C (blue) — Synaptic &amp; Mitochondrial:</strong> GAS7 drives dendritic spine initiation (via PI3K/N-WASP/Arp2/3), participates in learning-related synaptic proteome remodeling, and regulates mitochondrial dynamics and PINK1/Parkin-mediated mitophagy signaling. <strong>Panel D (amber/red) — AD Outcomes:</strong> These functions converge on synaptic resilience, reduced tau aggregation risk, neuronal survival, mitophagy/energy homeostasis, and microglial membrane remodeling; loss of GAS7 in AD brain is hypothesized to contribute to cognitive decline.</p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Tau–Microtubule Regulation (GAS7b)</h3>
+        <p>GAS7b binds phosphorylated tau, interacts with tau domains involved in oligomerization and microtubule association, and promotes tubulin polymerization. Reduced GAS7b in AD brain could worsen cytoskeletal instability, axonal transport failure, and tau-associated neuronal dysfunction — making this GAS7's most direct AD-relevant mechanism.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Anti-Tau Fibrillogenesis Function</h3>
+        <p>GAS7 is reported to bind phosphorylated tau through its F-BAR domain, alter tau conformation, and reduce fibril formation. This early-stage finding suggests a possible protective anti-aggregation role, but has not yet been validated in AD animal models or clinical settings.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Dendritic Spine Initiation</h3>
+        <p>Gas7 acts as a spine initiation factor in hippocampal pyramidal neurons: neuronal activation triggers Gas7 clustering at dendritic sites, overexpression increases spine density, and knockdown reduces it. The mechanism requires PI3K, the F-BAR domain, N-WASP recruitment, and Arp2/3-mediated actin clustering — directly relevant to AD synapse loss.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Mitochondrial Quality Control</h3>
+        <p>Gas7 knockout in cortical neurons disrupts mitochondrial morphology and distribution, alters Drp1 phosphorylation, reduces PINK1 expression, and impairs PINK1-dependent phosphorylation of Mfn2, Parkin, and ubiquitin. Re-expression of Gas7 rescues these deficits, linking GAS7 to mitophagy pathways relevant to AD synaptic energy failure.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Microglial &amp; Immune Relevance</h3>
+        <p>GAS7 forms F-BAR-domain membrane assemblies involved in macrophage phagocytosis, and Gas7 is induced during M1 macrophage polarization in an NF-κB-dependent manner. While not demonstrated in AD microglia, this raises the possibility of roles in plaque clearance, debris removal, and neuroinflammatory states.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Risk &amp; Complexity</h3>
+        <p>Broad GAS7 activation is potentially hazardous given its context-dependent roles in apoptosis, growth arrest, immune activation, cancer biology, and cell migration. Excess hGas7b may interfere with kinesin motility. Isoform-, region-, and cell-type-specific precision is essential; total GAS7 measurements likely obscure disease-relevant isoform changes.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Validate GAS7 in human AD brain.</strong> Test whether total expression, isoform usage, protein abundance, localization, and post-translational modifications differ in entorhinal cortex, hippocampus, temporal cortex, and prefrontal cortex across AD stages.</li>
+      <li><strong>Correlate with core AD pathology.</strong> Compare GAS7 changes with Braak stage, phosphorylated tau burden, amyloid-β plaque load, synapse density, dendritic spine markers, mitochondrial dysfunction markers, neuroinflammatory markers, and cognitive decline.</li>
+      <li><strong>Prioritize GAS7b isoform-specific assays.</strong> Because hGAS7b/GAS7b is repeatedly linked to tau binding, microtubule polymerization, and neuronal maturation, total GAS7 measurements may obscure disease-relevant changes; isoform-specific quantification is essential.</li>
+      <li><strong>Test in AD-relevant experimental systems.</strong> Use human iPSC-derived neurons, tauopathy models, amyloid-β oligomer exposure, APOE-genotype-stratified cultures, microglia–neuron co-cultures, and AD mouse models. Measure spine density, LTP, axonal transport, mitophagy, tau aggregation, and cognition.</li>
+      <li><strong>Determine protective vs. harmful context.</strong> Distinguish whether increasing GAS7 restores cytoskeletal and synaptic function or triggers apoptosis, disrupts kinesin transport, or promotes inflammatory activation — dose, isoform, cell type, and disease stage are likely all critical.</li>
+      <li><strong>Pursue precision therapeutic strategies.</strong> Rather than broad GAS7 upregulation, focus on enhancing GAS7b's beneficial tau–microtubule interaction, mimicking its anti-fibrillogenic domains, restoring physiological GAS7b levels in vulnerable neurons, or targeting downstream actin/microtubule pathways while avoiding proapoptotic or proinflammatory effects.</li>
+      <li><strong>Assess GAS7 as a biomarker candidate.</strong> If validated in AD tissue or biofluid-associated datasets, GAS7 isoforms or GAS7-linked network signatures could help identify patients with prominent synaptic, cytoskeletal, mitochondrial, or tau-related vulnerability.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="lead">Overall Assessment — GAS7 in Alzheimer's Disease</div>
+      <p>GAS7 is a <strong>mechanistically compelling but unvalidated AD candidate</strong>. Its strongest relevance lies in <strong>tau-associated microtubule maintenance</strong>, <strong>dendritic spine and neurite remodeling</strong>, <strong>neuronal plasticity</strong>, <strong>mitochondrial quality control via PINK1/Parkin signaling</strong>, and <strong>possibly microglial membrane remodeling</strong>. The GAS7b isoform's capacity to bind phosphorylated tau, stabilize microtubule polymerization, and reduce fibril formation positions it as a plausible node for synaptic and cytoskeletal resilience in AD-vulnerable brain regions. However, <strong>no supplied study demonstrates GAS7 modulation improves cognition, reduces amyloid-β, prevents tau pathology in vivo, or slows AD progression</strong> in patients or validated animal models. Therapeutic development must proceed with caution given GAS7's context-dependent roles in apoptosis, immune activation, and cell migration, and the risk that excess GAS7b disrupts kinesin motility. <strong>Rigorous AD-specific, isoform-resolved, region-specific validation is the necessary next step</strong> before GAS7 can be considered a credible therapeutic target.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>GAS7 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical application</p>
+</footer>
+
+</body>
+</html>

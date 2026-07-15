@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMX3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fbf;
+    --light: #ede8fa;
+    --danger: #b91c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --slate: #64748b;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ffffff;
+    padding: 5px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(185,28,28,0.35);
+    border: 1px solid rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 26px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--slate);
+    line-height: 1.55;
+    margin-top: 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-slate { background: var(--slate-light); border-color: var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning { background: var(--warning-light); border-color: #f59e0b; }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.8rem;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0720 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  .verdict .verdict-label {
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict p strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 22px 24px;
+    margin-top: 56px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TMX3 &nbsp;|&nbsp; Thioredoxin-Related Transmembrane Protein 3</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Broad inhibition risk</span>
+  </div>
+  <h1>TMX3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ MAIN -->
+<main>
+
+  <!-- ─────────────────────────── OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caveat — Therapeutic Safety Signal:</span>
+      Broad TMX3 inhibition may be hazardous because TMX3 participates in essential ER proteostasis, oxidative protein folding, and mitochondrial redox pathways. The desirable direction of modulation remains unclear, and interaction-specific targeting is strongly preferred over global inhibition.
+    </div>
+
+    <p>TMX3 is connected to Alzheimer's disease primarily as a <strong>mechanistic cofactor in MT5-MMP/MMP-24–mediated APPη processing</strong>, not as an independently validated Alzheimer's disease gene or established drug target. The strongest Alzheimer's-specific evidence is that TMX3 binds the C-terminal intracellular region of MT5-MMP and significantly increases MT5-MMP η-secretase activity or sAPPη production.</p>
+
+    <p>In the proposed disease mechanism, TMX3 binds MT5-MMP, enhances MT5-MMP-dependent cleavage of amyloid precursor protein through the APPη pathway, increases sAPPη and downstream Aη fragments, and may thereby contribute to production of synaptotoxic <strong>Aη-α</strong> and <strong>Aη-β</strong>. This links TMX3 indirectly to Alzheimer's-relevant synaptic toxicity and noncanonical APP processing.</p>
+
+    <p>Beyond the MT5-MMP axis, TMX3 is an endoplasmic reticulum transmembrane thioredoxin-related protein/PDI family member involved in thiol-disulfide redox regulation, oxidative protein folding, ER proteostasis, ER stress biology, and ER–mitochondria communication. These processes broadly overlap with Alzheimer's disease mechanisms—including misfolded-protein stress, oxidative stress, and mitochondrial dysfunction—but the supplied evidence does not directly demonstrate TMX3 involvement in Alzheimer's brain pathology.</p>
+  </section>
+
+  <!-- ─────────────────────────── FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="TMX3 mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fbf"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b91c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: TMX3 Biology (left) ═══ -->
+        <rect x="10" y="10" width="230" height="480" rx="12" ry="12"
+              fill="rgba(109,63,191,0.06)" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="125" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="bold" fill="#3b1f6e" letter-spacing="1">PANEL A · TMX3 BIOLOGY</text>
+
+        <!-- TMX3 (ER) -->
+        <rect x="30" y="42" width="190" height="42" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.4"/>
+        <text x="125" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#3b1f6e">TMX3</text>
+        <text x="125" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3b1f6e">(ER Transmembrane PDI)</text>
+
+        <!-- ER Redox -->
+        <rect x="30" y="108" width="190" height="40" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="125" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">ER Redox &amp; Protein</text>
+        <text x="125" y="137" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Folding / Proteostasis</text>
+
+        <!-- ER–Mito -->
+        <rect x="30" y="172" width="190" height="40" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="125" y="188" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">ER–Mitochondria /</text>
+        <text x="125" y="201" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">MAM Signaling</text>
+
+        <!-- ER Stress -->
+        <rect x="30" y="236" width="190" height="40" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="125" y="252" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">ER Stress &amp; ROS</text>
+        <text x="125" y="265" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Regulation</text>
+
+        <!-- Huntington note -->
+        <rect x="30" y="300" width="190" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="125" y="316" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Huntington's Model:</text>
+        <text x="125" y="329" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">↓ mHTT / Neuronal Atrophy</text>
+
+        <!-- Arrows Panel A -->
+        <line x1="125" y1="84" x2="125" y2="108" stroke="#6d3fbf" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="125" y1="148" x2="125" y2="172" stroke="#6d3fbf" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="125" y1="212" x2="125" y2="236" stroke="#6d3fbf" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ═══ PANEL B: Interaction + APP Processing (middle) ═══ -->
+        <rect x="258" y="10" width="390" height="480" rx="12" ry="12"
+              fill="rgba(29,78,216,0.05)" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="453" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="bold" fill="#1d4ed8" letter-spacing="1">PANEL B · MT5-MMP / APPη PROCESSING</text>
+
+        <!-- MT5-MMP -->
+        <rect x="310" y="42" width="170" height="42" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="395" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#1e3a8a">MT5-MMP (MMP-24)</text>
+        <text x="395" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a8a">Brain η-Secretase</text>
+
+        <!-- TMX3 binds C-term -->
+        <rect x="280" y="118" width="230" height="40" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="395" y="134" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">TMX3 Binds MT5-MMP</text>
+        <text x="395" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">C-Terminal Region</text>
+
+        <!-- APP substrate -->
+        <rect x="310" y="192" width="170" height="40" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="395" y="208" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">APP (Amyloid</text>
+        <text x="395" y="221" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Precursor Protein)</text>
+
+        <!-- ↑ sAPPη -->
+        <rect x="278" y="260" width="110" height="40" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="333" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3b1f6e">↑ sAPPη</text>
+        <text x="333" y="289" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3b1f6e">Production</text>
+
+        <!-- APPη fragments -->
+        <rect x="402" y="260" width="110" height="40" rx="7" fill="#ede8fa" stroke="#6d3fbf" stroke-width="1.2"/>
+        <text x="457" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3b1f6e">APPη-CTF</text>
+        <text x="457" y="289" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3b1f6e">Fragments</text>
+
+        <!-- Aη-α -->
+        <rect x="278" y="332" width="105" height="40" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="330" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">Aη-α Fragment</text>
+        <text x="330" y="361" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">(Synaptotoxic)</text>
+
+        <!-- Aη-β -->
+        <rect x="397" y="332" width="105" height="40" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="449" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">Aη-β Fragment</text>
+        <text x="449" y="361" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">(Synaptotoxic)</text>
+
+        <!-- Compartments row -->
+        <rect x="278" y="403" width="235" height="40" rx="7" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="395" y="419" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Multi-Compartment Processing:</text>
+        <text x="395" y="432" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#475569">ER · Golgi · Endosome · PM · MAM</text>
+
+        <!-- Arrows Panel B -->
+        <line x1="395" y1="84" x2="395" y2="118" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-slate)"/>
+        <line x1="395" y1="158" x2="395" y2="192" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-slate)"/>
+        <!-- split to two branches -->
+        <line x1="395" y1="232" x2="333" y2="260" stroke="#6d3fbf" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="395" y1="232" x2="457" y2="260" stroke="#6d3fbf" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- branches down to Aη -->
+        <line x1="333" y1="300" x2="330" y2="332" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="457" y1="300" x2="449" y2="332" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- converge to compartments -->
+        <line x1="330" y1="372" x2="355" y2="403" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr-slate)"/>
+        <line x1="449" y1="372" x2="430" y2="403" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr-slate)"/>
+
+        <!-- ═══ PANEL C: Downstream / Evidence Gaps (right) ═══ -->
+        <rect x="666" y="10" width="224" height="480" rx="12" ry="12"
+              fill="rgba(185,28,28,0.04)" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="778" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="bold" fill="#b91c1c" letter-spacing="1">PANEL C · EVIDENCE GAPS</text>
+
+        <!-- Synaptic Toxicity -->
+        <rect x="682" y="42" width="192" height="42" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.4"/>
+        <text x="778" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#b91c1c">Synaptic Toxicity</text>
+        <text x="778" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">(Indirect Link Only)</text>
+
+        <!-- No Aβ/tau evidence -->
+        <rect x="682" y="112" width="192" height="42" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="778" y="128" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">No Evidence: Aβ / Tau</text>
+        <text x="778" y="142" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">or Cognitive Decline</text>
+
+        <!-- No GWAS -->
+        <rect x="682" y="182" width="192" height="42" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="778" y="198" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">No GWAS / Variant</text>
+        <text x="778" y="212" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">AD Association</text>
+
+        <!-- No brain expression data -->
+        <rect x="682" y="252" width="192" height="42" rx="7" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="778" y="268" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Expression Altered</text>
+        <text x="778" y="282" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">in AD Brain? Unknown</text>
+
+        <!-- Safety risk -->
+        <rect x="682" y="322" width="192" height="42" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="778" y="338" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">Safety Risk: Broad</text>
+        <text x="778" y="352" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#b91c1c">TMX3 Inhibition</text>
+
+        <!-- Therapeutic framing -->
+        <rect x="682" y="392" width="192" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="778" y="410" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="#0f766e">Therapeutic Frame:</text>
+        <text x="778" y="424" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Interaction-Specific</text>
+        <text x="778" y="437" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">MT5-MMP/TMX3 Target</text>
+
+        <!-- Cross-panel connector: APPη → Synaptic toxicity (Panel B → Panel C) -->
+        <!-- Route through gutter: from Aη-α (right edge ~383) and Aη-β (right edge ~502) up to Panel C entry -->
+        <!-- Use elbow from center of Panel B bottom-right area to Panel C -->
+        <path d="M 524 352 L 648 352 L 648 63 L 682 63"
+              stroke="#b91c1c" stroke-width="1.3" fill="none" marker-end="url(#arr-red)" stroke-dasharray="5,3"/>
+
+        <!-- TMX3 (Panel A) → Interaction (Panel B): horizontal connector through gutter -->
+        <line x1="220" y1="63" x2="310" y2="63" stroke="#6d3fbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (left, purple):</strong> TMX3's intrinsic biology — an ER transmembrane PDI family protein regulating redox/protein folding, ER–mitochondria (MAM) signaling, ER stress and ROS, with additional evidence from Huntington's disease models. <strong>Panel B (center, blue):</strong> The core APPη pathway — TMX3 binds the MT5-MMP C-terminal region, enhancing η-secretase cleavage of APP and thereby increasing sAPPη and APPη-CTF fragments; these branch into two parallel synaptotoxic outputs (Aη-α and Aη-β), with processing occurring across multiple subcellular compartments. <strong>Panel C (right, red/teal):</strong> Key evidence gaps — synaptic toxicity is indirect only; no AD GWAS, no confirmed Aβ/tau link, unknown brain expression change; broad inhibition carries safety risk; preferred therapeutic frame is interaction-specific MT5-MMP/TMX3 targeting. Dashed red arrow indicates indirect/inferred connection.
+    </p>
+  </section>
+
+  <!-- ─────────────────────────── KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Mechanistic Role</h3>
+        TMX3's clearest Alzheimer's-relevant role is as an <strong>MT5-MMP-interacting protein that enhances APPη processing</strong>. It was identified via yeast two-hybrid screening against a human brain cDNA library using the MT5-MMP C-terminal region as bait, and produced significant increases in sAPPη in cellular assays alongside N4BP2L1, EIG121, and BIN1.
+      </div>
+
+      <div class="card card-blue">
+        <h3>APPη Pathway &amp; Synaptotoxicity</h3>
+        MT5-MMP is a <strong>brain-enriched membrane metalloproteinase</strong> implicated in Alzheimer's disease through η-secretase cleavage of APP. This cleavage generates APPη-derived fragments including synaptotoxic <strong>Aη-α and Aη-β</strong>, linking TMX3 indirectly to Alzheimer's-relevant synaptic dysfunction via noncanonical APP processing.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Broader ER &amp; Mitochondrial Biology</h3>
+        As a PDI/thioredoxin family member, TMX3 participates in <strong>ER oxidoreductase function, ER stress responses, ROS regulation, and ER–mitochondria/MAM signaling</strong>. These broadly overlap with Alzheimer's disease mechanisms including misfolded-protein stress, oxidative stress, and mitochondrial dysfunction — though direct evidence in Alzheimer's brain is lacking.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Cross-Disease Evidence</h3>
+        In <strong>Huntington's disease models</strong>, TMX3 reduced soluble mutant huntingtin levels and neuronal atrophy — suggesting neurodegeneration-relevant activity. However, this has not been demonstrated in Alzheimer's disease models, and its relevance to Alzheimer's pathology remains speculative.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Critical Evidence Gaps</h3>
+        There is <strong>no supplied evidence</strong> that TMX3 variants cause Alzheimer's disease, that TMX3 expression is altered in Alzheimer's brain, that TMX3 correlates with cognitive decline, or that TMX3 modulation reduces Aη fragments, amyloid-beta, tau pathology, synaptic loss, or cognitive impairment in vivo.
+      </div>
+
+      <div class="card card-slate">
+        <h3>Compartment Complexity</h3>
+        MT5-MMP-mediated APP processing occurs across <strong>multiple subcellular compartments</strong> — endosome, Golgi, plasma membrane, and mitochondria-proximal contexts. TMX3's ER oxidoreductase biology supports the hypothesis that it modulates MT5-MMP localization, trafficking, maturation, or activity in a compartment-specific manner.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Validate the interaction in neuronal systems.</strong> Prioritize confirmation of the MT5-MMP–TMX3 interaction in Alzheimer's-relevant neuronal models rather than relying solely on CHO-cell or engineered localization systems.</li>
+      <li><strong>Test functional perturbation in human neurons.</strong> Determine whether TMX3 knockdown, overexpression, or interaction disruption changes MT5-MMP η-secretase activity, sAPPη, Aη-α, and Aη-β in iPSC-derived neurons and brain organoids.</li>
+      <li><strong>Establish Alzheimer's disease expression context.</strong> Determine whether TMX3 is altered in Alzheimer's brain tissue, specific cell types, CSF, or disease stages — a currently unresolved question.</li>
+      <li><strong>Correlate with disease biomarkers.</strong> Assess whether TMX3 levels correlate with APPη-pathway markers, synaptic toxicity, amyloid and tau pathology, mitochondrial stress, ER stress, or cognitive decline.</li>
+      <li><strong>Develop interaction-specific tools.</strong> Build selective disruptors of the MT5-MMP–TMX3 interaction, since targeted disruption is likely safer than global TMX3 inhibition given its essential ER and redox functions.</li>
+      <li><strong>Map subcellular compartments of action.</strong> Determine where TMX3 enhances MT5-MMP-mediated APP processing — particularly across ER, Golgi, endosomes, plasma membrane, and MAM compartments.</li>
+      <li><strong>Evaluate canonical pathway effects.</strong> Assess whether TMX3 modulation affects canonical amyloid-beta and tau pathways, not only APPη processing.</li>
+      <li><strong>Rigorously evaluate safety.</strong> TMX3's roles in ER protein folding, redox control, oxidative stress regulation, and mitochondrial communication could render broad inhibition toxic in neurons — safety profiling is essential.</li>
+      <li><strong>Frame as hypothesis-generating candidate.</strong> Treat TMX3 as a mechanistic modulator of pathological APP processing that is promising but not yet validated as an Alzheimer's disease drug target.</li>
+      <li><strong>Define critical path experiments.</strong> Before therapeutic prioritization, conduct Alzheimer's-specific in vivo studies, neuronal synaptotoxicity assays, selective MT5-MMP/TMX3 inhibitor or degrader development, and biomarker studies in human Alzheimer's samples.</li>
+    </ol>
+  </section>
+
+  <!-- ─────────────────────────── VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment —</span>
+      <p>TMX3 represents an <strong>intriguing but early-stage mechanistic hypothesis</strong> in Alzheimer's disease biology. Its most compelling evidence is functional: TMX3 binds the intracellular C-terminal region of MT5-MMP and <strong>significantly enhances MT5-MMP-mediated APPη cleavage</strong>, increasing sAPPη production and potentially contributing to the generation of synaptotoxic Aη-α and Aη-β fragments. This positions TMX3 as a <strong>modifier of noncanonical APP processing</strong> rather than a primary driver of amyloid or tau pathology. TMX3's broader biology as an <strong>ER transmembrane oxidoreductase</strong> — participating in protein folding, ER proteostasis, ER–mitochondria communication, and ROS homeostasis — adds mechanistic plausibility in the context of Alzheimer's disease's widespread proteostatic and bioenergetic failures, but these connections remain inferential. Critically, <strong>no direct genetic, transcriptomic, or in vivo Alzheimer's-specific evidence</strong> has been supplied to elevate TMX3 beyond a mechanistic candidate. Safety considerations around broad inhibition are real and must be addressed through interaction-specific targeting strategies. TMX3 merits continued investigation as a <strong>hypothesis-generating secondary target in the MT5-MMP/APPη axis</strong>, pending rigorous neuronal and in vivo validation.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  TMX3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

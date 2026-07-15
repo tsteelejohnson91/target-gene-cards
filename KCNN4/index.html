@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KCNN4 / KCa3.1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0e7490;
+    --positive-light: #ecfeff;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f1f5f9;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255, 180, 180, 0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    max-width: 820px;
+    margin: 0 auto 14px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { margin: 0; line-height: 1.6; }
+
+  .card-accent  { background: var(--light);          border-left: 4px solid var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);   border-left: 4px solid var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+
+  .card-positive{ background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light);  border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate   { background: var(--neutral-bg);     border-left: 4px solid #64748b;         }
+  .card-slate   h3 { color: #475569; }
+
+  .card-blue    { background: #eff6ff;               border-left: 4px solid #3b82f6;         }
+  .card-blue    h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    border-radius: 12px;
+    color: #e2eaf3;
+    padding: 36px 36px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p { margin: 0; font-size: 1rem; }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: KCNN4 &nbsp;|&nbsp; KCa3.1 / IK1 / SK4 / Gardos Channel</span>
+    <span class="chip chip-danger">⚠ Safety caveat: dual physiological roles</span>
+  </div>
+  <h1>KCNN4 &amp; KCa3.1 in Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Dual-Role Safety Note:</strong> KCa3.1 is not purely pathological. Broad systemic inhibition could impair endothelial hyperpolarization, cerebral perfusion, neuronal excitability control, erythrocyte hydration, immune surveillance, and reparative microglial migration. Cell-type-specific targeting strategies are strongly recommended.
+    </div>
+
+    <p>
+      <em>KCNN4</em> encodes <strong>KCa3.1</strong> (also called IK1, SK4, IKCa, or the Gardos channel), an intermediate-conductance Ca²⁺-activated K⁺ channel that links intracellular Ca²⁺ changes to K⁺ efflux, membrane-potential regulation, and sustained Ca²⁺-dependent signaling.
+    </p>
+    <p>
+      Direct AD-specific evidence demonstrates that KCa3.1 is upregulated in reactive astrocytes and neurons in SAMP8 AD-like mice and in human AD brains. The selective inhibitor TRAM-34 reduced astrogliosis, microglial activation, and memory deficits in SAMP8 mice; KCa3.1 knockout rescued memory impairment after intrahippocampal Aβ₁₋₄₂ injection; and KCa3.1 blockade or deletion suppressed Aβ oligomer-induced astrogliosis in cultured astrocytes.
+    </p>
+    <p>
+      A second AD-relevant study links KCa3.1 to LPS-induced cognitive and neuropathological abnormalities. In that model, astrocytic KCa3.1 activity promoted reactive astrogliosis, neuroinflammation, tau phosphorylation and accumulation, insulin-signaling deficits, neuronal loss, and memory impairment. KCa3.1 deficiency reduced these abnormalities, implicating <em>KCNN4</em> as a functional mediator of inflammation-driven AD-like pathology rather than only a glial activation marker.
+    </p>
+    <p>
+      The broader evidence corpus supports KCNN4 as an AD-relevant therapeutic target mainly through glial and immune mechanisms: microglial activation, reactive astrogliosis, purinergic ATP/UTP signaling, Ca²⁺ overload, Orai1/store-operated Ca²⁺ entry, NF-κB, PI3K/AKT/GSK3β, TGF-β/Smad, MAPK/JNK/ERK/p38 signaling, NLRP3 inflammasome activation, ROS production, cytokine release, and immune-cell migration — all processes with strong overlap with chronic neuroinflammation, tau phosphorylation, synaptic/neuronal injury, vascular dysfunction, and cognitive decline.
+    </p>
+  </section>
+
+  <!-- MECHANISM FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" width="880" height="476" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- ═══ PANEL A: UPSTREAM ACTIVATION ═══ -->
+          <rect x="10" y="10" width="240" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="130" y="32" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#1a3a5c" text-transform="uppercase">A · UPSTREAM TRIGGERS</text>
+
+          <!-- Node A1: Aβ / LPS / ATP -->
+          <rect x="50" y="46" width="160" height="38" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="130" y="62" text-anchor="middle" fill="white" font-weight="700">Aβ Oligomers /</text>
+          <text x="130" y="76" text-anchor="middle" fill="white" font-weight="700">LPS / ATP·UTP</text>
+
+          <!-- A1 → A2 -->
+          <line x1="130" y1="84" x2="130" y2="106" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A2: Ca2+ influx / CRAC-Orai1 -->
+          <rect x="50" y="106" width="160" height="38" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="130" y="121" text-anchor="middle" fill="#1e3a5f" font-weight="700">Ca²⁺ Influx /</text>
+          <text x="130" y="135" text-anchor="middle" fill="#1e3a5f" font-weight="700">CRAC · Orai1 SOCE</text>
+
+          <!-- A2 → A3 -->
+          <line x1="130" y1="144" x2="130" y2="166" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A3: KCa3.1 activation -->
+          <rect x="38" y="166" width="184" height="38" rx="7" fill="#1a3a5c" stroke="#0c1f33" stroke-width="1.5"/>
+          <text x="130" y="181" text-anchor="middle" fill="white" font-weight="700">KCa3.1 Activation</text>
+          <text x="130" y="195" text-anchor="middle" fill="#93c5fd" font-size="10">(K⁺ efflux → ΔVm)</text>
+
+          <!-- A3 → A4 -->
+          <line x1="130" y1="204" x2="130" y2="226" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+          <!-- Node A4: Sustained Ca2+ overload -->
+          <rect x="50" y="226" width="160" height="38" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="130" y="241" text-anchor="middle" fill="#1e3a5f" font-weight="700">Sustained Ca²⁺</text>
+          <text x="130" y="255" text-anchor="middle" fill="#1e3a5f" font-weight="700">Overload</text>
+
+          <!-- A4 → A5 -->
+          <line x1="130" y1="264" x2="130" y2="286" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A5: NF-kB + MAPK/JNK/ERK/p38 -->
+          <rect x="38" y="286" width="184" height="40" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1"/>
+          <text x="130" y="302" text-anchor="middle" fill="#1a3a5c" font-weight="700">NF-κB · MAPK /</text>
+          <text x="130" y="316" text-anchor="middle" fill="#1a3a5c" font-weight="700">JNK · ERK · p38</text>
+
+          <!-- A5 → A6 (ROS) -->
+          <line x1="130" y1="326" x2="130" y2="350" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A6: ROS / Cytokines / iNOS / COX2 -->
+          <rect x="38" y="350" width="184" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="130" y="366" text-anchor="middle" fill="#9b1c1c" font-weight="700">ROS · Cytokines</text>
+          <text x="130" y="380" text-anchor="middle" fill="#9b1c1c" font-weight="700">iNOS · COX2</text>
+
+
+          <!-- ═══ PANEL B: GLIAL BRANCH ═══ -->
+          <rect x="268" y="10" width="320" height="480" rx="12" fill="#fff7ed" fill-opacity="0.5" stroke="#b45309" stroke-width="1.2"/>
+          <text x="428" y="32" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#92400e">B · GLIAL ACTIVATION BRANCHES</text>
+
+          <!-- Node B0: Reactive Glia Hub -->
+          <rect x="318" y="46" width="220" height="38" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+          <text x="428" y="61" text-anchor="middle" fill="white" font-weight="700">Reactive Astrocytes &amp;</text>
+          <text x="428" y="75" text-anchor="middle" fill="white" font-weight="700">Microglia (KCa3.1 ↑)</text>
+
+          <!-- B0 branches to B-left (astrocyte branch) and B-right (microglial branch) -->
+          <!-- left fork -->
+          <line x1="386" y1="84" x2="356" y2="110" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+          <!-- right fork -->
+          <line x1="470" y1="84" x2="498" y2="110" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+          <!-- ── Astrocyte sub-branch (left) ── -->
+          <!-- Node B1: Astrogliosis -->
+          <rect x="286" y="110" width="140" height="36" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="356" y="124" text-anchor="middle" fill="#92400e" font-weight="700">Reactive</text>
+          <text x="356" y="138" text-anchor="middle" fill="#92400e" font-weight="700">Astrogliosis</text>
+
+          <!-- B1 → B2 -->
+          <line x1="356" y1="146" x2="356" y2="168" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+          <!-- Node B2: PI3K/AKT/GSK3β -->
+          <rect x="286" y="168" width="140" height="36" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="356" y="182" text-anchor="middle" fill="#92400e" font-weight="700">PI3K/AKT/</text>
+          <text x="356" y="196" text-anchor="middle" fill="#92400e" font-weight="700">GSK3β ↑</text>
+
+          <!-- B2 → B3 -->
+          <line x1="356" y1="204" x2="356" y2="226" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+          <!-- Node B3: Tau phosphorylation -->
+          <rect x="286" y="226" width="140" height="36" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="356" y="241" text-anchor="middle" fill="#9b1c1c" font-weight="700">Tau Phospho-</text>
+          <text x="356" y="255" text-anchor="middle" fill="#9b1c1c" font-weight="700">rylation ↑</text>
+
+          <!-- B3 → converge node B5 -->
+          <line x1="356" y1="262" x2="356" y2="352" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+          <!-- ── Microglial sub-branch (right) ── -->
+          <!-- Node B4: Microglial activation -->
+          <rect x="436" y="110" width="140" height="36" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="506" y="124" text-anchor="middle" fill="#92400e" font-weight="700">Microglial</text>
+          <text x="506" y="138" text-anchor="middle" fill="#92400e" font-weight="700">Activation</text>
+
+          <!-- B4 → NLRP3 -->
+          <line x1="506" y1="146" x2="506" y2="168" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+          <!-- Node B4b: NLRP3 / IL-1β -->
+          <rect x="436" y="168" width="140" height="36" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="506" y="182" text-anchor="middle" fill="#9b1c1c" font-weight="700">NLRP3 / Caspase-1</text>
+          <text x="506" y="196" text-anchor="middle" fill="#9b1c1c" font-weight="700">IL-1β · IL-18 ↑</text>
+
+          <!-- B4b → migration -->
+          <line x1="506" y1="204" x2="506" y2="226" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+          <!-- Node B4c: Migration / plaque response -->
+          <rect x="436" y="226" width="140" height="36" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="506" y="241" text-anchor="middle" fill="#92400e" font-weight="700">Migration ↓ /</text>
+          <text x="506" y="255" text-anchor="middle" fill="#92400e" font-weight="700">Plaque Response</text>
+
+          <!-- B4c → converge node -->
+          <line x1="506" y1="262" x2="506" y2="352" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+          <!-- Node B5: Converge — Neuroinflammation + Insulin deficit -->
+          <rect x="298" y="352" width="260" height="40" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.5"/>
+          <text x="428" y="368" text-anchor="middle" fill="white" font-weight="700">Neuroinflammation ·</text>
+          <text x="428" y="382" text-anchor="middle" fill="white" font-weight="700">Insulin-Signaling Deficit</text>
+
+
+          <!-- ═══ PANEL C: DOWNSTREAM OUTCOMES ═══ -->
+          <rect x="606" y="10" width="304" height="480" rx="12" fill="#ecfeff" fill-opacity="0.45" stroke="#0e7490" stroke-width="1.2"/>
+          <text x="758" y="32" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.5" fill="#164e63">C · OUTCOMES &amp; TRANSLATIONAL</text>
+
+          <!-- Node C1a: Synaptic/Neuronal loss -->
+          <rect x="634" y="46" width="124" height="38" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="696" y="60" text-anchor="middle" fill="#9b1c1c" font-weight="700">Synapse Loss /</text>
+          <text x="696" y="74" text-anchor="middle" fill="#9b1c1c" font-weight="700">Neuronal Death</text>
+
+          <!-- Node C1b: Memory/cognitive decline -->
+          <rect x="772" y="46" width="124" height="38" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="834" y="60" text-anchor="middle" fill="#9b1c1c" font-weight="700">Memory /</text>
+          <text x="834" y="74" text-anchor="middle" fill="#9b1c1c" font-weight="700">Cognitive Decline</text>
+
+          <!-- Node C2: TGF-β / Smad -->
+          <rect x="634" y="130" width="124" height="36" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1"/>
+          <text x="696" y="144" text-anchor="middle" fill="#1a3a5c" font-weight="700">TGF-β / Smad</text>
+          <text x="696" y="158" text-anchor="middle" fill="#1a3a5c" font-weight="700">Signaling</text>
+
+          <!-- Node C3: Vascular / Endothelial -->
+          <rect x="772" y="130" width="124" height="36" rx="7" fill="#ecfeff" stroke="#0e7490" stroke-width="1"/>
+          <text x="834" y="144" text-anchor="middle" fill="#164e63" font-weight="700">Endothelial</text>
+          <text x="834" y="158" text-anchor="middle" fill="#164e63" font-weight="700">Vasodilation*</text>
+
+          <!-- Node C4: TRAM-34 -->
+          <rect x="634" y="222" width="124" height="36" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1"/>
+          <text x="696" y="237" text-anchor="middle" fill="#1a3a5c" font-weight="700">TRAM-34</text>
+          <text x="696" y="251" text-anchor="middle" fill="#1a3a5c" font-weight="700">Inhibition</text>
+
+          <!-- Node C5: Senicapoc -->
+          <rect x="772" y="222" width="124" height="36" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1"/>
+          <text x="834" y="237" text-anchor="middle" fill="#1a3a5c" font-weight="700">Senicapoc</text>
+          <text x="834" y="251" text-anchor="middle" fill="#1a3a5c" font-weight="700">(clinical KCa3.1 blocker)</text>
+
+          <!-- C4 + C5 → converge therapeutic outcome -->
+          <line x1="696" y1="258" x2="696" y2="310" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+          <line x1="834" y1="258" x2="834" y2="310" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node C6: Reduced gliosis + memory rescue -->
+          <rect x="634" y="310" width="262" height="40" rx="7" fill="#0e7490" stroke="#164e63" stroke-width="1.5"/>
+          <text x="765" y="326" text-anchor="middle" fill="white" font-weight="700">Reduced Gliosis ·</text>
+          <text x="765" y="340" text-anchor="middle" fill="white" font-weight="700">Memory Rescue (SAMP8 / Aβ models)</text>
+
+          <!-- Node C7: Preclinical → Clinical translation -->
+          <rect x="660" y="406" width="210" height="40" rx="7" fill="#ecfeff" stroke="#0e7490" stroke-width="1.5"/>
+          <text x="765" y="421" text-anchor="middle" fill="#164e63" font-weight="700">Preclinical → Clinical</text>
+          <text x="765" y="435" text-anchor="middle" fill="#164e63" font-weight="700">Translation Needed</text>
+
+          <!-- C6 → C7 -->
+          <line x1="765" y1="350" x2="765" y2="406" stroke="#0e7490" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- ═══ CROSS-PANEL CONNECTORS ═══ -->
+          <!-- Panel A (A6) → Panel B converge (B5): route along bottom gutter -->
+          <!-- A6 bottom-right → B5 left: elbow through gutter y=440 -->
+          <polyline points="222,390 254,390 254,430 298,430 298,392" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+          <!-- Panel B converge (B5) → Panel C outcome (C1a/C1b): route along bottom gutter y=440 -->
+          <polyline points="558,392 596,392 596,65 634,65" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+          <polyline points="558,392 596,392 596,65 772,65" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-danger)"/>
+
+          <!-- Panel A KCa3.1 node (A3) → Panel B reactive glia (B0): horizontal connector through gutter y=185 -->
+          <line x1="222" y1="185" x2="318" y2="65" stroke="#1a3a5c" stroke-width="0" />
+          <!-- safe routing: A3 right edge → B0 left edge at same approx y, gutter x=250 -->
+          <polyline points="222,185 254,185 254,65 318,65" fill="none" stroke="#1a3a5c" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+
+          <!-- Panel B node B2 → Panel C TGF-β (C2): horizontal connector at y=186 through gutter x=596 -->
+          <polyline points="426,186 580,186 580,148 634,148" fill="none" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-warn)"/>
+
+          <!-- ═══ ARROW MARKERS ═══ -->
+          <defs>
+            <marker id="arr-blue"   markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-dark"   markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1a3a5c"/>
+            </marker>
+            <marker id="arr-warn"   markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#b45309"/>
+            </marker>
+            <marker id="arr-danger" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal"   markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#0e7490"/>
+            </marker>
+          </defs>
+
+          <!-- Footnote asterisk -->
+          <text x="620" y="492" fill="#0e7490" font-size="9" font-style="italic">* Endothelial vasodilation = protective function; caution with systemic KCa3.1 blockade</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue — Upstream Triggers):</strong> Aβ oligomers, LPS, and purinergic signals drive Ca²⁺ influx via Orai1/SOCE, activating KCa3.1 and sustaining Ca²⁺ overload, which feeds NF-κB/MAPK signaling and ROS/cytokine production.
+        <strong>Panel B (amber — Glial Branches):</strong> KCa3.1 upregulation in reactive glia fans into two parallel sub-cascades — an astrocyte branch (astrogliosis → PI3K/AKT/GSK3β → tau phosphorylation) and a microglial branch (NLRP3/IL-1β activation → altered migration) — both converging on neuroinflammation and insulin-signaling deficits.
+        <strong>Panel C (teal — Outcomes &amp; Translational):</strong> Downstream consequences include synapse loss, neuronal death, and cognitive decline; inhibitors TRAM-34 and senicapoc converge on reduced gliosis and memory rescue in preclinical models, pointing toward clinical translation. Asterisk denotes protective endothelial function warranting caution for systemic inhibition.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Direct AD Evidence</h3>
+        <p>KCa3.1 expression is elevated in reactive astrocytes and neurons in SAMP8 AD-like mice and in human AD brains. KCa3.1 inhibition (TRAM-34) or genetic knockout reduced glial activation and rescued memory impairment in both SAMP8 and intrahippocampal Aβ₁₋₄₂ models.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Inflammation-Driven AD-Like Pathology</h3>
+        <p>In LPS-induced neuroinflammation, astrocytic KCa3.1 activity promoted reactive astrogliosis, tau phosphorylation and accumulation, insulin-signaling deficits, neuronal loss, and memory impairment. KCa3.1 deficiency substantially reduced all these abnormalities, implicating it as a functional driver — not merely a marker — of inflammation-linked AD pathology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>KCa3.1–Orai1–Ca²⁺ Overload Axis</h3>
+        <p>KCa3.1 interacts with and functionally supports Orai1-mediated store-operated Ca²⁺ entry in reactive astrocytes. This KCa3.1–Orai1 coupling provides a concrete mechanistic link between KCNN4 activity, sustained Ca²⁺ dysregulation, reactive gliosis, and downstream AD-like pathology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>NLRP3 Inflammasome Connection</h3>
+        <p>KCNN4-mediated K⁺ efflux can promote NLRP3 inflammasome activation, caspase-1 cleavage, ASC-speck formation, and IL-1β/IL-18 release — highly relevant because NLRP3/IL-1β signaling is centrally implicated in amyloid- and tau-associated neuroinflammation in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Tau-Relevant Signaling via GSK3β</h3>
+        <p>KCa3.1 influenced PI3K/AKT/GSK3β signaling in inflammation-driven models. Because GSK3β is a major tau kinase, this provides a plausible mechanistic route through which KCNN4 activity under inflammatory stress could promote pathological tau phosphorylation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Tractability: TRAM-34 &amp; Senicapoc</h3>
+        <p>TRAM-34 is a selective KCa3.1 blocker validated repeatedly in experimental AD-relevant models. Senicapoc is a potent KCa3.1 inhibitor with prior human clinical testing and CNS-relevant anti-inflammatory activity in non-AD models, making it especially translationally relevant.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Dual Physiological Roles — Safety Caveat</h3>
+        <p>KCa3.1 supports endothelial vasodilation, vascular repair, neuronal afterhyperpolarization, erythrocyte hydration, immune surveillance, and reparative microglial migration. Broad systemic inhibition could impair these protective functions, strongly motivating cell-type-specific or stage-specific targeting strategies.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Microglial Activation &amp; Migration</h3>
+        <p>Human and rodent microglia express functional KCa3.1 contributing to Ca²⁺ signaling, ROS, NO/IL-1β, iNOS, COX2, and cytokine responses central to AD neuroinflammation. KCa3.1 blockade also reduces microglial migration, suggesting modulation of plaque-associated microglial recruitment.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><strong>Prioritize as a glial-neuroinflammatory target.</strong> The best-supported rationale for KCNN4/KCa3.1 in AD is reduction of reactive astrogliosis, microglial activation, inflammatory Ca²⁺ signaling, cytokine release, and downstream neuronal injury — not direct amyloid production.</div>
+      </li>
+      <li>
+        <div><strong>Develop selective KCa3.1 inhibitors with CNS validation.</strong> Focus on TRAM-34-like or senicapoc-like compounds while confirming brain penetration, target engagement, and cell-type specificity in AD-relevant systems.</div>
+      </li>
+      <li>
+        <div><strong>Validate KCa3.1 expression and activity in human AD tissue.</strong> Measure KCa3.1 in plaque-associated astrocytes, disease-associated microglia, neurons, endothelial cells, and infiltrating immune cells from human AD brain.</div>
+      </li>
+      <li>
+        <div><strong>Test a comprehensive AD endpoint panel.</strong> Include Aβ-induced astrogliosis, microglial activation, NLRP3 activation, IL-1β/IL-18 release, TNF-α/IL-6/iNOS/COX2, tau phosphorylation, insulin-signaling deficits, synapse loss, neuronal death, and memory impairment.</div>
+      </li>
+      <li>
+        <div><strong>Dissect the KCa3.1–Orai1–Ca²⁺ axis.</strong> Mechanistically characterize this pathway in astrocytes and microglia to establish a concrete molecular link between KCNN4 activity, Ca²⁺ dysregulation, reactive gliosis, and AD-like pathology.</div>
+      </li>
+      <li>
+        <div><strong>Use PI3K/AKT/GSK3β and NF-κB as pharmacodynamic readouts.</strong> Improved AKT signaling, reduced GSK3β-driven tau phosphorylation, and reduced NF-κB inflammatory transcription would confirm disease-mechanism engagement after KCa3.1 inhibition.</div>
+      </li>
+      <li>
+        <div><strong>Include NLRP3 inflammasome assays in AD models.</strong> KCNN4-mediated K⁺ efflux is repeatedly linked to inflammasome activation; NLRP3, caspase-1, ASC specks, IL-1β, and IL-18 should be primary endpoints.</div>
+      </li>
+      <li>
+        <div><strong>Avoid assuming universal benefit from KCNN4 blockade.</strong> Study neuron, astrocyte, microglia, endothelial, erythrocyte, and peripheral immune-cell effects separately, as KCa3.1 can be harmful in inflammatory glia but beneficial in endothelial vasodilation and neuronal excitability control.</div>
+      </li>
+      <li>
+        <div><strong>Pursue cell-targeted or stage-specific modulation.</strong> The most attractive strategy is suppressing pathological glial KCa3.1 during inflammatory activation while preserving vascular and neuronal protective functions.</div>
+      </li>
+      <li>
+        <div><strong>Treat KCNN4 as promising but still preclinical.</strong> Clinical translation requires confirmation in amyloid/tau models, human AD tissue, CNS pharmacology studies, and cognition-focused efficacy experiments before advancing to clinical development.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — KCNN4 / KCa3.1 in Alzheimer's Disease</div>
+      <p>
+        <strong>KCNN4/KCa3.1 represents a compelling, mechanistically grounded, and therapeutically tractable neuroinflammatory target for Alzheimer's disease.</strong> Preclinical evidence directly demonstrates KCa3.1 upregulation in human AD brains and AD-model glia, with genetic deletion and pharmacological inhibition rescuing memory and reducing astrogliosis, microglial activation, tau phosphorylation, and neuronal loss in multiple AD-relevant systems. <strong>The convergent mechanisms — Ca²⁺ overload via Orai1/SOCE, NF-κB/MAPK inflammatory signaling, NLRP3 inflammasome activation, and GSK3β-driven tau phosphorylation</strong> — all overlap robustly with established AD pathobiology. The availability of <strong>TRAM-34 and the clinically tested inhibitor senicapoc</strong> provides a credible translational pathway. However, the dual protective roles of KCa3.1 in endothelial function, neuronal excitability, and immune surveillance demand that therapeutic development prioritize <strong>cell-type specificity and disease-stage selectivity</strong> rather than broad systemic channel blockade. Confirmation in amyloid/tau transgenic models, human AD tissue functional studies, and rigorous CNS pharmacology remain essential prerequisites for clinical advancement.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  KCNN4 / KCa3.1 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

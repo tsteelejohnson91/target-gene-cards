@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APOC1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.05rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.97rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* BODY TEXT */
+  .body-text p {
+    margin-bottom: 16px;
+    font-size: 1.01rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin: 0 0 10px 0;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.95rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.83rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    font-size: 0.98rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways ol li .lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+  }
+
+  .verdict h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5e8;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 7px;
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: #dbeafe;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: APOC1 &nbsp;|&nbsp; Apolipoprotein C-I</span>
+    <span class="chip chip-danger">⚠ Safety concern: broad systemic roles</span>
+  </div>
+  <h1>APOC1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety &amp; Caution Flag</strong>
+      APOC1 has broad systemic roles in triglyceride metabolism, CETP inhibition, lipoprotein lipase regulation, HDL function, cardiovascular risk, macrophage biology, host defense, and inflammatory responses. Both excess and deficiency states appear harmful in experimental models. Safety must be carefully assessed before any direct therapeutic intervention is pursued.
+    </div>
+
+    <div class="body-text">
+      <p>APOC1 is repeatedly implicated in Alzheimer's disease (AD) primarily as part of the chromosome 19 <em>APOE–TOMM40–APOC1</em> locus, a dense linkage-disequilibrium region dominated by APOE biology. The evidence supports APOC1 as an AD-relevant modifier, biomarker candidate, and lipid–immune regulatory node, but not yet as a validated standalone therapeutic target.</p>
+      <p>The most consistent AD-related findings connect APOC1 or APOC1-region variation to late-onset AD risk, APOE ε4 risk heterogeneity, age at onset, amyloid and tau biomarkers, hippocampal/entorhinal atrophy, cortical thinning, MCI-to-AD conversion, cognitive decline, and shared genetic architecture with related neurodegenerative phenotypes. Substantial regulatory complexity is documented through promoter variants, methylation, chromatin interactions, enhancer activity, tandem repeats, eQTL signals, and genotype-dependent expression.</p>
+      <p>Mechanistically, APOC1 is most strongly tied to lipid and lipoprotein biology, including HDL/VLDL remodeling, triglyceride-rich lipoprotein clearance, lipoprotein lipase inhibition, CETP inhibition, cholesterol efflux, and APOE-linked lipid handling. APOC1 also appears in immune and inflammatory contexts, especially macrophage and microglia-like states, where apoC-I can suppress inflammatory cytokine release stimulated by Aβ or innate immune triggers.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Genetic / Regulatory Context -->
+        <rect x="10" y="10" width="260" height="468" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="30" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">A · GENETIC / REGULATORY</text>
+
+        <!-- chr19 locus node -->
+        <rect x="55" y="42" width="170" height="38" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="140" y="57" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Chr19 APOE–TOMM40</text>
+        <text x="140" y="72" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#dbeafe">–APOC1 LD Region</text>
+
+        <!-- arrow down -->
+        <line x1="140" y1="80" x2="140" y2="104" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Regulatory node -->
+        <rect x="55" y="105" width="170" height="38" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1"/>
+        <text x="140" y="120" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#93c5e8">Regulatory Architecture</text>
+        <text x="140" y="135" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">Promoter·eQTL·Methylation</text>
+
+        <!-- two branches from regulatory node -->
+        <!-- left branch line -->
+        <line x1="98" y1="143" x2="75" y2="170" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- right branch line -->
+        <line x1="182" y1="143" x2="205" y2="170" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Left branch: APOE ε4 Modifier -->
+        <rect x="22" y="171" width="120" height="42" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="82" y="187" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1a3a5c">APOE ε4</text>
+        <text x="82" y="200" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Risk Modifier</text>
+        <text x="82" y="212" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">rs12721046·H2</text>
+
+        <!-- Right branch: Enhancer/Chromatin -->
+        <rect x="158" y="171" width="120" height="42" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="218" y="187" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1a3a5c">Enhancer /</text>
+        <text x="218" y="200" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Chromatin Loop</text>
+        <text x="218" y="212" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">SPI1·APOE coupling</text>
+
+        <!-- converge down to AD Endophenotypes -->
+        <line x1="82" y1="213" x2="82" y2="248" stroke="#2e6da4" stroke-width="1.4"/>
+        <line x1="82" y1="248" x2="140" y2="248" stroke="#2e6da4" stroke-width="1.4"/>
+        <line x1="218" y1="213" x2="218" y2="248" stroke="#2e6da4" stroke-width="1.4"/>
+        <line x1="218" y1="248" x2="140" y2="248" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- AD Endophenotypes node -->
+        <rect x="48" y="249" width="184" height="42" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1"/>
+        <text x="140" y="265" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#93c5e8">AD Endophenotypes</text>
+        <text x="140" y="279" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#bfdbfe">Hippo·Entorh atrophy·PET</text>
+
+        <!-- arrow to MCI Conversion -->
+        <line x1="140" y1="291" x2="140" y2="316" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- MCI to AD Conversion -->
+        <rect x="55" y="317" width="170" height="38" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="140" y="333" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1a3a5c">MCI → AD Conversion</text>
+        <text x="140" y="348" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">Cognitive decline · Age at onset</text>
+
+        <!-- arrow to Biomarker -->
+        <line x1="140" y1="355" x2="140" y2="380" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Biomarker node -->
+        <rect x="48" y="381" width="184" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="140" y="397" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#fff">Biomarker Candidate</text>
+        <text x="140" y="411" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#a7f3d0">CSF Aβ42·tau·proteomic panels</text>
+
+        <!-- PANEL B: Lipid Biology -->
+        <rect x="285" y="10" width="265" height="468" rx="12" fill="#fffbeb" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="417" y="30" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e" letter-spacing="1.2">B · LIPID BIOLOGY</text>
+
+        <!-- ApoC-I Protein node -->
+        <rect x="322" y="42" width="190" height="38" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="417" y="57" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">ApoC-I Protein</text>
+        <text x="417" y="72" text-anchor="middle" font-family="Arial" font-size="9" fill="#fef3c7">Hepatic &amp; peripheral expression</text>
+
+        <!-- two lipid branches -->
+        <line x1="370" y1="80" x2="345" y2="110" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <line x1="464" y1="80" x2="489" y2="110" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Left: LPL / CETP Inhibition -->
+        <rect x="295" y="111" width="128" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1"/>
+        <text x="359" y="127" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e">LPL &amp; CETP</text>
+        <text x="359" y="140" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Inhibition</text>
+        <text x="359" y="152" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">↑TG · ↑VLDL</text>
+
+        <!-- Right: HDL / Cholesterol -->
+        <rect x="435" y="111" width="128" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1"/>
+        <text x="499" y="127" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e">HDL Remodeling</text>
+        <text x="499" y="140" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Cholesterol efflux</text>
+        <text x="499" y="152" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">ABCA1·phospholipid</text>
+
+        <!-- converge to APOE-lipid transport -->
+        <line x1="359" y1="153" x2="359" y2="185" stroke="#b45309" stroke-width="1.4"/>
+        <line x1="359" y1="185" x2="417" y2="185" stroke="#b45309" stroke-width="1.4"/>
+        <line x1="499" y1="153" x2="499" y2="185" stroke="#b45309" stroke-width="1.4"/>
+        <line x1="499" y1="185" x2="417" y2="185" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <rect x="322" y="186" width="190" height="38" rx="7" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+        <text x="417" y="202" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#fef3c7">APOE-Lipid Transport</text>
+        <text x="417" y="216" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#fde68a">Lipoprotein receptor interactions</text>
+
+        <!-- arrow down -->
+        <line x1="417" y1="224" x2="417" y2="250" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Amyloid node -->
+        <rect x="322" y="251" width="190" height="42" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="417" y="267" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#9b1c1c">Amyloid Biology</text>
+        <text x="417" y="280" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">Aβ aggregation·plaque coloc.</text>
+        <text x="417" y="292" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">Soluble oligomer toxicity ↑</text>
+
+        <!-- arrow down -->
+        <line x1="417" y1="293" x2="417" y2="318" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Vascular-metabolic node -->
+        <rect x="322" y="319" width="190" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1"/>
+        <text x="417" y="335" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e">Vascular–Metabolic</text>
+        <text x="417" y="348" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">TG·LDL·CAD·T2DM·IMT</text>
+        <text x="417" y="360" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">Indirect dementia risk</text>
+
+        <!-- arrow down -->
+        <line x1="417" y1="361" x2="417" y2="386" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Synaptic/Neuronal Integrity -->
+        <rect x="322" y="387" width="190" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="417" y="403" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#fff">Synaptic Integrity</text>
+        <text x="417" y="417" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#a7f3d0">Membrane maintenance·repair</text>
+
+        <!-- PANEL C: Neuroimmune -->
+        <rect x="565" y="10" width="325" height="468" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="727" y="30" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#7f1d1d" letter-spacing="1.2">C · NEUROIMMUNE / CELL</text>
+
+        <!-- Microglia / Macrophage node -->
+        <rect x="612" y="42" width="230" height="38" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="727" y="57" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Microglia &amp; Macrophage</text>
+        <text x="727" y="72" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">APOE/TREM2/SPP1 lipid states</text>
+
+        <!-- two branches -->
+        <line x1="680" y1="80" x2="655" y2="110" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="774" y1="80" x2="799" y2="110" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Left: Anti-inflammatory -->
+        <rect x="575" y="111" width="152" height="42" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="651" y="127" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#0f766e">Anti-inflammatory</text>
+        <text x="651" y="140" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">Cytokine suppression</text>
+        <text x="651" y="152" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">Aβ·LPS·poly(I:C) stimuli</text>
+
+        <!-- Right: Pro-inflammatory signaling -->
+        <rect x="737" y="111" width="142" height="42" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="808" y="127" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#9b1c1c">Inflammatory</text>
+        <text x="808" y="140" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">NF-κB·MAPK</text>
+        <text x="808" y="152" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">STAT3/JAK2 signaling</text>
+
+        <!-- converge to Glial activation -->
+        <line x1="651" y1="153" x2="651" y2="185" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="651" y1="185" x2="727" y2="185" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="808" y1="153" x2="808" y2="185" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="808" y1="185" x2="727" y2="185" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <rect x="612" y="186" width="230" height="38" rx="7" fill="#7f1d1d" stroke="#6b1717" stroke-width="1"/>
+        <text x="727" y="202" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#fecaca">Glial Activation State</text>
+        <text x="727" y="216" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#fee2e2">Complement·oxidative stress</text>
+
+        <!-- arrow down -->
+        <line x1="727" y1="224" x2="727" y2="250" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Ferroptosis / Pyroptosis -->
+        <rect x="612" y="251" width="230" height="38" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="727" y="267" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#9b1c1c">Ferroptosis · Pyroptosis</text>
+        <text x="727" y="281" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">Mitochondrial stress · ROS</text>
+
+        <!-- arrow down -->
+        <line x1="727" y1="289" x2="727" y2="314" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Context-dependent APOC1 -->
+        <rect x="612" y="315" width="230" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="727" y="331" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e">Dose/Context Dependence</text>
+        <text x="727" y="344" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#334155">Overexpression → memory ↓</text>
+        <text x="727" y="357" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b">Knockout → memory ↓ + inflam. ↑</text>
+
+        <!-- arrow down -->
+        <line x1="727" y1="357" x2="727" y2="382" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Therapeutic framing -->
+        <rect x="612" y="383" width="230" height="42" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="727" y="399" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#fff">Normalization Strategy</text>
+        <text x="727" y="412" text-anchor="middle" font-family="Arial" font-size="8.8" fill="#a7f3d0">ABCA1·LXR·RXR·PPAR</text>
+        <text x="727" y="424" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#ccfbf1">Not broad inhibition/activation</text>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure.</strong>
+      <strong>Panel A (blue, left):</strong> The chr19 APOE–TOMM40–APOC1 LD region drives regulatory complexity (promoter, eQTL, methylation, chromatin looping). Two branches capture APOE ε4 risk modification and enhancer/chromatin coupling, which reconverge on AD endophenotypes (hippocampal/entorhinal atrophy, amyloid PET), MCI-to-AD conversion, and APOC1's role as a biomarker candidate.
+      <strong>Panel B (amber, centre):</strong> ApoC-I protein branches into LPL/CETP inhibition (↑TG, ↑VLDL) and HDL remodeling/cholesterol efflux pathways that reconverge on APOE-linked lipoprotein transport, feeding downstream into amyloid biology, vascular–metabolic risk, and synaptic membrane integrity.
+      <strong>Panel C (red, right):</strong> Microglia and macrophages in APOE/TREM2/SPP1 lipid states branch into anti-inflammatory cytokine suppression (protective in Aβ/LPS contexts) and pro-inflammatory NF-κB/MAPK/STAT3 signaling, reconverging on glial activation, ferroptosis/pyroptosis, and a context-dependent dose response — motivating a normalization rather than broad inhibition strategy.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Entanglement with APOE Locus</h3>
+        <p>Many APOC1 associations likely reflect LD with APOE ε4, TOMM40, PVRL2/NECTIN2, and APOC2/APOC4 rather than APOC1-specific causality. Fine-mapping with full haplotype adjustment is prerequisite to any causal claim.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Possible Independent APOE ε4 Risk Modification</h3>
+        <p>Variants rs12721046, rs4420638, rs11568822/HpaI/H2, and promoter insertion alleles appear in compound genotype and risk-stratification models that sometimes improve prediction beyond APOE ε4 alone or modify tau/cognitive outcomes.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Lipid Biology Central to AD Relevance</h3>
+        <p>ApoC-I regulates HDL/VLDL behavior, triglyceride clearance, LPL and CETP activity, cholesterol/phospholipid transfer, ABCA1-related efflux, and lipoprotein receptor interactions — all overlapping with APOE-driven AD pathways and vascular/metabolic contributors to dementia.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuroimmune Anti-Inflammatory Role</h3>
+        <p>ApoC-I can suppress pro-inflammatory cytokine secretion from microglia, astrocytes, and macrophages stimulated by Aβ, LPS, or poly(I:C). APOE ε4 carriers may have lower apoC-I levels, potentially removing an anti-inflammatory brake in the brain.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Dose- and Context-Dependent Harm</h3>
+        <p>Human APOC1 overexpression impairs learning and memory in mice, while Apoc1 knockout also impairs hippocampal-dependent memory and elevates inflammatory/oxidative stress markers. This bidirectional harm profile argues strongly against broad inhibition or broad activation strategies.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Biomarker Potential Over Therapeutic Target</h3>
+        <p>APOC1 appears in blood proteomic panels for MCI/cognitive frailty, CSF Aβ42 prediction, APOE genotype protein signatures, and AD progression models. Its most defensible near-term role is as a precision-medicine stratification variable within APOE-region lipid–immune frameworks, not a direct therapeutic target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div>
+          <span class="lead">Treat APOC1 as a modifier, not a standalone target.</span>
+          Frame it within the APOE-locus lipid–immune network and avoid positioning it as a primary validated AD drug target until APOE-independent causal effects are demonstrated in brain-relevant systems.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Prioritize haplotype-resolved fine-mapping.</span>
+          Studies must adjust for APOE ε2/ε3/ε4, TOMM40, PVRL2/NECTIN2, APOC2/APOC4, ancestry, sex, and age before attributing associations to APOC1 specifically.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Test APOC1 expression as an independent predictor of AD pathology.</span>
+          After APOE adjustment, assess whether APOC1 protein or transcript abundance independently predicts amyloid PET, tau PET, CSF Aβ42, phosphorylated tau, neurofilament light, hippocampal/entorhinal atrophy, and MCI-to-AD conversion rate.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Validate in human brain-relevant cell systems.</span>
+          Use iPSC-derived microglia, astrocytes, neurons, and endothelial cells in APOE-genotype-specific co-culture models to establish whether APOC1 directly alters Aβ aggregation, soluble oligomer toxicity, tau phosphorylation, glial inflammatory states, and neuronal survival.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Investigate disease-associated microglial programs.</span>
+          Determine APOC1's role in APOE/TREM2/SPP1/lipid-laden microglial states, including cholesterol efflux, phagocytosis, complement activation, cytokine release, and lipid-droplet accumulation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Explore regulatory rather than protein-level targeting.</span>
+          The APOE–APOC1 locus has extensive regulatory architecture (enhancers, SPI1-dependent microglial regulation, methylation, tandem repeats, chromatin looping, transcriptional coupling) that may be more tractable and safer than direct protein inhibition.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Do not assume simple inhibition is beneficial.</span>
+          Mouse data and lipid studies show both excess and deficiency cause harm. APOC1 may be protective in anti-inflammatory, HDL/CETP, or lipid-clearance contexts, making normalization of related pathways (APOE lipidation, ABCA1/LXR/RXR/PPAR signaling, microglial cholesterol handling, NF-κB/MAPK/STAT3 modulation) the preferred therapeutic hypothesis.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Use APOC1 as a precision-medicine biomarker first.</span>
+          Focus on APOE ε4 carrier stratification, tau-linked risk subtyping, inflammatory/lipid subtypes, vascular-metabolic comorbidity profiling, and identification of rapid MCI-to-AD converters before pursuing any therapeutic modulation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Assess systemic safety rigorously.</span>
+          APOC1 has broad roles in triglyceride metabolism, CETP inhibition, lipoprotein lipase regulation, HDL function, cardiovascular risk, macrophage biology, host defense, and inflammatory responses. Any intervention must account for these systemic effects.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>APOC1 is a plausible but preliminary APOE-locus modifier</strong> of Alzheimer's disease mechanisms, with its evidence base resting predominantly on genetic, epigenetic, transcriptomic, proteomic, and imaging-association data rather than interventional proof of efficacy. Its strongest scientific value lies in <strong>lipid–immune regulatory biology</strong> — particularly HDL/VLDL remodeling, LPL and CETP inhibition, ABCA1-linked cholesterol efflux, and microglial inflammatory suppression — all of which intersect meaningfully with APOE-driven AD pathways. However, <strong>the critical confound of LD with APOE ε4 and neighboring loci has not been fully resolved</strong>, and direct causal, brain-specific, APOE-independent effects of APOC1 remain undemonstrated. The bidirectional dose-dependency observed in mouse models — whereby both overexpression and knockout impair cognition and worsen neuroinflammation — further precludes a simple inhibit-or-activate therapeutic strategy. <strong>The most defensible near-term translational role for APOC1 is as a biomarker and stratification variable</strong> within APOE-adjusted, multi-marker frameworks for late-onset AD risk, subtyping, and progression monitoring. Direct APOC1-targeted therapy remains speculative and requires rigorous causal validation in human brain-relevant, APOE-genotype-stratified experimental systems before clinical translation can be responsibly pursued.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  APOC1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

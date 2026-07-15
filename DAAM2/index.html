@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAAM2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #64748b;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,120,120,0.45);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.15rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    color: var(--danger-dark);
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-size: 0.83rem;
+    font-style: italic;
+    color: var(--slate);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid #ef4444;
+  }
+  .card-danger h3 { color: var(--danger-dark); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid var(--slate);
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DAAM2 &nbsp;|&nbsp; Dishevelled-Associated Activator of Morphogenesis 2</span>
+    <span class="chip chip-danger">⚠ Broad safety concerns — systemic modulation risk</span>
+  </div>
+  <h1>DAAM2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Validation Gap:</strong> No direct Alzheimer's disease evidence is present in the source text — no AD patient cohort, no AD animal model, no amyloid-β or tau experiment, and no demonstration that DAAM2 is altered in AD brain. All AD relevance discussed below is mechanistically inferred and remains unvalidated in a disease context.
+    </div>
+
+    <p>DAAM2 is best characterized as a Dishevelled-associated, formin-family actin regulator that links Wnt signaling to cytoskeletal organization, cell polarity, glial development, and tissue remodeling. Its relevance to Alzheimer's disease is <em>indirect but biologically plausible</em>, resting primarily on roles in Wnt/Dishevelled signaling, actin remodeling, oligodendrocyte maturation, myelin compaction, remyelination after white matter injury, astrocyte morphology and calcium signaling, synaptic circuit regulation, immune/chemokine programs, hypoxia and oxidative stress pathways, and barrier and tissue integrity.</p>
+
+    <p>As a therapeutic target, DAAM2 should be considered <em>exploratory rather than validated</em>. Its most plausible AD application is not direct amyloid or tau targeting, but modulation of white matter repair, oligodendrocyte resilience, Wnt-dependent glial biology, synaptic structural maintenance, and possibly neuroinflammatory or neurovascular processes.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Wnt-Actin Hub -->
+        <rect x="12" y="12" width="270" height="476" rx="12" ry="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="22" y="29" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#1e3a5f" text-anchor="start" letter-spacing="0.12em">PANEL A · WNT-ACTIN HUB</text>
+
+        <!-- Node A1: Wnt Ligand -->
+        <rect x="86" y="38" width="118" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="54" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Wnt Ligand /</text>
+        <text x="145" y="67" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Frizzled Receptor</text>
+
+        <!-- Arrow A1 -> A2 -->
+        <line x1="145" y1="76" x2="145" y2="100" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: Dishevelled/DVL -->
+        <rect x="86" y="100" width="118" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="115" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Dishevelled /</text>
+        <text x="145" y="128" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">DVL complex</text>
+
+        <!-- Arrow A2 -> A3 DAAM2 -->
+        <line x1="145" y1="136" x2="145" y2="160" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: DAAM2 (central) -->
+        <rect x="76" y="160" width="138" height="40" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.8"/>
+        <text x="145" y="177" font-family="Georgia,serif" font-size="11" fill="#ffffff" text-anchor="middle" font-weight="bold">DAAM2</text>
+        <text x="145" y="191" font-family="Georgia,serif" font-size="9" fill="#bfdbfe" text-anchor="middle">(formin FH2 domain)</text>
+
+        <!-- Arrow A3 -> A4 Actin poly -->
+        <line x1="145" y1="200" x2="145" y2="226" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Actin Polymerization -->
+        <rect x="80" y="226" width="130" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="241" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Actin Polymerization</text>
+        <text x="145" y="254" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Cytoskeletal Org.</text>
+
+        <!-- Arrow A4 -> A5 -->
+        <line x1="145" y1="262" x2="145" y2="288" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: PIP5K/PIP2 -->
+        <rect x="80" y="288" width="130" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="303" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">PIP5K / PIP2</text>
+        <text x="145" y="316" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Receptor Clustering</text>
+
+        <!-- Arrow A5 -> A6 -->
+        <line x1="145" y1="324" x2="145" y2="350" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A6: Rac1/Rho & PCP -->
+        <rect x="80" y="350" width="130" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="366" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Rac1 / Rho /</text>
+        <text x="145" y="379" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Planar Cell Polarity</text>
+
+        <!-- Arrow A6 -> A7 -->
+        <line x1="145" y1="386" x2="145" y2="412" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A7: Cell Polarity & Morphogenesis -->
+        <rect x="72" y="412" width="146" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="145" y="427" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Cell Polarity &amp;</text>
+        <text x="145" y="440" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Tissue Morphogenesis</text>
+
+        <!-- Panel B: Glial / Myelin Branch -->
+        <rect x="296" y="12" width="298" height="280" rx="12" ry="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="308" y="29" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#065f46" text-anchor="start" letter-spacing="0.12em">PANEL B · MYELIN &amp; GLIAL BIOLOGY</text>
+
+        <!-- Node B1: OL Differentiation -->
+        <rect x="306" y="38" width="130" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="371" y="54" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Oligodendrocyte</text>
+        <text x="371" y="67" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Differentiation</text>
+
+        <!-- Node B2: CK2α phospho -->
+        <rect x="452" y="38" width="130" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="517" y="54" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">CK2α Phospho-</text>
+        <text x="517" y="67" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">rylates DAAM2</text>
+
+        <!-- Arrow B2 -> B1 (inhibits) -->
+        <line x1="452" y1="57" x2="436" y2="57" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow B1 -> B3 -->
+        <line x1="371" y1="76" x2="371" y2="103" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: Myelin Compaction -->
+        <rect x="306" y="103" width="130" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="371" y="119" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Myelin Compaction</text>
+        <text x="371" y="132" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Structure</text>
+
+        <!-- Arrow B2 -> B4 -->
+        <line x1="517" y1="76" x2="517" y2="103" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: Hypoxia & Neonatal Recovery -->
+        <rect x="452" y="103" width="130" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="517" y="119" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Neonatal Hypoxia</text>
+        <text x="517" y="132" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Myelin Repair</text>
+
+        <!-- Arrows B3 & B4 converge to B5 -->
+        <line x1="371" y1="139" x2="371" y2="164" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="517" y1="139" x2="517" y2="158" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="517" y1="158" x2="445" y2="158" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="445" y1="158" x2="445" y2="164" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B5: Remyelination -->
+        <rect x="350" y="164" width="160" height="36" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="430" y="180" font-family="Georgia,serif" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="bold">Remyelination after</text>
+        <text x="430" y="193" font-family="Georgia,serif" font-size="10" fill="#f0fdfa" text-anchor="middle">White Matter Injury</text>
+
+        <!-- Arrow B5 -> B6 -->
+        <line x1="430" y1="200" x2="430" y2="226" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B6: Astrocyte Morphology -->
+        <rect x="306" y="226" width="248" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="430" y="242" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Astrocyte Morphology, Ca²⁺ Dynamics</text>
+        <text x="430" y="255" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Synaptic Circuit Regulation</text>
+
+        <!-- Panel C: Immune / Safety -->
+        <rect x="296" y="305" width="298" height="183" rx="12" ry="12" fill="#fef2f2" fill-opacity="0.65" stroke="#ef4444" stroke-width="1.2"/>
+        <text x="308" y="322" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#9b1c1c" text-anchor="start" letter-spacing="0.12em">PANEL C · IMMUNE, SENESCENCE &amp; SAFETY</text>
+
+        <!-- Node C1: SIRT1/EZH2 axis -->
+        <rect x="306" y="330" width="130" height="38" rx="7" fill="#ffffff" stroke="#ef4444" stroke-width="1.4"/>
+        <text x="371" y="346" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">SIRT1/EZH2/</text>
+        <text x="371" y="359" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">DAAM2 Axis</text>
+
+        <!-- Arrow C1 -> C2 -->
+        <line x1="371" y1="368" x2="371" y2="393" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C2: Chemokines -->
+        <rect x="306" y="393" width="130" height="36" rx="7" fill="#ffffff" stroke="#ef4444" stroke-width="1.4"/>
+        <text x="371" y="409" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">CCL3, CCL5,</text>
+        <text x="371" y="422" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">CXCL10 secretion</text>
+
+        <!-- Arrow C2 -> C3 -->
+        <line x1="436" y1="411" x2="450" y2="411" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node C3: Immune risk -->
+        <rect x="450" y="330" width="134" height="38" rx="7" fill="#ffffff" stroke="#ef4444" stroke-width="1.4"/>
+        <text x="517" y="346" font-family="Georgia,serif" font-size="10" fill="#9b1c1c" text-anchor="middle">Cancer / Renal /</text>
+        <text x="517" y="359" font-family="Georgia,serif" font-size="10" fill="#9b1c1c" text-anchor="middle">Barrier Risk</text>
+
+        <!-- Node C4: CD4+ T cell recruitment -->
+        <rect x="450" y="393" width="134" height="36" rx="7" fill="#ffffff" stroke="#ef4444" stroke-width="1.4"/>
+        <text x="517" y="409" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">CD4+ Cytotoxic T</text>
+        <text x="517" y="422" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Cell Recruitment</text>
+
+        <!-- Arrow C3 -> C4 -->
+        <line x1="517" y1="368" x2="517" y2="393" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel D: AD-Relevant Outputs -->
+        <rect x="608" y="12" width="302" height="476" rx="12" ry="12" fill="#fffbeb" fill-opacity="0.65" stroke="#d97706" stroke-width="1.2"/>
+        <text x="620" y="29" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#92400e" text-anchor="start" letter-spacing="0.12em">PANEL D · AD-RELEVANT OUTPUTS</text>
+
+        <!-- Node D1: White matter degeneration -->
+        <rect x="622" y="38" width="274" height="38" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="54" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">White Matter Degeneration</text>
+        <text x="759" y="67" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Vascular Contributions to AD</text>
+
+        <!-- Arrow D1 -> D2 -->
+        <line x1="759" y1="76" x2="759" y2="102" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D2: Oligodendrocyte stress -->
+        <rect x="622" y="102" width="274" height="36" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="118" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Oligodendrocyte Stress &amp;</text>
+        <text x="759" y="131" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Myelin Loss in AD Brain</text>
+
+        <!-- Arrow D2 -> D3 -->
+        <line x1="759" y1="138" x2="759" y2="163" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D3: Wnt dysregulation -->
+        <rect x="622" y="163" width="274" height="36" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="179" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Wnt/β-catenin Dysregulation</text>
+        <text x="759" y="192" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">in Glial &amp; Synaptic Contexts</text>
+
+        <!-- Arrow D3 -> D4 -->
+        <line x1="759" y1="199" x2="759" y2="224" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D4: Network excitability -->
+        <rect x="622" y="224" width="274" height="36" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="240" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Network Excitability Imbalance</text>
+        <text x="759" y="253" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">&amp; Olfactory Circuit Disruption</text>
+
+        <!-- Arrow D4 -> D5 -->
+        <line x1="759" y1="260" x2="759" y2="285" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D5: Neuroinflammation -->
+        <rect x="622" y="285" width="274" height="36" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="301" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Neuroinflammation &amp;</text>
+        <text x="759" y="314" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Senescence Analogy</text>
+
+        <!-- Arrow D5 -> D6 -->
+        <line x1="759" y1="321" x2="759" y2="346" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D6: BBB / barrier analogy -->
+        <rect x="622" y="346" width="274" height="36" rx="7" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+        <text x="759" y="362" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Blood-Brain Barrier /</text>
+        <text x="759" y="375" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Structural Integrity (by analogy)</text>
+
+        <!-- Arrow D6 -> D7 -->
+        <line x1="759" y1="382" x2="759" y2="408" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D7: Exploratory target -->
+        <rect x="622" y="408" width="274" height="40" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1.5"/>
+        <text x="759" y="425" font-family="Georgia,serif" font-size="10.5" fill="#ffffff" text-anchor="middle" font-weight="bold">Exploratory AD Target —</text>
+        <text x="759" y="440" font-family="Georgia,serif" font-size="10" fill="#fef3c7" text-anchor="middle">No direct validation in AD models</text>
+
+        <!-- Cross-panel connector: Panel B (B6 astrocyte) -> Panel D (D4 network) via gutter -->
+        <!-- B6 right edge x=554, D4 left edge x=622; gutter center ~588 -->
+        <!-- B6 center y=243, D4 center y=242 — nearly same row, route horizontally through gutter -->
+        <line x1="554" y1="242" x2="568" y2="242" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="568" y1="242" x2="568" y2="242" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="568" y1="242" x2="622" y2="242" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connector: Panel A (A3 DAAM2) right edge -> Panel B B1/B2 area via gutter -->
+        <!-- A3 right edge x=214, B node left edge x=306; gutter ~260; A3 center y=180 -->
+        <!-- Route to B1 (y=57) via elbow through gutter -->
+        <line x1="214" y1="180" x2="258" y2="180" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="258" y1="180" x2="258" y2="57" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="258" y1="57" x2="306" y2="57" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: Panel C (C2 chemokines) -> Panel D (D5 neuroinflammation) via gutter -->
+        <!-- C2 right x=436, D5 left x=622; gutter ~588; C2 center y=411, D5 center y=302 -->
+        <line x1="436" y1="411" x2="583" y2="411" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="583" y1="411" x2="583" y2="302" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <line x1="583" y1="302" x2="622" y2="302" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure legend.</strong>
+      <strong>Panel A (blue):</strong> The upstream Wnt-actin hub — Wnt ligand activates Frizzled receptors, engaging Dishevelled/DVL to recruit DAAM2, which drives FH2-domain actin polymerization, PIP5K/PIP2 receptor clustering, and Rac1/Rho/planar-cell-polarity outputs governing cell polarity and tissue morphogenesis.
+      <strong>Panel B (teal):</strong> Glial and myelin biology — DAAM2 drives oligodendrocyte differentiation (left branch) while CK2α phosphorylation of DAAM2 modulates timing (right branch); both converge on remyelination after white matter injury, and astrocyte morphology and calcium/synaptic regulation emerge downstream.
+      <strong>Panel C (red):</strong> Immune, senescence, and safety signals — a SIRT1/EZH2/DAAM2 axis promotes CCL3/CCL5/CXCL10 chemokine secretion and CD4+ T-cell recruitment; broad DAAM2 modulation also carries cancer, renal, and barrier risks.
+      <strong>Panel D (amber):</strong> AD-relevant outputs — white matter degeneration, oligodendrocyte stress, Wnt dysregulation, network excitability imbalance, neuroinflammation, and structural barrier concerns all map onto plausible but unvalidated DAAM2-AD connections. Dashed arrows indicate cross-panel mechanistic links inferred from the text.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>⚠ No Direct AD Validation</h3>
+        <p>The source text contains no AD patient cohort, no AD animal model, and no amyloid-β, tau, or AD-specific neuroinflammation experiment. DAAM2 has not been demonstrated to be altered in AD brain tissue. All AD relevance is mechanistically inferred.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Wnt-Actin Regulatory Hub</h3>
+        <p>DAAM2 binds Dishevelled/DVL proteins and participates in canonical Wnt/β-catenin signaling, noncanonical Wnt/planar cell polarity signaling, Rac1/Rho pathways, PIP5K/PIP2-mediated receptor complex clustering, and FH2-domain actin polymerization — placing it at a central signaling intersection.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Oligodendrocyte &amp; Myelin Biology</h3>
+        <p>DAAM2 regulates oligodendrocyte differentiation, myelin structure, actin-cytoskeletal organization, and remyelination. DAAM2-PIP5K inhibition stimulated remyelination after CNS white matter injury, while oligodendrocyte-specific <em>Daam2</em> loss caused myelin decompaction and later motor deficits — indicating both inhibitory and necessary roles depending on context.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>CK2α–DAAM2 Phosphorylation Axis</h3>
+        <p>CK2α phosphorylates DAAM2, inhibiting its function and modulating Wnt activity during oligodendrocyte development. This phosphorylation has stage-specific effects: it can accelerate early oligodendrocyte differentiation but later slow maturation and myelination, and was linked to recovery after neonatal hypoxia and myelin repair after adult demyelination.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Wnt Directionality</h3>
+        <p>DAAM2 cannot be treated as universally pro-Wnt or anti-Wnt. In some systems DAAM2 promotes Wnt/β-catenin activation; in others, DAAM1/2 loss can stimulate canonical Wnt signaling by affecting Frizzled receptor degradation. This context-dependence complicates therapeutic targeting across tissues and disease states.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Broad Safety Risk Profile</h3>
+        <p>DAAM2 has roles in cancer invasion, cancer stem-cell maintenance, kidney/podocyte function, Paneth cell differentiation, bone aging chemokine secretion, immune T-cell recruitment, and tissue morphogenesis. A SIRT1/EZH2/DAAM2 axis drives CCL3, CCL5, and CXCL10 secretion. Systemic activation or inhibition could produce oncogenic, renal, immune, or barrier-related harms.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div><strong>Treat DAAM2 as a hypothesis-generating target.</strong> Current evidence supports mechanistic plausibility — especially in white matter and glial biology — but not direct disease causality. Do not advance DAAM2-directed programs on the basis of the existing literature alone.</div>
+      </li>
+
+      <li>
+        <div><strong>Prioritize brain-specific validation.</strong> Measure DAAM2 expression in AD versus control brain across cell types — including neurons, astrocytes, microglia, oligodendrocyte lineage cells, endothelial cells, and pericytes — to determine whether DAAM2 is meaningfully dysregulated in the disease.</div>
+      </li>
+
+      <li>
+        <div><strong>Test correlation with AD pathology.</strong> Determine whether DAAM2 levels or phosphorylation states correlate with amyloid plaques, tau burden, synapse loss, white matter lesions, oligodendrocyte stress, microglial activation, astrocytosis, vascular dysfunction, and cognitive decline.</div>
+      </li>
+
+      <li>
+        <div><strong>Focus on white matter and remyelination hypotheses.</strong> The strongest therapeutic rationale is that selective DAAM2 pathway modulation may improve oligodendrocyte maturation, myelin compaction, axonal support, or remyelination in AD cases with prominent white matter degeneration or vascular contributions.</div>
+      </li>
+
+      <li>
+        <div><strong>Investigate the CK2α–DAAM2 phosphorylation axis.</strong> Targeting DAAM2 phosphorylation status or CK2α–DAAM2 interactions may be more precise and tractable than simply increasing or decreasing overall DAAM2 expression levels.</div>
+      </li>
+
+      <li>
+        <div><strong>Avoid assuming one-directional targeting.</strong> DAAM2 inhibition may promote remyelination in some contexts, but DAAM2 loss can impair myelin compaction and cytoskeletal organization. Therapeutic strategies must be cell-type-, stage-, and pathway-specific.</div>
+      </li>
+
+      <li>
+        <div><strong>Examine key downstream and partner pathways.</strong> Priority candidates include PIP5K/PIP2, Rac1, Rho, Gelsolin, Nedd4, VHL, HIF-1α, Slc4a4, PAK1, MMP7, mTORC1, and chemokines CCL3, CCL5, and CXCL10 as mechanistic readouts and potential co-targets.</div>
+      </li>
+
+      <li>
+        <div><strong>Require rigorous safety profiling before therapeutic development.</strong> Because DAAM2 is involved in cancer biology, renal integrity, immune recruitment, development, and cytoskeletal homeostasis, systemic DAAM2 modulation could carry oncogenic, renal, immune, or barrier-related risks that must be characterized early.</div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — DAAM2 as an Alzheimer's Disease Target</span>
+      <p>DAAM2 is a <strong>biologically rich but indirectly AD-relevant</strong> formin-family actin regulator whose connection to Alzheimer's disease remains entirely inferential at this time. Its strongest rationale lies in <strong>white matter repair, oligodendrocyte resilience, and Wnt-dependent glial homeostasis</strong> — domains increasingly recognized as important in late-onset AD — rather than in amyloid or tau biology. The <strong>CK2α-DAAM2 phosphorylation axis</strong> represents the most mechanistically precise and pharmacologically tractable entry point. However, DAAM2's pronounced context-dependence (both promoting and opposing Wnt signaling depending on system and stage), combined with its broad roles in cancer, kidney function, immune recruitment, and tissue morphogenesis, means that <strong>non-selective systemic modulation carries substantial risk</strong>. The defensible development path is selective modulation of DAAM2-linked Wnt-actin signaling in <strong>defined CNS cell populations</strong> to support myelin repair, glial homeostasis, and synaptic and structural resilience — pursued only after direct AD validation in relevant human tissue and animal models is established.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DAAM2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

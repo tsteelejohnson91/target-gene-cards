@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NUAK2/SNARK — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --text-muted: #64748b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf3;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.30);
+    border: 1px solid rgba(239,68,68,0.45);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 54px 28px 20px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* ── KEY INSIGHTS GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent   { background: var(--light);          border-left-color: var(--mid);      }
+  .card-accent h3{ color: var(--dark);                 }
+  .card-danger   { background: var(--danger-light);    border-left-color: var(--danger);   }
+  .card-danger h3{ color: var(--danger);               }
+  .card-positive { background: var(--positive-light);  border-left-color: var(--positive); }
+  .card-positive h3{ color: var(--positive);           }
+  .card-warning  { background: var(--warning-light);   border-left-color: var(--warning);  }
+  .card-warning h3{ color: var(--warning);             }
+  .card-neutral  { background: var(--neutral-light);   border-left-color: var(--neutral);  }
+  .card-neutral h3{ color: var(--neutral);             }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways-list {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaways-list li {
+    margin-bottom: 16px;
+    font-size: 0.94rem;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 38px 40px;
+    margin-bottom: 56px;
+  }
+
+  .verdict p {
+    font-size: 1.0rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+    color: #dbeafe;
+  }
+
+  .verdict p strong {
+    color: #ffffff;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════ HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NUAK2 &nbsp;|&nbsp; NUAK Family Kinase 2 (SNARK)</span>
+    <span class="chip chip-danger">⚠ Safety Uncertainty — Context-Dependent Roles</span>
+  </div>
+  <h1>NUAK2 / SNARK &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ════════════════════════════════════════════════════════ MAIN -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Validation Gap:</strong> NUAK2/SNARK has <em>not</em> been validated as an Alzheimer's disease gene, biomarker, or therapeutic target. No supplied study directly demonstrates NUAK2 effects on amyloid-β, tau, synaptic loss, neuronal death, or cognition. Evidence is largely from cancer, fibrosis, developmental biology, and non-neural systems. AD relevance remains <em>hypothesis-generating only</em>.
+    </div>
+
+    <p>NUAK2/SNARK is an AMPK-related serine/threonine kinase operating at the intersection of stress signaling, LKB1/AMPK-family pathways, cytoskeletal regulation, Hippo-YAP/TAZ signaling, TGFβ signaling, NF-κB/TNFα-associated inflammation, metabolism, oxidative stress, ferroptosis, autophagy, senescence, apoptosis, ECM remodeling, and cell migration and proliferation.</p>
+
+    <p>Although direct Alzheimer's disease evidence is absent from the supplied literature, NUAK2 repeatedly appears in pathways central to neurodegeneration: energy stress, mitochondrial dysfunction, oxidative injury, lipid peroxidation and ferroptosis, ER stress, NF-κB/TNFα inflammatory signaling, autophagy, cytoskeletal remodeling, YAP/Hippo and TGFβ signaling, cellular senescence, and glial remodeling programs. Its neural relevance is most clearly established in developmental contexts (neural tube closure, neural progenitor morphogenesis) and in glioma biology, not in late-life neurodegeneration. Therapeutic relevance for AD is therefore exploratory.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN  (counting carefully — max 16 nodes)
+        Panel A (Upstream Inputs / Stress Sensors): 3 nodes  → LKB1/AMPK, TNFα/NF-κB, TGFβ/SMAD
+        Panel B (NUAK2 Hub): 1 node  → NUAK2/SNARK (central)
+        Panel C Left Branch (Cytoskeletal / Developmental):  3 nodes → Actin/Myosin, Neural Tube/Dev., Glioma Invasion
+        Panel C Right Branch (Metabolic / Stress):           3 nodes → Ferroptosis/ROS, Autophagy/WIPI4, Lactate/Epigenetics
+        Panel D (Downstream Outcomes — shared convergence):  3 nodes → Neuroinflam. NF-κB, YAP/TAZ, Cell Survival/Death
+        Badge: "AD-Relevant?" annotation
+        TOTAL: 3+1+3+3+3 = 13 nodes + 1 badge = 14 ✓  (≤ 16)
+
+        ViewBox: 0 0 900 490
+        Panel A: x=20,  y=20,  w=860, h=90  (top strip, 3 nodes side by side)
+        Panel B: x=20,  y=145, w=860, h=80  (hub strip, 1 centered node)
+        Panel C: x=20,  y=255, w=415, h=145 (left branch)
+        Panel C2: x=465, y=255, w=415, h=145 (right branch)
+        Panel D: x=20,  y=430, w=860, h=50  — too tight, use y=420 h=58
+        Actually need more vertical space. Use viewBox 0 0 900 520.
+
+        Revised:
+        Panel A: y=18,  h=94  → nodes row at y=55
+        Panel B: y=132, h=72  → node row at y=164
+        Panel C (left branch):  y=230, h=150 → nodes at y=265 and y=330
+        Panel C2 (right branch): y=230, h=150 → nodes at y=265 and y=330
+        Panel D: y=408,  h=90  → nodes at y=445
+        Gutter between B and C: rows 230-132-72=26px  ✓
+
+        Node sizes:  wide=160 h=44  for panel A/D; wide=180 h=48 for hub; wide=150 h=40 for branches
+      -->
+      <svg viewBox="0 0 900 520" width="860" height="495" xmlns="http://www.w3.org/2000/svg" aria-label="NUAK2 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ═══════════ PANEL A: Upstream Stress Inputs ═══════════ -->
+        <rect x="20" y="16" width="860" height="96" rx="10" ry="10"
+              fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="34" y="32" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              text-transform="uppercase" fill="#2e6da4" letter-spacing="1">PANEL A — UPSTREAM STRESS INPUTS</text>
+
+        <!-- Node A1: LKB1/AMPK -->
+        <rect x="72" y="44" width="164" height="46" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="154" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#1a3a5c">LKB1 / AMPK</text>
+        <text x="154" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1a3a5c">Energy / Nutrient Stress</text>
+
+        <!-- Node A2: TNFα/NF-κB -->
+        <rect x="368" y="44" width="164" height="46" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="450" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#7f1d1d">TNFα / NF-κB / RELA</text>
+        <text x="450" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#7f1d1d">Inflammatory Signaling</text>
+
+        <!-- Node A3: TGFβ/SMAD -->
+        <rect x="664" y="44" width="164" height="46" rx="7" fill="#fef9c3" stroke="#b45309" stroke-width="1.4"/>
+        <text x="746" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#92400e">TGFβ / SMAD2-3-4</text>
+        <text x="746" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">Fibrotic / Glial Signals</text>
+
+        <!-- ═══════════ PANEL B: NUAK2 Hub ═══════════ -->
+        <rect x="20" y="132" width="860" height="72" rx="10" ry="10"
+              fill="rgba(26,58,92,0.10)" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="34" y="148" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#1a3a5c" letter-spacing="1">PANEL B — NUAK2 / SNARK HUB</text>
+
+        <!-- Node B: NUAK2/SNARK -->
+        <rect x="330" y="146" width="240" height="50" rx="9" fill="#1a3a5c" stroke="#0a1e30" stroke-width="1.8"/>
+        <text x="450" y="166" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#ffffff">NUAK2 / SNARK</text>
+        <text x="450" y="184" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">AMPK-related Ser/Thr Kinase</text>
+
+        <!-- ═══════════ PANEL C LEFT: Cytoskeletal / Neural Branch ═══════════ -->
+        <rect x="20" y="228" width="410" height="156" rx="10" ry="10"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="34" y="244" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#0f766e" letter-spacing="1">PANEL C — CYTOSKELETAL &amp; NEURAL</text>
+
+        <!-- Node C1: Actin/Myosin -->
+        <rect x="48" y="254" width="170" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="133" y="271" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#134e4a">Actin / Myosin / MYPT1</text>
+        <text x="133" y="288" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#134e4a">Cytoskeletal Remodeling</text>
+
+        <!-- Node C2: Neural Tube/Dev -->
+        <rect x="48" y="322" width="170" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="133" y="339" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#134e4a">Neural Tube Closure</text>
+        <text x="133" y="356" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#134e4a">Developmental Morphogenesis</text>
+
+        <!-- Node C3: Glioma -->
+        <rect x="242" y="287" width="168" height="44" rx="7" fill="#d1fae5" stroke="#059669" stroke-width="1.3"/>
+        <text x="326" y="304" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#064e3b">Glioma / GBM</text>
+        <text x="326" y="321" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#064e3b">Invasion &amp; ECM Remodeling</text>
+
+        <!-- ═══════════ PANEL C RIGHT: Metabolic / Stress Branch ═══════════ -->
+        <rect x="470" y="228" width="410" height="156" rx="10" ry="10"
+              fill="rgba(180,83,9,0.06)" stroke="#b45309" stroke-width="1.2"/>
+        <text x="484" y="244" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#b45309" letter-spacing="1">PANEL D — METABOLIC &amp; STRESS</text>
+
+        <!-- Node D1: Ferroptosis/ROS -->
+        <rect x="492" y="254" width="170" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+        <text x="577" y="271" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#78350f">Ferroptosis / Lipid ROS</text>
+        <text x="577" y="288" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#78350f">GPX4, Fe²⁺, Oxidative Stress</text>
+
+        <!-- Node D2: Autophagy -->
+        <rect x="492" y="322" width="170" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+        <text x="577" y="339" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#78350f">Autophagy / WIPI4</text>
+        <text x="577" y="356" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#78350f">LKB1-AMPK-TSC Pathway</text>
+
+        <!-- Node D3: Lactate/Epigenetics -->
+        <rect x="686" y="287" width="168" height="44" rx="7" fill="#fff7ed" stroke="#ea580c" stroke-width="1.3"/>
+        <text x="770" y="304" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#7c2d12">PDHA1 / Lactate</text>
+        <text x="770" y="321" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#7c2d12">H4K12 Lactylation / SIRT3</text>
+
+        <!-- ═══════════ PANEL E: Downstream Convergence ═══════════ -->
+        <rect x="20" y="406" width="860" height="94" rx="10" ry="10"
+              fill="rgba(100,116,139,0.07)" stroke="#64748b" stroke-width="1.2"/>
+        <text x="34" y="422" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              fill="#64748b" letter-spacing="1">PANEL E — DOWNSTREAM OUTCOMES</text>
+
+        <!-- Node E1: Neuroinflammation -->
+        <rect x="72" y="430" width="188" height="48" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="166" y="449" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#7f1d1d">Neuroinflammation</text>
+        <text x="166" y="466" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#7f1d1d">NF-κB / Cytokines / Glia</text>
+
+        <!-- Node E2: YAP/TAZ -->
+        <rect x="356" y="430" width="188" height="48" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="450" y="449" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#1a3a5c">YAP / TAZ Signaling</text>
+        <text x="450" y="466" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1a3a5c">Hippo / Mechanotransduction</text>
+
+        <!-- Node E3: Cell Survival/Death -->
+        <rect x="640" y="430" width="188" height="48" rx="7" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
+        <text x="734" y="449" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#334155">Cell Survival / Death</text>
+        <text x="734" y="466" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#334155">Senescence / Apoptosis</text>
+
+        <!-- ════ ARROWS ════ -->
+
+        <!-- Panel A → Panel B (NUAK2 hub): 3 arrows going down into NUAK2 -->
+        <!-- A1 (LKB1) center-bottom x=154, y=90 → hub top x=390 y=146 -->
+        <!-- Route: straight down from A1, then elbow right -->
+        <line x1="154" y1="90" x2="154" y2="116" stroke="#2e6da4" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="154" y1="116" x2="390" y2="116" stroke="#2e6da4" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="390" y1="116" x2="390" y2="145" stroke="#2e6da4" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+        <!-- A2 (TNFα) center-bottom x=450, y=90 → hub top x=450, y=146 -->
+        <line x1="450" y1="90" x2="450" y2="145" stroke="#9b1c1c" stroke-width="1.6" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- A3 (TGFβ) center-bottom x=746, y=90 → hub top x=510 y=146 -->
+        <line x1="746" y1="90" x2="746" y2="116" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="746" y1="116" x2="512" y2="116" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="512" y1="116" x2="512" y2="145" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel B (NUAK2) → Panel C Left: hub bottom-left x=390 y=196 → C left branch entry -->
+        <!-- Hub bottom: y=196. Route to x=133 (C1 top) y=254 via elbow -->
+        <line x1="390" y1="196" x2="390" y2="215" stroke="#0f766e" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="390" y1="215" x2="133" y2="215" stroke="#0f766e" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="133" y1="215" x2="133" y2="253" stroke="#0f766e" stroke-width="1.6" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel B (NUAK2) → Panel C Right: hub bottom-right x=510 y=196 → D1 top x=577 y=254 -->
+        <line x1="510" y1="196" x2="510" y2="215" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="510" y1="215" x2="577" y2="215" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="none"/>
+        <line x1="577" y1="215" x2="577" y2="253" stroke="#b45309" stroke-width="1.6" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- Within C Left: C1 → C2 (vertical) -->
+        <line x1="133" y1="298" x2="133" y2="321" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- C1 → C3 (horizontal) -->
+        <line x1="218" y1="276" x2="241" y2="300" stroke="#059669" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Within C Right: D1 → D2 (vertical) -->
+        <line x1="577" y1="298" x2="577" y2="321" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- D1 → D3 (horizontal) -->
+        <line x1="662" y1="276" x2="685" y2="300" stroke="#ea580c" stroke-width="1.4" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- C Left → Panel E (convergence): C2 bottom x=133 y=366 → E1 top x=166 y=430 -->
+        <line x1="133" y1="366" x2="133" y2="393" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="none"/>
+        <line x1="133" y1="393" x2="166" y2="393" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="none"/>
+        <line x1="166" y1="393" x2="166" y2="429" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- NUAK2 hub bottom-center x=450 y=196 → E2 (YAP) top x=450 y=430 via elbow through gutter -->
+        <line x1="450" y1="196" x2="450" y2="215" stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="none"/>
+        <!-- jump to right of panel C left (x=432) and left of panel C right (x=470) — use x=450 which is in gutter -->
+        <!-- gutter between C-left (ends x=430) and C-right (starts x=470): x=450 is in gutter -->
+        <line x1="450" y1="215" x2="450" y2="393" stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="none"/>
+        <line x1="450" y1="393" x2="450" y2="429" stroke="#2e6da4" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+        <!-- C Right → Panel E (convergence): D2 bottom x=577 y=366 → E3 top x=734 y=430 -->
+        <line x1="577" y1="366" x2="577" y2="393" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="none"/>
+        <line x1="577" y1="393" x2="734" y2="393" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="none"/>
+        <line x1="734" y1="393" x2="734" y2="429" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="url(#arr-amber)"/>
+
+        <!-- C3 Glioma → E3 (survival/death) via right gutter: x=410 y=309 → right edge then down -->
+        <!-- C3 right edge x=410, E3 top x=734 y=430: route via x=440 down to y=393 then across -->
+        <!-- NOTE: x=440 is in the gutter between C-left (ends x=430) and C-right (starts x=470) -->
+        <line x1="410" y1="309" x2="440" y2="309" stroke="#059669" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="none"/>
+        <!-- 440,309 is above the gutter arrow at 450 — to avoid touching it, skip this cross-panel line -->
+        <!-- Instead: C3 → E1 (neuroinflammation) — C3 bottom x=326 y=331 → E1 top x=166 y=430 via elbow left -->
+        <line x1="326" y1="331" x2="326" y2="383" stroke="#059669" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="none"/>
+        <line x1="326" y1="383" x2="166" y2="383" stroke="#059669" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="none"/>
+        <line x1="166" y1="383" x2="166" y2="429" stroke="#059669" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- D3 Lactate → E3: D3 bottom x=770 y=331 → E3 top x=734 y=430 -->
+        <line x1="770" y1="331" x2="770" y2="383" stroke="#ea580c" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="none"/>
+        <line x1="770" y1="383" x2="734" y2="383" stroke="#ea580c" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="none"/>
+        <line x1="734" y1="383" x2="734" y2="429" stroke="#ea580c" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-amber)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure.</strong>
+      <strong>Panel A (Upstream Inputs):</strong> Three major upstream signals converge on NUAK2 — LKB1/AMPK-family energy stress, TNFα/NF-κB inflammatory signaling, and TGFβ/SMAD fibrotic–glial signaling.
+      <strong>Panel B (Hub):</strong> NUAK2/SNARK integrates these inputs as a central AMPK-related kinase.
+      <strong>Panel C (Cytoskeletal &amp; Neural branch, left):</strong> NUAK2 drives actin/myosin cytoskeletal remodeling and neural tube developmental morphogenesis; a parallel arm feeds glioma invasion and ECM remodeling.
+      <strong>Panel D (Metabolic &amp; Stress branch, right):</strong> NUAK2 also regulates ferroptosis/lipid ROS vulnerability, autophagy via WIPI4/LKB1-AMPK-TSC, and a SIRT3–PDHA1–lactate–histone-lactylation epigenetic axis.
+      <strong>Panel E (Convergent Outcomes):</strong> Both branches converge on downstream outcomes — neuroinflammatory NF-κB/cytokine signaling, YAP/TAZ Hippo mechanotransduction, and cell survival/death programs including senescence and apoptosis. Dashed lines denote indirect or cross-branch connections.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>🔴 Direct AD Validation Is Absent</h3>
+        <p>No supplied study demonstrates NUAK2 effects on amyloid-β, tau phosphorylation or aggregation, synaptic loss, neurodegeneration, cognition, or human AD brain pathology. AD relevance is mechanistically plausible but experimentally unvalidated.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>💊 Druggability in Principle</h3>
+        <p>Multiple NUAK2 or NUAK-family inhibitors exist — including WZ4003, HTH-02-006, OICR16422, OICR19451, KHKI-01128, KHKI-01215, compound 9q, disulfiram, and trilaciclib. Biological effects have been demonstrated mainly in cancer and fibrosis models, not in AD systems.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🔬 Cytoskeletal &amp; Neural Roles</h3>
+        <p>NUAK2 regulates actin stress fibers, myosin light-chain phosphorylation, MYPT1 pathways, focal adhesions, actomyosin organization, and apical constriction. It is required for neural tube closure and is upregulated in glioma. These overlap with AD-relevant cytoskeletal failure and tau pathology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🔗 Hippo-YAP/TAZ Axis</h3>
+        <p>NUAK2 acts as a YAP/TAZ target, enhancer, and feedback component across multiple cancer and developmental contexts, affecting YAP phosphorylation and nuclear localization. Because YAP/Hippo signaling is relevant to glial activation and neuronal survival, this is a plausible but untested AD-relevant axis.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>⚠ Metabolic &amp; Epigenetic Links</h3>
+        <p>A fibrosis study demonstrates a SIRT3 → PDHA1 hyperacetylation → lactate → H4K12 lactylation → NUAK2 super-enhancer pathway. This conceptually overlaps with AD themes of mitochondrial dysfunction and inflammatory epigenetic remodeling, but evidence is from pulmonary fibrosis, not brain.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠ Safety &amp; Context Dependence</h3>
+        <p>NUAK2 inhibition benefits cancer and fibrosis models but NUAK2 can support survival under metabolic stress, restrict Th1/Th17 inflammation in IBD models, support Schwann-cell regeneration, and maintain neural development. Broad inhibition in the CNS may carry significant risks.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat NUAK2 as exploratory, not validated.</strong> Current evidence supports mechanistic plausibility for AD relevance, but therapeutic prioritization requires AD-specific experimental validation before investment in drug programs.</li>
+      <li><strong>Profile NUAK2 in human AD brain first.</strong> Determine whether NUAK2 expression, activity, phosphorylation state, and downstream substrate signaling change in AD, and identify which cell types — neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes — are involved.</li>
+      <li><strong>Test NUAK2 in tauopathy models.</strong> Assess direct and indirect effects on tau phosphorylation, aggregation, propagation, clearance, microtubule stability, neurite degeneration, axonal transport, and synaptic structure.</li>
+      <li><strong>Test NUAK2 in amyloid models.</strong> Determine whether NUAK2 modifies APP processing, Aβ production and clearance, plaque burden, Aβ-induced synaptic toxicity, and amyloid-associated glial activation.</li>
+      <li><strong>Define cell-type-specific effects before considering inhibition.</strong> NUAK2 may be pathogenic in proliferative or reactive glia and vascular remodeling, yet protective in metabolically stressed neurons or regeneration-associated repair cells. These effects must be separated experimentally.</li>
+      <li><strong>Investigate inflammatory mechanisms in AD-relevant cells.</strong> Test NUAK2 effects on TNFα/NF-κB/RELA signaling, cytokine production, microglial activation states, astrocyte reactivity, and peripheral immune contributions under Aβ or tau stress conditions.</li>
+      <li><strong>Examine metabolic and mitochondrial endpoints.</strong> Measure NUAK2 effects on glucose utilization, glycolysis, lactate production, pyruvate dehydrogenase activity, mitochondrial respiration, oxidative phosphorylation, ROS, NAD⁺/SIRT3 pathways, and histone lactylation in AD-relevant systems.</li>
+      <li><strong>Evaluate ferroptosis and oxidative-stress vulnerability.</strong> Test whether NUAK2 regulates GPX4, lipid ROS, iron handling, TBARS, Fe²⁺, glutathione metabolism, and ferroptotic neuronal or glial death in AD models.</li>
+      <li><strong>Evaluate autophagy and lysosomal clearance.</strong> Determine whether the NUAK2-WIPI4 or LKB1-AMPK-TSC pathway affects autophagic flux, mitophagy, tau and Aβ clearance, and proteostasis in neurons and glia.</li>
+      <li><strong>Use available inhibitors as mechanistic probes only.</strong> Existing NUAK2 inhibitors can test mechanism, but AD translation requires CNS penetration, selectivity, chronic dosing safety, neuronal viability profiling, pharmacodynamics, and behavioral outcome studies in disease models.</li>
+      <li><strong>Include rigorous safety endpoints.</strong> Because NUAK2 loss disrupts neural development and NUAK2 can support stress survival and regeneration-associated migration, broad systemic or CNS inhibition may carry risks. Partial, timed, or cell-type-targeted modulation is likely more appropriate than generalized inhibition.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — NUAK2 / SNARK in Alzheimer's Disease</div>
+      <p>
+        NUAK2/SNARK is a <strong>mechanistically plausible but experimentally unvalidated</strong> Alzheimer's disease target. Its intersection with energy stress, mitochondrial dysfunction, oxidative injury, ferroptosis, autophagy, NF-κB/TNFα neuroinflammation, cytoskeletal remodeling, YAP/Hippo signaling, TGFβ pathways, cellular senescence, and metabolic-epigenetic reprogramming places it in <strong>pathways highly relevant to neurodegeneration</strong> — yet none of these connections have been directly tested in AD neurons, glia, vascular cells, animal models, or human AD brain tissue. The strongest neural evidence comes from <strong>developmental biology</strong> (neural tube closure, anencephaly) and <strong>glioma</strong> (invasion, ECM remodeling), not late-life neurodegeneration. Multiple druggable inhibitors exist but have not been evaluated in any AD context. Critical uncertainties include <strong>context-dependent and potentially opposing roles</strong> across cell types — NUAK2 inhibition is beneficial in proliferative and fibrotic settings but may be harmful in metabolically stressed neurons, regenerating glia, and developing neural tissue. The field should <strong>prioritize AD brain expression profiling, tau and amyloid model testing, and rigorous cell-type-specific mechanistic dissection</strong> before advancing NUAK2 as a therapeutic target in Alzheimer's disease.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  NUAK2 / SNARK — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

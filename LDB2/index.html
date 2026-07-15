@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDB2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: rgba(255,210,210,0.95);
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    font-size: 0.93rem;
+    color: #78350f;
+    line-height: 1.65;
+  }
+
+  /* BODY TEXT */
+  .body-text {
+    font-size: 0.97rem;
+    color: var(--text);
+    line-height: 1.78;
+    margin-bottom: 16px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: tak;
+  }
+
+  .takeaways-list li {
+    counter-increment: tak;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.94rem;
+    line-height: 1.72;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(tak);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px;
+  }
+
+  .verdict-banner p {
+    font-size: 1.02rem;
+    line-height: 1.78;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .verdict-banner strong {
+    color: #93c5fd;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LDB2 &nbsp;|&nbsp; LIM Domain Binding Protein 2</span>
+    <span class="chip chip-danger">⚠ No Direct AD Evidence — Exploratory Only</span>
+  </div>
+  <h1>LDB2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Evidence Caveat</div>
+      <p>LDB2 is <strong>not established</strong> as an Alzheimer's disease mechanism gene or validated therapeutic target in the supplied literature. No cited study directly examines LDB2 in AD patients, AD animal or cellular models, amyloid-β processing, tau biology, or AD-related cognitive decline. All AD-relevant inferences are indirect and hypothesis-generating only.</p>
+    </div>
+
+    <p class="body-text">LDB2 is best characterized as a <strong>LIM-domain-binding transcriptional co-regulator and scaffold</strong> that participates in transcription-factor complexes, enhancer regulation, developmental programs, vascular and endothelial biology, leukocyte transendothelial migration, cell migration, growth traits, cancer biology, and epigenetic aging signatures. These processes overlap conceptually with Alzheimer's-relevant biology — aging, neurovascular dysfunction, inflammation, synaptic plasticity, and transcriptional dysregulation — but the connection remains indirect.</p>
+
+    <p class="body-text">The most plausible AD-adjacent angles are: LDB2 CpG methylation in biological-aging signatures; LDB2 regulation of vascular inflammatory and leukocyte migration pathways; LDB2 involvement in endothelial DLL4/VEGF/Notch angiogenic signaling; LDB2 participation in neuronal developmental and synaptic-gene transcriptional networks including an <strong>LDB2–EGR–ARC axis</strong>; and LDB2 effects on MAPK signaling described in cancer contexts.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Landscape</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- ============================================================
+               PANEL A — Core Molecular Function (left)
+               ============================================================ -->
+          <!-- Panel A background -->
+          <rect x="10" y="10" width="270" height="470" rx="10" ry="10"
+                fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="145" y="30" text-anchor="middle" font-weight="700" font-size="9.5"
+                fill="#1e3a5f" letter-spacing="1.5" text-decoration="none">A · CORE MOLECULAR FUNCTION</text>
+
+          <!-- Node A1: LDB2 Scaffold -->
+          <rect x="60" y="44" width="170" height="40" rx="7"
+                fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="145" y="59" text-anchor="middle" fill="white" font-weight="700" font-size="11">LDB2 Scaffold /</text>
+          <text x="145" y="74" text-anchor="middle" fill="white" font-weight="700" font-size="11">Co-regulator</text>
+
+          <!-- Arrow A1 → A2 -->
+          <line x1="145" y1="84" x2="145" y2="106" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A2: TF Complex Assembly -->
+          <rect x="60" y="107" width="170" height="40" rx="7"
+                fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="145" y="122" text-anchor="middle" fill="#1e3a5f" font-size="11">LIM-Domain TF</text>
+          <text x="145" y="137" text-anchor="middle" fill="#1e3a5f" font-size="11">Complex Assembly</text>
+
+          <!-- Arrow A2 → branch split line -->
+          <line x1="145" y1="147" x2="145" y2="168" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A3: Enhancer Regulation -->
+          <rect x="60" y="169" width="170" height="40" rx="7"
+                fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="145" y="184" text-anchor="middle" fill="#1e3a5f" font-size="11">Enhancer / Chromatin</text>
+          <text x="145" y="199" text-anchor="middle" fill="#1e3a5f" font-size="11">Regulation</text>
+
+          <!-- Arrow A3 → A4 left branch -->
+          <line x1="105" y1="209" x2="105" y2="229" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+          <!-- Arrow A3 → A5 right branch -->
+          <line x1="185" y1="209" x2="185" y2="229" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A4: Developmental Programs (left sub) -->
+          <rect x="32" y="230" width="138" height="40" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="101" y="247" text-anchor="middle" fill="#1e3a5f" font-size="10.5">Developmental</text>
+          <text x="101" y="261" text-anchor="middle" fill="#1e3a5f" font-size="10.5">Programs</text>
+
+          <!-- Node A5: Epigenetic Aging (right sub) -->
+          <rect x="176" y="230" width="88" height="40" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="220" y="247" text-anchor="middle" fill="#1e3a5f" font-size="10">CpG Methyl.</text>
+          <text x="220" y="261" text-anchor="middle" fill="#1e3a5f" font-size="10">Aging Clock</text>
+
+          <!-- Converge arrows A4 & A5 → A6 -->
+          <line x1="101" y1="270" x2="101" y2="300" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="220" y1="270" x2="220" y2="300" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="101" y1="300" x2="145" y2="300" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="145" y1="300" x2="220" y2="300" stroke="#2e6da4" stroke-width="1.3"/>
+          <line x1="145" y1="300" x2="145" y2="318" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+          <!-- Node A6: Broad Cell-State Control -->
+          <rect x="60" y="319" width="170" height="40" rx="7"
+                fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="145" y="335" text-anchor="middle" fill="white" font-size="10.5">Broad Cell-State</text>
+          <text x="145" y="350" text-anchor="middle" fill="white" font-size="10.5">Gene Regulation</text>
+
+          <!-- Arrow A6 → A7 -->
+          <line x1="145" y1="359" x2="145" y2="383" stroke="#1e3a5f" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+
+          <!-- Node A7: Context-Dependent Roles -->
+          <rect x="46" y="384" width="198" height="40" rx="7"
+                fill="#f8fafc" stroke="#475569" stroke-width="1"/>
+          <text x="145" y="399" text-anchor="middle" fill="#475569" font-size="10.5">Context-Dependent</text>
+          <text x="145" y="414" text-anchor="middle" fill="#475569" font-size="10.5">Therapeutic Uncertainty</text>
+
+          <!-- ============================================================
+               PANEL B — Vascular / Inflammatory Pathways (center)
+               ============================================================ -->
+          <rect x="295" y="10" width="270" height="470" rx="10" ry="10"
+                fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="430" y="30" text-anchor="middle" font-weight="700" font-size="9.5"
+                fill="#0f766e" letter-spacing="1.5">B · VASCULAR / INFLAMMATORY</text>
+
+          <!-- Node B1: Endothelial Expression -->
+          <rect x="340" y="44" width="180" height="40" rx="7"
+                fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+          <text x="430" y="59" text-anchor="middle" fill="white" font-weight="700" font-size="11">Endothelial / Vascular</text>
+          <text x="430" y="74" text-anchor="middle" fill="white" font-weight="700" font-size="11">Expression</text>
+
+          <!-- Arrow B1 → split -->
+          <line x1="430" y1="84" x2="430" y2="108" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="375" y1="108" x2="430" y2="108" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="430" y1="108" x2="490" y2="108" stroke="#0f766e" stroke-width="1.5"/>
+          <line x1="375" y1="108" x2="375" y2="126" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="490" y1="108" x2="490" y2="126" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B2: DLL4/VEGF/Notch (left) -->
+          <rect x="300" y="127" width="148" height="40" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.1"/>
+          <text x="374" y="142" text-anchor="middle" fill="#065f46" font-size="10.5">DLL4/VEGF/</text>
+          <text x="374" y="157" text-anchor="middle" fill="#065f46" font-size="10.5">Notch Signaling</text>
+
+          <!-- Node B3: Leukocyte Migration (right) -->
+          <rect x="455" y="127" width="104" height="40" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.1"/>
+          <text x="507" y="142" text-anchor="middle" fill="#065f46" font-size="10">Leukocyte</text>
+          <text x="507" y="157" text-anchor="middle" fill="#065f46" font-size="10">Transendoth. Mgr.</text>
+
+          <!-- Arrow B2 → B4 -->
+          <line x1="374" y1="167" x2="374" y2="191" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B4: Angiogenesis -->
+          <rect x="300" y="192" width="148" height="40" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="374" y="207" text-anchor="middle" fill="#065f46" font-size="10.5">Angiogenesis</text>
+          <text x="374" y="222" text-anchor="middle" fill="#065f46" font-size="10.5">Regulation</text>
+
+          <!-- Arrow B3 → B5 -->
+          <line x1="507" y1="167" x2="507" y2="191" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B5: Atherosclerosis CAD -->
+          <rect x="455" y="192" width="104" height="40" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="507" y="207" text-anchor="middle" fill="#065f46" font-size="10">Atherosclerosis /</text>
+          <text x="507" y="222" text-anchor="middle" fill="#065f46" font-size="10">CAD (Ldb2 KO ↑)</text>
+
+          <!-- Converge B4 & B5 → B6 -->
+          <line x1="374" y1="232" x2="374" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="507" y1="232" x2="507" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="374" y1="258" x2="430" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="430" y1="258" x2="507" y2="258" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="430" y1="258" x2="430" y2="278" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B6: Vascular Inflammation -->
+          <rect x="340" y="279" width="180" height="40" rx="7"
+                fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+          <text x="430" y="294" text-anchor="middle" fill="white" font-size="11">Vascular Inflammation</text>
+          <text x="430" y="309" text-anchor="middle" fill="white" font-size="11">& Endothelial Dysfxn</text>
+
+          <!-- Arrow B6 → B7 -->
+          <line x1="430" y1="319" x2="430" y2="343" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B7: BBB / Neurovascular (AD angle) -->
+          <rect x="318" y="344" width="224" height="40" rx="7"
+                fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="430" y="359" text-anchor="middle" fill="#065f46" font-weight="700" font-size="10.5">BBB / Neurovascular Unit</text>
+          <text x="430" y="374" text-anchor="middle" fill="#065f46" font-size="10">(AD-Relevant Hypothesis)</text>
+
+          <!-- Arrow B7 → B8 -->
+          <line x1="430" y1="384" x2="430" y2="408" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B8: Immune Infiltration -->
+          <rect x="340" y="409" width="180" height="40" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="430" y="424" text-anchor="middle" fill="#065f46" font-size="10.5">Immune Infiltration</text>
+          <text x="430" y="439" text-anchor="middle" fill="#065f46" font-size="10.5">(Macrophage / Mast Cell)</text>
+
+          <!-- ============================================================
+               PANEL C — Neural / Synaptic & MAPK (right)
+               ============================================================ -->
+          <rect x="580" y="10" width="310" height="470" rx="10" ry="10"
+                fill="#fff7ed" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="735" y="30" text-anchor="middle" font-weight="700" font-size="9.5"
+                fill="#92400e" letter-spacing="1.5">C · NEURAL / SYNAPTIC &amp; MAPK</text>
+
+          <!-- Node C1: LDB2 in Neuronal Dev -->
+          <rect x="630" y="44" width="200" height="40" rx="7"
+                fill="#b45309" stroke="#92400e" stroke-width="1"/>
+          <text x="730" y="59" text-anchor="middle" fill="white" font-weight="700" font-size="11">LDB2 in Neuronal</text>
+          <text x="730" y="74" text-anchor="middle" fill="white" font-weight="700" font-size="11">Development</text>
+
+          <!-- Arrow C1 → split -->
+          <line x1="730" y1="84" x2="730" y2="108" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="665" y1="108" x2="730" y2="108" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="730" y1="108" x2="795" y2="108" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="665" y1="108" x2="665" y2="126" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+          <line x1="795" y1="108" x2="795" y2="126" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C2: Cortical Proj. Neuron Diff -->
+          <rect x="592" y="127" width="142" height="40" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.1"/>
+          <text x="663" y="142" text-anchor="middle" fill="#78350f" font-size="10.5">Cortical Proj.</text>
+          <text x="663" y="157" text-anchor="middle" fill="#78350f" font-size="10.5">Neuron Diff.</text>
+
+          <!-- Node C3: Hippocampal Dendritic -->
+          <rect x="742" y="127" width="136" height="40" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.1"/>
+          <text x="810" y="142" text-anchor="middle" fill="#78350f" font-size="10">Hippocampal</text>
+          <text x="810" y="157" text-anchor="middle" fill="#78350f" font-size="10">Dendritic Arb.</text>
+
+          <!-- Arrow C2 → C4 -->
+          <line x1="663" y1="167" x2="663" y2="191" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C4: EGR TF interaction -->
+          <rect x="592" y="192" width="142" height="40" rx="7"
+                fill="#ffedd5" stroke="#b45309" stroke-width="1"/>
+          <text x="663" y="207" text-anchor="middle" fill="#78350f" font-size="10.5">EGR Transcription</text>
+          <text x="663" y="222" text-anchor="middle" fill="#78350f" font-size="10.5">Factor Interaction</text>
+
+          <!-- Arrow C4 → C6 -->
+          <line x1="663" y1="232" x2="663" y2="258" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Arrow C3 → C5 MAPK cascade -->
+          <line x1="810" y1="167" x2="810" y2="191" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C5: MAPK Signaling -->
+          <rect x="742" y="192" width="136" height="40" rx="7"
+                fill="#ffedd5" stroke="#b45309" stroke-width="1"/>
+          <text x="810" y="207" text-anchor="middle" fill="#78350f" font-size="10">ERK1/2, p38,</text>
+          <text x="810" y="222" text-anchor="middle" fill="#78350f" font-size="10">JNK (cancer ctx)</text>
+
+          <!-- Node C6: ARC / Synaptic Plasticity -->
+          <rect x="592" y="259" width="142" height="40" rx="7"
+                fill="#f97316" stroke="#c2410c" stroke-width="1.1"/>
+          <text x="663" y="274" text-anchor="middle" fill="white" font-weight="700" font-size="10.5">ARC / Synaptic</text>
+          <text x="663" y="289" text-anchor="middle" fill="white" font-weight="700" font-size="10.5">Plasticity Axis</text>
+
+          <!-- Arrow C5 → C7 -->
+          <line x1="810" y1="232" x2="810" y2="259" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C7: Proliferation / Invasion -->
+          <rect x="742" y="260" width="136" height="38" rx="7"
+                fill="#ffedd5" stroke="#b45309" stroke-width="1"/>
+          <text x="810" y="274" text-anchor="middle" fill="#78350f" font-size="10">Proliferation /</text>
+          <text x="810" y="288" text-anchor="middle" fill="#78350f" font-size="10">Invasion (cancer)</text>
+
+          <!-- Converge C6 & C7 → C8 -->
+          <line x1="663" y1="299" x2="663" y2="326" stroke="#b45309" stroke-width="1.3"/>
+          <line x1="810" y1="298" x2="810" y2="326" stroke="#b45309" stroke-width="1.3"/>
+          <line x1="663" y1="326" x2="730" y2="326" stroke="#b45309" stroke-width="1.3"/>
+          <line x1="730" y1="326" x2="810" y2="326" stroke="#b45309" stroke-width="1.3"/>
+          <line x1="730" y1="326" x2="730" y2="346" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C8: AD Synaptic/Tau hypothesis -->
+          <rect x="618" y="347" width="224" height="40" rx="7"
+                fill="#fde68a" stroke="#b45309" stroke-width="1.3"/>
+          <text x="730" y="362" text-anchor="middle" fill="#78350f" font-weight="700" font-size="10.5">Memory / Tau / Neuroinflam.</text>
+          <text x="730" y="377" text-anchor="middle" fill="#78350f" font-size="10">(AD-Plausible, Unproven)</text>
+
+          <!-- Arrow C8 → C9 -->
+          <line x1="730" y1="387" x2="730" y2="411" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+          <!-- Node C9: Validation Required -->
+          <rect x="618" y="412" width="224" height="40" rx="7"
+                fill="#fff7ed" stroke="#b45309" stroke-width="1"/>
+          <text x="730" y="427" text-anchor="middle" fill="#92400e" font-size="10.5">iPSC / Amyloid / Tau</text>
+          <text x="730" y="442" text-anchor="middle" fill="#92400e" font-size="10.5">Model Validation Needed</text>
+
+          <!-- ============================================================
+               ARROW MARKERS
+               ============================================================ -->
+          <defs>
+            <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1e3a5f"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — Core Molecular Function:</strong> LDB2 acts as a scaffold assembling LIM-domain transcription factor complexes, regulating chromatin/enhancers, and fanning into developmental programs and CpG aging-clock methylation signatures, converging on broad, context-dependent cell-state gene regulation.
+        <strong>Panel B (teal) — Vascular / Inflammatory:</strong> Endothelial LDB2 expression branches into DLL4/VEGF/Notch angiogenic signaling and leukocyte transendothelial migration, reconverging at vascular inflammation and endothelial dysfunction, with a downstream hypothesis linking this to blood–brain barrier impairment relevant to Alzheimer's disease.
+        <strong>Panel C (amber) — Neural / Synaptic &amp; MAPK:</strong> LDB2 in neuronal development branches into cortical projection neuron differentiation → EGR transcription factor interaction → ARC/synaptic plasticity, and hippocampal dendritic arborization → MAPK (ERK/p38/JNK) → proliferation/invasion (cancer context), reconverging at an unproven but plausible AD memory/tau/neuroinflammation hypothesis requiring formal validation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        <p>The supplied literature does not support LDB2 as an established Alzheimer's disease gene, biomarker, mechanistic driver, or therapeutic target. No study directly examines LDB2 in AD patients, AD brain tissue, or AD experimental models.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Core Transcriptional Function</h3>
+        <p>LDB2 is a LIM-domain-binding scaffold that assembles transcription-factor complexes and regulates enhancers. This makes it potentially relevant to broad cell-state regulation, but specificity to Alzheimer's disease biology is not demonstrated by current evidence.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Aging & Epigenetic Methylation</h3>
+        <p>LDB2 CpG methylation appears in multiple epigenetic-clock and age-prediction panels. Since aging is the dominant AD risk factor, LDB2 methylation may be worth exploring as part of systemic biological-aging signatures. Causality is not implied.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Vascular & Inflammatory Plausibility</h3>
+        <p>LDB2 is implicated in coronary artery disease, atherosclerosis, and leukocyte transendothelial migration. Ldb2 deficiency worsened atherosclerosis in mice. Vascular inflammation and BBB impairment are relevant to AD progression, motivating neurovascular exploration.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Synaptic-Transcription Axis</h3>
+        <p>In non-AD neuroscience, LDB2 links to neuronal development, hippocampal dendritic arborization, and an LDB2–EGR–ARC transcriptional axis. ARC and EGR networks govern synaptic plasticity and memory — both disrupted early in AD — but AD-specific involvement is unshown.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Therapeutic Uncertainty</h3>
+        <p>LDB2 is not a straightforward drug target. As a scaffold/transcriptional cofactor with broad, context-dependent roles across cancer, development, and vascular biology, global inhibition or activation carries unpredictable risks. Extensive validation is required before any therapeutic prioritization.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li><strong>Position LDB2 as hypothesis-generating, not validated.</strong> Treat it as an exploratory regulatory node in aging-related, vascular-inflammatory, endothelial, and synaptic-transcriptional pathways that may modify AD susceptibility — not as a direct disease-modifying target ready for intervention.</li>
+
+      <li><strong>Prioritize biomarker exploration first.</strong> Investigate LDB2 methylation and expression in AD blood, brain, cerebrospinal fluid, and single-cell datasets before any therapeutic targeting is considered.</li>
+
+      <li><strong>Profile AD-relevant brain regions.</strong> Test whether LDB2 expression or methylation differs in hippocampus, entorhinal cortex, temporal cortex, and prefrontal cortex relative to controls.</li>
+
+      <li><strong>Define cell-type specificity.</strong> Determine whether LDB2 is expressed or altered in neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, vascular smooth muscle cells, or infiltrating immune cells in AD brain tissue.</li>
+
+      <li><strong>Investigate vascular mechanisms first.</strong> Focus on whether LDB2 regulates brain endothelial activation, leukocyte transmigration across blood–brain barrier models, DLL4/VEGF/Notch signaling, vascular inflammation, or cerebral perfusion phenotypes.</li>
+
+      <li><strong>Probe synaptic-transcription mechanisms.</strong> Determine whether LDB2 interacts with EGR-family transcription factors or regulates ARC and other activity-dependent synaptic genes in AD-relevant neurons.</li>
+
+      <li><strong>Evaluate MAPK effects carefully in CNS systems.</strong> LDB2-associated activation of p38, ERK, and JNK could be protective or harmful depending on cell type and disease stage; do not extrapolate from cancer studies.</li>
+
+      <li><strong>Do not overinterpret co-mentions or growth GWAS findings.</strong> APP co-mention and animal body-weight GWAS associations are biologically contextual but do not constitute mechanistic evidence for Alzheimer's disease.</li>
+
+      <li><strong>Complete a full validation battery before therapeutic prioritization.</strong> Required studies include: AD genetic association analysis; AD brain expression and methylation profiling; perturbation in human iPSC-derived neurons, astrocytes, microglia, and brain endothelial cells; and testing in amyloid and tau models with outcome measures for amyloid burden, tau pathology, synaptic integrity, neuroinflammation, vascular integrity, and cognition.</li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — LDB2 &amp; Alzheimer's Disease</div>
+      <p>LDB2 is <strong>not an established Alzheimer's disease gene, biomarker, or therapeutic target</strong> based on the available evidence. It is a broadly acting <strong>transcriptional scaffold</strong> whose roles in epigenetic aging, endothelial and vascular inflammatory biology, and synaptic-gene transcriptional networks create <strong>plausible but entirely indirect conceptual links</strong> to AD pathobiology. The most defensible current positioning is as an <strong>exploratory regulatory node</strong> in aging-related, neurovascular, and synaptic-transcriptional contexts that <em>might</em> modify AD susceptibility or progression. <strong>No therapeutic conclusion can be drawn</strong> until rigorous AD-specific genetic, molecular, and functional validation studies have been completed across relevant cell types and disease models.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  LDB2 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

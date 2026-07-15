@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRHDE — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f8fafc;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-warning {
+    background: rgba(180, 83, 9, 0.28);
+    border: 1px solid rgba(251, 191, 36, 0.45);
+    color: #fde68a;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: var(--neutral);
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .verdict-banner p {
+    font-size: 1.02rem;
+    opacity: 0.93;
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .verdict-banner strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    padding: 22px 24px;
+    border-top: 1px solid var(--neutral-border);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TRHDE &nbsp;|&nbsp; Thyrotropin-Releasing Hormone Degrading Ectoenzyme</span>
+    <span class="chip chip-warning">⚠ Thyroid-axis &amp; endocrine safety risks</span>
+  </div>
+  <h1>TRHDE &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <span class="callout-label">Scope Caveat:</span>
+      TRHDE has no validated, direct role in Alzheimer's disease pathology. AD relevance is currently indirect, mediated through the lncRNA <em>TRHDE-AS1</em>, TRH neuromodulatory biology, and metabolic/endocrine overlap rather than demonstrated effects on amyloid-β, tau, synaptic degeneration, or cognitive decline.
+    </div>
+    <p>TRHDE is a highly specific thyrotropin-releasing hormone-degrading ectoenzyme that terminates TRH signaling. Its direct role in Alzheimer's disease is not established. The strongest AD-specific evidence concerns <em>TRHDE-AS1</em>, an antisense long noncoding RNA at the TRHDE locus, which was included in a predicted AD competing endogenous RNA (ceRNA) network involving miRNAs and ribosomal protein genes — including RPL35 and RPL35A — linked to tau and amyloid-β model data.</p>
+    <p>TRHDE's relevance to AD is therefore mechanistic and hypothesis-generating rather than validated. The enzyme may matter because it regulates TRH availability, and TRH signaling has CNS roles in arousal, cognition-related circuits, autonomic regulation, appetite, stress responses, hypothalamic-pituitary-thyroid axis activity, and metabolic homeostasis — all domains overlapping with AD-relevant processes. However, the evidence does not demonstrate that TRHDE directly modifies amyloid-β, tau, synaptic degeneration, neuroinflammation, neuronal loss, or cognitive decline.</p>
+    <p>As a therapeutic concept, TRHDE inhibition or TRHDE-resistant TRH analogs could theoretically prolong central TRH signaling. This may have potential for modulating neuroendocrine, metabolic, arousal, autonomic, or stress-related features relevant to AD, but disease-modifying efficacy in AD is unproven.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Signaling -->
+        <rect x="14" y="14" width="285" height="472" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="156" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1.2" fill="#1e3a5f" text-transform="uppercase">A · TRH SIGNALLING AXIS</text>
+
+        <!-- Hypothalamus node -->
+        <rect x="56" y="48" width="200" height="38" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="156" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Hypothalamic TRH</text>
+        <text x="156" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Release</text>
+
+        <!-- Arrow down -->
+        <line x1="156" y1="86" x2="156" y2="110" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- TRHDE node -->
+        <rect x="56" y="112" width="200" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="156" y="127" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRHDE Ectoenzyme</text>
+        <text x="156" y="142" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">(TRH Degradation)</text>
+
+        <!-- Arrow down -->
+        <line x1="156" y1="150" x2="156" y2="174" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- TRH Receptor node -->
+        <rect x="56" y="176" width="200" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1" fill-opacity="0.75"/>
+        <text x="156" y="191" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRH Receptor</text>
+        <text x="156" y="206" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Activation</text>
+
+        <!-- Branch arrows from TRH Receptor -->
+        <!-- Left branch -->
+        <line x1="96" y1="214" x2="76" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Right branch -->
+        <line x1="216" y1="214" x2="236" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- CNS node (left) -->
+        <rect x="28" y="246" width="110" height="38" rx="7" fill="#3b82f6" stroke="#2563eb" stroke-width="1" fill-opacity="0.80"/>
+        <text x="83" y="261" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">CNS Effects</text>
+        <text x="83" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">Arousal/Cognition</text>
+
+        <!-- HPT node (right) -->
+        <rect x="174" y="246" width="110" height="38" rx="7" fill="#3b82f6" stroke="#2563eb" stroke-width="1" fill-opacity="0.80"/>
+        <text x="229" y="261" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">HPT Axis</text>
+        <text x="229" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ffffff">TSH/Thyroid</text>
+
+        <!-- Converge arrows to neuroendocrine outcome -->
+        <line x1="83" y1="284" x2="110" y2="316" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="229" y1="284" x2="202" y2="316" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Metabolic/NE outcome node -->
+        <rect x="56" y="318" width="200" height="38" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1" fill-opacity="0.72"/>
+        <text x="156" y="333" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Metabolic &amp; NE</text>
+        <text x="156" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Homeostasis</text>
+
+        <!-- Arrow to tanycyte note -->
+        <line x1="156" y1="356" x2="156" y2="382" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Tanycyte node -->
+        <rect x="56" y="384" width="200" height="38" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="156" y="399" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">β2-Tanycyte TRHDE</text>
+        <text x="156" y="414" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Stress-Evoked Tuning</text>
+
+
+        <!-- Panel B: AD Locus / ceRNA -->
+        <rect x="317" y="14" width="290" height="290" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="462" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1.2" fill="#991b1b">B · TRHDE-AS1 / ceRNA NETWORK</text>
+
+        <!-- TRHDE Locus node -->
+        <rect x="357" y="48" width="210" height="38" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="462" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRHDE Genomic Locus</text>
+        <text x="462" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">(Sense + Antisense)</text>
+
+        <!-- Arrow to AS1 -->
+        <line x1="462" y1="86" x2="462" y2="110" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- TRHDE-AS1 node -->
+        <rect x="357" y="112" width="210" height="38" rx="7" fill="#dc2626" stroke="#991b1b" stroke-width="1" fill-opacity="0.80"/>
+        <text x="462" y="127" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRHDE-AS1 lncRNA</text>
+        <text x="462" y="142" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">miRNA Sponge</text>
+
+        <!-- Branch: left = miRNA, right = circRNA -->
+        <line x1="408" y1="150" x2="385" y2="182" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="516" y1="150" x2="539" y2="182" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- miRNA node -->
+        <rect x="333" y="184" width="106" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="386" y="199" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">5 AD-linked</text>
+        <text x="386" y="214" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">miRNAs</text>
+
+        <!-- circRNA node -->
+        <rect x="461" y="184" width="106" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="514" y="199" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">26 circRNAs</text>
+        <text x="514" y="214" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">ceRNA axis</text>
+
+        <!-- Converge arrows to RPL node -->
+        <line x1="386" y1="222" x2="418" y2="254" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="514" y1="222" x2="482" y2="254" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- RPL35/35A node -->
+        <rect x="357" y="256" width="210" height="38" rx="7" fill="#7f1d1d" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="462" y="271" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">RPL35 / RPL35A</text>
+        <text x="462" y="286" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Tau &amp; Aβ Pathology Links</text>
+
+
+        <!-- Panel C: Therapeutic & Safety -->
+        <rect x="625" y="14" width="302" height="472" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="776" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1.2" fill="#0f766e">C · THERAPEUTIC &amp; SAFETY</text>
+
+        <!-- Inhibitor node -->
+        <rect x="663" y="48" width="226" height="38" rx="7" fill="#0f766e" stroke="#134e4a" stroke-width="1"/>
+        <text x="776" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRHDE Inhibitor /</text>
+        <text x="776" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRH-Resistant Analog</text>
+
+        <!-- Arrow down -->
+        <line x1="776" y1="86" x2="776" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Prolonged TRH -->
+        <rect x="663" y="112" width="226" height="38" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1" fill-opacity="0.80"/>
+        <text x="776" y="127" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Prolonged Central</text>
+        <text x="776" y="142" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">TRH Signalling</text>
+
+        <!-- Branch arrows -->
+        <line x1="720" y1="150" x2="700" y2="182" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="832" y1="150" x2="852" y2="182" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Symptomatic benefit node -->
+        <rect x="636" y="184" width="126" height="50" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="699" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Symptomatic</text>
+        <text x="699" y="216" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Benefits:</text>
+        <text x="699" y="230" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Arousal/Metabolism</text>
+
+        <!-- Safety risk node -->
+        <rect x="778" y="184" width="126" height="50" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="841" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Safety Risks:</text>
+        <text x="841" y="216" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">TSH/Prolactin,</text>
+        <text x="841" y="230" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Reproduction</text>
+
+        <!-- Converge to unproven node -->
+        <line x1="699" y1="234" x2="730" y2="268" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="841" y1="234" x2="810" y2="268" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- AD Efficacy node -->
+        <rect x="663" y="270" width="226" height="38" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1" fill-opacity="0.80"/>
+        <text x="776" y="285" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">AD Efficacy:</text>
+        <text x="776" y="300" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Currently Unproven</text>
+
+        <!-- Arrow to TDP -->
+        <line x1="776" y1="308" x2="776" y2="334" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- TDP-43 node -->
+        <rect x="663" y="336" width="226" height="38" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="776" y="351" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">TDP-43 ALS/FTD Models:</text>
+        <text x="776" y="366" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">TRHDE Differentially Expressed</text>
+
+        <!-- Arrow to Macrophage/Immune -->
+        <line x1="776" y1="374" x2="776" y2="400" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Immune node -->
+        <rect x="663" y="402" width="226" height="38" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="776" y="417" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Macrophage/Immune:</text>
+        <text x="776" y="432" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">circ_0099188 → miR-381-3p</text>
+
+
+        <!-- Panel B lower extension: connect to AD overlap -->
+        <rect x="317" y="320" width="290" height="166" rx="12" fill="#f1f5f9" fill-opacity="0.60" stroke="#475569" stroke-width="1.2"/>
+        <text x="462" y="342" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1.2" fill="#334155">D · AD-RELEVANT EXPRESSION</text>
+
+        <rect x="337" y="352" width="126" height="50" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+        <text x="400" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Brain Regions:</text>
+        <text x="400" y="384" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Hippocampus,</text>
+        <text x="400" y="398" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Cortex, Hyp.</text>
+
+        <rect x="481" y="352" width="116" height="50" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+        <text x="539" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Raphe, SN,</text>
+        <text x="539" y="384" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Olfactory Bulb,</text>
+        <text x="539" y="398" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Piriform Ctx</text>
+
+        <line x1="400" y1="402" x2="420" y2="428" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="539" y1="402" x2="519" y2="428" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <rect x="357" y="430" width="210" height="38" rx="7" fill="#475569" stroke="#334155" stroke-width="1"/>
+        <text x="462" y="445" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">Hypothesis-Generating</text>
+        <text x="462" y="460" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#ffffff">AD Relevance Only</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> (blue): The TRH signalling axis — TRHDE degrades TRH at the ectoenzyme level, controlling TRH receptor activation. Downstream effects branch into CNS arousal/cognition and HPT-axis TSH/thyroid regulation before converging on metabolic and neuroendocrine homeostasis; β2-tanycyte TRHDE provides stress-evoked tuning of this cascade.
+      <strong>Panel B</strong> (red): The TRHDE-AS1 ceRNA network — the antisense lncRNA at the TRHDE locus acts as a miRNA sponge within a predicted AD network comprising five miRNAs and 26 circRNAs, converging on RPL35/RPL35A ribosomal proteins linked to tau and amyloid-β model data.
+      <strong>Panel C</strong> (teal/amber): Therapeutic and safety landscape — TRHDE inhibition or TRH-resistant analogs prolong central TRH signalling, potentially offering symptomatic benefits (arousal, metabolism) but carrying safety risks (TSH/prolactin, reproduction); AD disease-modifying efficacy remains unproven. Adjacent amber nodes highlight TDP-43 co-pathology findings and macrophage/circRNA immune connections.
+      <strong>Panel D</strong> (slate): TRHDE is expressed in AD-relevant brain regions (hippocampus, cortex, hypothalamus, raphe, substantia nigra, olfactory bulb), supporting hypothesis-generating relevance without validated disease-modifying evidence.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>AD Evidence Is Limited to TRHDE-AS1, Not the Enzyme</h3>
+        <p>In one Alzheimer's ceRNA analysis, <em>TRHDE-AS1</em> was one of five lncRNAs in a predicted regulatory network with five miRNAs, 26 circRNAs, and ten ribosomal protein mRNAs. RPL35 and RPL35A were linked to tau and amyloid-β pathology model data — suggesting a connection to ribosomal stress, not direct TRHDE enzymatic action.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>TRHDE Is the Selective Terminator of TRH Signalling</h3>
+        <p>TRHDE has unusually narrow substrate specificity, with TRH as its best-characterized substrate. This selectivity makes TRHDE a plausible druggable node for selectively enhancing endogenous TRH activity in the CNS without broad off-target enzymatic consequences.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Pharmacological Feasibility Has Been Demonstrated</h3>
+        <p>TRHDE inhibitors and TRHDE-resistant TRH analogs have been described. A dual-action TRH-based peptide showed potent TRHDE inhibition, central TRH receptor binding, plasma stability, and central behavioral effects in rats — critically without eliciting TSH release. This supports druggability, though not AD efficacy.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Brain Expression Covers AD-Relevant Regions</h3>
+        <p>TRHDE is expressed in cortex, olfactory bulb, piriform cortex, cerebellar cortex, hypothalamus, dorsal raphe, substantia nigra, and pyramidal cells of Ammon's horn (hippocampal region). Hippocampal expression is particularly notable for AD relevance, though no AD-specific TRHDE alteration has been demonstrated.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Metabolic &amp; Endocrine Overlap with AD Risk</h3>
+        <p>TRHDE has been associated with glucose regulation, feed efficiency, reproductive cycling, lactation, hepatic/metabolic disease signatures, and energy utilization. Insulin resistance, systemic metabolism, hepatic inflammation, and energy imbalance all contribute to AD risk and progression — providing indirect mechanistic plausibility.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>TDP-43 and Immune Pathways Offer Adjacent Evidence</h3>
+        <p>TRHDE appeared among differentially expressed targets in TDP-43 ALS/FTD models, relevant because TDP-43 co-pathology occurs in AD and is associated with worse cognition. A separate macrophage study found TRHDE induction alongside circRNA, miR-381-3p, calcineurin, and chemokine effects overlapping with neuroinflammatory pathways — though neither study was conducted in microglia or AD brain.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span><strong>Treat TRHDE as a hypothesis-generating target:</strong> Current evidence does not support TRHDE as a validated, disease-modifying AD target. Downstream research decisions should reflect this preclinical status.</span>
+      </li>
+      <li>
+        <span><strong>Prioritize AD-relevant expression validation:</strong> Determine TRHDE and TRHDE-AS1 expression in human AD brain, CSF, blood, and single-cell datasets, with specific focus on vulnerable regions — hippocampus, cortex, hypothalamus, and brainstem nuclei.</span>
+      </li>
+      <li>
+        <span><strong>Correlate TRHDE with core AD biomarkers:</strong> Assess whether TRHDE enzyme expression or activity correlates with amyloid-β burden, tau pathology, synaptic loss, neuroinflammatory markers, metabolic dysfunction, TDP-43 co-pathology, cognitive decline, or disease stage.</span>
+      </li>
+      <li>
+        <span><strong>Test TRHDE inhibition in AD models experimentally:</strong> Evaluate whether TRHDE inhibition, genetic reduction, or TRHDE-resistant TRH analogs affect AD phenotypes — including amyloid, tau, synaptic function, neuronal survival, neuroinflammation, glucose metabolism, arousal, and cognition — in cellular and animal systems.</span>
+      </li>
+      <li>
+        <span><strong>Separately evaluate enzymatic vs. noncoding-locus mechanisms:</strong> TRHDE enzymatic function and TRHDE-AS1/circRNA/noncoding-locus effects may represent distinct therapeutic opportunities: enzyme inhibition to enhance TRH signalling, and RNA modulation to alter ceRNA networks.</span>
+      </li>
+      <li>
+        <span><strong>Validate the predicted AD ceRNA axis:</strong> Confirm expression direction, cell-type specificity, physical RNA interactions, and functional effects of the TRHDE-AS1 → miRNA → RPL35/RPL35A axis on tau/Aβ-linked stress pathways in AD-relevant systems.</span>
+      </li>
+      <li>
+        <span><strong>Systematically assess safety risks:</strong> Any TRHDE-modulating strategy must address effects on thyroid-axis signalling, TSH, prolactin, appetite, reproduction, autonomic physiology, stress responses, and compensatory receptor or tanycyte/glial remodelling before clinical advancement.</span>
+      </li>
+      <li>
+        <span><strong>Frame initial therapeutic positioning around symptomatic modulation:</strong> Unless future studies demonstrate direct effects on core AD pathology, TRHDE-targeting strategies are most plausible for symptomatic or systems-level effects — arousal, neuroendocrine tone, metabolism, autonomic function, and stress responsiveness.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — TRHDE in Alzheimer's Disease</span>
+      <p>
+        <strong>TRHDE is a biologically compelling but insufficiently validated candidate</strong> for Alzheimer's disease research. Its role as the selective terminator of TRH signalling, its expression in AD-relevant brain regions, and its associations with metabolic, immune, and neuroendocrine pathways overlapping with AD biology provide a coherent rationale for investigation. However, <strong>no direct evidence currently links TRHDE enzymatic activity to amyloid-β, tau, synaptic degeneration, neuroinflammation, or cognitive decline</strong>. The most specific AD evidence involves <strong>TRHDE-AS1</strong> — an antisense lncRNA at the same genomic locus — embedded in a predicted ceRNA network that remains unvalidated in human AD tissue. Pharmacological feasibility exists, with TRHDE-resistant TRH analogs demonstrating central behavioral effects without TSH release, but <strong>disease-modifying efficacy in AD is entirely unproven</strong>. The most productive near-term path is systematic validation of both the enzymatic and noncoding arms of TRHDE biology in AD-specific experimental contexts, with rigorous attention to the endocrine and metabolic safety profile of any therapeutic modulation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TRHDE · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

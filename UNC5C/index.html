@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UNC5C — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.3);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 16px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent   { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent h3{ color: var(--dark); }
+
+  .card-danger   { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger h3{ color: var(--danger); }
+
+  .card-positive { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+
+  .card-blue     { background: var(--blue-light);    border-left: 4px solid var(--blue);     }
+  .card-blue h3  { color: var(--blue); }
+
+  .card-gray     { background: var(--neutral-bg);    border-left: 4px solid #94a3b8;         }
+  .card-gray h3  { color: #475569; }
+
+  .card-warning  { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3{ color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    font-size: 1.05rem;
+    color: #d8b4fe;
+  }
+
+  .verdict p strong.kw {
+    color: #c4b5fd;
+    font-style: normal;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chips">
+    <span class="chip">Gene: UNC5C &nbsp;|&nbsp; Unc-5 Netrin Receptor C</span>
+    <span class="chip chip-danger">⚠ Apoptotic / Neurodegeneration Risk</span>
+  </div>
+  <h1>UNC5C &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> UNC5C has essential roles in neuronal guidance,
+      cytoskeletal regulation, synaptic organisation, and tumour-suppressor biology. Indiscriminate
+      global activation or inhibition risks serious off-target effects; modulation must be
+      pathway-, cell-type-, and disease-stage-specific. No UNC5C-targeted AD clinical trials have
+      been reported to date.
+    </div>
+
+    <p>
+      UNC5C is a biologically plausible Alzheimer's disease (AD) risk and mechanism gene centred on
+      netrin-1 receptor biology, dependence-receptor apoptosis, neuronal guidance, and stress
+      sensitivity. The strongest AD-specific evidence links UNC5C to rare genetic risk variants —
+      especially <em>T835M</em> — inflammation-modified genetic risk involving MCP-1, hippocampal
+      neurodegeneration, oxidative stress, apoptotic signalling, synaptic degeneration, glial
+      abnormalities, cerebral amyloid angiopathy (CAA), and cognitive decline.
+    </p>
+    <p>
+      UNC5C is not a classical amyloid-production gene. Rather, it governs how vulnerable neurons
+      respond to AD-relevant stressors such as amyloid-β, glutamate, oxidative stress, reduced
+      netrin-1 signalling, inflammation, and proteolytic cleavage by δ-secretase/AEP. Its core
+      disease-relevant identity is that of a <em>dependence receptor</em>: ligand-supported
+      netrin-1/UNC5C signalling may maintain guidance or survival functions, whereas ligand
+      deficiency, mutation, or cleavage can shift UNC5C toward pro-apoptotic signalling.
+    </p>
+    <p>
+      Therapeutically, UNC5C is promising but complex. The most plausible strategies involve
+      preventing maladaptive UNC5C-driven neuronal death, restoring netrin-1/UNC5C pathway balance,
+      blocking downstream stress/apoptotic cascades, inhibiting δ-secretase/AEP-mediated UNC5C
+      cleavage, reducing oxidative and inflammatory amplification, and using UNC5C variants as
+      precision-medicine biomarkers.
+    </p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN — 4 panels, total node count:
+        Panel A (Upstream Signals): 3 nodes
+        Panel B (Receptor & Cleavage): 3 nodes
+        Panel C (Apoptotic Cascade, branching): 4 nodes
+        Panel D (Downstream Outcomes): 3 nodes
+        TOTAL = 13 nodes — within 16-node limit.
+
+        ViewBox: 0 0 960 490
+        Panel A: x=10, y=10, w=190, h=470
+        Panel B: x=215, y=10, w=200, h=470
+        Panel C: x=430, y=10, w=270, h=470
+        Panel D: x=715, y=10, w=235, h=470
+
+        Row grid (centres): row1=80, row2=180, row3=280, row4=380
+      -->
+      <svg viewBox="0 0 960 490" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;max-width:920px;display:block;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-red" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: Upstream Stressors ══ -->
+        <rect x="10" y="10" width="190" height="470" rx="10"
+              fill="#f3eeff" fill-opacity="0.55" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="105" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#3b0764" letter-spacing="1.2">A · UPSTREAM STRESSORS</text>
+
+        <!-- A1: Reduced Netrin-1 -->
+        <rect x="25" y="44" width="160" height="52" rx="7"
+              fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="105" y="67" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Reduced</text>
+        <text x="105" y="82" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Netrin-1</text>
+
+        <!-- A2: Amyloid-β / Glutamate -->
+        <rect x="25" y="160" width="160" height="52" rx="7"
+              fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="105" y="183" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Aβ / Glutamate</text>
+        <text x="105" y="198" text-anchor="middle" font-size="10" fill="#3b0764">Neurotoxic stressors</text>
+
+        <!-- A3: MCP-1 Inflammation -->
+        <rect x="25" y="278" width="160" height="52" rx="7"
+              fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="105" y="301" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">MCP-1 Inflammation</text>
+        <text x="105" y="316" text-anchor="middle" font-size="10" fill="#3b0764">rs72659964 risk</text>
+
+        <!-- arrows A→B (panel gutter centre ~212) -->
+        <!-- A1 → B1 -->
+        <line x1="185" y1="70" x2="214" y2="70" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- A2 → B2 -->
+        <line x1="185" y1="186" x2="214" y2="186" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- A3 → B2 elbow: right then down to B2 -->
+        <polyline points="185,304 200,304 200,230 214,230" fill="none" stroke="#7c3aed" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ══ PANEL B: Receptor & Cleavage ══ -->
+        <rect x="215" y="10" width="200" height="470" rx="10"
+              fill="#fef2f2" fill-opacity="0.45" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="315" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#991b1b" letter-spacing="1.2">B · RECEPTOR &amp; CLEAVAGE</text>
+
+        <!-- B1: UNC5C (WT) Survival -->
+        <rect x="228" y="44" width="174" height="52" rx="7"
+              fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="315" y="67" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">UNC5C (WT)</text>
+        <text x="315" y="82" text-anchor="middle" font-size="10" fill="#7f1d1d">Netrin survival signal</text>
+
+        <!-- B2: UNC5C T835M / Cleavage -->
+        <rect x="228" y="160" width="174" height="66" rx="7"
+              fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="315" y="181" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">UNC5C T835M or</text>
+        <text x="315" y="196" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">AEP Cleavage</text>
+        <text x="315" y="213" text-anchor="middle" font-size="9.5" fill="#7f1d1d">N467 / N547 sites</text>
+
+        <!-- B3: δ-secretase / AEP -->
+        <rect x="228" y="300" width="174" height="52" rx="7"
+              fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="315" y="323" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">δ-secretase / AEP</text>
+        <text x="315" y="338" text-anchor="middle" font-size="10" fill="#7f1d1d">Proteolytic activator</text>
+
+        <!-- B3 → B2 (AEP cleaves UNC5C) elbow up -->
+        <polyline points="315,300 315,264 402,264 402,226" fill="none" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- B1 → B2 (ligand loss shifts to pro-apoptotic) -->
+        <line x1="315" y1="96" x2="315" y2="159" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- arrows B2 → Panel C entry -->
+        <line x1="402" y1="193" x2="428" y2="193" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- ══ PANEL C: Apoptotic Cascade (branching) ══ -->
+        <rect x="430" y="10" width="270" height="470" rx="10"
+              fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="565" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#b45309" letter-spacing="1.2">C · APOPTOTIC CASCADE</text>
+
+        <!-- C1: DAPK1 / PKD (shared entry) -->
+        <rect x="458" y="160" width="156" height="52" rx="7"
+              fill="#fef9c3" stroke="#b45309" stroke-width="1.4"/>
+        <text x="536" y="181" text-anchor="middle" font-size="10.5" font-weight="700" fill="#78350f">DAPK1 / Protein</text>
+        <text x="536" y="196" text-anchor="middle" font-size="10.5" font-weight="700" fill="#78350f">Kinase D</text>
+
+        <!-- Branch L: ASK1 -->
+        <rect x="444" y="278" width="126" height="52" rx="7"
+              fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+        <text x="507" y="301" text-anchor="middle" font-size="10.5" font-weight="700" fill="#78350f">ASK1</text>
+        <text x="507" y="316" text-anchor="middle" font-size="9.5" fill="#78350f">(APP convergence)</text>
+
+        <!-- Branch R: NADPH Oxidase / ROS -->
+        <rect x="582" y="278" width="104" height="52" rx="7"
+              fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+        <text x="634" y="301" text-anchor="middle" font-size="10.5" font-weight="700" fill="#78350f">NADPH Ox.</text>
+        <text x="634" y="316" text-anchor="middle" font-size="9.5" fill="#78350f">↑ ROS / JNK</text>
+
+        <!-- C4: Caspase-3/7 (convergence) -->
+        <rect x="468" y="394" width="136" height="52" rx="7"
+              fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+        <text x="536" y="415" text-anchor="middle" font-size="10.5" font-weight="700" fill="#78350f">Caspase-3/7</text>
+        <text x="536" y="430" text-anchor="middle" font-size="9.5" fill="#78350f">Apoptosis execution</text>
+
+        <!-- C1 → BranchL (ASK1) -->
+        <polyline points="510,212 510,242 507,242 507,277" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- C1 → BranchR (NADPH) -->
+        <polyline points="562,212 562,248 634,248 634,277" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ASK1 → Caspase -->
+        <polyline points="507,330 507,370 504,370 504,393" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- NADPH → Caspase elbow -->
+        <polyline points="634,330 634,370 570,370 570,393" fill="none" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ══ PANEL D: Downstream Outcomes ══ -->
+        <rect x="715" y="10" width="235" height="470" rx="10"
+              fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="832" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#0f766e" letter-spacing="1.2">D · DOWNSTREAM OUTCOMES</text>
+
+        <!-- D1: Hippocampal Neurodegeneration -->
+        <rect x="728" y="44" width="209" height="52" rx="7"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="832" y="67" text-anchor="middle" font-size="10.5" font-weight="700" fill="#134e4a">Hippocampal</text>
+        <text x="832" y="82" text-anchor="middle" font-size="10.5" font-weight="700" fill="#134e4a">Neurodegeneration</text>
+
+        <!-- D2: Synaptic / Glial Pathology -->
+        <rect x="728" y="160" width="209" height="66" rx="7"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="832" y="181" text-anchor="middle" font-size="10.5" font-weight="700" fill="#134e4a">Synaptic Degeneration</text>
+        <text x="832" y="196" text-anchor="middle" font-size="10" fill="#134e4a">Glial abnormalities</text>
+        <text x="832" y="211" text-anchor="middle" font-size="10" fill="#134e4a">↓GFAP / ↑Microglia</text>
+
+        <!-- D3: Cognitive Decline / CAA -->
+        <rect x="728" y="394" width="209" height="52" rx="7"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="832" y="417" text-anchor="middle" font-size="10.5" font-weight="700" fill="#134e4a">Cognitive Decline &amp; CAA</text>
+        <text x="832" y="432" text-anchor="middle" font-size="10" fill="#134e4a">PACC / atrophy markers</text>
+
+        <!-- Caspase → D1 inter-panel connector: elbow through gutter -->
+        <polyline points="604,420 660,420 660,70 727,70" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- D1 → D2 -->
+        <line x1="832" y1="96" x2="832" y2="159" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- D2 → D3 -->
+        <polyline points="832,226 832,393" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure.</strong>
+      <strong>Panel A (Upstream Stressors)</strong> shows the three converging upstream inputs that
+      engage UNC5C pathology: reduced netrin-1 availability, Aβ/glutamate neurotoxic stress, and
+      MCP-1-driven inflammation amplifying the rs72659964 genetic risk.
+      <strong>Panel B (Receptor &amp; Cleavage)</strong> depicts how ligand loss or the T835M
+      mutation shifts WT UNC5C survival signalling toward pro-apoptotic activity, and how
+      δ-secretase/AEP cleaves UNC5C at N467/N547 to further amplify this shift.
+      <strong>Panel C (Apoptotic Cascade)</strong> illustrates the branching downstream kinase
+      cascade: DAPK1/PKD fans out into two parallel arms — ASK1 (converging with APP-mediated
+      death signalling) and NADPH oxidase/JNK/ROS — both reconverging onto Caspase-3/7 execution.
+      <strong>Panel D (Downstream Outcomes)</strong> maps the resulting neuropathological
+      consequences: hippocampal neurodegeneration, synaptic and glial pathology, and ultimately
+      cognitive decline and cerebral amyloid angiopathy.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Rare Variant Genetics</h3>
+        UNC5C T835M segregated with late-onset AD in families and was associated with increased AD
+        risk in case-control cohorts. Additional variants rs72659964, rs3846455, and rs17024131 also
+        show AD-relevant associations, including CAA severity, hippocampal atrophy, and faster
+        cognitive decline on the PACC.
+      </div>
+
+      <div class="card card-danger">
+        <h3>T835M Increases Neuronal Vulnerability</h3>
+        Rather than altering amyloid production, T835M UNC5C sensitises neurons to death from Aβ,
+        glutamate, and staurosporine. A 2025 knock-in mouse model confirmed age-dependent
+        hippocampal atrophy, ventricular enlargement, CA1 dendritic disorganisation, and elevated
+        caspase-3/7 and TUNEL apoptosis. Crossing with <em>App</em><sup>NL-G-F</sup> mice
+        exacerbated pathology and raised Aβ42 levels, supporting mutual amplification.
+      </div>
+
+      <div class="card card-warning">
+        <h3>δ-Secretase / AEP Cleavage Axis</h3>
+        Netrin-1 deficiency activates δ-secretase/AEP, which cleaves UNC5C at N467 and N547,
+        triggering caspase-3 activation and AD-like cognitive impairment in models. Preventing
+        cleavage reduces proapoptotic activity; deleting UNC5C in netrin-1-depleted mice attenuates
+        pathology and rescues cognition — establishing a high-priority preclinical target node.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Defined Apoptotic Kinase Cascade</h3>
+        T835M-UNC5C death signalling involves DAPK1, Protein Kinase D, ASK1, JNK, and NADPH
+        oxidase. ASK1 represents a convergence point shared with APP-mediated death signalling,
+        providing a potential node for combined pathway intervention. T835M mice also show
+        upregulated oxidative-stress pathways, increased NADPH oxidase, and reduced chaperone/
+        proteostasis signatures.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Inflammation-Sensitive Genetic Risk</h3>
+        Elevated blood MCP-1 increased AD risk and brain AD pathology specifically in carriers of
+        UNC5C rs72659964 AT/TT genotypes. This gene–environment interaction suggests that the
+        peripheral inflammatory state can reveal or amplify UNC5C-associated vulnerability, and
+        that anti-inflammatory strategies targeting the MCP-1/CCR2 axis may be especially relevant
+        for these individuals.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Broader Neurobiological Plausibility</h3>
+        Beyond AD, UNC5C regulates netrin-dependent growth cone behaviour, axon repulsion, neurite
+        outgrowth, neuronal migration, synaptic partner selection, and cytoskeletal dynamics through
+        interactions with DCC, TRIM9, syntaxin-1, FLRT2, DSCAM, Fyn/FAK/PAK1, and
+        tubulin-associated systems. Schisandrin A has been shown to bind the UNC5C ZU5 domain,
+        demonstrating that UNC5C domains are pharmacologically accessible to small molecules.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <strong>Prioritise precision-medicine stratification.</strong>
+        Risk variants T835M, rs72659964, rs3846455, rs17024131, and CAA-associated UNC5C-region
+        variants identify subgroups with heightened vulnerability to inflammation, oxidative stress,
+        amyloid toxicity, hippocampal atrophy, and vascular amyloid pathology. UNC5C is not a
+        universal AD target.
+      </li>
+      <li>
+        <strong>Target the defined apoptotic kinase nodes.</strong>
+        Caspase-3/7, DAPK1, Protein Kinase D, ASK1, JNK, and NADPH oxidase are candidate
+        downstream intervention points for reducing UNC5C-linked neuronal death, each with
+        established tool compounds in the literature.
+      </li>
+      <li>
+        <strong>Elevate δ-secretase/AEP inhibition as a preclinical priority.</strong>
+        Model evidence demonstrates that blocking UNC5C cleavage at N467/N547 reduces proapoptotic
+        activity and AD-like pathology. AEP inhibitor development should be advanced with UNC5C
+        cleavage as an explicit pharmacodynamic readout.
+      </li>
+      <li>
+        <strong>Explore netrin-1/UNC5C pathway restoration.</strong>
+        Reduced netrin-1 in disease models and the dependence-receptor biology of UNC5C suggest
+        that restoring or stabilising ligand-supported signalling may protect against maladaptive
+        neuronal death cascades.
+      </li>
+      <li>
+        <strong>Consider anti-inflammatory intervention in rs72659964 carriers.</strong>
+        The MCP-1 interaction data argue that lowering MCP-1 or modulating the MCP-1/CCR2 axis
+        could be particularly beneficial for individuals with UNC5C AT/TT risk genotypes.
+      </li>
+      <li>
+        <strong>Develop UNC5C as a biomarker of neuronal resilience.</strong>
+        Genetic or expression-level measures of UNC5C may stratify risk for hippocampal atrophy,
+        cognitive decline trajectory, cerebral amyloid angiopathy severity, and
+        inflammation-amplified AD pathology across clinical cohorts.
+      </li>
+      <li>
+        <strong>Avoid indiscriminate global UNC5C activation or inhibition.</strong>
+        Given UNC5C's roles in neuronal guidance, cytoskeletal dynamics, synaptic organisation, and
+        tumour suppression, therapeutic modulation must be pathway-, cell-type-, and
+        disease-stage-specific to minimise off-target harm.
+      </li>
+      <li>
+        <strong>Validate all candidate interventions before clinical translation.</strong>
+        Current evidence is strongest in genetics, cellular models, mouse models, and pathway
+        biology; no UNC5C-targeted AD clinical trials have been reported. Human AD brain
+        interrogation of netrin-1 availability, UNC5C stability, AEP cleavage, and
+        DAPK1/ASK1/JNK activation is the immediate priority.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p>
+        <strong>Overall Assessment —</strong>
+        UNC5C represents a <strong class="kw">mechanistically coherent and genetically grounded</strong>
+        Alzheimer's disease risk gene whose core pathological identity is that of a
+        <strong class="kw">dependence receptor</strong>: survival-promoting under netrin-1
+        sufficiency, apoptosis-driving when ligand is absent, mutation is present, or proteolytic
+        cleavage by <strong class="kw">δ-secretase/AEP</strong> disrupts receptor integrity.
+        The <strong class="kw">T835M variant</strong> is the strongest single piece of genetic
+        evidence, validated across family-based segregation, case-control association, and a 2025
+        knock-in mouse model demonstrating age-dependent hippocampal neurodegeneration, synaptic
+        loss, glial dysfunction, and mutual amplification with amyloid pathology.
+        A well-defined downstream cascade — <strong class="kw">DAPK1 → PKD → ASK1/NADPH
+        oxidase → JNK → Caspase-3/7</strong> — provides tractable nodes for pharmacological
+        intervention. The <strong class="kw">MCP-1 gene–environment interaction</strong> adds a
+        clinically important inflammatory dimension. Therapeutic opportunities are real but require
+        <strong class="kw">precision targeting</strong>: pathway-, cell-type-, and
+        disease-stage-specific modulation, preceded by rigorous validation of candidate
+        interventions in human AD brain tissue and genetically defined patient subgroups.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+  UNC5C / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

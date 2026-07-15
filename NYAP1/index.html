@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NYAP1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7ab5;
+    --light: #e8f0fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #121e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-warning {
+    background: rgba(155,28,28,0.30);
+    border-color: rgba(255,180,180,0.35);
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 20px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ── OVERVIEW BODY TEXT ── */
+  .overview-text p {
+    margin-bottom: 16px;
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 14px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaways ol li::before {
+    content: counter(ta);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #121e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+    font-size: 0.98rem;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 10px;
+  }
+
+  .verdict p strong {
+    color: #93c5fd;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NYAP1 &nbsp;|&nbsp; Neuronal Tyrosine-phosphorylated Adaptor for PI3K 1</span>
+    <span class="chip chip-warning">⚠ Target validity: preliminary — not yet validated</span>
+  </div>
+  <h1>NYAP1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ MAIN -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Preliminary Target Status:</strong>&nbsp;
+      NYAP1 is an emerging, not validated, Alzheimer's disease locus. AD-specific evidence is
+      primarily genetic and epitranscriptomic; direct functional proof that NYAP1 causes or
+      modifies AD pathology is absent. Some NYAP1-region associations may reflect neighboring
+      immune-gene biology (PILRA/PILRB) rather than NYAP1-specific effects.
+    </div>
+
+    <div class="overview-text">
+      <p>
+        NYAP1 is an emerging Alzheimer's disease-relevant locus and neuronal plasticity regulator,
+        but it is not yet a validated AD driver or therapeutic target. The AD-specific evidence is
+        mainly genetic, epitranscriptomic, and locus-based rather than functional proof that NYAP1
+        itself causes or modifies AD pathology.
+      </p>
+      <p>
+        The strongest AD-linked findings include: NYAP1 rs12539172 appearing in AD GWAS/cis-RNA-editing
+        QTL colocalization; ancestry-related differences in NYAP1 allele and genotype frequencies in
+        an AD-risk cohort; and a NYAP1-region AD variant associated with PILRA/PILRB immune protein
+        levels, suggesting that some NYAP1-labeled associations may reflect neighboring immune-gene
+        biology rather than NYAP1-specific effects.
+      </p>
+      <p>
+        Mechanistically, NYAP1 participates in neuronal morphogenesis, neurite outgrowth,
+        cytoskeletal remodeling, PI3K/Akt/Rac1–WAVE1 signaling, Fyn-dependent phosphorylation,
+        and possibly JNK-linked survival/regeneration signaling. These pathways overlap with
+        AD-relevant processes such as synaptic failure, dendritic spine loss, axonal dysfunction,
+        impaired plasticity, neuronal stress responses, and neuroimmune regulation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN (counting nodes):
+        Panel A — Upstream Inputs (3 nodes): AD GWAS Locus, rs12539172 cis-edQTL, PILRA/PILRB Signal
+        Panel B — NYAP1 Signaling Mechanism (7 nodes): Fyn Kinase → NYAP1 (phosphorylated) → PI3K → branching:
+            branch1: Akt → Rac1 → WAVE1/Actin, branch2: JNK (nuclear↓/cytoplasm)
+        Panel C — AD-Relevant Outcomes (5 nodes): Neurite Outgrowth, Dendritic Spine Integrity,
+            Synaptic Plasticity, Neuronal Survival, Cytoskeletal Remodeling
+        Total = 15 nodes ✓ (≤16)
+
+        Geometry (viewBox 0 0 940 480):
+        Panel A: x=10, y=10, w=200, h=460
+        Panel B: x=220, y=10, w=490, h=460
+        Panel C: x=720, y=10, w=210, h=460
+
+        Node layout:
+        Panel A nodes (x center=110):
+          N1: AD GWAS Locus (110,65) 160×38
+          N2: rs12539172 cis-edQTL (110,145) 160×38
+          N3: PILRA/PILRB Signal (110,225) 160×44
+
+        Panel B nodes:
+          N4: Fyn Kinase (355,65) 130×36
+          N5: NYAP1 (phosphorylated) (355,145) 150×36
+          N6: PI3K (355,225) 120×36
+          -- branch left: Akt/PI3K arm
+          N7: Akt (265,305) 110×36
+          N8: Rac1 (265,385) 110×36
+          N9: WAVE1/Actin (265,445) 140×34
+          -- branch right: JNK arm
+          N10: JNK Signaling (450,305) 130×36
+          N11: Cytoplasm Regen (450,390) 140×40
+
+        Panel C nodes (x center=825):
+          N12: Neurite Outgrowth (825,65) 170×36
+          N13: Dendritic Spines (825,145) 170×36
+          N14: Synaptic Plasticity (825,225) 170×36
+          N15: Neuronal Survival (825,325) 170×36
+
+        ARROW CHECK:
+        A→B: N1→N4: from right edge of A panel area through gutter to N4 — use elbow
+        N4→N5 straight vertical ✓
+        N5→N6 straight vertical ✓
+        N6→N7 diagonal-left: need to check — PI3K at (355,225) center, Akt at (265,305) — 
+          path goes left-down through empty space ✓
+        N6→N10 diagonal-right: PI3K(355,225) → JNK(450,305) — goes right-down ✓
+        N7→N8 straight vertical ✓
+        N8→N9 straight vertical ✓
+        B→C: N9 → N12/N13/N14/N15 — use horizontal elbow through right gutter
+      -->
+      <svg viewBox="0 0 940 490" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block; min-width:600px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#4a7ab5" />
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e" />
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#b45309" />
+          </marker>
+        </defs>
+
+        <!-- ── Panel A: Upstream AD Evidence ── -->
+        <rect x="10" y="10" width="200" height="460" rx="10" fill="#dbeafe" fill-opacity="0.35" stroke="#4a7ab5" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#2d4a7a" text-decoration="none">UPSTREAM AD EVIDENCE</text>
+
+        <!-- N1: AD GWAS Locus -->
+        <rect x="30" y="42" width="160" height="40" rx="6" fill="#2d4a7a" opacity="0.88"/>
+        <text x="110" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">AD GWAS Locus</text>
+        <text x="110" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#bfdbfe">NYAP1 region</text>
+
+        <!-- N2: rs12539172 cis-edQTL -->
+        <rect x="30" y="108" width="160" height="44" rx="6" fill="#1e40af" opacity="0.80"/>
+        <text x="110" y="124" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="white" font-weight="700">rs12539172</text>
+        <text x="110" y="139" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bfdbfe">cis-edQTL colocalization</text>
+
+        <!-- N3: PILRA/PILRB -->
+        <rect x="30" y="178" width="160" height="44" rx="6" fill="#7c3aed" opacity="0.75"/>
+        <text x="110" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="white" font-weight="700">PILRA/PILRB Signal</text>
+        <text x="110" y="209" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ede9fe">immune-gene confound</text>
+
+        <!-- Ancestry note -->
+        <rect x="30" y="248" width="160" height="44" rx="6" fill="#0369a1" opacity="0.72"/>
+        <text x="110" y="264" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="white" font-weight="700">Ancestry Differences</text>
+        <text x="110" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bae6fd">allele/genotype freq.</text>
+
+        <!-- ── Panel B: NYAP1 Signaling Mechanism ── -->
+        <rect x="218" y="10" width="498" height="460" rx="10" fill="#dbeafe" fill-opacity="0.18" stroke="#4a7ab5" stroke-width="1.2"/>
+        <text x="467" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#2d4a7a">NYAP1 SIGNALING MECHANISM</text>
+
+        <!-- N4: Fyn Kinase -->
+        <rect x="397" y="42" width="140" height="38" rx="6" fill="#1d4ed8" opacity="0.85"/>
+        <text x="467" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">Fyn Kinase</text>
+        <text x="467" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bfdbfe">upstream activator</text>
+
+        <!-- N5: NYAP1 phosphorylated -->
+        <rect x="382" y="112" width="170" height="38" rx="6" fill="#2d4a7a"/>
+        <text x="467" y="127" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">NYAP1 (phosphorylated)</text>
+        <text x="467" y="142" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#93c5fd">dosage &amp; pY sensitive</text>
+
+        <!-- N6: PI3K -->
+        <rect x="412" y="184" width="110" height="38" rx="6" fill="#1d4ed8" opacity="0.80"/>
+        <text x="467" y="199" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">PI3K</text>
+        <text x="467" y="214" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bfdbfe">activated by NYAP1</text>
+
+        <!-- Left branch label -->
+        <text x="302" y="255" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1d4ed8" font-style="italic">PI3K/Akt arm</text>
+
+        <!-- N7: Akt -->
+        <rect x="246" y="264" width="110" height="36" rx="6" fill="#0369a1" opacity="0.85"/>
+        <text x="301" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">Akt</text>
+        <text x="301" y="293" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bae6fd">survival signaling</text>
+
+        <!-- N8: Rac1 -->
+        <rect x="246" y="334" width="110" height="36" rx="6" fill="#0369a1" opacity="0.85"/>
+        <text x="301" y="349" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">Rac1</text>
+        <text x="301" y="363" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#bae6fd">GTPase activation</text>
+
+        <!-- N9: WAVE1/Actin -->
+        <rect x="237" y="404" width="128" height="36" rx="6" fill="#0f766e" opacity="0.88"/>
+        <text x="301" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">WAVE1 / Actin</text>
+        <text x="301" y="434" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#d1fae5">cytoskeletal remodeling</text>
+
+        <!-- Right branch label -->
+        <text x="580" y="255" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#b45309" font-style="italic">JNK arm</text>
+
+        <!-- N10: JNK Signaling -->
+        <rect x="515" y="264" width="130" height="36" rx="6" fill="#b45309" opacity="0.82"/>
+        <text x="580" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">JNK Signaling</text>
+        <text x="580" y="293" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#fef3c7">stress/injury sensor</text>
+
+        <!-- N11: Cytoplasmic Regen -->
+        <rect x="510" y="338" width="140" height="40" rx="6" fill="#92400e" opacity="0.82"/>
+        <text x="580" y="353" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">Cytoplasmic Regen.</text>
+        <text x="580" y="369" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#fde68a">nuclear apoptosis ↓</text>
+
+        <!-- ── Panel C: AD-Relevant Outcomes ── -->
+        <rect x="724" y="10" width="208" height="460" rx="10" fill="#ccfbf1" fill-opacity="0.30" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="828" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#0f766e">AD-RELEVANT OUTCOMES</text>
+
+        <!-- N12: Neurite Outgrowth -->
+        <rect x="740" y="42" width="176" height="38" rx="6" fill="#0f766e" opacity="0.82"/>
+        <text x="828" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">Neurite Outgrowth</text>
+        <text x="828" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#d1fae5">morphogenesis</text>
+
+        <!-- N13: Dendritic Spines -->
+        <rect x="740" y="110" width="176" height="38" rx="6" fill="#0f766e" opacity="0.82"/>
+        <text x="828" y="125" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">Dendritic Spine Integrity</text>
+        <text x="828" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#d1fae5">spine loss in AD</text>
+
+        <!-- N14: Synaptic Plasticity -->
+        <rect x="740" y="178" width="176" height="38" rx="6" fill="#0f766e" opacity="0.82"/>
+        <text x="828" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">Synaptic Plasticity</text>
+        <text x="828" y="208" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#d1fae5">LTP/synaptic function</text>
+
+        <!-- N15: Neuronal Survival -->
+        <rect x="740" y="310" width="176" height="38" rx="6" fill="#0f766e" opacity="0.82"/>
+        <text x="828" y="325" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="white" font-weight="700">Neuronal Survival</text>
+        <text x="828" y="340" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#d1fae5">resilience to injury</text>
+
+        <!-- ══════════════ ARROWS ══════════════ -->
+
+        <!-- Panel A → Panel B: N1 (AD GWAS) → N4 (Fyn) via elbow through gutter -->
+        <!-- Right edge of N1: x=190, y=62. Left edge of N4: x=397, y=61 -->
+        <path d="M190,62 L210,62 L210,61 L397,61" stroke="#4a7ab5" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+        <!-- N2 → N5 (rs12539172 → NYAP1): elbow -->
+        <path d="M190,130 L210,130 L210,131 L382,131" stroke="#4a7ab5" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+        <!-- N3 → below (to note only — no arrow to panel B since it may be confound; note kept) -->
+
+        <!-- Within Panel B vertical chain: N4→N5 -->
+        <line x1="467" y1="80" x2="467" y2="111" stroke="#4a7ab5" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- N5→N6 -->
+        <line x1="467" y1="150" x2="467" y2="183" stroke="#4a7ab5" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- N6 → N7 (branch left): PI3K center (467,203) → Akt left edge. 
+             Route: go left from PI3K to x=301, then down. 
+             PI3K bottom: (467,222). Akt top: (301,264). 
+             Elbow: down to y=240, left to x=301, down to 264 -->
+        <path d="M467,222 L467,240 L301,240 L301,264" stroke="#1d4ed8" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+
+        <!-- N6 → N10 (branch right): PI3K (467,222) → JNK (580,264)
+             Elbow: down to 240 then right to 580, down to 264 -->
+        <path d="M467,222 L467,242 L580,242 L580,264" stroke="#b45309" stroke-width="1.8" fill="none" marker-end="url(#arr-warn)"/>
+
+        <!-- N7→N8 (Akt→Rac1) -->
+        <line x1="301" y1="300" x2="301" y2="333" stroke="#0369a1" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- N8→N9 (Rac1→WAVE1) -->
+        <line x1="301" y1="370" x2="301" y2="403" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-pos)"/>
+
+        <!-- N10→N11 (JNK→Cytoplasmic) -->
+        <line x1="580" y1="300" x2="580" y2="337" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr-warn)"/>
+
+        <!-- Panel B → Panel C: N9 (WAVE1/Actin) bottom-right → outcomes 
+             Route N9 right edge (365,422) → gutter x=712 → up to N12 y=61, N13 y=129, N14 y=197, N15 y=329 -->
+        <!-- N9 → N13 (dendritic spines) via right gutter -->
+        <path d="M365,422 L712,422 L712,129 L740,129" stroke="#0f766e" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-pos)"/>
+
+        <!-- N5 (NYAP1) right edge → N12 (Neurite outgrowth) -->
+        <path d="M552,131 L712,131 L712,61 L740,61" stroke="#4a7ab5" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- N6 right → N14 (Synaptic Plasticity) -->
+        <path d="M522,203 L712,203 L712,197 L740,197" stroke="#4a7ab5" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- N11 right → N15 (Neuronal Survival) -->
+        <path d="M650,358 L712,358 L712,329 L740,329" stroke="#b45309" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-warn)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Fig. 1.</strong>
+      <strong>Panel A (Upstream AD Evidence):</strong> Genetic and regulatory signals linking the NYAP1 genomic region to AD risk, including the rs12539172 cis-edQTL colocalization, PILRA/PILRB immune-gene confounds, and ancestry-related allele frequency differences.
+      <strong>Panel B (NYAP1 Signaling Mechanism):</strong> Fyn kinase phosphorylates NYAP1, which recruits and activates PI3K. From PI3K, the pathway bifurcates: the left (PI3K/Akt) branch proceeds through Akt → Rac1 → WAVE1/actin cytoskeletal remodeling; the right (JNK) branch engages JNK stress signaling and redirects its output toward cytoplasmic regeneration rather than nuclear apoptosis.
+      <strong>Panel C (AD-Relevant Outcomes):</strong> Downstream consequences relevant to AD pathology, including neurite outgrowth, dendritic spine integrity, synaptic plasticity, and neuronal survival. Dashed arrows indicate inferred connections supported by mechanistic overlap rather than direct AD experimental evidence.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic &amp; Regulatory Evidence</h3>
+        <p>NYAP1's direct AD evidence remains preliminary. Current data identify it as a genetic or regulatory locus — not a confirmed causal AD gene. The 2025 RNA-editing study found AD GWAS/cis-edQTL colocalization at rs12539172, yet the exact edited site, direction of effect, and functional consequences remain unspecified.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Immune-Gene Confound Risk</h3>
+        <p>A 2022 blood multiomics study linked a NYAP1-region AD variant most strongly to <em>PILRA/PILRB</em> protein levels, implying that the functional signal may involve neighboring immune-related genes rather than NYAP1 itself. Fine-mapping is required before attributing associations to NYAP1.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Mechanistic Plausibility in AD</h3>
+        <p>NYAP1 connects Fyn signaling to PI3K/Akt/Rac1 activation and WAVE1-mediated actin remodeling — pathways important for neuronal structure, synaptic integrity, and plasticity. Its role in actin cytoskeletal regulation is directly relevant to AD synaptic pathology, where dendritic spine loss is an early, central feature.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Injury &amp; Repair Signaling</h3>
+        <p>Injury-model evidence suggests NYAP1 may shift JNK signaling away from nuclear pro-apoptotic effects and toward regeneration and plasticity. If operative in AD neurons, this could support resilience to synaptic and neuritic injury — but this has not been demonstrated in AD models.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Dosage Sensitivity — Therapeutic Caution</h3>
+        <p>NYAP1 appears dosage- and phosphorylation-sensitive: <em>both</em> overexpression and knockdown impaired neuronal migration in cortical development studies. Therapeutic modulation would need to be precise rather than simple activation or inhibition — neither extreme is likely to be safe.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Population &amp; Ancestry Considerations</h3>
+        <p>A 2023 Health and Aging Brain Study-Health Disparities analysis found significant ancestry-related differences in NYAP1 allele and genotype frequencies, indicating that NYAP1-region variants may contribute differently to AD risk architecture across populations. Ancestral diversity must be incorporated into future studies.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Research candidate, not a drug target:</strong> Treat NYAP1 as a promising research candidate only. It is not a validated AD drug target, and premature target-development investment is not warranted by current evidence.</div>
+      </li>
+      <li>
+        <div><strong>Fine-map the NYAP1 locus:</strong> Prioritize genomic fine-mapping to determine whether AD-associated signals act through NYAP1 or neighboring genes such as PILRA/PILRB before attributing biological or therapeutic significance to NYAP1 specifically.</div>
+      </li>
+      <li>
+        <div><strong>Characterize rs12539172 and cis-edQTL effects:</strong> Functionally define the edited sites, affected transcripts, protein-level consequences, and brain-region or cell-type specificity of the NYAP1-linked cis-edQTL colocalization identified in 2025.</div>
+      </li>
+      <li>
+        <div><strong>Map NYAP1 in AD-vulnerable brain regions:</strong> Test whether NYAP1 expression, phosphorylation, RNA editing, or subcellular localization changes in hippocampus, entorhinal cortex, parahippocampal gyrus, and association cortex in AD versus controls.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate in AD-relevant cellular models:</strong> Assess NYAP1 modulation in AD-relevant neuronal and glial models for effects on amyloid-β toxicity, tau phosphorylation/aggregation, synapse loss, neuronal survival, neuroinflammation, and neurite/dendritic repair.</div>
+      </li>
+      <li>
+        <div><strong>Separate neuronal from immune-locus biology:</strong> Rigorously distinguish NYAP1-specific neuronal mechanisms from immune-locus effects involving PILRA/PILRB before pursuing any target-development strategy.</div>
+      </li>
+      <li>
+        <div><strong>Pursue normalizing, not extreme, modulation:</strong> If therapeutic exploration proceeds, focus on normalizing NYAP1-dependent repair signaling rather than indiscriminate activation or inhibition, given documented dosage sensitivity in both directions.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize key mechanistic nodes:</strong> Candidate therapeutic mechanisms to investigate include Fyn–NYAP1 phosphorylation control, PI3K/Akt/Rac1–WAVE1 cytoskeletal remodeling, and JNK localization/signaling balance — all requiring AD-specific validation.</div>
+      </li>
+      <li>
+        <div><strong>Incorporate ancestral diversity:</strong> All future genetic, functional, and translational studies must include diverse ancestral populations, given documented differences in NYAP1-region allele and genotype frequencies across populations.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="lead">Overall Assessment — NYAP1 in Alzheimer's Disease</p>
+      <p>
+        NYAP1 occupies an <strong>intriguing but scientifically immature</strong> position in the Alzheimer's disease landscape. Its strongest claim rests on <strong>genetic colocalization and locus-level associations</strong> rather than on direct functional evidence of disease causation or modification. The mechanistic rationale is genuinely compelling — NYAP1 sits at the junction of <strong>Fyn kinase signaling, PI3K/Akt/Rac1 activation, WAVE1-driven actin remodeling, and JNK-mediated survival/regeneration</strong>, all pathways with documented relevance to synaptic integrity, dendritic spine maintenance, and neuronal resilience. However, the <strong>PILRA/PILRB confound</strong> raises a serious question about whether genetic associations reflect NYAP1 biology at all, and <strong>no AD-specific functional experiments</strong> have yet established that NYAP1 mediates amyloid-β toxicity, tau pathology, or synaptic degeneration. The <strong>dosage-sensitivity finding</strong> further complicates therapeutic translation. The most defensible near-term hypothesis is that precisely modulating NYAP1-linked neuronal repair and plasticity pathways could improve resilience to AD-related synaptic and neuritic injury — but this hypothesis requires systematic, AD-context-specific validation before any therapeutic program is justified.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  NYAP1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical application
+</footer>
+
+</body>
+</html>

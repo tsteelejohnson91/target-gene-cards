@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCP/p97 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 42px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 9px;
+    padding: 16px 18px;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { margin-bottom: 0; font-size: 0.91rem; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-neutral { background: var(--neutral-bg); border-left: 4px solid #64748b; }
+  .card-neutral h3 { color: #334155; }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+  .verdict-banner .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+  }
+  .verdict-banner p {
+    font-size: 1rem;
+    color: #e2eaf4;
+    margin-bottom: 0;
+  }
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: VCP &nbsp;|&nbsp; Valosin-Containing Protein / p97 AAA+ ATPase</span>
+    <span class="chip chip-danger">⚠ High-risk target · systemic inhibition hazards</span>
+  </div>
+  <h1>VCP/p97 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Global VCP inhibition can trigger proteotoxic stress, ER stress, mitochondrial dysfunction, apoptosis, cardiac/skeletal-muscle toxicity, lysosomal damage, and inflammasome activation — effects potentially harmful in vulnerable neurons and glia. AD-directed strategies should favor selective functional restoration over broad systemic inhibition.
+    </div>
+
+    <p>VCP/p97 (valosin-containing protein) is a central AAA+ ATPase and segregase that orchestrates protein quality control across multiple degradation axes: ubiquitin-dependent substrate extraction, ER-associated degradation (ERAD), autophagy, mitophagy, lysosomal repair, stress-granule resolution, extracellular-vesicle biology, and mitochondrial homeostasis. These converging functions place VCP at the heart of virtually every major Alzheimer's disease (AD) mechanism, including impaired clearance of amyloid-β and tau species, proteostasis collapse, autophagy-lysosomal dysfunction, ER stress and UPR activation, mitochondrial dysfunction, oxidative stress, neuroinflammation, and intercellular spread of pathogenic proteins.</p>
+
+    <p>Direct AD-relevant evidence positions VCP as a hub gene in mitochondria-associated membrane (MAM) biology and ER stress, as cargo in APP-containing extracellular vesicles, and as a participant in the STUB1–VCP/p97–PINK1 mitophagy axis that is impaired in AD postmortem brain tissue. VCP overexpression enhances autophagy and reduces tau levels in AD animal models. As a therapeutic target, VCP is promising but high-risk: the evidence strongly favors restoring or precisely modulating selected VCP-dependent quality-control functions rather than broad systemic inhibition.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:680px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream inputs & VCP hub -->
+        <rect x="10" y="10" width="280" height="478" rx="12" fill="#e8f1fa" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="26" y="32" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="0.1em">A — INPUTS &amp; VCP HUB</text>
+
+        <!-- Upstream stressors cluster (3 boxes side by side) -->
+        <rect x="22" y="44" width="76" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="60" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">ER Stress /</text>
+        <text x="60" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">UPR</text>
+
+        <rect x="112" y="44" width="76" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="150" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Ubiquitinated</text>
+        <text x="150" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Substrates</text>
+
+        <rect x="202" y="44" width="76" height="36" rx="6" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="240" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Mitochondrial</text>
+        <text x="240" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Damage</text>
+
+        <!-- VCP/p97 central hub -->
+        <rect x="82" y="118" width="126" height="42" rx="8" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.5"/>
+        <text x="145" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">VCP / p97</text>
+        <text x="145" y="150" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#93c5fd">AAA+ ATPase Hub</text>
+
+        <!-- Arrows from stressors to VCP -->
+        <line x1="60" y1="80" x2="115" y2="118" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="150" y1="80" x2="150" y2="118" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="240" y1="80" x2="185" y2="118" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Cofactors cluster (2 boxes side by side) -->
+        <rect x="28" y="198" width="100" height="36" rx="6" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="78" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">STUB1 · SVIP</text>
+        <text x="78" y="224" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">UFD1–NPL4</text>
+
+        <rect x="162" y="198" width="100" height="36" rx="6" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="212" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">FAF1/FAF2</text>
+        <text x="212" y="224" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">ATXN3 · OPTN</text>
+
+        <!-- Label cofactors -->
+        <text x="145" y="192" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#2e6da4" font-style="italic">Cofactors / Adaptors</text>
+
+        <!-- Arrows VCP to cofactors -->
+        <line x1="120" y1="160" x2="95" y2="198" stroke="#2e6da4" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <line x1="172" y1="160" x2="200" y2="198" stroke="#2e6da4" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- MAM/EV node -->
+        <rect x="52" y="272" width="186" height="36" rx="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="145" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">MAM Biology · APP-EV Cargo</text>
+        <text x="145" y="298" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">APP Processing Modulation</text>
+
+        <!-- Arrows cofactors to MAM/EV -->
+        <line x1="100" y1="234" x2="120" y2="272" stroke="#2e6da4" stroke-width="1.1" marker-end="url(#arr)"/>
+        <line x1="190" y1="234" x2="172" y2="272" stroke="#2e6da4" stroke-width="1.1" marker-end="url(#arr)"/>
+
+        <!-- Genetic disease node -->
+        <rect x="42" y="342" width="206" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="145" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Pathogenic VCP Variants</text>
+        <text x="145" y="368" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">MSP · FTD · ALS · Tauopathy</text>
+
+        <line x1="145" y1="308" x2="145" y2="342" stroke="#9b1c1c" stroke-width="1.2" marker-end="url(#arr-red)"/>
+
+        <!-- Biomarker note -->
+        <rect x="52" y="412" width="206" height="36" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="155" y="426" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">SVIP↓ in aMCI plasma</text>
+        <text x="155" y="438" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">(better marker than VCP itself)</text>
+
+        <line x1="145" y1="378" x2="148" y2="412" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel B: Degradation branches -->
+        <rect x="308" y="10" width="310" height="330" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="324" y="32" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.1em">B — QUALITY-CONTROL BRANCHES</text>
+
+        <!-- Branch source from VCP panel — entry node in panel B -->
+        <rect x="374" y="44" width="122" height="36" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="435" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#ffffff">Substrate</text>
+        <text x="435" y="71" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#ffffff">Extraction</text>
+
+        <!-- Arrow from VCP hub to panel B entry (horizontal through gutter) -->
+        <line x1="208" y1="139" x2="374" y2="62" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch 1: UPS/ERAD -->
+        <rect x="322" y="122" width="94" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.1"/>
+        <text x="369" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">UPS / ERAD</text>
+        <text x="369" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Proteolysis</text>
+
+        <!-- Branch 2: Autophagy/Aggrephagy -->
+        <rect x="454" y="122" width="94" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.1"/>
+        <text x="501" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Autophagy /</text>
+        <text x="501" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Aggrephagy</text>
+
+        <!-- Arrows from extraction to branches -->
+        <line x1="410" y1="80" x2="380" y2="122" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+        <line x1="462" y1="80" x2="490" y2="122" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch 1 continues: Tau Clearance -->
+        <rect x="322" y="196" width="94" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.1"/>
+        <text x="369" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Tau / Aβ</text>
+        <text x="369" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Clearance↑</text>
+
+        <!-- Branch 2 continues: Lysosomal Repair -->
+        <rect x="454" y="196" width="94" height="36" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="1.1"/>
+        <text x="501" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Lysosomal</text>
+        <text x="501" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Repair / Lysophagy</text>
+
+        <line x1="369" y1="158" x2="369" y2="196" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+        <line x1="501" y1="158" x2="501" y2="196" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+        <!-- Convergence: Proteostasis Restored -->
+        <rect x="355" y="272" width="160" height="36" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.3"/>
+        <text x="435" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#ffffff">Proteostasis</text>
+        <text x="435" y="299" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#ffffff">Restored</text>
+
+        <line x1="369" y1="232" x2="400" y2="272" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+        <line x1="501" y1="232" x2="470" y2="272" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C: Mitophagy & Stress -->
+        <rect x="636" y="10" width="294" height="330" rx="12" fill="#fff7ed" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="652" y="32" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#b45309" letter-spacing="0.1em">C — MITOPHAGY &amp; STRESS RESOLUTION</text>
+
+        <!-- STUB1 node -->
+        <rect x="672" y="44" width="100" height="36" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="722" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">STUB1</text>
+        <text x="722" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">(E3 Ligase)</text>
+
+        <!-- PINK1 node -->
+        <rect x="802" y="44" width="100" height="36" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="852" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">PINK1</text>
+        <text x="852" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Stabilization</text>
+
+        <!-- VCP to Panel C entry (horizontal connector) -->
+        <line x1="208" y1="145" x2="672" y2="62" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- Arrow STUB1 to PINK1 -->
+        <line x1="772" y1="62" x2="802" y2="62" stroke="#b45309" stroke-width="1.2" marker-end="url(#arr-amber)"/>
+
+        <!-- PRKN/Parkin -->
+        <rect x="736" y="122" width="100" height="36" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="786" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">PRKN / Parkin</text>
+        <text x="786" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Recruitment</text>
+
+        <line x1="786" y1="80" x2="786" y2="122" stroke="#b45309" stroke-width="1.2" marker-end="url(#arr-amber)"/>
+        <!-- STUB1 also feeds PRKN -->
+        <line x1="730" y1="80" x2="762" y2="122" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Mitophagy -->
+        <rect x="736" y="196" width="100" height="36" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="786" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Mitophagy</text>
+        <text x="786" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Execution</text>
+
+        <line x1="786" y1="158" x2="786" y2="196" stroke="#b45309" stroke-width="1.2" marker-end="url(#arr-amber)"/>
+
+        <!-- Stress Granule node -->
+        <rect x="648" y="196" width="76" height="36" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="1.1"/>
+        <text x="686" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Stress Granule</text>
+        <text x="686" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b">Disassembly</text>
+
+        <!-- Arrow from STUB1 down to Stress Granule via vertical path -->
+        <line x1="686" y1="148" x2="686" y2="196" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+        <!-- Phantom connector from PINK1 area downward to stress granule row — use STUB1 column -->
+        <line x1="700" y1="80" x2="686" y2="196" stroke="#b45309" stroke-width="0" /><!-- invisible placeholder, real path below -->
+
+        <!-- Separate line from panel C top to stress granule — route via left edge -->
+        <line x1="672" y1="80" x2="672" y2="185" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3"/>
+        <line x1="672" y1="185" x2="686" y2="196" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- AD impairment note -->
+        <rect x="648" y="272" width="238" height="36" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="767" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">STUB1–VCP–PINK1 axis impaired</text>
+        <text x="767" y="298" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">in AD postmortem brain tissue</text>
+
+        <line x1="786" y1="232" x2="786" y2="272" stroke="#9b1c1c" stroke-width="1.2" marker-end="url(#arr-red)"/>
+        <line x1="686" y1="232" x2="690" y2="272" stroke="#9b1c1c" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel D: Safety/Risk -->
+        <rect x="308" y="358" width="622" height="132" rx="12" fill="#fef2f2" fill-opacity="0.7" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="324" y="378" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="0.1em">D — INHIBITION RISKS &amp; THERAPEUTIC DIRECTION</text>
+
+        <!-- Risk cluster: 3 boxes side by side -->
+        <rect x="324" y="388" width="118" height="36" rx="6" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.1"/>
+        <text x="383" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Global Inhibition:</text>
+        <text x="383" y="414" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">ER/Proteotoxic Stress</text>
+
+        <rect x="458" y="388" width="118" height="36" rx="6" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.1"/>
+        <text x="517" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Cardiac / Muscle</text>
+        <text x="517" y="414" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Toxicity · Apoptosis</text>
+
+        <rect x="592" y="388" width="118" height="36" rx="6" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.1"/>
+        <text x="651" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Lysosomal Damage</text>
+        <text x="651" y="414" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Inflammasome Activation</text>
+
+        <!-- Preferred therapeutic direction -->
+        <rect x="730" y="388" width="186" height="36" rx="6" fill="#e8f1fa" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="823" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f" font-weight="700">Preferred: Selective</text>
+        <text x="823" y="414" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">Cofactor/Domain Modulation</text>
+
+        <!-- Linking arrow: risks → preferred direction -->
+        <line x1="710" y1="406" x2="730" y2="406" stroke="#1e3a5f" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Convergence note at bottom of panel D -->
+        <rect x="340" y="444" width="556" height="32" rx="6" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.1"/>
+        <text x="618" y="456" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e293b" font-weight="700">Restore VCP quality-control functions · avoid indiscriminate pan-VCP ATPase blockade</text>
+        <text x="618" y="468" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">Target cofactors: SVIP · STUB1 · UFD1–NPL4 · FAF1/FAF2 · OPTN · D2 allosteric modulation</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> — Three upstream stressors (ER stress, ubiquitinated substrates, mitochondrial damage) converge on VCP/p97. Cofactors and adaptors (STUB1, SVIP, UFD1–NPL4, FAF1/FAF2, ATXN3, OPTN) direct VCP toward specific degradation routes. VCP also acts as cargo in APP-containing extracellular vesicles (MAM/APP-EV node). Pathogenic variants link VCP to MSP, FTD, ALS, and vacuolar tauopathy; SVIP (not plasma VCP) is the stronger aMCI biomarker.
+      <strong>Panel B</strong> — VCP-driven substrate extraction branches into two parallel quality-control cascades: UPS/ERAD → tau/Aβ clearance (left), and autophagy/aggrephagy → lysosomal repair (right), converging on a proteostasis-restored outcome.
+      <strong>Panel C</strong> — The STUB1–VCP–PINK1–PRKN mitophagy axis (impaired in AD brain) and VCP-dependent stress-granule disassembly represent two parallel stress-resolution branches converging on an AD-impairment node.
+      <strong>Panel D</strong> — Global VCP inhibition risks (ER stress, toxicity, lysosomal damage, inflammasome) versus the preferred therapeutic direction of selective cofactor/domain modulation to restore beneficial quality-control functions.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Proteostasis Hub for AD Proteinopathy</h3>
+        <p>VCP extracts, unfolds, remodels, and routes ubiquitinated substrates through the UPS, ERAD, autophagy, aggrephagy, mitophagy, and lysosomal pathways — all directly relevant to AD because tau, APP/Aβ species, and damaged proteins accumulate when these clearance systems fail.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>MAM Biology, ER Stress &amp; Mitochondrial Dysfunction</h3>
+        <p>In an AD-specific gene-expression study, VCP was one of four hub genes linking MAM regulation, ER stress, and AD pathology, placing it at the intersection of ER quality control, abnormal ER–mitochondria contacts, mitochondrial calcium overload, and UPR activation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>APP Metabolism &amp; Extracellular-Vesicle Pathways</h3>
+        <p>VCP was identified as cargo in APP-containing extracellular vesicles from neurons. Pharmacologic VCP modulation altered APP processing and global EV secretion, suggesting VCP may influence APP-metabolite sorting and intercellular spread of AD-relevant cargo.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Tau Biology — Dual Role</h3>
+        <p>VCP overexpression enhances autophagy and reduces tau levels in AD animal models. Conversely, VCP D395G-associated vacuolar tauopathy shows abundant tau deposition and NFTs, and VCP activity can promote early tau seed amplification — indicating context-dependent pro- or anti-pathological roles.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>STUB1–VCP–PINK1 Mitophagy Axis</h3>
+        <p>The STUB1–VCP/p97 axis fine-tunes full-length PINK1 during mitochondrial damage, enabling PRKN/parkin-mediated mitophagy. This axis is impaired in AD postmortem brain tissue, directly linking VCP dysfunction to defective mitochondrial clearance and neuronal impairment.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Inhibition Safety Concerns</h3>
+        <p>Global VCP inhibition induces proteotoxic stress, ER stress, mitochondrial dysfunction, apoptosis, cardiac and skeletal-muscle toxicity, lysosomal damage, and inflammasome activation. These effects could be severely harmful in vulnerable neurons and glia — arguing against broad systemic inhibition in AD.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Prioritize precision modulation over broad inhibition.</strong> AD-directed strategies should restore beneficial VCP functions in proteostasis, autophagy, lysosomal repair, and mitophagy while avoiding global proteostasis collapse through indiscriminate pan-VCP ATPase blockade.</li>
+      <li><strong>Investigate VCP activation for tau and aggregate clearance.</strong> VCP overexpression and pharmacologic activation data support controlled enhancement of VCP-dependent autophagy/aggrephagy to reduce tau burden, insoluble aggregates, and neuronal stress in AD models.</li>
+      <li><strong>Target VCP cofactors and adaptors for selectivity.</strong> Promising nodes include SVIP, STUB1, UFD1–NPL4, FAF1/FAF2, p47/NSFL1C, ATXN3, UBXD8/FAF2, OPTN, ASPL, and VCPIP1 — enabling selective modulation of tau seeding, autophagy, lysosomal repair, ERAD, or mitophagy without suppressing all VCP activity.</li>
+      <li><strong>Use the STUB1–VCP–PINK1–PRKN axis as a priority AD mechanism.</strong> This axis is impaired in AD brain and regulates mitophagy; it is a strong candidate for both therapeutic restoration and biomarker development.</li>
+      <li><strong>Evaluate SVIP as a peripheral readout of VCP-linked autophagy dysfunction.</strong> Plasma VCP itself was a weak aMCI biomarker, but SVIP showed significantly better diagnostic performance and may more reliably reflect brain-relevant VCP pathway disruption.</li>
+      <li><strong>Treat VCP inhibition with caution in AD contexts.</strong> Cancer-focused VCP inhibitors demonstrate druggability but also manifest risks (ER stress, apoptosis, mitochondrial stress, cardiac/skeletal toxicity, lysosomal damage, inflammasome activation) that could harm neurons unless inhibition is highly selective and carefully dosed.</li>
+      <li><strong>Explore compartment- and domain-specific modulation windows.</strong> D2 ATPase modulation, allosteric activation, UFMylation-dependent VCP regulation, and nuclear vs. cytosolic localization may offer safer therapeutic windows than pan-VCP blockade.</li>
+      <li><strong>Test VCP effects separately across AD-relevant cell types.</strong> Neurons, astrocytes, microglia, endothelial cells, and oligodendrocytes may respond differently — for example, VCP may support neuronal aggregate clearance, microglial lysosomal integrity, and astrocyte stress adaptation.</li>
+      <li><strong>Monitor safety in high-demand tissues.</strong> Any VCP-directed therapy requires cardiac, skeletal muscle, liver, and neuronal toxicity monitoring because VCP is essential and systemic disruption causes severe tissue dysfunction.</li>
+      <li><strong>Frame VCP as a high-value but high-risk AD target.</strong> VCP sits at the convergence of tau clearance, APP/EV trafficking, ER stress, mitophagy, lysosomal repair, aggrephagy, stress-granule resolution, and neuroinflammation. The most realistic therapeutic path is selective restoration or redirection of VCP-dependent quality-control pathways.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — VCP/p97 in Alzheimer's Disease</span>
+      <p>
+        VCP/p97 represents a <strong>high-value but high-risk therapeutic target</strong> in Alzheimer's disease. Its unique position as the central AAA+ ATPase segregase controlling proteostasis, ER quality control, mitophagy, lysosomal integrity, stress-granule resolution, and extracellular-vesicle biology means that <strong>VCP dysfunction intersects virtually every major AD pathomechanism</strong>. Converging evidence — from MAM-hub gene studies, APP-EV biology, impaired STUB1–VCP–PINK1 mitophagy in AD brain, and tau-clearance models — provides strong mechanistic rationale. However, the <strong>risks of broad VCP inhibition are substantial</strong>: proteotoxic collapse, ER stress, mitochondrial failure, apoptosis, and multi-organ toxicity. The field's most productive path forward is <strong>selective, context-aware modulation</strong> through cofactors (SVIP, STUB1, UFD1–NPL4, OPTN), domain-specific allosteric approaches, or compartment-targeted strategies that restore beneficial VCP functions without global disruption. <strong>SVIP warrants further evaluation as a plasma biomarker</strong> of VCP-linked autophagy dysfunction, and the STUB1–VCP–PINK1–PRKN axis deserves prioritization as a mechanistically anchored, AD-relevant intervention point.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  VCP/p97 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

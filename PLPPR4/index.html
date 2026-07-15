@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLPPR4 / PRG-1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e32 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-warning {
+    background: rgba(180, 83, 9, 0.35);
+    border: 1px solid rgba(251, 191, 36, 0.45);
+    color: #fde68a;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #e0eaf5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p + p {
+    margin-top: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    background: var(--dark);
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e32 100%);
+    border-radius: 12px;
+    padding: 38px 36px;
+    color: #e0eaf5;
+    line-height: 1.8;
+    font-size: 1.02rem;
+  }
+
+  .verdict strong {
+    color: #a5c8f0;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #7fb3d8;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: PLPPR4 &nbsp;|&nbsp; Plasticity-Related Gene 1 / PRG-1 / LPPR4</span>
+    <span class="chip chip-warning">⚠ Unvalidated in AD · Inferential Evidence Only</span>
+  </div>
+  <h1>PLPPR4 / PRG-1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> No direct Alzheimer's disease studies are provided for PLPPR4. All mechanistic links to AD are <em>inferential</em> — based on overlap with AD-relevant biology — and not derived from AD brain tissue, amyloid/tau models, or AD clinical data.
+    </div>
+
+    <p>PLPPR4 (also known as PRG-1 or LPPR4) is a <strong>neuron-enriched, postsynaptic membrane protein</strong> involved in lipid-phosphate signaling, lysophosphatidic acid (LPA) regulation, glutamatergic synaptic function, neurite and axon growth, dendritic spine integrity, neuronal survival, and network excitability.</p>
+
+    <p>The strongest Alzheimer's-relevant evidence derives from <strong>diabetic cognitive dysfunction</strong> models, where PRG-1/PLPPR4 was reduced under high-glucose neuronal injury conditions alongside BDNF, synapsin-1, PSD-95, and SYN — connecting its loss to impaired hippocampal synaptic plasticity and neurotrophin signaling, both central to cognitive decline in Alzheimer's disease.</p>
+
+    <p>Overall, PLPPR4 is best viewed as a <strong>mechanistically plausible but unvalidated</strong> Alzheimer's therapeutic target. Its relevance is strongest for synaptic resilience, hippocampal plasticity, lipid signaling, excitatory circuit regulation, and neurite/axon maintenance, rather than direct amyloid-β or tau biology.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; min-width:640px;">
+
+        <!-- PANEL BACKGROUNDS -->
+        <!-- Panel A: Upstream Regulation -->
+        <rect x="10" y="30" width="200" height="455" rx="10" ry="10"
+              fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="52" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="bold" text-decoration="none" fill="#2e6da4" letter-spacing="1">A · UPSTREAM</text>
+
+        <!-- Panel B: PLPPR4 Core Functions -->
+        <rect x="222" y="30" width="220" height="455" rx="10" ry="10"
+              fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="52" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="bold" fill="#0f766e" letter-spacing="1">B · PLPPR4 CORE</text>
+
+        <!-- Panel C: Synaptic / Structural Outputs -->
+        <rect x="454" y="30" width="210" height="455" rx="10" ry="10"
+              fill="rgba(26,58,92,0.07)" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="559" y="52" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="bold" fill="#1a3a5c" letter-spacing="1">C · SYNAPTIC OUTPUT</text>
+
+        <!-- Panel D: AD Relevance -->
+        <rect x="676" y="30" width="214" height="455" rx="10" ry="10"
+              fill="rgba(155,28,28,0.06)" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="783" y="52" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="bold" fill="#9b1c1c" letter-spacing="1">D · AD RELEVANCE</text>
+
+        <!-- ===================== PANEL A NODES ===================== -->
+        <!-- A1: miR-18a / lncRNA axis -->
+        <rect x="28" y="70" width="164" height="44" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="110" y="88" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="bold">miR-18a /</text>
+        <text x="110" y="101" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="bold">lncRNA axis</text>
+
+        <!-- A2: Math2 / NeuroD6 TF -->
+        <rect x="28" y="148" width="164" height="44" rx="7" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="110" y="166" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="bold">Math2 / NeuroD6</text>
+        <text x="110" y="179" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8">Transcription</text>
+
+        <!-- A3: High-Glucose Injury -->
+        <rect x="28" y="226" width="164" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="110" y="244" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c" font-weight="bold">High-Glucose /</text>
+        <text x="110" y="257" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c">Metabolic Stress</text>
+
+        <!-- Arrow A1 → A2 -->
+        <line x1="110" y1="114" x2="110" y2="146" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <!-- Arrow A2 → A3 -->
+        <line x1="110" y1="192" x2="110" y2="224" stroke="#64748b" stroke-width="1.4" marker-end="url(#arrowSlate)"/>
+
+        <!-- ===================== PANEL B NODES ===================== -->
+        <!-- B1: PLPPR4 / PRG-1 (central hub) -->
+        <rect x="240" y="70" width="184" height="50" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.8"/>
+        <text x="332" y="91" text-anchor="middle" font-family="Arial" font-size="12" fill="#ffffff" font-weight="bold">PLPPR4 / PRG-1</text>
+        <text x="332" y="107" text-anchor="middle" font-family="Arial" font-size="10" fill="#ccfbf1">Postsynaptic Membrane</text>
+
+        <!-- B2: LPA Uptake / Lipid Signaling -->
+        <rect x="240" y="158" width="184" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="176" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="bold">LPA Uptake /</text>
+        <text x="332" y="189" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Lipid-Phosphate Signal</text>
+
+        <!-- B3: Ca2+/CaM Binding -->
+        <rect x="240" y="236" width="184" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="254" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="bold">Ca²⁺ / Calmodulin</text>
+        <text x="332" y="267" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">C-terminal Binding</text>
+
+        <!-- B4: P2X7R / PP2A pathway -->
+        <rect x="240" y="314" width="184" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="332" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="bold">P2X7R / PP2A</text>
+        <text x="332" y="345" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">Pathway Activation</text>
+
+        <!-- Arrows B1→B2, B1→B3 -->
+        <line x1="332" y1="120" x2="332" y2="156" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <!-- B2→B3 -->
+        <line x1="332" y1="202" x2="332" y2="234" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <!-- B3→B4 -->
+        <line x1="332" y1="280" x2="332" y2="312" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- ===================== PANEL C NODES ===================== -->
+        <!-- C1: Glutamatergic Synapse Function -->
+        <rect x="470" y="70" width="178" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="559" y="88" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="bold">Glutamatergic</text>
+        <text x="559" y="101" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Synapse Function</text>
+
+        <!-- C2: Dendritic Spine Integrity -->
+        <rect x="470" y="152" width="178" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="559" y="170" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="bold">Dendritic Spine</text>
+        <text x="559" y="183" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Integrity</text>
+
+        <!-- C3: Neurite / Axon Growth -->
+        <rect x="470" y="232" width="178" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="559" y="250" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c" font-weight="bold">Neurite &amp; Axon</text>
+        <text x="559" y="263" text-anchor="middle" font-family="Arial" font-size="10" fill="#1a3a5c">Growth / Sprouting</text>
+
+        <!-- C4: Network Excitability -->
+        <rect x="470" y="312" width="178" height="44" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="559" y="330" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e" font-weight="bold">Network Excitability</text>
+        <text x="559" y="343" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">Seizure Susceptibility</text>
+
+        <!-- Arrows: B1→C1, B2→C2, B3→C3, B4→C4 -->
+        <!-- B1 (ends x=424,y=95) → C1 (starts x=470,y=92) -->
+        <line x1="424" y1="95" x2="468" y2="92" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arrowDark)"/>
+        <!-- B2 → C2 -->
+        <line x1="424" y1="180" x2="468" y2="174" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arrowDark)"/>
+        <!-- B3 → C3 -->
+        <line x1="424" y1="258" x2="468" y2="254" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arrowDark)"/>
+        <!-- B4 → C4 -->
+        <line x1="424" y1="336" x2="468" y2="334" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arrowDark)"/>
+
+        <!-- ===================== PANEL D NODES ===================== -->
+        <!-- D1: BDNF/TrkB / Neurotrophin Deficit -->
+        <rect x="693" y="70" width="180" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="783" y="88" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c" font-weight="bold">BDNF/TrkB</text>
+        <text x="783" y="101" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c">Neurotrophin Deficit</text>
+
+        <!-- D2: Synaptic Protein Loss -->
+        <rect x="693" y="152" width="180" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="783" y="170" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c" font-weight="bold">Synaptic Protein Loss</text>
+        <text x="783" y="183" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c">PSD-95, Synapsin-1</text>
+
+        <!-- D3: AD-Relevant Neurodegeneration -->
+        <rect x="693" y="232" width="180" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="783" y="250" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c" font-weight="bold">Neuritic Degeneration</text>
+        <text x="783" y="263" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c">Neuronal Vulnerability</text>
+
+        <!-- D4: Hyperexcitability / Seizure Risk -->
+        <rect x="693" y="312" width="180" height="44" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>
+        <text x="783" y="330" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e" font-weight="bold">Hyperexcitability</text>
+        <text x="783" y="343" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">AD Seizure Risk</text>
+
+        <!-- Arrows C→D (horizontal, panel D) -->
+        <line x1="648" y1="92" x2="691" y2="92" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arrowRed)"/>
+        <line x1="648" y1="174" x2="691" y2="174" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arrowRed)"/>
+        <line x1="648" y1="254" x2="691" y2="254" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arrowRed)"/>
+        <line x1="648" y1="334" x2="691" y2="334" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arrowRed)"/>
+
+        <!-- Panel A → Panel B connector (A3 metabolic stress → PLPPR4 loss) -->
+        <line x1="192" y1="248" x2="238" y2="120" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrowRed)"/>
+
+        <!-- Neuronal Survival node — in Panel B, below PP2A -->
+        <rect x="240" y="392" width="184" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="410" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46" font-weight="bold">Neuronal Survival</text>
+        <text x="332" y="423" text-anchor="middle" font-family="Arial" font-size="10" fill="#065f46">PRG-1 Protective Role</text>
+
+        <!-- B4→Neuronal Survival -->
+        <line x1="332" y1="358" x2="332" y2="390" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- ===================== ARROW MARKERS ===================== -->
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+          </marker>
+          <marker id="arrowSlate" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+          </marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arrowDark" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a3a5c"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+        </defs>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream):</strong> Regulatory inputs — miR-18a/lncRNA epigenetic axis and Math2/NeuroD6 transcriptional control feed into PLPPR4 expression; high-glucose/metabolic stress (dashed red arrow) suppresses PLPPR4. &nbsp;
+      <strong>Panel B (PLPPR4 Core):</strong> PLPPR4/PRG-1 at the postsynaptic membrane drives four parallel functions: LPA/lipid-phosphate uptake, Ca²⁺/calmodulin binding, P2X7R/PP2A pathway activation, and neuronal survival. &nbsp;
+      <strong>Panel C (Synaptic Output):</strong> These functions map to glutamatergic synapse integrity, dendritic spine maintenance, neurite/axon growth, and network excitability — each shown as a distinct branch. &nbsp;
+      <strong>Panel D (AD Relevance):</strong> Loss of each branch output links to AD-relevant pathology: BDNF/TrkB neurotrophin deficit, synaptic protein loss (PSD-95, synapsin-1), neuritic degeneration, and hyperexcitability/seizure risk.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>⚠ No Direct AD Validation</h3>
+        <p>All evidence is inferential. No studies in AD brain tissue, amyloid/tau models, or AD clinical cohorts are provided for PLPPR4. Its AD relevance rests entirely on mechanistic overlap with known AD biology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Synaptic Plasticity &amp; Neurotrophin Signaling</h3>
+        <p>In diabetic cognitive dysfunction models, PRG-1 downregulation co-occurred with reduced BDNF, synapsin-1, PSD-95, and SYN — implicating PLPPR4 in maintaining hippocampal synaptic function and neurotrophin pathways disrupted in AD.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>LPA Lipid Signaling at Glutamatergic Synapses</h3>
+        <p>PLPPR4 modulates local LPA levels at excitatory synapses through uptake mechanisms. Because lipid dysregulation and synaptic dysfunction are major AD features, this represents a plausible therapeutic route distinct from amyloid/tau biology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Dendritic Spine &amp; Neurite Integrity</h3>
+        <p>PLPPR4 deletion in human iPSC-derived neurons reduced dendritic protrusion density, neurite length, and axon length — directly relevant to AD-associated neuritic degeneration and synapse loss.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Network Excitability &amp; Dual-Effect Risk</h3>
+        <p>PLPPR4 loss can increase glutamatergic dysfunction and seizure vulnerability, mirroring AD network hyperexcitability. However, PRG-1 upregulation in seizure models with mossy fiber sprouting cautions that PLPPR4 enhancement may drive adaptive or maladaptive remodeling depending on context.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>P2X7R / PP2A &amp; Neuronal Survival</h3>
+        <p>PRG-1 overexpression improved dendritic spine and behavioral deficits via a P2X7R/PRG-1/PP2A pathway — overlapping with AD-relevant inflammation, spine pathology, and PP2A-linked tau regulation. PRG-1 knockdown increased DNA fragmentation, underscoring a neuroprotective lipid-phosphate-dependent function.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Frame expectations correctly.</strong> Treat PLPPR4 as a candidate target for Alzheimer's-related synaptic resilience, not as a validated AD target — all current evidence is mechanistically inferential.</div>
+      </li>
+      <li>
+        <div><strong>Establish human AD expression data first.</strong> Prioritize experiments measuring PLPPR4 expression in human AD hippocampus and cortex, ideally stratified by Braak stage, amyloid/tau burden, and cognitive status.</div>
+      </li>
+      <li>
+        <div><strong>Test AD-relevant stressors.</strong> Determine whether amyloid-β, tau pathology, metabolic stress, or neuroinflammation alters PLPPR4 expression or function in neurons — currently unknown.</div>
+      </li>
+      <li>
+        <div><strong>Conduct restoration rescue experiments.</strong> Evaluate whether restoring PLPPR4 rescues synaptic proteins (PSD-95, synapsin-1), BDNF/TrkB signaling, dendritic spines, neurite integrity, and electrophysiological function in AD-relevant models.</div>
+      </li>
+      <li>
+        <div><strong>Investigate LPA-glutamate axis as a mechanism.</strong> Explore PLPPR4-dependent LPA signaling at glutamatergic synapses as a therapeutic mechanism, especially in relation to excitotoxicity and network hyperexcitability.</div>
+      </li>
+      <li>
+        <div><strong>Map upstream regulators.</strong> Probe the miR-18a–lncRNA NONRATG-022419 axis and Math2/NeuroD6-dependent transcriptional control as potential entry points to modulate PLPPR4 levels therapeutically.</div>
+      </li>
+      <li>
+        <div><strong>Profile downstream signaling branches.</strong> Assess BDNF/TrkB, NGF, AKT/PI3K/mTOR, ERK, PP2A, calcium/calmodulin signaling, and synaptic structural proteins as PLPPR4 effectors in AD-relevant contexts.</div>
+      </li>
+      <li>
+        <div><strong>Exercise caution with enhancement strategies.</strong> Because increased structural sprouting may not always be beneficial, any PLPPR4-enhancing therapeutic approach must be evaluated for contribution to aberrant hippocampal remodeling or hyperexcitability.</div>
+      </li>
+      <li>
+        <div><strong>Most plausible hypothesis to test.</strong> Restoring or normalizing PLPPR4 function could protect synapses and neurites under metabolic or neurodegenerative stress — but this requires direct validation in Alzheimer's disease models before therapeutic development proceeds.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PLPPR4 / PRG-1 in Alzheimer's Disease</span>
+      PLPPR4 emerges as a <strong>mechanistically compelling but unvalidated Alzheimer's candidate</strong>. Its biology converges on several core AD vulnerabilities: <strong>hippocampal synaptic plasticity</strong>, <strong>BDNF/neurotrophin signaling</strong>, <strong>lipid-phosphate regulation at glutamatergic synapses</strong>, <strong>dendritic and axonal structural integrity</strong>, and <strong>network excitability</strong>. The clearest AD-inferential signal comes from diabetic cognitive dysfunction models where PRG-1 co-downregulates with key synaptic proteins. Downstream pathway links — including PP2A-tau regulation and calcium/calmodulin signaling — broaden its theoretical relevance. Critically, however, <strong>no Alzheimer's-specific data exist</strong>, and the bidirectional nature of PLPPR4-driven plasticity (protective under metabolic stress but potentially maladaptive in seizure-prone remodeling contexts) demands careful empirical testing before any therapeutic strategy is advanced. The highest-priority next step is <strong>direct measurement of PLPPR4 in human AD tissue</strong> and <strong>functional rescue experiments in validated AD models</strong>.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PLPPR4 / PRG-1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

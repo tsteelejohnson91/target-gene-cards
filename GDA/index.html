@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDA — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f0f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e0eaf8;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(253,164,164,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #c7d9f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    line-height: 1.5;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.91rem;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: item;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(item);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #e8f0f9;
+    border-radius: 14px;
+    padding: 36px 36px 34px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #7fb3e8;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    color: #dbeafe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GDA &nbsp;|&nbsp; Guanine Deaminase</span>
+    <span class="chip chip-danger">⚠ Target Validation Lacking</span>
+  </div>
+  <h1>GDA &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Critical Caveat</span>
+      The acronym "GDA" appears throughout the literature in many unrelated contexts — gastroduodenal artery, gene-disease association methods, guideline daily amounts, geldanamycin, glutaraldehyde, and author/institutional abbreviations. These must not be interpreted as molecular evidence for GDA involvement in Alzheimer's disease.
+    </div>
+
+    <p>The available evidence linking <em>GDA</em> (guanine deaminase) to Alzheimer's disease is limited and largely indirect. The most relevant direct finding places GDA as a cerebrospinal fluid (CSF) protein in an Alzheimer's biomarker proteomics study, where it contributed to distinguishing amyloid/tau-positive (AT+) individuals from amyloid/tau-negative (AT−) controls. A second Alzheimer's-model finding groups GDA among synaptic or neuronal-function markers that are restored following <em>KChIP3</em> deletion in 5XFAD mice.</p>
+
+    <p style="margin-top:16px;">Neither finding establishes GDA as causal in Alzheimer's disease. No study in the supplied text tests GDA inhibition, activation, knockdown, overexpression, or pharmacologic targeting in any Alzheimer's model or patient cohort. The text does not show that GDA modulation alters amyloid-β, tau, neuroinflammation, synaptic loss, cognition, or neurodegeneration. GDA is therefore best positioned, on current evidence, as a <strong>candidate biomarker or downstream molecular readout</strong> rather than a validated therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic &amp; Evidence Landscape</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Purine Metabolism Context -->
+          <rect x="14" y="14" width="250" height="460" rx="12" ry="12"
+                fill="#e8f0f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="139" y="36" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#1e3a5f" letter-spacing="0.12em">PURINE METABOLISM</text>
+
+          <!-- Node A1: Guanine -->
+          <rect x="64" y="48" width="150" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="139" y="66" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Guanine</text>
+          <text x="139" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(purine substrate)</text>
+
+          <!-- Arrow A1->A2 -->
+          <line x1="139" y1="92" x2="139" y2="118" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node A2: GDA enzyme -->
+          <rect x="54" y="120" width="170" height="44" rx="8" fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.8"/>
+          <text x="139" y="138" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="bold" fill="#1e3a5f">GDA</text>
+          <text x="139" y="153" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e3a5f">(Guanine Deaminase)</text>
+
+          <!-- Arrow A2->A3 -->
+          <line x1="139" y1="164" x2="139" y2="192" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Xanthine -->
+          <rect x="64" y="194" width="150" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="139" y="212" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Xanthine</text>
+          <text x="139" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(guanine→xanthine)</text>
+
+          <!-- Arrow A3->A4 -->
+          <line x1="139" y1="238" x2="139" y2="266" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node A4: Uric Acid / Oxidative -->
+          <rect x="54" y="268" width="170" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="139" y="286" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Uric acid / XO pathway</text>
+          <text x="139" y="300" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">oxidative stress risk</text>
+
+          <!-- Note box A5: AD-adjacency note -->
+          <rect x="34" y="334" width="210" height="52" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.1"/>
+          <text x="139" y="352" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">AD-adjacent themes:</text>
+          <text x="139" y="365" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">oxidative stress, inflammation,</text>
+          <text x="139" y="378" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">mitochondrial dysfunction</text>
+
+          <!-- Dashed link A4->A5 -->
+          <line x1="139" y1="312" x2="139" y2="334" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel B: Alzheimer's Evidence -->
+          <rect x="282" y="14" width="274" height="460" rx="12" ry="12"
+                fill="#fef2f2" fill-opacity="0.5" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="419" y="36" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#7f1d1d" letter-spacing="0.12em">ALZHEIMER'S EVIDENCE</text>
+
+          <!-- Node B1: CSF Proteomics -->
+          <rect x="306" y="48" width="226" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="419" y="68" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">CSF Proteomics Study</text>
+          <text x="419" y="83" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">GDA distinguishes AT+ vs AT−</text>
+
+          <!-- Arrow B1->B2 -->
+          <line x1="419" y1="100" x2="419" y2="128" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B2: Biomarker Candidate -->
+          <rect x="306" y="130" width="226" height="44" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="419" y="148" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">GDA as Candidate Biomarker</text>
+          <text x="419" y="162" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">not causal; no validation</text>
+
+          <!-- Arrow B1 branch down-left to B3 -->
+          <line x1="419" y1="100" x2="419" y2="108" stroke="#991b1b" stroke-width="1" stroke-opacity="0"/>
+
+          <!-- Node B3: 5XFAD / KChIP3 -->
+          <rect x="306" y="204" width="226" height="52" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="419" y="224" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">5XFAD Mouse Model</text>
+          <text x="419" y="239" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">GDA restored after KChIP3 deletion</text>
+
+          <!-- Arrow B2->B3 -->
+          <line x1="419" y1="174" x2="419" y2="204" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node B4: Synaptic marker readout -->
+          <rect x="306" y="278" width="226" height="44" rx="8" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="419" y="296" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">Synaptic Marker Readout</text>
+          <text x="419" y="311" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">downstream of KChIP3 pathway</text>
+
+          <!-- Arrow B3->B4 -->
+          <line x1="419" y1="256" x2="419" y2="278" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- No-evidence box B5 -->
+          <rect x="306" y="344" width="226" height="52" rx="8" fill="#fff1f2" stroke="#f87171" stroke-width="1.1" stroke-dasharray="5,3"/>
+          <text x="419" y="363" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#991b1b">No pharmacologic / genetic</text>
+          <text x="419" y="377" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#991b1b">target validation for GDA in AD</text>
+
+          <!-- Dashed arrow B4->B5 -->
+          <line x1="419" y1="322" x2="419" y2="344" stroke="#f87171" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C: KChIP3 Pathway (more actionable target) -->
+          <rect x="574" y="14" width="312" height="460" rx="12" ry="12"
+                fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="730" y="36" text-anchor="middle" font-family="Arial" font-size="9"
+                font-weight="700" fill="#134e4a" letter-spacing="0.12em">KChIP3 — MORE ACTIONABLE TARGET</text>
+
+          <!-- Node C1: KChIP3 -->
+          <rect x="622" y="48" width="216" height="44" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="730" y="66" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="bold" fill="#134e4a">KChIP3</text>
+          <text x="730" y="80" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">(neuroinflammation regulator)</text>
+
+          <!-- Arrow C1 -> branch split -->
+          <line x1="730" y1="92" x2="730" y2="116" stroke="#0f766e" stroke-width="1.6"/>
+
+          <!-- Branch left: C2a -->
+          <line x1="730" y1="116" x2="662" y2="116" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="662" y1="116" x2="662" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Branch right: C2b -->
+          <line x1="730" y1="116" x2="800" y2="116" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="800" y1="116" x2="800" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C2a: Amyloid/Neuroinflam -->
+          <rect x="592" y="130" width="140" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="662" y="150" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a">β-amyloid burden</text>
+          <text x="662" y="164" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a">neuroinflammation</text>
+
+          <!-- Node C2b: Synaptic / Glia -->
+          <rect x="748" y="130" width="124" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="810" y="150" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a">synaptic pruning</text>
+          <text x="810" y="164" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#134e4a">reactive gliosis</text>
+
+          <!-- Arrows C2a/C2b -> C3 -->
+          <line x1="662" y1="182" x2="662" y2="210" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="662" y1="210" x2="730" y2="210" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="810" y1="182" x2="810" y2="210" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="810" y1="210" x2="730" y2="210" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="730" y1="210" x2="730" y2="226" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C3: KChIP3 deletion outcomes -->
+          <rect x="622" y="228" width="216" height="52" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="730" y="248" text-anchor="middle" font-family="Georgia" font-size="11" fill="#134e4a">KChIP3 deletion</text>
+          <text x="730" y="263" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">improves AD-like outcomes</text>
+
+          <!-- Arrow C3->C4 -->
+          <line x1="730" y1="280" x2="730" y2="306" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C4: GDA restored (downstream) -->
+          <rect x="622" y="308" width="216" height="44" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="730" y="326" text-anchor="middle" font-family="Georgia" font-size="11" fill="#134e4a">GDA + synaptic markers</text>
+          <text x="730" y="341" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">restored (downstream readout)</text>
+
+          <!-- Arrow C4->C5 -->
+          <line x1="730" y1="352" x2="730" y2="378" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node C5: Cognitive outcomes -->
+          <rect x="622" y="380" width="216" height="44" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="730" y="399" text-anchor="middle" font-family="Georgia" font-size="11" fill="#134e4a">Cognitive / synaptic</text>
+          <text x="730" y="413" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">recovery in 5XFAD model</text>
+
+          <!-- Cross-panel connector: B4 -> C4 via gutter -->
+          <!-- Route: B4 right edge (532,300) -> gutter x=558 -> down to y=330 -> right to C4 left edge (622,330) -->
+          <polyline points="532,300 558,300 558,330 622,330"
+                    fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="5,3"
+                    marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> GDA's established role in purine metabolism — converting guanine to xanthine, feeding downstream uric-acid/xanthine oxidase biology. Themes such as oxidative stress and inflammation are adjacent to AD but not directly demonstrated in the supplied text.
+        <strong>Panel B (red, centre):</strong> The two direct Alzheimer's-relevant findings: GDA as a CSF proteomics biomarker distinguishing AT+/AT− individuals, and GDA as a synaptic-marker readout in 5XFAD mice. Dashed outline emphasises the absence of pharmacologic or genetic validation.
+        <strong>Panel C (teal, right):</strong> KChIP3 — the more actionable target described in the text — fans out into parallel pathways (amyloid/neuroinflammation and synaptic pruning/gliosis), converging on improved AD-like outcomes upon deletion. GDA restoration (Panel C, fourth row) is a downstream consequence of KChIP3 deletion, not an independent intervention. Dashed grey connector links the shared downstream readout across panels B and C.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Therapeutic Target Validation</h3>
+        <p>No study in the supplied text tests GDA inhibition, activation, knockdown, overexpression, or drug targeting in any Alzheimer's disease model or patient cohort. GDA cannot be considered a validated therapeutic target on current evidence.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>CSF Biomarker Signal</h3>
+        <p>In one CSF proteomics study, GDA was among proteins distinguishing AT+ individuals from AT− controls. This links GDA to amyloid/tau biomarker positivity but not necessarily to cognitive impairment or disease progression.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Synaptic Marker in 5XFAD Model</h3>
+        <p>GDA was grouped with synaptic/neuronal-function markers restored after KChIP3 deletion in 5XFAD mice — suggesting GDA reflects synaptic recovery or neuronal integrity <em>downstream</em> of reduced neuroinflammatory pathology, not a causal driver.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>KChIP3 Is the More Actionable Target</h3>
+        <p>KChIP3 — not GDA — is linked in the text to β-amyloid burden, neuroinflammation, synaptic pruning, reactive gliosis, and cognitive decline. KChIP3 deletion improved multiple AD-like outcomes in preclinical models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Purine Metabolism — Indirect Relevance</h3>
+        <p>Non-Alzheimer's studies identify GDA/guanine deaminase in purine metabolism (guanine-to-xanthine conversion and xanthine/uric-acid biology), themes adjacent to AD-relevant oxidative stress and inflammation. The supplied text does not demonstrate these links in AD.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Acronym Collision Risk</h3>
+        <p>Most appearances of "GDA" in the literature represent unrelated entities — gastroduodenal artery, gene-disease association methods, guideline daily amounts, geldanamycin, glutaraldehyde, and others. These must be excluded from any Alzheimer's target assessment.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Treat GDA as a candidate biomarker, not a target.</strong> Position GDA as a downstream molecular readout or candidate biomarker in Alzheimer's disease research rather than a confirmed therapeutic target warranting drug discovery efforts.</div>
+      </li>
+      <li>
+        <div><strong>Filter out acronym noise rigorously.</strong> Do not infer therapeutic relevance from unrelated GDA acronym uses. Most literature entries are terminologically mismatched and must be excluded from any Alzheimer's target assessment pipeline.</div>
+      </li>
+      <li>
+        <div><strong>Answer validation questions first.</strong> Before considering GDA druggability, establish whether GDA expression or activity changes in AD brain, CSF, or plasma; whether changes correlate with amyloid, tau, synaptic loss, inflammation, or disease stage; and whether GDA modulation alters AD-relevant phenotypes in experimental models.</div>
+      </li>
+      <li>
+        <div><strong>Pursue two indirect mechanistic hypotheses.</strong> If investigating GDA mechanism, focus on the two plausible hypotheses supported by the text: GDA as part of synaptic integrity programs, and GDA as a component of purine/xanthine/uric-acid metabolism linked to oxidative or inflammatory stress in the CNS.</div>
+      </li>
+      <li>
+        <div><strong>Use GDA in biomarker panels with caution.</strong> The CSF proteomics signal suggests potential utility for distinguishing amyloid/tau-positive disease states, but evidence is insufficient to use GDA alone as a diagnostic, prognostic, or treatment-response marker.</div>
+      </li>
+      <li>
+        <div><strong>Prioritise KChIP3 for therapeutic development.</strong> KChIP3, and to a lesser extent xanthine oxidase-linked oxidative metabolism pathways, appear substantially more actionable from the supplied material than direct GDA targeting.</div>
+      </li>
+      <li>
+        <div><strong>Commission AD-specific experiments.</strong> Further Alzheimer's-specific studies are required before GDA can be considered a credible therapeutic target — including causal experiments, CNS cell-type localisation, longitudinal biomarker analyses, and pharmacologic or genetic perturbation in AD models.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — GDA in Alzheimer's Disease</span>
+      <p>
+        On the basis of the supplied evidence, <strong>GDA (guanine deaminase) does not meet the criteria for a validated Alzheimer's therapeutic target</strong>. The strongest direct findings position GDA as a <strong>CSF proteomics biomarker</strong> that tracks amyloid/tau positivity, and as a <strong>downstream synaptic-integrity readout</strong> in the 5XFAD/KChIP3 mouse model. Neither finding demonstrates causality, and no pharmacologic or genetic perturbation of GDA in an AD context is reported. The enzyme's established role in <strong>purine/xanthine metabolism</strong> is mechanistically interesting given AD-adjacent themes of oxidative stress and neuroinflammation, but those links remain unproven in AD. The <strong>dominant therapeutic signal</strong> in the text belongs to KChIP3, which influences β-amyloid burden, neuroinflammation, synaptic pruning, and cognitive decline directly. GDA should be <strong>monitored as a secondary biomarker candidate</strong> and revisited only after targeted causal experiments, CNS localisation studies, and longitudinal clinical data are available.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GDA / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

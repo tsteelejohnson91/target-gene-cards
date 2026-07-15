@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AK4 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark:    #1a3a5c;
+    --mid:     #2e6da4;
+    --light:   #e8f1f9;
+    --danger:  #9b1c1c;
+    --danger-light: #fdf2f2;
+    --warning: #b45309;
+    --positive:#0f766e;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --card-blue: #eff6ff;
+    --card-blue-border: #3b82f6;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,100,100,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+  section { margin-bottom: 54px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p { margin-bottom: 1.1em; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #f87171;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+    color: var(--danger);
+  }
+  .callout strong { font-weight: 700; }
+
+  /* ── FIGURE WRAPPER ── */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card p { font-size: 0.9rem; line-height: 1.65; margin-bottom: 0; }
+
+  .card-accent  { background: var(--light);        border-color: var(--mid);       }
+  .card-accent h3  { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-color: #ef4444;          }
+  .card-danger h3  { color: var(--danger); }
+  .card-positive{ background: #f0fdfa;              border-color: var(--positive);  }
+  .card-positive h3{ color: var(--positive); }
+  .card-blue    { background: var(--card-blue);     border-color: var(--card-blue-border); }
+  .card-blue h3 { color: #1d4ed8; }
+  .card-neutral { background: #f1f5f9;              border-color: #94a3b8;          }
+  .card-neutral h3 { color: #475569; }
+  .card-warning { background: #fffbeb;              border-color: #f59e0b;          }
+  .card-warning h3 { color: var(--warning); }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways { list-style: none; counter-reset: tak; }
+  .takeaways li {
+    counter-increment: tak;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  .takeaways li::before {
+    content: counter(tak);
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--mid);
+    background: var(--light);
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .takeaways li strong { color: var(--dark); }
+
+  /* ── VERDICT ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 38px 36px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .verdict strong { color: #bfdbfe; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════  HEADER  ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: AK4 &nbsp;|&nbsp; Adenylate Kinase 4</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety concern</span>
+  </div>
+  <h1>AK4 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════  MAIN  ═══════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Therapeutic Safety Caveat:</strong> AK4 modulation is context-dependent — higher AK4 correlates with worse cognitive reserve in human AD cohorts, yet AK4 overexpression is neuroprotective in ischemic injury models. Broad inhibition could be harmful if AK4 is compensatory or cytoprotective in AD neurons.
+    </div>
+
+    <p>AK4 (adenylate kinase 4) is a mitochondrial matrix protein most relevant to Alzheimer's disease through indirect but convergent evidence involving <strong>cognitive reserve, mitochondrial energy metabolism, hypoxia signaling, oxidative stress, inflammation, and neuronal resilience</strong>. The literature does not establish AK4 as a direct amyloid-β or tau regulator; several entities labelled "AK4" in the literature refer to unrelated items and must be excluded.</p>
+
+    <p>The strongest AD-specific evidence derives from human postmortem proteomics and iPSC-derived neuron studies, where <strong>higher AK4 abundance associates with faster cognitive decline and lower cognitive reserve</strong>, largely independent of standard AD neuropathologies. AK4 is therefore best interpreted as a candidate modulator or biomarker of vulnerability to neuropathologic burden rather than a validated AD disease driver.</p>
+
+    <p>Its mitochondrial localization, effects on ATP handling, AMPK signaling, glycolysis/oxidative-metabolism balance, ROS, and HIF-1α pathways make it mechanistically plausible in AD, where bioenergetic failure and neuroinflammation are central. However, the <strong>direction of therapeutic modulation remains uncertain</strong> because AK4 appears harmful in some contexts and protective in others.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (16 nodes maximum — count: 16 exactly)
+          Panel A (left) "Upstream / Human Evidence" — 4 nodes
+          Panel B (middle-top) "Mitochondrial Mechanisms" — 5 nodes (1 shared + 2 branch A + 2 branch B)
+          Panel C (middle-bottom / right) "Downstream Axes" — 4 nodes
+          Panel D (far right) "AD Relevance" — 3 nodes
+          Total = 4 + 5 + 4 + 3 = 16 ✓
+
+          Arrows all route through gutters; no diagonal crosses any box.
+        -->
+        <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg"
+             width="900" height="480" aria-label="AK4 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#ef4444"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ╔══════════════════════════════════════════════════════════╗ -->
+          <!-- ║  PANEL A — Human / Clinical Evidence  (x:14 w:182)      ║ -->
+          <!-- ╚══════════════════════════════════════════════════════════╝ -->
+          <rect x="14" y="18" width="182" height="460" rx="10" ry="10"
+                fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="105" y="36" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="8.5" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1">HUMAN EVIDENCE</text>
+
+          <!-- A1: ROSMAP / Rush Cohorts -->
+          <rect x="28" y="48" width="154" height="48" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="105" y="67" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ROSMAP / Rush</text>
+          <text x="105" y="82" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Postmortem Cohorts</text>
+
+          <!-- A2: Higher AK4 → ↓ Cognitive Reserve -->
+          <rect x="28" y="122" width="154" height="48" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="105" y="141" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Higher AK4 →</text>
+          <text x="105" y="156" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">↓ Cognitive Reserve</text>
+
+          <!-- arrow A1→A2 -->
+          <line x1="105" y1="96" x2="105" y2="120" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A3: iPSC-Derived Neurons -->
+          <rect x="28" y="196" width="154" height="48" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="105" y="215" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">iPSC-Derived Neurons</text>
+          <text x="105" y="230" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">(Aged Donors)</text>
+
+          <!-- arrow A2→A3 -->
+          <line x1="105" y1="170" x2="105" y2="194" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- A4: White Matter Mediation -->
+          <rect x="28" y="270" width="154" height="58" rx="7"
+                fill="#fdf2f2" stroke="#ef4444" stroke-width="1.3"/>
+          <text x="105" y="290" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">↓ White Matter R2</text>
+          <text x="105" y="305" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Frontal / Temporal</text>
+          <text x="105" y="320" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#64748b">(mediates decline)</text>
+
+          <!-- arrow A3→A4 -->
+          <line x1="105" y1="244" x2="105" y2="268" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- ╔══════════════════════════════════════════════════════════╗ -->
+          <!-- ║  PANEL B — Mitochondrial Mechanisms  (x:220 w:270)      ║ -->
+          <!-- ╚══════════════════════════════════════════════════════════╝ -->
+          <rect x="220" y="18" width="278" height="460" rx="10" ry="10"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="359" y="36" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="8.5" font-weight="700"
+                fill="#0f766e" letter-spacing="1">MITOCHONDRIAL MECHANISMS</text>
+
+          <!-- B1: AK4 (shared hub) -->
+          <rect x="289" y="48" width="140" height="44" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8"/>
+          <text x="359" y="67" text-anchor="middle"
+                font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0f766e">AK4 Protein</text>
+          <text x="359" y="83" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">(Mitochondrial Matrix)</text>
+
+          <!-- Branch Left label -->
+          <text x="268" y="116" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="7.5" fill="#1a3a5c">Energy</text>
+
+          <!-- Branch Right label -->
+          <text x="450" y="116" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="7.5" fill="#b45309">Stress / Hypoxia</text>
+
+          <!-- B2L: ATP/AMPK Balance (left branch) -->
+          <rect x="234" y="128" width="140" height="48" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="304" y="148" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">ATP / ADP / AMP</text>
+          <text x="304" y="163" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">AMPK Signaling</text>
+
+          <!-- B2R: HIF-1α / Hypoxia (right branch) -->
+          <rect x="384" y="128" width="100" height="48" rx="7"
+                fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="434" y="148" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#b45309">HIF-1α</text>
+          <text x="434" y="163" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Hypoxia Response</text>
+
+          <!-- arrows B1 → B2L (elbow: down then left) -->
+          <polyline points="329,92 329,109 304,109 304,126"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <!-- arrows B1 → B2R (elbow: down then right) -->
+          <polyline points="389,92 389,109 434,109 434,126"
+                    fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- B3L: TCA / Oxidative Metabolism -->
+          <rect x="234" y="204" width="140" height="48" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="304" y="223" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">TCA Cycle /</text>
+          <text x="304" y="238" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Oxidative Metabolism</text>
+
+          <!-- arrow B2L → B3L -->
+          <line x1="304" y1="176" x2="304" y2="202" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- B3R: ROS / p38 Stress -->
+          <rect x="384" y="204" width="100" height="48" rx="7"
+                fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="434" y="223" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#b45309">ROS / p38</text>
+          <text x="434" y="238" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Stress Signaling</text>
+
+          <!-- arrow B2R → B3R -->
+          <line x1="434" y1="176" x2="434" y2="202" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+          <!-- Converge arrows B3L & B3R → shared node below (drawn in Panel C as C1) -->
+          <!-- these arrows drawn later once C1 coords known -->
+
+          <!-- ╔══════════════════════════════════════════════════════════╗ -->
+          <!-- ║  PANEL C — Downstream Axes  (x:522 w:214)               ║ -->
+          <!-- ╚══════════════════════════════════════════════════════════╝ -->
+          <rect x="522" y="18" width="214" height="460" rx="10" ry="10"
+                fill="rgba(59,130,246,0.06)" stroke="#3b82f6" stroke-width="1.2"/>
+          <text x="629" y="36" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="8.5" font-weight="700"
+                fill="#1d4ed8" letter-spacing="1">DOWNSTREAM AXES</text>
+
+          <!-- C1: PINK1 / Parkin Mitophagy -->
+          <rect x="537" y="48" width="184" height="48" rx="7"
+                fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="629" y="67" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1d4ed8">PINK1 / Parkin</text>
+          <text x="629" y="82" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Mitophagy / Quality Control</text>
+
+          <!-- C2: AK4-Parkin-PKM2 axis -->
+          <rect x="537" y="128" width="184" height="48" rx="7"
+                fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="629" y="148" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#1d4ed8">AK4–Parkin–PKM2 Axis</text>
+          <text x="629" y="163" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Ubiquitination of PKM2</text>
+
+          <!-- arrow C1→C2 -->
+          <line x1="629" y1="96" x2="629" y2="126" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- C3: Neuroinflammation / M1 Macrophage -->
+          <rect x="537" y="204" width="184" height="58" rx="7"
+                fill="#fdf2f2" stroke="#ef4444" stroke-width="1.3"/>
+          <text x="629" y="224" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">Neuroinflammation</text>
+          <text x="629" y="239" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">IL-1β, IL-6, TNF-α</text>
+          <text x="629" y="254" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">NOS2, NOX2, Glycolysis</text>
+
+          <!-- arrow C2→C3 -->
+          <line x1="629" y1="176" x2="629" y2="202" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- C4: Ischemia / Neuroprotection -->
+          <rect x="537" y="292" width="184" height="58" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="629" y="312" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#0f766e">Ischemia / Neuroprotection</text>
+          <text x="629" y="327" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">p-AMPK, ATP1A3,</text>
+          <text x="629" y="342" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">↓ Infarct Volume</text>
+
+          <!-- arrow C3→C4 (context-dependent arrow in gutter) -->
+          <line x1="629" y1="262" x2="629" y2="290" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+          <!-- ╔══════════════════════════════════════════════════════════╗ -->
+          <!-- ║  PANEL D — AD Relevance  (x:758 w:166)                  ║ -->
+          <!-- ╚══════════════════════════════════════════════════════════╝ -->
+          <rect x="758" y="18" width="166" height="460" rx="10" ry="10"
+                fill="rgba(155,28,28,0.05)" stroke="#ef4444" stroke-width="1.2"/>
+          <text x="841" y="36" text-anchor="middle"
+                font-family="Arial,sans-serif" font-size="8.5" font-weight="700"
+                fill="#9b1c1c" letter-spacing="1">AD RELEVANCE</text>
+
+          <!-- D1: Bioenergetic Failure -->
+          <rect x="770" y="48" width="142" height="58" rx="7"
+                fill="#fdf2f2" stroke="#ef4444" stroke-width="1.3"/>
+          <text x="841" y="70" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">Bioenergetic Failure</text>
+          <text x="841" y="85" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Complex I, Synaptic</text>
+          <text x="841" y="98" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Energy Deficit</text>
+
+          <!-- D2: Impaired Mitophagy -->
+          <rect x="770" y="180" width="142" height="58" rx="7"
+                fill="#fdf2f2" stroke="#ef4444" stroke-width="1.3"/>
+          <text x="841" y="202" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">Impaired Mitophagy</text>
+          <text x="841" y="217" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Neurodegeneration</text>
+          <text x="841" y="232" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Pathway Overlap</text>
+
+          <!-- D3: Cognitive Vulnerability -->
+          <rect x="770" y="322" width="142" height="58" rx="7"
+                fill="#fdf2f2" stroke="#ef4444" stroke-width="1.3"/>
+          <text x="841" y="344" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9.5" fill="#9b1c1c">Cognitive Vulnerability</text>
+          <text x="841" y="359" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">↓ Reserve, ↑ Decline</text>
+          <text x="841" y="374" text-anchor="middle"
+                font-family="Georgia,serif" font-size="9" fill="#1e293b">Non-canonical Pathway</text>
+
+          <!-- ═══  CROSS-PANEL CONNECTORS  (all routed through gutters) ═══ -->
+
+          <!-- Panel A → Panel B: A2 right edge → B1 left edge (horizontal through gutter at y≈72) -->
+          <polyline points="182,72 207,72 289,72"
+                    fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Panel B → Panel C: B3L right → C1 left (route through gutter at y≈56) -->
+          <!-- B3L center-right = (374, 228), C1 left = (537,72) — route as elbow through gutter x=500 -->
+          <polyline points="374,228 498,228 498,72 537,72"
+                    fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Panel B → Panel C: B3R right → C3 (neuroinflammation) through gutter at x=500, y=233 -->
+          <polyline points="484,228 498,228 498,233 537,233"
+                    fill="none" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C → Panel D: C1 right → D1 left (y≈72) -->
+          <line x1="721" y1="72" x2="770" y2="72"
+                stroke="#ef4444" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C → Panel D: C2 right → D2 left (elbow through gutter, y=152 then y=209) -->
+          <polyline points="721,152 742,152 742,209 770,209"
+                    fill="none" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C → Panel D: C4 right → D3 left (y=321) -->
+          <polyline points="721,321 742,321 742,351 770,351"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Human Evidence):</strong> ROSMAP/Rush postmortem cohorts and iPSC neuron models link higher AK4 protein to lower cognitive reserve and white matter microstructural changes.
+        <strong>Panel B (Mitochondrial Mechanisms):</strong> AK4 acts as a mitochondrial matrix hub, branching into an energy/AMPK arm (left: ATP–ADP–AMP balance, TCA cycle, oxidative metabolism) and a stress/hypoxia arm (right: HIF-1α induction, ROS, p38 signaling).
+        <strong>Panel C (Downstream Axes):</strong> Downstream consequences include PINK1/Parkin-mediated mitophagy, the AK4–Parkin–PKM2 ubiquitination axis, a pro-inflammatory state (IL-1β, IL-6, TNF-α, NOX2), and — context-dependently — neuroprotection in ischemia via p-AMPK and ATP1A3 (dashed line denotes context-dependence).
+        <strong>Panel D (AD Relevance):</strong> These mechanisms converge on AD-relevant outcomes: bioenergetic failure, impaired mitophagy-driven neurodegeneration, and reduced cognitive resilience independent of canonical amyloid/tau burden.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Cognitive Reserve — Human Cohorts</h3>
+        <p>In the Rush Religious Orders Study and Rush Memory and Aging Project, higher cortical AK4 abundance correlated with faster cognitive decline and lower cognitive reserve — associations not fully explained by amyloid-β, tau, or other standard neuropathologies, implicating non-canonical pathways.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Mitochondrial Energy Hub</h3>
+        <p>AK4 is a mitochondrial matrix protein involved in energy homeostasis, ATP regulation, adenine nucleotide balance, respiratory capacity, TCA-cycle activity, and AMPK signaling — mechanisms that directly overlap with AD features such as impaired Complex I activity and synaptic energy failure.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>PINK1 / Parkin Mitophagy Axis</h3>
+        <p>In cerebral ischemia models, AK4 acted through an AK4/Parkin/PKM2 axis, enhancing Parkin-mediated ubiquitination of PKM2 and supporting mitochondrial quality control — AD-relevant because impaired mitophagy is a recognized neurodegenerative mechanism.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neuroinflammatory Pathway Link</h3>
+        <p>In M1 macrophage models, AK4 promoted expression of <em>Il1b</em>, <em>Il6</em>, <em>Tnfa</em>, <em>Nos2</em>, <em>Nox2</em>, and <em>Hif1a</em>, alongside enhanced glycolysis and ROS. Although microglia were not directly tested, these pathways strongly overlap with AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Effects</h3>
+        <p>AK4 knockdown increased ATP production, oxygen consumption, and TCA intermediates in some models — suggesting AK4 may restrain oxidative metabolism. Yet in ischemic injury, AK4 overexpression improved neuronal survival and reduced infarct volume, demonstrating opposing context-dependent roles.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>White Matter Mediation</h3>
+        <p>A postmortem MRI / proteomics study found that AK4-associated cognitive decline was mediated through lower R2 measures in frontal and temporal white matter, implicating microstructural vulnerability of white matter rather than direct amyloid or tau effects as an intermediate mechanism.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <strong>Treat AK4 as a candidate resilience/metabolic target, not a validated AD therapeutic.</strong>
+        Current evidence supports investigation but not clinical translation; the field remains at the mechanistic-hypothesis stage.
+      </li>
+      <li>
+        <strong>Prioritize human AD-relevant cellular models.</strong>
+        Use iPSC-derived neurons, astrocytes, microglia, and mixed cultures from donors with known pathology and cognitive-reserve profiles to test AK4 perturbation directly and avoid spurious findings from non-neuronal systems.
+      </li>
+      <li>
+        <strong>Test both AK4 inhibition and enhancement side-by-side.</strong>
+        Because AK4 has context-dependent effects, experiments must compare knockdown, overexpression, and pathway-selective modulation under amyloid-β, tau, inflammatory, oxidative, hypoxic, and metabolic stress conditions before drawing directional conclusions.
+      </li>
+      <li>
+        <strong>Measure a comprehensive panel of pathway-specific outcomes.</strong>
+        Key readouts should include neuronal survival, synaptic function, mitochondrial membrane potential, ATP/ADP/AMP balance, oxygen consumption, glycolysis-to-oxidation ratio, Complex I activity, TCA intermediates, AMPK, ATP1A3, ROS, p38, HIF-1α, ATF3, PINK1/Parkin mitophagy, PKM2 ubiquitination, and cytokine/NOX2/NOS2 outputs.
+      </li>
+      <li>
+        <strong>Determine cell-type and disease-stage specificity.</strong>
+        AK4 may behave differently in neurons, microglia, astrocytes, oligodendrocytes, vascular cells, and white matter compartments, and its role may shift between early compensatory stress responses and late maladaptive metabolic remodeling in AD progression.
+      </li>
+      <li>
+        <strong>Investigate white matter mechanisms explicitly.</strong>
+        Given that AK4-linked cognitive decline may be mediated by frontal and temporal white matter microstructure, studies should examine oligodendrocyte metabolism, axonal bioenergetics, myelin integrity, and vascular-metabolic coupling.
+      </li>
+      <li>
+        <strong>Pursue pathway-selective rather than global modulation strategies.</strong>
+        Rather than broadly inhibiting or activating AK4, the more realistic goal is to modulate specific downstream axes — AK4–HIF-1α inflammation, AK4–ROS/p38 stress, AK4–AMPK energy sensing, or AK4–Parkin/PINK1 mitophagy — once each axis is validated in AD-relevant cells.
+      </li>
+      <li>
+        <strong>Rigorously exclude non-adenylate-kinase "AK4" entities.</strong>
+        Only adenylate kinase 4 is relevant. AK-4 chemical probes, bacterial strains, antibody clones, prostheses, and supplements sharing the label must not be used to infer AD biology.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — AK4 in Alzheimer's Disease</span>
+      AK4 emerges from the current literature as a <strong>biologically plausible but therapeutically ambiguous candidate</strong> in Alzheimer's disease. The most compelling evidence — drawn from large human postmortem proteomics cohorts and iPSC neuronal models — consistently links <strong>higher AK4 abundance to reduced cognitive reserve and accelerated cognitive decline</strong>, independently of classical amyloid-β and tau neuropathology. This positions AK4 as a potential biomarker of non-canonical vulnerability rather than a core AD driver. Mechanistically, AK4's role as a <strong>mitochondrial energy regulator interfacing with AMPK, HIF-1α, ROS/p38, and PINK1/Parkin mitophagy</strong> aligns well with the bioenergetic and neuroinflammatory dimensions of neurodegeneration. However, the <strong>context-dependence of AK4 function</strong> — harmful in chronic metabolic stress yet neuroprotective in acute ischemia — means that straightforward inhibition strategies carry genuine risk. Advancing AK4 as a target will require <strong>pathway-selective mechanistic dissection in human AD-relevant systems</strong>, rigorous cell-type and disease-stage characterization, and explicit attention to white matter biology as a potential mediating compartment.
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════  FOOTER  ═══════════════════════════ -->
+<footer>
+  AK4 / Alzheimer's Disease TEP Evidence Summary &mdash; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

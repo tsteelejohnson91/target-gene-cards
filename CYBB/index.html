@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBB / NOX2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger-dark: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #64748b;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e2f 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2eaf3;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,40,40,0.28);
+    border-color: rgba(255,160,160,0.4);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mid);
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #f0a0a0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .callout .callout-label {
+    font-weight: bold;
+    color: var(--danger-dark);
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--slate);
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 14px;
+    border-left: 4px solid transparent;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left-color: var(--danger-dark);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left-color: var(--slate);
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left-color: #3b82f6;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    margin-top: 3px;
+  }
+
+  .takeaways li p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e2f 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-label {
+    font-weight: bold;
+    color: #7ec8f0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    font-size: 0.98rem;
+    opacity: 0.93;
+    margin: 0;
+    color: #e2eaf3;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: CYBB &nbsp;|&nbsp; Cytochrome B-245 Beta Chain (gp91phox / NOX2)</span>
+    <span class="chip chip-danger">⚠ Safety: X-linked Chronic Granulomatous Disease Risk</span>
+  </div>
+  <h1>CYBB / NOX2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Key Safety Constraint:</span>
+      Human <em>CYBB</em> loss-of-function mutations cause <strong>X-linked chronic granulomatous disease</strong>, resulting in defective phagocyte respiratory burst and susceptibility to severe fungal, mycobacterial, and bacterial infections. Chronic systemic or complete NOX2 inhibition would carry significant infection and immune-dysregulation risks and is considered unsuitable without careful targeting and monitoring.
+    </div>
+
+    <p>
+      <em>CYBB</em> encodes <strong>gp91phox/NOX2</strong>, the catalytic subunit of NADPH oxidase 2 and a major enzymatic source of reactive oxygen species (ROS) in microglia, macrophages, neutrophils, endothelial cells, and other inflammatory cell types. Across the literature, CYBB/NOX2 is repeatedly linked to oxidative stress, innate immune activation, neuroinflammation, inflammasome signaling, ferroptosis/lipid peroxidation, mitochondrial dysfunction, vascular or barrier injury, and synaptic/neuronal damage.
+    </p>
+    <p>
+      The Alzheimer's disease (AD)-specific evidence is mixed in form but converges mechanistically. Reported AD-relevant findings include NOX2 activation downstream of amyloid-β, increased <em>Cybb</em> expression in degenerative microglial states in 5xFAD mice, CYBB as a dysregulated ferroptosis-associated AD biomarker, reduced NOX2 activation markers after probiotic therapy in mild AD, and Tocovid-mediated attenuation of NOX2 expression in APP23 mice with improvements in oxidative stress, neuroinflammation, neurovascular integrity, amyloid burden, synaptic alterations, and memory/motor deficits.
+    </p>
+    <p>
+      Overall, CYBB/NOX2 is best characterized as a <strong>redox-inflammatory amplifier</strong> in AD-relevant biology rather than a simple standalone AD gene. Its therapeutic potential lies in selectively reducing pathological NOX2-driven ROS and inflammatory feed-forward loops, especially in activated microglia/myeloid cells and neurovascular compartments.
+    </p>
+  </section>
+
+  <!-- MECHANISM FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN (16 nodes max):
+        Panel A (Upstream Triggers): 3 nodes — Aβ / LPS / Iron, TLR4 / Complement, Rac1·p47·p67 Assembly
+        Panel B (NOX2 Core): 1 node — NOX2/gp91phox (central hub)
+        Panel C (Branch 1 – Inflammatory): 4 nodes — NF-κB, NLRP3/Casp-1, IL-1β·IL-18·TNF-α, Pyroptosis/M1 Polarization
+        Panel D (Branch 2 – Redox/Ferroptosis): 4 nodes — Lipid Peroxidation, GPX4·SLC7A11↓, ACSL4↑, Ferroptosis/Neuronal Loss
+        Panel E (Downstream Outcomes): 3 nodes — Synaptic Loss·Tau, BBB/Vascular Injury, Cognitive Decline
+        Total = 15 nodes ✓
+      -->
+      <svg viewBox="0 0 880 490" width="100%" xmlns="http://www.w3.org/2000/svg" aria-label="CYBB/NOX2 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="12" y="10" width="200" height="460" rx="12" fill="rgba(230,242,255,0.55)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="112" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: Aβ / LPS / Iron -->
+        <rect x="26" y="44" width="172" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+        <text x="112" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#1e3a5f">Aβ / LPS / Iron</text>
+        <text x="112" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Stress Signals</text>
+
+        <!-- Node A2: TLR4 / Complement -->
+        <rect x="26" y="128" width="172" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+        <text x="112" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#1e3a5f">TLR4 / Complement</text>
+        <text x="112" y="165" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">Pattern Recognition</text>
+
+        <!-- Node A3: Rac1·p47·p67 Assembly -->
+        <rect x="26" y="212" width="172" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.3"/>
+        <text x="112" y="233" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#1e3a5f">Rac1·p47·p67</text>
+        <text x="112" y="249" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f">NOX2 Assembly</text>
+
+        <!-- Arrows within Panel A -->
+        <line x1="112" y1="94" x2="112" y2="126" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+        <line x1="112" y1="178" x2="112" y2="210" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Panel B: NOX2 Core (central) -->
+        <rect x="240" y="178" width="170" height="58" rx="9" fill="#1a3a5c" stroke="#0a1e2f" stroke-width="2"/>
+        <text x="325" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#ffffff">NOX2 / gp91phox</text>
+        <text x="325" y="221" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#a8d4f5">ROS Production Hub</text>
+
+        <!-- Arrow A3 → NOX2 -->
+        <line x1="198" y1="237" x2="238" y2="213" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Panel C: Inflammatory Branch -->
+        <rect x="446" y="10" width="196" height="338" rx="12" fill="rgba(253,240,240,0.6)" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="544" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="1">INFLAMMATORY CASCADE</text>
+
+        <!-- Node C1: NF-κB -->
+        <rect x="460" y="44" width="168" height="50" rx="8" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="544" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7f1d1d">NF-κB / TXNIP</text>
+        <text x="544" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">Transcriptional Activation</text>
+
+        <!-- Node C2: NLRP3/Casp-1 -->
+        <rect x="460" y="128" width="168" height="50" rx="8" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="544" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7f1d1d">NLRP3 / Caspase-1</text>
+        <text x="544" y="165" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">Inflammasome</text>
+
+        <!-- Node C3: Cytokines -->
+        <rect x="460" y="212" width="168" height="50" rx="8" fill="#fee2e2" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="544" y="233" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7f1d1d">IL-1β · IL-18 · TNF-α</text>
+        <text x="544" y="249" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">Pro-inflammatory Cytokines</text>
+
+        <!-- Node C4: Pyroptosis/M1 -->
+        <rect x="460" y="296" width="168" height="42" rx="8" fill="#fecaca" stroke="#8b1a1a" stroke-width="1.3"/>
+        <text x="544" y="313" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7f1d1d">Pyroptosis</text>
+        <text x="544" y="329" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d">M1 Microglial Polarization</text>
+
+        <!-- Arrows within Panel C -->
+        <line x1="544" y1="94" x2="544" y2="126" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <line x1="544" y1="178" x2="544" y2="210" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <line x1="544" y1="262" x2="544" y2="294" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow NOX2 → NF-κB (horizontal to right, enters panel C at top) -->
+        <!-- Route: from NOX2 right edge (410,207) → up via elbow → enter C1 top -->
+        <polyline points="410,200 430,200 430,69 458,69" fill="none" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Panel D: Ferroptosis Branch -->
+        <rect x="660" y="10" width="208" height="338" rx="12" fill="rgba(240,253,250,0.65)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="764" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1">FERROPTOSIS / REDOX</text>
+
+        <!-- Node D1: Lipid Peroxidation -->
+        <rect x="673" y="44" width="182" height="50" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="764" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#134e4a">Lipid Peroxidation</text>
+        <text x="764" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">4-HNE · MDA Elevation</text>
+
+        <!-- Node D2: GPX4/SLC7A11 -->
+        <rect x="673" y="128" width="182" height="50" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="764" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#134e4a">GPX4 · SLC7A11 ↓</text>
+        <text x="764" y="165" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Antioxidant Defense Loss</text>
+
+        <!-- Node D3: ACSL4 -->
+        <rect x="673" y="212" width="182" height="50" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="764" y="233" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#134e4a">ACSL4 ↑</text>
+        <text x="764" y="249" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Ferroptosis Signature</text>
+
+        <!-- Node D4: Ferroptosis/Neuronal Loss -->
+        <rect x="673" y="296" width="182" height="42" rx="8" fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="764" y="313" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#134e4a">Ferroptosis</text>
+        <text x="764" y="329" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Neuronal Cell Death</text>
+
+        <!-- Arrows within Panel D -->
+        <line x1="764" y1="94" x2="764" y2="126" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <line x1="764" y1="178" x2="764" y2="210" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <line x1="764" y1="262" x2="764" y2="294" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow NOX2 → Lipid Peroxidation: route right and up via gutter -->
+        <polyline points="410,200 640,200 640,69 671,69" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel E: Downstream Outcomes -->
+        <rect x="240" y="362" width="400" height="118" rx="12" fill="rgba(241,245,249,0.7)" stroke="#475569" stroke-width="1.2"/>
+        <text x="440" y="381" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#334155" letter-spacing="1">DOWNSTREAM OUTCOMES</text>
+
+        <!-- Node E1: Synaptic Loss -->
+        <rect x="254" y="390" width="116" height="76" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="1.3"/>
+        <text x="312" y="424" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="bold" fill="#1e293b">Synaptic Loss</text>
+        <text x="312" y="440" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#334155">Tau Hyperphosphorylation</text>
+        <text x="312" y="454" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#334155">Neuritic Dystrophy</text>
+
+        <!-- Node E2: BBB/Vascular -->
+        <rect x="382" y="390" width="116" height="76" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="1.3"/>
+        <text x="440" y="421" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="bold" fill="#1e293b">BBB / Vascular</text>
+        <text x="440" y="437" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#334155">Barrier Dysfunction</text>
+        <text x="440" y="453" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#334155">Small-vessel Injury</text>
+
+        <!-- Node E3: Cognitive Decline -->
+        <rect x="510" y="390" width="116" height="76" rx="8" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+        <text x="568" y="421" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="bold" fill="#0f172a">Cognitive Decline</text>
+        <text x="568" y="437" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b">Memory Deficits</text>
+        <text x="568" y="453" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b">Behavioral Decline</text>
+
+        <!-- Arrows from Panel C (pyroptosis) down into outcomes -->
+        <!-- C4 bottom-center = (544, 338), route down to E1/E2 -->
+        <polyline points="544,338 544,356 440,356 440,388" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr-dark)"/>
+
+        <!-- Arrows from Panel D (ferroptosis) down into outcomes -->
+        <polyline points="764,338 764,352 568,352 568,388" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr-dark)"/>
+
+        <!-- Arrow from NOX2 straight down to outcomes -->
+        <polyline points="325,236 325,340 312,340 312,388" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr-dark)"/>
+
+        <!-- E1→E3 arrow (convergence) -->
+        <line x1="370" y1="428" x2="508" y2="428" stroke="#334155" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+        <line x1="498" y1="428" x2="508" y2="428" stroke="none"/>
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Triggers:</strong> Amyloid-β, LPS, and iron stress signals engage pattern-recognition receptors (TLR4/Complement), driving assembly of the Rac1·p47phox·p67phox complex that activates NOX2.
+        <strong>Panel B — NOX2/gp91phox Hub:</strong> The catalytic core of NADPH oxidase 2, the central ROS-generating node that fans into two parallel downstream branches.
+        <strong>Panel C — Inflammatory Cascade (red branch):</strong> NOX2-derived ROS activate NF-κB/TXNIP → NLRP3 inflammasome/Caspase-1 → pro-inflammatory cytokines (IL-1β, IL-18, TNF-α) → pyroptosis and M1 microglial polarization.
+        <strong>Panel D — Ferroptosis/Redox Branch (teal):</strong> ROS drive lipid peroxidation, suppress GPX4/SLC7A11 antioxidant defenses, upregulate ACSL4, and culminate in ferroptotic neuronal cell death.
+        <strong>Panel E — Downstream Outcomes:</strong> Both branches converge on synaptic loss/tau pathology, blood-brain barrier and vascular injury, and ultimately cognitive decline.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Amyloid–Microglial–Oxidative Axis</h3>
+        <p>Amyloid-β–induced NOX2 activation is associated with ROS production, neuroinflammation, synaptic alteration, neurovascular unit dysfunction, amyloid deposition, and behavioral decline. NOX2 inhibition or attenuation shifted oxidative-stress profiles and reduced microgliosis or downstream pathology in reported AD-relevant models.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Microglial Degenerative States</h3>
+        <p>In 5xFAD;Cx3cr1-deficient mice, increased microglial <em>Cybb</em> co-occurred with impaired plaque engagement, reduced fibrillar Aβ uptake, defective lysosomal acidification, toxic oligomeric Aβ accumulation, neuritic dystrophy, synaptic loss, tau hyperphosphorylation, neuronal loss, and cognitive impairment — positioning CYBB as a marker and possible effector of harmful microglial redox activation.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ferroptosis &amp; Lipid Peroxidation Link</h3>
+        <p>Multiple studies place CYBB/NOX2 upstream of iron stress, lipid peroxidation, GPX4/SLC7A11 disruption, and ACSL4-linked ferroptosis signatures. This is directly relevant to AD because iron dyshomeostasis, lipid peroxidation, mitochondrial dysfunction, and ferroptosis-like neuronal vulnerability are increasingly recognized contributors to neurodegeneration.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Inflammasome &amp; Cytokine Cascades</h3>
+        <p>NOX2-derived ROS are repeatedly linked to NF-κB, TXNIP, NLRP3 inflammasome activation, caspase-1, IL-1β, IL-18, TNF-α, IL-6, pyroptosis, and M1-like microglial/macrophage polarization — pathways that directly overlap with amyloid- and tau-associated neuroinflammatory mechanisms in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Neurovascular &amp; Barrier Effects</h3>
+        <p>NOX2 is implicated in endothelial oxidative stress, impaired vasodilation, adhesion molecule induction, barrier dysfunction, small-vessel injury, and neurovascular-unit damage. Since vascular dysfunction and BBB impairment can accelerate cognitive decline and interact with amyloid/tau pathology, CYBB may contribute to AD through vascular as well as microglial mechanisms.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety — Infection &amp; CGD Risk</h3>
+        <p>Human <em>CYBB</em> mutations cause X-linked chronic granulomatous disease, characterized by defective phagocyte respiratory burst and severe susceptibility to fungal, mycobacterial, and catalase-positive bacterial infections. Broad systemic or complete NOX2 blockade is therefore unsuitable; partial, cell-type-targeted, and activation-state-dependent approaches are required.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <p><strong>Prioritize CYBB/NOX2 as a high-priority AD mechanism candidate</strong> for oxidative neuroinflammation, especially in patient subsets or disease stages marked by high microglial activation, oxidative stress, ferroptosis/lipid peroxidation, vascular dysfunction, or systemic inflammatory triggers.</p>
+      </li>
+      <li>
+        <p><strong>Pursue selective modulation, not complete inhibition.</strong> The most plausible AD strategy is partial, brain-penetrant, microglia-biased, neurovascular-targeted, time-limited, or activation-state-dependent NOX2 suppression — tools such as GSK2795039, gp91ds-tat, apocynin, or upstream ROCK/NF-κB/AMPK/Nrf2 modulators — rather than broad systemic CYBB blockade.</p>
+      </li>
+      <li>
+        <p><strong>Validate CYBB in AD-specific human systems</strong> before clinical translation. Key experiments should confirm CYBB/NOX2 upregulation in human AD brain cell types, plaque-associated microglia, endothelial cells, and infiltrating myeloid cells, and test whether activity correlates with amyloid, tau, lipid peroxidation, NLRP3 activation, synaptic loss, or cognition.</p>
+      </li>
+      <li>
+        <p><strong>Use pathway biomarkers to guide development.</strong> Candidate biomarkers include CYBB/NOX2 expression, soluble NOX2-derived peptide, ROS/H₂O₂, lipid peroxidation products (4-HNE, MDA), GPX4/SLC7A11 status, iron markers, NLRP3/caspase-1/IL-1β signaling, NF-κB/TXNIP activation, microglial activation markers, and vascular/barrier injury markers.</p>
+      </li>
+      <li>
+        <p><strong>Consider combination approaches.</strong> CYBB-targeted strategies may be more effective and safer when paired with Nrf2 activation, antioxidant/anti-ferroptotic support, NLRP3 inhibition, TLR4 or complement-pathway modulation, mitochondrial protection, gut-barrier/endotoxemia reduction, or neurovascular protection.</p>
+      </li>
+      <li>
+        <p><strong>Account for infection risk early in development.</strong> Any CYBB/NOX2-directed AD therapy must include host-defense safety assessment, particularly for fungal, mycobacterial, and catalase-positive bacterial infection risk, and should avoid dosing regimens that mimic chronic granulomatous disease–like loss of function.</p>
+      </li>
+      <li>
+        <p><strong>Frame CYBB as a redox-inflammatory amplifier, not the sole AD driver.</strong> AD oxidative stress and neuroinflammation are generated by multiple sources; CYBB/NOX2 likely contributes to feed-forward inflammatory ROS loops and should be targeted as part of a broader redox-inflammatory network rather than as a single-cause intervention.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — CYBB / NOX2 in Alzheimer's Disease</span>
+      <p>
+        CYBB/NOX2 is best understood as a <strong>redox-inflammatory amplifier</strong> deeply embedded in multiple AD-relevant pathological cascades — microglial degenerative activation, amyloid-β–driven oxidative injury, NLRP3 inflammasome signaling, ferroptosis and lipid peroxidation, and neurovascular dysfunction — rather than a primary genetic driver of disease. <strong>Its therapeutic potential is real but constrained</strong>: preclinical evidence supports benefit from selective NOX2 attenuation across multiple model systems, yet inherited human CYBB loss-of-function unambiguously demonstrates that complete or systemic blockade carries unacceptable infection risk. The translational path forward is <strong>targeted, partial, context-dependent NOX2 suppression</strong> in activated myeloid and neurovascular compartments, validated in human AD tissues, guided by multi-analyte pathway biomarkers, and combined with complementary redox and anti-inflammatory strategies. CYBB warrants continued prioritization as a <strong>mechanistically coherent, pharmacologically tractable node</strong> in the AD oxidative-neuroinflammatory network.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CYBB / NOX2 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DLAT — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #4a1a6b;
+    --mid: #7c3aad;
+    --light: #f3e8ff;
+    --danger: #991b1b;
+    --danger-tint: #fff1f1;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0530 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .header-chips {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f0e8ff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(180,40,40,0.28);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+    color: #e9d5ff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-tint);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    text-align: center;
+    line-height: 1.55;
+    padding: 0 12px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .card-purple {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-purple h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-tint);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-teal {
+    background: var(--positive-tint);
+    border-color: var(--positive);
+  }
+  .card-teal h3 { color: var(--positive); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #2563eb;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card-amber {
+    background: var(--warning-tint);
+    border-color: #d97706;
+  }
+  .card-amber h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.96rem;
+    position: relative;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0530 100%);
+    color: #f3e8ff;
+    border-radius: 14px;
+    padding: 40px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict strong.lead {
+    font-size: 1.15rem;
+    color: #e9d5ff;
+    font-style: normal;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    margin-top: 12px;
+    color: #e9d5ff;
+  }
+
+  .verdict p strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-chips">
+    <span class="chip">Gene: DLAT &nbsp;|&nbsp; Dihydrolipoamide S-Acetyltransferase (PDC-E2)</span>
+    <span class="chip chip-danger">⚠ Copper-driven proteotoxic risk</span>
+  </div>
+  <h1>DLAT &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Therapeutic Caution:</strong> DLAT is essential for acetyl-CoA production and mitochondrial energy metabolism. Broad DLAT inhibition could worsen AD-associated cerebral hypometabolism. Interventions must preserve physiological PDC function while blocking pathological copper-induced DLAT aggregation.
+    </div>
+
+    <div class="overview-body">
+      <p>DLAT (dihydrolipoamide S-acetyltransferase; PDC-E2), the lipoylated E2 component of the mitochondrial pyruvate dehydrogenase complex, is a central mitochondrial node linking pyruvate metabolism, acetyl-CoA production, TCA-cycle flux, oxidative phosphorylation, copper-dependent proteotoxic stress, and regulated cell death. Its relevance to Alzheimer's disease (AD) is supported by a combination of direct AD-adjacent findings and broader mechanistic evidence involving cuproptosis, copper dyshomeostasis, mitochondrial dysfunction, oxidative stress, neuroinflammation, and cognitive impairment.</p>
+      <p>The most consistent mechanism is DLAT-centered cuproptosis: excess or mislocalized copper binds lipoylated mitochondrial proteins — especially DLAT — causing DLAT oligomerization/aggregation, iron–sulfur cluster protein loss, mitochondrial proteotoxic stress, impaired respiration, ATP depletion, ROS generation, and cell death. These processes overlap strongly with AD biology, where impaired glucose metabolism, mitochondrial failure, oxidative injury, metal imbalance, synaptic dysfunction, and glial inflammation are major pathogenic features.</p>
+      <p>Direct AD-related evidence includes DLAT downregulation as an AD-associated hub gene in human brain bioinformatics; DLAT prioritization in an integrated phenotypic/proteomic AD target screen in Psen2-knockdown microglia; PSP-mediated improvement of 3×Tg-AD phenotypes through DLAT/cuproptosis/PI3K-AKT signaling; FDX1-driven DLAT/DLST lipoylation in Aβ-treated neuronal cells; and a 5xFAD mechanism in which microglial exosomal PKM2 increased neuronal DLAT, contributing to copper-induced neuronal death and cognitive decline.</p>
+      <p>Overall, DLAT is best interpreted in AD as a mitochondrial vulnerability node and possible biomarker/effector of copper-related metabolic stress, rather than as a simple target for inhibition. Therapeutic strategies would likely need to preserve normal DLAT/PDC function while preventing pathological copper-induced DLAT lipoylation-dependent aggregation and downstream cuproptotic injury.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 960 wide × 500 tall, 3 panels -->
+      <svg viewBox="0 0 960 500" width="920" height="479" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aad"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: Upstream Copper Control ═══ -->
+        <rect x="8" y="8" width="230" height="484" rx="12" fill="#f3e8ff" fill-opacity="0.55" stroke="#7c3aad" stroke-width="1.3"/>
+        <text x="123" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1a6b" letter-spacing="1">A · COPPER HOMEOSTASIS</text>
+
+        <!-- Node A1: CTR1/SLC31A1 -->
+        <rect x="38" y="40" width="150" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="113" y="56" text-anchor="middle" font-size="10" fill="#1e293b">CTR1 / SLC31A1</text>
+        <text x="113" y="70" text-anchor="middle" font-size="9" fill="#4a1a6b">Cu²⁺ import</text>
+
+        <!-- arrow A1→A2 -->
+        <line x1="113" y1="80" x2="113" y2="100" stroke="#7c3aad" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node A2: Mitochondrial Cu pool -->
+        <rect x="38" y="100" width="150" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="113" y="116" text-anchor="middle" font-size="10" fill="#1e293b">Mitochondrial</text>
+        <text x="113" y="130" text-anchor="middle" font-size="10" fill="#1e293b">Cu²⁺ Pool</text>
+
+        <!-- arrow A2→A3 -->
+        <line x1="113" y1="140" x2="113" y2="160" stroke="#7c3aad" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node A3: SLC25A3 -->
+        <rect x="38" y="160" width="150" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="113" y="176" text-anchor="middle" font-size="10" fill="#1e293b">SLC25A3</text>
+        <text x="113" y="190" text-anchor="middle" font-size="9" fill="#4a1a6b">mito Cu accumulation</text>
+
+        <!-- arrow A3→A4 -->
+        <line x1="113" y1="200" x2="113" y2="220" stroke="#7c3aad" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node A4: ATP7A/ATP7B efflux -->
+        <rect x="38" y="220" width="150" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="113" y="236" text-anchor="middle" font-size="10" fill="#1e293b">ATP7A / ATP7B</text>
+        <text x="113" y="250" text-anchor="middle" font-size="9" fill="#4a1a6b">Cu²⁺ export</text>
+
+        <!-- Node A5: Metallothioneins -->
+        <rect x="38" y="290" width="150" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="113" y="306" text-anchor="middle" font-size="10" fill="#1e293b">Metallothioneins</text>
+        <text x="113" y="320" text-anchor="middle" font-size="9" fill="#4a1a6b">Cu²⁺ buffering</text>
+
+        <!-- arrow A4→A5 (elbow: right then down) -->
+        <polyline points="113,260 113,290" stroke="#7c3aad" stroke-width="1.2" fill="none" marker-end="url(#arr)" stroke-dasharray="4,2"/>
+
+        <!-- Note: PANK4 badge -->
+        <rect x="38" y="356" width="150" height="32" rx="6" fill="#ddd6fe" stroke="#7c3aad" stroke-width="1"/>
+        <text x="113" y="369" text-anchor="middle" font-size="9" fill="#4a1a6b">PANK4 → ↓ATP7B</text>
+        <text x="113" y="381" text-anchor="middle" font-size="9" fill="#4a1a6b">Astrocyte Cu efflux ↓</text>
+
+        <!-- arrow A5→badge -->
+        <line x1="113" y1="330" x2="113" y2="356" stroke="#7c3aad" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <!-- Microglial exosome note -->
+        <rect x="38" y="416" width="150" height="32" rx="6" fill="#ddd6fe" stroke="#7c3aad" stroke-width="1"/>
+        <text x="113" y="429" text-anchor="middle" font-size="9" fill="#4a1a6b">Microglial exo-PKM2</text>
+        <text x="113" y="441" text-anchor="middle" font-size="9" fill="#4a1a6b">→ ↑neuronal DLAT</text>
+
+        <!-- arrow badge→exo -->
+        <line x1="113" y1="388" x2="113" y2="416" stroke="#7c3aad" stroke-width="1.2" marker-end="url(#arr)"/>
+
+
+        <!-- ═══ PANEL B: DLAT / Cuproptosis Mechanism ═══ (center) -->
+        <rect x="254" y="8" width="240" height="484" rx="12" fill="#fff1f1" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="374" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">B · DLAT &amp; CUPROPTOSIS</text>
+
+        <!-- Node B1: FDX1 -->
+        <rect x="284" y="40" width="180" height="38" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="374" y="55" text-anchor="middle" font-size="10" fill="#1e293b">FDX1 / LIAS / LIPT1</text>
+        <text x="374" y="69" text-anchor="middle" font-size="9" fill="#7f1d1d">Lipoylation of DLAT/DLST</text>
+
+        <!-- arrow B1→B2 -->
+        <line x1="374" y1="78" x2="374" y2="100" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node B2: DLAT (central) -->
+        <rect x="272" y="100" width="204" height="44" rx="9" fill="#fca5a5" stroke="#991b1b" stroke-width="2"/>
+        <text x="374" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="#7f1d1d">DLAT (PDC-E2)</text>
+        <text x="374" y="135" text-anchor="middle" font-size="9" fill="#7f1d1d">Lipoylated E2 of PDC</text>
+
+        <!-- arrow B2→B3 (branch point → two paths) -->
+        <!-- Left branch: normal function -->
+        <line x1="340" y1="144" x2="310" y2="180" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <!-- Right branch: Cu excess -->
+        <line x1="408" y1="144" x2="438" y2="180" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- B-left: Normal PDC function -->
+        <rect x="272" y="180" width="120" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="197" text-anchor="middle" font-size="9.5" fill="#065f46">Normal PDC</text>
+        <text x="332" y="211" text-anchor="middle" font-size="9" fill="#065f46">Pyruvate → Acetyl-CoA</text>
+
+        <!-- B-right: Cu binding -->
+        <rect x="400" y="180" width="82" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="441" y="197" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Cu²⁺ binds</text>
+        <text x="441" y="211" text-anchor="middle" font-size="9" fill="#7f1d1d">lipoyl-DLAT</text>
+
+        <!-- arrow B-left →  TCA/ATP -->
+        <line x1="332" y1="224" x2="332" y2="260" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- B3: TCA / ATP -->
+        <rect x="272" y="260" width="120" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="332" y="276" text-anchor="middle" font-size="9.5" fill="#065f46">TCA cycle / OXPHOS</text>
+        <text x="332" y="290" text-anchor="middle" font-size="9" fill="#065f46">ATP production ✓</text>
+
+        <!-- arrow B-right → DLAT aggregation -->
+        <line x1="441" y1="224" x2="441" y2="260" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- B4-right: DLAT aggregation -->
+        <rect x="400" y="260" width="82" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="441" y="277" text-anchor="middle" font-size="9.5" fill="#7f1d1d">DLAT</text>
+        <text x="441" y="291" text-anchor="middle" font-size="9" fill="#7f1d1d">Aggregation</text>
+
+        <!-- arrow aggregation → Fe-S loss -->
+        <line x1="441" y1="304" x2="441" y2="340" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- B5: Fe-S cluster loss -->
+        <rect x="400" y="340" width="82" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="441" y="357" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Fe-S Cluster</text>
+        <text x="441" y="371" text-anchor="middle" font-size="9" fill="#7f1d1d">Protein Loss</text>
+
+        <!-- arrow Fe-S → Proteotoxic stress (convergence) -->
+        <line x1="441" y1="384" x2="441" y2="416" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- B6: Cuproptotic death (convergence node) -->
+        <rect x="284" y="416" width="180" height="44" rx="9" fill="#fca5a5" stroke="#991b1b" stroke-width="2"/>
+        <text x="374" y="433" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">Cuproptosis</text>
+        <text x="374" y="449" text-anchor="middle" font-size="9" fill="#7f1d1d">Proteotoxic stress · Cell death</text>
+
+        <!-- left branch TCA impairment also merges into cuproptosis via elbow -->
+        <polyline points="332,300 332,408 284,408 284,438 284,438" stroke="#991b1b" stroke-width="1.2" fill="none" marker-end="url(#arr-red)" stroke-dasharray="4,2"/>
+
+
+        <!-- ═══ PANEL C: Downstream AD Consequences ═══ -->
+        <rect x="510" y="8" width="442" height="484" rx="12" fill="#eff6ff" fill-opacity="0.5" stroke="#2563eb" stroke-width="1.3"/>
+        <text x="731" y="28" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">C · AD-RELEVANT DOWNSTREAM CONSEQUENCES</text>
+
+        <!-- Top cluster: 3 parallel consequence boxes -->
+        <!-- C1: ROS / Oxidative stress -->
+        <rect x="524" y="40" width="120" height="42" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="584" y="57" text-anchor="middle" font-size="9.5" fill="#1e3a8a">ROS / Oxidative</text>
+        <text x="584" y="70" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Stress ↑</text>
+
+        <!-- C2: ATP depletion -->
+        <rect x="671" y="40" width="120" height="42" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="731" y="57" text-anchor="middle" font-size="9.5" fill="#1e3a8a">ATP Depletion</text>
+        <text x="731" y="70" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Bioenergetic failure</text>
+
+        <!-- C3: Neuroinflammation -->
+        <rect x="818" y="40" width="120" height="42" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="878" y="57" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Neuroinflammation</text>
+        <text x="878" y="70" text-anchor="middle" font-size="9.5" fill="#1e3a8a">NF-κB · cGAS-STING</text>
+
+        <!-- arrows from C1, C2, C3 converging down to C4 -->
+        <line x1="584" y1="82" x2="584" y2="142" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="731" y1="82" x2="731" y2="142" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="878" y1="82" x2="878" y2="142" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- C4: Synaptic dysfunction -->
+        <rect x="540" y="142" width="120" height="42" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="600" y="159" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Synaptic</text>
+        <text x="600" y="172" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Dysfunction ↑</text>
+
+        <!-- C5: Hippo/cognitive impairment -->
+        <rect x="688" y="142" width="132" height="42" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="754" y="159" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Hippocampal injury</text>
+        <text x="754" y="172" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Cognitive decline</text>
+
+        <!-- C3 → converge line to C5 already via direct arrow above; C3 also feeds neuroinflam-->
+        <!-- connector from C3 to C5 via elbow through gutter -->
+        <polyline points="878,142 878,120 754,120 754,142" stroke="#2563eb" stroke-width="1.2" fill="none" stroke-dasharray="4,2"/>
+
+        <!-- arrows C4,C5 → C6 PI3K/AKT -->
+        <line x1="600" y1="184" x2="600" y2="230" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="754" y1="184" x2="754" y2="230" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- C6: PI3K-AKT / CREB/BDNF -->
+        <rect x="540" y="230" width="120" height="42" rx="7" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="600" y="247" text-anchor="middle" font-size="9.5" fill="#1e3a8a">PI3K / AKT</text>
+        <text x="600" y="260" text-anchor="middle" font-size="9.5" fill="#1e3a8a">signaling</text>
+
+        <!-- C7: CREB/BDNF -->
+        <rect x="688" y="230" width="132" height="42" rx="7" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="754" y="247" text-anchor="middle" font-size="9.5" fill="#1e3a8a">CREB / BDNF</text>
+        <text x="754" y="260" text-anchor="middle" font-size="9.5" fill="#1e3a8a">TrkB preservation</text>
+
+        <!-- converge C6,C7 → C8 AD Biomarker/Target -->
+        <line x1="600" y1="272" x2="600" y2="318" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="754" y1="272" x2="754" y2="318" stroke="#2563eb" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- C8: AD Target / Biomarker -->
+        <rect x="556" y="318" width="240" height="44" rx="9" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.5"/>
+        <text x="676" y="336" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">DLAT: AD Vulnerability Node</text>
+        <text x="676" y="352" text-anchor="middle" font-size="9" fill="#bfdbfe">Biomarker · Metabolic target</text>
+
+        <!-- Therapeutic strategy box -->
+        <rect x="556" y="390" width="240" height="50" rx="9" fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="676" y="409" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Therapeutic Strategy</text>
+        <text x="676" y="423" text-anchor="middle" font-size="9" fill="#065f46">Preserve PDC · Block Cu-DLAT aggregation</text>
+        <text x="676" y="436" text-anchor="middle" font-size="9" fill="#065f46">Normalize Cu trafficking</text>
+
+        <!-- arrow C8 → therapeutic -->
+        <line x1="676" y1="362" x2="676" y2="390" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connectors: Panel B cuproptosis → Panel C consequences -->
+        <!-- Cuproptosis box right edge (x=464, y=438) → C1 left edge, via gutter -->
+        <polyline points="464,438 490,438 490,61 524,61" stroke="#991b1b" stroke-width="1.3" fill="none" marker-end="url(#arr-red)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (purple):</strong> Upstream copper homeostasis — CTR1/SLC31A1 drives Cu²⁺ import into the mitochondrial pool; SLC25A3 facilitates accumulation; ATP7A/ATP7B mediate efflux; metallothioneins buffer free copper. PANK4-mediated ATP7B suppression impairs astrocytic copper export; microglial exosomal PKM2 elevates neuronal DLAT.&ensp;
+      <strong>Panel B (red):</strong> DLAT/cuproptosis core mechanism — FDX1/LIAS/LIPT1 lipoylate DLAT within PDC. Under normal conditions, DLAT supports pyruvate→acetyl-CoA conversion (green branch). Under excess copper, Cu²⁺ binds lipoylated DLAT, driving aggregation, Fe-S cluster protein loss, and convergent cuproptotic cell death.&ensp;
+      <strong>Panel C (blue):</strong> AD-relevant downstream consequences — cuproptosis feeds ROS, ATP depletion, and neuroinflammation; these converge on synaptic dysfunction, hippocampal injury, and cognitive decline via PI3K/AKT and CREB/BDNF pathways, ultimately framing DLAT as an AD vulnerability node whose therapeutic modulation must preserve PDC function while blocking pathological copper-driven aggregation.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-purple">
+        <h3>Metabolic Failure &amp; Copper Toxicity</h3>
+        <p>As the E2 core of the pyruvate dehydrogenase complex, DLAT links AD-relevant cerebral glucose hypometabolism directly to copper toxicity. DLAT dysfunction could worsen acetyl-CoA insufficiency, synaptic energy failure, and TCA-cycle impairment — processes already central to AD pathophysiology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cuproptosis Is the Dominant Mechanism</h3>
+        <p>The recurring sequence is: copper overload → binding to lipoylated DLAT → DLAT aggregation/oligomerization → Fe-S cluster protein destabilization → mitochondrial dysfunction, oxidative stress, proteotoxic stress, inflammation, and cell death. This cascade is the most mechanistically consistent DLAT-related finding across the evidence base.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>AD Evidence: Promising but Preclinical</h3>
+        <p>Reported findings include DLAT as a top-tier AD target in microglial screening (Psen2-knockdown), DLAT downregulation as an AD brain hub gene, PSP targeting DLAT in 3×Tg-AD mice, FDX1-mediated DLAT/DLST lipoylation under Aβ injury, and microglial exosomal PKM2-driven DLAT upregulation in 5xFAD mice. All current evidence is preclinical.</p>
+      </div>
+
+      <div class="card card-amber">
+        <h3>Context-Dependent Directionality</h3>
+        <p>In cancer, inducing DLAT aggregation/cuproptosis kills tumor cells and is therapeutic. In neurodegeneration, the goal is the opposite: prevent DLAT aggregation, preserve enzymatic function, protect mitochondrial respiration, and reduce copper-driven neuronal or glial injury. Therapeutic direction must not be confused between these settings.</p>
+      </div>
+
+      <div class="card card-teal">
+        <h3>Multi-Cell-Type Contributions</h3>
+        <p>Astrocytes, microglia, and neurons each contribute differently. Astrocytic PANK4-ATP7B suppression may promote hippocampal copper overload. Microglial exosomes transfer PKM2 to neurons and increase DLAT-mediated copper toxicity. Neurons may undergo FDX1-DLAT/DLST-linked cuproptotic injury under Aβ or copper stress.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>DLAT Abundance Is an Insufficient Biomarker</h3>
+        <p>Functionally relevant readouts extend beyond total DLAT expression and should include lipoylated DLAT, aggregated/oligomerized DLAT, DLAT solubility, PDH activity, Fe-S protein levels, FDX1/LIAS/LIPT1 status, SLC31A1/ATP7A/ATP7B balance, mitochondrial copper burden, ROS, ATP, and synaptic markers.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li><strong>Prioritize DLAT within a module, not in isolation.</strong> Key companion markers should include FDX1, LIAS, LIPT1, DLST, DLD, PDHA1, PDHB, SLC31A1/CTR1, ATP7A, ATP7B, metallothioneins, Fe-S proteins, HSP70, ROS, ATP, and PDH activity.</li>
+
+      <li><strong>Test DLAT functional states in AD models.</strong> Experiments should probe DLAT lipoylation changes, DLAT aggregation/oligomerization, reduced soluble DLAT, impaired PDH activity, mitochondrial copper accumulation, Fe-S protein loss, and their correlation with amyloid, tau, synaptic loss, glial activation, and cognition.</li>
+
+      <li><strong>Treat DLAT as a functional-state target.</strong> Distinguish total DLAT expression from pathological states — lipoylated DLAT aggregation, insoluble DLAT, DLAT depletion after proteotoxic stress, and impaired PDC enzymatic function — each of which may require distinct interventions.</li>
+
+      <li><strong>Avoid broad DLAT suppression in neurodegeneration.</strong> Because DLAT is essential for acetyl-CoA production and mitochondrial energy metabolism, indiscriminate inhibition could worsen AD-associated hypometabolism. Neuroprotective strategies must preserve physiological DLAT/PDC activity.</li>
+
+      <li><strong>Investigate upstream copper-homeostasis interventions.</strong> Candidate strategies include reducing SLC31A1/CTR1-mediated copper influx, restoring ATP7A/ATP7B-mediated copper efflux, enhancing metallothionein copper buffering, limiting mitochondrial copper overload, or using carefully titrated copper chelation/redistribution approaches.</li>
+
+      <li><strong>Modulate FDX1/LIAS/lipoylation cautiously.</strong> Since lipoylation is required for normal DLAT enzymatic function but also creates vulnerability to copper binding, interventions should aim to prevent pathological copper-DLAT aggregation without abolishing essential mitochondrial lipoylation.</li>
+
+      <li><strong>Evaluate glial mechanisms rigorously.</strong> AD-focused studies should test whether astrocytic PANK4-ATP7B dysfunction, microglial exosomal PKM2 transfer, inflammatory signaling, or microglial metabolic reprogramming regulates neuronal DLAT and copper-induced death.</li>
+
+      <li><strong>Validate in cognition-linked AD models.</strong> Promising models include 3×Tg-AD, 5xFAD, Aβ-treated neuronal cultures, aged/MCI mice, copper-exposed cognitive impairment models, and neuron–astrocyte–microglia co-cultures with copper-stress readouts.</li>
+
+      <li><strong>Consider pathway-level therapeutic candidates.</strong> The evidence supports investigation of PSP-like DLAT/cuproptosis-modulating compounds, tetrathiomolybdate-like copper modulators, antioxidants (NAC/glutathione/NRF2), mitochondrial protective strategies, PI3K/AKT modulation, CREB/BDNF/TrkB preservation, and agents that block pathological microglial exosome PKM2 transfer.</li>
+
+      <li><strong>Position DLAT as a pharmacodynamic biomarker.</strong> Changes in lipoylated or aggregated DLAT, restored soluble DLAT, normalized PDH activity, improved ATP production, reduced mitochondrial ROS, preserved Fe-S proteins, and improved synaptic markers could indicate successful suppression of copper-DLAT mitochondrial stress.</li>
+
+      <li><strong>Interpret current evidence as promising but not definitive.</strong> The strongest conclusion is that DLAT plausibly connects copper dyshomeostasis to mitochondrial failure and cognitive decline in AD-relevant contexts. Direct validation in human AD brain, primary human neurons/glia, organoids, and in vivo AD models is still required before DLAT can be considered an established therapeutic target.</li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p><strong class="lead">Overall Assessment —</strong> DLAT occupies a <strong>compelling but mechanistically complex position</strong> in Alzheimer's disease biology. As the lipoylated E2 core of the pyruvate dehydrogenase complex, it sits at the intersection of <strong>mitochondrial energy metabolism, copper homeostasis, and regulated cell death</strong> — three axes that are each independently implicated in AD pathogenesis. The most mechanistically robust evidence centers on <strong>copper-driven DLAT lipoylation-dependent aggregation</strong> (cuproptosis), a cascade that generates proteotoxic stress, Fe-S protein loss, mitochondrial failure, ROS, and ultimately neuronal death in patterns strikingly congruent with AD pathology. Direct AD-relevant studies — spanning bioinformatics hub-gene analyses, microglial target screens, transgenic mouse models (3×Tg-AD, 5xFAD), and Aβ-treated neuronal cultures — converge on DLAT as a <strong>priority vulnerability node</strong>. However, all current evidence is preclinical, and the directional complexity of DLAT biology (a protective metabolic enzyme that becomes a pathological aggregation substrate under copper stress) demands <strong>highly selective, function-preserving therapeutic strategies</strong> rather than simple inhibition. The most rational near-term path is to develop <strong>multimodal assays of DLAT functional state, advance upstream copper-homeostasis interventions, and validate mechanisms in human-derived AD models</strong>, positioning DLAT as both a pharmacodynamic biomarker and a node within a broader copper–lipoylation–mitochondrial module.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DLAT / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCND3 / Kv4.3 — AD Relevance Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #64748b;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.4);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--danger);
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    color: #7f1d1d;
+    margin: 0;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid transparent;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.93rem;
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-color: var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: ta-counter;
+  }
+
+  .takeaway-list li {
+    counter-increment: ta-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(ta-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .ta-lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    margin-bottom: 56px;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    color: #e2eaf4;
+    line-height: 1.8;
+    font-size: 1.02rem;
+    margin: 0;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--slate);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: KCND3 &nbsp;|&nbsp; Potassium Voltage-Gated Channel Subfamily D Member 3</span>
+    <span class="chip chip-danger">⚠ Cardiac Safety Concern</span>
+  </div>
+  <h1>KCND3 / Kv4.3 &amp; Alzheimer's Disease Relevance</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Critical Safety Caveat</div>
+      <p>KCND3/Kv4.3 plays important roles in cardiac repolarization and is linked to atrial fibrillation, Brugada syndrome, ventricular arrhythmia susceptibility, and sudden-death channelopathy risk. Any AD-directed KCND3 therapeutic program demands rigorous cardiac safety evaluation from the outset.</p>
+    </div>
+
+    <p>KCND3 encodes Kv4.3, a voltage-gated potassium-channel subunit that contributes to A-type/transient outward potassium currents and regulates neuronal excitability, action-potential repolarization, dendritic signaling, synaptic integration, and network stability.</p>
+
+    <p>The provided text does <em>not</em> establish KCND3 as an Alzheimer's disease gene or validated AD therapeutic target. Direct AD evidence is minimal to absent: most studies involve spinocerebellar ataxia type 19/22 (SCA19/22), epilepsy/neurodevelopmental disorders, olfactory aging, hippocampal injury models, cardiac electrophysiology, channel pharmacology, and broader transcriptomic contexts.</p>
+
+    <p>KCND3's relevance to Alzheimer's disease is <strong>indirect and mechanistic</strong>. Key AD-relevant themes include neuronal hyperexcitability, hippocampal memory impairment, synaptic and dendritic vulnerability, neuroinflammation, ER/Golgi stress, protein trafficking and proteostasis failure, olfactory dysfunction in aging, hypoxia/vascular stress, calcium-linked signaling, and druggability of neuronal Kv4.3/KChIP channel complexes. These mechanisms overlap with major AD biology, but the text does not show that KCND3 drives amyloid-β pathology, tau pathology, AD-specific synaptic loss, AD microglial activation, or clinical AD progression.</p>
+
+    <p>KCND3/Kv4.3 is best interpreted as an <strong>exploratory excitability/proteostasis/synaptic-resilience target</strong> with plausible relevance to AD-like mechanisms, rather than a proven AD mechanism or therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — KCND3/Kv4.3 Pathway</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 3 panels, ~14 nodes total -->
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:700px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL A: Channel & Upstream ── -->
+        <rect x="10" y="10" width="260" height="478" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">CHANNEL BIOLOGY</text>
+
+        <!-- Node A1: KCND3/Kv4.3 -->
+        <rect x="54" y="46" width="168" height="46" rx="8" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="138" y="64" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">KCND3 / Kv4.3</text>
+        <text x="138" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">Voltage-gated K⁺ subunit</text>
+
+        <!-- Arrow A1 -> A2 -->
+        <line x1="138" y1="92" x2="138" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: KChIP Complex -->
+        <rect x="54" y="112" width="168" height="44" rx="8" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="130" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">Kv4.3 / KChIP</text>
+        <text x="138" y="145" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Channel complex assembly</text>
+
+        <!-- Arrow A2 -> A3 -->
+        <line x1="138" y1="156" x2="138" y2="173" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: A-type current -->
+        <rect x="54" y="175" width="168" height="44" rx="8" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="193" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">A-type / Transient</text>
+        <text x="138" y="208" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Outward K⁺ current (I<tspan baseline-shift="sub" font-size="7">to</tspan>)</text>
+
+        <!-- Arrow A3 -> A4 -->
+        <line x1="138" y1="219" x2="138" y2="237" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Neuronal excitability -->
+        <rect x="54" y="239" width="168" height="44" rx="8" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="257" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">Neuronal Excitability</text>
+        <text x="138" y="272" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">AP repolarization · dendrites</text>
+
+        <!-- Arrow A4 -> A5 -->
+        <line x1="138" y1="283" x2="138" y2="300" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: Druggability -->
+        <rect x="54" y="302" width="168" height="44" rx="8" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="320" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e3a5f">IQM-22110</text>
+        <text x="138" y="335" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">KChIP3-selective modulator</text>
+
+        <!-- Node A6: Cardiac risk badge area -->
+        <rect x="54" y="370" width="168" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="138" y="388" text-anchor="middle" font-family="Arial" font-size="10" fill="#9b1c1c">Cardiac Kv4.3/KChIP2</text>
+        <text x="138" y="403" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">AF · Brugada · Arrhythmia</text>
+
+        <!-- ── PANEL B: Dysfunction Cascade ── -->
+        <rect x="282" y="10" width="310" height="478" rx="12" fill="#fff7ed" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="437" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#92400e" letter-spacing="1">DYSFUNCTION CASCADE</text>
+
+        <!-- Node B1: Mutations -->
+        <rect x="320" y="46" width="232" height="46" rx="8" fill="#b45309" stroke="#92400e" stroke-width="1.2"/>
+        <text x="436" y="64" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">KCND3 Mutations</text>
+        <text x="436" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#fef3c7">LoF · GoF · Dominant-negative</text>
+
+        <!-- Arrow B1 → B2 left branch -->
+        <line x1="390" y1="92" x2="358" y2="115" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <!-- Arrow B1 → B3 right branch -->
+        <line x1="483" y1="92" x2="514" y2="115" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- Node B2: ER/Golgi stress -->
+        <rect x="295" y="117" width="142" height="44" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="366" y="135" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">ER/Golgi Retention</text>
+        <text x="366" y="150" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">UPR · trafficking failure</text>
+
+        <!-- Node B3: Gating/stability -->
+        <rect x="447" y="117" width="132" height="44" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="513" y="135" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">Altered Gating</text>
+        <text x="513" y="150" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Protein instability</text>
+
+        <!-- Arrow B2 → B4 -->
+        <line x1="366" y1="161" x2="366" y2="178" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <!-- Arrow B3 → B4 -->
+        <line x1="513" y1="161" x2="488" y2="178" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- Node B4: Proteostasis failure -->
+        <rect x="320" y="180" width="232" height="44" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="436" y="198" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">Proteostasis Failure</text>
+        <text x="436" y="213" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">↓ Membrane Kv4.3 · synaptic genes</text>
+
+        <!-- Arrow B4 → B5 -->
+        <line x1="436" y1="224" x2="436" y2="242" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- Node B5: Neuroinflammation -->
+        <rect x="320" y="244" width="232" height="44" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="436" y="262" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400e">Neuroinflammation</text>
+        <text x="436" y="277" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Hippocampal · SCA19/22 models</text>
+
+        <!-- Arrow B5 → B6 -->
+        <line x1="436" y1="288" x2="436" y2="306" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- Node B6: Neurodegeneration -->
+        <rect x="320" y="308" width="232" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="436" y="326" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#9b1c1c">Neuronal Degeneration</text>
+        <text x="436" y="341" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Dendrite · spine loss · death</text>
+
+        <!-- ── PANEL C: AD-Relevant Overlap ── -->
+        <rect x="604" y="10" width="286" height="478" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="747" y="34" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#134e4a" letter-spacing="1">AD-RELEVANT OVERLAP</text>
+
+        <!-- Node C1: Hippocampal circuit -->
+        <rect x="630" y="46" width="234" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.2"/>
+        <text x="747" y="64" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Hippocampal Circuit</text>
+        <text x="747" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#ccfbf1">Memory · dendritic spines</text>
+
+        <!-- Arrow C1 → C2 -->
+        <line x1="747" y1="90" x2="747" y2="108" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node C2: Network hyperexcitability -->
+        <rect x="630" y="110" width="234" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="747" y="128" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Network Hyperexcitability</text>
+        <text x="747" y="143" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Seizures · epileptiform activity</text>
+
+        <!-- Arrow C2 → C3 -->
+        <line x1="747" y1="154" x2="747" y2="172" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node C3: Olfactory decline -->
+        <rect x="630" y="174" width="234" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="747" y="192" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Olfactory Dysfunction</text>
+        <text x="747" y="207" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Early AD sensory circuit signal</text>
+
+        <!-- Arrow C3 → C4 -->
+        <line x1="747" y1="218" x2="747" y2="236" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node C4: Proteostasis rescue -->
+        <rect x="630" y="238" width="234" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="747" y="256" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Proteostasis Rescue</text>
+        <text x="747" y="271" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">HSC70/Hsp90β · chaperones</text>
+
+        <!-- Arrow C4 → C5 -->
+        <line x1="747" y1="282" x2="747" y2="300" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node C5: Dietary/lifestyle -->
+        <rect x="630" y="302" width="234" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="747" y="320" text-anchor="middle" font-family="Arial" font-size="10" fill="#134e4a">Dietary Restriction</text>
+        <text x="747" y="335" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">↓ Mem. deficit · ↑ spine density</text>
+
+        <!-- Arrow C5 → C6 -->
+        <line x1="747" y1="346" x2="747" y2="364" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node C6: Mechanistic plausibility -->
+        <rect x="630" y="366" width="234" height="46" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="747" y="384" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Mechanistic Plausibility</text>
+        <text x="747" y="399" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Exploratory AD-overlap — not validated</text>
+
+        <!-- Cross-panel connector: B6 → C1 via horizontal bridge at y=430 (below all nodes) -->
+        <!-- Route: from B6 bottom (436,352) down to y=440, right to 747, then up to C6 top (747,366) -->
+        <!-- But C6 occupies 366-412. Route below panel bottom instead: use gutter between B and C panels -->
+        <!-- Simple elbow: B6 right edge (552,330) → right to x=590 → up to y=420 → right to x=630 area avoided
+             Better: from B6 right side mid (552,330) → elbow in the gutter (578,330) → (578,430) → not through C panel
+             Since C6 is at y=366-412, a connector entering from left at y=430 would be below C6. Clean. -->
+        <polyline points="552,330 588,330 588,444 630,444" fill="none" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <!-- label for dashed line - in gutter below panels, no overlap -->
+        <text x="590" y="458" text-anchor="middle" font-family="Arial" font-size="8" font-style="italic" fill="#9b1c1c">AD-overlap (indirect)</text>
+
+        <!-- Note: the dashed line endpoint lands at x=630 y=444, which is the left edge of Panel C BELOW node C6 (y=366-412) — clean -->
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue) — Channel Biology:</strong> KCND3/Kv4.3 assembles with KChIP auxiliary subunits into channel complexes that generate A-type outward K⁺ currents controlling neuronal excitability and action-potential repolarization. IQM-22110 demonstrates KChIP3-selective druggability; cardiac KChIP2 coupling flags safety risk.
+      <strong>Panel B (amber) — Dysfunction Cascade:</strong> Pathogenic KCND3 mutations branch into ER/Golgi retention with UPR activation (left) and altered gating/protein instability (right), converging on proteostasis failure, neuroinflammation, and ultimately neuronal degeneration as seen in SCA19/22 models.
+      <strong>Panel C (teal) — AD-Relevant Overlap:</strong> Key AD-proximal phenotypes — hippocampal circuit impairment, network hyperexcitability, early olfactory dysfunction, proteostasis rescue by chaperones, and dietary restriction benefits — overlap mechanistically with KCND3 biology, supporting exploratory (unvalidated) AD relevance. Dashed red connector indicates indirect mechanistic bridge from degeneration cascade to AD-overlap domain.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-slate">
+        <h3>No Direct AD Validation</h3>
+        <p>KCND3 has not been directly tested in AD patients, AD brain models, amyloid-β/tau mechanisms, or AD therapeutic studies. The text repeatedly confirms this gap. Any AD interpretation is strictly hypothesis-generating at this stage.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neuronal Excitability &amp; Olfactory Circuit</h3>
+        <p>Reduced Kcnd3/Kv4.3 expression in olfactory bulb projection neurons causes reduced A-type current and neuronal hyperexcitability. Olfactory decline is an early feature of neurodegenerative disease including AD, creating a plausible but indirect bridge to early AD sensory/circuit dysfunction.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Hippocampal &amp; Cognitive Phenotypes</h3>
+        <p>Kcnd3 F227del knock-in mice (SCA19/22 model) showed memory impairment, hippocampal neuronal vulnerability, dendritic/spine abnormalities, and neuroinflammation. Dietary restriction attenuated memory deficits and preserved hippocampal neurons, dendrites, and spine density while reducing inflammation — processes directly relevant to AD cellular biology.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>ER Stress &amp; Proteostasis Pathways</h3>
+        <p>Mutant Kv4.3 in SCA19/22 studies triggers ER/Golgi retention, unfolded protein response activation, impaired trafficking, reduced protein stability, and synaptic/neurogenesis gene downregulation — mechanisms that overlap strongly with AD-relevant proteostasis and synaptic-failure biology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Druggability: KChIP3-Selective Targeting</h3>
+        <p>IQM-22110 selectively modulated neuronal Kv4.3/KChIP3 currents at nanomolar concentrations with selectivity over Kv4.3/KChIP2 (prominent in cardiac tissue) and Kv4.3 alone. Proteostasis rescue via HSC70/Hsp90β chaperone enhancement also improved phenotypes in Drosophila and patient-cell models, pointing to non-blocking therapeutic strategies.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cardiac Safety Is a Major Constraint</h3>
+        <p>KCND3/Kv4.3 is linked to atrial fibrillation, Brugada syndrome, early repolarization syndrome, ventricular arrhythmia, and sudden cardiac death. Any AD-directed therapeutic program requires strong CNS selectivity, auxiliary-subunit discrimination (KChIP3 over KChIP2), and rigorous cardiac electrophysiology evaluation from the earliest stages.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span><span class="ta-lead">Treat KCND3 as exploratory, not validated.</span> Current evidence supports prioritizing AD-focused validation studies well before any therapeutic development program is initiated.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Test in AD-relevant systems.</span> Evaluate KCND3/Kv4.3 expression and function in human AD brain regions, single-cell transcriptomic datasets, hippocampal/cortical neurons, and amyloid/tau models — especially those with hyperexcitability or seizure phenotypes.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Determine directionality before intervention.</span> Clarify whether KCND3/Kv4.3 is reduced, increased, mislocalized, alternatively spliced, or functionally altered in AD circuits, because both gain- and loss-of-function can be pathogenic and require opposite therapeutic strategies.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Focus on hippocampal and olfactory circuits.</span> The most AD-proximal evidence involves memory impairment, hippocampal neuronal survival, dendritic/spine integrity, neuroinflammation, and olfactory neuron hyperexcitability — all domains of early AD vulnerability.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Prioritize complex-selective and trafficking approaches.</span> Potential strategies include Kv4.3/KChIP3-selective ligands, modulation of KChIP interactions, restoration of membrane trafficking, chaperone/proteostasis enhancement, and normalization of upstream regulatory pathways rather than nonspecific channel blockade.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Use IQM-22110-like chemistry as proof of druggability.</span> Neuronal Kv4.3/KChIP3-selective modulators may offer a safer route than broad Kv4.3 modulation, given the cardiac Kv4.3/KChIP2 liability.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Include cardiac electrophysiology from day one.</span> Safety studies should assess action-potential duration, repolarization, atrial/ventricular arrhythmia risk, QT interval effects, and interactions with age-related cardiovascular comorbidities.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Evaluate AD subgroups with network hyperexcitability.</span> The strongest rationale may apply to patients or models with seizures, epileptiform activity, olfactory dysfunction, or hippocampal hyperexcitability, where Kv4.3 dysfunction is most plausibly pathogenic.</span>
+      </li>
+      <li>
+        <span><span class="ta-lead">Consider proteostasis rescue as a disease-modifying angle.</span> Because KCND3 mutations cause ER/Golgi retention and UPR activation, therapies that stabilize Kv4.3 complexes or improve channel folding and trafficking may be broadly relevant to neurodegenerative vulnerability beyond SCA19/22.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict-banner">
+    <div class="verdict-label">Overall Assessment</div>
+    <p>
+      <strong>KCND3/Kv4.3 is a mechanistically plausible, druggable excitability and proteostasis node</strong> with potential relevance to AD-like neuronal dysfunction, but it remains <strong>unvalidated for Alzheimer's disease</strong> and requires direct AD-focused evidence before being considered a serious therapeutic target. Its most compelling AD-adjacent evidence comes from <strong>hippocampal circuit impairment, dendritic spine vulnerability, neuroinflammation, and ER/proteostasis stress</strong> in SCA19/22 models — not in AD models. The existence of <strong>KChIP3-selective pharmacology (IQM-22110) and chaperone-mediated rescue</strong> demonstrates genuine druggability through neuronal-selective strategies. However, the <strong>cardiac safety profile</strong> — encompassing atrial fibrillation, Brugada syndrome, and arrhythmia susceptibility — imposes a high selectivity bar on any therapeutic development effort. The field should proceed with structured validation in AD systems before committing resources to lead optimization.
+    </p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  KCND3 / Kv4.3 — Alzheimer's Disease Relevance TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SGPP1 — Sphingolipid Flux & Alzheimer's Disease</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #f0eafa;
+    --danger: #991b1b;
+    --danger-tint: #fef2f2;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-card: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-tint: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1f 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-warn {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-tint);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: #f8f8fb;
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 20px 22px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-tint); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-tint); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-tint); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-neutral { background: var(--neutral-card); border-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: tak;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  ol.takeaways li {
+    counter-increment: tak;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(tak);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a1f 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 38px 40px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .verdict strong {
+    color: #d8b4fe;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SGPP1 &nbsp;|&nbsp; Sphingosine-1-Phosphate Phosphatase 1</span>
+    <span class="chip chip-warn">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>SGPP1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Context-Dependent Effects:</strong> SGPP1 modulation is <em>not</em> uniformly beneficial. Evidence indicates that SGPP1 upregulation can protect pancreatic beta cells from lipotoxicity and ER stress, meaning blanket inhibition could carry adverse metabolic consequences. Therapeutic direction must be determined by disease context.
+    </div>
+
+    <p>SGPP1 (sphingosine-1-phosphate phosphatase 1; also referred to as SPP1 in some literature) is an intracellular, endoplasmic-reticulum-associated enzyme that dephosphorylates sphingosine-1-phosphate (S1P) to sphingosine. It is a master regulator of the sphingolipid "rheostat" — governing interconversion among S1P, sphingosine, ceramide, and complex sphingolipids — lipid pathways repeatedly implicated in neurodegeneration, synaptic injury, neuroinflammation, vascular dysfunction, ER stress, lysosomal/autophagic impairment, and neuronal survival.</p>
+
+    <p>The literature does not establish SGPP1 as a validated Alzheimer's disease gene, biomarker, or therapeutic target. However, it repeatedly places SGPP1 at a mechanistic control point for pathways that closely overlap with AD biology. Elevated or dysregulated SGPP1 could reduce protective S1P signaling while increasing sphingosine and ceramide availability, thereby promoting oxidative stress, ER stress, mitochondrial dysfunction, inflammatory activation, apoptosis, lysosomal damage, and synaptic vulnerability.</p>
+
+    <p>The most directly neuro-relevant evidence derives from a diabetic cognitive impairment mouse study in which cognitive deficits, hippocampal neuronal loss, and synaptic impairment were associated with upregulated brain SGPP1, ABCA2, and CERS2. Semaglutide treatment improved cognition, remodeled gut microbiota and bile acid profiles, and downregulated SGPP1 — supporting a model in which metabolic and gut–brain signaling modulates cerebral sphingolipid remodeling, with SGPP1 reduction coinciding with neuroprotection.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; font-family: Arial, Helvetica, sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3bbf"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-b" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Context -->
+          <rect x="10" y="10" width="210" height="480" rx="12" fill="#f0eafa" stroke="#6d3bbf" stroke-width="1.2" opacity="0.6"/>
+          <text x="20" y="28" font-size="8" font-weight="700" fill="#3b1f6e" text-anchor="start" letter-spacing="0.1em">A · UPSTREAM CONTEXT</text>
+
+          <!-- A nodes -->
+          <!-- Metabolic Stress -->
+          <rect x="30" y="38" width="170" height="44" rx="8" fill="#fff" stroke="#6d3bbf" stroke-width="1.2"/>
+          <text x="115" y="56" font-size="10" fill="#3b1f6e" text-anchor="middle" font-weight="700">Metabolic Stress</text>
+          <text x="115" y="70" font-size="9" fill="#64748b" text-anchor="middle">Diabetes / Dyslipidemia</text>
+
+          <!-- arrow down -->
+          <line x1="115" y1="82" x2="115" y2="102" stroke="#6d3bbf" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Gut-Brain Axis -->
+          <rect x="30" y="102" width="170" height="44" rx="8" fill="#fff" stroke="#6d3bbf" stroke-width="1.2"/>
+          <text x="115" y="120" font-size="10" fill="#3b1f6e" text-anchor="middle" font-weight="700">Gut–Brain Axis</text>
+          <text x="115" y="134" font-size="9" fill="#64748b" text-anchor="middle">Microbiota / Bile Acids</text>
+
+          <!-- arrow down -->
+          <line x1="115" y1="146" x2="115" y2="166" stroke="#6d3bbf" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- SGPP1 upregulated -->
+          <rect x="30" y="166" width="170" height="44" rx="8" fill="#ede9fe" stroke="#3b1f6e" stroke-width="1.8"/>
+          <text x="115" y="184" font-size="10.5" fill="#3b1f6e" text-anchor="middle" font-weight="700">SGPP1 (↑ in AD/DCI)</text>
+          <text x="115" y="198" font-size="9" fill="#64748b" text-anchor="middle">ER-membrane phosphatase</text>
+
+          <!-- arrow: semaglutide protective -->
+          <line x1="115" y1="210" x2="115" y2="230" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Semaglutide -->
+          <rect x="30" y="230" width="170" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="115" y="248" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="700">Semaglutide / GLP-1</text>
+          <text x="115" y="262" font-size="9" fill="#64748b" text-anchor="middle">Downregulates SGPP1</text>
+
+          <!-- arrow: sphingolipid rheostat -->
+          <line x1="115" y1="274" x2="115" y2="294" stroke="#6d3bbf" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Core conversion -->
+          <rect x="30" y="294" width="170" height="44" rx="8" fill="#fff" stroke="#6d3bbf" stroke-width="1.2"/>
+          <text x="115" y="312" font-size="10" fill="#3b1f6e" text-anchor="middle" font-weight="700">S1P → Sphingosine</text>
+          <text x="115" y="326" font-size="9" fill="#64748b" text-anchor="middle">Core catalytic reaction</text>
+
+          <!-- Panel B: Harmful Downstream -->
+          <rect x="234" y="10" width="212" height="480" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" opacity="0.55"/>
+          <text x="244" y="28" font-size="8" font-weight="700" fill="#991b1b" text-anchor="start" letter-spacing="0.1em">B · HARMFUL CASCADES</text>
+
+          <!-- Ceramide accumulation -->
+          <rect x="252" y="38" width="176" height="44" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="340" y="56" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Ceramide Accumulation</text>
+          <text x="340" y="70" font-size="9" fill="#64748b" text-anchor="middle">C16:0 / C18:0 / C20:0</text>
+
+          <!-- arrow -->
+          <line x1="340" y1="82" x2="340" y2="102" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- ER Stress -->
+          <rect x="252" y="102" width="176" height="44" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="340" y="120" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">ER Stress / UPR</text>
+          <text x="340" y="134" font-size="9" fill="#64748b" text-anchor="middle">CHOP · BiP · p-eIF2α</text>
+
+          <!-- arrow -->
+          <line x1="340" y1="146" x2="340" y2="166" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- Mitochondrial Dysfunction -->
+          <rect x="252" y="166" width="176" height="44" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="340" y="184" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Mitochondrial Injury</text>
+          <text x="340" y="198" font-size="9" fill="#64748b" text-anchor="middle">Depolarisation · ROS</text>
+
+          <!-- arrow -->
+          <line x1="340" y1="210" x2="340" y2="230" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- Lysosomal damage -->
+          <rect x="252" y="230" width="176" height="44" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="340" y="248" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Lysosomal Damage</text>
+          <text x="340" y="262" font-size="9" fill="#64748b" text-anchor="middle">LMP · Lipid Peroxidation</text>
+
+          <!-- arrow -->
+          <line x1="340" y1="274" x2="340" y2="294" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- Apoptosis / Synaptic loss -->
+          <rect x="252" y="294" width="176" height="44" rx="8" fill="#fecaca" stroke="#991b1b" stroke-width="1.6"/>
+          <text x="340" y="312" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Apoptosis / Synaptic Loss</text>
+          <text x="340" y="326" font-size="9" fill="#991b1b" text-anchor="middle">Caspase · Neuronal Death</text>
+
+          <!-- Panel C: Protective / Dual branches -->
+          <rect x="460" y="10" width="212" height="480" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2" opacity="0.55"/>
+          <text x="470" y="28" font-size="8" font-weight="700" fill="#0f766e" text-anchor="start" letter-spacing="0.1em">C · PROTECTIVE BRANCHES</text>
+
+          <!-- S1P signaling -->
+          <rect x="478" y="38" width="176" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="566" y="56" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="700">↑ Intracellular S1P</text>
+          <text x="566" y="70" font-size="9" fill="#64748b" text-anchor="middle">SGPP1 knockdown effect</text>
+
+          <!-- branch arrow top -->
+          <line x1="566" y1="82" x2="522" y2="102" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+          <line x1="566" y1="82" x2="610" y2="102" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Left branch: Akt Survival -->
+          <rect x="478" y="102" width="82" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="519" y="120" font-size="9.5" fill="#0f766e" text-anchor="middle" font-weight="700">Akt Survival</text>
+          <text x="519" y="134" font-size="8.5" fill="#64748b" text-anchor="middle">Signalling</text>
+
+          <!-- Right branch: Autophagy -->
+          <rect x="570" y="102" width="82" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="611" y="120" font-size="9.5" fill="#0f766e" text-anchor="middle" font-weight="700">Autophagy</text>
+          <text x="611" y="134" font-size="8.5" fill="#64748b" text-anchor="middle">PERK/IRE1α/ATF6</text>
+
+          <!-- converge arrows -->
+          <line x1="519" y1="146" x2="519" y2="158" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="611" y1="146" x2="611" y2="158" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="519" y1="158" x2="566" y2="158" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="611" y1="158" x2="566" y2="158" stroke="#0f766e" stroke-width="1.3"/>
+          <line x1="566" y1="158" x2="566" y2="172" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-g)"/>
+
+          <!-- Proteostasis/Neuroprotection -->
+          <rect x="478" y="172" width="176" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="566" y="190" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="700">Proteostasis Support</text>
+          <text x="566" y="204" font-size="9" fill="#64748b" text-anchor="middle">Neuroprotective potential</text>
+
+          <!-- arrow -->
+          <line x1="566" y1="216" x2="566" y2="236" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Immune / Vascular -->
+          <rect x="478" y="236" width="176" height="44" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="566" y="254" font-size="10" fill="#0f766e" text-anchor="middle" font-weight="700">Immune Regulation</text>
+          <text x="566" y="268" font-size="9" fill="#64748b" text-anchor="middle">Microglia · Endothelial S1P</text>
+
+          <!-- Panel D: AD Outcome -->
+          <rect x="686" y="10" width="224" height="480" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2" opacity="0.55"/>
+          <text x="696" y="28" font-size="8" font-weight="700" fill="#1d4ed8" text-anchor="start" letter-spacing="0.1em">D · AD DISEASE OUTCOMES</text>
+
+          <!-- Cognitive Impairment -->
+          <rect x="704" y="38" width="188" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.4"/>
+          <text x="798" y="56" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">Cognitive Impairment</text>
+          <text x="798" y="70" font-size="9" fill="#64748b" text-anchor="middle">Hippocampal neuronal loss</text>
+
+          <!-- arrow -->
+          <line x1="798" y1="82" x2="798" y2="102" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-b)"/>
+
+          <!-- Neuroinflammation -->
+          <rect x="704" y="102" width="188" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="798" y="120" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">Neuroinflammation</text>
+          <text x="798" y="134" font-size="9" fill="#64748b" text-anchor="middle">Glial / Vascular Activation</text>
+
+          <!-- arrow -->
+          <line x1="798" y1="146" x2="798" y2="166" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-b)"/>
+
+          <!-- Synaptic Vulnerability -->
+          <rect x="704" y="166" width="188" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="798" y="184" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">Synaptic Vulnerability</text>
+          <text x="798" y="198" font-size="9" fill="#64748b" text-anchor="middle">Membrane remodelling</text>
+
+          <!-- arrow -->
+          <line x1="798" y1="210" x2="798" y2="230" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-b)"/>
+
+          <!-- BBB / Vascular -->
+          <rect x="704" y="230" width="188" height="44" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="798" y="248" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">BBB / Vascular Dysfunction</text>
+          <text x="798" y="262" font-size="9" fill="#64748b" text-anchor="middle">Cerebrovascular risk</text>
+
+          <!-- arrow -->
+          <line x1="798" y1="274" x2="798" y2="294" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-b)"/>
+
+          <!-- AD Pathology node -->
+          <rect x="704" y="294" width="188" height="44" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.8"/>
+          <text x="798" y="312" font-size="10.5" fill="#1d4ed8" text-anchor="middle" font-weight="700">AD Pathology</text>
+          <text x="798" y="326" font-size="9" fill="#1d4ed8" text-anchor="middle">Amyloid · Tau · Neurodegeneration</text>
+
+          <!-- Cross-panel connector: Panel B apoptosis -> Panel D AD Pathology (horizontal through gutter) -->
+          <line x1="428" y1="316" x2="704" y2="316" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+
+          <!-- Cross-panel connector: Panel C immune -> Panel D neuroinflammation (horizontal through gutter) -->
+          <line x1="654" y1="258" x2="704" y2="258" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-g)"/>
+
+          <!-- Cross-panel connector: Panel A S1P->Sphingosine -> Panel B Ceramide (horizontal) -->
+          <line x1="200" y1="316" x2="252" y2="316" stroke="#6d3bbf" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel A S1P -> Panel C S1P node (through gap, row ~316 vs 60) -->
+          <!-- Route: from Panel A bottom-right to Panel C top via top gutter at y=355 area -->
+          <!-- Actually: connect A "S1P→Sphingosine" node rightward to C "↑ Intracellular S1P" via top -->
+          <!-- Use elbow: go right from A(200,316) along y=338 through gutter x=222..235..460 up to C at y=60 -->
+          <polyline points="200,316 220,316 220,338 458,338 458,60 478,60" fill="none" stroke="#6d3bbf" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel labels (bottom) -->
+          <text x="115" y="370" font-size="9" fill="#6d3bbf" text-anchor="middle" font-style="italic">Upstream drivers</text>
+          <text x="340" y="370" font-size="9" fill="#991b1b" text-anchor="middle" font-style="italic">Harm pathways</text>
+          <text x="566" y="300" font-size="9" fill="#0f766e" text-anchor="middle" font-style="italic">Protective signals</text>
+          <text x="798" y="370" font-size="9" fill="#1d4ed8" text-anchor="middle" font-style="italic">Clinical phenotypes</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Fig. 1. SGPP1 sphingolipid pathway in Alzheimer's disease context.</strong>
+        <strong>Panel A (purple)</strong> — Upstream drivers: metabolic stress and gut–brain axis signals upregulate SGPP1; GLP-1/semaglutide opposes this. SGPP1 catalyses the core S1P→sphingosine conversion, feeding both harmful and protective branches.
+        <strong>Panel B (red)</strong> — Harmful cascades driven by SGPP1 activity: ceramide accumulation (C16:0/C18:0/C20:0), ER stress/UPR, mitochondrial injury, lysosomal membrane permeabilization, and ultimately apoptosis and synaptic loss.
+        <strong>Panel C (teal)</strong> — Protective branches activated by SGPP1 knockdown / elevated S1P: two parallel sub-cascades (Akt survival signalling and autophagy induction via PERK/IRE1α/ATF6) that reconverge on proteostasis support and immune/vascular regulation.
+        <strong>Panel D (blue)</strong> — AD-relevant disease outcomes: cognitive impairment, neuroinflammation, synaptic vulnerability, and blood–brain barrier dysfunction converging on amyloid/tau AD pathology. Dashed arrows indicate cross-panel causal contributions.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Sphingolipid Rheostat Control</h3>
+        <p>SGPP1 controls sphingolipid flux rather than acting as a simple disease marker. By converting S1P to sphingosine, it can lower intracellular S1P and feed sphingosine into ceramide and complex sphingolipid salvage pathways — placing it at the hub of lipid signals central to neurodegeneration.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Ceramide Accumulation Risk</h3>
+        <p>SGPP1 overexpression increases incorporation of sphingosine into long-chain ceramides — including C16:0, C18:0, and C20:0 — and into hexosylceramides and sphingomyelins. Ceramide accumulation is a plausible contributor to AD-related neuronal and synaptic injury through mitochondrial depolarisation, ROS release, and lysosomal membrane permeabilisation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Dual ER Stress / Autophagy Role</h3>
+        <p>SGPP1 depletion can increase intracellular and secreted S1P, activating Akt survival signalling, autophagy (via PERK/IRE1α/ATF6), and CHOP/BiP/phospho-eIF2α markers. Whether enhanced autophagy and survival signalling outweighs the ER-stress burden is context-dependent and critical for therapeutic design.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Neuroinflammation &amp; Immune Tone</h3>
+        <p>In inflammatory dendritic cells and immune models, SGPP1 reshapes the S1P/sphingosine balance during activation. Because AD involves chronic microglial, astrocytic, endothelial, and peripheral immune activation, SGPP1 could modulate inflammatory tone and immune-cell behaviour across the brain–immune axis.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Diabetic Cognition &amp; Gut–Brain Link</h3>
+        <p>In a diabetic cognitive impairment mouse model, cognitive deficits and hippocampal neuronal loss were associated with upregulated SGPP1, ABCA2, and CERS2. Semaglutide restored cognition, remodelled gut microbiota and bile acid profiles, and downregulated SGPP1 — linking metabolic and gut–brain signalling to cerebral sphingolipid remodelling.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Broader Neurological Signals</h3>
+        <p>Genetic and lipidomic studies associate SGPP1 variants with circulating ceramide and S1P species. A Parkinson's disease lysosomal-gene rare-variant study found nominal SGPP1 association, and schizophrenia cortical studies detected altered SGPP1 within sphingolipid/myelination gene networks — reinforcing neurological plausibility without proving an AD-specific causal role.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <span><strong>Treat SGPP1 as mechanistically plausible — not validated.</strong> Current evidence positions SGPP1 as an AD pathway target through sphingolipid biology, but it has not been established as a validated AD gene, biomarker, or therapeutic target. Mechanistic plausibility must not substitute for direct validation.</span>
+      </li>
+      <li>
+        <span><strong>Prioritise AD-specific expression profiling.</strong> Measure SGPP1 expression and activity in human AD brain regions, CSF/plasma lipid signatures, and key cell types — neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and pericytes — before advancing therapeutic development.</span>
+      </li>
+      <li>
+        <span><strong>Test modulation in multiple AD models.</strong> Experimental studies should span amyloid, tau, metabolic dysfunction, and neuroinflammation models, with outcomes including amyloid/tau burden, synaptic integrity, neuronal survival, microglial phagocytosis, inflammatory cytokines, ER stress, autophagic flux, mitochondrial function, and cognition.</span>
+      </li>
+      <li>
+        <span><strong>Use lipid biomarkers to define therapeutic context.</strong> Monitor S1P, sphingosine, C16:0/C18:0/C20:0 ceramides, hexosylceramides, sphingomyelins, bile acids, and inflammatory/oxidative stress markers to determine whether SGPP1 inhibition, enhancement, or selective modulation is warranted in each disease context.</span>
+      </li>
+      <li>
+        <span><strong>Do not assume inhibition is universally beneficial.</strong> In ceramide-high, S1P-low, metabolically stressed neurodegenerative states, reducing SGPP1 may restore survival signalling. In other contexts, SGPP1 loss could worsen ER stress, immune dysregulation, or systemic metabolic vulnerability — including beta-cell lipotoxicity.</span>
+      </li>
+      <li>
+        <span><strong>Account for brain-region and cell-type specificity.</strong> The optimal direction of SGPP1 modulation may differ between neurons, microglia, astrocytes, endothelial cells, oligodendrocytes, and peripheral metabolic tissues — demanding cell-type-resolved studies.</span>
+      </li>
+      <li>
+        <span><strong>Embed SGPP1 within broader therapeutic axes.</strong> Relevant parallel interventions include GLP-1/semaglutide-like metabolic modulation, gut microbiota and bile-acid normalisation, Nrf2/HO-1 antioxidant pathways, sphingosine kinase regulation, ceramide synthase modulation, lysosomal/autophagy support, and vascular S1P signalling.</span>
+      </li>
+      <li>
+        <span><strong>Prioritise patient selection around metabolic and lipid endotypes.</strong> SGPP1-targeted strategies may be most relevant for AD or AD-related cognitive impairment accompanied by metabolic syndrome, diabetes, vascular disease, dyslipidemia, gut–brain/bile-acid abnormalities, or biomarker evidence of ceramide/sphingolipid dysregulation.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="verdict-lead">Overall Assessment — SGPP1 in Alzheimer's Disease</p>
+      <p>
+        <strong>SGPP1 is a sphingolipid-flux regulator</strong> that connects lipid metabolism to AD-relevant stress pathways including ER stress, mitochondrial dysfunction, lysosomal damage, neuroinflammation, and synaptic vulnerability. Its therapeutic potential is real but currently indirect: <strong>no study directly validates SGPP1 as an AD driver or therapeutic target</strong>. The most compelling direct evidence comes from a diabetic cognitive impairment model in which <strong>SGPP1 downregulation by semaglutide coincided with neuroprotection</strong>, pointing toward metabolic and gut–brain modulation as a tractable upstream intervention.
+      </p>
+      <p style="margin-top:14px;">
+        The key scientific question is whether, in specific AD endotypes, <strong>SGPP1 should be inhibited, enhanced, or selectively modulated</strong> — a determination that requires AD-context ceramide/S1P profiling, cell-type-resolved expression data, and rigorous in vivo testing. Given the dual-edged nature of SGPP1 biology, <strong>patient stratification by metabolic and lipidomic biomarkers</strong> will be essential before any therapeutic development is pursued.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SGPP1 · Sphingolipid Flux &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

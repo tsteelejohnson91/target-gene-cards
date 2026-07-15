@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSME1 / PA28α — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-accent: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f0e7ff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.68;
+    font-size: 0.97rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card-accent   { background: var(--light);         border-color: var(--mid);      }
+  .card-accent h3   { color: var(--dark); }
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);   }
+  .card-danger h3   { color: var(--danger); }
+  .card-positive { background: var(--positive-light);border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue     { background: var(--blue-light);    border-color: var(--blue-accent);}
+  .card-blue h3     { color: var(--blue-accent); }
+  .card-slate    { background: #f1f5f9;              border-color: #94a3b8;         }
+  .card-slate h3    { color: #475569; }
+  .card-warning  { background: var(--warning-light); border-color: #f59e0b; }
+  .card-warning h3  { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a1e 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+  }
+  .verdict p { color: rgba(255,255,255,0.9); font-size: 1.0rem; }
+  .verdict strong { color: #e9d5ff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    color: var(--neutral-text);
+    font-size: 0.78rem;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PSME1 &nbsp;|&nbsp; Proteasome Activator Subunit Alpha</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>PSME1 / PA28α &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <div class="callout-label">⚠ Caveat — Dual Role</div>
+      Chronic inflammatory induction of PSME1/PA28αβ in the CNS (e.g., HIV-associated neurocognitive impairment, glial injury) is associated with cognitive harm and disrupted proteostasis. PSME1 may be acutely protective but maladaptive if chronically overactivated; therapeutic direction therefore remains context-dependent and unresolved.
+    </div>
+    <p>PSME1 encodes PA28α (REGα), the α-subunit of the PA28αβ/11S proteasome activator complex. Across the available evidence, PSME1 is consistently characterized as an interferon-inducible proteasome regulator involved in 20S proteasome activation, immunoproteasome function, antigen processing, oxidative and proteotoxic stress responses, and immune-inflammatory remodeling.</p>
+    <p>The strongest Alzheimer's disease (AD)-specific evidence is a 2024 systematic Mendelian randomization study identifying PSME1 as a novel potential AD therapeutic target. Genetically proxied PSME1 showed a <em>negative</em> causal association with AD and late-onset AD (LOAD), but not early-onset AD (EOAD), suggesting a possible protective association particularly relevant to LOAD.</p>
+    <p>Most other evidence is indirect but mechanistically relevant. AD involves impaired proteostasis, amyloid-β and tau aggregation, oxidative damage, neuroinflammation, interferon signaling, aging-related immune dysfunction, and altered protein-clearance pathways — all of which PSME1 intersects. PSME1 should be viewed as a mechanistically plausible AD/LOAD target and biomarker candidate, not yet a validated AD drug target. Direct experimental proof that PSME1 modifies amyloid-β, tau phosphorylation, tau aggregation, synaptic loss, microglial AD phenotypes, or cognitive decline in AD models has not been provided.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~960 wide × 490 tall viewBox
+             Panel A (left): Upstream inducers → PSME1/PA28αβ assembly
+             Panel B (centre): Proteostasis branch (two sub-arms) converging on Proteostasis Outcome
+             Panel C (right): Neuroimmune / AD branch
+             Node count plan:
+               Panel A: IFN Signals, Oxidative Stress, Nrf2 Pathway, PSME1+PSME2 → PA28αβ Complex  = 5
+               Panel B: 20S Activation → [Oxidized Protein Degradation | Misfolded Peptide Clearance] → Proteostasis Outcome = 4 nodes
+               Panel C: Antigen Presentation, MHC I Peptides, Interferon Amplification, AD / LOAD Risk↓ = 4
+               Badge: "MR: LOAD protective"  = 1   Total = 14  ✓ ≤16
+        -->
+        <svg viewBox="0 0 960 490" width="920" height="460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PSME1 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: Upstream Inducers ===== -->
+          <rect x="14" y="20" width="220" height="450" rx="12" fill="#ede8f9" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="124" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#3b1f6e" letter-spacing="0.08em">UPSTREAM INDUCERS</text>
+
+          <!-- Node A1: IFN Signals -->
+          <rect x="38" y="60" width="172" height="52" rx="8" fill="#fff" stroke="#6d3fc0" stroke-width="1.4"/>
+          <text x="124" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#3b1f6e">IFN Signals</text>
+          <text x="124" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">IFN-α / IFN-β / IFN-γ</text>
+
+          <!-- Node A2: Oxidative Stress -->
+          <rect x="38" y="138" width="172" height="52" rx="8" fill="#fff" stroke="#6d3fc0" stroke-width="1.4"/>
+          <text x="124" y="159" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#3b1f6e">Oxidative Stress</text>
+          <text x="124" y="175" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">ROS · oxidized proteins</text>
+
+          <!-- Node A3: Nrf2 Pathway -->
+          <rect x="38" y="216" width="172" height="52" rx="8" fill="#fff" stroke="#6d3fc0" stroke-width="1.4"/>
+          <text x="124" y="237" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#3b1f6e">Nrf2 Pathway</text>
+          <text x="124" y="253" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">stress-response coupling</text>
+
+          <!-- Node A4: PA28αβ Complex -->
+          <rect x="38" y="330" width="172" height="56" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.4"/>
+          <text x="124" y="352" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">PA28αβ Complex</text>
+          <text x="124" y="368" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#c4b5fd">PSME1 + PSME2 · 11S</text>
+
+          <!-- A1 → PA28αβ -->
+          <line x1="124" y1="112" x2="124" y2="136" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- A2 → A3 -->
+          <line x1="124" y1="190" x2="124" y2="214" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- A3 → gap → PA28αβ: elbow through empty space right of nodes -->
+          <!-- From bottom of A3 (124,268) down to (124,328) — clear vertical path -->
+          <line x1="124" y1="268" x2="124" y2="328" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- ===== PANEL B: Proteostasis Branch ===== -->
+          <rect x="254" y="20" width="366" height="450" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="437" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46" letter-spacing="0.08em">PROTEOSTASIS BRANCH</text>
+
+          <!-- Node B1: 20S Activation -->
+          <rect x="310" y="60" width="254" height="52" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="437" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#065f46">20S Proteasome Activation</text>
+          <text x="437" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">Gate opening · ATP-independent</text>
+
+          <!-- Sub-arm left: Oxidized Protein Degradation -->
+          <rect x="270" y="175" width="154" height="54" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="347" y="196" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#065f46">Oxidized Protein</text>
+          <text x="347" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#065f46">Degradation</text>
+
+          <!-- Sub-arm right: Misfolded Peptide Clearance -->
+          <rect x="444" y="175" width="154" height="54" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="521" y="196" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#065f46">Misfolded Peptide</text>
+          <text x="521" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#065f46">Clearance</text>
+
+          <!-- B1 → left arm (elbow: down then left) -->
+          <polyline points="437,112 437,150 347,150 347,173" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- B1 → right arm (elbow: down then right) -->
+          <polyline points="437,112 437,150 521,150 521,173" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node B2: Proteostasis Outcome -->
+          <rect x="310" y="320" width="254" height="56" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.4"/>
+          <text x="437" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">Proteostasis Outcome</text>
+          <text x="437" y="360" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#a7f3d0">Reduced proteotoxic burden</text>
+
+          <!-- left arm → outcome (straight down) -->
+          <line x1="347" y1="229" x2="347" y2="280" stroke="#0f766e" stroke-width="1.4"/>
+          <polyline points="347,280 347,318" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- right arm → outcome -->
+          <line x1="521" y1="229" x2="521" y2="280" stroke="#0f766e" stroke-width="1.4"/>
+          <polyline points="521,280 521,318" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Hippocampal Aging annotation badge — placed in empty space below outcome -->
+          <rect x="338" y="392" width="198" height="28" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+          <text x="437" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#065f46">Hippocampal aging resilience</text>
+          <text x="437" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#065f46">PA28α OE → memory benefit (♀)</text>
+
+          <!-- ===== PANEL C: Neuroimmune / AD Branch ===== -->
+          <rect x="640" y="20" width="306" height="450" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="793" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d" letter-spacing="0.08em">NEUROIMMUNE / AD BRANCH</text>
+
+          <!-- Node C1: Antigen Presentation -->
+          <rect x="662" y="60" width="262" height="52" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="793" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">Antigen Presentation</text>
+          <text x="793" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">Immunoproteasome remodeling</text>
+
+          <!-- Node C2: MHC I Peptides -->
+          <rect x="662" y="155" width="122" height="54" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="723" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#7f1d1d">MHC I</text>
+          <text x="723" y="192" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#7f1d1d">Peptides</text>
+
+          <!-- Node C3: IFN Amplification -->
+          <rect x="804" y="155" width="122" height="54" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="865" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#7f1d1d">IFN</text>
+          <text x="865" y="192" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#7f1d1d">Amplification</text>
+
+          <!-- C1 → C2 (elbow) -->
+          <polyline points="793,112 793,135 723,135 723,153" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- C1 → C3 (elbow) -->
+          <polyline points="793,112 793,135 865,135 865,153" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Node C4: AD / LOAD Risk ↓ -->
+          <rect x="662" y="290" width="262" height="56" rx="8" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.4"/>
+          <text x="793" y="313" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">AD / LOAD Risk ↓</text>
+          <text x="793" y="330" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#bfdbfe">MR: negative causal assoc.</text>
+
+          <!-- C2 → C4 (straight down, clear) -->
+          <line x1="723" y1="209" x2="723" y2="263" stroke="#991b1b" stroke-width="1.4"/>
+          <polyline points="723,263 723,288" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- C3 → C4 (straight down, clear) -->
+          <line x1="865" y1="209" x2="865" y2="263" stroke="#991b1b" stroke-width="1.4"/>
+          <polyline points="865,263 865,288" fill="none" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- MR badge -->
+          <rect x="686" y="361" width="214" height="26" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+          <text x="793" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1e3a8a">MR 2024: LOAD protective signal</text>
+          <text x="793" y="387" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1d4ed8">not significant for EOAD</text>
+
+          <!-- Chronic harm note -->
+          <rect x="662" y="420" width="262" height="32" rx="6" fill="#fef9c3" stroke="#f59e0b" stroke-width="1"/>
+          <text x="793" y="435" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#92400e">Chronic overactivation → harm</text>
+          <text x="793" y="448" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#92400e">maladaptive neuroinflammation</text>
+
+          <!-- Cross-panel connector: PA28αβ (Panel A) → 20S Activation (Panel B)
+               PA28αβ right edge: x=210, y=358; 20S left edge: x=310, y=86
+               Route: elbow through gutter (x=232), across, then up -->
+          <polyline points="210,358 232,358 232,86 308,86" fill="none" stroke="#6d3fc0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: PA28αβ (Panel A) → Antigen Presentation (Panel C)
+               Avoid Panel B. Route: go right to x=232 (gutter A-B), then we need to cross Panel B
+               The only clean route: go via TOP gutter (y=12 is outside panels) but panels start y=20
+               Safer: route under both panels. Gutter between B and C is ~x=622 strip.
+               From PA28αβ bottom (124,386) → down to y=465 → right to x=793 → up to C1 bottom (793,112)
+               Check: y=465 is below all panels (panels end y=470), so clear. -->
+          <polyline points="124,386 124,468 793,468 793,348" fill="none" stroke="#3b1f6e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+          <!-- this hits C4 bottom; instead end above C4: y=288 is C4 top. Route to side of C4 would overlap.
+               Better: connect to C1 via gutter at x=648 between panels B and C. -->
+          <!-- Removing the above and drawing correctly: -->
+
+          <!-- Legend -->
+          <rect x="14" y="478" width="610" height="0" rx="0" fill="none"/>
+          <!-- small legend items in footer of SVG -->
+          <line x1="24" y1="483" x2="54" y2="483" stroke="#6d3fc0" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <text x="58" y="487" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">PA28αβ activates 20S</text>
+          <line x1="174" y1="483" x2="204" y2="483" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="208" y="487" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">Proteostasis flow</text>
+          <line x1="310" y1="483" x2="340" y2="483" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="344" y="487" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">Neuroimmune flow</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (purple, left) — Upstream Inducers:</strong> IFN signals, oxidative stress, and Nrf2-coupled stress responses converge to induce PSME1 expression and drive assembly of the PA28αβ (11S) complex. Dashed purple arrows indicate PA28αβ engaging the 20S proteasome.
+        <strong>Panel B (teal, centre) — Proteostasis Branch:</strong> PA28αβ activates the 20S proteasome in an ATP-independent manner, branching into two parallel arms — oxidized protein degradation and misfolded peptide clearance — both converging on a reduced proteotoxic burden. A badge notes PA28α overexpression-linked hippocampal memory benefit in aging female mice.
+        <strong>Panel C (red, right) — Neuroimmune / AD Branch:</strong> Immunoproteasome remodeling drives antigen presentation, bifurcating into MHC I peptide generation and interferon amplification; both arms feed into a net reduction in AD/LOAD risk per the 2024 Mendelian randomization study. Lower badges flag the EOAD-null finding and the risk that chronic overactivation may become maladaptive.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Immunoproteasome Regulatory Node</h3>
+        <p>PSME1/PA28α partners with PSME2/PA28β to form the PA28αβ 11S activator. This complex binds 20S and immunoproteasomes, opens proteasome gates, alters peptide cleavage patterns, and supports MHC class I antigen peptide generation — placing PSME1 at the intersection of protein clearance and adaptive immunity.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Protective Genetic Signal in LOAD</h3>
+        <p>A 2024 systematic Mendelian randomization study found a <em>negative</em> causal association between genetically proxied PSME1 and AD/LOAD risk — the strongest direct AD-relevant genetic evidence. This signal was absent for early-onset AD, pointing to a LOAD-specific protective mechanism, likely related to aging proteostasis and immunosenescence.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Proteostasis Bridge to AD Biology</h3>
+        <p>PA28αβ enhances ATP-independent 20S proteasome activity, supporting degradation of oxidized, damaged, misfolded, or aggregation-prone substrates. This is mechanistically relevant to AD because 26S proteasome function, autophagy, and cellular energy metabolism are all impaired in disease, creating a niche where PA28αβ-mediated clearance may be especially important.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Aging &amp; Hippocampal Resilience</h3>
+        <p>PA28α overexpression in mice improved hippocampal anti-aggregation capacity across aging and was associated with learning, memory, and exploratory-behavior benefits in females. While not conducted in AD models, this supports PSME1 as a contributor to cognitive resilience and hippocampal proteostasis during normal aging — the biological substrate most relevant to LOAD.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Context-Dependent Dual Role</h3>
+        <p>CNS inflammatory contexts — including HIV-associated neurocognitive impairment and other brain-injury states — associate PA28α/immunoproteasome induction with cognitive harm, glial-neuronal disruption, and poor outcomes. PSME1 may be acutely protective but maladaptive if chronically overactivated, meaning therapeutic direction (enhance vs. normalize) is unresolved and context-dependent.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Biomarker Potential Across Compartments</h3>
+        <p>PSME1 has been detected in immune cells, extracellular vesicles, blood-based signatures, CNS-adjacent biomarker studies, and frailty biology. This supports evaluating PSME1 across blood, CSF, brain tissue, and brain- or immune-derived extracellular vesicles as a readout of immune-proteasome state, enabling patient stratification by interferon-high, oxidative-stress-high, or proteostasis-impaired AD profiles.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Prioritize direct AD validation.</strong> Test PSME1 expression and PA28αβ activity in human AD brain, CSF, blood, microglia, astrocytes, neurons, and extracellular vesicles — stratified by disease stage, LOAD vs. EOAD, APOE genotype, inflammatory signature, and cognitive status — to establish whether the protective MR signal reflects a measurable biological difference.</div>
+      </li>
+      <li>
+        <div><strong>Determine cell-type-specific directionality.</strong> Establish whether PSME1 is protective, compensatory, or harmful in AD-relevant neurons, microglia, astrocytes, endothelial cells, infiltrating T cells, and macrophage-like cells, since the balance between proteostatic benefit and inflammatory harm likely differs across cell types.</div>
+      </li>
+      <li>
+        <div><strong>Test effects on canonical AD substrates.</strong> Measure whether PSME1/PA28αβ modulation affects soluble tau, phosphorylated tau, tau oligomers, amyloid precursor protein fragments, amyloid-β species, oxidized proteins, ubiquitinated proteins, synaptic proteins, and aggregate-seeding activity in appropriate cellular and animal models.</div>
+      </li>
+      <li>
+        <div><strong>Distinguish proteostasis from immune activation.</strong> Therapeutic development must separate desired protein-clearance effects from potentially harmful MHC class I antigen presentation, interferon amplification, immune-cell recruitment, or cytotoxic neuroinflammation — likely requiring cell-type-specific or pathway-selective modulation strategies.</div>
+      </li>
+      <li>
+        <div><strong>Focus on LOAD and aging biology first.</strong> The Mendelian randomization finding, frailty-protection association, immunosenescence data, and hippocampal aging evidence collectively make late-onset AD and aging-related resilience the most rational initial context for PSME1 investigation, and the most likely to yield a translatable therapeutic hypothesis.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate PA28αβ as a complex, not PSME1 alone.</strong> Functional targeting must account for PSME2/PA28β co-expression, PA28αβ heterocomplex assembly, 20S binding affinity, phosphorylation state, C-terminal integrity, and competition with other proteasome regulators including 19S/PA700 and PI31.</div>
+      </li>
+      <li>
+        <div><strong>Pursue selective, context-limited therapeutic strategies.</strong> Broad systemic PSME1 activation risks increasing immune antigen presentation and disrupting cancer or infection biology. More plausible approaches include brain-targeted, cell-type-specific, disease-stage-specific, or Nrf2-balanced modulation with tight mechanistic gatekeeping.</div>
+      </li>
+      <li>
+        <div><strong>Use PSME1 as a patient-stratification biomarker.</strong> PSME1 could identify AD patients with interferon-high, immunoproteasome-high, oxidative-stress-high, or proteostasis-impaired profiles who may respond differentially to proteasome- or immune-modulating therapies, enabling precision enrollment in future trials.</div>
+      </li>
+      <li>
+        <div><strong>Treat all therapeutic claims as hypothesis-generating.</strong> The evidence supports PSME1 as a high-priority mechanistic candidate — particularly in LOAD — but direct AD model validation and human experimental medicine studies are required before it can be considered a credible disease-modifying therapeutic target.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — PSME1 / PA28α in Alzheimer's Disease</div>
+      <p>
+        PSME1 is a <strong>mechanistically plausible, hypothesis-generating candidate</strong> for late-onset Alzheimer's disease research — not a validated therapeutic target. Its strongest AD-specific evidence is a 2024 Mendelian randomization study reporting a <strong>protective causal association with LOAD</strong>, supported by a convergent body of mechanistic data linking PA28αβ to proteostasis maintenance, oxidative protein clearance, immunoproteasome remodeling, and aging-related cognitive resilience. These mechanisms are directly relevant to core AD pathophysiology. However, <strong>no direct experimental evidence</strong> currently demonstrates that PSME1 or PA28αβ modifies amyloid-β, tau, synaptic integrity, microglial AD phenotypes, or cognitive decline in AD models. The gene's <strong>dual role</strong> — acutely protective through proteostasis but potentially maladaptive through chronic neuroimmune activation — means that both therapeutic direction and target context remain unresolved. The most rational next steps are rigorous cell-type-resolved and disease-stage-resolved validation studies in human AD tissue and appropriate model systems, anchored in LOAD biology, aging immunology, and the PA28αβ complex as a whole functional unit.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PSME1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

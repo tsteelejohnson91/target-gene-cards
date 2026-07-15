@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICAM1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2a6496;
+    --light: #e8f2fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --positive: #0f766e;
+    --positive-light: #f0faf9;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(255,160,160,0.35);
+    color: #ffd0d0;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #c8ddf0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: #fff8f0;
+    border: 1.5px solid #e8a040;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* PROSE */
+  p { margin-bottom: 1rem; font-size: 0.97rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 9px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: #fffbeb; }
+  .card.slate { border-left-color: #64748b; background: #f8fafc; }
+  .card.blue { border-left-color: #1d4ed8; background: #eff6ff; }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.blue h3 { color: #1d4ed8; }
+  .card.slate h3 { color: #475569; }
+  .card p { font-size: 0.88rem; margin-bottom: 0; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.93rem;
+  }
+  .takeaways li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .lead { font-size: 1.05rem; font-weight: bold; color: #7ec8f0; margin-bottom: 10px; display: block; }
+  .verdict strong { color: #a8d8f0; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ICAM1 &nbsp;|&nbsp; Intercellular Adhesion Molecule 1</span>
+    <span class="chip chip-danger">⚠ Broad inhibition: immunologic risk</span>
+  </div>
+  <h1>ICAM1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Caution — Dual Role:</strong> ICAM1 supports normal immune surveillance and host defense. Broad systemic inhibition carries potential immunologic and vascular risks; selective, context-specific targeting is strongly preferred over global blockade.
+    </div>
+    <p>ICAM1 is a neurovascular and inflammatory adhesion molecule with multifaceted relevance to Alzheimer's disease (AD). It operates at the intersection of endothelial activation, leukocyte adhesion and trafficking, blood–brain barrier (BBB) dysfunction, oxidative stress, cytokine signaling, and glial activation. The collective evidence supports ICAM1 as an AD-relevant <em>biomarker and mechanistic node</em> rather than a fully validated standalone therapeutic target.</p>
+    <p>AD-focused findings link ICAM1 to CSF adhesion-molecule signatures in preclinical and clinical AD progression, associations with phosphorylated tau, Aβ-induced inflammatory injury in neuronal-like and cerebral endothelial models, ICAM1-associated monocyte/immune infiltration and BBB disruption in single-cell analyses, corneal neuroimmune remodeling in 5xFAD mice, and a mechanistic 5xFAD study showing astrocyte-secreted ICAM1 can improve cognition by modulating microglial inflammation and Aβ clearance through LFA-1/ERK–STAT3-related signaling.</p>
+    <p>Across non-AD models, ICAM1 repeatedly appears downstream of TNF-α, IL-1β, IL-6, NF-κB, MAPK/JNK/ERK, JAK/STAT, TLR/RAGE, NLRP3 inflammasome signaling, oxidative stress, hypoxia, and mitochondrial dysfunction — pathways with strong mechanistic overlap with AD neuroinflammation, vascular dysfunction, and chronic oxidative injury.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- PANEL BACKGROUNDS -->
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="10" y="10" width="200" height="470" rx="12" fill="#e8f2fa" fill-opacity="0.6" stroke="#2a6496" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">A · UPSTREAM TRIGGERS</text>
+
+        <!-- Panel B: ICAM1 Central Node & Signaling -->
+        <rect x="220" y="10" width="210" height="470" rx="12" fill="#e8f2fa" fill-opacity="0.35" stroke="#2a6496" stroke-width="1.2"/>
+        <text x="325" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a3a5c" letter-spacing="1">B · ICAM1 SIGNALING HUB</text>
+
+        <!-- Panel C: Downstream Branches -->
+        <rect x="440" y="10" width="240" height="470" rx="12" fill="#e0f2f1" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="560" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#0a5954" letter-spacing="1">C · DOWNSTREAM EFFECTS</text>
+
+        <!-- Panel D: Outcomes & Modulation -->
+        <rect x="690" y="10" width="222" height="470" rx="12" fill="#fdf0f0" fill-opacity="0.6" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="801" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="1">D · OUTCOMES &amp; THERAPY</text>
+
+        <!-- ============ PANEL A NODES ============ -->
+        <!-- A1: Aβ / Tau stress -->
+        <rect x="22" y="46" width="176" height="38" rx="7" fill="#2a6496" stroke="none"/>
+        <text x="110" y="61" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Aβ / Tau Stress</text>
+        <text x="110" y="76" text-anchor="middle" fill="#cde" font-size="9.5">&amp; Amyloid burden</text>
+
+        <!-- A2: TNF-α / IL-1β / IL-6 -->
+        <rect x="22" y="100" width="176" height="38" rx="7" fill="#1a3a5c" stroke="none"/>
+        <text x="110" y="115" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">TNF-α · IL-1β · IL-6</text>
+        <text x="110" y="130" text-anchor="middle" fill="#aac" font-size="9.5">Pro-inflammatory cytokines</text>
+
+        <!-- A3: NF-κB / MAPK / JAK-STAT -->
+        <rect x="22" y="154" width="176" height="38" rx="7" fill="#1a3a5c" stroke="none"/>
+        <text x="110" y="169" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">NF-κB · MAPK · JAK/STAT</text>
+        <text x="110" y="184" text-anchor="middle" fill="#aac" font-size="9.5">Signaling cascades</text>
+
+        <!-- A4: TLR / RAGE / NLRP3 -->
+        <rect x="22" y="208" width="176" height="38" rx="7" fill="#1a3a5c" stroke="none"/>
+        <text x="110" y="223" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">TLR · RAGE · NLRP3</text>
+        <text x="110" y="238" text-anchor="middle" fill="#aac" font-size="9.5">Innate immune activation</text>
+
+        <!-- A5: Oxidative stress / Hypoxia -->
+        <rect x="22" y="262" width="176" height="38" rx="7" fill="#b45309" stroke="none"/>
+        <text x="110" y="277" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">ROS · Hypoxia</text>
+        <text x="110" y="292" text-anchor="middle" fill="#ffe" font-size="9.5">Mitochondrial dysfunction</text>
+
+        <!-- ============ PANEL B NODES ============ -->
+        <!-- B1: Endothelial Activation -->
+        <rect x="232" y="46" width="186" height="38" rx="7" fill="#2a6496" stroke="none"/>
+        <text x="325" y="61" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Endothelial Activation</text>
+        <text x="325" y="76" text-anchor="middle" fill="#cde" font-size="9.5">ICAM1 surface upregulation</text>
+
+        <!-- B2: ICAM1 (central) -->
+        <rect x="240" y="140" width="170" height="44" rx="9" fill="#0c2a45" stroke="#7ec8f0" stroke-width="2.2"/>
+        <text x="325" y="158" text-anchor="middle" fill="#7ec8f0" font-weight="bold" font-size="13">ICAM1</text>
+        <text x="325" y="175" text-anchor="middle" fill="#a8d8f0" font-size="9.5">Adhesion molecule hub</text>
+
+        <!-- B3: LFA-1 / β2-integrin binding -->
+        <rect x="232" y="240" width="186" height="38" rx="7" fill="#1a3a5c" stroke="none"/>
+        <text x="325" y="255" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">LFA-1 / β2-Integrin</text>
+        <text x="325" y="270" text-anchor="middle" fill="#aac" font-size="9.5">Leukocyte docking receptor</text>
+
+        <!-- B4: ERK–STAT3 (astrocytic branch) -->
+        <rect x="232" y="340" width="186" height="38" rx="7" fill="#0f766e" stroke="none"/>
+        <text x="325" y="355" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">ERK–STAT3 Signaling</text>
+        <text x="325" y="370" text-anchor="middle" fill="#cef" font-size="9.5">Astrocyte-secreted ICAM1</text>
+
+        <!-- ============ PANEL C NODES ============ -->
+        <!-- Branch 1 top: BBB Dysfunction -->
+        <rect x="452" y="46" width="160" height="38" rx="7" fill="#134e4a" stroke="none"/>
+        <text x="532" y="61" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">BBB Dysfunction</text>
+        <text x="532" y="76" text-anchor="middle" fill="#99e6de" font-size="9.5">↓ ZO-1, occludin, claudin-5</text>
+
+        <!-- Branch 1 mid: Leukocyte Transmigration -->
+        <rect x="452" y="148" width="160" height="38" rx="7" fill="#0f766e" stroke="none"/>
+        <text x="532" y="163" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Leukocyte Trafficking</text>
+        <text x="532" y="178" text-anchor="middle" fill="#cef" font-size="9.5">Monocyte · T-cell · Neutrophil</text>
+
+        <!-- Branch 2 top: Glial Activation -->
+        <rect x="452" y="248" width="160" height="38" rx="7" fill="#134e4a" stroke="none"/>
+        <text x="532" y="263" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Glial Activation</text>
+        <text x="532" y="278" text-anchor="middle" fill="#99e6de" font-size="9.5">Microglia · Astrocyte</text>
+
+        <!-- Branch 2 mid: Microglial Aβ Clearance -->
+        <rect x="452" y="350" width="160" height="38" rx="7" fill="#0f766e" stroke="none"/>
+        <text x="532" y="365" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Microglial Aβ Clearance</text>
+        <text x="532" y="380" text-anchor="middle" fill="#cef" font-size="9.5">Phagocytosis ↑ (protective)</text>
+
+        <!-- ============ PANEL D NODES ============ -->
+        <!-- D1: AD Neuroinflammation / Cognitive decline -->
+        <rect x="702" y="46" width="198" height="38" rx="7" fill="#8b1a1a" stroke="none"/>
+        <text x="801" y="61" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Neuroinflammation / Decline</text>
+        <text x="801" y="76" text-anchor="middle" fill="#ffcccc" font-size="9.5">AD pathology amplification</text>
+
+        <!-- D2: CSF Biomarker (p-tau / ICAM1) -->
+        <rect x="702" y="148" width="198" height="38" rx="7" fill="#7c3d3d" stroke="none"/>
+        <text x="801" y="163" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">CSF Biomarker Signal</text>
+        <text x="801" y="178" text-anchor="middle" fill="#ffdddd" font-size="9.5">↑ ICAM1 assoc. with p-tau</text>
+
+        <!-- D3: Therapeutic Targets -->
+        <rect x="702" y="248" width="198" height="38" rx="7" fill="#1a3a5c" stroke="none"/>
+        <text x="801" y="263" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">Pathway Modulation</text>
+        <text x="801" y="278" text-anchor="middle" fill="#aac" font-size="9.5">NF-κB · Nrf2 · NLRP3 · AMPK</text>
+
+        <!-- D4: Targeted Delivery -->
+        <rect x="702" y="350" width="198" height="38" rx="7" fill="#1a5c3a" stroke="none"/>
+        <text x="801" y="365" text-anchor="middle" fill="#fff" font-weight="bold" font-size="10.5">ICAM1-Targeted Delivery</text>
+        <text x="801" y="380" text-anchor="middle" fill="#b9f5d8" font-size="9.5">Nanoparticles · EV-miRNA</text>
+
+        <!-- ============ ARROWS ============ -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2a6496"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-white" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A internal: A1→A2→A3→A4→A5 (vertical chain) -->
+        <line x1="110" y1="84" x2="110" y2="98" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="110" y1="138" x2="110" y2="152" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="110" y1="192" x2="110" y2="206" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="110" y1="246" x2="110" y2="260" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A → B: cytokines → Endothelial Activation (A2 right → B1 left) -->
+        <line x1="198" y1="119" x2="230" y2="65" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B1 → B2 (Endothelial → ICAM1) -->
+        <line x1="325" y1="84" x2="325" y2="138" stroke="#2a6496" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- B2 → B3 (ICAM1 → LFA-1) -->
+        <line x1="325" y1="184" x2="325" y2="238" stroke="#2a6496" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- B2 → B4 (ICAM1 → ERK-STAT3, routed left gutter) -->
+        <polyline points="240,162 228,162 228,359 230,359" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B3 → C: LFA-1 → BBB Dysfunction (top branch) -->
+        <line x1="418" y1="255" x2="450" y2="180" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B3 → C: LFA-1 → Leukocyte Trafficking (mid) -->
+        <line x1="418" y1="259" x2="450" y2="165" stroke="#2a6496" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Use elbow: B3 (right x=418, y=259) → C BBB top (left x=452, y=65) -->
+        <!-- Route straight: B3 right → C top left via gutter -->
+        <polyline points="418,259 436,259 436,65 450,65" fill="none" stroke="#2a6496" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- B3 right → C Leukocyte (y=167) -->
+        <polyline points="418,262 438,262 438,167 450,167" fill="none" stroke="#2a6496" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B4 right → C Glial Activation -->
+        <polyline points="418,359 436,359 436,267 450,267" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B4 right → C Microglial Aβ Clearance -->
+        <polyline points="418,362 440,362 440,369 450,369" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C BBB → D Neuroinflam (top) -->
+        <polyline points="612,65 680,65 680,65 700,65" fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C Leukocyte → D CSF Biomarker -->
+        <polyline points="612,167 680,167 680,167 700,167" fill="none" stroke="#7c3d3d" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- C Glial → D Therapeutic -->
+        <polyline points="612,267 680,267 700,267" fill="none" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arr-white)"/>
+
+        <!-- C Microglial Aβ → D Targeted Delivery -->
+        <polyline points="612,369 680,369 700,369" fill="none" stroke="#1a5c3a" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- A5 (ROS) → B2 ICAM1 diagonal via gutter -->
+        <polyline points="198,281 210,281 210,162 238,162" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Triggers:</strong> Aβ/tau stress, pro-inflammatory cytokines (TNF-α, IL-1β, IL-6), transcriptional cascades (NF-κB, MAPK, JAK/STAT), innate immune sensors (TLR, RAGE, NLRP3), and oxidative/metabolic stress (dashed orange) all converge to drive ICAM1 expression.
+      <strong>Panel B — ICAM1 Signaling Hub:</strong> Endothelial activation leads to surface ICAM1 upregulation; ICAM1 engages LFA-1/β2-integrins for leukocyte docking (harmful branch) and, via astrocyte-secreted ICAM1, activates ERK–STAT3 signaling (protective branch).
+      <strong>Panel C — Downstream Effects:</strong> The LFA-1 branch fans into BBB dysfunction (↓tight junctions) and leukocyte transmigration; the astrocytic ERK–STAT3 branch leads to glial activation and enhanced microglial Aβ phagocytosis (a potentially beneficial outcome).
+      <strong>Panel D — Outcomes &amp; Therapy:</strong> Converging effects produce AD neuroinflammation and cognitive decline, a CSF biomarker signal (ICAM1/p-tau), opportunities for upstream pathway modulation, and a precision-delivery handle for ICAM1-targeted nanoparticles or EV-miRNA therapies.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Vascular–Immune Interface Role</h3>
+        <p>ICAM1 operates at the endothelial–immune junction, enabling leukocyte adhesion via LFA-1/β2-integrin interactions and supporting monocyte, neutrophil, and T-cell trafficking across activated cerebral endothelium — a core mechanism in AD neurovascular inflammation.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Dual Role: Harmful vs. Protective</h3>
+        <p>Endothelial ICAM1 drives harmful leukocyte recruitment and BBB disruption; yet one 5xFAD study found astrocyte-secreted ICAM1 can be <em>protective</em>, enhancing microglial Aβ phagocytosis while suppressing inflammatory microglial activation through ICAM1–LFA-1/ERK–STAT3 signaling.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>Biomarker Value — Limited Specificity</h3>
+        <p>CSF ICAM1 appears in AD-related adhesion-molecule signatures and associates with phosphorylated tau in ADNI-type analyses. However, it may also rise across multiple dementias, suggesting transdiagnostic neuroinflammatory biomarker value rather than AD specificity.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>BBB Dysfunction Signature</h3>
+        <p>ICAM1 elevation consistently co-occurs with reduced tight-junction proteins (ZO-1, occludin, claudin-5, VE-cadherin), increased permeability, inflammatory cytokines, ROS, and leukocyte transmigration in brain-relevant endothelial models.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Broad Therapeutic Modulation</h3>
+        <p>Multiple interventions reduce ICAM1 alongside improved endothelial function: GLP-1/GIP metabolic therapies, SGLT2 approaches, statins, CB2 agonists, NF-κB/MAPK modulators, Nrf2/antioxidant strategies, NLRP3 inhibition, AMPK activation, EV-miRNA delivery, and ICAM1-targeted nanoparticles.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Pathway-Level, Not Isolated, Driver</h3>
+        <p>ICAM1 functions as part of a broader inflammatory adhesion module — co-regulated with VCAM1, E/P-selectin, MCP-1/CCL2, IL-6, TNF-α, MMP-9, ROS, and NF-κB. Pathway-level targeting is therefore more rational than isolated ICAM1 blockade.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Position ICAM1 as a candidate neurovascular-inflammatory biomarker.</strong> Its strongest current relevance is identifying endothelial activation, BBB dysfunction, immune trafficking, and tau-linked or inflammation-linked vulnerability — not as a validated AD-specific therapeutic target.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize cell-type and compartment-resolved AD studies.</strong> Determine whether ICAM1 is elevated in brain endothelium, astrocytes, microglia, CSF, plasma, or corneal/retinal tissues and whether elevations correlate with BBB leakage, tau pathology, amyloid burden, vascular lesions, or cognitive decline.</div>
+      </li>
+      <li>
+        <div><strong>Target selective normalization, not broad elimination.</strong> Focus on upstream modulation of TNF/NF-κB, IL-6/JAK/STAT, MAPK/JNK/ERK, TLR/RAGE, NLRP3, oxidative stress, mitochondrial dysfunction, and endothelial barrier pathways rather than systemic ICAM1 blockade.</div>
+      </li>
+      <li>
+        <div><strong>Explore ICAM1 as a precision delivery handle.</strong> ICAM1-targeted nanoparticles or extracellular vesicles could deliver anti-inflammatory, antioxidant, mitochondrial-protective, or RNA-based therapies to inflamed cerebral endothelium, contingent on confirmed AD-specific vascular ICAM1 expression.</div>
+      </li>
+      <li>
+        <div><strong>Distinguish harmful from beneficial ICAM1 signaling.</strong> Therapeutic strategies must separate harmful endothelial leukocyte-recruitment effects from potentially beneficial astrocytic/microglial Aβ-clearance effects, accounting for membrane-bound vs. soluble ICAM1 forms and ICAM1-adjacent RNA regulation.</div>
+      </li>
+      <li>
+        <div><strong>Deploy ICAM1 in multi-marker biomarker panels.</strong> Combining ICAM1 with VCAM1, GFAP, p-tau, Aβ42/40, MCP-1/CCL2, inflammatory cytokines, BBB markers, and vascular imaging will better identify AD patients with prominent neurovascular inflammation than ICAM1 alone.</div>
+      </li>
+      <li>
+        <div><strong>Conduct key validation experiments in AD models.</strong> Test whether ICAM1 or ICAM1–LFA-1/β2-integrin modulation improves BBB integrity, reduces harmful leukocyte adhesion, alters microglial phenotype, enhances Aβ clearance, affects tau progression, and improves cognition without impairing protective immune surveillance.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — ICAM1 in Alzheimer's Disease</span>
+      ICAM1 is a <strong>well-supported neurovascular and neuroinflammatory node</strong> with meaningful relevance to Alzheimer's disease, but it currently occupies the role of a <strong>mechanistic biomarker and pathway indicator</strong> rather than a validated primary therapeutic target. Its most compelling AD evidence spans <strong>CSF adhesion-molecule signatures, p-tau associations, Aβ-driven endothelial injury, BBB disruption, and single-cell immune-infiltration analyses</strong>. Critically, preclinical data reveal a <strong>dual biological identity</strong>: endothelial ICAM1 amplifies harmful leukocyte trafficking and barrier breakdown, while astrocyte-secreted ICAM1 may promote beneficial microglial Aβ clearance. This duality means that <strong>broad ICAM1 blockade carries real immunologic risk</strong> and is not advisable. The most rational near-term strategies are to use ICAM1 within multi-marker biomarker panels to map neurovascular inflammation, to pursue <strong>upstream pathway modulation</strong> (NF-κB, JAK/STAT, NLRP3, Nrf2, AMPK), and to evaluate <strong>ICAM1-guided targeted delivery</strong> of therapeutic cargo to inflamed cerebral endothelium in validated AD model systems.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ICAM1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

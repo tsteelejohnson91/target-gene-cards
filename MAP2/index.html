@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAP2 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-accent: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    background: var(--danger-light);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--danger);
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    font-size: 0.93rem;
+    margin-bottom: 0;
+    color: #7f1d1d;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    border-left: 4px solid var(--danger);
+    background: var(--danger-light);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    border-left: 4px solid var(--positive);
+    background: var(--positive-light);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    border-left: 4px solid var(--blue-accent);
+    background: var(--blue-light);
+  }
+  .card-blue h3 { color: var(--blue-accent); }
+
+  .card-warning {
+    border-left: 4px solid var(--warning);
+    background: var(--warning-light);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    border-left: 4px solid var(--neutral-text);
+    background: var(--neutral-bg);
+  }
+  .card-slate h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--mid);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #ffffff;
+  }
+
+  .verdict h2 {
+    color: #c4b5fd;
+    border-bottom-color: rgba(196,181,253,0.4);
+    margin-bottom: 16px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+    font-size: 0.97rem;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MAP2 | Microtubule-Associated Protein 2</span>
+    <span class="chip chip-danger">⚠ Indirect target — no direct AD therapy demonstrated</span>
+  </div>
+  <h1>MAP2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Scope Caveat</div>
+      <p>MAP2 is <em>not</em> established as a direct, validated AD drug target. The evidence positions it as a downstream structural biomarker and pharmacodynamic endpoint. No MAP2-specific agonist, inhibitor, gene therapy, or MAP2-modifying clinical treatment independently alters AD disease progression in the supplied evidence.</p>
+    </div>
+
+    <p>MAP2 (microtubule-associated protein 2) is a dendritic cytoskeletal protein and neuronal structural marker with broad relevance to Alzheimer's disease (AD) through its roles in dendritic integrity, microtubule stability, neurite outgrowth, synaptic plasticity, neuronal maturation, and neuronal survival. Across AD and AD-adjacent studies, MAP2 is repeatedly used to assess whether neurons retain or recover dendritic architecture under conditions involving amyloid-β (Aβ), tau hyperphosphorylation, oxidative stress, mitochondrial dysfunction, neuroinflammation, insulin/metabolic dysfunction, impaired proteostasis, and synaptic degeneration.</p>
+
+    <p>Interventions that improve AD-like pathology — including DAPK1 degradation, insulin/AKT/GSK-3β modulation, BDNF enhancement, Nrf2 activation, cPLA2 inhibition, ghrelin-mediated autophagy activation, exercise, anti-inflammatory treatments, antioxidant therapies, stem-cell/neuroregenerative strategies, and metabolic rescue — frequently preserve, restore, or modulate MAP2-positive dendrites or MAP2 expression. MAP2's therapeutic relevance is therefore indirect but important: its preservation may help maintain synaptic connectivity and cognitive function, but the most actionable targets remain upstream regulators of dendritic injury.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT PLAN (counting nodes to stay ≤16):
+        Panel A (Upstream Stressors) — top row: 3 nodes
+        Panel B (Signaling Convergence) — center: 2 branch nodes → shared MAP2 node
+        Panel C (MAP2 Outcomes) — 3 outcome nodes
+        Panel D (Therapeutic Rescue) — 3 intervention nodes
+        + 1 shared convergence output node
+        Total: 3+2+1+3+3 = 12 nodes. Well within limit.
+      -->
+      <svg viewBox="0 0 920 510" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MAP2 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream AD Stressors -->
+        <rect x="16" y="16" width="260" height="340" rx="12" fill="rgba(153,27,27,0.06)" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="26" y="35" font-family="Arial" font-size="9" font-weight="bold" fill="#991b1b" letter-spacing="0.1em">A · UPSTREAM STRESSORS</text>
+
+        <!-- Node A1: Aβ Toxicity -->
+        <rect x="40" y="52" width="148" height="46" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="114" y="71" font-family="Arial" font-size="11" font-weight="bold" fill="#991b1b" text-anchor="middle">Aβ Toxicity</text>
+        <text x="114" y="86" font-family="Arial" font-size="10" fill="#7f1d1d" text-anchor="middle">Amyloid burden</text>
+
+        <!-- Node A2: Tau Hyperphosphorylation -->
+        <rect x="40" y="122" width="148" height="46" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="114" y="141" font-family="Arial" font-size="11" font-weight="bold" fill="#991b1b" text-anchor="middle">Tau Hyperphospho-</text>
+        <text x="114" y="157" font-family="Arial" font-size="11" font-weight="bold" fill="#991b1b" text-anchor="middle">rylation / GSK-3β</text>
+
+        <!-- Node A3: Neuroinflammation -->
+        <rect x="40" y="192" width="148" height="46" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="114" y="211" font-family="Arial" font-size="11" font-weight="bold" fill="#991b1b" text-anchor="middle">Neuroinflammation</text>
+        <text x="114" y="227" font-family="Arial" font-size="10" fill="#7f1d1d" text-anchor="middle">TNF-α, IL-1β, NF-κB</text>
+
+        <!-- Node A4: Oxidative / Metabolic Stress -->
+        <rect x="40" y="262" width="148" height="46" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="114" y="281" font-family="Arial" font-size="11" font-weight="bold" fill="#991b1b" text-anchor="middle">Oxidative / Metabolic</text>
+        <text x="114" y="297" font-family="Arial" font-size="10" fill="#7f1d1d" text-anchor="middle">Stress &amp; Mito. Dysfxn.</text>
+
+        <!-- PANEL B: Signaling Convergence -->
+        <rect x="298" y="16" width="240" height="340" rx="12" fill="rgba(59,31,110,0.06)" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="308" y="35" font-family="Arial" font-size="9" font-weight="bold" fill="#3b1f6e" letter-spacing="0.1em">B · SIGNALING AXES</text>
+
+        <!-- Node B1: AKT/Insulin Pathway -->
+        <rect x="316" y="52" width="148" height="46" rx="8" fill="#ede8f9" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="390" y="71" font-family="Arial" font-size="11" font-weight="bold" fill="#3b1f6e" text-anchor="middle">AKT / Insulin /</text>
+        <text x="390" y="87" font-family="Arial" font-size="11" font-weight="bold" fill="#3b1f6e" text-anchor="middle">Wnt–β-catenin</text>
+
+        <!-- Node B2: Nrf2 / Antioxidant -->
+        <rect x="316" y="122" width="148" height="46" rx="8" fill="#ede8f9" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="390" y="141" font-family="Arial" font-size="11" font-weight="bold" fill="#3b1f6e" text-anchor="middle">Nrf2 / HO-1</text>
+        <text x="390" y="157" font-family="Arial" font-size="10" fill="#3b1f6e" text-anchor="middle">Antioxidant defense</text>
+
+        <!-- Node B3: BDNF / CREB / Neurotrophic -->
+        <rect x="316" y="192" width="148" height="46" rx="8" fill="#ede8f9" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="390" y="211" font-family="Arial" font-size="11" font-weight="bold" fill="#3b1f6e" text-anchor="middle">BDNF / CREB</text>
+        <text x="390" y="227" font-family="Arial" font-size="10" fill="#3b1f6e" text-anchor="middle">Neurotrophic signaling</text>
+
+        <!-- Node B4: Autophagy / Proteostasis -->
+        <rect x="316" y="262" width="148" height="46" rx="8" fill="#ede8f9" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="390" y="281" font-family="Arial" font-size="11" font-weight="bold" fill="#3b1f6e" text-anchor="middle">Autophagy /</text>
+        <text x="390" y="297" font-family="Arial" font-size="10" fill="#3b1f6e" text-anchor="middle">Proteostasis (DAPK1)</text>
+
+        <!-- PANEL C: MAP2 Node + Outcomes -->
+        <rect x="560" y="16" width="340" height="480" rx="12" fill="rgba(15,118,110,0.05)" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="570" y="35" font-family="Arial" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="0.1em">C · MAP2 STATUS &amp; OUTCOMES</text>
+
+        <!-- Node C1: MAP2 — central node -->
+        <rect x="626" y="52" width="202" height="56" rx="10" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+        <text x="727" y="76" font-family="Arial" font-size="13" font-weight="bold" fill="#0f766e" text-anchor="middle">MAP2</text>
+        <text x="727" y="95" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">Dendritic microtubule marker</text>
+
+        <!-- Node C2: Dendritic Integrity -->
+        <rect x="580" y="158" width="148" height="46" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="654" y="177" font-family="Arial" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Dendritic Integrity</text>
+        <text x="654" y="193" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">&amp; Neurite Length</text>
+
+        <!-- Node C3: Synaptic Connectivity -->
+        <rect x="748" y="158" width="136" height="46" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="816" y="177" font-family="Arial" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Synaptic</text>
+        <text x="816" y="193" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">Connectivity</text>
+
+        <!-- Node C4: Neuronal Survival -->
+        <rect x="580" y="252" width="148" height="46" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="654" y="271" font-family="Arial" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Neuronal Survival</text>
+        <text x="654" y="287" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">&amp; Maturation</text>
+
+        <!-- Node C5: Cognitive Function -->
+        <rect x="748" y="252" width="136" height="46" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="816" y="271" font-family="Arial" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Cognitive</text>
+        <text x="816" y="287" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">Function</text>
+
+        <!-- Node C6: PD Biomarker endpoint -->
+        <rect x="630" y="356" width="190" height="46" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="725" y="375" font-family="Arial" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Pharmacodynamic</text>
+        <text x="725" y="391" font-family="Arial" font-size="10" fill="#134e4a" text-anchor="middle">Biomarker Endpoint</text>
+
+        <!-- Node C7: iPSC / Model Validation -->
+        <rect x="630" y="428" width="190" height="46" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="725" y="447" font-family="Arial" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">iPSC / Organoid</text>
+        <text x="725" y="463" font-family="Arial" font-size="10" fill="#1e40af" text-anchor="middle">Model Validation</text>
+
+        <!-- ===== ARROWS ===== -->
+
+        <!-- Panel A → Panel B (stressor nodes → signaling nodes via right edge A → left edge B) -->
+        <!-- A1 → B1 -->
+        <line x1="188" y1="75" x2="316" y2="75" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- A2 → B1 (elbow: right from A2, up slightly, across to B1) -->
+        <polyline points="188,145 254,145 254,75 316,75" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- A3 → B2 (elbow) -->
+        <polyline points="188,215 254,215 254,145 316,145" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- A4 → B2 (elbow) -->
+        <polyline points="188,285 254,285 254,145 316,145" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B → MAP2 central node (B nodes → C1) -->
+        <!-- B1 right → C1 left -->
+        <line x1="464" y1="75" x2="626" y2="75" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B2 right → C1 (elbow) -->
+        <polyline points="464,145 534,145 534,80 626,80" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B3 right → C1 (elbow) -->
+        <polyline points="464,215 534,215 534,84 626,84" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B4 right → C1 (elbow) -->
+        <polyline points="464,285 534,285 534,88 626,88" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- MAP2 → C2 Dendritic Integrity -->
+        <polyline points="654,108 654,158" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- MAP2 → C3 Synaptic -->
+        <polyline points="800,108 800,158" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C2 → C4 Neuronal Survival -->
+        <line x1="654" y1="204" x2="654" y2="252" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- C3 → C5 Cognitive -->
+        <line x1="816" y1="204" x2="816" y2="252" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C4 + C5 converge → C6 PD Biomarker (elbows meeting at y=330) -->
+        <polyline points="654,298 654,330 725,330 725,356" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <polyline points="816,298 816,330 725,330 725,356" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+
+        <!-- C6 → C7 iPSC -->
+        <line x1="725" y1="402" x2="725" y2="428" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Stressors:</strong> Four major AD pathological drivers (Aβ toxicity, tau hyperphosphorylation/GSK-3β, neuroinflammation, oxidative/metabolic stress) converge onto signaling pathways.
+        <strong>Panel B — Signaling Axes:</strong> Four protective/pathological signaling branches (AKT/Insulin/Wnt–β-catenin, Nrf2/HO-1 antioxidant defense, BDNF/CREB neurotrophic signaling, Autophagy/Proteostasis) are modulated by upstream stressors and feed into MAP2 status.
+        <strong>Panel C — MAP2 Status &amp; Outcomes:</strong> MAP2 (central node) fans out into two parallel sub-cascades — dendritic integrity/neurite length and synaptic connectivity — which converge onto neuronal survival and cognitive function, feeding downstream into MAP2 as a pharmacodynamic biomarker endpoint and iPSC/organoid model validation platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>MAP2 as Structural Marker</h3>
+        Reduced MAP2 or shortened MAP2-positive neurites commonly indicates dendritic degeneration, neuronal injury, impaired maturation, or synaptic compromise. Preserved or increased MAP2 often accompanies improved memory, neuronal survival, synaptic protein restoration, and reduced AD-like pathology.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Aβ &amp; Tau Intersection</h3>
+        Aβ exposure reduces neurite length, dendritic complexity, and MAP2 expression in neuronal cultures and AD models. MAP2 and tau are both microtubule-associated proteins; MAP2 preservation frequently co-occurs with reduced phosphorylated tau, suggesting coordinated cytoskeletal protection.
+      </div>
+
+      <div class="card card-accent">
+        <h3>GSK-3β / AKT / Wnt Axis</h3>
+        Interventions that inhibit GSK-3β, activate AKT, restore Wnt/β-catenin signaling, or increase inhibitory GSK-3β Ser9 phosphorylation consistently reduce tau-related pathology and improve MAP2-associated neurite or dendritic structure — a recurring pharmacologically tractable axis.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neuroinflammation Damages MAP2 Compartments</h3>
+        Microglial and astrocytic inflammatory states, TNF-α, IL-1β, IL-6, inflammasome activation, and NF-κB signaling are repeatedly associated with reduced MAP2, dendritic injury, synaptic loss, and cognitive impairment. Anti-inflammatory interventions often restore MAP2 or protect MAP2-positive neurons.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Oxidative &amp; Metabolic Stress</h3>
+        Methylglyoxal, diabetes-like metabolic dysfunction, mitochondrial fragmentation, impaired mitophagy, hypoxia/ischemia, and ROS all reduce MAP2 or disrupt MAP2-positive structures. Nrf2/HO-1 activation, improved mitochondrial biogenesis, and insulin signaling rescue are associated with MAP2 preservation.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Proteostasis &amp; Autophagy</h3>
+        DAPK1 degradation by PROTAC, Aβ phosphorylation-dependent endolysosomal sorting, autophagy restoration, and RNA/translation control of MAP2 protein levels are relevant to MAP2-defined neuronal rescue. Early AD-like models may show MAP2 protein loss without corresponding mRNA changes, indicating post-transcriptional regulation.
+      </div>
+
+      <div class="card card-blue">
+        <h3>iPSC &amp; Model Validation</h3>
+        MAP2 is used to confirm neuronal identity, dendritic maturation, and experimental suitability in iPSC-derived cortical neurons, induced neurons from AD patient fibroblasts, neural stem-cell models, organoids, and differentiated neuronal cultures — making it a critical quality-control marker for human-relevant platforms.
+      </div>
+
+      <div class="card card-slate">
+        <h3>No Direct AD Drug Target</h3>
+        The supplied evidence does not demonstrate a MAP2-specific agonist, inhibitor, gene therapy, or direct MAP2-modifying AD treatment. MAP2 is best supported as a downstream structural endpoint of therapies targeting amyloid, tau, inflammation, metabolism, mitochondria, autophagy, and neurotrophic signaling.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><strong>Treat MAP2 as a high-value pharmacodynamic biomarker.</strong> MAP2 immunostaining, MAP2-positive neurite length, dendritic complexity, MAP2 protein abundance, and MAP2 localization can assess whether candidate therapies preserve dendritic architecture and neuronal integrity in AD models.</div>
+      </li>
+      <li>
+        <div><strong>Pair MAP2 with complementary AD endpoints.</strong> MAP2 should be interpreted alongside Aβ burden, p-tau/tau, synaptic markers (PSD95, synaptophysin, SYN1, SNAP25, GAP43), neurotrophic markers (BDNF/NGF), neuronal markers (NeuN/TUJ1), inflammatory markers, mitochondrial markers, and cognitive or electrophysiological outcomes.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize upstream therapeutic pathways that preserve MAP2-positive dendrites.</strong> The most evidence-supported strategies include targeting DAPK1, GSK-3β/tau phosphorylation, cPLA2 inflammatory lipid signaling, insulin/AKT signaling, Nrf2 antioxidant pathways, BDNF/CREB signaling, Wnt/β-catenin signaling, autophagy/endolysosomal dysfunction, mitochondrial biogenesis, neuroinflammation, and metabolic/glycation stress.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate dendritic rescue rather than assuming "more MAP2 is always better."</strong> MAP2 changes can vary by brain region, disease stage, cell type, assay type, and protein versus mRNA measurement. Increased MAP2 often indicates repair or preservation, but some studies show complex or ambiguous changes requiring careful interpretation.</div>
+      </li>
+      <li>
+        <div><strong>Investigate MAP2 regulation as a secondary therapeutic hypothesis.</strong> Future work should test whether modifying MAP2 phosphorylation, stability, localization, degradation, mRNA translation, or MAP2–tau interactions causally protects dendrites in AD models, as direct causality remains insufficiently proven.</div>
+      </li>
+      <li>
+        <div><strong>Apply MAP2 in human-relevant AD platforms.</strong> MAP2-positive iPSC-derived neurons, induced neurons, organoids, and neural stem-cell systems are valuable for testing how Aβ, tau, inflammation, metabolic stress, proteostasis defects, and candidate therapies affect dendritic integrity.</div>
+      </li>
+      <li>
+        <div><strong>Avoid conflating unrelated "MAP2" terms.</strong> Some records use MAP2 to mean methionine aminopeptidase 2, modified atmosphere packaging, mannose-binding lectin-associated protein 2, or parasite PfMAP2. These are not neuronal microtubule-associated protein 2 and should not be used to infer AD relevance.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>Overall Assessment —</strong> MAP2 is best framed as a <strong>dendritic cytoskeletal resilience marker</strong> and downstream mediator of neuronal structural health in Alzheimer's disease. It is not an established direct drug target, but rather a <strong>high-value pharmacodynamic endpoint</strong> and mechanistic readout that reflects the success or failure of upstream therapeutic interventions. The breadth of evidence — spanning amyloid, tau, neuroinflammation, oxidative/metabolic stress, autophagy, proteostasis, and neurotrophic signaling — confirms that <strong>preserving MAP2-positive dendritic architecture is a meaningful therapeutic goal</strong>. The most actionable immediate strategy is to use MAP2 as a structural benchmark when testing upstream regulators, particularly <strong>GSK-3β/AKT/Wnt, BDNF/CREB, Nrf2, and DAPK1 pathways</strong>. Direct MAP2-targeted therapy remains hypothetical and requires further mechanistic validation in human-relevant disease models.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MAP2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

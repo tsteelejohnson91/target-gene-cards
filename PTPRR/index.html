@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTPRR — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.45);
+    border: 1px solid rgba(255,160,160,0.35);
+    color: #ffd4d4;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #ffffff;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.94rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card p { margin: 0; font-size: 0.91rem; line-height: 1.65; color: var(--text); }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  .card-blue { background: #eff6ff; border-color: #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: item;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .takeaway-list li::before {
+    content: counter(item);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .verdict p { color: rgba(255,255,255,0.92); margin: 0; }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PTPRR &nbsp;|&nbsp; Protein Tyrosine Phosphatase Receptor Type R</span>
+    <span class="chip chip-danger">⚠ Evidence gap — no direct AD validation</span>
+  </div>
+  <h1>PTPRR &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat</strong>
+      PTPRR is <em>not</em> established as a direct Alzheimer's disease gene, biomarker, pathology driver, or validated therapeutic target. All evidence is mechanistic and inferential; no direct Alzheimer's patient data or in-vivo Alzheimer's model validation is available from the supplied text.
+    </div>
+
+    <p>PTPRR is a neuronal and brain-enriched protein tyrosine phosphatase whose most consistent Alzheimer's-relevant function is regulation of MAPK-family signaling — principally ERK1/2, p38α, JNK-linked pathways, and ERK5. Its isoforms (PTP-SL, PTPBR7, and others) use kinase-interaction motifs (KIMs) to bind MAPKs, dephosphorylate regulatory tyrosine residues, alter MAPK subcellular localization, and modulate the intensity and timing of kinase activity.</p>
+
+    <p>These mechanisms overlap substantially with established Alzheimer's disease processes: kinase/phosphatase imbalance, tau-relevant signaling cascades, synaptic dysfunction, memory impairment, oxidative stress, neuroinflammation, calcium dysregulation, endosomal/Golgi trafficking defects, amyloid-associated neuronal stress, and altered synaptic plasticity. Nevertheless, the supplied evidence does not include direct Alzheimer's patient data, Alzheimer's animal-model validation, or proof that PTPRR modulation alters amyloid burden, tau hyperphosphorylation, cognition, neuronal survival, or microglial pathology in vivo.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:0 auto;" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- DEFS -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: Upstream Regulators & PTPRR ===== -->
+          <rect x="10" y="10" width="230" height="460" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="125" y="31" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">A · UPSTREAM &amp; PTPRR</text>
+
+          <!-- Oxidative Stress -->
+          <rect x="50" y="45" width="150" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="125" y="61" text-anchor="middle" fill="#1a3a5c" font-weight="600">Oxidative Stress /</text>
+          <text x="125" y="74" text-anchor="middle" fill="#1a3a5c">AgNP Toxicity</text>
+
+          <!-- Arrow down -->
+          <line x1="125" y1="83" x2="125" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- PTPRR central node -->
+          <rect x="38" y="112" width="174" height="40" rx="8" fill="#1a3a5c" stroke="#0a1e30" stroke-width="1.5"/>
+          <text x="125" y="128" text-anchor="middle" fill="#ffffff" font-weight="700" font-size="12">PTPRR</text>
+          <text x="125" y="144" text-anchor="middle" fill="#c7dff7" font-size="10">(PTP-SL / PTPBR7)</text>
+
+          <!-- Arrow down to KIM -->
+          <line x1="125" y1="152" x2="125" y2="180" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- KIM node -->
+          <rect x="50" y="182" width="150" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="125" y="197" text-anchor="middle" fill="#1a3a5c" font-weight="600">KIM-MAPK Binding</text>
+          <text x="125" y="210" text-anchor="middle" fill="#1a3a5c">&amp; Dephosphorylation</text>
+
+          <!-- Arrow down to PKA node -->
+          <line x1="125" y1="220" x2="125" y2="248" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- PKA/cAMP node -->
+          <rect x="50" y="250" width="150" height="38" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="125" y="265" text-anchor="middle" fill="#7c3406" font-weight="600">PKA Ser231 Phosph.</text>
+          <text x="125" y="278" text-anchor="middle" fill="#7c3406">Releases MAPK</text>
+
+          <!-- Arrow down to Epigenetic node -->
+          <line x1="125" y1="288" x2="125" y2="316" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Epigenetic silencing -->
+          <rect x="50" y="318" width="150" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="125" y="333" text-anchor="middle" fill="#1a3a5c" font-weight="600">Epigenetic Silencing</text>
+          <text x="125" y="346" text-anchor="middle" fill="#1a3a5c">Methylation / miRNA</text>
+
+          <!-- Isoform note -->
+          <rect x="38" y="375" width="174" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1"/>
+          <text x="125" y="390" text-anchor="middle" fill="#1a3a5c" font-weight="600">Isoform Localization</text>
+          <text x="125" y="403" text-anchor="middle" fill="#475569">Golgi / Endosome / Vesicle</text>
+
+          <!-- ===== PANEL B: MAPK Branching ===== -->
+          <rect x="258" y="10" width="290" height="460" rx="12" fill="#e8f2fb" fill-opacity="0.35" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="403" y="31" text-anchor="middle" font-weight="700" font-size="10" fill="#1a3a5c" letter-spacing="1">B · MAPK SIGNALING BRANCHES</text>
+
+          <!-- ERK1/2 branch label -->
+          <text x="325" y="55" text-anchor="middle" font-size="9.5" fill="#2e6da4" font-weight="700">ERK1/2 Branch</text>
+
+          <!-- ERK1/2 node -->
+          <rect x="270" y="62" width="110" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="325" y="77" text-anchor="middle" fill="#1a3a5c" font-weight="600">ERK1/2</text>
+          <text x="325" y="91" text-anchor="middle" fill="#475569">Cytoplasmic retention</text>
+
+          <!-- ERK5 branch label -->
+          <text x="487" y="55" text-anchor="middle" font-size="9.5" fill="#0f766e" font-weight="700">ERK5 / p38 Branch</text>
+
+          <!-- ERK5/p38 node -->
+          <rect x="432" y="62" width="100" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="482" y="77" text-anchor="middle" fill="#0f5a54" font-weight="600">ERK5 / p38α</text>
+          <text x="482" y="91" text-anchor="middle" fill="#475569">Nuclear translocation</text>
+
+          <!-- Arrow: ERK1/2 down -->
+          <line x1="325" y1="98" x2="325" y2="128" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Arrow: ERK5/p38 down -->
+          <line x1="482" y1="98" x2="482" y2="128" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- RAS/ERK suppression -->
+          <rect x="270" y="130" width="110" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="325" y="145" text-anchor="middle" fill="#1a3a5c" font-weight="600">RAS/ERK</text>
+          <text x="325" y="159" text-anchor="middle" fill="#1a3a5c">Activation Suppressed</text>
+
+          <!-- JNK -->
+          <rect x="432" y="130" width="100" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="482" y="145" text-anchor="middle" fill="#0f5a54" font-weight="600">JNK Pathway</text>
+          <text x="482" y="159" text-anchor="middle" fill="#475569">Modulated</text>
+
+          <!-- Arrow ERK1/2 down to AMPAR -->
+          <line x1="325" y1="166" x2="325" y2="196" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Arrow ERK5 down to AMPAR -->
+          <line x1="482" y1="166" x2="482" y2="196" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- AMPAR phosphorylation -->
+          <rect x="270" y="198" width="110" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="325" y="213" text-anchor="middle" fill="#1a3a5c" font-weight="600">AMPAR Phosph.</text>
+          <text x="325" y="227" text-anchor="middle" fill="#1a3a5c">&amp; Endocytosis</text>
+
+          <!-- Tau phosphorylation -->
+          <rect x="432" y="198" width="100" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="482" y="213" text-anchor="middle" fill="#8b1a1a" font-weight="600">Tau Phosph.</text>
+          <text x="482" y="227" text-anchor="middle" fill="#8b1a1a">Networks</text>
+
+          <!-- Converge arrows to LTD node -->
+          <line x1="325" y1="234" x2="325" y2="274" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="482" y1="234" x2="482" y2="260" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="482" y1="260" x2="380" y2="260" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="380" y1="260" x2="380" y2="274" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- LTD / Plasticity -->
+          <rect x="290" y="276" width="175" height="36" rx="7" fill="#1a3a5c" stroke="#0a1e30" stroke-width="1.5"/>
+          <text x="377" y="291" text-anchor="middle" fill="#ffffff" font-weight="600">Cerebellar LTD /</text>
+          <text x="377" y="305" text-anchor="middle" fill="#c7dff7">Synaptic Plasticity</text>
+
+          <!-- Arrow down to memory -->
+          <line x1="377" y1="312" x2="377" y2="342" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Memory / Cognitive node -->
+          <rect x="290" y="344" width="175" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="377" y="359" text-anchor="middle" fill="#1a3a5c" font-weight="600">Memory &amp; Cognition</text>
+          <text x="375" y="373" text-anchor="middle" fill="#475569">Novel object recognition</text>
+
+          <!-- Arrow to balance node -->
+          <line x1="377" y1="380" x2="377" y2="412" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Signaling balance node -->
+          <rect x="290" y="414" width="175" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+          <text x="377" y="429" text-anchor="middle" fill="#7c3406" font-weight="600">Signaling Balance</text>
+          <text x="377" y="443" text-anchor="middle" fill="#7c3406">Context-dependent outcome</text>
+
+          <!-- ===== PANEL C: Downstream AD-relevant outcomes ===== -->
+          <rect x="566" y="10" width="324" height="460" rx="12" fill="#fdf0f0" fill-opacity="0.45" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="728" y="31" text-anchor="middle" font-weight="700" font-size="10" fill="#8b1a1a" letter-spacing="1">C · AD-RELEVANT OUTCOMES</text>
+
+          <!-- Neuroinflammation -->
+          <rect x="584" y="44" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="649" y="59" text-anchor="middle" fill="#8b1a1a" font-weight="600">Neuroinflammation</text>
+          <text x="649" y="73" text-anchor="middle" fill="#475569">p38 / JNK axis</text>
+
+          <!-- Calcium dysregulation -->
+          <rect x="730" y="44" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="795" y="59" text-anchor="middle" fill="#8b1a1a" font-weight="600">Ca²⁺ Dysregulation</text>
+          <text x="795" y="73" text-anchor="middle" fill="#475569">Homeostasis disrupted</text>
+
+          <!-- Arrows from panel B → panel C: route through right gutter -->
+          <!-- Arrow: Tau phosph to Neuroinflam — elbow route via gutter -->
+          <polyline points="532,216 555,216 555,62 584,62" fill="none" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Amyloid / PSEN node -->
+          <rect x="584" y="108" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="649" y="123" text-anchor="middle" fill="#8b1a1a" font-weight="600">β-Amyloid / PSEN</text>
+          <text x="649" y="137" text-anchor="middle" fill="#475569">↓ PSEN1/PSEN2</text>
+
+          <!-- Oxidative modification -->
+          <rect x="730" y="108" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="795" y="123" text-anchor="middle" fill="#8b1a1a" font-weight="600">Catalytic Cys Ox.</text>
+          <text x="795" y="137" text-anchor="middle" fill="#475569">PTPRR inactivation</text>
+
+          <!-- Arrows down within panel C -->
+          <line x1="649" y1="80" x2="649" y2="108" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="795" y1="80" x2="795" y2="108" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Synaptic marker loss -->
+          <rect x="584" y="172" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="649" y="187" text-anchor="middle" fill="#8b1a1a" font-weight="600">Synaptic Marker</text>
+          <text x="649" y="201" text-anchor="middle" fill="#475569">Loss / Presynaptic ↓</text>
+
+          <!-- Trafficking defects -->
+          <rect x="730" y="172" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="795" y="187" text-anchor="middle" fill="#8b1a1a" font-weight="600">Endosomal/Golgi</text>
+          <text x="795" y="201" text-anchor="middle" fill="#475569">Trafficking Defects</text>
+
+          <line x1="649" y1="144" x2="649" y2="172" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="795" y1="144" x2="795" y2="172" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Neuronal apoptosis / survival -->
+          <rect x="584" y="236" width="130" height="36" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="649" y="251" text-anchor="middle" fill="#8b1a1a" font-weight="600">Neuronal Apoptosis</text>
+          <text x="649" y="265" text-anchor="middle" fill="#475569">DG stress model</text>
+
+          <!-- GADD45a -->
+          <rect x="730" y="236" width="130" height="36" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+          <text x="795" y="251" text-anchor="middle" fill="#7c3406" font-weight="600">GADD45α ↑</text>
+          <text x="795" y="265" text-anchor="middle" fill="#475569">Stress / DNA damage</text>
+
+          <line x1="649" y1="208" x2="649" y2="236" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="795" y1="208" x2="795" y2="236" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Converge to AD Vulnerability -->
+          <line x1="649" y1="272" x2="649" y2="308" stroke="#8b1a1a" stroke-width="1.4"/>
+          <line x1="795" y1="272" x2="795" y2="298" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="795" y1="298" x2="728" y2="298" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="728" y1="298" x2="728" y2="308" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- AD Vulnerability box -->
+          <rect x="614" y="310" width="228" height="40" rx="8" fill="#8b1a1a" stroke="#5a0f0f" stroke-width="1.5"/>
+          <text x="728" y="326" text-anchor="middle" fill="#ffffff" font-weight="700" font-size="12">AD-like Vulnerability</text>
+          <text x="728" y="343" text-anchor="middle" fill="#ffd4d4" font-size="10">Mechanistic convergence (inferential)</text>
+
+          <!-- Therapeutic node -->
+          <line x1="728" y1="350" x2="728" y2="388" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <rect x="614" y="390" width="228" height="40" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="728" y="405" text-anchor="middle" fill="#0f766e" font-weight="700">Structural / Inhibitor</text>
+          <text x="728" y="420" text-anchor="middle" fill="#0f5a54">Crystal structure solved; scaffolds ID'd</text>
+
+          <!-- Inter-panel connector: Panel A PTPRR → Panel B ERK1/2 (straight horizontal, in gutter) -->
+          <line x1="212" y1="132" x2="270" y2="80" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel A Isoform → Panel C trafficking (elbow via bottom gutter) -->
+          <polyline points="212,394 240,394 240,460 728,460 728,430" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> Upstream regulatory inputs to PTPRR — oxidative/AgNP toxicity, KIM-mediated MAPK binding and dephosphorylation, PKA-dependent release of MAPKs via Ser231, epigenetic silencing, and isoform-specific compartmentalization. A dashed diagonal connects PTPRR to its primary ERK1/2 target in Panel B. A dashed bottom elbow connects isoform localization to trafficking defects in Panel C.
+        <strong>Panel B (blue, centre):</strong> MAPK signaling branches downstream of PTPRR: the ERK1/2 branch (cytoplasmic retention → RAS/ERK suppression → AMPAR phosphorylation/endocytosis) and the ERK5/p38/JNK branch (nuclear translocation → tau phosphorylation networks) converge at cerebellar LTD/synaptic plasticity, then feed into a context-dependent signaling balance node.
+        <strong>Panel C (red, right):</strong> AD-relevant downstream outcomes — neuroinflammation, calcium dysregulation, β-amyloid/PSEN reduction, catalytic cysteine oxidation, synaptic marker loss, endosomal/Golgi trafficking defects, neuronal apoptosis, and GADD45α elevation — converging to an inferential AD-like vulnerability state. The structural/therapeutic node reflects available crystal structures and early inhibitor scaffolds.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>MAPK/ERK Signaling Brake</h3>
+        <p>Across multiple systems, PTPRR suppresses ERK1/2 phosphorylation, restrains RAS/ERK activation, and modulates p38 and ERK5. This is directly relevant because ERK/p38/MAPK dysregulation underpins Alzheimer's-related neuronal stress, synaptic failure, tau phosphorylation, and inflammatory signaling.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>AgNP Neurotoxicity Model</h3>
+        <p>In neuronal N2a cells exposed to silver nanoparticles, PTPRR expression was reduced alongside increased GADD45α, β-amyloid deposition, decreased PSEN1/PSEN2, calcium-homeostasis disruption, and presynaptic dysfunction — an Alzheimer's-like neurotoxic response, though PTPRR causality remains unproven.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Synaptic Plasticity &amp; Memory</h3>
+        <p>Ptprr-deficient mice show impaired novel object recognition and altered exploratory behavior. In cerebellar LTD studies, PTPRR deficiency elevated basal MAPK activity, disrupted AMPAR phosphorylation/endocytosis, and impaired LTD — linking PTPRR to memory-relevant synaptic mechanisms, albeit not in Alzheimer's models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent Activity</h3>
+        <p>Excessive PTPRR activity can reduce ERK phosphorylation and, in hippocampal dentate gyrus stress models, increase apoptosis and reduce proliferation. PTPRR deficiency, conversely, chronically elevates basal MAPK signaling and impairs plasticity. Alzheimer's targeting requires restoring balance, not simply activating or inhibiting PTPRR.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>cAMP/PKA Intersection &amp; Localization</h3>
+        <p>PTP-SL retains ERK and p38 in the cytoplasm. PKA phosphorylation at Ser231 within the KIM disrupts MAPK binding and permits nuclear translocation, placing PTPRR at a critical cAMP/PKA–MAPK intersection relevant to neuronal survival, plasticity, and degeneration.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Regulatory Sensitivity &amp; Therapeutic Feasibility</h3>
+        <p>PTPRR is subject to epigenetic silencing, promoter methylation, histone acetylation changes, microRNA repression, and catalytic cysteine oxidation — all plausible in Alzheimer's pathogenesis. Human PTPRR crystal structures have been solved and inhibitor scaffolds identified, making selective modulation structurally feasible, though no AD-directed therapy is validated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span><span class="takeaway-lead">Hypothesis-generating target only.</span> Treat PTPRR as a biologically plausible but mechanistically inferential Alzheimer's candidate. No direct human Alzheimer's data or validated in-vivo model evidence exists in the supplied literature.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Prioritize Alzheimer's-specific validation.</span> Measure PTPRR mRNA, protein, isoform abundance, localization, methylation status, oxidation state, and enzymatic activity in vulnerable brain regions — hippocampus, entorhinal cortex, prefrontal cortex — across disease stages and compared with age-matched controls.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Correlate PTPRR with AD readouts.</span> Assess whether PTPRR changes track with phospho-ERK1/2, p38 activation, ERK5 localization, JNK signaling, tau phosphorylation, amyloid burden, PSEN1/PSEN2 expression, calcium dysregulation, synaptic marker loss, AMPAR trafficking, neuroinflammation, and cognitive decline.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Establish directionality in Alzheimer's models.</span> Test whether restoring PTPRR activity protects against excessive MAPK signaling, amyloid-associated toxicity, synaptic dysfunction, or inflammatory stress; and whether inhibiting PTPRR is beneficial in contexts where it suppresses protective ERK/ERK5 survival signaling.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Avoid blunt activation or inhibition strategies.</span> Evidence supports balanced, cell-type-specific, isoform-specific, and compartment-specific modulation. Broad PTPRR agonism or antagonism risks opposing consequences across neuronal subtypes and disease stages.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Explore mechanistically grounded intervention strategies.</span> Candidate approaches include: stabilizing PTPRR catalytic activity under oxidative stress, modulating KIM-dependent ERK/p38 binding, targeting PKA-dependent Ser231 phosphorylation, correcting epigenetic or miRNA-mediated PTPRR suppression, and developing selective small-molecule modulators informed by available crystal structures.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Near-term value: pathway interrogation tool.</span> The strongest immediate research use for PTPRR is as a pathway-modulating candidate in Alzheimer's disease mechanisms involving MAPK/ERK/p38 imbalance, synaptic plasticity failure, oxidative stress, calcium disturbance, and intracellular trafficking dysfunction.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PTPRR in Alzheimer's Disease</span>
+      <p>
+        PTPRR represents a <strong>biologically compelling but mechanistically inferential</strong> candidate in Alzheimer's disease research. Its established role as a <strong>neuronal MAPK/ERK signaling brake</strong> — operating through KIM-mediated dephosphorylation, cytoplasmic sequestration of ERK and p38, PKA-regulated MAPK release, and sensitivity to epigenetic and oxidative regulation — places it at the intersection of multiple Alzheimer's-relevant pathophysiological axes. The convergent evidence from <strong>synaptic plasticity studies, an AgNP neurotoxicity model, and phosphoproteomic signaling data</strong> provides a coherent mechanistic rationale for further investigation. However, the <strong>absence of direct Alzheimer's patient data, validated AD model experiments, or demonstrated PTPRR-specific effects on amyloid, tau, cognition, or neurodegeneration in vivo</strong> means PTPRR cannot currently be classified as a validated therapeutic target. Progressing PTPRR from hypothesis to viable target requires isoform-resolved, compartment-specific, and disease-stage-stratified experimentation in authentic Alzheimer's model systems, guided by the signaling balance principle that <strong>neither blanket activation nor inhibition is likely to be appropriate</strong>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PTPRR &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

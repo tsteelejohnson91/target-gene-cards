@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIBP — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.92rem;
+    opacity: 0.7;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-slate h3 { color: #475569; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.93rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaway-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 12px;
+  }
+
+  .verdict p strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: FIBP &nbsp;|&nbsp; FGF1 Intracellular Binding Protein</span>
+    <span class="chip chip-danger">⚠ Safety: Broad systemic targeting risk</span>
+  </div>
+  <h1>FIBP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat</strong><br>
+      FIBP's established roles in FGF1 signaling, cellular proliferation, development, and tumor biology create meaningful safety concerns for any broad systemic targeting strategy. Cell-type-specific and state-specific approaches are strongly indicated before therapeutic development proceeds.
+    </div>
+
+    <p>FIBP is an emerging Alzheimer's disease-associated gene whose strongest disease-specific evidence supports a <em>protective or inverse-risk relationship</em>: higher FIBP expression — or genetically predicted higher expression — is repeatedly associated with reduced AD risk, while FIBP downregulation is specifically reported in NK cells and T cells within AD brain tissue.</p>
+
+    <p>The most defensible AD mechanism is <em>immune-metabolic regulation</em> rather than a direct amyloid-β or tau mechanism. Across the available literature, FIBP is linked to microglial regulatory genetics, peripheral and brain-infiltrating immune-cell states, cholesterol metabolism, and diagnostic gene signatures. It also carries indirect mechanistic relevance through FGF1 signaling, GSK3β regulation, β-catenin/cyclin D1 signaling, CDK5 complex biology, nuclear/mitochondrial localization, and developmental and cognitive phenotypes.</p>
+
+    <p>As a therapeutic target, FIBP is <strong>promising but early-stage</strong>. Current evidence supports prioritization for experimental validation, not immediate drug development. The most plausible therapeutic direction would be to preserve, restore, or enhance beneficial FIBP-related activity in specific immune or metabolic compartments — especially microglia and infiltrating immune cells — rather than globally inhibiting FIBP.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL LAYOUT (4 panels, left-to-right, top-aligned):
+          Panel A (Upstream/Genetic): x=12, y=12, w=210, h=440  — Genetic evidence
+          Panel B (Immune Context): x=238, y=12, w=210, h=440   — Immune-cell states
+          Panel C (Molecular): x=464, y=12, w=210, h=440        — Molecular pathways
+          Panel D (Outcome/Safety): x=690, y=12, w=198, h=440   — Outcomes & safety
+
+          NODE COUNT PLAN:
+          Panel A: 3 nodes
+          Panel B: 4 nodes
+          Panel C: 4 nodes
+          Panel D: 3 nodes
+          Total: 14 nodes ✓ (≤16)
+        -->
+        <svg viewBox="0 0 900 464" xmlns="http://www.w3.org/2000/svg" width="860" aria-label="FIBP mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-pos" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Genetic Evidence -->
+          <rect x="12" y="12" width="210" height="440" rx="10" ry="10"
+                fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="117" y="32" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A · GENETIC EVIDENCE</text>
+
+          <!-- Node A1: AD GWAS + MR -->
+          <rect x="32" y="44" width="170" height="48" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="117" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">AD GWAS &amp; Mendelian</text>
+          <text x="117" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Randomization Studies</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="117" y1="92" x2="117" y2="112" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A2: FIBP expression -->
+          <rect x="32" y="113" width="170" height="48" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="117" y="132" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Higher FIBP expression</text>
+          <text x="117" y="147" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">→ reduced AD risk</text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="117" y1="161" x2="117" y2="181" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Microglia regulome -->
+          <rect x="32" y="182" width="170" height="48" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="117" y="201" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Microglia Regulome</text>
+          <text x="117" y="216" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">(Nature Genetics 2022)</text>
+
+          <!-- Node A4: Cholesterol / Diagnostic sig -->
+          <rect x="32" y="264" width="170" height="48" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="117" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">8-gene Cholesterol-linked</text>
+          <text x="117" y="298" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e293b">Diagnostic Signature</text>
+
+          <!-- Arrow A3→A4 (gap between 230 and 264) -->
+          <line x1="117" y1="230" x2="117" y2="264" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+
+          <!-- PANEL B: Immune Cell Context -->
+          <rect x="238" y="12" width="210" height="440" rx="10" ry="10"
+                fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="343" y="32" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.1em">B · IMMUNE CELL CONTEXT</text>
+
+          <!-- Node B1: Brain-infiltrating NK/T -->
+          <rect x="258" y="44" width="170" height="48" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="343" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#134e4a">Brain NK &amp; T cells</text>
+          <text x="343" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">(FIBP ↓ in AD tissue)</text>
+
+          <!-- Node B2: Microglia -->
+          <rect x="258" y="116" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="343" y="134" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Microglia &amp; M1</text>
+          <text x="343" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Macrophages</text>
+
+          <!-- Arrow B1→B2 -->
+          <line x1="343" y1="92" x2="343" y2="116" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node B3: Naive B / CD4+ T -->
+          <rect x="258" y="182" width="170" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="343" y="200" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Naive B cells &amp;</text>
+          <text x="343" y="215" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Naive CD4+ T cells</text>
+
+          <!-- Arrow B2→B3 -->
+          <line x1="343" y1="160" x2="343" y2="182" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+          <!-- Node B4: Immune-metabolic dysregulation -->
+          <rect x="258" y="262" width="170" height="48" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="343" y="281" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#134e4a">Immune-metabolic</text>
+          <text x="343" y="296" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Dysregulation in AD</text>
+
+          <!-- Arrow B3→B4 -->
+          <line x1="343" y1="226" x2="343" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+
+          <!-- PANEL C: Molecular Pathways -->
+          <rect x="464" y="12" width="210" height="440" rx="10" ry="10"
+                fill="rgba(180,83,9,0.06)" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="569" y="32" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#92400e" letter-spacing="0.1em">C · MOLECULAR PATHWAYS</text>
+
+          <!-- Node C1: FGF1 Signaling (shared root for branching) -->
+          <rect x="484" y="44" width="170" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="569" y="62" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#78350f">FGF1 Signaling &amp;</text>
+          <text x="569" y="77" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">Proliferation</text>
+
+          <!-- Branch left: C2 GSK3β/tau -->
+          <rect x="484" y="122" width="76" height="52" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.3"/>
+          <text x="522" y="141" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">GSK3β</text>
+          <text x="522" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">Regulation</text>
+          <text x="522" y="168" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b45309">→ tau phosph.</text>
+
+          <!-- Branch right: C3 CDK5 complex -->
+          <rect x="578" y="122" width="76" height="52" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.3"/>
+          <text x="616" y="141" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">CDK5 Complex</text>
+          <text x="616" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">&amp; Neuronal</text>
+          <text x="616" y="168" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b45309">Stress</text>
+
+          <!-- Arrow C1 → C2 (left branch) -->
+          <line x1="522" y1="88" x2="522" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+          <!-- Arrow C1 → C3 (right branch) -->
+          <line x1="616" y1="88" x2="616" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+          <!-- Elbow from C1 left side to C2 -->
+          <!-- Redraw: straight down from C1 mid splits to left column and right column -->
+          <!-- vertical stem from C1 bottom center down to row y=110, then split L/R -->
+          <line x1="569" y1="88" x2="569" y2="110" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="522" y1="110" x2="616" y2="110" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="522" y1="110" x2="522" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+          <line x1="616" y1="110" x2="616" y2="122" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+          <!-- Converge C2+C3 → C4: β-catenin/CycD1 -->
+          <!-- C2 bottom: y=174, C3 bottom: y=174, C4 top: y=208 -->
+          <line x1="522" y1="174" x2="522" y2="196" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="616" y1="174" x2="616" y2="196" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="522" y1="196" x2="616" y2="196" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="569" y1="196" x2="569" y2="208" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+          <!-- Node C4: β-catenin / Cyclin D1 -->
+          <rect x="484" y="208" width="170" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="569" y="226" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">β-catenin / Cyclin D1</text>
+          <text x="569" y="241" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">Signaling</text>
+
+          <!-- Arrow C4 → C5: Cholesterol + Nuclear/Mito localization -->
+          <line x1="569" y1="252" x2="569" y2="272" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+          <!-- Node C5: Nuclear/Mitochondrial -->
+          <rect x="484" y="272" width="170" height="48" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.3"/>
+          <text x="569" y="291" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">Nuclear &amp; Mitochondrial</text>
+          <text x="569" y="306" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#78350f">Localization / Cholesterol</text>
+
+
+          <!-- PANEL D: Outcomes & Safety -->
+          <rect x="690" y="12" width="198" height="440" rx="10" ry="10"
+                fill="rgba(155,28,28,0.06)" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="789" y="32" text-anchor="middle" font-family="Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="0.08em">D · OUTCOMES &amp; SAFETY</text>
+
+          <!-- Node D1: Protective AD activity -->
+          <rect x="708" y="44" width="162" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="789" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#134e4a">Protective Activity</text>
+          <text x="789" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#134e4a">in AD immune compartments</text>
+
+          <!-- Arrow D1 → D2 -->
+          <line x1="789" y1="96" x2="789" y2="126" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node D2: Safety concern -->
+          <rect x="708" y="127" width="162" height="60" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="789" y="147" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#9b1c1c">Safety Concern</text>
+          <text x="789" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#7f1d1d">FGF signaling, proliferation</text>
+          <text x="789" y="177" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#7f1d1d">&amp; tumor biology risks</text>
+
+          <!-- Arrow D2 → D3 -->
+          <line x1="789" y1="187" x2="789" y2="217" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node D3: Therapeutic direction -->
+          <rect x="708" y="218" width="162" height="60" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.3"/>
+          <text x="789" y="238" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a8a">Therapeutic Direction</text>
+          <text x="789" y="253" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e3a8a">Restore/enhance FIBP</text>
+          <text x="789" y="268" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e3a8a">in specific cell states</text>
+
+          <!-- Cross-panel connectors via gutters (right-angle, through empty space) -->
+          <!-- B4 (343,286+24=310 mid) → D1 top: route through bottom gutter of panels -->
+          <!-- B4 bottom: y=310, D1 mid-left: x=708, y=70 — route under panels -->
+          <!-- Use horizontal segment at y=390 through gutters, then up -->
+          <!-- Connector: Panel B (Immune outcome) → Panel D (Protective outcome) -->
+          <!-- B4 right edge: x=428, y=286; D1 left edge: x=708, y=70 -->
+          <!-- Route: B4 right (428,286) → right to gutter x=450 → up to y=70 → right to D1 left (708,70) -->
+          <!-- Check: panel C occupies x=464..674, gutter between B and C: x=428..464 empty -->
+          <!-- Path: B4 right (428,286) → (450,286) → (450,70) → (708,70) — but passes through panel C region y=12..452 at x=464..674, so at y=70 the segment from x=450 to x=708 would pass through panel C at x=464..674. NOT SAFE. -->
+          <!-- Alternative: route BELOW all panels y=458 -->
+          <!-- B4 bottom: y=310. Down from B4-right through gutter: (428,310)→(428,455)→(789,455)→(789,278) — D3 bottom is y=278, so arrive at D3 bottom -->
+          <!-- But we want B4 → D1 (protective). Check if path at y=455 is outside all panels (panels end at y=452). Safe. -->
+          <!-- But this is a very long route for a figure this size. Let's instead just omit cross-panel connectors to keep the figure clean and unambiguous. The panel labels and flow are self-explanatory. -->
+
+          <!-- Instead, add a short note arrow: Panel A node (A3 microglia) cross to Panel B (B1 NK/T) through gutter -->
+          <!-- A3 right: x=202, y=206; B1 left: x=258, y=68 — gutter x=202..238 -->
+          <!-- Straight diagonal: from (202,206) to (258,68) — this passes through no boxes (gutter is empty). Check: gutter is x=202..238, A4 is at x=32..202 y=264..312, B nodes start at x=258. Diagonal in gutter: ok. -->
+          <!-- Actually A3 right center: x=202, y=206; B1 left center: x=258, y=68 -->
+          <!-- Slope check: all intermediate points have x between 202..258 (gutter) and y between 68..206 — no boxes in gutter. SAFE. -->
+          <line x1="202" y1="206" x2="255" y2="71" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel C (C5 cholesterol) → Panel D (D1 protective) — short connector through gutter x=674..690 -->
+          <!-- C5 right: x=654, y=296; D1 left: x=708, y=70 -->
+          <!-- Gutter x=674..690. Route: (654,296)→(674,296)→(674,70)→(708,70) — gutter column is clear. SAFE. -->
+          <polyline points="654,296 676,296 676,70 708,70" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-pos)"/>
+
+          <!-- Validation count: A1,A2,A3,A4=4; B1,B2,B3,B4=4; C1,C2,C3,C4,C5=5; D1,D2,D3=3 → TOTAL=16 ✓ -->
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Genetic Evidence):</strong> AD GWAS and Mendelian randomization studies converge on FIBP, linking higher expression to reduced AD risk and identifying FIBP within the microglia regulome (Nature Genetics 2022) and an 8-gene cholesterol-linked diagnostic signature.
+        <strong>Panel B (Immune Cell Context):</strong> FIBP is downregulated in brain-infiltrating NK and T cells in AD tissue; its expression spans microglia, M1 macrophages, and naive lymphocyte populations, collectively pointing to immune-metabolic dysregulation.
+        <strong>Panel C (Molecular Pathways):</strong> FGF1 signaling branches into parallel GSK3β/tau-phosphorylation and CDK5-neuronal-stress sub-cascades that reconverge into β-catenin/Cyclin D1 signaling and nuclear/mitochondrial localization linked to cholesterol metabolism.
+        <strong>Panel D (Outcomes &amp; Safety):</strong> Net AD-relevant activity is protective; however, FGF signaling and proliferative roles create systemic safety concerns, directing any therapeutic approach toward cell-state-specific restoration rather than global modulation. Dashed cross-panel arrows indicate key mechanistic connections between evidence layers.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Protective Association with AD Risk</h3>
+        <p>Multiple AD-focused multi-omics and Mendelian randomization studies repeatedly associate higher FIBP expression — or genetically predicted higher expression — with <em>reduced</em> AD risk. A 2026 <em>Alzheimer's &amp; Dementia</em> study combining MR, colocalization, single-cell immune eQTL, and AD GWAS data explicitly identified FIBP among genes whose expression is associated with reduced AD risk.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Immune-Cell Downregulation in AD Brain</h3>
+        <p>FIBP is specifically downregulated in NK cells and T cells within AD brain tissue, detected by spatial transcriptomics among brain-infiltrating immune cells. Its expression spans microglia, M1 macrophages, naive B cells, and naive CD4+ T cells — pointing to a role in <em>immune-cell state regulation</em> across multiple compartments relevant to neuroinflammation.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Microglial Regulatory Architecture &amp; Cholesterol</h3>
+        <p>A 2022 Nature Genetics human microglia regulome study identified FIBP as one of three new candidate AD risk genes, directly linking it to microglial regulatory architecture. A 2026 transcriptomic/machine-learning study independently included FIBP in an 8-gene AD diagnostic signature tied to cholesterol metabolism, reinforcing its immune-metabolic relevance.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Kinase Pathway Connections</h3>
+        <p>FIBP may connect indirectly to AD-relevant kinase biology through reported interactions with <strong>GSK3β</strong> and participation in <strong>CDK5-associated complexes</strong>, both of which are central to tau phosphorylation and neuronal stress biology — providing a plausible mechanistic bridge between FIBP's immune context and classical AD pathophysiology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety Concern: Broad Systemic Targeting</h3>
+        <p>FIBP's roles in <strong>FGF1 signaling, cellular proliferation, development, and tumor biology</strong> create meaningful safety risks for any global FIBP inhibition or systemic modulation strategy. The AD-specific evidence does not support inhibition; the directionality consistently favors preservation or enhancement of FIBP-linked protective activity.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Early-Stage Target: Direct Evidence Missing</h3>
+        <p>No supplied study demonstrates that FIBP manipulation changes amyloid deposition, tau pathology, synaptic loss, microglial phenotype, cognition, or neurodegeneration in an AD model. FIBP should be treated as a <em>biomarker and target candidate</em> requiring experimental validation, not an established therapeutic target. Note: "FIB-P" chemotherapy and "Fib/P" cardiac perfusion literature are entirely unrelated and must be excluded from mechanistic conclusions.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <span class="takeaway-num">1</span>
+        <span><strong>Prioritize FIBP for experimental validation</strong> — especially in immune-cell and cholesterol-metabolism contexts — before any therapeutic development decision is made. Current evidence warrants strong prioritization, not immediate drug development.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">2</span>
+        <span><strong>Test microglial phenotype modulation:</strong> determine whether FIBP modulation alters microglial activation states, inflammatory signaling, phagocytosis, lipid handling, ApoE-related pathways, and disease-associated microglia (DAM) phenotypes.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">3</span>
+        <span><strong>Validate across AD-relevant immune compartments:</strong> confirm FIBP expression and function in microglia, infiltrating NK cells, T cells, naive B cells, M1 macrophages, and naive CD4+ T-cell populations identified in the available studies.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">4</span>
+        <span><strong>Explore NK/T-cell restoration:</strong> determine whether restoring FIBP in AD-associated NK/T-cell states reverses immune dysfunction or modifies neuroinflammatory signatures in relevant model systems.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">5</span>
+        <span><strong>Assess cholesterol metabolism effects:</strong> examine whether FIBP affects cholesterol metabolism in microglia and peripheral immune cells in ways relevant to amyloid processing, membrane biology, synaptic resilience, and ApoE-linked AD risk.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">6</span>
+        <span><strong>Investigate GSK3β and CDK5 interactions:</strong> assess FIBP's impact on GSK3β and CDK5 activity in neurons and glia, including downstream effects on tau phosphorylation, cellular stress, mitochondrial function, and aberrant cell-cycle signaling.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">7</span>
+        <span><strong>Do not assume global inhibition is beneficial:</strong> the AD-specific evidence more strongly supports preservation or enhancement of protective FIBP-linked activity. Inhibition strategies run counter to the observed protective directionality.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">8</span>
+        <span><strong>Use cell-type-specific strategies:</strong> given FIBP's roles in FGF signaling, proliferation, development, immune metabolism, and cancer biology, systemic modulation carries unacceptable risk. State-specific and cell-type-specific approaches are essential.</span>
+      </li>
+
+      <li>
+        <span class="takeaway-num">9</span>
+        <span><strong>Exclude unrelated literature:</strong> "FIB-P" chemotherapy regimens and "Fib/P" cardiac perfusion/ventricular fibrillation literature are entirely unrelated to the FIBP gene/protein and must not be incorporated into mechanistic conclusions about Alzheimer's disease.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Synthesis &amp; Verdict</div>
+      <p>
+        <strong>FIBP is one of the more robustly emerging immune-metabolic candidate genes in Alzheimer's disease genetics</strong>, appearing across independent multi-omics, Mendelian randomization, single-cell, spatial transcriptomic, and machine-learning studies with a consistent and striking directionality: <strong>higher expression is protective, and downregulation is observed in AD-affected immune cells</strong>. Its strongest mechanistic footing lies in <strong>microglial regulatory architecture, brain-infiltrating NK and T cell states, and cholesterol-linked diagnostic biology</strong>, rather than direct amyloid or tau pathobiology — though indirect kinase connections via GSK3β and CDK5 are plausible. The principal limitations are the <strong>complete absence of direct AD-model intervention evidence</strong> and the real safety risks posed by FIBP's roles in FGF1 signaling, proliferation, and tumor biology. The recommended posture is <strong>active prioritization for cell-type-specific experimental validation</strong>, with a therapeutic hypothesis focused on restoring or enhancing FIBP-linked protective immune and metabolic functions in defined cellular states — not systemic inhibition.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  FIBP · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCAM — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.30);
+    border: 1px solid rgba(255,180,180,0.40);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent  { background: var(--light);          border-color: var(--mid);    }
+  .card-accent h3  { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger); }
+  .card-danger h3  { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue    { background: var(--blue-light);     border-color: var(--blue-mid); }
+  .card-blue h3    { color: var(--blue-mid); }
+
+  .card-slate   { background: var(--neutral-light);  border-color: var(--neutral); }
+  .card-slate h3   { color: var(--neutral); }
+
+  .card-warning { background: var(--warning-light);  border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+
+  .verdict p {
+    line-height: 1.8;
+    opacity: 0.92;
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: BCAM &nbsp;|&nbsp; Basal Cell Adhesion Molecule / Lutheran Glycoprotein / CD239</span>
+    <span class="chip chip-danger">⚠ Unvalidated AD target — association only</span>
+  </div>
+  <h1>BCAM &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Validation Caveat:</strong> BCAM is <em>not</em> a validated Alzheimer's disease mechanism, biomarker, or therapeutic target. All AD-linked evidence is statistical/associative. Several "BCAM" mentions in the AD literature refer to unrelated acronyms (e.g., Basque Center for Applied Mathematics) and must be excluded from biological interpretation.
+    </div>
+
+    <p>BCAM (basal cell adhesion molecule), also known as the Lutheran glycoprotein (Lu) or CD239, is an emerging but unvalidated Alzheimer's disease-relevant candidate. It is a laminin α5-binding cell-surface adhesion molecule involved in extracellular-matrix interactions, vascular adhesion, erythrocyte biology, cell migration, inflammation-adjacent processes, and cancer progression.</p>
+
+    <p>The strongest direct AD-related evidence is genetic and proteomic association evidence — not mechanistic proof. BCAM appears in proteome-wide association studies and Mendelian randomisation analyses linking circulating BCAM levels to AD risk, and in APOE-region genetic analyses where rare BCAM variants associate with CSF Aβ1-42. No supplied AD-specific text explains how BCAM would affect canonical AD mechanisms such as amyloid-β production, tau phosphorylation, neuroinflammation, or synaptic dysfunction.</p>
+
+    <p>Its relevance is best described as <em>hypothesis-generating</em>: BCAM may warrant follow-up because it appears in AD-associated genetic/proteomic analyses and has plausible biology involving vascular, extracellular-matrix, adhesion, and inflammatory pathways that could intersect with AD pathophysiology.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Established BCAM Biology -->
+          <rect x="10" y="10" width="410" height="480" rx="12" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="26" y="32" font-family="Arial" font-size="9.5" font-weight="700" fill="#2e6da4" letter-spacing="1.5" text-transform="uppercase">A · ESTABLISHED BCAM BIOLOGY</text>
+
+          <!-- Row 1: BCAM/Lu node -->
+          <rect x="130" y="46" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="205" y="65" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#1a3a5c">BCAM / Lu / CD239</text>
+          <text x="205" y="82" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1a3a5c">Cell-surface receptor</text>
+
+          <!-- Laminin α5 -->
+          <rect x="30" y="138" width="138" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="99" y="155" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a3a5c">Laminin α5 binding</text>
+          <text x="99" y="170" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">(ECM interaction)</text>
+
+          <!-- Vascular / erythrocyte -->
+          <rect x="244" y="138" width="148" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="318" y="155" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a3a5c">Vascular &amp; erythrocyte</text>
+          <text x="318" y="170" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">adhesion (cAMP/PKA)</text>
+
+          <!-- Arrow BCAM → Laminin -->
+          <line x1="175" y1="90" x2="120" y2="138" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- Arrow BCAM → Vascular -->
+          <line x1="235" y1="90" x2="282" y2="138" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- ECM / migration -->
+          <rect x="30" y="228" width="138" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="99" y="245" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a3a5c">Cell migration &amp;</text>
+          <text x="99" y="260" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">cytoskeletal signalling</text>
+
+          <!-- Inflammation -->
+          <rect x="244" y="228" width="148" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="318" y="245" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a3a5c">α4β1 integrin / T-cell</text>
+          <text x="318" y="260" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">&amp; macrophage trafficking</text>
+
+          <!-- Arrow Laminin → ECM -->
+          <line x1="99" y1="178" x2="99" y2="228" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- Arrow Vascular → Inflammation -->
+          <line x1="318" y1="178" x2="318" y2="228" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Shared outcome node: Adhesion / tissue remodelling -->
+          <rect x="122" y="320" width="170" height="42" rx="7" fill="#bfdbfe" stroke="#1a3a5c" stroke-width="1.5"/>
+          <text x="207" y="338" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#1a3a5c">Adhesion &amp; tissue</text>
+          <text x="207" y="354" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#1a3a5c">remodelling output</text>
+
+          <!-- Arrow ECM → shared -->
+          <line x1="130" y1="268" x2="170" y2="320" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- Arrow Inflammation → shared -->
+          <line x1="295" y1="268" x2="250" y2="320" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Cancer / sickle cell disease node -->
+          <rect x="60" y="410" width="150" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="135" y="427" text-anchor="middle" font-family="Georgia" font-size="11" fill="#92400e">Cancer invasion &amp;</text>
+          <text x="135" y="443" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#92400e">metastasis models</text>
+
+          <!-- Sickle cell -->
+          <rect x="228" y="410" width="148" height="40" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="302" y="427" text-anchor="middle" font-family="Georgia" font-size="11" fill="#92400e">Sickle cell / PV /</text>
+          <text x="302" y="443" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#92400e">erythrocyte senescence</text>
+
+          <!-- Arrows shared → cancer / sickle -->
+          <line x1="180" y1="362" x2="148" y2="410" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+          <line x1="233" y1="362" x2="270" y2="410" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+
+          <!-- Panel B: AD Association Evidence -->
+          <rect x="436" y="10" width="454" height="480" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="452" y="32" font-family="Arial" font-size="9.5" font-weight="700" fill="#0f766e" letter-spacing="1.5">B · AD ASSOCIATION EVIDENCE &amp; HYPOTHESIS</text>
+
+          <!-- PWAS / MR node -->
+          <rect x="536" y="46" width="200" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="636" y="65" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#064e3b">PWAS / Mendelian</text>
+          <text x="636" y="82" text-anchor="middle" font-family="Georgia" font-size="11" fill="#064e3b">Randomisation signals</text>
+
+          <!-- APOE-region rare variants -->
+          <rect x="450" y="140" width="170" height="42" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="535" y="158" text-anchor="middle" font-family="Georgia" font-size="11" fill="#064e3b">APOE-region rare</text>
+          <text x="535" y="173" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#064e3b">variant association</text>
+
+          <!-- Circulating BCAM protein -->
+          <rect x="644" y="140" width="180" height="42" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="734" y="158" text-anchor="middle" font-family="Georgia" font-size="11" fill="#064e3b">Circulating BCAM</text>
+          <text x="734" y="173" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#064e3b">protein → AD risk</text>
+
+          <!-- Arrows PWAS → two nodes -->
+          <line x1="606" y1="90" x2="556" y2="140" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="666" y1="90" x2="706" y2="140" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- CSF Aβ association -->
+          <rect x="450" y="230" width="170" height="42" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="535" y="248" text-anchor="middle" font-family="Georgia" font-size="11" fill="#064e3b">CSF Aβ1-42 signal</text>
+          <text x="535" y="263" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#064e3b">(ADNI WGS)</text>
+
+          <!-- LD caveat -->
+          <rect x="644" y="230" width="180" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="734" y="248" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">LD confounding with</text>
+          <text x="734" y="263" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#7f1d1d">APOE — unclear</text>
+
+          <!-- Arrows -->
+          <line x1="535" y1="182" x2="535" y2="230" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+          <line x1="734" y1="182" x2="734" y2="230" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+          <!-- Hypothesis node: Neurovascular -->
+          <rect x="520" y="322" width="220" height="44" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.6"/>
+          <text x="630" y="341" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#064e3b">Neurovascular / basement</text>
+          <text x="630" y="358" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#064e3b">membrane hypothesis</text>
+
+          <!-- Arrows → hypothesis -->
+          <line x1="562" y1="272" x2="590" y2="322" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+          <line x1="718" y1="272" x2="672" y2="322" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Unknown: canonical AD mechanisms -->
+          <rect x="460" y="418" width="188" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="554" y="436" text-anchor="middle" font-family="Georgia" font-size="11" fill="#7f1d1d">Amyloid / tau / synapse</text>
+          <text x="554" y="451" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#7f1d1d">links — NOT established</text>
+
+          <!-- Targetability note -->
+          <rect x="664" y="418" width="192" height="42" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="760" y="436" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e3a8a">Antibodies / peptides /</text>
+          <text x="760" y="451" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e3a8a">small-mol. probes exist</text>
+
+          <!-- Arrows hypothesis → bottom nodes -->
+          <line x1="597" y1="366" x2="561" y2="418" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <line x1="668" y1="366" x2="740" y2="418" stroke="#1d4ed8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (left, blue):</strong> Established BCAM biology. BCAM/Lu/CD239 branches into two functional arms: laminin α5 / ECM binding leading to cell migration and cytoskeletal signalling, and vascular/erythrocyte adhesion via cAMP/PKA modulation involving α4β1 integrin and immune-cell trafficking. Both arms converge on a shared adhesion &amp; tissue-remodelling output, with downstream relevance demonstrated in cancer invasion and erythrocyte-disease contexts (dashed; non-AD).
+        <strong>Panel B (right, teal/red):</strong> AD association evidence and emerging hypothesis. Proteome-wide association / Mendelian-randomisation signals branch into APOE-region rare-variant associations (CSF Aβ1-42) and circulating BCAM protein risk signals, tempered by unresolved linkage-disequilibrium confounding with APOE. Both arms converge on a neurovascular/basement-membrane hypothesis (most plausible AD-relevant mechanism). Downstream dashed branches flag two key gaps: no established amyloid/tau/synaptic links (red) and available but context-limited targetability tools (blue).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Statistical AD Association — Multi-Cohort</h3>
+        <p>A 2025 proteome-wide association study identified BCAM alongside APOE as significantly associated with AD risk in both European and African American populations. A separate Mendelian-randomisation analysis found BCAM consistently among proteins linked to AD risk across large plasma-proteomics GWAS resources, though BCAM was not always prioritised after stringent colocalization tests, where GRN and CR1 ranked more strongly.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>APOE-Region Signal — Independent or Confounded?</h3>
+        <p>Rare BCAM variants in ADNI whole-genome sequencing remained significantly associated with CSF Aβ1-42 after adjustment for APOE genotype, suggesting possible AD biomarker relevance beyond the common APOE effect. However, other APOE-region analyses caution that BCAM signals may reflect linkage disequilibrium with APOE rather than an independent causal effect — the key uncertainty remains unresolved.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>No Mechanistic AD Link Established</h3>
+        <p>No supplied AD-specific text explains how BCAM would affect canonical AD mechanisms. There is no direct evidence that BCAM modulates amyloid-β production, amyloid clearance, tau phosphorylation, synaptic dysfunction, neuroinflammation, microglial or astrocyte activation, neuronal death, blood–brain barrier dysfunction, or cognitive decline.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurovascular Biology — Plausible AD Angle</h3>
+        <p>BCAM's established roles in erythrocyte and endothelial adhesion to laminin, modulated by cAMP/PKA signalling, AKAPs, PDE4A, spectrin coupling, and oxidative stress, are not AD evidence per se but suggest possible relevance to cerebral microvascular dysfunction if BCAM is altered in AD-relevant compartments. The neurovascular/basement-membrane axis is the most plausible hypothesis to pursue.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Existing Targetability Tools — Research Use Only</h3>
+        <p>Function-blocking antibodies against BCAM/Lu, BCAM-mimic peptides that inhibit BCAM/LAMA5-mediated metastasis in colorectal cancer models, and small-molecule screening efforts to block Lutheran–laminin interactions in sickle cell disease confirm that BCAM is pharmacologically tractable. These tools could serve as experimental probes in AD models, but therapeutic development should await AD-specific causal validation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety &amp; False-Positive Risks</h3>
+        <p>BCAM expression in red blood cells, endothelial cells, smooth muscle cells, and epithelial cells means systemic BCAM targeting could disrupt normal adhesion, vascular function, hematologic behaviour, and tissue remodelling. Additionally, many "BCAM" mentions in the AD literature are false positives referring to the Basque Center for Applied Mathematics, Breast Cancer Awareness Month, or other unrelated acronyms, and must be excluded from biological interpretation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Classify BCAM as candidate, not target.</strong> The current evidence supports prioritising BCAM for follow-up studies rather than advancing BCAM-directed AD therapy. Treat it as a hypothesis-generating biomarker or target candidate.</div>
+      </li>
+      <li>
+        <div><strong>Resolve APOE independence rigorously.</strong> Future analyses should test whether BCAM associations persist after rigorous adjustment for APOE ε2/ε3/ε4 haplotypes and regional linkage disequilibrium, and whether BCAM variants colocalize with BCAM expression or protein quantitative trait loci and AD outcomes.</div>
+      </li>
+      <li>
+        <div><strong>Determine directionality of effect before selecting strategy.</strong> Existing summaries do not consistently state whether higher or lower genetically predicted BCAM protein levels increase AD risk, nor whether BCAM effects are protective or harmful — this is essential before considering inhibition or activation strategies.</div>
+      </li>
+      <li>
+        <div><strong>Profile BCAM across AD-relevant tissues and cell types.</strong> Priority compartments include brain endothelium, pericytes, vascular smooth muscle, astrocytes, microglia, neurons, choroid plexus, meninges, erythrocytes, monocytes/macrophages, plasma, and CSF.</div>
+      </li>
+      <li>
+        <div><strong>Investigate neurovascular mechanisms first.</strong> Given BCAM's established laminin α5, endothelial, erythrocyte, adhesion, and ECM biology, the most plausible AD-relevant hypothesis is neurovascular/basement-membrane dysfunction rather than a direct amyloid or tau mechanism. Prioritise this axis in functional studies.</div>
+      </li>
+      <li>
+        <div><strong>Test links to core AD pathology in functional models.</strong> Assess whether BCAM modulation affects amyloid-β generation or clearance, tau phosphorylation/spread, neuroinflammation, leukocyte trafficking, blood–brain barrier permeability, cerebral blood flow, capillary stalling, vascular amyloid, neuronal viability, synaptic function, and cognition.</div>
+      </li>
+      <li>
+        <div><strong>Use existing targetability tools cautiously as probes.</strong> Antibodies, peptides, or small molecules that block BCAM–laminin interactions may be useful experimental probes in AD models, but therapeutic development should wait until AD-specific causal relevance is demonstrated.</div>
+      </li>
+      <li>
+        <div><strong>Define safety risks early.</strong> Because BCAM is broadly expressed in red blood cells, endothelial cells, smooth muscle cells, and epithelial cells, systemic BCAM targeting could affect normal adhesion, vascular function, hematologic behaviour, and tissue remodelling — characterise this liability before any in vivo programme.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — BCAM in Alzheimer's Disease</span>
+      <p>
+        BCAM is an <strong>emerging AD-associated genetic and proteomic signal</strong> with plausible adhesion, vascular, and extracellular-matrix biology, but it remains <strong>mechanistically unvalidated</strong> as an Alzheimer's disease effector. Its appearance in proteome-wide association studies and Mendelian-randomisation analyses, and in APOE-region rare-variant analyses linked to CSF Aβ1-42, warrants serious scientific attention. However, the <strong>absence of any direct mechanistic AD evidence</strong> — no amyloid, tau, neuroinflammatory, or synaptic data — means BCAM cannot yet be considered an actionable therapeutic target. The <strong>most defensible next step</strong> is to establish APOE-independent causal evidence, determine directionality of effect, profile BCAM in AD-relevant vascular and CNS compartments, and test whether BCAM modulation influences neurovascular or basement-membrane dysfunction in AD-relevant models. BCAM's established targetability in other disease contexts is an asset, but <strong>therapeutic development must await causal validation in Alzheimer's disease</strong>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  BCAM / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFM — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #f0eaff;
+    --danger: #991b1b;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+    color: #f1f5f9;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    max-width: 820px;
+    margin: 0 auto 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.94rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 14px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #475569;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway-counter;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 38px 36px;
+    line-height: 1.75;
+  }
+
+  .verdict p {
+    color: #e2d9f3;
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #fff;
+  }
+
+  .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #a78bfa;
+    margin-bottom: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TUFM &nbsp;|&nbsp; Mitochondrial Translation Elongation Factor Tu</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety risk</span>
+  </div>
+  <h1>TUFM &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> TUFM has context-dependent roles in cancer cell survival, drug resistance, lipophagy, and pathogen immune evasion. Indiscriminate global TUFM enhancement carries risk; any AD therapeutic strategy must be cell-type-specific, dose-controlled, and stage-specific.
+    </div>
+
+    <p>TUFM is a nuclear-encoded mitochondrial translation elongation factor increasingly described as a mitochondrial stress-response and quality-control node relevant to Alzheimer's disease mechanisms. Across the literature, TUFM is linked to mitochondrial protein synthesis, oxidative phosphorylation, mitochondrial ROS signaling, mitophagy/autophagy, apoptosis, tau handling, amyloidogenic APP processing, innate immune signaling, and inflammasome activity.</p>
+
+    <p>The strongest AD-relevant evidence shows that TUFM is reduced in AD-relevant brain regions — including hippocampus and cortex of APP/PS1 mice (particularly with aging) — and reportedly in AD patient brains. Functionally, TUFM loss increased BACE1 and Aβ in APP-expressing cells, while TUFM overexpression reduced both. TUFM also influenced tau phosphorylation, apoptosis, and autophagy-dependent tau/MAPT degradation.</p>
+
+    <p>Overall, TUFM is best viewed as a plausible mitochondrial proteostasis and bioenergetic resilience factor for AD rather than a fully validated therapeutic target. Its therapeutic appeal lies in connecting mitochondrial dysfunction with amyloidogenesis, tau pathology, oxidative stress, autophagy/mitophagy failure, and neuroinflammation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#6d3bbf"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: UPSTREAM / TUFM STATUS -->
+        <rect x="10" y="10" width="220" height="480" rx="12"
+              fill="rgba(109,59,191,0.06)" stroke="#6d3bbf" stroke-width="1.2"/>
+        <text x="120" y="30" text-anchor="middle" font-family="Arial" font-size="8.5"
+              font-weight="700" fill="#6d3bbf" letter-spacing="1">PANEL A — TUFM STATUS</text>
+
+        <!-- Node 1: TUFM (central) -->
+        <rect x="35" y="50" width="170" height="46" rx="8"
+              fill="#ede9fe" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="120" y="68" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#3b1f6e">TUFM</text>
+        <text x="120" y="82" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#4c1d95">Mitochondrial EF-Tu</text>
+
+        <!-- Node 2: AD reduction -->
+        <rect x="35" y="130" width="170" height="46" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="120" y="148" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">↓ in AD Brain</text>
+        <text x="120" y="163" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">Hippocampus / Cortex</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="120" y1="96" x2="120" y2="128" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 3: PTM regulation -->
+        <rect x="35" y="218" width="170" height="46" rx="8"
+              fill="#f0eaff" stroke="#6d3bbf" stroke-width="1.2"/>
+        <text x="120" y="236" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6e">PTM Regulation</text>
+        <text x="120" y="251" text-anchor="middle" font-family="Georgia" font-size="9" fill="#4c1d95">Lactylation · Ubiquitination</text>
+
+        <!-- Arrow 2→3 -->
+        <line x1="120" y1="176" x2="120" y2="216" stroke="#6d3bbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Mitochondrial Translation -->
+        <rect x="35" y="308" width="170" height="46" rx="8"
+              fill="#f0eaff" stroke="#6d3bbf" stroke-width="1.2"/>
+        <text x="120" y="326" text-anchor="middle" font-family="Georgia" font-size="10" fill="#3b1f6e">Mito Translation</text>
+        <text x="120" y="341" text-anchor="middle" font-family="Georgia" font-size="9" fill="#4c1d95">&amp; OXPHOS Function</text>
+
+        <!-- Arrow 3→4 -->
+        <line x1="120" y1="264" x2="120" y2="306" stroke="#6d3bbf" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: ROS generation -->
+        <rect x="35" y="396" width="170" height="46" rx="8"
+              fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+        <text x="120" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#92400e">Mitochondrial ROS</text>
+        <text x="120" y="429" text-anchor="middle" font-family="Georgia" font-size="9" fill="#92400e">Key signaling mediator</text>
+
+        <!-- Arrow 4→5 -->
+        <line x1="120" y1="354" x2="120" y2="394" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+
+        <!-- PANEL B: AMYLOID & TAU BRANCH -->
+        <rect x="245" y="10" width="210" height="480" rx="12"
+              fill="rgba(153,27,27,0.05)" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="350" y="30" text-anchor="middle" font-family="Arial" font-size="8.5"
+              font-weight="700" fill="#991b1b" letter-spacing="1">PANEL B — AMYLOID &amp; TAU</text>
+
+        <!-- Node 6: BACE1 -->
+        <rect x="265" y="50" width="170" height="46" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="350" y="68" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#991b1b">BACE1 Regulation</text>
+        <text x="350" y="82" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">mRNA stability / 5′UTR</text>
+
+        <!-- Arrow TUFM ROS → BACE1 (from panel A ROS node right side, elbow into panel B) -->
+        <!-- ROS node right edge: x=205, y=419. BACE1 left edge: x=265, y=73 -->
+        <!-- Route: right from ROS (205,419) → go right to 232,419 → up to 232,73 → right to 265,73 -->
+        <polyline points="205,419 232,419 232,73 265,73"
+                  fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 7: Aβ production -->
+        <rect x="265" y="140" width="170" height="46" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="350" y="158" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Aβ Production</text>
+        <text x="350" y="173" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">↑ TUFM loss · ↓ TUFM OE</text>
+
+        <!-- Arrow 6→7 -->
+        <line x1="350" y1="96" x2="350" y2="138" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 8: Tau phosphorylation -->
+        <rect x="265" y="230" width="170" height="46" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="350" y="248" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Tau Phosphorylation</text>
+        <text x="350" y="263" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">ROS-sensitive manner</text>
+
+        <!-- Arrow 7→8 -->
+        <line x1="350" y1="186" x2="350" y2="228" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 9: Tau clearance (Kaempferide) -->
+        <rect x="265" y="318" width="170" height="52" rx="8"
+              fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="350" y="338" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">Tau / MAPT Clearance</text>
+        <text x="350" y="352" text-anchor="middle" font-family="Georgia" font-size="9" fill="#134e4a">Kaempferide → TFEB</text>
+        <text x="350" y="364" text-anchor="middle" font-family="Georgia" font-size="9" fill="#134e4a">lysosomal degradation</text>
+
+        <!-- Arrow 8→9 -->
+        <line x1="350" y1="276" x2="350" y2="316" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Apoptosis -->
+        <rect x="265" y="412" width="170" height="46" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="350" y="430" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">Neuronal Apoptosis</text>
+        <text x="350" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">↑ with TUFM loss / lactyl</text>
+
+        <!-- Arrow 9→10 -->
+        <line x1="350" y1="370" x2="350" y2="410" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+
+        <!-- PANEL C: MITOPHAGY & NEUROIMMUNE -->
+        <rect x="470" y="10" width="420" height="480" rx="12"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="680" y="30" text-anchor="middle" font-family="Arial" font-size="8.5"
+              font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C — MITOPHAGY &amp; NEUROIMMUNE</text>
+
+        <!-- Arrow from Panel A ROS to Panel C (ROS node: x=205, y=419 → route elbow below panel B) -->
+        <!-- We'll route: ROS right (205,419) already used; we use ROS node top (120,396) up then right -->
+        <!-- Actually connect Mito Translation node (Panel A, right edge 205, y=331) to PINK1 node -->
+        <!-- PINK1 node: left edge ~490, y ~73 -->
+        <!-- Route: 205,331 → 232,331 ... but 232 is used. Use 240,331 → 240,73 → 470,73 - conflicts with panel B -->
+        <!-- Better: straight from Panel A right side (205,331) going right, arriving at Panel C left edge (470) at y=73 via elbow below y=100 only if no boxes in path -->
+        <!-- Panel B boxes span x=265 to 435. Route through gutter above panel B's boxes at y=48? No, panel starts at y=10 -->
+        <!-- Safe route: from Mito Trans right (205,331) → elbow going right at y=331, enter panel C right side via: 205,331 → 460,331 → 460 would pass through panel B at x=265..435 at y=331 → Node 8 is at y=230..276, Node 9 is 318..370. At y=331, x between 265..435 is inside Node9 (y=318..370). Conflict. -->
+        <!-- Use route from panel A node 3 PTM right edge → to PINK1: 205,241 → enter panel C. At y=241 panel B has Node 8 (y=230..276, x=265..435). Conflict again. -->
+        <!-- Best: arrow from TUFM node right (205,73) → to PINK1 left (490,73), path at y=73 passes over panel B area. Node 6 is at 265..435 y=50..96. So y=73 passes through Node6. Conflict. -->
+        <!-- Route connector from Panel A TUFM bottom (120,96) down then along bottom gutter ... This is getting complex. -->
+        <!-- Let me draw a direct arrow from TUFM to PINK1 via the TOP gutter above all boxes (y=42) -->
+        <!-- Top of TUFM: (120,50). PINK1 top: (490,50+). Route: 120,50 → 120,38 → 680,38 → 680,50 -->
+        <!-- y=38 is above all panel box content (panels start y=10, label at y=30, so y=38 is just above node tops at y=50). Safe. -->
+        <polyline points="120,50 120,38 535,38 535,52"
+                  fill="none" stroke="#6d3bbf" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <!-- PINK1 node -->
+        <rect x="490" y="52" width="155" height="46" rx="8"
+              fill="#f0eaff" stroke="#6d3bbf" stroke-width="1.5"/>
+        <text x="568" y="70" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#3b1f6e">PINK1</text>
+        <text x="568" y="84" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#4c1d95">Phospho-TUFM Ser222</text>
+
+        <!-- Branch arrow left: PINK1 → Mitophagy Inhibit -->
+        <line x1="568" y1="98" x2="518" y2="140" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Branch arrow right: PINK1 → Parkin/ATG5 -->
+        <line x1="568" y1="98" x2="618" y2="140" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Mitophagy Inhibit (left branch) -->
+        <rect x="473" y="140" width="130" height="52" rx="8"
+              fill="#fff1f1" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="538" y="160" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#991b1b">Mitophagy ↓</text>
+        <text x="538" y="174" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#7f1d1d">Blocks ATG5–ATG12</text>
+        <text x="538" y="186" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#7f1d1d">phosphoswitch</text>
+
+        <!-- Node: Parkin / LC3 / p62 (right branch) -->
+        <rect x="614" y="140" width="155" height="52" rx="8"
+              fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="692" y="158" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#0f766e">Parkin · LC3 · p62</text>
+        <text x="692" y="173" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#134e4a">ATG5–ATG12 · BECN1</text>
+        <text x="692" y="186" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#134e4a">NLRX1 · MAVS</text>
+
+        <!-- Convergence arrow left branch → Mitochondrial QC -->
+        <line x1="538" y1="192" x2="538" y2="268" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Convergence arrow right branch → Mitochondrial QC -->
+        <line x1="692" y1="192" x2="692" y2="268" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Mitochondrial QC (convergence) -->
+        <rect x="490" y="268" width="290" height="46" rx="8"
+              fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="635" y="286" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="700" fill="#0f766e">Mitochondrial Quality Control</text>
+        <text x="635" y="301" text-anchor="middle" font-family="Georgia" font-size="9" fill="#134e4a">Balanced mitophagy · Damage clearance</text>
+
+        <!-- Node: Inflammasome / IFN -->
+        <rect x="490" y="356" width="130" height="52" rx="8"
+              fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+        <text x="555" y="374" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#92400e">NLRP3 / IFN-I</text>
+        <text x="555" y="388" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#92400e">Inflammasome</text>
+        <text x="555" y="400" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#92400e">suppression</text>
+
+        <!-- Node: Neurodegeneration outcomes -->
+        <rect x="638" y="356" width="155" height="52" rx="8"
+              fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="716" y="374" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1d4ed8">Neuroprotection</text>
+        <text x="716" y="388" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#1e3a8a">Reduced ROS · Aβ · Tau</text>
+        <text x="716" y="400" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#1e3a8a">Maintained OXPHOS</text>
+
+        <!-- Arrow QC → Inflammasome -->
+        <line x1="575" y1="314" x2="555" y2="354" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Arrow QC → Neuroprotection -->
+        <line x1="700" y1="314" x2="716" y2="354" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Count check: 1-TUFM, 2-AD reduction, 3-PTM, 4-MitoTranslation, 5-ROS, 6-BACE1, 7-Aβ, 8-Tau Phosph, 9-Tau Clearance, 10-Apoptosis, 11-PINK1, 12-MitophagyInhibit, 13-Parkin/LC3, 14-MitoQC, 15-NLRP3, 16-Neuroprotection = 16 exactly -->
+
+        <!-- Panel labels visible -->
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Figure.</strong> Three-panel mechanistic overview of TUFM in Alzheimer's disease. <em>Panel A (purple)</em> shows TUFM abundance, disease-linked reduction, post-translational modification (lactylation/ubiquitination), and downstream mitochondrial translation and ROS generation. <em>Panel B (red/teal)</em> depicts the amyloid–tau axis: TUFM loss elevates BACE1/Aβ via mRNA stability; mitochondrial ROS routes into tau hyperphosphorylation; kaempferide-TFEB activation drives protective lysosomal tau clearance; apoptosis follows TUFM depletion. <em>Panel C (teal/blue)</em> illustrates the PINK1 branch point: phospho-TUFM Ser222 can suppress mitophagy (via ATG5–ATG12 blockade) while an alternative arm via Parkin, LC3, p62, and BECN1 promotes mitochondrial quality control; both branches converge on balanced mitophagy, fanning out to inflammasome/IFN-I suppression and net neuroprotection.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>BACE1 &amp; Amyloid Regulation</h3>
+        TUFM knockdown increased BACE1 and Aβ; overexpression reduced both. Effects involve BACE1 mRNA stability and 5′UTR dependence rather than a purely transcriptional NFκB pathway, placing TUFM in a direct amyloidogenic regulatory role.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Mitochondrial ROS as Central Mediator</h3>
+        TUFM manipulation alters ROS levels, and mitochondria-targeted antioxidant treatment attenuates TUFM-linked effects on BACE1, apoptosis, and tau phosphorylation — establishing a mitochondrial ROS–amyloid–tau signaling axis.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Tau Phosphorylation &amp; Clearance</h3>
+        TUFM modulates tau phosphorylation in a ROS-sensitive manner and is required for kaempferide-induced lysosomal MAPT degradation via TFEB-mediated autophagy, notably without mTOR inhibition — a potentially safer autophagy induction route.
+      </div>
+
+      <div class="card card-accent">
+        <h3>PINK1–TUFM Mitophagy Phosphoswitch</h3>
+        PINK1-dependent phosphorylation of TUFM at Ser222 can <em>inhibit</em> mitophagy by interfering with ATG5–ATG12 complex formation. TUFM can thus both promote and restrain mitophagy depending on post-translational state and localization.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Neuroimmune Bridge</h3>
+        TUFM-dependent mitophagy can degrade MAVS or TRAF3, suppressing type I interferon signaling. TUFM preservation is also linked to reduced NLRP3 inflammasome activity and pyroptosis — positioning TUFM at the interface of mitochondrial quality control and innate immunity in AD.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Context-Dependent Safety Risk</h3>
+        Excessive TUFM stabilization supports cancer cell survival, drug resistance, lipophagy, and pathogen immune evasion. Pathogenic TUFM variants cause OXPHOS deficiency, lactic acidosis, and leukodystrophy. Both loss-of-function and indiscriminate gain-of-function carry risk.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><strong>Treat as exploratory, not validated.</strong> Position TUFM as a high-priority exploratory AD target focused on mitochondrial quality control — not yet a validated clinical target — and design studies accordingly.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize deep phenotyping in AD systems.</strong> Measure TUFM protein level, localization, solubility, phosphorylation (Ser222), lactylation (K286), ubiquitination, and interaction partners in AD patient brain, APP/PS1 or tauopathy models, iPSC-derived neurons, astrocytes, microglia, and brain endothelial cells.</div>
+      </li>
+      <li>
+        <div><strong>Test restoration of core AD phenotypes.</strong> Determine whether restoring TUFM reduces BACE1 translation, Aβ production, tau phosphorylation, tau aggregation, defective autophagic flux, mitochondrial ROS, complex I/IV dysfunction, synaptic impairment, and cognitive decline.</div>
+      </li>
+      <li>
+        <div><strong>Explore TUFM-directed autophagy activation.</strong> Kaempferide-like compounds that directly interact with TUFM and promote TFEB-mediated tau degradation without mTOR inhibition are notable starting points — with reduced liabilities compared to canonical mTOR-targeted approaches.</div>
+      </li>
+      <li>
+        <div><strong>Pursue balanced, not maximal, mitophagy.</strong> The therapeutic goal should be calibrated restoration of mitochondrial quality control. Excessive mitophagy may deplete functional mitochondria or suppress necessary antiviral/innate immune signaling.</div>
+      </li>
+      <li>
+        <div><strong>Investigate TUFM in microglia and neuroimmune contexts.</strong> Determine whether TUFM modulation reduces mitochondrial DAMP release, NLRP3 activation, and harmful interferon signaling without compromising host defense.</div>
+      </li>
+      <li>
+        <div><strong>Avoid broad TUFM inhibition.</strong> TUFM loss is associated with mitochondrial translation failure, OXPHOS deficiency, ROS elevation, mtDNA instability, apoptosis, encephalopathy, and neurodegeneration-like phenotypes — making global inhibition an unsafe strategy.</div>
+      </li>
+      <li>
+        <div><strong>Favor indirect, targeted modulation.</strong> Consider enhancing PGC-1α/NRF1/TFAM-linked mitochondrial biogenesis, reducing oxidative stress, protecting TUFM from ubiquitin-proteasome degradation, or blocking pathological K286 lactylation rather than direct global TUFM activation.</div>
+      </li>
+      <li>
+        <div><strong>Design for cell-type and stage specificity.</strong> Any AD therapeutic program must be cell-type-specific, dose-controlled, and stage-specific, given TUFM's opposing roles in neurons vs. cancer cells and its dual function in immune regulation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="verdict-label">Overall Assessment — TUFM in Alzheimer's Disease</p>
+      <p>
+        TUFM emerges from this evidence base as a <strong>compelling but complex mitochondrial resilience factor</strong> with multi-layered relevance to Alzheimer's disease pathophysiology. Its reduction in AD-relevant brain regions, its direct influence on <strong>BACE1/Aβ production</strong> through mRNA stability mechanisms, its role in <strong>ROS-mediated tau phosphorylation</strong>, its requirement for kaempferide-induced lysosomal tau clearance, and its participation in PINK1-dependent mitophagy switches collectively make it a <strong>plausible node connecting mitochondrial dysfunction to the core molecular features of AD</strong>. Human genetic associations with cognitive performance, white matter hyperintensities, frailty, and metabolic vulnerability further support TUFM as part of a mitochondrial-metabolic axis influencing cognitive resilience. However, <strong>TUFM is not a simple on/off target</strong>: it can both promote and restrain mitophagy depending on phosphorylation state, and unrestricted enhancement risks supporting cancer survival programs, immune evasion, and drug resistance. The optimal therapeutic path is <strong>selective, calibrated restoration of TUFM function in vulnerable neurons</strong> — particularly through correction of pathological post-translational modifications, indirect biogenesis support, or TUFM-dependent autophagy activation — with careful attention to cellular context, dose, and disease stage.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TUFM · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

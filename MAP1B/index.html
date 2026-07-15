@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAP1B — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6b;
+    --mid: #6d3fc0;
+    --light: #f0ebfa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+    --slate: #64748b;
+    --slate-light: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153, 27, 27, 0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1rem;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+  }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-left: 4px solid var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  .takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.94rem;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* CLOSING BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0820 100%);
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  .verdict strong {
+    color: #ddd6fe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.76rem;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: MAP1B &nbsp;|&nbsp; Microtubule-Associated Protein 1B</span>
+    <span class="chip chip-danger">⚠ Direct targeting: dosage-sensitive risk</span>
+  </div>
+  <h1>MAP1B &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety / Dosage Caveat:</strong> MAP1B is dosage-sensitive in neurons. Both loss-of-function and overactivation are harmful; broad inhibition or global activation carries a real risk of impairing essential neuronal structure, plasticity, receptor trafficking, and autophagy. Precision or indirect modulation strategies are strongly preferred.
+    </div>
+
+    <div class="overview-text">
+      <p>MAP1B is a neuronal microtubule-associated protein repeatedly linked to Alzheimer's disease (AD)-relevant mechanisms, encompassing cytoskeletal instability, tau-adjacent kinase signaling, axonal transport failure, synaptic dysfunction, dendritic spine vulnerability, autophagy/proteostasis disruption, oxidative/nitrosative stress, and neuroinflammatory or neuroimmune contexts.</p>
+      <p>The supplied literature supports MAP1B as an <em>AD-relevant mechanistic node</em> rather than a validated AD therapeutic target. Direct AD-related evidence includes altered MAP1B in AD synaptic-gene and CSF biomarker studies; spatial proteomics showing altered microtubule-associated proteins near Aβ pathology; reduced MAP1B phosphorylation across 22 phosphosites in AD-plus-diabetes phosphoproteomic networks; MAP1B phosphopeptides in AD neurofibrillary tangle preparations; MAP1B-P Thr1265 in early granulovacuolar degeneration associated with neurofibrillary-tangle stages; amyloid-β1-42 binding to the MAP1B heavy-chain microtubule-binding domain; and pathological tau species sequestering MAP1B along with other MAPs.</p>
+      <p>Overall, MAP1B appears most relevant to AD as a <strong>cytoskeletal-synaptic stress integrator</strong>. Its strongest therapeutic implications are indirect: preserving normal MAP1B-dependent microtubule and synaptic function, preventing pathological MAP1B phosphorylation or sequestration, protecting axonal transport, correcting upstream kinase/phosphatase imbalance, and using MAP1B as a biomarker of neuronal/synaptic injury or cytoskeletal phosphopathology.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Pathology -->
+        <rect x="10" y="10" width="260" height="475" rx="12" fill="#f0ebfa" fill-opacity="0.6" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="140" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#3b1f6b" letter-spacing="1">UPSTREAM PATHOLOGY</text>
+
+        <!-- Aβ node -->
+        <rect x="55" y="44" width="170" height="42" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.4"/>
+        <text x="140" y="61" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Aβ1-42 Peptide</text>
+        <text x="140" y="76" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">(amyloid plaque)</text>
+
+        <!-- arrow down -->
+        <line x1="140" y1="86" x2="140" y2="112" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- hyperP-tau node -->
+        <rect x="40" y="112" width="200" height="42" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="140" y="129" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Hyper-P Tau / NFTs</text>
+        <text x="140" y="144" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">(GSK3β · CDK5 · JNK)</text>
+
+        <!-- arrow down -->
+        <line x1="140" y1="154" x2="140" y2="180" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Kinase imbalance node -->
+        <rect x="40" y="180" width="200" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="140" y="197" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Kinase / Phosphatase</text>
+        <text x="140" y="212" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">Imbalance (PP2A ↓)</text>
+
+        <!-- arrow down -->
+        <line x1="140" y1="222" x2="140" y2="248" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Nitrosative stress node -->
+        <rect x="40" y="248" width="200" height="42" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="140" y="265" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Nitrosative / Oxidative</text>
+        <text x="140" y="280" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">Stress · S-nitrosylation</text>
+
+        <!-- arrow down -->
+        <line x1="140" y1="290" x2="140" y2="316" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- MAP1B central node -->
+        <rect x="32" y="316" width="216" height="44" rx="7" fill="#3b1f6b" stroke="#3b1f6b" stroke-width="1.5"/>
+        <text x="140" y="335" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="bold" fill="#ffffff">MAP1B</text>
+        <text x="140" y="352" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#c4b5fd">(phosphorylated / sequestered)</text>
+
+        <!-- Biomarker note -->
+        <rect x="40" y="388" width="200" height="36" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="140" y="404" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1d4ed8">CSF / NFT phosphopeptides</text>
+        <text x="140" y="418" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1d4ed8">Thr1265 · Ser1270/74/79</text>
+
+        <line x1="140" y1="388" x2="140" y2="360" stroke="#1d4ed8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-blue)"/>
+
+        <!-- PANEL B: Cytoskeletal & Axonal Mechanisms -->
+        <rect x="282" y="10" width="310" height="475" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="437" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">CYTOSKELETAL &amp; AXONAL MECHANISMS</text>
+
+        <!-- Branch source: MAP1B effect on MT -->
+        <rect x="320" y="44" width="234" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="437" y="61" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">MAP1B Microtubule Binding</text>
+        <text x="437" y="76" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">stabilizes / regulates dynamics</text>
+
+        <!-- two branches down from MT node -->
+        <!-- left branch line -->
+        <line x1="380" y1="86" x2="340" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- right branch line -->
+        <line x1="494" y1="86" x2="534" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch A: Axonal transport -->
+        <rect x="295" y="130" width="160" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="375" y="147" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Axonal Transport</text>
+        <text x="375" y="162" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">motor-protein regulation</text>
+
+        <line x1="375" y1="172" x2="375" y2="212" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <rect x="295" y="212" width="160" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="375" y="229" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Mitochondrial</text>
+        <text x="375" y="244" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">Localization / Transport</text>
+
+        <!-- Branch B: Tubulin modification -->
+        <rect x="470" y="130" width="110" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="525" y="147" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Tubulin</text>
+        <text x="525" y="162" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">Acetylation / Tyros.</text>
+
+        <line x1="525" y1="172" x2="525" y2="212" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <rect x="470" y="212" width="110" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="525" y="229" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Golgi / ER</text>
+        <text x="525" y="244" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">Vesicle Trafficking</text>
+
+        <!-- Converge lines to shared node -->
+        <line x1="375" y1="254" x2="375" y2="292" stroke="#0f766e" stroke-width="1.4"/>
+        <line x1="525" y1="254" x2="525" y2="276" stroke="#0f766e" stroke-width="1.4"/>
+        <line x1="375" y1="292" x2="525" y2="292" stroke="#0f766e" stroke-width="1.4"/>
+        <line x1="450" y1="292" x2="450" y2="316" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Shared outcome: Cytoskeletal Integrity -->
+        <rect x="330" y="316" width="234" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="447" y="335" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="bold" fill="#ffffff">Cytoskeletal Integrity</text>
+        <text x="447" y="352" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#ccfbf1">↓ in AD → transport failure</text>
+
+        <!-- Autophagy box -->
+        <rect x="330" y="390" width="234" height="42" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+        <text x="447" y="407" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Autophagy / Proteostasis</text>
+        <text x="447" y="422" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">DAPK1 · Nbr1 · STX17 pathway</text>
+
+        <line x1="447" y1="390" x2="447" y2="360" stroke="#6d3fc0" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- PANEL C: Synaptic & Downstream -->
+        <rect x="606" y="10" width="284" height="475" rx="12" fill="#eff6ff" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="748" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">SYNAPTIC &amp; DOWNSTREAM</text>
+
+        <!-- Dendritic spine -->
+        <rect x="630" y="44" width="236" height="42" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="748" y="61" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">Dendritic Spine Maturation</text>
+        <text x="748" y="76" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">MAP1B deficiency → impaired</text>
+
+        <line x1="748" y1="86" x2="748" y2="112" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- AMPAR trafficking -->
+        <rect x="630" y="112" width="236" height="42" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="748" y="129" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#1e293b">AMPAR Trafficking</text>
+        <text x="748" y="144" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">GRIP1/GluA2 · mGluR-LTD</text>
+
+        <line x1="748" y1="154" x2="748" y2="180" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Receptor systems -->
+        <rect x="630" y="180" width="110" height="56" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="685" y="197" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">NMDA / AMPA</text>
+        <text x="685" y="211" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">NR3A · Nav1.6</text>
+        <text x="685" y="225" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">CaV2.2</text>
+
+        <rect x="756" y="180" width="110" height="56" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="811" y="197" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">5-HT6R / 5-HT3A</text>
+        <text x="811" y="211" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">mGluR4</text>
+        <text x="811" y="225" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">receptor trafficking</text>
+
+        <!-- lines from AMPAR node to two receptor boxes -->
+        <line x1="700" y1="154" x2="685" y2="180" stroke="#1d4ed8" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+        <line x1="796" y1="154" x2="811" y2="180" stroke="#1d4ed8" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+
+        <!-- converge lines -->
+        <line x1="685" y1="236" x2="685" y2="270" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="811" y1="236" x2="811" y2="270" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="685" y1="270" x2="811" y2="270" stroke="#1d4ed8" stroke-width="1.3"/>
+        <line x1="748" y1="270" x2="748" y2="290" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+        <!-- Synaptic failure -->
+        <rect x="630" y="290" width="236" height="42" rx="7" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="748" y="307" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="bold" fill="#ffffff">Synaptic Dysfunction</text>
+        <text x="748" y="322" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#bfdbfe">early AD cognitive decline</text>
+
+        <line x1="748" y1="332" x2="748" y2="358" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        <!-- Compensation node -->
+        <rect x="630" y="358" width="236" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="748" y="375" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">Compensatory MAP Upregulation</text>
+        <text x="748" y="390" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">MAP1A · MAP2 · DHA/α-LA rescue</text>
+
+        <!-- Therapeutic note -->
+        <rect x="630" y="430" width="236" height="36" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="748" y="447" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#3b1f6b">Indirect Kinase Modulation</text>
+        <text x="748" y="461" text-anchor="middle" font-family="Georgia" font-size="9" fill="#64748b">GSK3β · DYRK1A · CDK5 · PP2A</text>
+
+        <line x1="748" y1="400" x2="748" y2="430" stroke="#6d3fc0" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connectors: MAP1B (panel A) → Panel B top -->
+        <!-- Right edge of panel A MAP1B node to left edge of Panel B MT Binding node -->
+        <!-- MAP1B center-right: x=248, y=338; Panel B MT node left: x=320, y=65 -->
+        <!-- Route via elbow: right along y=338, then up in gutter x=270, then right to y=65 -->
+        <polyline points="248,338 270,338 270,65 320,65" fill="none" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="5,3"/>
+
+        <!-- Cross-panel: Panel B Cytoskeletal Integrity → Panel C Synaptic Dysfunction -->
+        <!-- Right edge of panel B outcome: x=564, y=338; left edge of Panel C synaptic failure: x=630, y=311 -->
+        <polyline points="564,338 595,338 595,311 630,311" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)" stroke-dasharray="5,3"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (left, purple):</strong> Upstream AD pathology — Aβ1-42 and hyperphosphorylated tau/NFTs drive kinase/phosphatase imbalance and nitrosative stress converging on MAP1B (phosphorylation, sequestration). Biomarker phosphopeptides (Thr1265, Ser1270/74/79) are indicated. <strong>Panel B (center, teal):</strong> MAP1B's cytoskeletal roles branch from microtubule binding into two parallel sub-cascades: axonal transport and mitochondrial localization (left branch) versus tubulin acetylation/tyrosination and Golgi/ER vesicle trafficking (right branch), reconverging at a shared cytoskeletal integrity node; MAP1B also links to autophagy/proteostasis (DAPK1·Nbr1·STX17). <strong>Panel C (right, blue):</strong> Downstream synaptic consequences — dendritic spine maturation and AMPAR trafficking branch into NMDA/ion-channel and 5-HT/mGluR receptor systems, reconverging on synaptic dysfunction as an early AD cognitive driver; compensatory MAP upregulation and indirect kinase modulation are indicated as potential rescue axes. Dashed connectors show cross-panel influences.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Tau–MAP1B Sequestration</h3>
+        Hyperphosphorylated cytosolic tau can bind and sequester MAP1B, MAP1A, MAP2, and normal tau, functionally depleting these MAPs from microtubules and contributing to impaired microtubule assembly, axonal transport failure, and progressive neurodegeneration — a core AD mechanism.
+      </div>
+
+      <div class="card card-danger">
+        <h3>AD Pathological Phosphoproteome</h3>
+        MAP1B phosphopeptides (Ser1270, Ser1274, Ser1779) are found in purified AD neurofibrillary tangle preparations. MAP1B-P Thr1265 appears in granulovacuolar degeneration granules at early NFT stages, alongside activated GSK3, JNK, p38, PKA, SRC, PAK1, and CAMK2A.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Amyloid–MAP1B Interaction</h3>
+        Aβ1-42 was reported to bind a peptide corresponding to the MAP1B heavy-chain microtubule-binding domain, suggesting a direct route by which amyloid could impair MAP1B-mediated cytoskeletal integrity, microtubule-dependent transport, and synaptic function.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Biomarker Potential</h3>
+        In CSF proteomics, MAP1B was significantly altered in AD and aided discrimination from non-AD cognitive impairment. In synaptic-gene network analyses, MAP1B emerged as a co-hub gene with diagnostic potential, though context dependence limits its generalizability as a universal AD biomarker.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Compensatory Cytoskeletal Resilience</h3>
+        In aged tau knockout models, MAP1B, MAP1A, and MAP2 rose compensatorily but later declined alongside reduced acetylated α-tubulin, synaptic protein loss, and cognitive impairment. DHA plus α-lipoic acid restored MAP1B, microtubule stability markers, synaptic proteins, and memory — validating MAP1B as part of a rescue-responsive resilience network.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Dosage-Sensitive Targeting Risk</h3>
+        MAP1B has essential, dosage-sensitive roles in axon formation, neuronal migration, growth-cone behavior, dendritic spine development, synaptic maturation, and receptor trafficking. Both loss and excess of MAP1B can be harmful depending on context, making direct broad manipulation a high-risk therapeutic strategy.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat MAP1B as a mechanistic candidate, not a validated target.</strong> Current evidence supports mechanistic plausibility and biomarker potential, but not direct disease-modifying efficacy in AD. Escalating clinical investment should await rigorous human-tissue validation.</li>
+      <li><strong>Prioritize AD-focused validation in human tissue.</strong> Test MAP1B abundance, localization, cleavage, solubility, phosphorylation, nitrosylation, and sequestration in hippocampus, entorhinal cortex, and prefrontal cortex, correlating with amyloid burden, tau stage, synapse loss, and cognition.</li>
+      <li><strong>Focus on specific post-translational states.</strong> Candidate AD-relevant phosphosites include Thr1265, Ser1270, Ser1274, and Ser1779, as well as broader phosphosite modules altered in AD-plus-diabetes brains. Determine whether each change is pathogenic, compensatory, or biomarker-only.</li>
+      <li><strong>Test pathological tau disruption of MAP1B function.</strong> Assess whether tau oligomers or hyperphosphorylated tau sequester MAP1B in AD neurons, reduce MAP1B microtubule binding, impair axonal transport, or destabilize dendritic spine microtubules in cellular and in vivo models.</li>
+      <li><strong>Evaluate Aβ–MAP1B microtubule-domain interaction in neuronal systems.</strong> The reported Aβ1-42 binding to MAP1B's microtubule-binding domain should be tested for effects on microtubule dynamics, transport, spine stability, and synaptic receptor trafficking before conclusions are drawn.</li>
+      <li><strong>Explore MAP1B as a fluid and vesicle biomarker.</strong> CSF or plasma assays measuring MAP1B peptides, phospho-MAP1B epitopes, or neuron-derived extracellular vesicle MAP1B content should be developed and correlated with tau, neurofilament light, GAP43, synaptic proteins, and cognitive trajectories.</li>
+      <li><strong>Avoid broad MAP1B inhibition or activation.</strong> MAP1B biology is compartment-, stage-, and modification-dependent. Global manipulation could impair essential neuronal structure, plasticity, synaptic receptor trafficking, and autophagy — a serious safety concern.</li>
+      <li><strong>Favor indirect or precision modulation strategies.</strong> More plausible approaches include normalizing upstream kinase/phosphatase pathways (GSK3β, DYRK1A, CDK5, JNK, PP2A, ERK, PI3K/Akt, mTOR), preserving MAP1B microtubule binding, preventing pathological tau-MAP1B sequestration, reducing harmful nitrosylation, and correcting MAP1B-linked autophagy/transport defects.</li>
+      <li><strong>Investigate synaptic mechanisms in AD models specifically.</strong> MAP1B's roles in AMPAR trafficking, mGluR-LTD, dendritic spine maturation, synaptic vesicle turnover, 5-HT6R trafficking, calcium-channel degradation, and NMDA receptor regulation are directly relevant to early, clinically measurable AD cognitive decline.</li>
+      <li><strong>Consider MAP1B in metabolic-risk AD subtypes.</strong> Reduced MAP1B phosphorylation across 22 phosphosites in AD-plus-diabetes networks suggests particular relevance where diabetes, insulin signaling, kinase imbalance, and tau pathology intersect — a subgroup that may be especially responsive to kinase-corrective strategies.</li>
+      <li><strong>Use MAP1B state as a readout for cytoskeletal-rescue therapies.</strong> Interventions targeting tau phosphorylation, microtubule stabilization, oxidative stress, Nrf2 activation, HDAC6/tubulin acetylation, mitochondrial antioxidants, autophagy-lysosome enhancement, or neurotrophic pathways should assess MAP1B normalization alongside axonal and synaptic rescue endpoints.</li>
+      <li><strong>Distinguish MAP1B from LC3 autophagy terminology.</strong> References to microtubule-associated protein 1A/1B light chain 3 (LC3) usually refer to autophagy markers (MAP1LC3 family), not canonical full-length MAP1B as a therapeutic protein target — conflation could confound target identification and assay design.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — MAP1B in Alzheimer's Disease</span>
+      MAP1B's most defensible role in AD, based on the supplied evidence, is as a <strong>cytoskeletal-synaptic stress node and candidate biomarker/pathway target</strong>. It sits at the intersection of tau pathology, amyloid biology, kinase imbalance, nitrosative stress, axonal transport failure, and synaptic dysfunction — all hallmark AD mechanisms — yet without direct validation as a disease-modifying target. <strong>Therapeutic development should aim to preserve or restore physiological MAP1B functions</strong> while preventing disease-associated phosphorylation, sequestration, mislocalization, aggregation, nitrosylation, and trafficking/autophagy disruption. The most actionable near-term priorities are human-tissue phosphoproteomic validation of key MAP1B modification states, biomarker assay development in CSF and plasma, and mechanistic dissection of pathological tau- and Aβ-driven MAP1B disruption in neuronal systems. <strong>Direct broad targeting remains premature and risky</strong> given MAP1B's dosage-sensitive, context-dependent essentiality throughout neuronal life.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MAP1B · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

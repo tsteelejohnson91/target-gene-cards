@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEMA3F — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6c3fc5;
+    --light: #f0ebff;
+    --danger: #9b1c1c;
+    --danger-light: #fff1f1;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0d7370;
+    --positive-light: #f0fdfb;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border-color: rgba(255,180,180,0.4);
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.97rem;
+    color: #e2d9ff;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 28px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--slate);
+    line-height: 1.5;
+    text-align: center;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-slate { background: var(--slate-light); border-color: var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.94rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #100a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner p {
+    color: rgba(255,255,255,0.93);
+    font-size: 0.98rem;
+    margin: 0;
+  }
+
+  .verdict-lead {
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 22px 24px;
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SEMA3F &nbsp;|&nbsp; Semaphorin-3F</span>
+    <span class="chip chip-danger">⚠ Ambiguous therapeutic directionality</span>
+  </div>
+  <h1>SEMA3F &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Ambiguity Warning:</strong> SEMA3F exerts opposing effects across neuronal, endothelial, immune, glial, and peripheral cell types. Global activation or inhibition carries meaningful risks, and therapeutic directionality remains unresolved without AD-specific functional studies.
+    </div>
+
+    <p>SEMA3F is a secreted class 3 semaphorin best characterized as a neuropilin/plexin-mediated guidance cue rather than an established Alzheimer's disease (AD) target. The available literature contains limited direct AD-specific evidence, but it repeatedly links SEMA3F to mechanisms central to AD biology: hippocampal and cortical circuit remodeling, dendritic spine pruning, axonal growth-cone collapse, synaptic plasticity, AMPA receptor homeostatic downscaling, VEGF/angiogenesis signaling, endothelial barrier and leukocyte trafficking, oxidative stress/ferroptosis networks, immune regulation, and oligodendrocyte precursor/remyelination biology.</p>
+
+    <p>The strongest direct AD-related signals are hypothesis-generating: SEMA3F appears as a shared genetic locus in AD–gastrointestinal disorder cross-trait analyses, as a neuronal gene predicted to influence cognitive decline in aged human brain multi-omics work, and as part of an RXR/bexarotene-responsive brain regulatory network in AD-relevant APOE/Aβ settings. The text does not establish that SEMA3F directly modifies amyloid-β, tau, AD progression, or cognition through targeted manipulation.</p>
+
+    <p>Overall, SEMA3F should be viewed as a <em>plausible modifier</em> of AD-relevant neuronal, vascular, immune, and myelin-repair pathways — not as a validated AD therapeutic target.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN  (16 nodes maximum):
+        Panel A (left): Receptor Signaling — 3 nodes vertically
+          A1: SEMA3F (shared top node)
+          A2: NRP2 / PlexinA3
+          A3: CRMP2 / β2-Chim / Rac1/RhoA
+        Panel B (center-top): Neuronal Outcomes — branches from A3
+          B1: Dendritic Spine Pruning
+          B2: Growth-Cone Collapse
+          B3: AMPAR Downscaling
+          B4: Hippocampal Plasticity
+        Panel C (center-bottom): Vascular & Barrier
+          C1: VEGF/Akt/eNOS
+          C2: Endothelial Barrier
+          C3: Leukocyte Trafficking
+        Panel D (right): AD-Relevant Outcomes
+          D1: Synaptic Loss / Cognitive Decline
+          D2: Neurovascular Integrity
+          D3: OPC Remyelination
+          D4: Network Hyperexcitability
+          D5: Neuroinflammation
+
+        Total: A1+A2+A3 + B1+B2+B3+B4 + C1+C2+C3 + D1+D2+D3+D4+D5 = 3+4+3+5 = 15 ✓ ≤16
+
+        Canvas: viewBox 0 0 940 500
+        Panel A: x=20, y=20, w=170, h=460
+        Panel B: x=210, y=20, w=250, h=270  (neuronal)
+        Panel C: x=210, y=310, w=250, h=170 (vascular)
+        Panel D: x=480, y=20, w=440, h=460  (outcomes)
+
+        Node sizes: main nodes 140×44, outcome nodes 160×42
+
+        Row positions:
+        A1: cx=105, cy=90   → box x=35, y=68, w=140, h=44
+        A2: cx=105, cy=180  → box x=35, y=158, w=140, h=44
+        A3: cx=105, cy=275  → box x=35, y=253, w=140, h=44
+
+        B-panel nodes (x center = 335):
+        B1: cy=80  → box x=220, y=58, w=150, h=44
+        B2: cy=135 → box x=220, y=113, w=150, h=44
+        B3: cy=190 → box x=220, y=168, w=150, h=44
+        B4: cy=245 → box x=220, y=223, w=150, h=44
+
+        C-panel nodes (x center = 335):
+        C1: cy=345 → box x=220, y=323, w=150, h=44
+        C2: cy=400 → box x=220, y=378, w=150, h=44
+        C3: cy=455 → box x=220, y=433, w=150, h=44
+
+        D-panel nodes (x center = 720, width=160):
+        D1: cy=80  → box x=640, y=58,  w=160, h=44
+        D2: cy=150 → box x=640, y=128, w=160, h=44
+        D3: cy=220 → box x=640, y=198, w=160, h=44
+        D4: cy=300 → box x=640, y=278, w=160, h=44
+        D5: cy=370 → box x=640, y=348, w=160, h=44
+
+        Arrows:
+        A1→A2: straight down
+        A2→A3: straight down
+        A3→B1,B2,B3,B4: right from A3 (right edge x=175, cy=275) → left edge of B nodes (x=220)
+          need elbow for B1(cy=80),B2(cy=135) — route up in gutter x≈197
+        A3→C1,C2,C3: right from A3 → C nodes (cy=345,400,455)
+          direct right from A3 right edge then down to C nodes
+
+        D connections: from right edge of B/C nodes to D nodes
+        B1→D1, B2→D1, B3→D4, B4→D2,D3
+        C1→D2, C2→D2, C3→D5
+
+        Check all paths carefully for box overlaps before drawing.
+      -->
+      <svg viewBox="0 0 940 500" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SEMA3F pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6c3fc5"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0d7370"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: Receptor Signaling ══ -->
+        <rect x="20" y="20" width="170" height="460" rx="10" fill="#f0ebff" fill-opacity="0.6" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="105" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#2d1b69" letter-spacing="0.1em" text-decoration="none">RECEPTOR SIGNALING</text>
+
+        <!-- A1: SEMA3F -->
+        <rect x="35" y="54" width="140" height="44" rx="7" fill="#2d1b69" stroke="#2d1b69" stroke-width="1.5"/>
+        <text x="105" y="73" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">SEMA3F</text>
+        <text x="105" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#d8c8ff">(Secreted Semaphorin)</text>
+
+        <!-- A2: NRP2/PlexinA3 -->
+        <rect x="35" y="146" width="140" height="44" rx="7" fill="#6c3fc5" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="105" y="165" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">NRP2 / PlexinA3</text>
+        <text x="105" y="180" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#e9d5ff">Co-receptor complex</text>
+
+        <!-- A3: Cytoskeletal effectors -->
+        <rect x="35" y="238" width="140" height="44" rx="7" fill="#6c3fc5" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="105" y="256" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#ffffff">Rac1/RhoA · CRMP2</text>
+        <text x="105" y="271" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#e9d5ff">β2-Chim · Cofilin</text>
+
+        <!-- ══ PANEL B: Neuronal Outcomes ══ -->
+        <rect x="205" y="20" width="255" height="276" rx="10" fill="#eff6ff" fill-opacity="0.7" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="332" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="0.1em">NEURONAL EFFECTS</text>
+
+        <!-- B1: Dendritic Spine Pruning -->
+        <rect x="220" y="46" width="155" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="297" y="64" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Dendritic Spine</text>
+        <text x="297" y="79" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Pruning</text>
+
+        <!-- B2: Growth-Cone Collapse -->
+        <rect x="220" y="104" width="155" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="297" y="122" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Growth-Cone</text>
+        <text x="297" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Collapse</text>
+
+        <!-- B3: AMPAR Downscaling -->
+        <rect x="220" y="162" width="155" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="297" y="180" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">AMPAR Homeostatic</text>
+        <text x="297" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Downscaling</text>
+
+        <!-- B4: Hippocampal Plasticity -->
+        <rect x="220" y="220" width="155" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="297" y="238" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Hippocampal</text>
+        <text x="297" y="253" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1e3a8a">Plasticity / CREB</text>
+
+        <!-- ══ PANEL C: Vascular & Barrier ══ -->
+        <rect x="205" y="308" width="255" height="172" rx="10" fill="#f0fdfb" fill-opacity="0.8" stroke="#0d7370" stroke-width="1.2"/>
+        <text x="332" y="326" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0d7370" letter-spacing="0.1em">VASCULAR / BARRIER</text>
+
+        <!-- C1: VEGF/Akt/eNOS -->
+        <rect x="220" y="334" width="155" height="40" rx="7" fill="#ccfbf1" stroke="#0d7370" stroke-width="1.2"/>
+        <text x="297" y="351" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#134e4a">VEGF/Akt/eNOS</text>
+        <text x="297" y="366" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Anti-angiogenic</text>
+
+        <!-- C2: Endothelial Barrier -->
+        <rect x="220" y="386" width="155" height="40" rx="7" fill="#ccfbf1" stroke="#0d7370" stroke-width="1.2"/>
+        <text x="297" y="403" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#134e4a">Endothelial Barrier</text>
+        <text x="297" y="418" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Integrity</text>
+
+        <!-- C3: Leukocyte Trafficking -->
+        <rect x="220" y="438" width="155" height="40" rx="7" fill="#ccfbf1" stroke="#0d7370" stroke-width="1.2"/>
+        <text x="297" y="455" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#134e4a">Leukocyte</text>
+        <text x="297" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a">Trafficking</text>
+
+        <!-- ══ PANEL D: AD-Relevant Outcomes ══ -->
+        <rect x="475" y="20" width="445" height="460" rx="10" fill="#fff7ed" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="697" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#b45309" letter-spacing="0.1em">AD-RELEVANT OUTCOMES</text>
+
+        <!-- D1: Synaptic Loss -->
+        <rect x="492" y="46" width="185" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="584" y="64" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#78350f">Synaptic / Spine Loss</text>
+        <text x="584" y="79" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">→ Cognitive Decline</text>
+
+        <!-- D2: Neurovascular Integrity -->
+        <rect x="492" y="116" width="185" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="584" y="134" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#78350f">Neurovascular</text>
+        <text x="584" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">Integrity / BBB</text>
+
+        <!-- D3: OPC Remyelination -->
+        <rect x="492" y="186" width="185" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="584" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#78350f">OPC Recruitment</text>
+        <text x="584" y="219" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">→ Remyelination</text>
+
+        <!-- D4: Network Hyperexcitability -->
+        <rect x="492" y="276" width="185" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="584" y="294" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#78350f">Network</text>
+        <text x="584" y="309" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">Hyperexcitability</text>
+
+        <!-- D5: Neuroinflammation -->
+        <rect x="492" y="356" width="185" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="584" y="374" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#78350f">Neuroinflammation</text>
+        <text x="584" y="389" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#78350f">/ Oxidative Stress</text>
+
+        <!-- Genetic Evidence node -->
+        <rect x="700" y="276" width="185" height="44" rx="7" fill="#e9d5ff" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="792" y="294" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#2d1b69">Genetic / Omics</text>
+        <text x="792" y="309" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#2d1b69">Evidence (AD-GIT loci)</text>
+
+        <!-- ══ ARROWS ══ -->
+
+        <!-- A1 → A2 -->
+        <line x1="105" y1="98" x2="105" y2="144" stroke="#6c3fc5" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- A2 → A3 -->
+        <line x1="105" y1="190" x2="105" y2="236" stroke="#6c3fc5" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- A3 → B1: elbow up through gutter (x≈198) -->
+        <!-- right edge of A3 = x:175, cy:260. Gutter mid x=192. B1 left edge x=220, cy=68 -->
+        <polyline points="175,260 192,260 192,68 220,68" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- A3 → B2: elbow -->
+        <!-- right edge A3 x=175, cy=260. gutter x=192. B2 left x=220, cy=126 -->
+        <polyline points="175,260 192,260 192,126 220,126" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- A3 → B3: short right -->
+        <line x1="175" y1="260" x2="220" y2="184" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- A3 → B4: short right down -->
+        <line x1="175" y1="264" x2="220" y2="242" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- A3 → C1: right and slightly down -->
+        <line x1="175" y1="268" x2="220" y2="354" stroke="#0d7370" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- A3 → C2 -->
+        <line x1="175" y1="272" x2="220" y2="406" stroke="#0d7370" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- A3 → C3 -->
+        <line x1="175" y1="276" x2="220" y2="458" stroke="#0d7370" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B1 → D1: right edge B1 x=375, cy=68 → left edge D1 x=492, cy=68 -->
+        <line x1="375" y1="68" x2="490" y2="68" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- B2 → D1: right edge B2 x=375, cy=126 → D1 right y=68, elbow -->
+        <polyline points="375,126 450,126 450,68 490,68" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- B3 → D4 -->
+        <polyline points="375,184 450,184 450,298 490,298" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- B4 → D2 -->
+        <polyline points="375,242 450,242 450,138 490,138" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- B4 → D3 -->
+        <polyline points="375,250 460,250 460,208 490,208" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- C1 → D2: right edge C1 x=375, cy=354 → D2 left x=492, cy=138. Need elbow via gutter x≈462 -->
+        <polyline points="375,354 462,354 462,138 490,138" fill="none" stroke="#0d7370" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C2 → D2 -->
+        <polyline points="375,406 468,406 468,148 490,148" fill="none" stroke="#0d7370" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C3 → D5: right edge C3 x=375, cy=458 → D5 left x=492, cy=376 -->
+        <polyline points="375,458 472,458 472,378 490,378" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Genetic evidence node: internal arrow -->
+        <line x1="677" y1="298" x2="700" y2="298" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (left, purple) — Receptor Signaling:</strong> SEMA3F binds the NRP2/PlexinA3 co-receptor complex, activating cytoskeletal effectors (Rac1/RhoA, CRMP2, β2-Chimaerin, Cofilin).
+      <strong>Panel B (center-top, blue) — Neuronal Effects:</strong> Branching from Panel A, SEMA3F drives dendritic spine pruning, growth-cone collapse, AMPAR homeostatic downscaling, and hippocampal plasticity via CREB signaling.
+      <strong>Panel C (center-bottom, teal) — Vascular/Barrier:</strong> SEMA3F suppresses VEGF/Akt/eNOS angiogenesis, modulates endothelial barrier integrity, and regulates leukocyte trafficking.
+      <strong>Panel D (right, amber) — AD-Relevant Outcomes:</strong> Convergent outputs include synaptic/spine loss, neurovascular integrity/BBB, OPC remyelination, network hyperexcitability, and neuroinflammation/oxidative stress, alongside a genetic/omics evidence node reflecting AD–GIT susceptibility loci.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Synaptic Remodeling — Core AD Mechanism</h3>
+        <p>SEMA3F signals via NRP2/PlexinA3 to prune dendritic spines, reduce excitatory synaptic structures, and remodel cortical and hippocampal circuits. Because synapse and spine loss strongly correlates with cognitive decline in AD, excessive or mislocalized SEMA3F signaling could plausibly worsen synaptic vulnerability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Synaptic Homeostasis — Protective Role</h3>
+        <p>In cortical neurons, SEMA3F–Npn2/PlexA3 signaling is required for homeostatic downscaling of surface AMPA receptors after increased neuronal activity. This suggests a possible protective role in AD contexts involving network hyperexcitability — but excessive activation could also weaken synapses.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Hippocampal Relevance</h3>
+        <p>SEMA3F affects hippocampal mossy fiber pruning, growth-cone collapse, dentate gyrus/CA1 synaptic transmission, CREB/CREBBP signaling, VEGF expression in hippocampal neurons, and NRP2/CRMP2-mediated axonal remodeling — processes that broadly overlap with AD-related hippocampal vulnerability, impaired plasticity, and network hyperexcitability.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Vascular Effects — Context-Dependent</h3>
+        <p>SEMA3F often antagonizes VEGF/neuropilin signaling, suppresses VEGF/Akt/eNOS pathways, inhibits angiogenesis, and regulates endothelial migration. These functions matter in AD because cerebral hypoperfusion, BBB disruption, and altered VEGF signaling are implicated in progression — but excessive anti-angiogenic activity could impair vascular repair.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Remyelination — Therapeutic Angle</h3>
+        <p>SEMA3F can attract oligodendrocyte precursor cells (OPCs) through NRP2 and promote remyelination in demyelination models, including in middle-aged OPCs. Since white matter injury and myelin breakdown contribute to cognitive decline in AD, SEMA3F–NRP2 signaling may be worth testing in AD-associated myelin repair contexts.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Inflammatory &amp; Oxidative Roles — Unresolved</h3>
+        <p>SEMA3F appears in models involving microglial inflammatory activation, P2X7-linked inflammatory states, mitochondrial dysfunction, lipid peroxidation, iron accumulation, and ferroptosis-related processes. These mechanisms strongly overlap with AD pathogenesis, but the directionality and causal role of SEMA3F remain unresolved.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat as a candidate pathway node, not a validated target.</strong> SEMA3F should be considered a plausible modifier of AD-relevant biology, not yet a proven therapeutic target. AD-specific functional validation is absent from the current literature.</li>
+      <li><strong>Prioritize AD-specific expression profiling.</strong> Measure SEMA3F, NRP2, PlexinA3, NrCAM, CRMP2, ZDHHC15, and related downstream signals across hippocampus, entorhinal cortex, cortex, CSF, plasma, endothelial cells, neurons, astrocytes, microglia, oligodendrocyte lineage cells, and meningeal/vascular compartments.</li>
+      <li><strong>Determine disease-stage and cell-type directionality.</strong> Establish whether SEMA3F is increased or decreased in early AD, late AD, amyloid-rich regions, tau-vulnerable regions, white matter lesions, inflamed vasculature, and areas of synaptic loss before any therapeutic intervention.</li>
+      <li><strong>Test NRP2/PlexinA3 blockade in amyloid and tau models.</strong> Assess whether SEMA3F/NRP2/PlexinA3 pathway blockade preserves dendritic spines, excitatory synapses, neurites, and hippocampal plasticity in established preclinical AD models.</li>
+      <li><strong>Test selected pathway enhancement.</strong> Determine whether enhancing specific SEMA3F arms improves AMPAR homeostatic scaling, reduces hyperexcitability, promotes remyelination, stabilizes endothelial barrier function, or limits maladaptive inflammatory trafficking.</li>
+      <li><strong>Avoid global SEMA3F modulation as an initial strategy.</strong> Receptor-, compartment-, and pathway-selective approaches are more plausible — specifically targeting NRP2/PlexinA3 neuronal pruning, endothelial barrier, OPC recruitment, or downstream Rac1/RhoA/MICAL/cAMP/CRMP2 signaling.</li>
+      <li><strong>Evaluate vascular risks carefully.</strong> Because SEMA3F can suppress VEGF/Akt/eNOS signaling and angiogenesis, therapeutic enhancement could worsen hypoperfusion or impair vascular repair, while inhibition could increase vascular leak or abnormal angiogenesis depending on context.</li>
+      <li><strong>Include comprehensive functional AD endpoints.</strong> Future studies should cover synapse density, dendritic spine morphology, neurite dystrophy, AMPAR trafficking, network hyperexcitability, seizure susceptibility, BBB integrity, cerebral perfusion, remyelination, neuroinflammation, amyloid/tau burden, cognition, and safety.</li>
+      <li><strong>Use SEMA3F as part of a biomarker panel, not standalone.</strong> SEMA3F is secreted and measurable but is not brain-specific and is altered in inflammatory, vascular, metabolic, infectious, and cancer-related states, limiting its standalone specificity as an AD biomarker.</li>
+      <li><strong>Focus on four leading hypotheses.</strong> The most promising AD-relevant proposals are: (i) excessive neuronal SEMA3F contributes to synapse/spine loss and neurite collapse; (ii) endothelial SEMA3F may protect neurovascular barrier integrity; (iii) SEMA3F–NRP2 signaling may support remyelination; and (iv) SEMA3F may modulate hippocampal hyperexcitability through synaptic homeostatic mechanisms.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — SEMA3F in Alzheimer's Disease</span>
+      <p>
+        SEMA3F is a <strong>biologically compelling but therapeutically ambiguous</strong> candidate in the context of Alzheimer's disease. Its established roles in <strong>dendritic spine pruning, hippocampal circuit remodeling, AMPA receptor homeostatic scaling, vascular/endothelial regulation, OPC-driven remyelination, and neuroinflammatory modulation</strong> all intersect with well-recognized mechanisms of AD pathogenesis. Genetic and multi-omics data provide preliminary plausibility. However, <strong>no direct evidence establishes that SEMA3F modifies amyloid-β, tau, AD progression, or cognition through targeted manipulation</strong>. The opposing effects of SEMA3F across neuronal, endothelial, immune, and glial compartments mean that <strong>global modulation carries substantial risk</strong>. The field requires AD-specific expression mapping, disease-stage-resolved directionality studies, and selective pathway intervention experiments before SEMA3F can be responsibly advanced as a therapeutic target. It is best considered a <strong>plausible multi-pathway modifier</strong> warranting rigorous, cell-type-selective mechanistic investigation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  SEMA3F · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

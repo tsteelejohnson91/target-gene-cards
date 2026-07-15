@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTN1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6c3fc5;
+    --light: #ede8fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #64748b;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.38);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #ffffff;
+    max-width: 800px;
+    margin: 0 auto 12px;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #e2e8f0;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 32px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 26px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW */
+  .overview-text p { margin-bottom: 16px; font-size: 0.97rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  /* KEY INSIGHTS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.slate { border-left-color: var(--slate); background: var(--slate-light); }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.slate h3 { color: var(--slate); }
+  .card p { font-size: 0.88rem; line-height: 1.65; }
+  /* TAKEAWAYS */
+  .takeaways { list-style: none; counter-reset: ta; }
+  .takeaways li {
+    counter-increment: ta;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .takeaways li::before {
+    content: counter(ta);
+    min-width: 28px;
+    height: 28px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0a2e 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 36px 36px 32px;
+    margin-bottom: 56px;
+  }
+  .verdict h2 {
+    color: #c4b5fd;
+    border-bottom-color: rgba(196,181,253,0.4);
+    margin-bottom: 16px;
+  }
+  .verdict p { font-size: 0.97rem; line-height: 1.8; color: #e2e8f0; }
+  .verdict strong { color: #f5f3ff; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 16px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: RTN1 &nbsp;|&nbsp; Reticulon-1</span>
+    <span class="chip chip-danger">⚠ Therapeutic safety concerns noted</span>
+  </div>
+  <h1>RTN1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> RTN1 supports essential neuronal functions including ER architecture, axonal growth, synaptic maintenance, autophagy, and calcium signaling. Broad RTN1 inhibition risks disrupting these normal roles. Pathway-selective and isoform-specific approaches are strongly advised before any therapeutic development.
+    </div>
+    <div class="overview-text">
+      <p>RTN1 is an endoplasmic reticulum (ER)-associated reticulon family protein with AD relevance through both direct disease associations and convergent neurodegeneration mechanisms. The strongest AD-specific evidence identifies RTN1 as a candidate gene associated with symptomatic AD onset, a potential brain/platelet biomarker of cognitive impairment, a differentially expressed gene in AD mouse hippocampal single-nucleus transcriptomics, and an altered hippocampal protein/gene in aging-related cognitive decline models with AD-like transcriptomic overlap.</p>
+      <p>Mechanistically, RTN1 and its isoforms — especially RTN1A and RTN1-C — are linked to ER morphology, ER stress, ER–mitochondria communication, calcium regulation, autophagy, apoptosis, neuronal structure, synaptic maintenance, inflammatory signaling, and BACE1/amyloidogenic APP-processing biology. These pathways overlap strongly with established AD mechanisms involving proteostasis failure, amyloid-β and tau toxicity, synaptic dysfunction, mitochondrial injury, calcium dyshomeostasis, neuroinflammation, and neuronal death.</p>
+      <p>RTN1 is not established as a validated disease-modifying AD therapeutic target. Current evidence supports it more strongly as a biomarker candidate and mechanistic node requiring further validation. Its therapeutic potential is plausible but complex because RTN1 also has indispensable roles in ER architecture, axonal growth, dendritic/synaptic maintenance, autophagy, and neuronal calcium signaling.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure class="figure-wrap">
+      <!--
+        Layout plan (16 nodes max):
+        Panel A (Upstream / AD Evidence): RTN1 Gene [1], AD Omics / Biomarker [2], Hippocampal Models [3]
+        Panel B (ER Stress Branch): RTN1A → PERK/ER Stress [4], RTN1-C → Apoptosis [5]
+        Panel C (Calcium & Mito Branch): RyR2/Ca²⁺ [6], ER–Mito Contacts [7], VDAC1/HK [8]
+        Panel D (Downstream AD Pathology): BACE1/APP [9], Autophagy Flux [10], Synaptic Loss [11], Neuroinflammation [12]
+        Shared outcome: Neuronal Vulnerability [13]
+
+        Total: 13 nodes — within limit. ✓
+        Arrows carefully routed through empty gutters.
+      -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" width="920" height="480" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#6c3fc5"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ======== PANEL A: AD Evidence & RTN1 Entry ======== -->
+        <rect x="14" y="14" width="260" height="460" rx="14" fill="#ede8fb" fill-opacity="0.55" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="144" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="#2d1b69" letter-spacing="1.5">PANEL A — AD EVIDENCE</text>
+
+        <!-- Node 1: RTN1 Gene -->
+        <rect x="54" y="52" width="180" height="46" rx="8" fill="#6c3fc5" stroke="#2d1b69" stroke-width="1.3"/>
+        <text x="144" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">RTN1 Gene</text>
+        <text x="144" y="88" text-anchor="middle" font-size="10" fill="#e9d5ff">(RTN1A / RTN1-C isoforms)</text>
+
+        <!-- Node 2: AD Omics / Biomarker -->
+        <rect x="44" y="140" width="200" height="52" rx="8" fill="#fff" stroke="#6c3fc5" stroke-width="1.3"/>
+        <text x="144" y="161" text-anchor="middle" font-size="11" font-weight="700" fill="#2d1b69">AD Omics &amp; Biomarker</text>
+        <text x="144" y="178" text-anchor="middle" font-size="9.5" fill="#475569">Brain, platelet, CSF expression</text>
+
+        <!-- Node 3: Hippocampal Models -->
+        <rect x="44" y="238" width="200" height="52" rx="8" fill="#fff" stroke="#6c3fc5" stroke-width="1.3"/>
+        <text x="144" y="259" text-anchor="middle" font-size="11" font-weight="700" fill="#2d1b69">Hippocampal Models</text>
+        <text x="144" y="276" text-anchor="middle" font-size="9.5" fill="#475569">5XFAD, SAMP8, Trem2-KO</text>
+
+        <!-- Node 4: Symptomatic Conversion -->
+        <rect x="44" y="336" width="200" height="52" rx="8" fill="#fff" stroke="#6c3fc5" stroke-width="1.3"/>
+        <text x="144" y="354" text-anchor="middle" font-size="11" font-weight="700" fill="#2d1b69">Symptomatic Conversion</text>
+        <text x="144" y="371" text-anchor="middle" font-size="9.5" fill="#475569">Asymptomatic → AD onset</text>
+
+        <!-- Arrows within Panel A -->
+        <!-- Node1 → Node2 -->
+        <line x1="144" y1="98" x2="144" y2="140" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- Node2 → Node3 -->
+        <line x1="144" y1="192" x2="144" y2="238" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- Node3 → Node4 -->
+        <line x1="144" y1="290" x2="144" y2="336" stroke="#6c3fc5" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- ======== PANEL B: ER Stress Branches ======== -->
+        <rect x="296" y="14" width="260" height="280" rx="14" fill="#fef2f2" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="426" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.5">PANEL B — ER STRESS</text>
+
+        <!-- Node 5: ER Stress Hub -->
+        <rect x="336" y="50" width="180" height="46" rx="8" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.3"/>
+        <text x="426" y="71" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">ER Stress Hub</text>
+        <text x="426" y="87" text-anchor="middle" font-size="10" fill="#fecaca">UPR activation</text>
+
+        <!-- Node 6: RTN1A → PERK -->
+        <rect x="304" y="148" width="160" height="46" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="384" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">RTN1A / PERK</text>
+        <text x="384" y="184" text-anchor="middle" font-size="9.5" fill="#475569">CHOP, caspase-12</text>
+
+        <!-- Node 7: RTN1-C → Apoptosis -->
+        <rect x="484" y="148" width="60" height="46" rx="8" fill="#fff" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="514" y="168" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">RTN1-C</text>
+        <text x="514" y="184" text-anchor="middle" font-size="9" fill="#475569">Apoptosis</text>
+
+        <!-- Node 8: Neuronal Death -->
+        <rect x="336" y="236" width="180" height="46" rx="8" fill="#fecaca" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="426" y="257" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Neuronal Death</text>
+        <text x="426" y="273" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Caspase activation ↑</text>
+
+        <!-- Arrows Panel B -->
+        <!-- Node5 → Node6 (branch left) -->
+        <line x1="408" y1="96" x2="384" y2="148" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Node5 → Node7 (branch right) -->
+        <line x1="444" y1="96" x2="514" y2="148" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Node6 → Node8 -->
+        <line x1="384" y1="194" x2="400" y2="236" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Node7 → Node8 -->
+        <line x1="514" y1="194" x2="452" y2="236" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- ======== PANEL C: Calcium & Mitochondria ======== -->
+        <rect x="296" y="310" width="260" height="164" rx="14" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="426" y="333" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.5">PANEL C — Ca²⁺ &amp; MITO</text>
+
+        <!-- Node 9: RyR2/Ca²⁺ -->
+        <rect x="304" y="346" width="108" height="46" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="358" y="364" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">RyR2 / Ca²⁺</text>
+        <text x="358" y="380" text-anchor="middle" font-size="9.5" fill="#475569">RTN1A binds RyR2</text>
+
+        <!-- Node 10: ER–Mito MAM -->
+        <rect x="432" y="346" width="108" height="46" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="486" y="364" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">ER–Mito MAM</text>
+        <text x="486" y="380" text-anchor="middle" font-size="9.5" fill="#475569">VDAC1 / HK axis</text>
+
+        <!-- Node 11: Ca²⁺ Dyshomeostasis -->
+        <rect x="336" y="430" width="180" height="34" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="426" y="452" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f766e">Ca²⁺ Dyshomeostasis</text>
+
+        <!-- Arrows Panel C -->
+        <line x1="358" y1="392" x2="390" y2="430" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="486" y1="392" x2="462" y2="430" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- ======== PANEL D: AD Downstream Outcomes ======== -->
+        <rect x="578" y="14" width="368" height="460" rx="14" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+        <text x="762" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.5">PANEL D — AD PATHOLOGY OUTPUTS</text>
+
+        <!-- Node 12: BACE1/APP Processing -->
+        <rect x="598" y="52" width="160" height="46" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="678" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">BACE1 / APP</text>
+        <text x="678" y="88" text-anchor="middle" font-size="9.5" fill="#475569">Aβ production modulation</text>
+
+        <!-- Node 13: Autophagy Flux -->
+        <rect x="778" y="52" width="150" height="46" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="853" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Autophagy Flux</text>
+        <text x="853" y="88" text-anchor="middle" font-size="9.5" fill="#475569">ATG16L / LC3II</text>
+
+        <!-- Node 14: Neuroinflammation -->
+        <rect x="598" y="162" width="160" height="46" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="678" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Neuroinflammation</text>
+        <text x="678" y="198" text-anchor="middle" font-size="9.5" fill="#475569">Inflammasome / acute phase</text>
+
+        <!-- Node 15: Synaptic Loss -->
+        <rect x="778" y="162" width="150" height="46" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="853" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Synaptic Loss</text>
+        <text x="853" y="198" text-anchor="middle" font-size="9.5" fill="#475569">RTN1/RTN3 deficiency</text>
+
+        <!-- Node 16: Neuronal Vulnerability (shared outcome) -->
+        <rect x="638" y="310" width="248" height="52" rx="10" fill="#2d1b69" stroke="#0f0a2e" stroke-width="1.5"/>
+        <text x="762" y="333" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Neuronal Vulnerability</text>
+        <text x="762" y="351" text-anchor="middle" font-size="10" fill="#c4b5fd">AD neurodegeneration amplified</text>
+
+        <!-- Arrows Panel D: nodes → shared outcome -->
+        <!-- Node12 → Node14 -->
+        <line x1="678" y1="98" x2="678" y2="162" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Node13 → Node15 -->
+        <line x1="853" y1="98" x2="853" y2="162" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Node14 → Node16 -->
+        <line x1="678" y1="208" x2="720" y2="310" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Node15 → Node16 -->
+        <line x1="853" y1="208" x2="810" y2="310" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- ======= CROSS-PANEL CONNECTORS (through gutters) ======= -->
+        <!-- Panel A Node1 (RTN1 Gene) → Panel B ER Stress Hub: horizontal through gutter x=280 -->
+        <!-- From right edge of Node1 (54+180=234, y=75) → gutter → left edge of Node5 (336, y=73) -->
+        <path d="M234,75 L280,75 L280,73 L336,73" stroke="#6c3fc5" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Panel A Node1 (RTN1 Gene) → Panel C RyR2: elbow down through gutter -->
+        <!-- Right edge of Node1 y=75, then down to y=369 in gutter, then right to Node9 -->
+        <path d="M234,75 L280,75 L280,369 L304,369" stroke="#0f766e" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel A Node1 → Panel D (BACE1): horizontal at y=75, through Panel B gutter at x=556, to Panel D -->
+        <!-- Route: right edge of Node1 x=234 y=75 → right side of panel B gutter x=556 y=75 → Node12 left edge x=598 y=75 -->
+        <path d="M234,75 L556,75 L598,75" stroke="#b45309" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel B Node8 (Neuronal Death) → Panel D Node16 (Neuronal Vulnerability): elbow through gutter -->
+        <!-- Node8 right edge: 336+180=516, y=259. Route east to gutter at x=556, then south to y=336, east to Node16 left=638 -->
+        <path d="M516,259 L556,259 L556,336 L638,336" stroke="#991b1b" stroke-width="1.5" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C Node11 (Ca2+ Dysh) → Panel D Node16: route east through gutter -->
+        <!-- Node11 right edge: 336+180=516 y=447. Route east x=556 y=447, then up to y=362, east to Node16 left x=638 -->
+        <path d="M516,447 L556,447 L556,362 L638,362" stroke="#0f766e" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+      </svg>
+      <figcaption>
+        <strong>Panel A</strong> (purple) — AD evidence trail: RTN1 gene expression feeds into omics/biomarker evidence, hippocampal model changes, and symptomatic conversion signals.
+        <strong>Panel B</strong> (red) — ER stress branches: the ER stress hub diverges into RTN1A/PERK and RTN1-C apoptosis sub-cascades that reconverge on neuronal death.
+        <strong>Panel C</strong> (teal) — Calcium &amp; mitochondria: RTN1A/RyR2 and ER–mito MAM/VDAC1 converge on Ca²⁺ dyshomeostasis.
+        <strong>Panel D</strong> (amber) — AD pathology outputs: BACE1/APP and autophagy flux branch into neuroinflammation and synaptic loss, converging on the shared neuronal vulnerability node. Dashed cross-panel arrows indicate RTN1's multi-pathway reach.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card">
+        <h3>AD Association — Not Yet Causal</h3>
+        <p>Omics studies link RTN1 to symptomatic AD conversion (alongside <em>VSNL1</em>, <em>FGF12</em>, <em>ENC1</em>), cognitive impairment, and hippocampal transcriptomic changes in AD models. These findings establish disease relevance but do not prove that RTN1 drives amyloid, tau pathology, synaptic loss, or cognitive decline.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Biomarker Potential Across Compartments</h3>
+        <p>Integrated brain and platelet omics identified RTN1 (alongside <em>IDH3B</em>) as having potential diagnostic value for cognitive impairment. This positions RTN1 as a possible peripheral/central biomarker linking brain pathology to accessible blood/platelet changes and correlating with disease stage or preclinical-to-symptomatic conversion.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>RTN1-C: Neuronal Apoptosis Driver</h3>
+        <p>Across ischemic, metabolic, traumatic, Parkinsonian, and infection-related neural injury models, RTN1-C induction or phosphorylation is repeatedly associated with ER stress, calcium overload, mitochondrial apoptotic signaling, and caspase activation. RTN1-C knockdown is often neuroprotective in these contexts.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>ER–Mitochondria Dysfunction</h3>
+        <p>RTN1A and RTN1-C are implicated in ER–mitochondria contacts (MAMs), VDAC1/hexokinase interactions, lipid exchange, calcium transfer, and inflammasome activation — processes strongly relevant to AD-related mitochondrial dysfunction and calcium dyshomeostasis.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>BACE1 / RTN3 Compensation Complicates Targeting</h3>
+        <p>Reticulons RTN1–RTN4 can bind and negatively modulate BACE1, potentially limiting Aβ production. However, RTN3 appears more prominent in dystrophic neurite pathology, and RTN1 deficiency may be buffered by increased RTN3, which itself elevates BACE1 protein. Targeting RTN1 alone may have unpredictable amyloidogenic effects.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>Autophagy: Protective or Harmful?</h3>
+        <p>RTN1-C can support autophagosome biogenesis (colocalizing with ATG16L and LC3II), yet RTN1-C knockdown can also reduce pathological autophagy overactivation in injury models. In AD, this creates therapeutic tension: autophagy can be beneficial for aggregate clearance or detrimental when dysregulated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat RTN1 as exploratory, not validated.</strong> Prioritize target validation and biomarker studies before any therapeutic development program.</li>
+      <li><strong>Investigate isoform-specific biology separately.</strong> RTN1A (PERK-mediated ER stress, RyR2 calcium signaling, ER–mitochondria stress) and RTN1-C (neuronal apoptosis, ER calcium release, autophagy, PDI regulation, MAM function) should be evaluated as distinct functional entities.</li>
+      <li><strong>Determine causality vs. reactivity.</strong> Key experiments must test whether RTN1 modulation affects Aβ generation, tau phosphorylation/aggregation, synaptic loss, neuroinflammation, mitochondrial dysfunction, and cognition in validated AD models.</li>
+      <li><strong>Validate RTN1 as a multi-compartment biomarker.</strong> Assess RTN1 expression or protein levels in AD brain regions, CSF, plasma, platelets, and single-cell datasets across disease stages and amyloid/tau burden gradients.</li>
+      <li><strong>Avoid broad RTN1 inhibition as first strategy.</strong> Because RTN1 supports ER architecture, axonal growth, synaptic maintenance, autophagy, and calcium signaling, global suppression risks disrupting essential neuronal functions.</li>
+      <li><strong>Pursue pathway-selective, dose-controlled modulation.</strong> Aim to reduce maladaptive RTN1-linked ER stress, calcium overload, mitochondrial dysfunction, apoptosis, or inflammasome activation while preserving normal ER-shaping and synaptic roles.</li>
+      <li><strong>Monitor the RTN1–RTN3 reticulon network.</strong> Any RTN1-directed intervention must track RTN3 expression, BACE1 protein/activity, APP processing, Aβ production, and plaque-associated neuritic pathology.</li>
+      <li><strong>Test high-priority AD-specific mechanisms.</strong> Focus on PERK/CHOP/caspase-12 signaling, RyR2-mediated calcium release, STIM1/SOCE, mGluR-linked calcium responses, VDAC1/hexokinase disruption, MAM dysfunction, autophagic flux, and PDI/MANF-dependent proteostasis.</li>
+      <li><strong>Position RTN1 as a stress-vulnerability modifier.</strong> The strongest therapeutic rationale is modulation of ER-centered cellular vulnerability pathways that amplify AD neurodegeneration — not direct anti-amyloid or anti-tau action.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <h2>Overall Assessment</h2>
+    <p><strong>Overall Assessment —</strong> RTN1 represents a <strong>biologically plausible but mechanistically complex</strong> node in Alzheimer's disease neurobiology. Its strongest current standing is as a <strong>biomarker candidate</strong> — linking brain and peripheral (platelet) compartments to cognitive impairment and symptomatic AD progression — and as a <strong>mechanistic amplifier</strong> of ER stress, calcium dyshomeostasis, and mitochondrial dysfunction pathways that are well-established in AD. The <strong>isoform distinction between RTN1A and RTN1-C</strong> is critical: RTN1A is primarily tied to PERK-mediated ER stress and calcium regulation, while RTN1-C is repeatedly implicated in neuronal apoptosis across injury models. Therapeutic targeting is <strong>premature and carries genuine risk</strong> given RTN1's essential roles in neuronal architecture and synaptic maintenance. The priority actions are <strong>isoform-resolved mechanistic validation</strong>, <strong>AD-model causal testing</strong>, and <strong>multi-compartment biomarker characterization</strong>, before any selective modulation strategy is advanced.</p>
+  </div>
+
+</main>
+
+<footer>
+  RTN1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDB3 / ZASP — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.93);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 10px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-slate h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    border-radius: 10px;
+    padding: 36px 40px;
+    color: var(--white);
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: LDB3 &nbsp;|&nbsp; LIM Domain Binding 3 (ZASP / Cypher)</span>
+    <span class="chip chip-danger">⚠ Safety: cardiac &amp; skeletal-muscle risk</span>
+  </div>
+  <h1>LDB3 / ZASP — Alzheimer's Disease &amp; Tauopathy</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Safety Concern</div>
+      LDB3 has essential roles in cardiac and skeletal muscle. Perturbation is linked to myofibrillar myopathy, cardiomyopathy, conduction abnormalities, cardiac hypertrophy, and structural muscle disease. Any LDB3-directed Alzheimer's therapy would require strong brain- and cell-type specificity to avoid serious on-target toxicity.
+    </div>
+
+    <p>LDB3 (also known as ZASP or Cypher) is established primarily as a <strong>cytoskeletal scaffolding gene</strong> with well-characterised roles in striated muscle: Z-disc/Z-line integrity, sarcomere organisation, mechanosensing, phosphorylation signalling, autophagy/proteostasis, mitochondrial coupling, and cardiomyopathy/myopathy. Within the Alzheimer's disease literature, LDB3 appears as a <strong>novel oligodendrocyte-associated candidate gene</strong> within a replicated tau-linked epigenomic and transcriptomic signature — not as an established amyloid-driven AD gene or validated therapeutic target.</p>
+
+    <p>The strongest AD-specific evidence derives from an integrative epigenomic study of <strong>472 AD brains</strong>, examining DNA methylation associations with APOE, Aβ40, Aβ42, tau, and phosphorylated tau. A regional CpG methylation analysis identified 5,478 significant associations, of which <strong>99.7% were linked to tau biochemical measures</strong>. Replication in 1,337 independent brain samples supported 93 tau-associated regional methylation signals. Integration with transcriptomic data identified 535 significant gene-expression associations, enriched for oligodendrocyte marker genes. LDB3 was listed among novel genes in this oligodendrocyte-enriched set, alongside BIN1, MYRF, MBP, and MAG.</p>
+
+    <p>LDB3's AD relevance is therefore currently <strong>associative and multiomic</strong>: altered methylation and linked expression changes occur in AD brain and track most strongly with tau burden within an oligodendrocyte-related molecular context. The source text does not show that LDB3 causes AD, modifies amyloid processing, drives tau aggregation, changes cognition, or has been tested as an AD therapy.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL PLAN (4 panels, ≤16 nodes total):
+        Panel A (top-left): LDB3 AD Epigenomic Evidence — 3 nodes in a chain
+        Panel B (top-right): Oligodendrocyte Molecular Signature — 3 nodes as cluster + 1 shared hub = 4 nodes
+        Panel C (bottom-left): LDB3 Core Biology (muscle) — branching: 2 branches × 2 nodes + 1 shared = 5 nodes
+        Panel D (bottom-right): AD Relevance & Caveats — 2 nodes
+        Total: 3 + 4 + 5 + 2 = 14 nodes ✓ (≤16)
+        
+        Layout:
+        Panel A: x=20, y=20, w=390, h=170
+        Panel B: x=460, y=20, w=420, h=170
+        Panel C: x=20, y=240, w=390, h=220
+        Panel D: x=460, y=240, w=420, h=220
+
+        Node dimensions: w=150, h=44 standard; cluster nodes w=120, h=40
+      -->
+      <svg viewBox="0 0 900 490" width="900" height="490" xmlns="http://www.w3.org/2000/svg" aria-label="LDB3 pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- === PANEL A: AD Epigenomic Evidence === -->
+        <rect x="20" y="20" width="390" height="175" rx="10" ry="10"
+              fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2" opacity="0.9"/>
+        <text x="32" y="40" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              letter-spacing="0.1em" fill="#2e6da4" text-anchor="start">A — AD EPIGENOMIC EVIDENCE</text>
+
+        <!-- Node A1: 472 AD Brains -->
+        <rect x="42" y="52" width="148" height="44" rx="6" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="116" y="71" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">472 AD Brains</text>
+        <text x="116" y="86" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">CpG methylation study</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="190" y1="74" x2="228" y2="74" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: 5,478 Signals -->
+        <rect x="229" y="52" width="158" height="44" rx="6" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="308" y="71" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">5,478 Sig. Assoc.</text>
+        <text x="308" y="86" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">99.7% tau-linked</text>
+
+        <!-- Arrow A2→A3 (down from A2) -->
+        <line x1="308" y1="96" x2="308" y2="121" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: Replication -->
+        <rect x="209" y="122" width="198" height="44" rx="6" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="308" y="141" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">Replicated in 1,337</text>
+        <text x="308" y="156" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">93 tau-assoc. methyl. signals</text>
+
+        <!-- === PANEL B: Oligodendrocyte Molecular Signature === -->
+        <rect x="460" y="20" width="420" height="175" rx="10" ry="10"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2" opacity="0.9"/>
+        <text x="472" y="40" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              letter-spacing="0.1em" fill="#0f766e" text-anchor="start">B — OLIGODENDROCYTE MOLECULAR SIGNATURE</text>
+
+        <!-- Node B1: Hub — 535 Gene-Expr Assoc. -->
+        <rect x="490" y="52" width="168" height="44" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="574" y="71" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle">535 Gene-Expr Assoc.</text>
+        <text x="574" y="86" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Oligo-enriched signature</text>
+
+        <!-- Arrow B1→B2 -->
+        <line x1="658" y1="74" x2="690" y2="74" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2: Known OL genes -->
+        <rect x="691" y="52" width="162" height="44" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="772" y="71" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle">BIN1, MYRF, MBP</text>
+        <text x="772" y="86" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">MAG — myelin/OL genes</text>
+
+        <!-- Arrow B1→B3 (down) -->
+        <line x1="574" y1="96" x2="574" y2="121" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: LDB3 Novel Candidate -->
+        <rect x="478" y="122" width="192" height="44" rx="6" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="574" y="141" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle">LDB3 — Novel Candidate</text>
+        <text x="574" y="156" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Tau-linked; oligo-enriched set</text>
+
+        <!-- === PANEL C: LDB3 Core Biology (muscle/cytoskeletal) === -->
+        <rect x="20" y="240" width="390" height="230" rx="10" ry="10"
+              fill="rgba(30,58,95,0.05)" stroke="#1e3a5f" stroke-width="1.2" opacity="0.9"/>
+        <text x="32" y="260" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              letter-spacing="0.1em" fill="#1e3a5f" text-anchor="start">C — LDB3 CORE BIOLOGY (MUSCLE / CYTOSKELETAL)</text>
+
+        <!-- Node C1: Shared hub — Z-disc Scaffolding -->
+        <rect x="100" y="270" width="180" height="44" rx="6" fill="#e8f1f9" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="190" y="289" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">Z-disc Scaffolding</text>
+        <text x="190" y="304" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Sarcomere organisation</text>
+
+        <!-- Branch split: left arrow C1→C2, right arrow C1→C3 -->
+        <!-- Left branch: down-left -->
+        <line x1="140" y1="314" x2="97" y2="349" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Right branch: down-right -->
+        <line x1="240" y1="314" x2="283" y2="349" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node C2 (left branch): Mechanosensing & Kinase -->
+        <rect x="34" y="350" width="152" height="44" rx="6" fill="#e8f1f9" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="110" y="369" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">Mechanosensing</text>
+        <text x="110" y="384" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Kinase / phospho-signalling</text>
+
+        <!-- Node C3 (right branch): Autophagy & Proteostasis -->
+        <rect x="224" y="350" width="158" height="44" rx="6" fill="#e8f1f9" stroke="#1e3a5f" stroke-width="1.3"/>
+        <text x="303" y="369" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" text-anchor="middle">Autophagy</text>
+        <text x="303" y="384" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Proteostasis / mito. coupling</text>
+
+        <!-- Convergence arrows C2→C4, C3→C4 -->
+        <line x1="110" y1="394" x2="148" y2="426" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="303" y1="394" x2="262" y2="426" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node C4: Shared outcome — Myopathy / Cardiomyopathy -->
+        <rect x="100" y="427" width="180" height="30" rx="6" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="190" y="447" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#9b1c1c" text-anchor="middle">Myopathy / Cardiomyopathy</text>
+
+        <!-- === PANEL D: AD Relevance & Caveats === -->
+        <rect x="460" y="240" width="420" height="230" rx="10" ry="10"
+              fill="rgba(180,83,9,0.05)" stroke="#b45309" stroke-width="1.2" opacity="0.9"/>
+        <text x="472" y="260" font-family="Arial,sans-serif" font-size="9" font-weight="700"
+              letter-spacing="0.1em" fill="#b45309" text-anchor="start">D — AD RELEVANCE &amp; CAVEATS</text>
+
+        <!-- Node D1: Tauopathy Context -->
+        <rect x="490" y="270" width="172" height="44" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="576" y="289" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">Tauopathy Context</text>
+        <text x="576" y="304" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">AD, PSP, Pick's disease</text>
+
+        <!-- Arrow D1→D2 -->
+        <line x1="576" y1="314" x2="576" y2="349" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D2: Functional Status Unknown -->
+        <rect x="476" y="350" width="200" height="44" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="576" y="369" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">Functional Role Unresolved</text>
+        <text x="576" y="384" font-family="Arial,sans-serif" font-size="9" fill="#475569" text-anchor="middle">Harmful? Protective? Reactive?</text>
+
+        <!-- Arrow D2→D3 -->
+        <line x1="576" y1="394" x2="576" y2="427" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node D3: Exploratory Target -->
+        <rect x="476" y="427" width="200" height="30" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="576" y="447" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#b45309" text-anchor="middle">Exploratory Biomarker / Candidate</text>
+
+        <!-- Cross-panel connector: A3 to B3 via horizontal bridge
+             A3 right edge: x=407, y=144; B3 left edge: x=478, y=144
+             Path goes through the gutter at y=144 — clear empty space between x=407 and x=478 -->
+        <line x1="407" y1="144" x2="478" y2="144" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> traces the AD epigenomic study design: 472 brains → 5,478 methylation associations (99.7% tau-linked) → replication in 1,337 samples (93 tau-associated signals). A dashed connector (→) links this evidence to Panel B.
+      <strong>Panel B</strong> shows the oligodendrocyte-enriched transcriptomic signature: 535 gene-expression associations including known myelin/OL genes (BIN1, MYRF, MBP, MAG) alongside LDB3 as a novel candidate.
+      <strong>Panel C</strong> illustrates LDB3's established cytoskeletal biology in muscle, branching from a shared Z-disc scaffolding hub into mechanosensing/kinase signalling and autophagy/proteostasis pathways, both converging on myopathy/cardiomyopathy — the basis for the safety concern.
+      <strong>Panel D</strong> summarises the AD-specific interpretive context: LDB3 appears across tauopathies (AD, PSP, Pick's), but functional direction remains unresolved, placing it as an exploratory biomarker candidate rather than a validated target.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Tau, Not Amyloid</h3>
+        <p>LDB3 is most strongly connected to tau-associated oligodendrocyte perturbation in AD. The epigenomic evidence overwhelmingly links methylation signals to tau biochemical measures, not amyloid biology, placing LDB3-associated changes within tau-related mechanisms.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Oligodendrocyte Molecular Signature</h3>
+        <p>LDB3 belongs to an oligodendrocyte-enriched AD molecular signature alongside MYRF, MBP, and MAG, suggesting possible relevance to myelin maintenance, oligodendrocyte structural integrity, stress adaptation, or glial vulnerability under tau pathology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Cross-Tauopathy Consistency</h3>
+        <p>The AD study annotated oligodendrocyte genes across AD and other tauopathies including Pick's disease and progressive supranuclear palsy, suggesting LDB3 may be part of a broader tauopathy-linked glial response rather than an AD-only statistical signal.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Functional Direction Unresolved</h3>
+        <p>The text does not establish whether LDB3 dysregulation is harmful, protective, compensatory, or merely reflects disease stage, altered cell states, or shifts in oligodendrocyte abundance. Directionality is a critical open question.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Serious Safety Concern</h3>
+        <p>LDB3 has essential roles in cardiac and skeletal muscle. Perturbation is linked to myofibrillar myopathy, cardiomyopathy, conduction abnormalities, and cardiac hypertrophy. Any LDB3-directed AD therapy would require strong brain/cell-type specificity.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Mechanistic Plausibility from Non-AD Biology</h3>
+        <p>In muscle systems, LDB3 links cytoskeletal organisation, kinase signalling, protein aggregation, autophagy, mitochondrial coupling, and stress remodelling — processes overlapping with neurodegeneration, but extrapolation to AD oligodendrocytes remains unproven.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <span><strong>Treat as hypothesis-generating, not validated.</strong> LDB3 should be approached as an exploratory AD candidate, not a target ready for therapeutic intervention. Current evidence is associative and requires substantial functional validation.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritise cross-cohort validation.</strong> Determine whether LDB3 expression and methylation changes are reproducible across independent cohorts, brain regions, disease stages, and tau-burden levels before committing to mechanistic studies.</span>
+      </li>
+
+      <li>
+        <span><strong>Resolve cell-type specificity.</strong> Test whether LDB3 alterations occur specifically in oligodendrocytes or whether the signal reflects altered cell composition, demyelination, or broader glial state transitions.</span>
+      </li>
+
+      <li>
+        <span><strong>Define the causal direction.</strong> Establish whether LDB3 changes precede tau pathology, occur downstream of tau burden, or represent a compensatory oligodendrocyte adaptation — this is essential before any therapeutic rationale can be formed.</span>
+      </li>
+
+      <li>
+        <span><strong>Test functional consequences in relevant models.</strong> Evaluate whether LDB3 perturbation affects oligodendrocyte survival, myelin integrity, cytoskeletal stability, metabolic support, tau propagation, neuroinflammation, or neuron–glia interactions.</span>
+      </li>
+
+      <li>
+        <span><strong>Do not assume broad LDB3 inhibition is therapeutic.</strong> Given essential cardiac and skeletal-muscle roles, any intervention must be targeted to the relevant brain cell type and grounded in a known pathological direction of change.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritise LDB3 as a biomarker or mechanistic probe.</strong> Its near-term value lies most plausibly as a marker of tau-associated oligodendrocyte/myelin vulnerability rather than as a standalone AD drug target.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — LDB3 in Alzheimer's Disease</div>
+      <p>
+        LDB3 represents a <strong>novel, associative, and hypothesis-generating candidate</strong> within Alzheimer's disease research, not a validated therapeutic target. Its AD relevance rests on a well-powered integrative epigenomic study demonstrating that <strong>LDB3 methylation and expression changes track strongly with tau burden</strong> in an oligodendrocyte-enriched molecular context, replicated across nearly 1,800 brain samples. The signal is notable for its consistency across tauopathies and for co-occurring with established myelin and oligodendrocyte genes. However, <strong>functional causality, directional effect, and therapeutic tractability remain entirely unestablished</strong> in AD. Compounding this, LDB3's well-characterised essential roles in cardiac and skeletal muscle impose a <strong>significant safety constraint</strong>: systemic perturbation risks serious on-target toxicity. The most defensible near-term posture is to use LDB3 as a <strong>mechanistic probe and potential biomarker</strong> of tau-associated glial dysfunction, while investing in rigorous cell-type-specific functional studies to determine whether and how its dysregulation contributes to, or compensates for, the oligodendrocyte vulnerability observed in tauopathy.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  LDB3 / ZASP — Alzheimer's Disease &amp; Tauopathy TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

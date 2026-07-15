@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KDM3B — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: white;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,100,100,0.35);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #e2d9f3;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    font-size: 0.91rem;
+  }
+
+  .card-accent    { background: var(--light);        border-left: 4px solid var(--mid); }
+  .card-danger    { background: var(--danger-light);  border-left: 4px solid var(--danger); }
+  .card-positive  { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-blue      { background: var(--blue-light);    border-left: 4px solid var(--blue); }
+  .card-neutral   { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-warning   { background: var(--warning-light); border-left: 4px solid var(--warning); }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: ta;
+  }
+
+  .takeaway-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaway-list li:last-child { border-bottom: none; }
+
+  .ta-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .ta-lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    border-radius: 14px;
+    padding: 40px 36px;
+    color: white;
+  }
+
+  .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    color: #e2d9f3;
+    line-height: 1.8;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: KDM3B &nbsp;|&nbsp; Lysine Demethylase 3B</span>
+    <span class="chip chip-danger">⚠ Safety Concerns Noted</span>
+  </div>
+  <h1>KDM3B &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Evidence Caveat</div>
+      KDM3B has <em>no direct validation</em> in AD patients, AD brain tissue, amyloid-β or tau models, or AD therapeutic experiments. All AD relevance is <strong>inferential</strong>, based on mechanistic overlap with known AD biology.
+    </div>
+
+    <p>KDM3B is an H3K9me1/2 histone demethylase and epigenetic transcriptional regulator with plausible but unvalidated relevance to Alzheimer's disease (AD). The supplied evidence does not describe any direct KDM3B study in AD patients, AD brain tissue, amyloid-β models, tau models, microglia in AD, cognitive-decline cohorts, or AD therapeutic experiments. Its AD relevance is therefore inferential, based on overlap between KDM3B-regulated mechanisms and known AD biology.</p>
+
+    <p>The strongest AD-adjacent evidence comes from neuronal and aging-related studies: in an aging mouse retina model, <em>Kdm3b</em> declined with age in cone photoreceptors; insufficiency increased H3K9me1/2 heterochromatin at synapse assembly and vesicle-transport genes, downregulated those genes, altered ribbon synapse morphology, and promoted apoptotic cone loss. This aligns with central AD mechanisms including aging-associated epigenomic drift, synaptic dysfunction, impaired vesicle trafficking, neuronal vulnerability, and apoptosis.</p>
+
+    <p>KDM3B also appears relevant to cognition through Diets-Jongmans syndrome, where heterozygous human variants associate with developmental delay, intellectual disability, autism-spectrum features, executive dysfunction, working-memory weaknesses, and learning difficulties. Mouse <em>Kdm3b</em> haploinsufficiency impaired cerebellum-dependent memory consolidation and altered plasticity-related gene expression.</p>
+
+    <p>As a therapeutic target, KDM3B is best viewed as a candidate mechanistic node rather than a validated AD target. The most plausible neurodegenerative hypothesis is that preserving or restoring KDM3B activity in vulnerable neurons may help maintain synaptic gene expression, autophagy, mitochondrial function, ferroptosis resistance, and epigenomic stability during aging. However, KDM3B biology is highly context-dependent, and cancer studies show that both inhibition and preservation can be beneficial or harmful depending on tissue and disease state.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Arial,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Core Mechanism -->
+        <rect x="10" y="10" width="270" height="460" rx="12" fill="#ede8f8" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="145" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1.5">A — CORE MECHANISM</text>
+
+        <!-- KDM3B node -->
+        <rect x="60" y="48" width="170" height="42" rx="8" fill="#6d3fc0" stroke="#3b1f6e" stroke-width="1.2"/>
+        <text x="145" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="white">KDM3B</text>
+        <text x="145" y="80" text-anchor="middle" font-size="9.5" fill="#e2d9f3">H3K9me1/2 Demethylase</text>
+
+        <!-- H3K9me1/2 -->
+        <rect x="60" y="120" width="170" height="40" rx="8" fill="white" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="145" y="135" text-anchor="middle" font-size="10" fill="#3b1f6e">Removes H3K9me1/2</text>
+        <text x="145" y="150" text-anchor="middle" font-size="9.5" fill="#6d3fc0">Repressive Marks</text>
+
+        <!-- Chromatin Open -->
+        <rect x="60" y="192" width="170" height="40" rx="8" fill="white" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="145" y="207" text-anchor="middle" font-size="10" fill="#3b1f6e">Open Chromatin</text>
+        <text x="145" y="222" text-anchor="middle" font-size="9.5" fill="#6d3fc0">Transcriptional Activation</text>
+
+        <!-- Iron sensitivity node -->
+        <rect x="60" y="264" width="170" height="40" rx="8" fill="white" stroke="#b45309" stroke-width="1.2"/>
+        <text x="145" y="279" text-anchor="middle" font-size="10" fill="#3b1f6e">Iron-Sensitive Activity</text>
+        <text x="145" y="294" text-anchor="middle" font-size="9.5" fill="#b45309">LAT3 / RAPTOR / mTORC1</text>
+
+        <!-- m6A / RNA crosstalk -->
+        <rect x="60" y="336" width="170" height="40" rx="8" fill="white" stroke="#475569" stroke-width="1.2"/>
+        <text x="145" y="351" text-anchor="middle" font-size="10" fill="#3b1f6e">m6A / YTHDC1</text>
+        <text x="145" y="366" text-anchor="middle" font-size="9.5" fill="#475569">RNA &amp; Chromatin Crosstalk</text>
+
+        <!-- Diets-Jongmans badge -->
+        <rect x="68" y="408" width="154" height="34" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="145" y="421" text-anchor="middle" font-size="9.5" font-weight="700" fill="#9b1c1c">Diets-Jongmans Syndrome</text>
+        <text x="145" y="434" text-anchor="middle" font-size="9" fill="#9b1c1c">Heterozygous variants → ID/DD</text>
+
+        <!-- Arrows Panel A -->
+        <line x1="145" y1="90" x2="145" y2="119" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="145" y1="160" x2="145" y2="191" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="145" y1="232" x2="145" y2="263" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+        <line x1="145" y1="304" x2="145" y2="335" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+        <line x1="145" y1="376" x2="145" y2="407" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B: Neuronal Aging Branch -->
+        <rect x="296" y="10" width="295" height="300" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="443" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.5">B — NEURONAL AGING</text>
+
+        <!-- Aging trigger -->
+        <rect x="341" y="45" width="200" height="38" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="441" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="white">KDM3B Decline</text>
+        <text x="441" y="74" text-anchor="middle" font-size="9.5" fill="#d1fae5">Aging &amp; Neurodegeneration</text>
+
+        <!-- Branch split — two parallel columns -->
+        <!-- Left sub: Synapse branch -->
+        <rect x="306" y="117" width="120" height="38" rx="8" fill="white" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="366" y="132" text-anchor="middle" font-size="9.5" fill="#0f766e">H3K9me2↑</text>
+        <text x="366" y="147" text-anchor="middle" font-size="9.5" fill="#1e293b">Synaptic Genes ↓</text>
+
+        <!-- Right sub: Vesicle branch -->
+        <rect x="455" y="117" width="120" height="38" rx="8" fill="white" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="515" y="132" text-anchor="middle" font-size="9.5" fill="#0f766e">H3K9me2↑</text>
+        <text x="515" y="147" text-anchor="middle" font-size="9.5" fill="#1e293b">Vesicle Transport ↓</text>
+
+        <!-- Left: Synapse morphology -->
+        <rect x="306" y="186" width="120" height="38" rx="8" fill="white" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="366" y="201" text-anchor="middle" font-size="9.5" fill="#1e293b">Ribbon Synapse</text>
+        <text x="366" y="216" text-anchor="middle" font-size="9.5" fill="#0f766e">Morphology Altered</text>
+
+        <!-- Right: Cone loss -->
+        <rect x="455" y="186" width="120" height="38" rx="8" fill="white" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="515" y="201" text-anchor="middle" font-size="9.5" fill="#1e293b">Cone Photoreceptor</text>
+        <text x="515" y="216" text-anchor="middle" font-size="9.5" fill="#0f766e">Apoptotic Loss</text>
+
+        <!-- Converged: Neuronal Vulnerability -->
+        <rect x="341" y="255" width="200" height="38" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="441" y="270" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Neuronal Vulnerability</text>
+        <text x="441" y="284" text-anchor="middle" font-size="9.5" fill="#065f46">AD-like Synaptic Failure</text>
+
+        <!-- Arrows Panel B -->
+        <!-- KDM3B Decline → branch forks -->
+        <line x1="441" y1="83" x2="366" y2="116" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="441" y1="83" x2="515" y2="116" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Left col down -->
+        <line x1="366" y1="155" x2="366" y2="185" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Right col down -->
+        <line x1="515" y1="155" x2="515" y2="185" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Both converge to Neuronal Vulnerability -->
+        <line x1="366" y1="224" x2="420" y2="254" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="515" y1="224" x2="462" y2="254" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connector: Panel A open chromatin → Panel B KDM3B Decline (routed through gutter) -->
+        <!-- KDM3B (Panel A, right edge ~230) → KDM3B Decline top-left -->
+        <path d="M 230 69 Q 275 69 341 64" fill="none" stroke="#6d3fc0" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+
+        <!-- Panel C: Stress / Protective Pathways -->
+        <rect x="296" y="325" width="295" height="165" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="443" y="346" text-anchor="middle" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1.5">C — STRESS RESPONSE</text>
+
+        <!-- Ferroptosis branch -->
+        <rect x="306" y="356" width="120" height="38" rx="8" fill="white" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="366" y="371" text-anchor="middle" font-size="9.5" fill="#9b1c1c">ATF4 / SLC7A11</text>
+        <text x="366" y="386" text-anchor="middle" font-size="9.5" fill="#1e293b">Ferroptosis Guard</text>
+
+        <!-- Autophagy branch -->
+        <rect x="455" y="356" width="120" height="38" rx="8" fill="white" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="515" y="371" text-anchor="middle" font-size="9.5" fill="#9b1c1c">GABARAPL1</text>
+        <text x="515" y="386" text-anchor="middle" font-size="9.5" fill="#1e293b">Autophagic Flux</text>
+
+        <!-- Converged outcome -->
+        <rect x="341" y="432" width="200" height="38" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="441" y="449" text-anchor="middle" font-size="10" font-weight="700" fill="#9b1c1c">Proteostasis &amp; Survival</text>
+        <text x="441" y="463" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Aβ/tau/mitochondria clearance</text>
+
+        <!-- Arrows Panel C -->
+        <!-- Neuronal Vulnerability → stress panel (route through gutter between B-bottom and C-top) -->
+        <!-- Vertical drop from neuronal vulnerability bottom to ferroptosis/autophagy -->
+        <line x1="390" y1="325" x2="350" y2="355" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+        <line x1="490" y1="325" x2="497" y2="355" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+        <!-- ferroptosis → outcome -->
+        <line x1="366" y1="394" x2="400" y2="431" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- autophagy → outcome -->
+        <line x1="515" y1="394" x2="483" y2="431" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel D: Therapeutic / Safety -->
+        <rect x="607" y="10" width="305" height="460" rx="12" fill="#eff6ff" fill-opacity="0.65" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="759" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af" letter-spacing="1.5">D — THERAPEUTIC CONTEXT</text>
+
+        <!-- Neuroprotection -->
+        <rect x="630" y="48" width="256" height="40" rx="8" fill="#1e40af" stroke="#1e3a8a" stroke-width="1.2"/>
+        <text x="758" y="64" text-anchor="middle" font-size="10.5" font-weight="700" fill="white">Preserve / Restore KDM3B</text>
+        <text x="758" y="78" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Neuronal aging hypothesis</text>
+
+        <!-- Target genes -->
+        <rect x="630" y="120" width="115" height="40" rx="8" fill="white" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="687" y="135" text-anchor="middle" font-size="9.5" fill="#1e40af">Synaptic Gene</text>
+        <text x="687" y="150" text-anchor="middle" font-size="9.5" fill="#1e293b">Expression</text>
+
+        <rect x="771" y="120" width="115" height="40" rx="8" fill="white" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="828" y="135" text-anchor="middle" font-size="9.5" fill="#1e40af">Mitochondrial</text>
+        <text x="828" y="150" text-anchor="middle" font-size="9.5" fill="#1e293b">Function</text>
+
+        <!-- Memory / cognition -->
+        <rect x="630" y="192" width="115" height="40" rx="8" fill="white" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="687" y="207" text-anchor="middle" font-size="9.5" fill="#1e40af">Memory</text>
+        <text x="687" y="222" text-anchor="middle" font-size="9.5" fill="#1e293b">Consolidation</text>
+
+        <rect x="771" y="192" width="115" height="40" rx="8" fill="white" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="828" y="207" text-anchor="middle" font-size="9.5" fill="#1e40af">Epigenomic</text>
+        <text x="828" y="222" text-anchor="middle" font-size="9.5" fill="#1e293b">Stability</text>
+
+        <!-- Safety concerns cluster -->
+        <rect x="630" y="264" width="256" height="40" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="758" y="279" text-anchor="middle" font-size="10" font-weight="700" fill="#9b1c1c">Safety Concerns</text>
+        <text x="758" y="294" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Cancer · Immune · Endocrine · Fertility</text>
+
+        <!-- Drug tools -->
+        <rect x="630" y="336" width="115" height="40" rx="8" fill="white" stroke="#475569" stroke-width="1.2"/>
+        <text x="687" y="351" text-anchor="middle" font-size="9.5" fill="#475569">P3FI-90</text>
+        <text x="687" y="366" text-anchor="middle" font-size="9.5" fill="#1e293b">KDM3B Inhibitor</text>
+
+        <rect x="771" y="336" width="115" height="40" rx="8" fill="white" stroke="#475569" stroke-width="1.2"/>
+        <text x="828" y="351" text-anchor="middle" font-size="9.5" fill="#475569">Jumonji / KDM</text>
+        <text x="828" y="366" text-anchor="middle" font-size="9.5" fill="#1e293b">Broader Inhibitors</text>
+
+        <!-- Selectivity imperative -->
+        <rect x="630" y="408" width="256" height="40" rx="8" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+        <text x="758" y="425" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af">CNS-Selective Approaches</text>
+        <text x="758" y="439" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Brain-penetrant · Cell-type-selective</text>
+
+        <!-- Arrows Panel D -->
+        <line x1="758" y1="88" x2="687" y2="119" stroke="#1e40af" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="758" y1="88" x2="828" y2="119" stroke="#1e40af" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="687" y1="160" x2="687" y2="191" stroke="#1e40af" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="828" y1="160" x2="828" y2="191" stroke="#1e40af" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+        <line x1="687" y1="232" x2="706" y2="263" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+        <line x1="828" y1="232" x2="812" y2="263" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+        <line x1="687" y1="304" x2="687" y2="335" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+        <line x1="828" y1="304" x2="828" y2="335" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+        <line x1="687" y1="376" x2="716" y2="407" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+        <line x1="828" y1="376" x2="798" y2="407" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+        <!-- Cross-panel: Neuronal Vulnerability → Preserve/Restore (gutter route) -->
+        <path d="M 591 269 Q 608 269 608 64 Q 609 64 629 64" fill="none" stroke="#6d3fc0" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Fig. 1.</strong> Mechanistic overview of KDM3B in the context of Alzheimer's disease.
+      <strong>Panel A (purple):</strong> Core biochemical mechanism — KDM3B removes repressive H3K9me1/2 marks, opening chromatin for transcriptional activation; its activity is iron-sensitive and involves m6A/RNA crosstalk. Heterozygous loss causes Diets-Jongmans syndrome.
+      <strong>Panel B (teal):</strong> Age-related KDM3B decline branches into two parallel cascades — silencing of synaptic genes and impaired vesicle transport — both converging on AD-like neuronal vulnerability.
+      <strong>Panel C (red):</strong> Stress-response arm: KDM3B supports ferroptosis resistance (ATF4/SLC7A11) and autophagic flux (GABARAPL1), converging on proteostasis and neuronal survival.
+      <strong>Panel D (blue):</strong> Therapeutic context — preserving/restoring KDM3B is the preferred neuroprotective hypothesis; chemical inhibitors (P3FI-90, Jumonji/KDM tools) exist but the field requires CNS-selective, cell-type-selective approaches given significant safety risks.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Demethylase Mechanism</h3>
+        KDM3B repeatedly removes repressive H3K9me1/2 marks — especially H3K9me2 — enabling transcriptional activation. Altered heterochromatin, histone methylation, and transcriptional repression are hallmarks of neuronal aging and neurodegeneration, making this mechanism centrally relevant.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuronal Aging &amp; Synaptic Maintenance</h3>
+        In aged mouse retina, KDM3B loss disrupted heterochromatin balance, silenced synaptic and vesicle-transport genes, altered ribbon synapse morphology, and promoted apoptosis. Since synaptic failure is an early, central feature of AD, this provides the strongest mechanistic bridge to AD-like neurodegeneration.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Cognitive &amp; Neurodevelopmental Dosage Sensitivity</h3>
+        Human KDM3B variants cause Diets-Jongmans syndrome (developmental delay, intellectual disability, autism-spectrum features, executive dysfunction, working-memory deficits). Mouse <em>Kdm3b</em> haploinsufficiency impairs cerebellum-dependent memory consolidation and alters plasticity-related gene expression.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Autophagy, Iron &amp; mTORC1 Intersection</h3>
+        KDM3B activates autophagy genes (GABARAPL1) and functions as an iron-sensitive demethylase regulating LAT3, RAPTOR, leucine availability, and mTORC1 signaling — pathways directly intersecting AD-relevant iron dyshomeostasis, mitochondrial dysfunction, oxidative stress, and impaired proteostasis.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ferroptosis Resistance &amp; Oxidative Stress</h3>
+        KDM3B can protect against ferroptosis via ATF4/SLC7A11 regulation and appears in oxidative-stress-linked epigenetic programs. AD involves iron accumulation, lipid peroxidation, oxidative injury, and ferroptosis-like neuronal vulnerability, making this potentially important.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Complexity &amp; Safety Risks</h3>
+        KDM3B is chemically targetable (P3FI-90; broader Jumonji/KDM inhibitors), but neuronal-aging evidence favors <em>restoration</em> over inhibition. Systemic modulation carries significant risks across development, cognition, immune function, endocrine pathways, cell-cycle regulation, fertility, and cancer biology.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <span class="ta-num">1</span>
+        <span><span class="ta-lead">Treat KDM3B as exploratory, not validated.</span> It should be positioned as a candidate mechanistic node in AD biology, pending direct evidence in AD brain tissue, AD genetic datasets, or established AD models.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">2</span>
+        <span><span class="ta-lead">Map KDM3B expression in AD-vulnerable regions.</span> Prioritize testing whether KDM3B expression or activity is altered in hippocampus, entorhinal cortex, and association cortex using post-mortem and/or imaging-linked datasets.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">3</span>
+        <span><span class="ta-lead">Deploy single-cell and spatial transcriptomics.</span> Determine whether KDM3B changes occur in neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, or disease-associated glial states to identify the cell type most relevant for intervention.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">4</span>
+        <span><span class="ta-lead">Map H3K9me1/2 changes at AD-relevant genes.</span> After KDM3B gain or loss of function, profile changes at genes involved in synaptic maintenance, vesicle trafficking, autophagy, mitochondrial function, inflammatory signaling, iron handling, and apoptosis.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">5</span>
+        <span><span class="ta-lead">Test in AD-relevant experimental models.</span> Include amyloid-β, tau, aging, oxidative stress, iron overload, and neuroinflammatory models to determine therapeutic direction and evaluate downstream readouts such as synaptic resilience, autophagic flux, mitochondrial dynamics, ferroptosis resistance, and neuronal survival.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">6</span>
+        <span><span class="ta-lead">Determine therapeutic direction before drug development.</span> Current neuronal-aging evidence suggests preserving or enhancing KDM3B activity may be more plausible for neuroprotection than inhibiting it — but this must be validated in brain models before committing to a chemical strategy.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">7</span>
+        <span><span class="ta-lead">Require selectivity for any therapeutic approach.</span> If inhibitors or activators are pursued, mandate brain-penetrant, cell-type-selective, and pathway-selective designs rather than broad systemic KDM3B modulation, given the breadth of safety risks.</span>
+      </li>
+
+      <li>
+        <span class="ta-num">8</span>
+        <span><span class="ta-lead">Assess risks systematically and early.</span> Cancer risk, immune activation, endocrine disruption, developmental/cognitive effects, and broad transcriptional dysregulation must all be evaluated before any clinical translation is considered.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — KDM3B in Alzheimer's Disease</div>
+      <p>
+        KDM3B is an intellectually compelling but <strong>unvalidated candidate</strong> for Alzheimer's disease research. Its core function — removing repressive <strong>H3K9me1/2 histone marks</strong> to enable transcriptional activation — is mechanistically aligned with the epigenomic drift, synaptic failure, impaired proteostasis, and neuronal vulnerability that characterize AD. The most persuasive evidence comes from aging retina studies showing that KDM3B loss silences synaptic and vesicle-transport genes and promotes apoptosis, and from human Diets-Jongmans syndrome demonstrating that KDM3B dosage is essential for cognitive and neural function. Additional functional intersections with <strong>autophagy, iron metabolism, mTORC1, ferroptosis resistance, and inflammatory signaling</strong> further enrich the biological rationale. However, no direct AD evidence exists. The central working hypothesis should be that <strong>KDM3B protects aging neurons by maintaining proper chromatin balance at synaptic, trafficking, stress-response, and survival genes</strong>, and that loss or misregulation of this balance could contribute to AD-like pathology. The preferred therapeutic strategy, if validated, would likely be <strong>preservation or restoration</strong> of KDM3B activity in vulnerable neurons — not inhibition — using highly selective, brain-penetrant tools. Significant safety complexity demands rigorous pre-clinical evaluation before any therapeutic advance.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  KDM3B / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

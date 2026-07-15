@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANP32B — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.45);
+    border-color: rgba(255,180,180,0.4);
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.75;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+    color: var(--slate);
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW PROSE */
+  .prose p { margin-bottom: 1rem; font-size: 0.97rem; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { line-height: 1.6; }
+  .card-accent  { background: var(--light);          border-color: var(--mid);     }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger);  }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light); border-color: var(--positive);}
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light);  border-color: #d97706;        }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: #f1f5f9;               border-color: #64748b;        }
+  .card-neutral h3 { color: #334155; }
+  .card-blue    { background: #eff6ff;               border-color: #3b82f6;        }
+  .card-blue    h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: takeaway; padding: 0; }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    padding: 0 0 0 2.6rem;
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 32px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    opacity: 0.7;
+    margin-bottom: 10px;
+  }
+  .verdict p strong { color: #93c5fd; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ANP32B &nbsp;|&nbsp; Acidic Nuclear Phosphoprotein 32B / PAL31</span>
+    <span class="chip chip-danger">⚠ Safety: Pleiotropic — inhibition risks uncertain</span>
+  </div>
+  <h1>ANP32B &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> ANP32B is <em>not</em> established as a validated Alzheimer's disease gene, biomarker, or therapeutic target. The sole direct AD-relevant finding is a reduction of ANP32B in brain-derived extracellular vesicles from CAST.APP/PS1 mice. All remaining mechanistic evidence derives from cancer, viral, developmental, immune, and chromatin-biology studies. Treat this summary as hypothesis-generating.
+    </div>
+
+    <div class="prose">
+      <p>ANP32B (also known as PAL31) is a multifunctional nuclear acidic phosphoprotein and histone chaperone involved in nucleocytoplasmic shuttling, chromatin regulation, PP2A inhibition, p53 modulation, apoptosis and caspase signaling, HuR/ELAVL1-mediated RNA export, mitochondrial/cytochrome c stress signaling, inflammatory pathway control, ferroptosis-related oxidative injury, and viral polymerase support.</p>
+      <p>These diverse functions overlap substantially with core Alzheimer's pathophysiology — including epigenetic dysregulation, tau phosphorylation control (via PP2A), mitochondrial dysfunction, oxidative stress, neuroinflammation, RNA-binding protein dysfunction, altered extracellular vesicle signaling, and neuronal vulnerability — making ANP32B an intellectually compelling but currently unvalidated AD modifier candidate.</p>
+      <p>Note that several database records conflate ANP32B with "APRIL" (TNFSF13), a TNF-family cytokine. BAFF/APRIL immune findings attributable to TNFSF13 must not be attributed to ANP32B and are excluded here.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <!--
+        Layout plan (counting nodes — max 16):
+        Panel A (Upstream Inputs): 3 nodes
+        Panel B (Core ANP32B Hub): 1 node (ANP32B)
+        Panel C (Signaling Branches — two branches): 6 nodes
+        Panel D (AD-Relevant Outcomes): 4 nodes
+        Total = 14 nodes ✓ (≤16)
+
+        Row grid: rows at y=60,130,200,270,340,410
+        Panel A: x=20-200, Panel B: x=230-430 (center hub), Panel C: x=460-860, Panel D: x=230-660 (bottom)
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: Upstream Stressors ══ -->
+        <rect x="12" y="12" width="168" height="340" rx="10" fill="#e8f1fa" fill-opacity="0.5" stroke="#2e6da4" stroke-width="1" stroke-opacity="0.4"/>
+        <text x="96" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-decoration="none" letter-spacing="1">UPSTREAM STRESSORS</text>
+
+        <!-- A1: Amyloid/Tau -->
+        <rect x="26" y="46" width="140" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="63" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Amyloid-β /</text>
+        <text x="96" y="78" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Tau stress</text>
+
+        <!-- A2: Mitochondrial injury -->
+        <rect x="26" y="108" width="140" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="125" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Mitochondrial</text>
+        <text x="96" y="140" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">injury / Cytochrome c</text>
+
+        <!-- A3: Oxidative/Inflammatory -->
+        <rect x="26" y="170" width="140" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="187" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Oxidative stress /</text>
+        <text x="96" y="202" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Neuroinflammation</text>
+
+        <!-- A4: DNA damage -->
+        <rect x="26" y="232" width="140" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="249" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">DNA damage /</text>
+        <text x="96" y="264" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Nuclear stress</text>
+
+        <!-- ══ PANEL B: ANP32B Hub ══ -->
+        <rect x="196" y="80" width="180" height="230" rx="10" fill="#dbeafe" fill-opacity="0.45" stroke="#1e3a5f" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="286" y="99" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">ANP32B HUB</text>
+
+        <!-- B1: ANP32B/PAL31 (central) -->
+        <rect x="214" y="110" width="144" height="52" rx="8" fill="#1e3a5f" stroke="none"/>
+        <text x="286" y="131" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#fff">ANP32B / PAL31</text>
+        <text x="286" y="148" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#bfdbfe">Histone chaperone</text>
+
+        <!-- B2: EV packaging -->
+        <rect x="214" y="180" width="144" height="44" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="286" y="197" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">EV packaging</text>
+        <text x="286" y="212" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">↓ in AD-model EVs</text>
+
+        <!-- B3: Nucleocytoplasmic shuttling -->
+        <rect x="214" y="242" width="144" height="44" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="286" y="259" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Nucleocytoplasmic</text>
+        <text x="286" y="274" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">shuttling / CRM1</text>
+
+        <!-- ══ PANEL C: Signaling Branches ══ -->
+        <rect x="392" y="12" width="536" height="370" rx="10" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1" stroke-opacity="0.4"/>
+        <text x="660" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">DOWNSTREAM SIGNALING BRANCHES</text>
+
+        <!-- Branch 1 label -->
+        <text x="510" y="56" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1e3a5f" font-style="italic">Branch 1 — Phosphatase / Tau</text>
+
+        <!-- C1a: PP2A inhibition -->
+        <rect x="418" y="66" width="136" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="486" y="83" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">PP2A inhibition</text>
+        <text x="486" y="98" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">(endogenous)</text>
+
+        <!-- C1b: Tau phosphorylation -->
+        <rect x="418" y="132" width="136" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="486" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">↑ Tau phospho-</text>
+        <text x="486" y="164" text-anchor="middle" font-family="Georgia" font-size="10" fill="#991b1b">rylation (potential)</text>
+
+        <!-- C1c: p53 / apoptosis -->
+        <rect x="418" y="198" width="136" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="486" y="215" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">p53 / Caspase</text>
+        <text x="486" y="230" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Apoptosis</text>
+
+        <!-- Branch 2 label -->
+        <text x="790" y="56" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#0f766e" font-style="italic">Branch 2 — Chromatin / RNA</text>
+
+        <!-- C2a: Chromatin / macroH2A -->
+        <rect x="706" y="66" width="136" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="774" y="83" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Chromatin / macroH2A</text>
+        <text x="774" y="98" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">H3K27ac / MYC</text>
+
+        <!-- C2b: HuR/ELAVL1 RNA export -->
+        <rect x="706" y="132" width="136" height="44" rx="6" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="774" y="149" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">HuR/ELAVL1</text>
+        <text x="774" y="164" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">RNA export</text>
+
+        <!-- C2c: NF-κB / iNOS / inflammation -->
+        <rect x="706" y="198" width="136" height="44" rx="6" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="774" y="215" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">NF-κB / iNOS</text>
+        <text x="774" y="230" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">inhibition (PAL31)</text>
+
+        <!-- Convergence node: Neuronal vulnerability -->
+        <rect x="562" y="300" width="160" height="52" rx="8" fill="#1e3a5f" stroke="none"/>
+        <text x="642" y="321" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#fff">Neuronal vulnerability /</text>
+        <text x="642" y="338" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#bfdbfe">Cell-fate balance</text>
+
+        <!-- ══ PANEL D: AD-Relevant Outcomes ══ (bottom, under Hub+Branch) -->
+        <rect x="196" y="400" width="736" height="85" rx="10" fill="#fef2f2" fill-opacity="0.5" stroke="#991b1b" stroke-width="1" stroke-opacity="0.35"/>
+        <text x="564" y="418" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">AD-RELEVANT OUTCOMES (HYPOTHESISED)</text>
+
+        <!-- D1 -->
+        <rect x="210" y="426" width="148" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1"/>
+        <text x="284" y="443" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">Tau pathology</text>
+        <text x="284" y="458" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">modulation</text>
+
+        <!-- D2 -->
+        <rect x="374" y="426" width="148" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1"/>
+        <text x="448" y="443" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">Neuroinflammation</text>
+        <text x="448" y="458" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">regulation</text>
+
+        <!-- D3 -->
+        <rect x="538" y="426" width="148" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1"/>
+        <text x="612" y="443" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">Epigenetic /</text>
+        <text x="612" y="458" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">Transcriptional change</text>
+
+        <!-- D4 -->
+        <rect x="702" y="426" width="148" height="44" rx="6" fill="#fff" stroke="#991b1b" stroke-width="1"/>
+        <text x="776" y="443" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">EV / biomarker</text>
+        <text x="776" y="458" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1e293b">signal (↓ in AD)</text>
+
+        <!-- ═══════ ARROWS ═══════ -->
+        <!-- Panel A → ANP32B hub (horizontal arrows from right edge of each A node to left edge of B1/B2) -->
+        <!-- A1 → ANP32B -->
+        <line x1="166" y1="68" x2="213" y2="130" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- A2 → ANP32B -->
+        <line x1="166" y1="130" x2="213" y2="136" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- A3 → ANP32B -->
+        <line x1="166" y1="192" x2="214" y2="148" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- A4 → ANP32B -->
+        <line x1="166" y1="254" x2="214" y2="155" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- ANP32B → EV packaging -->
+        <line x1="286" y1="162" x2="286" y2="179" stroke="#1e3a5f" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+        <!-- ANP32B → Shuttling -->
+        <line x1="286" y1="224" x2="286" y2="241" stroke="#1e3a5f" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+
+        <!-- ANP32B (right edge) → Branch 1: PP2A (left side of C panel) -->
+        <!-- Route: from B1 right edge (358,136) → horizontal to (418,88) -->
+        <path d="M358,136 Q388,136 388,88 L417,88" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+
+        <!-- ANP32B (right edge) → Branch 2: Chromatin -->
+        <path d="M358,130 Q385,130 385,88 L705,88" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Branch 1 chain: PP2A → Tau phos -->
+        <line x1="486" y1="110" x2="486" y2="131" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- Tau phos → Apoptosis -->
+        <line x1="486" y1="176" x2="486" y2="197" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Branch 2 chain: Chromatin → HuR -->
+        <line x1="774" y1="110" x2="774" y2="131" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- HuR → NF-κB -->
+        <line x1="774" y1="176" x2="774" y2="197" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch 1 Apoptosis converges to Neuronal vulnerability -->
+        <path d="M486,242 L486,276 L562,326" stroke="#991b1b" stroke-width="1.3" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- Branch 2 NF-κB converges to Neuronal vulnerability -->
+        <path d="M774,242 L774,276 L803,326" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Neuronal vulnerability → Outcome panel (D) -->
+        <line x1="642" y1="352" x2="642" y2="399" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+
+        <!-- EV packaging → D4 -->
+        <path d="M286,224 L286,390 Q286,399 296,399 L702,399 Q722,399 776,425" stroke="#475569" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-gray)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream Stressors):</strong> Four converging biological stressors — amyloid-β/tau, mitochondrial injury/cytochrome c release, oxidative stress/neuroinflammation, and DNA/nuclear damage — each feeding into the ANP32B hub.
+      <strong>Panel B (ANP32B Hub):</strong> The central ANP32B/PAL31 node, acting as histone chaperone, extracellular vesicle cargo (reduced in AD-model mice), and nucleocytoplasmic shuttling factor.
+      <strong>Panel C (Branching Signaling):</strong> <em>Branch 1</em> (left, blue/red) — PP2A inhibition → potential tau hyperphosphorylation → p53/caspase/apoptosis; <em>Branch 2</em> (right, teal) — chromatin remodeling (macroH2A, H3K27ac, MYC) → HuR/ELAVL1 RNA export → NF-κB/iNOS inflammatory inhibition. Both branches reconverge on a shared neuronal vulnerability/cell-fate outcome node.
+      <strong>Panel D (AD-Relevant Outcomes, hypothesised):</strong> Four candidate downstream consequences — tau pathology modulation, neuroinflammation regulation, epigenetic/transcriptional change, and altered EV/biomarker signals.
+    </p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>Direct AD Evidence Is Limited</h3>
+        <p>ANP32B was reduced in brain-derived EVs from CAST.APP/PS1 amyloid-model mice vs. wild-type controls. Whether this is causal, compensatory, cell-origin-related, or purely consequential to neurodegeneration remains entirely untested.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>ANP32B–PP2A–Tau Axis</h3>
+        <p>ANP32B acts as an endogenous PP2A inhibitor regulated by cytochrome c during DNA damage. Because PP2A is a principal tau phosphatase, ANP32B inhibition could theoretically increase PP2A activity and reduce pathological tau phosphorylation — but this has not been tested in any AD context.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Mitochondria-to-Nucleus Signaling</h3>
+        <p>Cytochrome c can bind ANP32B during DNA damage to modulate its PP2A-inhibitory function, suggesting a mechanistic bridge between mitochondrial injury, nuclear phosphatase regulation, and cell-death pathways — all highly relevant to AD neurodegeneration.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Chromatin &amp; Transcriptional Roles</h3>
+        <p>ANP32B participates in histone chaperoning, macroH2A deposition, H3K27ac regulation, and MYC/c-MYC signaling — mechanisms that could intersect with AD-related transcriptional stress, chromatin remodeling, and cell-cycle re-entry, though no AD-specific chromatin targets are identified.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Anti-Inflammatory / Cytoprotective Role (PAL31)</h3>
+        <p>In non-AD injury models, PAL31/ANP32B overexpression reduced LPS/IFNγ-induced glial inflammatory activation, inhibited NF-κB/iNOS signaling, protected astroglial cells from oxidative toxicity, and reduced neuronal damage in co-culture — suggesting a possible protective function in glia.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Therapeutic Direction Is Uncertain</h3>
+        <p>In cancer, ANP32B knockdown reduces proliferation, MYC signaling, and leukemic stem-cell survival. In normal or injury contexts it may support survival, restrain apoptosis, and maintain immune balance. Context-dependent roles mean systemic inhibition could be harmful in neurons, glia, or regenerative compartments in chronic AD.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Position ANP32B as an exploratory modifier candidate.</strong> Do not treat it as a validated therapeutic target; all current AD relevance is hypothesis-generating based on a single EV proteomics observation and mechanistic parallels from non-AD systems.</li>
+      <li><strong>Prioritize the ANP32B–PP2A–tau hypothesis.</strong> Determine experimentally whether ANP32B inhibition or knockdown increases PP2A activity and reduces tau phosphorylation in primary neurons and established AD mouse models.</li>
+      <li><strong>Measure intracellular vs. EV-associated ANP32B separately.</strong> Assess both compartments in AD brain tissue, AD mouse models, and human iPSC-derived neurons, astrocytes, microglia, and oligodendrocytes to establish cell-type and compartment specificity.</li>
+      <li><strong>Probe ANP32B's response to canonical AD stimuli.</strong> Determine whether amyloid-β, tau stress, oxidative injury, inflammatory stimuli, or mitochondrial cytochrome c release alters ANP32B expression, localization, cleavage, EV packaging, or PP2A-inhibitory activity.</li>
+      <li><strong>Map ANP32B-dependent chromatin changes in AD-relevant cell types.</strong> Focus especially on macroH2A deposition, histone acetylation, H3K27ac, MYC-associated stress programs, and AD-risk or neuroinflammatory gene networks.</li>
+      <li><strong>Test RNA-regulatory functions in neuronal/glial contexts.</strong> Evaluate whether ANP32B governs HuR/ELAVL1-dependent export or stabilization of inflammatory, stress-response, synaptic, or survival-related mRNAs in neurons and glia.</li>
+      <li><strong>Evaluate safety rigorously before considering therapeutic modulation.</strong> ANP32B has pleiotropic roles spanning survival, apoptosis, immune regulation, development, viral replication, and proliferation; broad systemic inhibition is likely inappropriate for a chronic neurodegenerative disease setting.</li>
+      <li><strong>Near-term priority: biomarker and mechanism discovery.</strong> Assess whether ANP32B EV levels, cellular localization, or pathway activity correlate with amyloid burden, tau pathology, neuroinflammation, synaptic injury, or cognitive decline in human cohorts.</li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — ANP32B in Alzheimer's Disease</div>
+      <p>
+        <strong>ANP32B is a biologically plausible but empirically unvalidated Alzheimer's disease candidate.</strong> Its sole direct AD-relevant evidence — a reduction in brain-derived extracellular vesicles from an amyloid-model mouse — is intriguing but insufficient to establish causal involvement, directional effect, or therapeutic value. <strong>The most scientifically compelling rationale for studying ANP32B in AD rests on indirect mechanistic convergence:</strong> its roles as an endogenous PP2A inhibitor (and therefore potential regulator of tau phosphorylation), a cytochrome c–regulated stress sensor linking mitochondrial injury to nuclear signaling, a histone chaperone influencing chromatin accessibility and transcriptional programs, and a modulator of glial inflammatory activation. <strong>Each of these functions maps onto a well-established axis of AD pathophysiology.</strong> However, the same functional breadth that makes ANP32B interesting as a mechanistic node also makes it a challenging therapeutic target — its context-dependent roles in cell survival, apoptosis, immune regulation, and proliferation mean that systemic modulation carries substantial unpredictable risk. <strong>The most defensible near-term research strategy is biomarker characterization and mechanistic hypothesis testing</strong> — particularly the PP2A–tau axis, the mitochondria-to-nucleus signaling relay, and glial inflammatory modulation — before any therapeutic application is contemplated.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  ANP32B / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

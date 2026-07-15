@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFIH1 / MDA5 — Neuroinflammatory Pathway Candidate in Alzheimer's Disease</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --card-blue: #1e40af;
+    --card-blue-light: #eff6ff;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .card-accent  { background: var(--light);          border-color: var(--mid);      }
+  .card-accent h3  { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger);   }
+  .card-danger h3  { color: var(--danger); }
+
+  .card-positive{ background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+
+  .card-blue    { background: var(--card-blue-light); border-color: var(--card-blue); }
+  .card-blue h3   { color: var(--card-blue); }
+
+  .card-warning { background: var(--warning-light);  border-color: var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-bg);     border-color: var(--neutral-text); }
+  .card-neutral h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.93rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    border-radius: 12px;
+    color: #ffffff;
+    padding: 36px 36px;
+    line-height: 1.75;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    font-size: 0.96rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+    color: #e2eaf4;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+    opacity: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: IFIH1 &nbsp;|&nbsp; Interferon Induced with Helicase C Domain 1 (MDA5)</span>
+    <span class="chip chip-danger">⚠ No Direct AD Evidence — Mechanistic Inference Only</span>
+  </div>
+  <h1>IFIH1 / MDA5 &mdash; Neuroinflammatory Pathway Candidate<br>in Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package &mdash; AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Evidence Caveat:</strong> The source data contains <em>no direct Alzheimer's disease evidence</em> for IFIH1 — no AD cohorts, amyloid-β or tau experiments, synaptic-loss studies, cognitive outcomes, or AD therapeutic trials are described. All AD relevance is <strong>mechanistic and inferential</strong>.
+    </div>
+
+    <p>IFIH1 encodes <strong>MDA5</strong>, a cytosolic double-stranded RNA sensor in the RIG-I-like receptor (RLR) pathway. Upon detection of dsRNA, MDA5 signals through <strong>MAVS</strong> to activate type I interferon production, NF-κB, JAK/STAT, IRF3/IRF7, and a broad program of interferon-stimulated genes (ISGs), constituting a central pillar of innate antiviral and sterile inflammatory immunity.</p>
+
+    <p>Its Alzheimer's disease relevance is inferential. IFIH1/MDA5 repeatedly emerges as an upstream regulator of innate immune RNA sensing, antiviral/interferon signaling, endogenous dsRNA detection, mitochondrial RNA sensing, autophagy/ubiquitination-controlled immune activation, monocyte/macrophage inflammatory states, and autoimmune interferonopathy — all of which have mechanistic overlap with AD-relevant processes including chronic neuroinflammation, microglial and myeloid activation, interferon-stimulated gene signatures, mitochondrial dysfunction, cellular senescence, retroelement or endogenous RNA activation, vascular inflammation, and possible viral reactivation triggers.</p>
+
+    <p>IFIH1 should therefore be viewed as a <strong>plausible neuroinflammatory pathway candidate</strong> in Alzheimer's disease, not as a validated AD biomarker or established therapeutic target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 960 510" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Arial,Helvetica,sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-o" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Triggers -->
+          <rect x="10" y="10" width="240" height="490" rx="12" fill="#e8f1f8" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="130" y="33" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a5f" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+          <!-- Node 1: Viral dsRNA -->
+          <rect x="32" y="44" width="196" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="130" y="61" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Viral dsRNA</text>
+          <text x="130" y="77" text-anchor="middle" font-size="9.5" fill="#475569">RNA virus replication</text>
+
+          <!-- Node 2: Endogenous dsRNA -->
+          <rect x="32" y="108" width="196" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="130" y="125" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Endogenous dsRNA</text>
+          <text x="130" y="141" text-anchor="middle" font-size="9.5" fill="#475569">Alu / HERV / retroelements</text>
+
+          <!-- Node 3: Mitochondrial dsRNA -->
+          <rect x="32" y="172" width="196" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="130" y="189" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Mitochondrial dsRNA</text>
+          <text x="130" y="205" text-anchor="middle" font-size="9.5" fill="#475569">mtRNA leakage / dysfunction</text>
+
+          <!-- Node 4: ADAR1 failure -->
+          <rect x="32" y="236" width="196" height="42" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="130" y="253" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">ADAR1 Editing Failure</text>
+          <text x="130" y="269" text-anchor="middle" font-size="9.5" fill="#475569">Loss of self-RNA tolerance</text>
+
+          <!-- arrows panel A internal -->
+          <line x1="130" y1="86" x2="130" y2="107" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="130" y1="150" x2="130" y2="171" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="130" y1="214" x2="130" y2="235" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-o)"/>
+
+          <!-- converge arrows toward IFIH1 node — horizontal out of panel A -->
+          <line x1="228" y1="65" x2="268" y2="65" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="228" y1="129" x2="268" y2="129" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="228" y1="193" x2="268" y2="193" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="228" y1="257" x2="268" y2="257" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-o)"/>
+
+          <!-- Panel B: Sensing & Activation -->
+          <rect x="260" y="10" width="210" height="490" rx="12" fill="#e8f1f8" fill-opacity="0.45" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="365" y="33" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e3a5f" letter-spacing="1">SENSING &amp; ACTIVATION</text>
+
+          <!-- Node 5: IFIH1/MDA5 -->
+          <rect x="277" y="44" width="176" height="52" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.6"/>
+          <text x="365" y="65" text-anchor="middle" font-size="11.5" fill="#ffffff" font-weight="700">IFIH1 / MDA5</text>
+          <text x="365" y="83" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Cytosolic dsRNA sensor</text>
+
+          <!-- connector from 65 row 4-input to MDA5 node -->
+          <!-- vertical elbow from bottom triggers -->
+          <polyline points="268,129 257,129 257,70 277,70" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+          <polyline points="268,193 254,193 254,75 277,75" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+          <polyline points="268,257 252,257 252,80 277,80" stroke="#b45309" stroke-width="1.3" fill="none" marker-end="url(#arr-o)"/>
+
+          <!-- Node 6: MAVS -->
+          <rect x="277" y="126" width="176" height="42" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+          <text x="365" y="143" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">MAVS</text>
+          <text x="365" y="159" text-anchor="middle" font-size="9.5" fill="#475569">Mitochondrial adaptor</text>
+
+          <line x1="365" y1="96" x2="365" y2="125" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 7: Regulation (Ubiquitination/Autophagy) -->
+          <rect x="277" y="196" width="176" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+          <text x="365" y="213" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Ubiquitin / Autophagy</text>
+          <text x="365" y="229" text-anchor="middle" font-size="9.5" fill="#475569">ISGylation · filament control</text>
+
+          <line x1="365" y1="168" x2="365" y2="195" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr-o)"/>
+
+          <!-- Panel C: Downstream Signaling — BRANCHES -->
+          <rect x="488" y="10" width="236" height="490" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="606" y="33" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0f766e" letter-spacing="1">DOWNSTREAM SIGNALING</text>
+
+          <!-- Shared input from MAVS -->
+          <line x1="453" y1="147" x2="487" y2="147" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Branch split node: IFN/IRF branch & NF-kB/JAK branch -->
+          <!-- Node 8: IRF3/IRF7 -->
+          <rect x="500" y="58" width="156" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="578" y="73" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">IRF3 / IRF7</text>
+          <text x="578" y="87" text-anchor="middle" font-size="9.5" fill="#475569">Transcription factors</text>
+
+          <!-- Node 9: Type I IFN -->
+          <rect x="500" y="122" width="156" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="578" y="137" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Type I Interferon</text>
+          <text x="578" y="153" text-anchor="middle" font-size="9.5" fill="#475569">IFN-α / IFN-β production</text>
+
+          <!-- vertical connector IRF3→IFN -->
+          <line x1="578" y1="98" x2="578" y2="121" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Route from MAVS (y=147) elbow up to IRF3 (y=78) -->
+          <polyline points="487,147 494,147 494,78 500,78" stroke="#1e3a5f" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 10: JAK/STAT -->
+          <rect x="500" y="188" width="156" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="578" y="203" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">JAK / STAT1/STAT2</text>
+          <text x="578" y="219" text-anchor="middle" font-size="9.5" fill="#475569">Signal transduction</text>
+
+          <!-- MAVS → JAK/STAT elbow -->
+          <polyline points="487,147 493,147 493,208 500,208" stroke="#1e3a5f" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Node 11: NF-kB -->
+          <rect x="500" y="254" width="156" height="40" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="578" y="269" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">NF-κB</text>
+          <text x="578" y="285" text-anchor="middle" font-size="9.5" fill="#475569">Inflammatory transcription</text>
+
+          <!-- MAVS → NF-kB elbow -->
+          <polyline points="487,147 491,147 491,274 500,274" stroke="#1e3a5f" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Panel D: Outputs / AD-Relevant Consequences -->
+          <rect x="742" y="10" width="208" height="490" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="846" y="33" text-anchor="middle" font-size="9.5" font-weight="700" fill="#9b1c1c" letter-spacing="1">AD-RELEVANT OUTPUTS</text>
+
+          <!-- Node 12: ISG Program -->
+          <rect x="756" y="50" width="180" height="40" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="846" y="65" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">ISG Program</text>
+          <text x="846" y="81" text-anchor="middle" font-size="9.5" fill="#475569">MX1 · OAS · IFIT · ISG15</text>
+
+          <!-- IFN → ISG -->
+          <line x1="656" y1="142" x2="755" y2="71" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- Node 13: Microglial / Myeloid Activation -->
+          <rect x="756" y="152" width="180" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="846" y="169" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Microglial / Myeloid</text>
+          <text x="846" y="185" text-anchor="middle" font-size="9.5" fill="#475569">Activation &amp; inflammation</text>
+
+          <!-- JAK/STAT → Microglial -->
+          <line x1="656" y1="208" x2="755" y2="175" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- Node 14: SASP / Senescence -->
+          <rect x="756" y="256" width="180" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="846" y="273" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">SASP / Senescence</text>
+          <text x="846" y="289" text-anchor="middle" font-size="9.5" fill="#475569">Chronic sterile inflammation</text>
+
+          <!-- NF-kB → SASP -->
+          <line x1="656" y1="274" x2="755" y2="278" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-r)"/>
+
+          <!-- Node 15: Interferonopathy / CNS Pathology -->
+          <rect x="756" y="358" width="180" height="44" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.6"/>
+          <text x="846" y="375" text-anchor="middle" font-size="10.5" fill="#9b1c1c" font-weight="700">Interferonopathy</text>
+          <text x="846" y="391" text-anchor="middle" font-size="9.5" fill="#475569">AGS · CNS pathology risk</text>
+
+          <!-- convergence from ISG → Interferonopathy vertical -->
+          <polyline points="846,92 846,120 846,357" stroke="#9b1c1c" stroke-width="1.3" fill="none" marker-end="url(#arr-r)"/>
+
+          <!-- Node 16: Therapeutic Targets -->
+          <rect x="277" y="338" width="176" height="44" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.4"/>
+          <text x="365" y="355" text-anchor="middle" font-size="10.5" fill="#1e293b" font-weight="700">Therapeutic Window</text>
+          <text x="365" y="371" text-anchor="middle" font-size="9.5" fill="#475569">JAK-i · IFNAR · ADAR1</text>
+
+          <!-- Regulation node → Therapeutic -->
+          <line x1="365" y1="240" x2="365" y2="337" stroke="#1e40af" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+          <!-- Microglial / NF-kB → Therapeutic elbow through gutter -->
+          <polyline points="500,274 472,274 472,360 476,360" stroke="#1e40af" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers):</strong> Four input signal classes feeding into MDA5 activation — viral dsRNA, endogenous retroelement-derived dsRNA (Alu/HERV), mitochondrial dsRNA leakage, and failure of ADAR1-mediated RNA editing.
+        <strong>Panel B (Sensing &amp; Activation):</strong> IFIH1/MDA5 engages the mitochondrial adaptor MAVS; regulatory nodes (ubiquitination, ISGylation, autophagy/mitophagy) modulate pathway strength, suggesting potential therapeutic tuning points.
+        <strong>Panel C (Downstream Signaling):</strong> MAVS branches into three parallel signaling arms — IRF3/IRF7 → Type I IFN, JAK/STAT1/STAT2, and NF-κB — representing the three major transcriptional outputs of MDA5 activation.
+        <strong>Panel D (AD-Relevant Outputs):</strong> Converging consequences relevant to AD: a broad ISG program (MX1, OAS, IFIT, ISG15), microglial/myeloid activation, SASP-driven senescence, and, in gain-of-function states, systemic interferonopathy and CNS pathology (as modeled by Aicardi-Goutières syndrome). Dashed blue arrows indicate downstream therapeutic intervention points.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Interferon-Network Hub</h3>
+        <p>IFIH1/MDA5 is a central node in the interferon gene signature, co-appearing with STAT1, IRF7, MX1, OAS1/OASL, IFIT1/2/3, ISG15, RSAD2, CXCL10, DDX58/RIG-I, and MAVS across antiviral and inflammatory transcriptional programs.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Sterile Nucleic-Acid Sensing &amp; AD Relevance</h3>
+        <p>ADAR1 normally edits endogenous dsRNA to suppress inappropriate MDA5 activation. When RNA editing or quality control fails — via aging, Alu/HERV expression, or mtRNA leakage — IFIH1/MDA5 can trigger type I interferon in a sterile, cell-autonomous manner, directly paralleling hypothesized AD mechanisms.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Mitochondrial RNA &amp; SASP Bridge</h3>
+        <p>Cytosolic mitochondrial dsRNA can activate MDA5/MAVS and drive SASP-like inflammatory programs. Because mitochondrial dysfunction and cellular senescence are central aging and AD themes, this axis represents a plausible mechanism for IFIH1 amplifying chronic brain inflammation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Microglial / Myeloid Plausibility</h3>
+        <p>Aicardi-Goutières syndrome and ADAR1-deficiency models show that defective RNA editing drives interferon production in macrophage/microglia-like cells, and that Ifih1/MDA5 loss can rescue some interferon phenotypes — supporting a model of aberrant microglial IFIH1 activation sustaining brain inflammation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Gain-of-Function Danger &amp; Dual-Edge Therapeutics</h3>
+        <p>IFIH1 gain-of-function mutations are linked to interferonopathies including Aicardi-Goutières syndrome with severe CNS pathology. Anti-MDA5 dermatomyositis is associated with rapidly progressive interstitial lung disease and high mortality. Broad IFIH1 inhibition risks increased viral susceptibility — especially dangerous in elderly AD patients.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Precision-Subgroup Strategy</h3>
+        <p>IFIH1 is most relevant to AD subgroups with interferon-high signatures, impaired ADAR1/RNA-control pathways, mitochondrial dsRNA leakage, retroelement activation, senescence/SASP, or heightened myeloid inflammation — not as a universal AD disease-modifying target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat IFIH1 as hypothesis-generating, not validated.</strong> No AD cohorts, amyloid-β/tau experiments, or cognitive outcomes are currently linked to IFIH1; all AD relevance is inferred from mechanistic pathway overlap.</li>
+      <li><strong>Prioritize biomarker studies first.</strong> Determine whether IFIH1/MDA5 is elevated or activated in AD brain, CSF, blood, and single-cell datasets — specifically in microglia, astrocytes, neurons, endothelial cells, infiltrating macrophages, and peripheral monocytes.</li>
+      <li><strong>Evaluate the full pathway module, not IFIH1 alone.</strong> Co-assess MAVS, DDX58/RIG-I, DHX58/LGP2, ADAR1, PKR/EIF2AK2, cGAS-STING, IRF3/IRF7, STAT1/STAT2, ISG15, OAS genes, IFIT genes, MX1, CXCL10, and JAK/STAT components as a coherent network.</li>
+      <li><strong>Test AD-relevant dsRNA triggers experimentally.</strong> Determine whether endogenous dsRNA, HERV/Alu transcripts, mitochondrial dsRNA, improperly edited RNA, senescence-associated RNA, or viral reactivation products are sufficient to activate IFIH1/MDA5 in brain-relevant cell types.</li>
+      <li><strong>Correlate IFIH1 activation with AD pathological outcomes.</strong> Measure associations with amyloid burden, tau pathology, synapse loss, neurodegeneration, vascular dysfunction, cognitive decline, and microglial inflammatory state using existing AD biomarker frameworks.</li>
+      <li><strong>Avoid global IFIH1 inhibition strategies.</strong> Because MDA5 is essential for RNA-virus defense, any therapeutic approach must be partial, CNS/myeloid-targeted, time-limited, or downstream-selective (e.g., JAK inhibition, IFNAR blockade, ADAR1 restoration), with rigorous monitoring for infectious complications.</li>
+      <li><strong>Use IFIH1 as a precision-immunology concept.</strong> Reserve as a target for biomarker-defined interferon-high, RNA-sensing-high, mitochondrial-stress-high, senescence-high, or viral-response-high AD subtypes — not as a candidate for universal AD disease modification.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — IFIH1 / MDA5 in Alzheimer's Disease</span>
+      <p>
+        IFIH1/MDA5 represents a <strong>biologically credible but currently unvalidated neuroinflammatory pathway candidate</strong> in Alzheimer's disease. Its core mechanism — cytosolic dsRNA sensing through MAVS to drive type I interferon, NF-κB, and JAK/STAT programs — overlaps meaningfully with AD-associated processes including <strong>chronic microglial activation, interferon-stimulated gene signatures, mitochondrial dysfunction, cellular senescence, and endogenous retroelement or RNA-quality-control failure</strong>. The mitochondrial dsRNA–MDA5–SASP axis and the ADAR1-editing-failure model both provide specific, testable mechanistic bridges. However, <strong>no direct AD evidence exists</strong>: no cohort data, no amyloid or tau biology, no cognitive endpoints. The therapeutic potential of this axis is inherently <strong>double-edged</strong> — dampening excessive sterile inflammation must be balanced against preserving antiviral immunity in a vulnerable, elderly population. The most defensible near-term role for IFIH1 is as a <strong>precision biomarker and pathway anchor</strong> within interferon-high AD subgroups, informing downstream interventional strategies rather than serving as a primary therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  IFIH1 / MDA5 Neuroinflammation TEP Evidence Summary &mdash; AI-generated analysis &middot; For research use only &middot; Not for clinical application
+</footer>
+
+</body>
+</html>

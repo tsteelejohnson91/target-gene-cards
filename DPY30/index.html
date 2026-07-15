@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DPY30 — Alzheimer's Disease Epigenetic Regulatory Node</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-card: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 13px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180, 40, 40, 0.25);
+    border: 1px solid rgba(255, 140, 140, 0.35);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.68);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 0;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: #f4f7fa;
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 16px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card.accent    { border-color: var(--mid);      background: var(--light); }
+  .card.accent .card-heading  { color: var(--dark); }
+  .card.danger    { border-color: var(--danger);    background: var(--danger-light); }
+  .card.danger .card-heading  { color: var(--danger); }
+  .card.positive  { border-color: var(--positive);  background: var(--positive-light); }
+  .card.positive .card-heading { color: var(--positive); }
+  .card.warning   { border-color: var(--warning);   background: var(--warning-light); }
+  .card.warning .card-heading  { color: var(--warning); }
+  .card.neutral   { border-color: var(--neutral-border); background: var(--neutral-card); }
+  .card.neutral .card-heading  { color: #475569; }
+  .card.blue      { border-color: #3b6cb5; background: #eff4fc; }
+  .card.blue .card-heading    { color: #1d3f7a; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaway-list li .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 38px 40px;
+    line-height: 1.75;
+    font-size: 1.02rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .verdict p { color: rgba(255,255,255,0.9); }
+  .verdict strong { color: #ffffff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    margin-top: 56px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+
+  p { margin-bottom: 1em; }
+  p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DPY30 &nbsp;|&nbsp; Dumpy-30 Homolog / WRAD-COMPASS Subunit</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unresolved — inhibition may harm AD</span>
+  </div>
+  <h1>DPY30 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Key Caveat — Therapeutic Direction Unresolved</span>
+      The direction of any therapeutic intervention targeting DPY30 in Alzheimer's disease is currently unresolved. In cancer, DPY30 inhibition may be beneficial; in aging and neurodegeneration, DPY30 may be protective. Broad DPY30 suppression could therefore be actively harmful in an AD context, and this uncertainty must be resolved before any therapeutic program is initiated.
+    </div>
+
+    <p>DPY30 is a conserved epigenetic regulatory subunit of SET1/MLL/KMT2/COMPASS-family histone H3 lysine 4 (H3K4) methyltransferase complexes, functioning within the WRAD core complex (WDR5, RBBP5, ASH2L, DPY30). Its primary biochemical role is to support H3K4me2 and H3K4me3 deposition at active promoters and enhancers, thereby influencing chromatin accessibility, transcriptional competence, cell identity, differentiation, proliferation, metabolism, senescence, genome integrity, and stress-response programs.</p>
+
+    <p>DPY30 is <em>not</em> an established or validated Alzheimer's disease gene. Direct evidence linking DPY30 to amyloid-β, tau pathology, synaptic failure, AD-specific neuroinflammation, neuronal death, or cognitive decline is absent from the literature reviewed. Its Alzheimer's-disease relevance is indirect and mechanistic, resting on overlap with AD-relevant biology: brain aging, epigenomic remodeling, neuronal and glial transcriptional states, hippocampal neurogenesis, endosomal-lysosomal trafficking, metabolic dysfunction, oxidative stress, DNA damage, senescence, inflammation, and neurovascular changes.</p>
+
+    <p>The strongest AD-specific association is a 2024 postmortem brain methylomics/genetics study linking a DPY30/MEMO1 locus to excitatory neuron composition—a finding relevant to neuronal vulnerability and cell-state maintenance, but not to direct AD causality. A large plasma proteomics/Mendelian randomization study additionally identified plasma DPY30 as causally associated with biological aging—an upstream modifier of AD risk, though AD itself was not tested directly.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Core Mechanism -->
+        <rect x="12" y="12" width="260" height="476" rx="12" fill="#e8f1f8" fill-opacity="0.6" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="142" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1.2">A · CORE MECHANISM</text>
+
+        <!-- Node 1: WRAD Complex -->
+        <rect x="60" y="44" width="164" height="40" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="142" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">WRAD Complex</text>
+        <text x="142" y="76" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#cde" >(WDR5·RBBP5·ASH2L·DPY30)</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="142" y1="84" x2="142" y2="108" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 2: H3K4me2/me3 -->
+        <rect x="60" y="108" width="164" height="38" rx="7" fill="#3b6cb5" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="142" y="124" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">H3K4me2 / H3K4me3</text>
+        <text x="142" y="139" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#cde">Histone methylation</text>
+
+        <!-- Arrow 2→3 -->
+        <line x1="142" y1="146" x2="142" y2="170" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Chromatin accessibility -->
+        <rect x="55" y="170" width="174" height="38" rx="7" fill="#5b87c5" stroke="#2e6da4" stroke-width="1"/>
+        <text x="142" y="186" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#fff" font-weight="700">Active Chromatin</text>
+        <text x="142" y="201" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#cde">Promoters &amp; Enhancers</text>
+
+        <!-- Arrow 3→4 -->
+        <line x1="142" y1="208" x2="142" y2="232" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Gene Expression Programs -->
+        <rect x="55" y="232" width="174" height="38" rx="7" fill="#7aa7d6" stroke="#2e6da4" stroke-width="1"/>
+        <text x="142" y="248" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#1e3a5f" font-weight="700">Gene Expression</text>
+        <text x="142" y="263" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e3a5f">Cell identity programs</text>
+
+        <!-- Arrow 4→5 -->
+        <line x1="142" y1="270" x2="142" y2="294" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 5: ASH2L–DPY30 Interface -->
+        <rect x="55" y="294" width="174" height="38" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="142" y="310" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#93c5fd" font-weight="700">ASH2L–DPY30 PPI</text>
+        <text x="142" y="325" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#7fb5e8">Druggable interface</text>
+
+        <!-- Panel B: AD-Relevant Branches -->
+        <rect x="290" y="12" width="330" height="476" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="455" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">B · AD-RELEVANT MECHANISMS</text>
+
+        <!-- Node 6: Aging/Epigenomics -->
+        <rect x="308" y="44" width="142" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="379" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Brain Aging</text>
+        <text x="379" y="74" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ccfbf1">Plasma DPY30 → aging</text>
+
+        <!-- Node 7: Excitatory Neurons -->
+        <rect x="460" y="44" width="142" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="531" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Excitatory Neurons</text>
+        <text x="531" y="74" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ccfbf1">DPY30/MEMO1 locus</text>
+
+        <!-- Arrow 6→8 -->
+        <line x1="379" y1="84" x2="379" y2="114" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Arrow 7→9 -->
+        <line x1="531" y1="84" x2="531" y2="114" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 8: Hippocampal Neurogenesis -->
+        <rect x="305" y="114" width="148" height="40" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="379" y="130" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Hippocampal</text>
+        <text x="379" y="144" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Neurogenesis</text>
+
+        <!-- Node 9: Neuronal identity/vulnerability -->
+        <rect x="462" y="114" width="138" height="40" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="531" y="130" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Neuronal Identity</text>
+        <text x="531" y="144" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">&amp; Vulnerability</text>
+
+        <!-- Arrows 8→convergence, 9→convergence -->
+        <line x1="379" y1="154" x2="379" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="531" y1="154" x2="531" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Senescence / Oxidative Stress -->
+        <rect x="305" y="178" width="148" height="40" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="379" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Senescence /</text>
+        <text x="379" y="208" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Oxidative Stress</text>
+
+        <!-- Node 11: Genome Integrity -->
+        <rect x="462" y="178" width="138" height="40" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="531" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Genome Integrity</text>
+        <text x="531" y="208" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">cGAS/STING</text>
+
+        <!-- Arrows →12 -->
+        <line x1="379" y1="218" x2="379" y2="250" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="531" y1="218" x2="531" y2="250" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 12: Endolysosomal trafficking -->
+        <rect x="305" y="250" width="148" height="40" rx="7" fill="#8b1a1a" stroke="#6b1111" stroke-width="1"/>
+        <text x="379" y="266" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Endolysosomal</text>
+        <text x="379" y="280" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">Trafficking</text>
+
+        <!-- Node 13: Signaling Pathways -->
+        <rect x="462" y="250" width="138" height="40" rx="7" fill="#8b1a1a" stroke="#6b1111" stroke-width="1"/>
+        <text x="531" y="266" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#fff" font-weight="700">AD Signaling</text>
+        <text x="531" y="280" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffd0d0" font-size2="9">PI3K/AKT·Wnt·NFκB</text>
+
+        <!-- Panel C: Outcomes -->
+        <rect x="638" y="12" width="250" height="476" rx="12" fill="#fff8f8" fill-opacity="0.7" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="763" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#8b1a1a" letter-spacing="1.2">C · DISEASE OUTCOMES</text>
+
+        <!-- Node 14: Neuroinflammation -->
+        <rect x="656" y="44" width="174" height="40" rx="7" fill="#8b1a1a" stroke="#6b1111" stroke-width="1"/>
+        <text x="743" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Neuroinflammation</text>
+        <text x="743" y="74" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ffc9c9">Senescent glia · cGAS/STING</text>
+
+        <!-- Arrow 11→14 via right-angle over gutter -->
+        <polyline points="600,198 625,198 625,64 656,64" fill="none" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 15: Proteostasis Failure -->
+        <rect x="656" y="170" width="174" height="40" rx="7" fill="#a03030" stroke="#6b1111" stroke-width="1"/>
+        <text x="743" y="186" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Proteostasis Failure</text>
+        <text x="743" y="200" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ffc9c9">Lysosomal / autophagy</text>
+
+        <!-- Arrow 12→15 -->
+        <polyline points="453,270 625,270 625,190 656,190" fill="none" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow 14→verdict -->
+        <line x1="743" y1="84" x2="743" y2="120" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 16: Verdict -->
+        <rect x="651" y="120" width="184" height="44" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="743" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#93c5fd" font-weight="700">Plausible AD Relevance</text>
+        <text x="743" y="152" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7fb5e8">Not causal · Needs validation</text>
+
+        <!-- Arrow 15→Verdict -->
+        <line x1="743" y1="210" x2="743" y2="220" stroke="#a03030" stroke-width="1.4"/>
+        <polyline points="743,220 743,240 835,240 835,150 835,164" fill="none" stroke="#a03030" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Connector: Panel A node 4 → Panel B node 6 (horizontal, in gutter) -->
+        <polyline points="229,251 268,251 268,64 308,64" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> Core DPY30 biochemical mechanism — DPY30 within the WRAD complex drives H3K4me2/me3, activating chromatin and transcriptional programs via the druggable ASH2L–DPY30 protein–protein interface.
+      <strong>Panel B (teal/amber/red, centre):</strong> AD-relevant mechanism branches — upper tier: brain aging (plasma DPY30→aging) and excitatory neuron composition (DPY30/MEMO1 locus) diverge into hippocampal neurogenesis and neuronal identity/vulnerability; middle tier: these converge onto senescence/oxidative stress and genome integrity/cGAS·STING; lower tier: endolysosomal trafficking dysfunction and PI3K/AKT·Wnt·NFκB signalling dysregulation.
+      <strong>Panel C (red, right):</strong> Disease-level outcomes — neuroinflammation (from cGAS/STING and senescent glia) and proteostasis failure (from lysosomal dysfunction) both feed into the overall assessment of plausible but unvalidated AD relevance.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card accent">
+        <div class="card-heading">H3K4 Methylation — Core Epigenetic Engine</div>
+        DPY30 supports SET1/MLL/COMPASS activity through the ASH2L–DPY30 interface, promoting H3K4me2/me3 at active promoters. Alzheimer's disease involves broad transcriptional and epigenomic disruption across neurons, glia, immune, and metabolic programs — placing DPY30 at the centre of a plausible mechanistic axis.
+      </div>
+
+      <div class="card positive">
+        <div class="card-heading">Excitatory Neuron Composition &amp; Hippocampal Neurogenesis</div>
+        A 2024 brain methylomics study linked the DPY30/MEMO1 locus to excitatory neuron composition. DPY30 loss also compromised neural stem/progenitor self-renewal, hippocampal dentate gyrus development, and neuronal/glial lineage generation — mechanisms central to AD vulnerability and cognitive reserve.
+      </div>
+
+      <div class="card warning">
+        <div class="card-heading">Biological Aging — An Upstream Modifier</div>
+        Plasma DPY30 was causally associated with biological aging in a Mendelian randomization study. Aged primate prefrontal cortex showed increased DPY30 expression alongside H3K4me2 changes enriched in stress-response and DNA-damage pathways, supporting a role in brain-aging epigenomics — the dominant upstream context for AD.
+      </div>
+
+      <div class="card warning">
+        <div class="card-heading">Senescence &amp; Oxidative Stress</div>
+        DPY30 depletion in human primary cells produced senescence-like phenotypes, elevated reactive oxygen species, and activated p16<sup>INK4a</sup>-related pathways. Senescent glia and vascular cells are implicated in AD neuroinflammation and degeneration, making this a plausible mechanistic bridge.
+      </div>
+
+      <div class="card danger">
+        <div class="card-heading">Endolysosomal Trafficking — A Key Non-Canonical Link</div>
+        DPY30 and WRAD components affect endosome-to-trans-Golgi trafficking of the cation-independent mannose 6-phosphate receptor and lysosomal morphology. DPY30 dosage also modified neurological disease onset in hereditary spastic paraplegia via endosomal tubule fission. Endolysosomal dysfunction is strongly implicated in AD pathogenesis, making this potentially the most disease-relevant non-canonical DPY30 mechanism.
+      </div>
+
+      <div class="card danger">
+        <div class="card-heading">Therapeutic Direction — Unresolved &amp; Risk of Harm</div>
+        In cancer, DPY30 inhibition suppresses proliferation and limits immune evasion. In aging/neurodegeneration, DPY30 may be protective — maintaining transcriptional identity, neurogenesis, genome integrity, and lysosomal homeostasis. Broad DPY30 inhibition in an AD context could therefore be harmful, and the therapeutic direction must be resolved before any drug programme advances.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span><span class="lead">Treat DPY30 as hypothesis-generating, not validated.</span> The current evidence supports mechanistic plausibility in AD-relevant biology but does not establish disease causality or therapeutic efficacy in Alzheimer's disease.</span>
+      </li>
+      <li>
+        <span><span class="lead">Prioritise AD-specific expression and activity profiling.</span> Measure DPY30 expression, localisation, and chromatin activity across vulnerable regions and cell types in human AD brain — including excitatory neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, and neural progenitors.</span>
+      </li>
+      <li>
+        <span><span class="lead">Map DPY30-dependent H3K4me2/me3 changes in AD-relevant genes.</span> Determine whether DPY30 alters active chromatin at genes governing synaptic function, neuronal identity, APP processing, tau biology, lysosomal/autophagy pathways, inflammatory signalling, mitochondrial metabolism, and DNA-damage responses.</span>
+      </li>
+      <li>
+        <span><span class="lead">Rigorously test disease-directionality before any therapeutic programme.</span> Determine whether DPY30 activity is increased, decreased, compensatory, protective, or maladaptive in AD — therapeutic strategies would differ fundamentally depending on the answer.</span>
+      </li>
+      <li>
+        <span><span class="lead">Do not assume cancer-style DPY30 inhibition translates to AD.</span> Cancer data support DPY30 inhibition for suppressing proliferation or enhancing immunogenicity; AD treatment requires long-term preservation of post-mitotic neurons, glial homeostasis, vascular integrity, and essential transcriptional programs.</span>
+      </li>
+      <li>
+        <span><span class="lead">Pursue context-specific modulation, not broad suppression.</span> Safer strategies may target the ASH2L–DPY30 interaction in defined cellular contexts, or act downstream on effectors such as PDE4B, PI3K/AKT-related pathways, NFκB, HIF1α/SIRT6 metabolic programs, or endolysosomal trafficking machinery.</span>
+      </li>
+      <li>
+        <span><span class="lead">Evaluate DPY30 as an aging and cell-type biomarker.</span> Plasma DPY30's causal association with biological aging suggests potential as an aging-related biomarker; brain genetic associations with excitatory neuron composition suggest possible disease-stratification value — but AD-specific biomarker validation is required.</span>
+      </li>
+      <li>
+        <span><span class="lead">Focus mechanistic investigation on four priority areas.</span> These are: (1) epigenetic aging and H3K4 methylation; (2) excitatory neuron identity and selective vulnerability; (3) endosomal-lysosomal trafficking and proteostasis; and (4) senescence, DNA-damage responses, and inflammatory signalling.</span>
+      </li>
+      <li>
+        <span><span class="lead">Conduct comprehensive safety assessment from the outset.</span> DPY30 has broad roles in development, hematopoiesis, stem/progenitor maintenance, metabolism, immune regulation, fertility, cancer biology, and neural differentiation. Any modulation must evaluate risks of disrupting essential chromatin programs or promoting oncogenic, immune, vascular, or neurodevelopmental adverse effects.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — DPY30 in Alzheimer's Disease</span>
+      <p>
+        DPY30 is a <strong>biologically powerful epigenetic node</strong> with plausible, multi-faceted relevance to Alzheimer's disease mechanisms through <strong>aging, chromatin regulation, neuronal cell-state biology, genome stress, senescence, inflammation, metabolism, and endolysosomal function</strong>. Its strongest AD-relevant associations — a 2024 postmortem methylomics link to excitatory neuron composition and a Mendelian randomization association with biological aging — are intriguing but <strong>mechanistically upstream and not causally AD-specific</strong>. Critically, <strong>the direction of any therapeutic intervention is unresolved</strong>: the same DPY30 functions that make it a cancer target may make it neuroprotective in aging and neurodegeneration. The most defensible conclusion is that DPY30 warrants <strong>structured, hypothesis-driven mechanistic investigation in human AD brain and validated AD models</strong> before any therapeutic programme is initiated, with safety assessment built in from the start. It is not yet an actionable Alzheimer's drug target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DPY30 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical decision-making
+</footer>
+
+</body>
+</html>

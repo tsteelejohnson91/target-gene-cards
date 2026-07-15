@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TESPA1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fef9ec;
+    --positive: #0f766e;
+    --positive-light: #f0fdf9;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: var(--white);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    letter-spacing: 0.04em;
+    color: #e2eaf3;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.45);
+    border-color: rgba(255,120,120,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.68;
+    color: var(--white);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 18px 18px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--slate);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .card-accent  { background: var(--light);          border-color: var(--mid);        }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger-mid); }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light); border-color: var(--positive);   }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light);  border-color: #f59e0b;           }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate   { background: var(--slate-light);    border-color: var(--slate);      }
+  .card-slate   h3 { color: var(--slate); }
+
+  /* ── TAKEAWAYS ── */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: ta;
+  }
+
+  .takeaway-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(ta);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    border-radius: 12px;
+    padding: 34px 36px;
+    color: #d0e5f5;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--white);
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TESPA1 &nbsp;|&nbsp; Thymocyte-Expressed, Positive Selection-Associated Protein 1</span>
+    <span class="chip chip-danger">⚠ Complex immune safety profile</span>
+  </div>
+  <h1>TESPA1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caveat:</span>
+      TESPA1 has <em>not</em> been established as a validated AD gene or therapeutic target. All links to Alzheimer's disease are indirect, hypothesis-generating, and require direct experimental validation before any therapeutic conclusions can be drawn.
+    </div>
+
+    <p>TESPA1 is not directly established as an Alzheimer's disease (AD) gene or therapeutic target in the available evidence. No study has reported TESPA1 expression, genetic association, methylation status, protein function, or therapeutic modulation specifically in AD patients, AD models, amyloid-β biology, tau pathology, neurons, microglia, astrocytes, synaptic dysfunction, or cognitive decline.</p>
+
+    <p>Its relevance to AD is therefore <strong>indirect and hypothesis-generating</strong>. TESPA1 is primarily described as an immune and calcium-signaling regulator — functioning in T-cell receptor (TCR) signaling, thymocyte development, B-cell activation, mast-cell responses, IP3 receptor-mediated calcium flux, and ER–mitochondria/MAM calcium transfer. These processes overlap conceptually with AD-relevant mechanisms such as immune aging, neuroinflammation, ER stress, mitochondrial dysfunction, calcium dyshomeostasis, and hippocampal vulnerability.</p>
+
+    <p>The strongest AD-adjacent signals identified are: an association of a TESPA1 variant (rs4374022) with shorter DNA methylation-derived telomere length and lower hippocampal volume, and hippocampal TESPA1 mRNA expression data, together with repeated mechanistic links to IP3R/MAM calcium signaling. None of these findings establish a causal role in AD.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview — TESPA1 Signaling &amp; AD-Adjacent Pathways</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~920 wide × 490 tall, 4 panels, 16 nodes max -->
+        <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#c0392b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ══ PANEL A: Immune Receptor Signaling (left) ══ -->
+          <rect x="10" y="10" width="270" height="470" rx="12" ry="12"
+                fill="#e8f2fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="145" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.5" fill="#1a3a5c" text-transform="uppercase">A · IMMUNE RECEPTOR SIGNALING</text>
+
+          <!-- TCR / BCR stimulus -->
+          <rect x="55" y="42" width="180" height="38" rx="7"
+                fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="145" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">TCR / BCR Stimulus</text>
+          <text x="145" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#c8ddf0">antigen recognition</text>
+
+          <!-- Arrow down -->
+          <line x1="145" y1="80" x2="145" y2="107" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- LAT Signalosome / TESPA1 -->
+          <rect x="40" y="108" width="210" height="38" rx="7"
+                fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="145" y="124" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">TESPA1 · LAT Signalosome</text>
+          <text x="145" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#d0e8f8">scaffold / adaptor</text>
+
+          <!-- Two branches down from TESPA1 -->
+          <!-- Branch left: NFAT/Ca²⁺ -->
+          <line x1="100" y1="146" x2="90" y2="173" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Branch right: MAPK -->
+          <line x1="190" y1="146" x2="200" y2="173" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- NFAT / Ca2+ node -->
+          <rect x="28" y="174" width="118" height="38" rx="7"
+                fill="#e8f2fa" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="87" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1a3a5c" font-weight="700">Ca²⁺ / NFAT</text>
+          <text x="87" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">calcium flux</text>
+
+          <!-- MAPK/Erk-AP1 node -->
+          <rect x="154" y="174" width="118" height="38" rx="7"
+                fill="#e8f2fa" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="213" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1a3a5c" font-weight="700">MAPK / Erk–AP-1</text>
+          <text x="213" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">proliferation</text>
+
+          <!-- Converge arrows to Immune Outcome -->
+          <line x1="87" y1="212" x2="87" y2="235" stroke="#2e6da4" stroke-width="1.4"/>
+          <line x1="87" y1="235" x2="145" y2="252" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="213" y1="212" x2="213" y2="235" stroke="#2e6da4" stroke-width="1.4"/>
+          <line x1="213" y1="235" x2="145" y2="252" stroke="#2e6da4" stroke-width="1.4"/>
+
+          <!-- Immune outcome -->
+          <rect x="48" y="253" width="194" height="38" rx="7"
+                fill="#1a3a5c" stroke="#0a1e30" stroke-width="1"/>
+          <text x="145" y="269" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">T/B-Cell Activation</text>
+          <text x="145" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#c8ddf0">thymocyte selection · CD8+ activity</text>
+
+          <!-- Mast-cell divergent note -->
+          <line x1="145" y1="291" x2="145" y2="318" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+          <rect x="52" y="319" width="186" height="36" rx="7"
+                fill="#fef9ec" stroke="#f59e0b" stroke-width="1.2"/>
+          <text x="145" y="334" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b45309" font-weight="700">Mast-Cell / Type-2</text>
+          <text x="145" y="347" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e">opposing role in allergy/asthma</text>
+
+          <!-- ══ PANEL B: ER–Ca²⁺ & MAM (center) ══ -->
+          <rect x="292" y="10" width="256" height="470" rx="12" ry="12"
+                fill="#f0fdf9" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="420" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.5" fill="#0f766e">B · ER–CA²⁺ &amp; MAM BIOLOGY</text>
+
+          <!-- IP3R -->
+          <rect x="320" y="42" width="200" height="38" rx="7"
+                fill="#0f766e" stroke="#064e3b" stroke-width="1"/>
+          <text x="420" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">IP3 Receptor (IP3R)</text>
+          <text x="420" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#a7f3d0">ER membrane channel</text>
+
+          <line x1="420" y1="80" x2="420" y2="107" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- TESPA1-IP3R interaction -->
+          <rect x="310" y="108" width="220" height="38" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="420" y="124" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#0f766e" font-weight="700">TESPA1–IP3R Interaction</text>
+          <text x="420" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#047857">supports Ca²⁺ flux</text>
+
+          <line x1="420" y1="146" x2="420" y2="173" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- ER Ca release -->
+          <rect x="318" y="174" width="204" height="38" rx="7"
+                fill="#f0fdf9" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="420" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#1a3a5c" font-weight="700">ER Ca²⁺ Release / SOCE</text>
+          <text x="420" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#475569">store-operated entry</text>
+
+          <!-- Two branches: to MAM and to Mito Ca -->
+          <line x1="380" y1="212" x2="360" y2="239" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="460" y1="212" x2="480" y2="239" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- MAM node -->
+          <rect x="302" y="240" width="106" height="36" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="355" y="255" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e" font-weight="700">MAM Structure</text>
+          <text x="355" y="268" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#047857">ER–mito contact</text>
+
+          <!-- Mito Ca node -->
+          <rect x="418" y="240" width="118" height="36" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="477" y="255" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0f766e" font-weight="700">Mito Ca²⁺ Uptake</text>
+          <text x="477" y="268" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#047857">bioenergetics</text>
+
+          <!-- Converge to shared outcome -->
+          <line x1="355" y1="276" x2="355" y2="298" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="355" y1="298" x2="420" y2="314" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="477" y1="276" x2="477" y2="298" stroke="#0f766e" stroke-width="1.4"/>
+          <line x1="477" y1="298" x2="420" y2="314" stroke="#0f766e" stroke-width="1.4"/>
+
+          <!-- Outcome: mitochondrial dysfunction / ER stress -->
+          <rect x="316" y="315" width="208" height="38" rx="7"
+                fill="#0f766e" stroke="#064e3b" stroke-width="1"/>
+          <text x="420" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">Mito Dysfunction / ER Stress</text>
+          <text x="420" y="345" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#a7f3d0">apoptosis · bioenergetic failure</text>
+
+          <!-- ══ PANEL C: AD-Adjacent &amp; Epigenetic (right) ══ -->
+          <rect x="560" y="10" width="350" height="470" rx="12" ry="12"
+                fill="#fdf0f0" fill-opacity="0.45" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="735" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" letter-spacing="1.5" fill="#8b1a1a">C · AD-ADJACENT &amp; EPIGENETIC SIGNALS</text>
+
+          <!-- rs4374022 variant -->
+          <rect x="598" y="42" width="274" height="38" rx="7"
+                fill="#8b1a1a" stroke="#5a0f0f" stroke-width="1"/>
+          <text x="735" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">TESPA1 Variant rs4374022</text>
+          <text x="735" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#ffc9c9">DNA methylation / telomere association</text>
+
+          <!-- Two branches -->
+          <line x1="690" y1="80" x2="672" y2="107" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="780" y1="80" x2="798" y2="107" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Shorter telomeres -->
+          <rect x="574" y="108" width="188" height="38" rx="7"
+                fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="668" y="124" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a" font-weight="700">Shorter DNAm Telomeres</text>
+          <text x="668" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b91c1c">accelerated aging signal</text>
+
+          <!-- Lower hippocampal TESPA1 mRNA -->
+          <rect x="772" y="108" width="128" height="38" rx="7"
+                fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="836" y="121" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a" font-weight="700">↓ Hippo. mRNA</text>
+          <text x="836" y="134" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b91c1c">TESPA1 expression</text>
+
+          <!-- Arrow from shorter telomeres down -->
+          <line x1="668" y1="146" x2="668" y2="173" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- Arrow from lower mRNA down -->
+          <line x1="836" y1="146" x2="836" y2="173" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Lower hippocampal volume -->
+          <rect x="574" y="174" width="185" height="38" rx="7"
+                fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="666" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a" font-weight="700">Lower Hippocampal Vol.</text>
+          <text x="666" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b91c1c">atrophy marker</text>
+
+          <!-- Immune aging node -->
+          <rect x="769" y="174" width="131" height="38" rx="7"
+                fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="834" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8b1a1a" font-weight="700">Immune Aging</text>
+          <text x="834" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b91c1c">autoimmune, cancer</text>
+
+          <!-- Converge arrows -->
+          <line x1="666" y1="212" x2="666" y2="237" stroke="#c0392b" stroke-width="1.4"/>
+          <line x1="666" y1="237" x2="735" y2="254" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="834" y1="212" x2="834" y2="237" stroke="#c0392b" stroke-width="1.4"/>
+          <line x1="834" y1="237" x2="735" y2="254" stroke="#c0392b" stroke-width="1.4"/>
+
+          <!-- AD-adjacent convergence node -->
+          <rect x="598" y="255" width="274" height="38" rx="7"
+                fill="#8b1a1a" stroke="#5a0f0f" stroke-width="1"/>
+          <text x="735" y="271" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">AD-Adjacent Vulnerability Signals</text>
+          <text x="735" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#ffc9c9">plausible but unvalidated in AD</text>
+
+          <!-- No Direct AD Evidence callout box -->
+          <rect x="600" y="312" width="270" height="50" rx="8"
+                fill="#fef9ec" stroke="#f59e0b" stroke-width="1.4"/>
+          <text x="735" y="330" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#b45309" font-weight="700">⚠ No Direct AD Evidence</text>
+          <text x="735" y="344" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e">Aβ · tau · synapse · glia · clinical</text>
+          <text x="735" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e">outcomes — none demonstrated</text>
+
+          <!-- Cross-panel connector: Panel A Immune outcome → Panel C AD signals -->
+          <!-- Route: from bottom of Panel A outcome, go south then east via gutter, avoid all boxes -->
+          <polyline points="145,420 145,445 735,445 735,362"
+                    fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,4"
+                    marker-end="url(#arr-amber)"/>
+          <!-- Panel B bottom: ER stress → also route south to same gutter -->
+          <polyline points="420,353 420,420 735,420"
+                    fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3"
+                    marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue) — Immune receptor signaling:</strong> TESPA1 acts within the LAT signalosome downstream of TCR/BCR stimulation, branching into Ca²⁺/NFAT and MAPK/Erk–AP-1 cascades that converge on T/B-cell activation; a dashed amber branch indicates TESPA1's opposing, pro-inflammatory role in mast-cell/type-2 responses.
+        <strong>Panel B (teal) — ER–Ca²⁺ and MAM biology:</strong> TESPA1 interacts with IP3 receptors to support ER calcium release and store-operated calcium entry, which diverges into MAM structure and mitochondrial Ca²⁺ uptake, converging on mitochondrial dysfunction and ER stress.
+        <strong>Panel C (red) — AD-adjacent and epigenetic signals:</strong> The rs4374022 variant branches to shorter DNA-methylation telomeres (→ lower hippocampal volume) and reduced hippocampal TESPA1 mRNA (→ immune aging signatures), converging on AD-adjacent vulnerability signals; the amber callout box underscores that no direct Alzheimer's evidence (Aβ, tau, synaptic, clinical) has been demonstrated. Dashed connectors indicate conceptual rather than experimentally proven links from Panels A and B into Panel C.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        <p>No study has demonstrated that TESPA1 affects amyloid-β production or clearance, tau phosphorylation or aggregation, synaptic loss, neuronal survival, microglial activation, astrocyte responses, blood-brain barrier function, or any AD clinical outcome.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Immune Signaling Hub</h3>
+        <p>TESPA1 is most consistently linked to TCR-driven thymocyte development and positive selection, LAT signalosome function, and downstream Ca²⁺/NFAT and MAPK/Erk–AP-1 pathway activation — placing it centrally in adaptive immune regulation.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent &amp; Opposing Roles</h3>
+        <p>TESPA1 deficiency can impair T-cell and B-cell responses and reduce antitumor CD8⁺ activity, yet also attenuate autoimmune arthritis while worsening mast-cell/type-2 inflammation in asthma or allergic models. This bidirectionality raises significant safety concerns for therapeutic targeting.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>IP3R / MAM Calcium Signaling</h3>
+        <p>TESPA1 interacts with IP3 receptors to support receptor-induced calcium flux and ER calcium release. Its proposed role as a MAM-associated component affecting mitochondrial Ca²⁺ uptake is biologically plausible given that calcium dyshomeostasis and ER–mitochondria coupling are implicated in AD, though this bridge remains unvalidated in neuronal contexts.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Hippocampal &amp; Telomere Associations</h3>
+        <p>The strongest neuro-relevant finding is that the TESPA1 variant rs4374022 is associated with shorter DNA methylation-derived telomere length, lower hippocampal volume, and reduced hippocampal TESPA1 mRNA expression — all AD-relevant phenomena, but derived from aging/epigenetic studies, not AD-specific investigations.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Broader Disease Context</h3>
+        <p>TESPA1 appears in inflammatory, autoimmune, cancer, and epigenetic disease signatures. These findings reinforce its role as an immune-state regulator with pleiotropic influence, but none establish AD-specific relevance. All links to Alzheimer's disease remain indirect and hypothesis-generating.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div><span class="takeaway-lead">Do not classify as a validated AD target.</span> The current evidence base does not support designating TESPA1 as a confirmed Alzheimer's disease therapeutic target. No disease-specific functional data exist.</div>
+      </li>
+      <li>
+        <div><span class="takeaway-lead">Treat as a speculative AD research candidate.</span> TESPA1 may be relevant where immune aging, T-cell biology, ER calcium release, MAM dysfunction, mitochondrial stress, and hippocampal vulnerability intersect — but this remains a hypothesis.</div>
+      </li>
+      <li>
+        <div><span class="takeaway-lead">Prioritize validation in AD datasets.</span> Assess TESPA1 expression, methylation status, genetic variation, and protein levels in AD brain tissue, single-cell transcriptomic datasets, CSF-linked immune cells, and peripheral immune cell populations.</div>
+      </li>
+      <li>
+        <div><span class="takeaway-lead">Test cell-type relevance before therapeutic development.</span> Determine whether TESPA1 is functionally expressed and active in microglia, astrocytes, neurons, endothelial cells, CNS-border immune cells, or infiltrating T cells within the AD brain.</div>
+      </li>
+      <li>
+        <div><span class="takeaway-lead">Evaluate mechanism in appropriate AD models.</span> Experiments should test whether TESPA1 modulation alters ER–mitochondria calcium transfer, mitochondrial dysfunction, inflammatory signaling, amyloid burden, tau pathology, synaptic integrity, neurodegeneration, or cognition in validated systems.</div>
+      </li>
+      <li>
+        <div><span class="takeaway-lead">Exercise substantial caution in target strategy.</span> Because TESPA1 has opposing roles across immune-cell types, systemic activation or inhibition could produce unwanted effects on adaptive immunity, mast-cell inflammation, antitumor surveillance, autoimmunity, or hematopoietic stress responses.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment —</span>
+      TESPA1 is an <strong>immune, calcium, and ER-associated regulatory gene</strong> with biologically plausible but entirely indirect links to Alzheimer's disease mechanisms. Its established roles in <strong>TCR/LAT signalosome function, IP3R-mediated calcium flux, MAM biology, and mitochondrial calcium homeostasis</strong> connect conceptually to AD-relevant processes, and the association of rs4374022 with <strong>shorter telomere length and reduced hippocampal volume</strong> offers a tentative epidemiological bridge. However, <strong>no direct evidence</strong> implicates TESPA1 in amyloid-β biology, tau pathology, synaptic dysfunction, neuroinflammation, or any AD clinical phenotype. Its <strong>context-dependent and opposing immune functions</strong> further complicate any therapeutic strategy. TESPA1's potential role in Alzheimer's disease remains <strong>entirely unproven and requires direct, disease-specific experimental validation</strong> before it can be considered a credible drug target.
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════ FOOTER ════════════════════════════════════════════ -->
+<footer>
+  TESPA1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No clinical or therapeutic decisions should be based on this document
+</footer>
+
+</body>
+</html>

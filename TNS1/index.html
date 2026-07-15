@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNS1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #cbd5e1;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+  section {
+    margin-bottom: 52px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* PROSE */
+  p { margin-bottom: 14px; font-size: 0.97rem; }
+  p:last-child { margin-bottom: 0; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 10px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    max-width: 100%;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.9rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger-dark); }
+  .card-danger h3 { color: var(--danger-dark); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-neutral { background: #f1f5f9; border-left: 4px solid #64748b; }
+  .card-neutral h3 { color: #334155; }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 0 0 18px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .takeaway-list li:last-child { border-bottom: none; margin-bottom: 0; }
+  .takeaway-num {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--dark);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+  .takeaway-list li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 34px 36px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: inline;
+  }
+  .verdict strong { color: #93c5fd; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 0.77rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TNS1 &nbsp;|&nbsp; Tensin-1</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Directionality Risk</span>
+  </div>
+  <h1>TNS1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Caution — Bidirectional Risk:</strong> TNS1 effects are strongly context-dependent. Reduced TNS1 is harmful in vascular smooth muscle and macrophages, while elevated TNS1 promotes fibrosis, EMT, and tumor progression in other settings. A simple "activate" or "inhibit" therapeutic strategy carries substantial off-target risk until directionality is defined cell-type by cell-type.
+    </div>
+    <p>TNS1 is best characterized as an <em>indirect, hypothesis-generating</em> Alzheimer's disease (AD) candidate rather than a validated AD mechanism or therapeutic target. Some sections of the supporting literature state that no cited studies directly examine TNS1 in AD, while other sections report AD-relevant transcriptomic associations — including TNS1 upregulation in female AD peripheral blood, progressive upregulation in temporal lobe tissue with increasing Braak stage, and nomination as an immune-related AD candidate in a ceRNA/WGCNA network analysis.</p>
+    <p>Across the broader literature, TNS1 is consistently described as a focal-adhesion, integrin-linked, actin/cytoskeleton-associated scaffold. It links integrin-mediated adhesion to actin remodeling and participates in cell migration, adhesion turnover, extracellular matrix remodeling, vascular smooth muscle phenotype maintenance, immune-cell migration and phagocytosis, macrophage polarization, TGF-β-associated remodeling, MAPK/Akt/Rho-family signaling, and blood–brain barrier-related biology in non-AD models.</p>
+    <p>These mechanisms overlap with AD-relevant processes — neurovascular dysfunction, BBB breakdown, glial migration, ECM remodeling, cytoskeletal instability, and innate immune dysfunction — but the text does not establish that TNS1 directly regulates amyloid-β, tau, synaptic loss, neuronal death, or AD-specific neuroinflammation.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: ~960 wide x 490 tall. 4 panels. Node count tracked. -->
+        <svg viewBox="0 0 960 490" xmlns="http://www.w3.org/2000/svg" width="960" height="490" aria-label="TNS1 pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amb" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- === PANEL A: Upstream Scaffold (left) === -->
+          <rect x="12" y="12" width="270" height="466" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="147" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5">A · UPSTREAM SCAFFOLD</text>
+
+          <!-- Node 1: Integrins -->
+          <rect x="72" y="44" width="150" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="147" y="59" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Integrins</text>
+          <text x="147" y="73" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#dbeafe">(Active / ECM-bound)</text>
+
+          <!-- Arrow down -->
+          <line x1="147" y1="84" x2="147" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 2: TNS1 (central scaffold) -->
+          <rect x="62" y="110" width="170" height="40" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1.8"/>
+          <text x="147" y="125" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">TNS1</text>
+          <text x="147" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#93c5fd">Focal-Adhesion Scaffold</text>
+
+          <!-- Arrow down -->
+          <line x1="147" y1="150" x2="147" y2="174" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Actin / Cytoskeleton -->
+          <rect x="72" y="176" width="150" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="147" y="191" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Actin / Cytoskeleton</text>
+          <text x="147" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#dbeafe">Remodeling &amp; Polarity</text>
+
+          <!-- Arrow down -->
+          <line x1="147" y1="216" x2="147" y2="240" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 4: FAK/Src + Akt/RhoA -->
+          <rect x="52" y="242" width="190" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1"/>
+          <text x="147" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">FAK/Src · Akt/mTOR</text>
+          <text x="147" y="271" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#2e6da4">RhoA/Cdc42 · MAPK/ERK</text>
+
+          <!-- Arrow down -->
+          <line x1="147" y1="282" x2="147" y2="306" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 5: TGF-β / ECM -->
+          <rect x="62" y="308" width="170" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1"/>
+          <text x="147" y="323" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">TGF-β / ECM / FN1</text>
+          <text x="147" y="337" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#2e6da4">SMAD3 · ZEB1 · WNT</text>
+
+          <!-- Arrow down -->
+          <line x1="147" y1="348" x2="147" y2="372" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node 6: Cell Migration & Adhesion -->
+          <rect x="52" y="374" width="190" height="40" rx="7" fill="#e8f1f8" stroke="#2e6da4" stroke-width="1"/>
+          <text x="147" y="389" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Cell Migration</text>
+          <text x="147" y="403" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#2e6da4">&amp; Adhesion Turnover</text>
+
+          <!-- === PANEL B: Vascular/BBB (top-center) === -->
+          <rect x="298" y="12" width="308" height="232" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="452" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1.5">B · VASCULAR &amp; BBB</text>
+
+          <!-- Node 7: VSMC Phenotype -->
+          <rect x="314" y="44" width="130" height="40" rx="7" fill="#fca5a5" fill-opacity="0.7" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="379" y="59" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">VSMC Contractile</text>
+          <text x="379" y="73" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Phenotype (TNS1↓ → loss)</text>
+
+          <!-- Arrow right -->
+          <line x1="444" y1="64" x2="463" y2="64" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 8: VCAM/PDGF/CXCL -->
+          <rect x="465" y="44" width="125" height="40" rx="7" fill="#fca5a5" fill-opacity="0.7" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="527" y="59" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">VCAM · PDGF</text>
+          <text x="527" y="73" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">THBS · CXCL inflam.</text>
+
+          <!-- Arrow from Node 7 down -->
+          <line x1="379" y1="84" x2="379" y2="108" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Arrow from Node 8 down -->
+          <line x1="527" y1="84" x2="527" y2="108" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 9: Atherosclerosis/Plaque -->
+          <rect x="314" y="110" width="130" height="40" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="379" y="125" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">Plaque Instability</text>
+          <text x="379" y="139" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">Atherosclerosis ↑</text>
+
+          <!-- Node 10: BBB Tight Junctions -->
+          <rect x="465" y="110" width="125" height="40" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1"/>
+          <text x="527" y="125" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">BBB Integrity</text>
+          <text x="527" y="139" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#7f1d1d">ZO-1 · OCLN (miR-522)</text>
+
+          <!-- Converge arrows to Node 11 -->
+          <line x1="379" y1="150" x2="379" y2="172" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <line x1="527" y1="150" x2="527" y2="172" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Node 11: Neurovascular Dysfunction -->
+          <rect x="338" y="174" width="228" height="40" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1"/>
+          <text x="452" y="189" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Neurovascular Dysfunction</text>
+          <text x="452" y="203" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#fecaca">Cerebrovascular Inflammation</text>
+
+          <!-- === PANEL C: Immune / Microglial (bottom-center) === -->
+          <rect x="298" y="260" width="308" height="218" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="452" y="280" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.5">C · IMMUNE &amp; MICROGLIAL</text>
+
+          <!-- Node 12: miR-122-5p axis -->
+          <rect x="313" y="292" width="135" height="40" rx="7" fill="#99f6e4" fill-opacity="0.7" stroke="#0f766e" stroke-width="1"/>
+          <text x="380" y="307" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#134e4a">miR-122-5p / TNS1</text>
+          <text x="380" y="321" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#134e4a">Microglial inflam. axis</text>
+
+          <!-- Arrow right -->
+          <line x1="448" y1="312" x2="463" y2="312" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 13: Macrophage Migration/Phagocytosis -->
+          <rect x="465" y="292" width="125" height="40" rx="7" fill="#99f6e4" fill-opacity="0.7" stroke="#0f766e" stroke-width="1"/>
+          <text x="527" y="307" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#134e4a">Macrophage</text>
+          <text x="527" y="321" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#134e4a">Migration · Phagocytosis</text>
+
+          <!-- Arrows down to Node 14 -->
+          <line x1="380" y1="332" x2="380" y2="356" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+          <line x1="527" y1="332" x2="527" y2="356" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 14: Immune Gene Pathways -->
+          <rect x="338" y="358" width="228" height="40" rx="7" fill="#0f766e" stroke="#134e4a" stroke-width="1"/>
+          <text x="452" y="373" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Neuroimmune Overlap</text>
+          <text x="452" y="387" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#ccfbf1">M2 polarization · lncRNA-miRNA-mRNA</text>
+
+          <!-- Arrow down to Panel D node -->
+          <line x1="452" y1="398" x2="452" y2="422" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- === PANEL D: AD Evidence Cluster (far right) === -->
+          <rect x="622" y="12" width="326" height="466" rx="12" fill="#fffbeb" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="785" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.5">D · AD EVIDENCE &amp; CONTEXT</text>
+
+          <!-- Node 15: AD Transcriptomic Signals -->
+          <rect x="648" y="44" width="274" height="58" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="785" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#78350f">AD Transcriptomic Signals</text>
+          <text x="785" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#92400e">↑ Female AD peripheral blood</text>
+          <text x="785" y="92" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#92400e">↑ Temporal lobe with Braak stage</text>
+
+          <!-- Arrow down -->
+          <line x1="785" y1="102" x2="785" y2="126" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amb)"/>
+
+          <!-- Node 16: ceRNA / WGCNA network -->
+          <rect x="648" y="128" width="274" height="46" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="785" y="147" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#78350f">ceRNA / WGCNA Network</text>
+          <text x="785" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#92400e">Immune-related AD candidate (computational)</text>
+
+          <!-- Horizontal connector: Panel B Node11 to Panel D Node15 via top gutter -->
+          <!-- Route: from right edge of Node11 (452+114=566, y=194) → right to x=618 (gutter) → up to y=64 → right to Node15 left edge (648,64) ... but we must avoid crossing panel borders. Instead go from Node11 bottom (452,214) down but Panel C starts at y=260, so there's no room. Use right side routing: from Node 11 right edge (452+114=566, y=194) right to gutter x=610, then up to y=73, then right to 648. Check: does this path cross Panel D rect? Panel D starts x=622, so the path at x=610 is in the gutter. But gutter is 622-606=16px. Let's use x=613 for the vert segment. -->
+          <polyline points="566,194 613,194 613,73 648,73" fill="none" stroke="#b45309" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-amb)"/>
+
+          <!-- Connector: Panel C Node14 to Panel D bottom area — route along bottom: from (452,438) → right along y=445 → to Panel D bottom content. Panel D content below Node16... let's add a small note box there. Actually connecting to a text label would be messy; let's just show the association arrow going into right panel at a good y. Node 16 bottom is at y=174. Let's route: from (452,438) go right y=445 to x=613, then up to y=155, then right to 648,155 which hits Node16 side. Check: x=613 vertical segment from y=445 to y=155 — does it cross Panel B (y=12 to y=244, x=298-606)? At x=613 Panel B ends at x=606, so we're in the gutter, clear. Panel A ends x=282. OK. -->
+          <polyline points="452,438 452,448 613,448 613,162 648,162" fill="none" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+          <!-- Context note in Panel D -->
+          <text x="785" y="208" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-style="italic" fill="#92400e">Not yet linked to Aβ · tau · synaptic loss · neuronal death</text>
+
+          <!-- Divider line in Panel D -->
+          <line x1="648" y1="218" x2="896" y2="218" stroke="#b45309" stroke-width="0.7" stroke-dasharray="4,3"/>
+
+          <!-- Panel D lower: Key pathway axes -->
+          <text x="785" y="236" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f" letter-spacing="0.5">PROPOSED THERAPEUTIC AXES</text>
+
+          <rect x="648" y="246" width="125" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="710" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">Integrin/FAK</text>
+          <text x="710" y="274" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">focal adhesion signaling</text>
+
+          <rect x="783" y="246" width="135" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="850" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">MAPK/ERK/JNK</text>
+          <text x="850" y="274" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">cytoskeletal stress</text>
+
+          <rect x="648" y="294" width="125" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="710" y="308" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">TGF-β/SMAD</text>
+          <text x="710" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">ECM/fibrosis remodeling</text>
+
+          <rect x="783" y="294" width="135" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="850" y="308" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">Akt/mTOR/RhoA</text>
+          <text x="850" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">survival &amp; migration</text>
+
+          <rect x="648" y="342" width="125" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="710" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">miRNA/lncRNA</text>
+          <text x="710" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">regulatory networks</text>
+
+          <rect x="783" y="342" width="135" height="36" rx="6" fill="#fff7ed" stroke="#b45309" stroke-width="0.9"/>
+          <text x="850" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">VCAM/PDGF/CXCL</text>
+          <text x="850" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">vascular inflammation</text>
+
+          <!-- Overall verdict note at bottom of Panel D -->
+          <rect x="648" y="394" width="270" height="58" rx="7" fill="#fde68a" fill-opacity="0.5" stroke="#b45309" stroke-width="1"/>
+          <text x="783" y="413" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#78350f">Overall Status</text>
+          <text x="783" y="428" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">Exploratory candidate — transcriptomic/</text>
+          <text x="783" y="441" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#92400e">computational, not mechanistically validated</text>
+
+        </svg>
+      </div>
+      <figcaption><strong>Panel A (blue, left):</strong> TNS1 as a core focal-adhesion scaffold linking active integrins to the actin cytoskeleton and downstream kinase cascades (FAK/Src, Akt/mTOR, RhoA, MAPK/ERK) and ECM-remodeling pathways (TGF-β, FN1, SMAD3), ultimately driving cell migration and adhesion turnover. <strong>Panel B (red, upper-centre):</strong> Vascular and BBB branches — TNS1 loss destabilizes vascular smooth muscle cell contractile phenotype (left sub-branch), activating VCAM/PDGF/CXCL inflammation, while miR-522-3p targeting of TNS1 disrupts BBB tight-junction proteins ZO-1 and OCLN (right sub-branch); both converge on neurovascular dysfunction. <strong>Panel C (teal, lower-centre):</strong> Immune and microglial branches — the miR-122-5p/TNS1 axis drives microglial inflammation (left sub-branch) while TNS1 regulates macrophage migration and phagocytosis (right sub-branch), converging on neuroimmune pathway overlap including M2 polarization and lncRNA-miRNA-mRNA networks. <strong>Panel D (amber, right):</strong> AD-specific evidence cluster — AD transcriptomic signals (female blood upregulation; temporal-lobe Braak-stage progression) and ceRNA/WGCNA computational nomination sit above a matrix of eight proposed pathway-level therapeutic axes, all presently indirect; the bottom box reflects the overall exploratory status.</figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Evidence — Transcriptomic &amp; Computational</h3>
+        <p>Direct AD-specific signals for TNS1 are limited. Reported associations include upregulation in female AD peripheral blood, progressive upregulation in temporal lobe tissue with increasing Braak stage, and identification as a candidate immune-related AD target in a lncRNA-miRNA-mRNA/immune-cell regulatory network. No study has yet directly manipulated TNS1 in an AD experimental model.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Core Biology — Adhesion/Cytoskeletal Scaffold</h3>
+        <p>TNS1's most consistent role across the literature is as a focal and fibrillar adhesion component linking active integrins to the actin cytoskeleton. It governs adhesion dynamics, cell migration and polarization, actin organization, and extracellular matrix interactions — functions broadly relevant to neurovascular and glial biology but not yet specifically mapped in the AD brain.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Vascular Risk — VSMC Phenotype &amp; Plaque</h3>
+        <p>In vascular smooth muscle cell studies, reduced TNS1 was associated with loss of contractile markers, increased macrophage-like phenotypic transition, and activation of VCAM, PDGF, THBS, and CXCL signaling, worsening atherosclerosis and plaque instability in mice. Because cerebrovascular disease can contribute to cognitive impairment and intersect with AD pathology, TNS1 may be more plausible as a vascular modifier than as a direct amyloid/tau target.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Immune Relevance — Macrophage &amp; Microglial Biology</h3>
+        <p>TNS1 loss altered immune gene-expression pathways and impaired macrophage migration and phagocytosis in non-AD models. A radiation-induced brain injury study connected a miR-122-5p/TNS1 axis to microglial inflammation, phagocytosis, neuronal injury, and cognitive impairment. These mechanisms overlap with AD neuroimmune biology, but TNS1 has not been validated in AD microglia, amyloid clearance, or disease-associated microglial states.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Blood–Brain Barrier Intersection</h3>
+        <p>In a brain-metastasis model, miR-522-3p targeting of TNS1 affected BBB-related tight-junction proteins ZO-1 and occludin/OCLN and promoted tumor penetration through the BBB. This suggests a possible route by which TNS1 could influence neurovascular barrier integrity in AD, though this has not been demonstrated in any AD model or patient tissue.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context Dependence — Bidirectional Risk</h3>
+        <p>Lower TNS1 appears harmful in vascular smooth muscle and impairs macrophage phagocytosis, while higher or active TNS1 can promote tumor progression, EMT, fibrosis-like signaling, myofibroblast–cancer crosstalk, and M2 macrophage polarization in other contexts. This makes any simple "activate TNS1" or "inhibit TNS1" therapeutic strategy potentially counterproductive until cell-type-specific directionality is established.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span class="takeaway-num">1</span>
+        <span><strong>Treat TNS1 as an exploratory candidate, not a validated target.</strong> The most defensible framing is that TNS1 may mark or modulate neurovascular, immune, cytoskeletal, and extracellular-matrix remodeling pathways in AD — it is not a proven driver, biomarker, or therapeutic target.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">2</span>
+        <span><strong>Prioritize cell-type-specific AD validation.</strong> Key studies should test TNS1 expression and localization in AD-relevant brain regions across neurons, astrocytes, microglia, endothelial cells, pericytes, vascular smooth muscle cells, and oligodendrocytes before drawing mechanistic conclusions.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">3</span>
+        <span><strong>Stratify analyses by sex and disease stage.</strong> Existing signals suggest possible female-specific peripheral blood upregulation and progressive temporal-lobe upregulation with Braak stage, making sex- and stage-stratified validation essential for reproducibility.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">4</span>
+        <span><strong>Investigate neurovascular mechanisms first.</strong> The strongest mechanistic rationale from the current text points to vascular smooth muscle phenotype stability, endothelial adhesion and migration, BBB tight-junction regulation, ECM remodeling, and cerebrovascular inflammation as the most tractable entry points.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">5</span>
+        <span><strong>Investigate immune and phagocytic mechanisms second.</strong> TNS1 should be tested in microglia and infiltrating myeloid cells for effects on migration, phagocytosis, amyloid clearance, tau clearance, inflammatory cytokines, and disease-associated microglial states before immunological claims are made.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">6</span>
+        <span><strong>Link TNS1 to AD endpoints before therapeutic prioritization.</strong> Required experiments include testing whether TNS1 perturbation affects amyloid-β production or clearance, tau phosphorylation and aggregation, synaptic integrity, neurite remodeling, neuronal survival, glial activation, BBB integrity, vascular remodeling, and cognition in AD-relevant models.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">7</span>
+        <span><strong>Avoid broad systemic modulation until directionality is defined.</strong> Because TNS1 effects vary starkly by tissue, cell type, and disease context, any therapeutic strategy must be cell-type-specific, pathway-specific, and disease-stage-specific to avoid inadvertent harm.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">8</span>
+        <span><strong>Consider pathway-level rather than direct TNS1 targeting.</strong> Potentially relevant axes include integrin/focal-adhesion signaling, TGF-β/SMAD/ZEB1, ECM/FN1, VCAM/PDGF/THBS/CXCL inflammatory-vascular signaling, S1PR1-associated cytoskeletal pathways, MAPK/ERK/JNK, Akt/mTOR/RhoA, and miRNA/lncRNA networks regulating TNS1 — all candidates for more tractable indirect intervention.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment —</span> The available evidence supports TNS1 as a <strong>mechanistically plausible, but unvalidated, AD-relevant node</strong> in adhesion biology, cytoskeletal remodeling, vascular biology, extracellular matrix signaling, and immune-cell behavior. The current evidence base is <strong>predominantly transcriptomic and computational</strong>, with no study directly demonstrating TNS1 regulation of amyloid-β, tau, synaptic integrity, or AD-specific neuroinflammation. The most compelling mechanistic entry points are <strong>neurovascular (VSMC phenotype, BBB tight junctions)</strong> and <strong>neuroimmune (microglial phagocytosis, macrophage migration)</strong> biology, both indirectly supported by non-AD experimental models. A critical unresolved challenge is <strong>context-dependent bidirectionality</strong>: TNS1 loss is harmful in one setting and its gain is harmful in another, making therapeutic direction unclear without cell-type-resolved AD studies. TNS1 merits <strong>exploratory investment in mechanistic validation</strong> — particularly neurovascular and neuroimmune cell-type studies stratified by sex and disease stage — before it can be considered a serious therapeutic priority in Alzheimer's disease.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TNS1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

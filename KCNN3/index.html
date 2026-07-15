@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCNN3 / SK3 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    padding: 4px 13px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.32);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.7;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 6px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.975rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin: 0 0 10px 0;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+    margin-top: 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5rem; }
+  }
+
+  .card {
+    border-radius: 9px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+  .card.neutral {
+    border-left-color: var(--neutral);
+    background: var(--neutral-light);
+  }
+  .card.blue {
+    border-left-color: #1d4ed8;
+    background: #eff6ff;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 48px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.94rem;
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 8px;
+    top: 16px;
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+
+  .verdict p {
+    color: #e2eaf4;
+    font-size: 0.97rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: KCNN3 &nbsp;|&nbsp; Small-Conductance Ca²⁺-Activated K⁺ Channel SK3 / KCa2.3</span>
+    <span class="chip chip-danger">⚠ Significant Safety Concerns — Cardiovascular &amp; Multi-tissue</span>
+  </div>
+  <h1>KCNN3 / SK3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caution:</span>
+      KCNN3 modulation carries substantial multi-system safety risks. Systemic SK3 targeting may affect atrial rhythm, blood pressure, vascular tone, gastrointestinal motility, insulin secretion, and CNS reward/mood circuits — risks of particular concern in older Alzheimer's patient populations.
+    </div>
+
+    <p>KCNN3, also called <em>SK3</em> or <em>KCa2.3</em>, encodes a small-conductance Ca²⁺-activated K⁺ channel that links intracellular calcium signals to potassium efflux, membrane hyperpolarization, afterhyperpolarization, and regulation of neuronal excitability. Within the supplied evidence base, KCNN3 is <strong>not established as a validated Alzheimer's disease gene or therapeutic target</strong>. Most evidence is indirect, drawn from neurodegeneration-focused computational work, hippocampal and prefrontal physiology, microglial and vascular studies, excitotoxicity models, neuropsychiatric genetics, and peripheral druggability data.</p>
+
+    <p>The most Alzheimer's-relevant mechanisms engaged by SK3 include calcium dyshomeostasis, hippocampal and cortical circuit dysfunction, altered synaptic plasticity, neuronal hyperexcitability or hypoexcitability, tau-vulnerable prefrontal neurons, microglial inflammatory activation, oxidative stress, mitochondrial injury, and neurovascular/endothelial dysfunction. The therapeutic direction is unresolved: SK3 <em>activation</em> may reduce pathological hyperexcitability, excitotoxicity, mitochondrial stress, or vascular dysfunction, whereas SK3 <em>inhibition</em> may improve certain forms of hippocampal plasticity or reduce microglia-mediated inflammatory neurotoxicity in specific contexts.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="display:block; min-width:600px; width:100%; height:auto;" aria-label="KCNN3/SK3 mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Signal & Channel -->
+        <rect x="12" y="12" width="218" height="476" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="121" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">A · UPSTREAM &amp; CHANNEL</text>
+
+        <!-- A1: Ca2+ signal -->
+        <rect x="46" y="40" width="150" height="42" rx="7" fill="#2e6da4" fill-opacity="0.15" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="121" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Ca²⁺ Dyshomeostasis</text>
+        <text x="121" y="71" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1a3a5c">Intracellular Ca²⁺ rise</text>
+
+        <!-- arrow A1->A2 -->
+        <line x1="121" y1="82" x2="121" y2="103" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A2: KCNN3/SK3 channel -->
+        <rect x="35" y="103" width="172" height="44" rx="7" fill="#1a3a5c" fill-opacity="0.88" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="121" y="121" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">KCNN3 / SK3</text>
+        <text x="121" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#93c5fd">Ca²⁺-activated K⁺ channel</text>
+
+        <!-- arrow A2->A3 -->
+        <line x1="121" y1="147" x2="121" y2="168" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- A3: K+ efflux / hyperpol -->
+        <rect x="46" y="168" width="150" height="42" rx="7" fill="#2e6da4" fill-opacity="0.15" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="121" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">K⁺ Efflux &amp; Hyperpol.</text>
+        <text x="121" y="199" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1a3a5c">Afterhyperpolarization</text>
+
+        <!-- A4: Isoform note -->
+        <rect x="30" y="235" width="180" height="42" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="120" y="252" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#92400e">Splice Isoform Context</text>
+        <text x="120" y="266" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#78350f">Long vs. short variants;</text>
+        <text x="120" y="278" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#78350f">short may lack K⁺ motif</text>
+
+        <!-- A5: Regulators -->
+        <rect x="30" y="300" width="180" height="52" rx="7" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+        <text x="120" y="318" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#334155">Oxidative Regulators</text>
+        <text x="120" y="332" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">ROS, NOX4, NF-κB,</text>
+        <text x="120" y="344" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">p38 MAPK, PKC, ERK</text>
+
+        <!-- A6: Druggable note -->
+        <rect x="30" y="375" width="180" height="52" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.1"/>
+        <text x="120" y="393" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1a3a5c">Pharmacological Tools</text>
+        <text x="120" y="407" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1a3a5c">CyPPA, 1-EBIO, NS309,</text>
+        <text x="120" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1a3a5c">apamin, NS8593, riluzole</text>
+
+        <!-- PANEL B: Neuronal / Hippocampal -->
+        <rect x="244" y="12" width="214" height="312" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="351" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">B · NEURONAL CIRCUITS</text>
+
+        <!-- B1: Hippocampal -->
+        <rect x="264" y="40" width="174" height="44" rx="7" fill="#0f766e" fill-opacity="0.12" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="351" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0f5343">Hippocampal Circuitry</text>
+        <text x="351" y="71" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">CA1/CA3, memory encoding</text>
+
+        <!-- arrow B1 -> B2 left branch -->
+        <line x1="310" y1="84" x2="295" y2="104" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- arrow B1 -> B3 right branch -->
+        <line x1="395" y1="84" x2="408" y2="104" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B2: LTP suppression -->
+        <rect x="258" y="104" width="120" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="318" y="122" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#0f5343">LTP Suppression</text>
+        <text x="318" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">NMDAR-EPSP, E-S</text>
+        <text x="318" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">coupling impaired</text>
+
+        <!-- B3: Memory deficit -->
+        <rect x="388" y="104" width="58" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="417" y="122" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f5343">Memory</text>
+        <text x="417" y="136" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">Deficit</text>
+        <text x="417" y="150" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">↓ ORM</text>
+
+        <!-- arrows B2,B3 -> B4 -->
+        <line x1="318" y1="156" x2="318" y2="177" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="417" y1="156" x2="395" y2="177" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- B4: Aging + SK3 upregul -->
+        <rect x="264" y="177" width="174" height="44" rx="7" fill="#0f766e" fill-opacity="0.1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="351" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#0f5343">Aging SK3 Upregulation</text>
+        <text x="351" y="208" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">Reduced LTP, trace fear ↓</text>
+
+        <!-- arrow B4 -> B5 -->
+        <line x1="351" y1="221" x2="351" y2="241" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- B5: PFC tau-vulnerable -->
+        <rect x="264" y="241" width="174" height="52" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="351" y="259" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a8a">PFC Layer III Pyramidal</text>
+        <text x="351" y="273" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e3a8a">Tau-vulnerable; SK3 + CALB1</text>
+        <text x="351" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e3a8a">+ CACNA1C + GRIN2B</text>
+
+        <!-- PANEL C: Neuroinflamm / Microglia -->
+        <rect x="244" y="338" width="214" height="152" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="351" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">C · MICROGLIA / INFLAMMATION</text>
+
+        <!-- C1: Microglia activation -->
+        <rect x="264" y="364" width="174" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="351" y="381" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">Microglial SK3 Activity</text>
+        <text x="351" y="395" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">Ca²⁺, LPS stimulus, podosome</text>
+
+        <!-- arrow C1 -> C2 left, C3 right -->
+        <line x1="310" y1="406" x2="295" y2="424" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="395" y1="406" x2="410" y2="424" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- C2: Activation (pro-inflammatory) -->
+        <rect x="258" y="424" width="118" height="48" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.1"/>
+        <text x="317" y="441" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#7f1d1d">Pro-inflam.</text>
+        <text x="317" y="455" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">TNF-α, IL-6,</text>
+        <text x="317" y="467" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">NO, neurotox.</text>
+
+        <!-- C3: Anti-inflammatory context -->
+        <rect x="386" y="424" width="56" height="48" rx="7" fill="#fff7f7" stroke="#b45309" stroke-width="1.1"/>
+        <text x="414" y="441" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#92400e">Mixed</text>
+        <text x="414" y="455" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e">context</text>
+        <text x="414" y="469" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e">depend.</text>
+
+        <!-- PANEL D: Vascular + Neuroprot -->
+        <rect x="472" y="12" width="436" height="476" rx="12" fill="#f1f5f9" fill-opacity="0.55" stroke="#475569" stroke-width="1.4"/>
+        <text x="690" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#334155" letter-spacing="1">D · VASCULAR, NEUROPROTECTION &amp; SAFETY</text>
+
+        <!-- D1: Endothelial SK3 -->
+        <rect x="560" y="40" width="160" height="44" rx="7" fill="#1a3a5c" fill-opacity="0.1" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="640" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Endothelial SK3</text>
+        <text x="640" y="71" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1a3a5c">KCa2.3 / cerebrovascular</text>
+
+        <!-- arrow D1 -> D2 left -->
+        <line x1="600" y1="84" x2="574" y2="104" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- arrow D1 -> D3 right -->
+        <line x1="681" y1="84" x2="706" y2="104" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- D2: Beneficial vascular -->
+        <rect x="490" y="104" width="162" height="52" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="571" y="121" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1a3a5c">Protective Vascular</text>
+        <text x="571" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">Hyperpol., vasodilation,</text>
+        <text x="571" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">EDHF, NO signaling</text>
+
+        <!-- D3: Harmful vascular -->
+        <rect x="662" y="104" width="162" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="743" y="121" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">Pathological Vascular</text>
+        <text x="743" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">Stress → ROS, ET-1,</text>
+        <text x="743" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">vasoconstriction, leakage</text>
+
+        <!-- D2 -> D4 (converge) -->
+        <line x1="571" y1="156" x2="571" y2="190" stroke="#2e6da4" stroke-width="1.4"/>
+        <line x1="571" y1="190" x2="670" y2="190" stroke="#2e6da4" stroke-width="1.4"/>
+        <line x1="670" y1="190" x2="670" y2="177" stroke="#2e6da4" stroke-width="1.4"/>
+        <!-- D3 -> converge line -->
+        <line x1="743" y1="156" x2="743" y2="190" stroke="#9b1c1c" stroke-width="1.4"/>
+        <line x1="743" y1="190" x2="672" y2="190" stroke="#9b1c1c" stroke-width="1.4"/>
+
+        <!-- D4: NVC / BBB -->
+        <rect x="574" y="192" width="192" height="44" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+        <text x="670" y="209" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#334155">Neurovascular Coupling</text>
+        <text x="670" y="223" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">Perfusion, BBB integrity, AD link</text>
+
+        <!-- arrow D4 -> D5 neuroprot -->
+        <line x1="640" y1="236" x2="600" y2="257" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- arrow D4 -> D5b safety -->
+        <line x1="700" y1="236" x2="740" y2="257" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- D5: Neuroprotection -->
+        <rect x="490" y="257" width="168" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="574" y="274" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#0f5343">Neuroprotection (SK3 act.)</text>
+        <text x="574" y="288" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">1-EBIO, CyPPA, NS309</text>
+        <text x="574" y="302" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#134e4a">vs. excitotox./mito. stress</text>
+
+        <!-- D6: Safety concerns -->
+        <rect x="668" y="257" width="168" height="52" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="752" y="274" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">Systemic Safety Risks</text>
+        <text x="752" y="288" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">Atrial fib., BP, smooth</text>
+        <text x="752" y="302" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#7f1d1d">muscle, immune, reward</text>
+
+        <!-- D7: Verdict box -->
+        <rect x="530" y="335" width="320" height="54" rx="8" fill="#1a3a5c" fill-opacity="0.09" stroke="#1a3a5c" stroke-width="1.3"/>
+        <text x="690" y="354" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Therapeutic Direction: Unresolved</text>
+        <text x="690" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#334155">Activation vs. inhibition depends on cell type,</text>
+        <text x="690" y="384" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#334155">disease stage, isoform, and context</text>
+
+        <!-- arrows D5,D6 -> D7 -->
+        <line x1="574" y1="309" x2="574" y2="326" stroke="#475569" stroke-width="1.3"/>
+        <line x1="574" y1="326" x2="648" y2="335" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+        <line x1="752" y1="309" x2="752" y2="326" stroke="#475569" stroke-width="1.3"/>
+        <line x1="752" y1="326" x2="733" y2="335" stroke="#475569" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+
+        <!-- D8: Genetics note -->
+        <rect x="530" y="412" width="320" height="52" rx="7" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+        <text x="690" y="430" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#334155">Human Genetic Evidence</text>
+        <text x="690" y="444" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">CAG-repeat, SNPs in schizophrenia, AF, epilepsy;</text>
+        <text x="690" y="458" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#475569">not established as AD risk gene</text>
+
+        <!-- Cross-panel connector: Panel A A3 (K+/hyperpol) -> Panel B B1 (hippocampal) -->
+        <!-- Route through gutter between panels (x≈230..244) -->
+        <line x1="196" y1="189" x2="230" y2="189" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="230" y1="189" x2="230" y2="62" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="230" y1="62" x2="264" y2="62" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel: Panel B B5 -> Panel D D1 area: route through gutter x≈460..472 -->
+        <!-- B5 right edge at x=438, D panel starts at 472 -->
+        <line x1="438" y1="267" x2="458" y2="267" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="458" y1="267" x2="458" y2="62" stroke="#2e6da4" stroke-width="1.3"/>
+        <line x1="458" y1="62" x2="560" y2="62" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> Upstream Ca²⁺ signals activate KCNN3/SK3, driving K⁺ efflux and membrane hyperpolarization. Splice isoform context and oxidative regulators (ROS, NOX4, NF-κB, p38 MAPK) modulate channel availability. Available pharmacological modulators are listed.
+      <strong>Panel B (teal, upper centre):</strong> Neuronal circuit consequences — hippocampal SK3 drives two parallel sub-cascades: LTP suppression (NMDAR–EPSP, E-S coupling impairment) and object-recognition memory deficit, converging on age-associated SK3 upregulation that worsens plasticity. A cross-panel connector links to PFC layer III tau-vulnerable pyramidal neurons co-expressing CALB1, CACNA1C, and GRIN2B.
+      <strong>Panel C (red, lower centre):</strong> Microglial SK3 bifurcates into pro-inflammatory (TNF-α, IL-6, NO, neurotoxicity) versus mixed/context-dependent outcomes, reflecting conflicting reports in the literature.
+      <strong>Panel D (gray, right):</strong> Endothelial SK3 branches into protective vascular effects (vasodilation, EDHF, NO) versus pathological effects (ROS, ET-1, vasoconstriction) that converge on neurovascular coupling and BBB integrity. Downstream neuroprotection (SK3 activation) and systemic safety risks (SK3 modulation) both feed into the unresolved therapeutic direction box. Human genetic evidence (CAG-repeat, SNPs) is shown as a non-AD-specific contextual note.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-heading">Core Physiology &amp; AD-Relevant Mechanisms</div>
+        <p>SK3 regulates Ca²⁺-dependent K⁺ conductance, membrane hyperpolarization, afterhyperpolarization, neuronal firing adaptation, synaptic responsiveness, and calcium-feedback control — all directly intersecting with calcium dyshomeostasis, hyperexcitability, and synaptic plasticity deficits central to Alzheimer's disease.</p>
+      </div>
+
+      <div class="card positive">
+        <div class="card-heading">Hippocampal &amp; Aging Evidence</div>
+        <p>SK3 overexpression in mice caused severe hippocampal shrinkage, CA1/CA3 disorganization, and impaired object-recognition memory and LTP. Elevated SK3 in aged mouse hippocampus reduced LTP and trace fear conditioning, suggesting that pathological or age-associated SK3 upregulation could directly worsen the hippocampal memory dysfunction characteristic of Alzheimer's disease.</p>
+      </div>
+
+      <div class="card blue">
+        <div class="card-heading">Prefrontal Tau-Vulnerable Circuitry</div>
+        <p>In primate dorsolateral PFC layer III pyramidal neurons — a population vulnerable to tau pathology in cognitive disorders — SK3 is coexpressed with CALB1, CACNA1C/Cav1.2, and GRIN2B/GluN2B near dendritic spine calcium microdomains. β1-adrenoceptor stress signaling reduced working-memory firing via SK-channel opening, placing KCNN3 at the intersection of stress, aging, and Alzheimer's tau pathology.</p>
+      </div>
+
+      <div class="card danger">
+        <div class="card-heading">Safety: Multi-System Risks</div>
+        <p>KCNN3/SK3 is expressed in heart, vasculature, smooth muscle, bladder, gastrointestinal tract, pancreas, immune cells, and reproductive tissues. Systemic modulation may affect atrial fibrillation risk, conduction, blood pressure, vascular reactivity, insulin secretion, immune responses, and CNS reward circuits — concerns of particular weight in older Alzheimer's populations.</p>
+      </div>
+
+      <div class="card warning">
+        <div class="card-heading">Microglial Findings Are Conflicting</div>
+        <p>Some studies show SK3 activation (CyPPA, riluzole) reduces LPS-induced microglial TNF-α, IL-6, and nitric oxide; others show SK3 blockade reduced microglial activation and microglia-mediated neuronal death. This bidirectionality reflects strong dependence on microglial state, stimulus, and pharmacological tool specificity — the direction of benefit is not yet resolved.</p>
+      </div>
+
+      <div class="card neutral">
+        <div class="card-heading">Human Genetics: Not Alzheimer's-Specific</div>
+        <p>KCNN3 CAG/polyglutamine repeat variation and SNPs have been studied primarily in schizophrenia, bipolar disorder, anorexia, epilepsy, migraine, and atrial fibrillation. Results are often inconsistent or negative and do not establish KCNN3 as an Alzheimer's risk or protective gene. Direct Alzheimer's in silico evidence is limited to a single neurodegeneration-focused splicing and variant analysis without patient outcome data.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat KCNN3 as hypothesis-generating.</strong> Do not advance KCNN3 as a validated Alzheimer's therapeutic target without disease-specific evidence; current data are indirect, context-dependent, and often from non-AD models.</li>
+      <li><strong>Prioritize cell-type-specific studies.</strong> Conduct KCNN3 investigations separately in hippocampal pyramidal neurons, PFC layer III pyramidal neurons, interneurons, astrocytes, microglia, and cerebral endothelial cells, as effects differ fundamentally across cell types.</li>
+      <li><strong>Characterize KCNN3 in Alzheimer's tissue and datasets.</strong> Measure mRNA, protein, splice isoforms, CAG-repeat/variant status, methylation, surface trafficking, and functional SK3 currents in Alzheimer's brain tissue and single-cell transcriptomic datasets.</li>
+      <li><strong>Correlate KCNN3 changes with AD pathology markers.</strong> Test whether KCNN3 alterations correlate with amyloid burden, tau pathology, synapse loss, hippocampal atrophy, subclinical epileptiform activity, cognitive decline, neuropsychiatric symptoms, and vascular or inflammatory markers.</li>
+      <li><strong>Resolve therapeutic direction before drug development.</strong> SK3 activation may be appropriate for hyperexcitability, excitotoxicity, mitochondrial stress, and endothelial dysfunction; SK3 inhibition may be appropriate where excessive afterhyperpolarization suppresses plasticity or where microglial SK3 drives inflammatory neurotoxicity. This must be determined empirically in AD-relevant models.</li>
+      <li><strong>Use KCNN3-selective or genetically validated tools.</strong> Many current SK modulators are pan-SK or affect KCNN4/KCa3.1. Alzheimer's studies require KCNN3-selective pharmacology or genetic approaches to avoid confounded results.</li>
+      <li><strong>Include electrophysiological and neuroinflammatory endpoints.</strong> Measure afterhyperpolarization, spike-frequency adaptation, burst firing, NMDAR coupling, E-S coupling, LTP, network oscillations, seizure susceptibility, microglial Ca²⁺ signaling, cytokines, ROS, and NF-κB/p38 activation in AD models.</li>
+      <li><strong>Include vascular endpoints.</strong> Assess cerebral microvascular dilation, endothelial hyperpolarization, neurovascular coupling, BBB integrity, and perfusion; account for interactions with hypertension, diabetes, APOE status, and inflammatory vascular stress.</li>
+      <li><strong>Evaluate cardiovascular safety early.</strong> KCNN3 modulation may affect atrial rhythm, conduction, and blood pressure — evaluate these risks before clinical translation, especially given the age and comorbidity profile of the Alzheimer's population.</li>
+      <li><strong>Target selective normalization, not blanket modulation.</strong> The most defensible therapeutic concept is selective restoration of KCNN3/SK3 function in a defined pathological state (e.g., hippocampal SK3 overactivity impairing LTP, microglial SK3 driving inflammatory toxicity, or endothelial SK3 loss worsening perfusion) rather than universal activation or inhibition.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — KCNN3 / SK3 in Alzheimer's Disease</div>
+      <p>KCNN3/SK3 is a <strong>biologically plausible, context-dependent, but unvalidated</strong> Alzheimer's-relevant target. Its role in Ca²⁺-dependent membrane hyperpolarization, hippocampal LTP, PFC tau-vulnerable circuitry, microglial inflammatory signaling, and cerebrovascular endothelial function places it at the intersection of several core Alzheimer's disease mechanisms. However, <strong>no direct evidence links KCNN3 to Alzheimer's patient outcomes, amyloid or tau pathology, or disease modification</strong>. The therapeutic direction is genuinely bidirectional and context-dependent: activation may benefit excitotoxicity, mitochondrial stress, or vascular dysfunction, while inhibition may benefit plasticity or microglial neurotoxicity in other settings. Compounding this ambiguity, <strong>substantial systemic safety risks</strong> — cardiovascular, vascular, and peripheral — demand early and rigorous evaluation. The most scientifically defensible path forward is careful, cell-type-resolved, isoform-aware, Alzheimer's-specific investigation using selective tools, before any therapeutic hypothesis is advanced.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  KCNN3 / SK3 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

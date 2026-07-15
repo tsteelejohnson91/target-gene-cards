@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRDX1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+    color: #ffc9c9;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW text */
+  .overview-text p { margin-bottom: 14px; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 10px;
+    padding: 18px 12px 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    margin-top: 11px;
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 7px;
+    padding: 16px 18px;
+    border-left: 4px solid transparent;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+  }
+  .card p { font-size: 0.92rem; line-height: 1.65; }
+  .card-accent { background: var(--light); border-left-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-left-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  /* TAKEAWAYS */
+  .takeaway-list { list-style: none; }
+  .takeaway-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.96rem;
+    line-height: 1.72;
+  }
+  .takeaway-list li:last-child { border-bottom: none; }
+  .takeaway-list li .lead { color: var(--dark); font-weight: 700; }
+  .takeaway-num {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: var(--mid);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    margin-right: 9px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f35 100%);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+    font-size: 1.01rem;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+  .verdict-banner p { color: rgba(255,255,255,0.9); }
+  .verdict-banner strong { color: var(--white); }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PRDX1 &nbsp;|&nbsp; Peroxiredoxin-1</span>
+    <span class="chip chip-danger">⚠ Context-Dependent Safety Concern</span>
+  </div>
+  <h1>PRDX1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> PRDX1 is context-dependent. Extracellular PRDX1 can act as a DAMP-like inflammatory mediator via TLR4/NF-κB/NLRP3 pathways, potentially worsening neuroinflammation. Systemic modulation without compartment specificity carries oncogenic or immune-modulatory risk.
+    </div>
+
+    <div class="overview-text">
+      <p>PRDX1 is a redox-regulatory peroxiredoxin with antioxidant, inflammatory, mitochondrial, ferroptosis-related, and cell-survival functions. Across the literature, PRDX1 is repeatedly linked to hydrogen peroxide and ROS detoxification, lipid peroxidation control, mitochondrial stress resilience, ER stress, autophagy/mitophagy, glial and immune-cell signaling, NF-κB/TLR4/NLRP3 inflammatory pathways, and regulated cell death.</p>
+      <p>The Alzheimer's disease evidence is mixed in strength. PRDX1 was identified in AD hippocampal ferroptosis-related gene networks; decreased in hippocampus after Aβ25–35 exposure and restored by a protective organoselenium compound; elevated in brain-derived extracellular vesicles from AD patients alongside total tau and phosphorylated tau; and overexpression of PRDX1 protected HT-22 hippocampal neuronal cells from STZ-induced AD-like pathology by suppressing Ca²⁺/Calpain/Cdk5/Drp1 signaling.</p>
+      <p>Overall, PRDX1 is best interpreted as a plausible, context-dependent AD therapeutic target. Intracellular PRDX1 is generally protective against oxidative stress, mitochondrial dysfunction, lipid peroxidation/ferroptosis, ER stress, apoptosis, synaptic injury, and tau-related stress signaling. In contrast, extracellular or secreted PRDX1 can act as a DAMP-like inflammatory mediator through TLR4, Mincle, NF-κB, NOD1, or NLRP3-related pathways, potentially worsening chronic neuroinflammation.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Intracellular Protective Cascade (~x=10 to x=420)
+        PANEL B (right): Extracellular / Inflammatory Cascade (~x=500 to x=870)
+        Nodes planned (counting carefully, max 16):
+        Panel A: 1=PRDX1(intracell), 2=ROS/H2O2↓, 3=Lipid ROS↓, 4=Mito H2O2, 
+                 5=Ca2+/Calpain, 6=Cdk5/Drp1, 7=Neuroprotection
+        Panel B: 8=PRDX1(secreted), 9=TLR4/NF-κB, 10=NLRP3, 11=Neuroinflammation,
+                 12=Tau Phosphorylation, 13=Ferroptosis risk
+        Shared upstream: 14=AD Stress (Aβ/tau/oxidative)
+        Badge/annotation: 15=GPX4/NRF2 (panel A annotation box)
+        Total = 15 nodes. OK.
+      -->
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="870" height="460" aria-label="PRDX1 mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-d" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- SHARED UPSTREAM NODE: AD Stress -->
+        <rect x="320" y="14" width="260" height="48" rx="9" fill="#1e3a5f" opacity="0.92"/>
+        <text x="450" y="34" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">AD Stress</text>
+        <text x="450" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="rgba(255,255,255,0.85)">Aβ / Tau / Oxidative Injury</text>
+
+        <!-- Arrow: AD Stress → PRDX1 intracell (goes left-down into panel A) -->
+        <line x1="370" y1="62" x2="245" y2="118" stroke="#2e6da4" stroke-width="1.7" marker-end="url(#arr)"/>
+        <!-- Arrow: AD Stress → PRDX1 secreted (goes right-down into panel B) -->
+        <line x1="530" y1="62" x2="655" y2="118" stroke="#9b1c1c" stroke-width="1.7" marker-end="url(#arr-r)"/>
+
+        <!-- ===== PANEL A: Intracellular Protective Cascade ===== -->
+        <rect x="12" y="78" width="420" height="388" rx="12" fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="6,3"/>
+        <text x="28" y="98" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#2e6da4" text-anchor="start" letter-spacing="0.1em">PANEL A — INTRACELLULAR PROTECTIVE SIGNALING</text>
+
+        <!-- Node 1: PRDX1 (intracellular) -->
+        <rect x="140" y="108" width="210" height="46" rx="8" fill="#2e6da4"/>
+        <text x="245" y="127" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">PRDX1</text>
+        <text x="245" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="rgba(255,255,255,0.88)">Intracellular Peroxidase</text>
+
+        <!-- Arrow down to branch point row -->
+        <line x1="245" y1="154" x2="245" y2="184" stroke="#2e6da4" stroke-width="1.7" marker-end="url(#arr)"/>
+
+        <!-- BRANCH: left to ROS/H2O2↓, right to Mito H2O2 sink -->
+        <!-- Node 2: ROS / H2O2 Detox -->
+        <rect x="30" y="192" width="170" height="46" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">ROS / H₂O₂ Detox</text>
+        <text x="115" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Thiol-peroxidase activity</text>
+
+        <!-- Node 3: Mito H2O2 Sink -->
+        <rect x="290" y="192" width="130" height="46" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="355" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1e3a5f">Mito H₂O₂</text>
+        <text x="355" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Extramito. sink</text>
+
+        <!-- Elbow line from node1 bottom → splits to Node2 and Node3 -->
+        <!-- To Node2 -->
+        <line x1="245" y1="184" x2="115" y2="184" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="115" y1="184" x2="115" y2="192" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- To Node3 -->
+        <line x1="245" y1="184" x2="355" y2="184" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="355" y1="184" x2="355" y2="192" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Lipid ROS / Ferroptosis Defense (below Node2) -->
+        <rect x="30" y="266" width="170" height="46" rx="8" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.2"/>
+        <text x="115" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0c4a6e">Lipid ROS Defense</text>
+        <text x="115" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0c4a6e">GPX4/NRF2 support</text>
+
+        <line x1="115" y1="238" x2="115" y2="266" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: Ca2+/Calpain/Cdk5 (below Node3) -->
+        <rect x="290" y="266" width="130" height="46" rx="8" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.2"/>
+        <text x="355" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0c4a6e">Ca²⁺/Calpain</text>
+        <text x="355" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0c4a6e">Cdk5 suppressed</text>
+
+        <line x1="355" y1="238" x2="355" y2="266" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 6: Drp1 / Mito fragmentation -->
+        <rect x="290" y="340" width="130" height="46" rx="8" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.2"/>
+        <text x="355" y="359" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#0c4a6e">Drp1 / Mito</text>
+        <text x="355" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0c4a6e">Fragmentation ↓</text>
+
+        <line x1="355" y1="312" x2="355" y2="340" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 7: Neuroprotection (converging outcome, below both branches) -->
+        <rect x="90" y="414" width="240" height="42" rx="8" fill="#0f766e"/>
+        <text x="210" y="432" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">Neuroprotection</text>
+        <text x="210" y="449" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="rgba(255,255,255,0.9)">Synaptic / tau / apoptosis protection</text>
+
+        <!-- Converging arrows to Neuroprotection -->
+        <line x1="115" y1="312" x2="115" y2="406" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="115" y1="406" x2="155" y2="414" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <line x1="355" y1="386" x2="355" y2="406" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="355" y1="406" x2="292" y2="414" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- ===== PANEL B: Extracellular Inflammatory Cascade ===== -->
+        <rect x="468" y="78" width="420" height="388" rx="12" fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="6,3"/>
+        <text x="484" y="98" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#9b1c1c" text-anchor="start" letter-spacing="0.1em">PANEL B — EXTRACELLULAR INFLAMMATORY SIGNALING</text>
+
+        <!-- Node 8: PRDX1 secreted / DAMP -->
+        <rect x="596" y="108" width="196" height="46" rx="8" fill="#9b1c1c"/>
+        <text x="694" y="127" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">PRDX1 (Secreted)</text>
+        <text x="694" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="rgba(255,255,255,0.88)">DAMP · Released from cells</text>
+
+        <!-- Arrow down to branch -->
+        <line x1="694" y1="154" x2="694" y2="184" stroke="#9b1c1c" stroke-width="1.7" marker-end="url(#arr-r)"/>
+
+        <!-- BRANCH B: TLR4/NF-κB left, NLRP3 right -->
+        <!-- Node 9: TLR4 / NF-κB -->
+        <rect x="480" y="192" width="170" height="46" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="565" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">TLR4 / NF-κB</text>
+        <text x="565" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Mincle / NOD1 axis</text>
+
+        <!-- Node 10: NLRP3 Inflammasome -->
+        <rect x="668" y="192" width="196" height="46" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="766" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">NLRP3 Inflammasome</text>
+        <text x="766" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Cytokine release</text>
+
+        <!-- Elbow from Node8 bottom to branches -->
+        <line x1="694" y1="184" x2="565" y2="184" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="565" y1="184" x2="565" y2="192" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+        <line x1="694" y1="184" x2="766" y2="184" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="766" y1="184" x2="766" y2="192" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 11: Microglial Activation -->
+        <rect x="480" y="266" width="170" height="46" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="565" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">Microglial Activation</text>
+        <text x="565" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Pro-inflammatory state</text>
+
+        <line x1="565" y1="238" x2="565" y2="266" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 12: Tau Phosphorylation risk -->
+        <rect x="668" y="266" width="196" height="46" rx="8" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="766" y="285" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">Tau Phosphorylation</text>
+        <text x="766" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Synaptic stress ↑</text>
+
+        <line x1="766" y1="238" x2="766" y2="266" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 13: Ferroptosis / Neuronal Death (converging outcome) -->
+        <rect x="540" y="340" width="308" height="46" rx="8" fill="#7f1d1d"/>
+        <text x="694" y="359" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">Neuroinflammation / Neuronal Death</text>
+        <text x="694" y="376" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="rgba(255,255,255,0.88)">Ferroptosis · Apoptosis · Synaptic loss</text>
+
+        <!-- Converging arrows to Node13 -->
+        <line x1="565" y1="312" x2="565" y2="332" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="565" y1="332" x2="597" y2="340" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+        <line x1="766" y1="312" x2="766" y2="332" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="766" y1="332" x2="743" y2="340" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node 14: EV Biomarker annotation (small badge, below Node13, within panel) -->
+        <rect x="576" y="414" width="236" height="38" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1"/>
+        <text x="694" y="430" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#7f1d1d">AD-EV Biomarker</text>
+        <text x="694" y="445" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">↑ in brain-derived EVs with tau</text>
+
+        <line x1="694" y1="386" x2="694" y2="414" stroke="#9b1c1c" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+
+        <!-- Panel labels / divider -->
+        <line x1="450" y1="78" x2="450" y2="466" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5,4"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (left, blue):</strong> Intracellular PRDX1 acts as a thiol-dependent peroxidase, branching into two protective sub-cascades — (1) ROS/H₂O₂ detoxification supporting lipid-ROS defense via GPX4/NRF2, and (2) mitochondrial H₂O₂ regulation that suppresses Ca²⁺/Calpain/Cdk5 signaling and Drp1-mediated mitochondrial fragmentation — both converging on neuroprotection.
+        <strong>Panel B (right, red):</strong> Secreted/extracellular PRDX1 functions as a DAMP, branching into TLR4/NF-κB/Mincle-driven microglial activation and NLRP3 inflammasome cytokine release, converging on neuroinflammation, ferroptosis, and neuronal death. Elevated PRDX1 in AD brain-derived extracellular vesicles alongside tau is also indicated (dashed arrow, bottom).
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Redox Role in AD</h3>
+        <p>PRDX1 is strongly tied to oxidative stress — a core AD mechanism. It functions as a thiol-dependent peroxidase buffering ROS and H₂O₂, directly relevant to AD's chronic oxidative injury, mitochondrial dysfunction, lipid/protein oxidation, and synaptic vulnerability.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Direct Neuroprotection (STZ & Aβ Models)</h3>
+        <p>PRDX1 overexpression in STZ-induced AD-like HT-22 neurons protected against apoptosis, synaptic loss, tau phosphorylation, and mitochondrial fragmentation. Mechanistically, PRDX1 reduced Ca²⁺ accumulation, Calpain activation, Cdk5 activity, and Drp1 phosphorylation. In Aβ25–35 mouse models, hippocampal PRDX1 was decreased and restored by a protective organoselenium compound.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitochondrial Redox Regulation</h3>
+        <p>Cytosolic PRDX1 serves as an extramitochondrial H₂O₂ sink, helping set mitochondrial matrix ROS levels. PRDX1 deficiency increased mitochondrial H₂O₂ signals and sensitized cells to chronic mitochondrial oxidative stress, directly aligning with AD's impaired mitochondrial quality control.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Ferroptosis & Lipid Peroxidation</h3>
+        <p>PRDX1 loss or inhibition increases lipid ROS, MDA, iron-dependent oxidative injury, and ferroptosis markers. PRDX1 activity supports GPX4/SLC7A11/NRF2-associated antioxidant protection. Iron dyshomeostasis, lipid peroxidation, glutathione depletion, and ferroptosis-like neuronal death are increasingly implicated in AD, making this axis therapeutically relevant.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Extracellular PRDX1 as a Pro-Inflammatory DAMP</h3>
+        <p>Released PRDX1 activates macrophage and microglial inflammatory pathways including TLR4/NF-κB, Mincle/Syk/NF-κB, NOD1/NF-κB, and NLRP3 inflammasome signaling. In AD, extracellular PRDX1 from damaged neurons or glia could amplify sterile neuroinflammation and worsen disease.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context Dependence & Drug Safety</h3>
+        <p>Acetylation, lactylation, phosphorylation, ubiquitination, hyperoxidation, oligomeric state, and extracellular secretion can each alter whether PRDX1 is protective or pathogenic. PRDX1 also supports tumor survival and therapy resistance in cancer, meaning broad systemic modulation carries oncogenic or immune-modulatory risk in AD settings.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Glial & Neuroimmune Relevance</h3>
+        <p>In astrocyte injury models, PRDX1 reduced ROS, lipid peroxidation, and inflammatory cytokines. In microglial models, PRDX1 was enriched in protective antioxidant microglial populations and influenced microglial polarization — mapping onto AD microglial heterogeneity between amyloid/tau clearance and synaptic injury.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>EV Biomarker & Druggability</h3>
+        <p>PRDX1 was elevated in AD brain-derived extracellular vesicles alongside total tau and phosphorylated tau, suggesting potential as a vesicular redox-stress biomarker. Druggable approaches include rosmarinic-acid-like agonists, Nrf2-activating polyphenols, SIRT1/Sirt5-linked modulation, HDAC6 inhibition restoring PRDX1 acetylation, and biologic EV or peptide strategies.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span class="takeaway-num">1</span>
+        <span class="lead">Treat PRDX1 as a precision redox–immune target.</span>
+        The most plausible AD strategy is to enhance intracellular PRDX1 antioxidant/peroxidase function in vulnerable neurons, astrocytes, and protective microglia while limiting extracellular PRDX1-driven inflammatory signaling — not a simple activate-or-inhibit approach.
+      </li>
+      <li>
+        <span class="takeaway-num">2</span>
+        <span class="lead">Prioritize AD-specific in vivo validation.</span>
+        Key experiments should test PRDX1 gain- and loss-of-function in amyloid, tau, STZ/metabolic, and aging models, measuring cognition, synaptic markers, tau phosphorylation, amyloid burden, mitochondrial function, lipid peroxidation, ferroptosis markers, glial activation, and inflammatory cytokines.
+      </li>
+      <li>
+        <span class="takeaway-num">3</span>
+        <span class="lead">Measure PRDX1 state, not only abundance.</span>
+        AD studies must distinguish intracellular versus extracellular PRDX1; cell-type-specific (neuronal, astrocytic, microglial, EV-associated) pools; oxidized/hyperoxidized, acetylated, lactylated, phosphorylated, ubiquitinated, or oligomeric PRDX1; and PRDX1 enzymatic activity versus total protein level.
+      </li>
+      <li>
+        <span class="takeaway-num">4</span>
+        <span class="lead">Explore PRDX1 as a vesicular biomarker.</span>
+        Elevated PRDX1 in AD brain-derived EVs alongside tau and PRDX6 suggests value as a redox-stress biomarker, especially in panels combining tau, ferroptosis markers, inflammatory markers, and CNS cell-type EV markers.
+      </li>
+      <li>
+        <span class="takeaway-num">5</span>
+        <span class="lead">Investigate PRDX1-enhancing therapies for neuronal protection.</span>
+        Candidates include direct PRDX1 agonists, Nrf2 pathway activation, SIRT1/Sirt5-linked restoration, HDAC6 inhibition where PRDX1 deacetylation is harmful, and strategies preserving thioredoxin/sulfiredoxin-dependent PRDX1 redox cycling.
+      </li>
+      <li>
+        <span class="takeaway-num">6</span>
+        <span class="lead">Separately investigate blockade of extracellular PRDX1 signaling.</span>
+        If extracellular PRDX1 is elevated in AD brain, CSF, or EV fractions and activates microglia, neutralizing antibodies, receptor-pathway blockade, or peptides disrupting PRDX1–TLR4/NF-κB interactions may be useful while sparing intracellular antioxidant PRDX1.
+      </li>
+      <li>
+        <span class="takeaway-num">7</span>
+        <span class="lead">Use ferroptosis and mitochondrial endpoints as key readouts.</span>
+        PRDX1-targeted AD studies should track GPX4, SLC7A11, ACSL4, COX2, lipid ROS, MDA/4-HNE, iron handling, mitochondrial H₂O₂, mitophagy, membrane potential, ATP production, Drp1 phosphorylation, and mitochondrial fragmentation.
+      </li>
+      <li>
+        <span class="takeaway-num">8</span>
+        <span class="lead">Avoid broad systemic PRDX1 modulation without safety controls.</span>
+        Because PRDX1 supports cancer-cell survival and maladaptive inflammatory programs, AD-directed approaches must emphasize brain targeting, cell-type specificity, controlled dosing, and monitoring for oncogenic or immune consequences.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — PRDX1 in Alzheimer's Disease</div>
+      <p>
+        PRDX1 represents a <strong>plausible but contextually complex AD therapeutic target</strong>. The evidence consistently positions intracellular PRDX1 as a <strong>neuroprotective peroxidase</strong> that limits oxidative stress, mitochondrial fragmentation, tau hyperphosphorylation, lipid peroxidation/ferroptosis, synaptic injury, and apoptosis. Direct AD-relevant data include hippocampal PRDX1 reduction after Aβ exposure, PRDX1 elevation in AD patient brain-derived extracellular vesicles co-occurring with tau pathology, and protective overexpression in STZ-induced AD-like neuronal models. However, <strong>extracellular PRDX1 functions as a DAMP</strong>, activating TLR4/NF-κB/NLRP3 inflammatory cascades in microglia, creating a dual biological identity that demands <strong>compartment-specific therapeutic design</strong>. The strongest hypothesis is to boost intracellular PRDX1 to reduce oxidative-ferroptotic-mitochondrial injury while blocking extracellular PRDX1 from amplifying neuroinflammation — pursued with <strong>brain-targeted, cell-type-specific strategies</strong> and rigorous safety monitoring for oncogenic or immune-modulatory off-target effects.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PRDX1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

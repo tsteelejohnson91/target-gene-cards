@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHPN2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #ede8f7;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.4);
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW BODY */
+  .overview-body p {
+    margin-bottom: 1rem;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent  { background: var(--light);           border-left: 4px solid var(--mid);     }
+  .card-accent h3  { color: var(--dark); }
+
+  .card-danger  { background: var(--danger-light);    border-left: 4px solid var(--danger);  }
+  .card-danger h3  { color: var(--danger); }
+
+  .card-positive{ background: var(--positive-light);  border-left: 4px solid var(--positive);}
+  .card-positive h3{ color: var(--positive); }
+
+  .card-warning { background: var(--warning-light);   border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light);   border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue    { background: #eff6ff;                border-left: 4px solid #2563eb; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways {
+    list-style: none;
+    counter-reset: take;
+    padding: 0;
+  }
+
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0720 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #d8b4fe;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .verdict strong {
+    color: #c4b5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: RHPN2 &nbsp;|&nbsp; Rhophilin Rho GTPase Binding Protein 2</span>
+    <span class="chip chip-danger">⚠ Indirect AD relevance only — not a validated target</span>
+  </div>
+  <h1>RHPN2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Speculative Relevance:</strong> RHPN2 is <em>not</em> directly established as an Alzheimer's disease gene, biomarker, mechanism, or therapeutic target. No supplied evidence covers AD patients, AD brain tissue, amyloid-β, tau, synaptic loss, or neurodegeneration. All AD-relevant connections are indirect and hypothesis-generating only.
+    </div>
+
+    <div class="overview-body">
+      <p>RHPN2 encodes a Rho GTPase-binding protein whose best-characterized roles span RhoA/RhoB/RhoA-ROCK signaling, actin cytoskeleton remodeling, vesicular and endosomal trafficking, vascular-risk biology, inflammation and stress signaling, and cellular metabolism. The primary evidence base derives from cancer biology, sensory-cell developmental genetics, hypertension epigenomics, and cell-based mechanistic studies — not from AD or any neurodegenerative context.</p>
+      <p>Its plausible connections to AD arise because the cellular pathways it operates within — RhoA/ROCK cytoskeletal control, endosomal sorting, vascular tone, and NF-κB/STAT3 inflammation — overlap with mechanisms broadly implicated in AD pathophysiology. Crucially, these overlaps are inferred by pathway analogy, not by direct experimental evidence in AD models or patient tissue.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;" font-family="Arial,Helvetica,sans-serif" font-size="11">
+
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6d3fc0"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Upstream Signals ===== -->
+        <rect x="12" y="12" width="200" height="460" rx="14" fill="#ede8f7" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+        <text x="112" y="34" text-anchor="middle" font-weight="700" font-size="9" fill="#3b1f6e" letter-spacing="1">A · UPSTREAM</text>
+
+        <!-- Node 1: Hypertension/BP Methylation -->
+        <rect x="28" y="50" width="168" height="46" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+        <text x="112" y="68" text-anchor="middle" fill="#1e293b" font-weight="600">Hypertension /</text>
+        <text x="112" y="82" text-anchor="middle" fill="#1e293b">BP Methylation (EWAS)</text>
+
+        <!-- Node 2: RHPN2 (central) -->
+        <rect x="40" y="138" width="144" height="44" rx="8" fill="#3b1f6e" stroke="#3b1f6e" stroke-width="1.5"/>
+        <text x="112" y="156" text-anchor="middle" fill="#ffffff" font-weight="700" font-size="13">RHPN2</text>
+        <text x="112" y="173" text-anchor="middle" fill="#d8b4fe" font-size="10">Rho GTPase–binding</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="112" y1="96" x2="112" y2="136" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: RhoB / Endosomal -->
+        <rect x="28" y="228" width="168" height="44" rx="8" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+        <text x="112" y="246" text-anchor="middle" fill="#1e293b" font-weight="600">RhoB Interaction</text>
+        <text x="112" y="260" text-anchor="middle" fill="#1e293b">CD63+ late endosomes</text>
+
+        <!-- Arrow 2→3 -->
+        <line x1="112" y1="182" x2="112" y2="226" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Vascular Risk context -->
+        <rect x="28" y="382" width="168" height="44" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="112" y="400" text-anchor="middle" fill="#1e293b" font-weight="600">Vascular Aging /</text>
+        <text x="112" y="415" text-anchor="middle" fill="#b45309">Dementia Risk Context</text>
+
+        <!-- Arrow 3 down to vascular (routing through empty space) -->
+        <line x1="112" y1="272" x2="112" y2="380" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+        <!-- ===== PANEL B: RhoA/ROCK Mechanism ===== -->
+        <rect x="228" y="12" width="222" height="340" rx="14" fill="#e0e7ff" fill-opacity="0.45" stroke="#4338ca" stroke-width="1.2"/>
+        <text x="339" y="34" text-anchor="middle" font-weight="700" font-size="9" fill="#3730a3" letter-spacing="1">B · RhoA / ROCK SIGNALING</text>
+
+        <!-- Node 5: RhoA activation -->
+        <rect x="244" y="50" width="190" height="44" rx="8" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+        <text x="339" y="68" text-anchor="middle" fill="#1e293b" font-weight="600">RhoA Activation</text>
+        <text x="339" y="82" text-anchor="middle" fill="#1e293b">rs10411210 allele ↑</text>
+
+        <!-- Node 6: ROCK2b -->
+        <rect x="244" y="148" width="190" height="44" rx="8" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+        <text x="339" y="166" text-anchor="middle" fill="#1e293b" font-weight="600">ROCK2b Expression</text>
+        <text x="339" y="180" text-anchor="middle" fill="#1e293b">↓ upon rhpn2 KO</text>
+
+        <!-- Arrow 5→6 -->
+        <line x1="339" y1="94" x2="339" y2="146" stroke="#4338ca" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Branch: Node 7 Actin remodeling, Node 8 Neurite/Spine -->
+        <!-- Node 7 -->
+        <rect x="244" y="248" width="86" height="44" rx="8" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+        <text x="287" y="266" text-anchor="middle" fill="#1e293b" font-weight="600">Actin</text>
+        <text x="287" y="280" text-anchor="middle" fill="#1e293b">Remodeling</text>
+
+        <!-- Node 8 -->
+        <rect x="348" y="248" width="86" height="44" rx="8" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+        <text x="391" y="262" text-anchor="middle" fill="#1e293b" font-weight="600">Cytoskeletal</text>
+        <text x="391" y="276" text-anchor="middle" fill="#1e293b">Dynamics</text>
+
+        <!-- Arrow 6→7 -->
+        <line x1="300" y1="192" x2="287" y2="246" stroke="#4338ca" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Arrow 6→8 -->
+        <line x1="378" y1="192" x2="391" y2="246" stroke="#4338ca" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ===== PANEL C: Downstream / Cancer Evidence ===== -->
+        <rect x="466" y="12" width="222" height="340" rx="14" fill="#fce7f3" fill-opacity="0.4" stroke="#be185d" stroke-width="1.2"/>
+        <text x="577" y="34" text-anchor="middle" font-weight="700" font-size="9" fill="#9d174d" letter-spacing="1">C · ONCOLOGY EVIDENCE</text>
+
+        <!-- Node 9: Proliferation/Migration -->
+        <rect x="482" y="50" width="190" height="44" rx="8" fill="#ffffff" stroke="#be185d" stroke-width="1.3"/>
+        <text x="577" y="68" text-anchor="middle" fill="#1e293b" font-weight="600">RHPN2 Knockdown</text>
+        <text x="577" y="82" text-anchor="middle" fill="#9d174d">↓ Proliferation / Migration</text>
+
+        <!-- Node 10: EMT / Invasion -->
+        <rect x="482" y="148" width="86" height="44" rx="8" fill="#ffffff" stroke="#be185d" stroke-width="1.3"/>
+        <text x="525" y="163" text-anchor="middle" fill="#1e293b" font-weight="600">EMT-like</text>
+        <text x="525" y="177" text-anchor="middle" fill="#9d174d">Programs ↓</text>
+
+        <!-- Node 11: Angiogenesis/Metastasis -->
+        <rect x="586" y="148" width="90" height="44" rx="8" fill="#ffffff" stroke="#be185d" stroke-width="1.3"/>
+        <text x="631" y="163" text-anchor="middle" fill="#1e293b" font-weight="600">Angiogenesis</text>
+        <text x="631" y="177" text-anchor="middle" fill="#9d174d">Metastasis ↓</text>
+
+        <!-- Arrow 9→10 -->
+        <line x1="538" y1="94" x2="525" y2="146" stroke="#be185d" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <!-- Arrow 9→11 -->
+        <line x1="616" y1="94" x2="631" y2="146" stroke="#be185d" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 12: Signaling mediators -->
+        <rect x="482" y="248" width="190" height="44" rx="8" fill="#fff1f2" stroke="#be185d" stroke-width="1.3"/>
+        <text x="577" y="263" text-anchor="middle" fill="#1e293b" font-weight="600">NF-κB · STAT3</text>
+        <text x="577" y="278" text-anchor="middle" fill="#9d174d">Integrin β1 · c-Myc</text>
+
+        <!-- Arrow 10→12 -->
+        <line x1="525" y1="192" x2="525" y2="246" stroke="#be185d" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <!-- Arrow 11→12 elbow: down then left -->
+        <polyline points="631,192 631,230 672,230 672,256 672,256" fill="none" stroke="#be185d" stroke-width="1.3"/>
+        <!-- last segment to box -->
+        <line x1="672" y1="256" x2="673" y2="256" stroke="none"/>
+        <!-- simpler: arrow from 11 down to 12 via right side -->
+        <polyline points="631,192 631,236 577,236 577,246" fill="none" stroke="#be185d" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- ===== PANEL D: AD Hypothesis ===== -->
+        <rect x="704" y="12" width="204" height="460" rx="14" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="806" y="34" text-anchor="middle" font-weight="700" font-size="9" fill="#0f766e" letter-spacing="1">D · AD HYPOTHESIS</text>
+
+        <!-- Node 13: Endosomal trafficking -->
+        <rect x="718" y="50" width="176" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="806" y="68" text-anchor="middle" fill="#1e293b" font-weight="600">Endosomal Trafficking</text>
+        <text x="806" y="82" text-anchor="middle" fill="#0f766e">APP / BACE1 (hypothetical)</text>
+
+        <!-- Node 14: BBB / Vascular tone -->
+        <rect x="718" y="158" width="176" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="806" y="176" text-anchor="middle" fill="#1e293b" font-weight="600">BBB Integrity /</text>
+        <text x="806" y="190" text-anchor="middle" fill="#0f766e">Vascular Tone</text>
+
+        <!-- Node 15: Neuroinflammation -->
+        <rect x="718" y="268" width="176" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="806" y="286" text-anchor="middle" fill="#1e293b" font-weight="600">Neuroinflammation</text>
+        <text x="806" y="300" text-anchor="middle" fill="#0f766e">NF-κB / STAT3 (indirect)</text>
+
+        <!-- Node 16: AD Risk — unvalidated -->
+        <rect x="718" y="382" width="176" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="806" y="399" text-anchor="middle" fill="#0f766e" font-weight="700">AD Risk Hypothesis</text>
+        <text x="806" y="413" text-anchor="middle" fill="#475569">(not yet validated)</text>
+
+        <!-- Arrows D panel -->
+        <line x1="806" y1="94" x2="806" y2="156" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="806" y1="202" x2="806" y2="266" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="806" y1="312" x2="806" y2="380" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connectors (via gutters) -->
+        <!-- Panel A node 2 (RHPN2, right edge ~184) → Panel B node 5 (RhoA, left edge 244) at y=72 -->
+        <line x1="184" y1="72" x2="242" y2="72" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Panel B ROCK2b (right edge 434) → Panel D Vascular node: elbow through gutter -->
+        <!-- Route: from 434,170 right to 700 in gutter, then to 718,176 -->
+        <!-- But panels C occupies 466-688. Use gutter between C (right 688) and D (left 704). -->
+        <!-- Panel B right edge is 450. Gutter between B(450) and C(466): x=458 -->
+        <!-- Route RhoA→BBB: right from 434,72 → 458,72 → 458,176 → 716,176 -->
+        <!-- But Node 9 (Panel C) occupies y=50-94. Arrow would cross it at y=72 if we go through x=482. Stay in gutter x=458. -->
+        <polyline points="434,72 458,72 458,176 716,176" fill="none" stroke="#4338ca" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Panel C node 12 (NF-κB) right edge 672 → Panel D Neuroinflammation left 718 at y=286 -->
+        <line x1="672" y1="270" x2="716" y2="286" stroke="#be185d" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel A node 4 (Vascular risk, right edge 196) → Panel D AD Risk via bottom gutter -->
+        <!-- Node 4 is at y=382-426, center right 196. Route: 196,404 → 700,404 → 716,404 -->
+        <!-- Panels B, C at y=382: Panel B ends y=352, Panel C ends y=352. Gutter clear at y=382-426. -->
+        <line x1="196" y1="404" x2="716" y2="404" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream):</strong> RHPN2 expression and methylation are linked to blood-pressure trajectories in leukocytes (EWAS), placing it in a vascular-aging context; it also interacts with RhoB to localise to CD63+ late-endosomal compartments.
+      <strong>Panel B (RhoA/ROCK):</strong> RHPN2 promotes RhoA activation; rhpn2 knockout reduces ROCK2b expression, branching into actin remodelling and broader cytoskeletal dynamics — both rescuable by RhoA activation or rock2b mRNA.
+      <strong>Panel C (Oncology):</strong> RHPN2 knockdown suppresses proliferation, migration, EMT-like programmes, angiogenesis, and metastasis, converging on NF-κB / STAT3 / Integrin β1 / c-Myc mediators.
+      <strong>Panel D (AD Hypothesis — dashed border = unvalidated):</strong> Inferred AD-relevant outputs via endosomal trafficking, BBB/vascular tone, and neuroinflammation, none of which have been directly demonstrated for RHPN2.
+      Dashed lines indicate indirect or hypothetical connections; solid lines indicate experimentally supported relationships in the supplied evidence base.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-warning">
+        <h3>Hypertension Epigenomics</h3>
+        <p>A longitudinal EWAS identified RHPN2 among genes with blood-pressure–associated DNA methylation trajectories over ~7 years in leukocytes. Because hypertension is a vascular risk factor for cognitive decline and AD-related dementia, RHPN2 may warrant study in vascular-aging cohorts — but no brain tissue or dementia outcomes were assessed.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>RhoA / ROCK Signaling Hub</h3>
+        <p>RHPN2 directly binds RhoA in zebrafish, reduces ROCK2b expression upon knockout, and shows heightened RhoA activation linked to the rs10411210 risk allele. Structural defects are rescued by RhoA activation or rock2b mRNA injection, establishing a clear mechanistic axis. RhoA/ROCK biology influences cytoskeletal dynamics, neurite structure, synapses, vascular tone, and inflammatory responses — all AD-adjacent processes.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Actin Cytoskeleton &amp; Structural Biology</h3>
+        <p>Consistent evidence links RHPN2 to actin cytoskeleton remodelling and structural cell functions. This is potentially relevant to AD synaptic and neuronal vulnerability, but no supplied study connects RHPN2 to dendritic spines, axons, tau, synaptic preservation, or neuronal survival in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Endosomal / Vesicular Trafficking</h3>
+        <p>RHPN2 recruitment to CD63-positive late-endosomal structures via RhoB links it to vesicular biology. Endosomal dysfunction is a well-established AD-relevant pathway, but the text provides no evidence that RHPN2 affects APP trafficking, BACE1, amyloid-β production, tau secretion, lysosomal function, or neuronal endosome abnormalities.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Oncology: Strongest Perturbation Data</h3>
+        <p>RHPN2 knockdown or regulatory disruption suppresses proliferation, migration, invasion, angiogenesis, metastasis, and EMT-like programmes across multiple cancer contexts, mediated by NF-κB, STAT3, integrin β1, and c-Myc. This is the most mechanistically detailed evidence available, but cancer targetability does not establish safety or benefit in AD.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Broader Pathway Overlaps</h3>
+        <p>Additional indirect links include NF-κB, STAT3, integrin β1, c-Myc/glutamine synthetase, metabolic stress responses, infection-response pathways, and developmental morphogenesis. These processes overlap broadly with neurodegeneration-relevant biology, but all RHPN2 evidence for them remains non-AD-specific.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <span><strong>Classify RHPN2 as speculative:</strong> Treat RHPN2 as a hypothesis-generating, indirect AD-relevant candidate — not a validated AD therapeutic target. No direct AD evidence exists in the supplied literature.</span>
+      </li>
+      <li>
+        <span><strong>Validate in AD-specific datasets:</strong> Prioritise human AD brain transcriptomics, single-cell / single-nucleus RNA-seq, methylation datasets, proteomics, and AD GWAS / TWAS / eQTL analyses, including cerebrovascular dementia cohorts.</span>
+      </li>
+      <li>
+        <span><strong>Examine relevant CNS cell types:</strong> Focus on neurons, astrocytes, microglia, endothelial cells, pericytes, vascular smooth-muscle cells, and oligodendrocytes — all plausible cell types where RHPN2's RhoA/ROCK axis could affect AD-relevant biology.</span>
+      </li>
+      <li>
+        <span><strong>Test RhoA/ROCK AD endpoints:</strong> Determine whether RHPN2 regulates actin remodelling, neurite retraction, dendritic spine stability, synaptic integrity, endothelial barrier function, vascular tone, and inflammatory activation in AD-relevant models.</span>
+      </li>
+      <li>
+        <span><strong>Investigate endosomal/lysosomal relevance:</strong> Assess whether RHPN2 participates in APP/BACE1 trafficking, amyloidogenic processing, autophagy-lysosomal flux, multivesicular body biology, exosome pathways, and tau handling.</span>
+      </li>
+      <li>
+        <span><strong>Follow up the hypertension methylation signal:</strong> Test the EWAS-identified RHPN2 methylation signal in cohorts with cognitive and dementia outcomes to determine whether it mediates vascular contributions to cognitive impairment or AD risk.</span>
+      </li>
+      <li>
+        <span><strong>Withhold therapeutic claims:</strong> Avoid therapeutic translation until AD-specific perturbation studies demonstrate that RHPN2 inhibition or activation improves amyloid, tau, synaptic, neuroinflammatory, vascular, neuronal-survival, or cognitive endpoints.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — RHPN2 in Alzheimer's Disease</span>
+      RHPN2 is a <strong>biologically plausible but entirely unvalidated</strong> candidate for AD-relevant investigation. Its documented roles in <strong>RhoA/ROCK signaling, actin cytoskeleton remodelling, and vesicular/endosomal biology</strong> touch on pathways broadly implicated in AD pathophysiology, and a longitudinal hypertension EWAS places it in a <strong>vascular-risk context</strong> relevant to dementia. However, every item of mechanistic evidence derives from cancer, sensory-cell, developmental, or non-neuronal systems. <strong>No supplied study demonstrates RHPN2 activity in AD brain, AD animal models, neurons experiencing amyloid or tau pathology, or any dementia-relevant outcome.</strong> The oncology perturbation data are mechanistically rich but not translatable to AD without dedicated experiments. RHPN2 warrants <strong>targeted exploratory studies in AD-specific biological contexts</strong>, but should not be elevated to a therapeutic target until such evidence is generated.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  RHPN2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

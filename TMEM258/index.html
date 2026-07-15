@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMEM258 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e36 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 42px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(185,28,28,0.30);
+    border: 1px solid rgba(255,100,100,0.40);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE WRAPPER */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger  { border-left-color: var(--danger);   background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning  { border-left-color: var(--warning);  background: var(--warning-light); }
+  .card.neutral  { border-left-color: var(--neutral);  background: var(--neutral-light); }
+  .card.blue     { border-left-color: #1d4ed8;         background: #eff6ff; }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.92rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: take;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.96rem;
+  }
+
+  ol.takeaways li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e36 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 1.0rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TMEM258 &nbsp;|&nbsp; Transmembrane Protein 258</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Essential Glycosylation Role</span>
+  </div>
+  <h1>TMEM258 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════ MAIN ════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Safety Concern:</strong> TMEM258 participates in essential N-linked
+      glycosylation via the OST-A complex. Broad systemic inhibition risks impairing protein
+      glycosylation globally, increasing ER stress, and triggering apoptosis — underscoring the
+      need for pathway-normalising rather than suppressive strategies.
+    </div>
+
+    <p>TMEM258 is <strong>not established as a direct Alzheimer's disease gene</strong> and has
+    not been experimentally validated in Alzheimer's models. Its relevance to Alzheimer's disease
+    is indirect and mechanistic, rooted in its connections to immune regulation, endoplasmic
+    reticulum (ER) stress, N-linked glycosylation, lipid and PUFA biology, inflammatory disease
+    susceptibility, and the cognition–immune genetic architecture.</p>
+
+    <p>The strongest Alzheimer's-relevant signal derives from a 2026 cognition–immune genetics
+    study that identified TMEM258 as one of fourteen pleiotropic genes prioritised as potential
+    therapeutic targets for both cognitive function and autoimmune disorders. Cognitive decline and
+    immune dysregulation are core features of Alzheimer's pathophysiology, though Alzheimer's
+    disease itself was not the study endpoint.</p>
+
+    <p>At the molecular level, TMEM258 is a required component of the
+    <strong>OST-A oligosaccharyltransferase complex</strong>, the core ER machinery responsible
+    for N-linked glycosylation of secretory and membrane proteins. Loss of TMEM258 disrupts
+    glycosylation, promotes unresolved ER stress and apoptosis, and drives inflammatory tissue
+    injury in experimental intestinal models — mechanisms that overlap directly with
+    Alzheimer's-relevant pathways including proteostasis failure, neuroinflammation, and
+    altered protein processing.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (nodes counted):
+          Panel A (Upstream / Genomic Context): 3 nodes
+          Panel B (ER Mechanism — branches): 4 nodes (TMEM258, OST-A, Glycoprotein Maturation, ER Stress/Apoptosis)
+          Panel C (Downstream Biology — fan-out): 5 nodes (Neuroinflammation, Lipid/PUFA Biology, Immune-Cell States, Synaptic Biology, Proteostasis)
+          Panel D (Disease Relevance): 3 nodes (Cognition-Immune Genetics, AD-Relevant Pathways, Therapeutic Caution)
+          TOTAL = 15 nodes ✓ (≤16)
+        -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" width="100%" style="display:block; font-family: Arial, Helvetica, sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 Z" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: Upstream / Genomic Context ═══ -->
+          <rect x="10" y="10" width="200" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="0.08em">A · GENOMIC CONTEXT</text>
+
+          <!-- A1: FADS1/TMEM258 Locus -->
+          <rect x="30" y="45" width="160" height="52" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="110" y="67" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">FADS1/TMEM258</text>
+          <text x="110" y="83" text-anchor="middle" font-size="10" fill="#475569">Shared Genomic Locus</text>
+
+          <!-- A2: Pleiotropic GWAS Signals -->
+          <rect x="30" y="128" width="160" height="52" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="110" y="149" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">Pleiotropic GWAS</text>
+          <text x="110" y="165" text-anchor="middle" font-size="10" fill="#475569">Signals (2026 Study)</text>
+
+          <!-- A3: Anti-inflammatory Drug Target -->
+          <rect x="30" y="216" width="160" height="52" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="110" y="237" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">Anti-inflammatory</text>
+          <text x="110" y="253" text-anchor="middle" font-size="10" fill="#475569">Drug-Target Priority</text>
+
+          <!-- A arrows -->
+          <line x1="110" y1="97" x2="110" y2="122" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="110" y1="180" x2="110" y2="210" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ═══ PANEL B: ER Mechanism ═══ -->
+          <rect x="222" y="10" width="218" height="480" rx="10" fill="#e8f1f9" fill-opacity="0.4" stroke="#1e3a5f" stroke-width="1.2"/>
+          <text x="331" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="0.08em">B · ER MECHANISM</text>
+
+          <!-- B1: TMEM258 (central hub) -->
+          <rect x="242" y="45" width="178" height="52" rx="7" fill="#1e3a5f" stroke="#0b1e36" stroke-width="1.5"/>
+          <text x="331" y="67" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">TMEM258</text>
+          <text x="331" y="83" text-anchor="middle" font-size="10" fill="#bfdbfe">OST-A Complex Subunit</text>
+
+          <!-- B2: N-linked Glycosylation -->
+          <rect x="242" y="128" width="178" height="52" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+          <text x="331" y="149" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">N-linked Glycosylation</text>
+          <text x="331" y="165" text-anchor="middle" font-size="10" fill="#475569">Secretory &amp; Membrane Proteins</text>
+
+          <!-- B3: left branch — Glycoprotein Maturation -->
+          <rect x="242" y="220" width="80" height="52" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="282" y="241" text-anchor="middle" font-size="10" font-weight="700" fill="#0f766e">Glycoprotein</text>
+          <text x="282" y="255" text-anchor="middle" font-size="10" fill="#0f766e">Maturation ✓</text>
+
+          <!-- B4: right branch — ER Stress / Apoptosis -->
+          <rect x="340" y="220" width="80" height="52" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="380" y="241" text-anchor="middle" font-size="10" font-weight="700" fill="#9b1c1c">ER Stress &amp;</text>
+          <text x="380" y="255" text-anchor="middle" font-size="10" fill="#9b1c1c">Apoptosis ↑</text>
+
+          <!-- B arrows -->
+          <line x1="331" y1="97" x2="331" y2="122" stroke="#1e3a5f" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- branch left -->
+          <line x1="290" y1="180" x2="282" y2="214" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- branch right -->
+          <line x1="370" y1="180" x2="380" y2="214" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- ═══ PANEL C: Downstream Biology ═══ -->
+          <rect x="452" y="10" width="232" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="568" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.08em">C · DOWNSTREAM BIOLOGY</text>
+
+          <!-- C1: Neuroinflammation -->
+          <rect x="472" y="45" width="192" height="46" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="568" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#9b1c1c">Neuroinflammation</text>
+          <text x="568" y="79" text-anchor="middle" font-size="10" fill="#475569">Microglia, Macrophages, T-cells</text>
+
+          <!-- C2: Lipid / PUFA Biology -->
+          <rect x="472" y="120" width="192" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="568" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">Lipid / PUFA Biology</text>
+          <text x="568" y="154" text-anchor="middle" font-size="10" fill="#475569">DHA, Omega-3, Phosphatidylcholine</text>
+
+          <!-- C3: Immune-Cell States -->
+          <rect x="472" y="196" width="192" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="568" y="214" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">Immune-Cell States</text>
+          <text x="568" y="230" text-anchor="middle" font-size="10" fill="#475569">Crohn's, Pancreatitis, Autoimmune</text>
+
+          <!-- C4: Synaptic Biology -->
+          <rect x="472" y="272" width="90" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="517" y="290" text-anchor="middle" font-size="10" font-weight="700" fill="#0f766e">Synaptic</text>
+          <text x="517" y="304" text-anchor="middle" font-size="10" fill="#0f766e">Biology</text>
+
+          <!-- C5: Proteostasis -->
+          <rect x="574" y="272" width="90" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="619" y="290" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Proteostasis</text>
+          <text x="619" y="304" text-anchor="middle" font-size="10" fill="#b45309">Failure</text>
+
+          <!-- C arrows — from panel B crosses via cross-panel connectors (routed through empty gutter) -->
+          <!-- B3 maturation → C1 neuroinflammation: elbow right along row ~246 then down -->
+          <polyline points="322,246 440,246 440,68 472,68" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- B4 ER stress → C5 proteostasis: elbow right along row ~246 then to C5 -->
+          <polyline points="420,246 437,246 437,295 574,295" fill="none" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- C internal separators (no arrows needed — conceptual cluster) -->
+
+          <!-- ═══ PANEL D: Disease Relevance ═══ -->
+          <rect x="696" y="10" width="214" height="480" rx="10" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+          <text x="803" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309" letter-spacing="0.08em">D · DISEASE RELEVANCE</text>
+
+          <!-- D1: Cognition–Immune Genetics -->
+          <rect x="714" y="45" width="178" height="52" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="803" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Cognition–Immune</text>
+          <text x="803" y="82" text-anchor="middle" font-size="10" fill="#475569">Genetics Nexus (2026)</text>
+
+          <!-- D2: AD-Relevant Pathways -->
+          <rect x="714" y="145" width="178" height="62" rx="7" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.4"/>
+          <text x="803" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a5f">AD-Relevant Pathways</text>
+          <text x="803" y="181" text-anchor="middle" font-size="10" fill="#475569">Amyloid-β, Tau, UPR,</text>
+          <text x="803" y="196" text-anchor="middle" font-size="10" fill="#475569">Neuroinflammation</text>
+
+          <!-- D3: Therapeutic Caution -->
+          <rect x="714" y="260" width="178" height="62" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="803" y="281" text-anchor="middle" font-size="11" font-weight="700" fill="#9b1c1c">Therapeutic Caution</text>
+          <text x="803" y="297" text-anchor="middle" font-size="10" fill="#7f1d1d">Broad inhibition → toxicity</text>
+          <text x="803" y="312" text-anchor="middle" font-size="10" fill="#7f1d1d">Normalise, don't suppress</text>
+
+          <!-- D arrows -->
+          <line x1="803" y1="97" x2="803" y2="139" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+          <line x1="803" y1="207" x2="803" y2="254" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel connector: C → D (Neuroinflammation → Cognition-Immune) -->
+          <line x1="664" y1="68" x2="714" y2="68" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure.</strong>
+        <strong>Panel A (Genomic Context):</strong> The FADS1/TMEM258 shared locus produces pleiotropic GWAS signals across lipid, immune, and cognitive traits, with TMEM258 identified as an anti-inflammatory drug-target priority (2026 cognition–immune genetics study).
+        <strong>Panel B (ER Mechanism):</strong> TMEM258 acts as a required OST-A complex subunit enabling N-linked glycosylation; loss branches into two consequences — successful glycoprotein maturation (when functional, teal) versus ER stress and apoptosis when disrupted (red).
+        <strong>Panel C (Downstream Biology):</strong> These ER outputs connect to neuroinflammation, lipid/PUFA biology, immune-cell states, synaptic biology, and proteostasis failure — all overlapping Alzheimer's-relevant biology.
+        <strong>Panel D (Disease Relevance):</strong> The cognition–immune genetics nexus links TMEM258 to AD-relevant pathways (amyloid-β, tau, UPR, neuroinflammation), but therapeutic caution is required given the essential glycosylation role; broad suppression risks systemic toxicity, favouring pathway-normalising strategies.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Exploratory Target Status</h3>
+        <p>TMEM258 is best viewed as a <em>hypothesis-generating</em> Alzheimer's-relevant target, not a validated or disease-proven therapeutic target. No direct experimental evidence links it to amyloid-β, tau, neurodegeneration, or clinical Alzheimer's progression.</p>
+      </div>
+
+      <div class="card">
+        <h3>OST-A Complex &amp; ER Glycosylation</h3>
+        <p>Structural and functional studies place TMEM258 within the OST-A oligosaccharyltransferase complex — core ER machinery for glycosylating secretory and membrane proteins. This position could theoretically affect protein folding, trafficking, immune signalling, synaptic biology, and cellular stress responses relevant to Alzheimer's disease.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Cognition–Immune Genetics Nexus</h3>
+        <p>A 2026 study identified TMEM258 among fourteen pleiotropic genes shared between cognitive function and autoimmune disorders, positioning it alongside known Alzheimer's immune loci such as CD33. This strengthens the rationale for studying TMEM258 in the context of neurodegeneration.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Lipid &amp; PUFA Biology</h3>
+        <p>The TMEM258/FADS genomic region is repeatedly associated with omega-3, DHA, PUFA, phosphatidylcholine, triglyceride, HDL, and cholesterol traits. These lipid pathways are directly implicated in neuronal membrane integrity, synaptic function, vascular risk, and lipid-mediated inflammation in cognitive decline.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Immune-Mediated Disease Links</h3>
+        <p>TMEM258 is implicated in Crohn's disease, acute pancreatitis, inflammatory dermatoses, and autoimmune disorders, with associations involving macrophages, plasma cells, and T-cell states. These immune connections support its possible relevance to neuroimmune mechanisms in Alzheimer's disease.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Safety: Essential Glycosylation Role</h3>
+        <p>Because TMEM258 participates in a fundamental cellular glycosylation process, broad inhibition carries a meaningful toxicity risk. Disruption can impair protein glycosylation, escalate ER stress, and trigger apoptosis — making systemic suppression a potentially harmful therapeutic strategy.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><strong>Treat as hypothesis-generating, not validated:</strong> Current evidence does not establish TMEM258 as a clinically validated or disease-proven Alzheimer's target; it should guide experimental design rather than therapeutic development at this stage.</div>
+      </li>
+      <li>
+        <div><strong>Prioritise Alzheimer's brain expression studies:</strong> Determine whether TMEM258 expression or regulation is altered in Alzheimer's brain tissue, including neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, and infiltrating immune cells.</div>
+      </li>
+      <li>
+        <div><strong>Test Alzheimer's-relevant phenotypes:</strong> Investigate whether TMEM258 affects amyloid-β processing, tau phosphorylation or aggregation, synaptic function, neuronal survival, microglial activation, ER stress, unfolded protein response signalling, and glycoprotein maturation.</div>
+      </li>
+      <li>
+        <div><strong>Carefully dissect the FADS1/TMEM258 locus:</strong> Distinguish whether disease-relevant genetic signals reflect TMEM258 biology, FADS-mediated PUFA metabolism, shared regulatory elements, or horizontal pleiotropy before attributing associations to either gene alone.</div>
+      </li>
+      <li>
+        <div><strong>Pursue pathway-normalising therapeutic strategies:</strong> Rather than broadly inhibiting TMEM258, explore correcting ER stress, improving glycoprotein quality control, modulating inflammatory consequences, or targeting disease-specific regulatory variants at the FADS1/TMEM258 locus.</div>
+      </li>
+      <li>
+        <div><strong>Include lipid-focused readouts:</strong> When studying TMEM258 in Alzheimer's-relevant systems, measure DHA, omega-3/omega-6 balance, phosphatidylcholine species, membrane composition, cholesterol handling, and lipid inflammatory mediators.</div>
+      </li>
+      <li>
+        <div><strong>Assess safety early and rigorously:</strong> TMEM258's essential role in N-linked glycosylation means systemic suppression could cause broad cellular toxicity; safety profiling should accompany any mechanistic studies from the outset.</div>
+      </li>
+      <li>
+        <div><strong>Dedicated Alzheimer's studies are required:</strong> Therapeutic conclusions cannot be drawn from current evidence. Direct experimental work in Alzheimer's-relevant systems is necessary before any clinical translation is considered.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — TMEM258 in Alzheimer's Disease</div>
+      <p>
+        TMEM258 represents an <strong>exploratory, mechanistically motivated candidate</strong> for
+        Alzheimer's disease research rather than a validated therapeutic target. Its most compelling
+        Alzheimer's relevance lies at the <strong>pathway level</strong>: N-linked glycosylation and
+        ER protein quality control, neuroinflammatory and immune homeostasis, lipid and PUFA
+        metabolism, and a <strong>cognition–immune genetic architecture</strong> that links it to
+        cognitive traits and autoimmune disease simultaneously. The 2026 pleiotropic genetics study
+        provides the strongest direct rationale, but Alzheimer's disease was not its endpoint.
+        Mechanistic studies in intestinal models confirm that loss of TMEM258 causes glycosylation
+        failure, ER stress, and apoptosis — findings that map onto core Alzheimer's pathophysiology
+        but have not been tested in neural or Alzheimer's-specific contexts. A significant
+        <strong>therapeutic safety concern</strong> exists: because TMEM258 is an integral subunit
+        of the OST-A complex performing essential cellular glycosylation, broad inhibitory strategies
+        carry a real toxicity risk. Any future therapeutic direction should focus on
+        <strong>restoring or normalising TMEM258-dependent pathways</strong> rather than suppressing
+        the protein globally, and must be preceded by dedicated Alzheimer's brain and model-system
+        studies to determine whether TMEM258 genuinely modifies disease-relevant biology.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ══════════════════════════ -->
+<footer>
+  TMEM258 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HEBP2 / SOUL — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1c6e;
+    --mid: #7c3aad;
+    --light: #f3eafc;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #e2e8f0;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0530 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #ffffff;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW PROSE */
+  .prose p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid transparent;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-text); }
+  .card-neutral h3 { color: #334155; }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: take;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .takeaways ol li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0530 100%);
+    border-radius: 12px;
+    padding: 36px 36px;
+    color: #ffffff;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.88);
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  .verdict-lead {
+    font-size: 1.12rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 12px;
+    display: block;
+    letter-spacing: 0.01em;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: HEBP2 | Heme-Binding Protein 2 / SOUL</span>
+    <span class="chip chip-danger">⚠ No direct AD validation — exploratory only</span>
+  </div>
+  <h1>HEBP2 / SOUL &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Important Caveat:</strong> The literature supplied does not directly establish HEBP2 as an Alzheimer's disease gene, biomarker, or validated therapeutic target. All Alzheimer's relevance is <em>indirect and hypothesis-generating</em>, derived from mechanistic overlaps between HEBP2-associated biology and known AD pathways. Studies originate predominantly from cancer, isolated mitochondria, insomnia genetics, psychiatric, and immune-microenvironment contexts.
+    </div>
+
+    <div class="prose">
+      <p>HEBP2 in the supplied literature refers to <em>heme-binding protein 2 / SOUL</em> — not the unrelated Epstein-Barr virus EBNA1-binding protein 2 (hEBP2). HEBP2/SOUL is a heme-binding, BH3-like protein capable of sensitizing cells to mitochondrial injury. It can promote cyclophilin D / cyclosporine A–sensitive mitochondrial permeability transition (mPTP), collapse of mitochondrial membrane potential, release of pro-death mitochondrial proteins, and predominantly necrotic rather than classical caspase-dependent apoptosis under oxidative or calcium-related stress.</p>
+      <p>The strongest Alzheimer's-relevant themes that emerge from the supplied evidence are: mitochondrial stress, oxidative injury, calcium-related mPTP opening, glutathione/redox metabolism, ferroptosis-like vulnerability, immune/macrophage-like cell-state regulation, cytoskeletal and microtubule effects, and stress-dependent cell death — all highly relevant to AD biology, but not yet tested in AD-specific models.</p>
+      <p>The only explicit Alzheimer's-adjacent signal is indirect: an insomnia integrative genomics study identified HEBP2 as one of five replicated candidate genes for insomnia risk, noting enrichment of insomnia-associated genes in neurodegenerative pathways including Alzheimer's disease, and lower HEBP2 brain expression in insomniac patients versus controls.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- Panel background definitions -->
+          <!-- Panel A: Upstream triggers/inputs -->
+          <rect x="10" y="10" width="210" height="465" rx="12" fill="#f3eafc" fill-opacity="0.6" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1c6e" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+          <!-- Panel B: HEBP2/SOUL Core Mechanism -->
+          <rect x="232" y="10" width="218" height="465" rx="12" fill="#ede9fe" fill-opacity="0.5" stroke="#7c3aad" stroke-width="1.5"/>
+          <text x="341" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#4a1c6e" letter-spacing="1">HEBP2/SOUL CORE</text>
+
+          <!-- Panel C: Downstream Branches -->
+          <rect x="462" y="10" width="220" height="465" rx="12" fill="#f0fdf4" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="572" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#065f46" letter-spacing="1">DOWNSTREAM EFFECTS</text>
+
+          <!-- Panel D: AD Relevance -->
+          <rect x="694" y="10" width="218" height="465" rx="12" fill="#eff6ff" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="1">AD-RELEVANT OVERLAP</text>
+
+          <!-- ===================== PANEL A NODES ===================== -->
+          <!-- A1: Oxidative Stress -->
+          <rect x="28" y="48" width="174" height="44" rx="7" fill="#7c3aad" fill-opacity="0.13" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="66" text-anchor="middle" font-weight="700" fill="#4a1c6e">Oxidative Stress /</text>
+          <text x="115" y="80" text-anchor="middle" fill="#4a1c6e">ROS Elevation</text>
+
+          <!-- A2: Calcium dysregulation -->
+          <rect x="28" y="110" width="174" height="44" rx="7" fill="#7c3aad" fill-opacity="0.13" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="128" text-anchor="middle" font-weight="700" fill="#4a1c6e">Ca²⁺ Dysregulation</text>
+          <text x="115" y="142" text-anchor="middle" fill="#4a1c6e">Ionophore / Stress</text>
+
+          <!-- A3: Heme binding -->
+          <rect x="28" y="172" width="174" height="44" rx="7" fill="#7c3aad" fill-opacity="0.13" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="190" text-anchor="middle" font-weight="700" fill="#4a1c6e">Heme Binding</text>
+          <text x="115" y="204" text-anchor="middle" fill="#4a1c6e">(porphyrin ligand)</text>
+
+          <!-- A4: Sleep/insomnia -->
+          <rect x="28" y="234" width="174" height="44" rx="7" fill="#7c3aad" fill-opacity="0.13" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="252" text-anchor="middle" font-weight="700" fill="#4a1c6e">Sleep Deprivation /</text>
+          <text x="115" y="266" text-anchor="middle" fill="#4a1c6e">Insomnia Risk</text>
+
+          <!-- A5: ALG-2 / Ca-dependent -->
+          <rect x="28" y="296" width="174" height="44" rx="7" fill="#7c3aad" fill-opacity="0.13" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="115" y="314" text-anchor="middle" font-weight="700" fill="#4a1c6e">ALG-2 (PDCD6)</text>
+          <text x="115" y="328" text-anchor="middle" fill="#4a1c6e">Ca²⁺-dependent binding</text>
+
+          <!-- ===================== PANEL B NODES ===================== -->
+          <!-- B1: HEBP2/SOUL protein -->
+          <rect x="250" y="48" width="182" height="44" rx="7" fill="#7c3aad" fill-opacity="0.22" stroke="#4a1c6e" stroke-width="1.8"/>
+          <text x="341" y="66" text-anchor="middle" font-weight="700" fill="#2d0a52">HEBP2/SOUL Protein</text>
+          <text x="341" y="80" text-anchor="middle" fill="#2d0a52">Heme-binding, BH3-like</text>
+
+          <!-- B2: BH3-like domain -->
+          <rect x="250" y="120" width="182" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="341" y="138" text-anchor="middle" font-weight="700" fill="#4a1c6e">BH3-like Domain</text>
+          <text x="341" y="150" text-anchor="middle" fill="#4a1c6e">→ Bcl-2 / Bcl-xL binding</text>
+
+          <!-- B3: mPTP induction -->
+          <rect x="250" y="186" width="182" height="44" rx="7" fill="#fce7f3" stroke="#9d174d" stroke-width="1.2"/>
+          <text x="341" y="204" text-anchor="middle" font-weight="700" fill="#831843">mPTP Opening</text>
+          <text x="341" y="218" text-anchor="middle" fill="#831843">CypD-dependent (CsA-sensitive)</text>
+
+          <!-- B4: Membrane potential collapse -->
+          <rect x="250" y="252" width="182" height="40" rx="7" fill="#fce7f3" stroke="#9d174d" stroke-width="1.2"/>
+          <text x="341" y="270" text-anchor="middle" font-weight="700" fill="#831843">ΔΨm Collapse</text>
+          <text x="341" y="282" text-anchor="middle" fill="#831843">Mitochondrial depolarization</text>
+
+          <!-- B5: FOXA1/GSTP1 axis -->
+          <rect x="250" y="316" width="182" height="44" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="341" y="334" text-anchor="middle" font-weight="700" fill="#4a1c6e">FOXA1 Nuclear</text>
+          <text x="341" y="348" text-anchor="middle" fill="#4a1c6e">Translocation → GSTP1↑</text>
+
+          <!-- B6: Glutamine/GSH metabolism -->
+          <rect x="250" y="382" width="182" height="40" rx="7" fill="#ede9fe" stroke="#7c3aad" stroke-width="1.2"/>
+          <text x="341" y="400" text-anchor="middle" font-weight="700" fill="#4a1c6e">Glutamine / GSH</text>
+          <text x="341" y="412" text-anchor="middle" fill="#4a1c6e">Metabolic Reprogramming</text>
+
+          <!-- ===================== PANEL C NODES ===================== -->
+          <!-- C1: Pro-death protein release -->
+          <rect x="480" y="48" width="182" height="44" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="571" y="66" text-anchor="middle" font-weight="700" fill="#991b1b">Pro-death Protein</text>
+          <text x="571" y="80" text-anchor="middle" fill="#991b1b">Release (intermembrane)</text>
+
+          <!-- C2: Necrotic cell death -->
+          <rect x="480" y="116" width="182" height="40" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="571" y="134" text-anchor="middle" font-weight="700" fill="#991b1b">Non-apoptotic / Necrotic</text>
+          <text x="571" y="146" text-anchor="middle" fill="#991b1b">Cell Death (caspase-3 low)</text>
+
+          <!-- C3: Cytoskeletal effects -->
+          <rect x="480" y="182" width="182" height="44" rx="7" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="571" y="200" text-anchor="middle" font-weight="700" fill="#065f46">Microtubule Dynamics /</text>
+          <text x="571" y="214" text-anchor="middle" fill="#065f46">Mitotic Spindle (ALG-2)</text>
+
+          <!-- C4: Macrophage/immune state -->
+          <rect x="480" y="252" width="182" height="44" rx="7" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="571" y="270" text-anchor="middle" font-weight="700" fill="#065f46">Macrophage Ferroptosis /</text>
+          <text x="571" y="284" text-anchor="middle" fill="#065f46">M2 Polarization</text>
+
+          <!-- C5: Stress-resistance (therapy) -->
+          <rect x="480" y="322" width="182" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+          <text x="571" y="340" text-anchor="middle" font-weight="700" fill="#92400e">Therapy Resistance</text>
+          <text x="571" y="354" text-anchor="middle" fill="#92400e">(cisplatin, BCNU, RT)</text>
+
+          <!-- C6: Ferroptosis-like lipid perox -->
+          <rect x="480" y="392" width="182" height="44" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="571" y="410" text-anchor="middle" font-weight="700" fill="#991b1b">Ferroptosis-like /</text>
+          <text x="571" y="424" text-anchor="middle" fill="#991b1b">Lipid Peroxidation Risk</text>
+
+          <!-- ===================== PANEL D NODES ===================== -->
+          <!-- D1: mPTP + neurodegeneration -->
+          <rect x="712" y="48" width="182" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="66" text-anchor="middle" font-weight="700" fill="#1e3a8a">AD Mitochondrial</text>
+          <text x="803" y="80" text-anchor="middle" fill="#1e3a8a">Dysfunction / mPTP</text>
+
+          <!-- D2: Oxidative damage / GSH -->
+          <rect x="712" y="116" width="182" height="40" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="134" text-anchor="middle" font-weight="700" fill="#1e3a8a">Oxidative Damage &amp;</text>
+          <text x="803" y="146" text-anchor="middle" fill="#1e3a8a">Impaired GSH Defenses</text>
+
+          <!-- D3: Tau / microtubule -->
+          <rect x="712" y="182" width="182" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="200" text-anchor="middle" font-weight="700" fill="#1e3a8a">Tau Pathology /</text>
+          <text x="803" y="214" text-anchor="middle" fill="#1e3a8a">Axonal Transport Deficits</text>
+
+          <!-- D4: Neuroinflammation/microglia -->
+          <rect x="712" y="252" width="182" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="270" text-anchor="middle" font-weight="700" fill="#1e3a8a">Microglial Activation /</text>
+          <text x="803" y="284" text-anchor="middle" fill="#1e3a8a">Neuroinflammation</text>
+
+          <!-- D5: Sleep/AD risk -->
+          <rect x="712" y="322" width="182" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="340" text-anchor="middle" font-weight="700" fill="#1e3a8a">Sleep-Deprivation &amp;</text>
+          <text x="803" y="354" text-anchor="middle" fill="#1e3a8a">Neurodegeneration Risk</text>
+
+          <!-- D6: Noncanonical cell death -->
+          <rect x="712" y="392" width="182" height="44" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+          <text x="803" y="410" text-anchor="middle" font-weight="700" fill="#1e3a8a">Mixed / Ferroptotic</text>
+          <text x="803" y="424" text-anchor="middle" fill="#1e3a8a">Neuronal Death in AD</text>
+
+          <!-- ===================== CONNECTORS ===================== -->
+          <!-- Arrowhead marker definitions -->
+          <defs>
+            <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#7c3aad"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- A1 → B1 (oxidative stress activates HEBP2) -->
+          <line x1="202" y1="70" x2="248" y2="70" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+          <!-- A2 → B1 (calcium activates HEBP2) -->
+          <path d="M202,132 Q225,132 225,70 L248,70" fill="none" stroke="#7c3aad" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-purple)"/>
+
+          <!-- A3 → B1 (heme binding) -->
+          <path d="M202,194 Q226,194 226,70 L248,70" fill="none" stroke="#7c3aad" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-purple)"/>
+
+          <!-- A4 → B1 (insomnia/sleep) — routes below A4, goes to B1 via bottom approach -->
+          <path d="M202,256 Q227,256 227,75 L248,75" fill="none" stroke="#7c3aad" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-purple)"/>
+
+          <!-- A5 (ALG-2) → B1 — runs through gutter at y=320 -->
+          <path d="M202,318 Q228,318 228,80 L248,80" fill="none" stroke="#7c3aad" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-purple)"/>
+
+          <!-- B1 → B2 (HEBP2 → BH3 domain) -->
+          <line x1="341" y1="92" x2="341" y2="118" stroke="#4a1c6e" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+          <!-- B1 → B3 (HEBP2 → mPTP) — goes from right side of B1 down to B3 via B2 bypass -->
+          <line x1="341" y1="162" x2="341" y2="184" stroke="#9d174d" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- B3 → B4 (mPTP → ΔΨm collapse) -->
+          <line x1="341" y1="230" x2="341" y2="250" stroke="#9d174d" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- B1 → B5 (FOXA1 pathway — from right edge of B1 through gutter) -->
+          <path d="M432,70 Q445,70 445,338 L432,338" fill="none" stroke="#7c3aad" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-purple)"/>
+
+          <!-- B5 → B6 -->
+          <line x1="341" y1="360" x2="341" y2="380" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+          <!-- B4 → C1 (ΔΨm collapse → pro-death release) -->
+          <line x1="432" y1="272" x2="478" y2="272" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- B3 → C1 (mPTP → pro-death release) — horizontal at y=208 to right, then up -->
+          <path d="M432,208 Q456,208 456,70 L478,70" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- C1 → C2 -->
+          <line x1="571" y1="92" x2="571" y2="114" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- C2 → C6 — right-edge route -->
+          <path d="M662,136 Q673,136 673,414 L662,414" fill="none" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- A5 → C3 (ALG-2 → microtubule in panel C) via gutter -->
+          <path d="M202,318 Q220,318 220,445 Q455,445 455,204 L478,204" fill="none" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-teal)"/>
+
+          <!-- C3 → C4 (cytoskeletal → macrophage) -->
+          <line x1="571" y1="226" x2="571" y2="250" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- B6 → C5 (GSH → therapy resistance) -->
+          <line x1="432" y1="402" x2="478" y2="344" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+          <!-- PANEL C → PANEL D connectors (in gutter x~664-712) -->
+          <!-- C1 → D1 -->
+          <line x1="662" y1="70" x2="710" y2="70" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- C2 → D2 -->
+          <line x1="662" y1="136" x2="710" y2="136" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- C3 → D3 -->
+          <line x1="662" y1="204" x2="710" y2="204" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- C4 → D4 -->
+          <line x1="662" y1="274" x2="710" y2="274" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+          <!-- A4 → D5 (insomnia → AD sleep risk) — route through bottom gutter -->
+          <path d="M115,278 Q115,458 803,458 L803,368" fill="none" stroke="#1d4ed8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-blue)"/>
+
+          <!-- C6 → D6 -->
+          <line x1="662" y1="414" x2="710" y2="414" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arr-blue)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure:</strong> Four-panel mechanistic overview of HEBP2/SOUL in the context of Alzheimer's disease–relevant biology.
+        <strong>Panel A (Upstream Triggers)</strong> shows the stimuli that activate or engage HEBP2/SOUL: oxidative stress/ROS, Ca²⁺ dysregulation, heme binding, sleep deprivation/insomnia risk, and ALG-2 (PDCD6) calcium-dependent interaction.
+        <strong>Panel B (HEBP2/SOUL Core)</strong> depicts the protein's two main effector branches: a BH3-like domain engaging Bcl-2/Bcl-xL survival pathways, and a convergent mitochondrial branch (mPTP opening → ΔΨm collapse); a separate FOXA1/GSTP1/glutathione metabolic axis is shown at lower left.
+        <strong>Panel C (Downstream Effects)</strong> shows divergent outcomes: pro-death mitochondrial protein release → noncanonical necrotic death and ferroptosis-like lipid peroxidation; cytoskeletal/microtubule effects via ALG-2; macrophage ferroptosis/M2 polarization; and stress-induced therapy resistance.
+        <strong>Panel D (AD-Relevant Overlap)</strong> maps each downstream effect onto established Alzheimer's disease mechanisms — all links remain hypothesis-generating and untested in AD-specific models.
+        Dashed arrows indicate indirect or hypothesis-level connections.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct Alzheimer's Validation</h3>
+        <p>No supplied study shows HEBP2 expression changes in AD brains, effects on amyloid-β or tau pathology, or functional testing in neurons, astrocytes, microglia, or any AD animal, organoid, or iPSC model. AD relevance remains entirely indirect.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>mPTP Sensitization — Strongest Mechanistic Link</h3>
+        <p>Recombinant SOUL induces cyclophilin D–dependent, cyclosporine A–sensitive mitochondrial permeability transition under sub-threshold calcium or low calcium/phosphate conditions. Because mPTP opening, calcium dyshomeostasis, and mitochondrial dysfunction are central to AD neurodegeneration, this is the most mechanistically compelling connection.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>BH3-like Domain: Potentially Druggable Interface</h3>
+        <p>Deletion of SOUL's BH3-like region prevented mitochondrial membrane potential collapse and cell death. Bcl-2 and Bcl-xL blocked SOUL-facilitated mitochondrial dysfunction. Structural work confirmed a SOUL peptide–Bcl-xL interaction, suggesting a potentially targetable interface — though untested in neurons or AD pathology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Stress Sensitizer, Not Sole Death Inducer</h3>
+        <p>SOUL did not necessarily cause death alone but enhanced lethality under oxidative stress, calcium ionophore, or etoposide exposure. This fits a model in which HEBP2 lowers the threshold for neuronal/glial injury under chronic amyloid-, tau-, or inflammatory-stress conditions present in AD.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Redox / Glutathione Metabolism Axis</h3>
+        <p>HEBP2 promoted FOXA1 nuclear translocation, increased GSTP1 expression, and reshaped glutamine/glutathione metabolism in cancer contexts. These processes directly overlap with AD mechanisms involving oxidative damage, impaired antioxidant defenses, and ferroptosis-like lipid peroxidation — though untested in AD cells.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Insomnia Genomics: Only Explicit AD-Adjacent Signal</h3>
+        <p>An insomnia integrative genomics study found HEBP2 as one of five replicated insomnia candidate genes, with enrichment in Alzheimer's disease neurodegenerative pathways and lower HEBP2 brain expression in insomnia patients. This is indirect and does not demonstrate AD causation or biomarker utility.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Immune and Macrophage Relevance</h3>
+        <p>HEBP2 was associated with macrophage ferroptosis in triple-negative breast cancer, M2 tumor-associated macrophage polarization in ovarian cancer and glioma, and myeloid-cell composition in disc degeneration. These findings are potentially relevant to AD microglial biology but have not been tested in microglia or AD neuroinflammation models.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Noncanonical Cell Death — AD Relevance</h3>
+        <p>SOUL facilitated release of proapoptotic mitochondrial intermembrane proteins but did not enhance caspase-3 activation; death was predominantly necrotic. AD neurodegeneration likely involves mixed energetic-collapse, necrosis-like, ferroptotic, and other noncanonical death processes — aligning mechanistically with SOUL's profile.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Frame HEBP2 as exploratory, not validated.</strong> Treat it as a mechanistically plausible but unproven candidate. Do not conflate hypothesis-generating mechanistic overlap with therapeutic validation in AD-specific contexts.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize direct expression studies in AD-relevant human tissue.</strong> Determine whether HEBP2 is altered in hippocampus, entorhinal cortex, temporal cortex, and frontal cortex, and whether changes track disease stage.</div>
+      </li>
+      <li>
+        <div><strong>Resolve cell-type specificity.</strong> Measure HEBP2 across neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, vascular-associated macrophages, and meningeal immune cells in AD and control brains.</div>
+      </li>
+      <li>
+        <div><strong>Test functional roles in AD models.</strong> Use knockdown, knockout, overexpression, or BH3-domain–mutant approaches in iPSC-derived neurons/astrocytes/microglia, brain organoids, amyloid-β and tau exposure models, and transgenic animal models.</div>
+      </li>
+      <li>
+        <div><strong>Focus mechanistic readouts on mitochondria.</strong> Assess whether HEBP2 modulation changes mPTP opening, cyclophilin D dependence, ΔΨm, respiratory function, ATP production, calcium handling, oxidative damage, and survival under AD-relevant stressors.</div>
+      </li>
+      <li>
+        <div><strong>Investigate the BH3-like domain therapeutically.</strong> Test whether blocking HEBP2's BH3-like region or its Bcl-xL/Bcl-2 interaction reduces mitochondrial dysfunction in AD-relevant cells — this is the most structurally defined intervention point available from supplied evidence.</div>
+      </li>
+      <li>
+        <div><strong>Examine stress-induced mitochondrial localization.</strong> Determine whether oxidative stress, amyloid-β, tau, inflammatory cytokines, or calcium dyshomeostasis drive HEBP2 translocation to mitochondria in neurons or glia.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate immune relevance in microglia.</strong> Test effects on microglial activation, lipid metabolism, phagocytosis, cytokine production, plaque response, ferroptosis vulnerability, and disease-associated microglia states.</div>
+      </li>
+      <li>
+        <div><strong>Do not conflate HEBP2/SOUL with hEBP2 (EBNA1-binding protein 2).</strong> The EBV-related hEBP2 literature concerns viral episome segregation and mitotic chromosome biology and carries no Alzheimer's therapeutic relevance from the supplied evidence.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — HEBP2/SOUL as an Alzheimer's Disease Target</span>
+      <p>
+        HEBP2/SOUL is best framed as a <strong>heme-binding, mitochondrial stress-sensitizing protein</strong> with plausible but entirely unvalidated links to Alzheimer's disease biology. Its most compelling mechanistic connections run through <strong>cyclophilin D–dependent mPTP opening</strong>, <strong>BH3/Bcl-xL–mediated mitochondrial death signaling</strong>, <strong>oxidative and redox-metabolic reprogramming</strong> (FOXA1/GSTP1/glutathione axis), <strong>noncanonical necrotic and ferroptosis-like cell death</strong>, and <strong>calcium-dependent ALG-2 interaction</strong> affecting cytoskeletal dynamics. Secondary relevance stems from insomnia-genomics associations enriched in AD pathways and immune/macrophage-state regulation potentially pertinent to neuroinflammation. <strong>No supplied study validates HEBP2 in an Alzheimer's tissue, cell, or animal model.</strong> Before this gene can be considered a genuine AD target, direct expression profiling, cell-type–resolved studies, and functional testing under AD-relevant conditions are essential. The therapeutic direction also remains uncertain: depending on cellular context, inhibiting HEBP2 might protect against mitochondrial injury, or enhancing it could support stress adaptation. <strong>Proceed with rigorous exploratory studies rather than assuming therapeutic utility.</strong>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  HEBP2 / SOUL &mdash; Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

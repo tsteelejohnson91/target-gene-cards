@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPOCK3 / Testican-3 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+    --neutral-text: #64748b;
+    --neutral-border: #e2e8f0;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #100120 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f0e6ff;
+    padding: 4px 14px;
+    border-radius: 99px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: normal;
+    letter-spacing: -0.025em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.0rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding-bottom: 9px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 22px;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+  }
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+  .fig-caption {
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .card p { margin-bottom: 0; }
+
+  .card-accent  { border-left: 4px solid var(--mid);     background: var(--light); }
+  .card-accent  h3 { color: var(--dark); }
+
+  .card-danger  { border-left: 4px solid var(--danger);  background: var(--danger-light); }
+  .card-danger  h3 { color: var(--danger); }
+
+  .card-positive { border-left: 4px solid var(--positive); background: var(--positive-light); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue    { border-left: 4px solid var(--blue);    background: var(--blue-light); }
+  .card-blue    h3 { color: var(--blue); }
+
+  .card-neutral { border-left: 4px solid var(--neutral-text); background: var(--neutral-bg); }
+  .card-neutral h3 { color: #475569; }
+
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-light); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+  ol.takeaways li {
+    margin-bottom: 1.1rem;
+    font-size: 0.95rem;
+  }
+  ol.takeaways li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #100120 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+  }
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+  }
+  .verdict p {
+    font-size: 0.97rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SPOCK3 &nbsp;|&nbsp; Testican-3 / SPARC Family</span>
+    <span class="chip chip-danger">⚠ Translational caution: mouse models may not reflect human vascular role</span>
+  </div>
+  <h1>SPOCK3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">Translational Caution:</span>
+      SPOCK3 is enriched in human BBB capillary endothelial cells relative to mouse, suggesting standard mouse AD models may systematically underrepresent its vascular and matrix functions. Human iPSC-BBB, organoid, or postmortem spatial proteomics approaches are strongly preferred.
+    </div>
+
+    <p>
+      SPOCK3/testican-3 is a brain-expressed extracellular matrix proteoglycan whose relevance to Alzheimer's disease (AD) emerges from converging evidence spanning postmortem brain pathology, APOE ε4-linked proteomics, epigenetic studies, memory and cognitive genetics, and extracellular matrix/protease biology. Its strongest AD signal is not as a proven causal driver but as a matrisome-associated protein enriched in AD-vulnerable regions and linked to plaque, tau, vascular, and tissue-remodeling microenvironments.
+    </p>
+    <p>
+      In AD postmortem tissue, SPOCK3 accumulates regionally — most prominently in hippocampus and occipital cortex — while remaining sparse in striatum and absent in cerebellum. This pattern mirrors selective neuronal vulnerability rather than global brain change. SPOCK3 also features among proteins connecting APOE ε4 to tau tangle burden in dorsolateral prefrontal cortex proteomics, and has been flagged as an AD epigenetic signature gene in fusiform gyrus. Its biology encompasses heparan sulfate proteoglycan signaling, MMP/MT-MMP regulation, neuronal structural maintenance, cortical plasticity, and BBB/vascular biology — all of which directly intersect with AD mechanisms.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (4 panels, left-to-right):
+        Panel A: Upstream Context (x=10, w=200) — 3 nodes
+        Panel B: SPOCK3 Biology (x=225, w=210) — 4 nodes (branching)
+        Panel C: AD Pathology Links (x=450, w=210) — 5 nodes (cluster)
+        Panel D: Outcomes / Translational (x=675, w=215) — 3 nodes
+        Total nodes: 3+4+5+3 = 15  ✓ ≤16
+      -->
+      <svg viewBox="0 0 920 490" width="880" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- DEFS -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0,0 8,3.5 0,7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0,0 8,3.5 0,7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0,0 8,3.5 0,7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0,0 8,3.5 0,7" fill="#1e40af"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0,0 8,3.5 0,7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ============================================================ -->
+        <!-- PANEL A: Upstream Context  x=10 w=195 h=470 -->
+        <!-- ============================================================ -->
+        <rect x="10" y="10" width="195" height="470" rx="12" fill="#f3eeff" fill-opacity="0.6" stroke="#7c3aed" stroke-width="1.2" stroke-opacity="0.4"/>
+        <text x="107" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#3b0764" letter-spacing="1.5" text-decoration="none">A · UPSTREAM CONTEXT</text>
+
+        <!-- A1: APOE ε4 Risk  y centre 85 -->
+        <rect x="28" y="48" width="158" height="50" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="107" y="68" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="11">APOE ε4 Risk</text>
+        <text x="107" y="83" text-anchor="middle" fill="#3b0764" font-size="10">Genetic vulnerability</text>
+
+        <!-- A2: GWAS / Epigenetics  y centre 175 -->
+        <rect x="28" y="140" width="158" height="50" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="107" y="160" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="11">GWAS &amp; Epigenetics</text>
+        <text x="107" y="175" text-anchor="middle" fill="#3b0764" font-size="10">Near-SPOCK3 AD locus</text>
+
+        <!-- A3: Memory Genetics  y centre 265 -->
+        <rect x="28" y="230" width="158" height="50" rx="7" fill="#ede9ve" stroke="#7c3aed" stroke-width="1.4" fill="#ede9fe"/>
+        <text x="107" y="250" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="11">Memory Genetics</text>
+        <text x="107" y="265" text-anchor="middle" fill="#3b0764" font-size="10">Delayed-recall variants</text>
+
+        <!-- A arrows -->
+        <line x1="107" y1="98" x2="107" y2="138" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="107" y1="190" x2="107" y2="228" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ============================================================ -->
+        <!-- PANEL B: SPOCK3 Biology  x=225 w=210 -->
+        <!-- ============================================================ -->
+        <rect x="225" y="10" width="210" height="470" rx="12" fill="#f5f3ff" fill-opacity="0.55" stroke="#7c3aed" stroke-width="1.5" stroke-opacity="0.55"/>
+        <text x="330" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#3b0764" letter-spacing="1.5">B · SPOCK3 BIOLOGY</text>
+
+        <!-- B0: SPOCK3 central node  y centre=90 -->
+        <rect x="247" y="52" width="164" height="54" rx="8" fill="#7c3aed" stroke="#3b0764" stroke-width="1.6"/>
+        <text x="329" y="74" text-anchor="middle" font-weight="700" fill="#ffffff" font-size="12">SPOCK3</text>
+        <text x="329" y="90" text-anchor="middle" fill="#e9d5ff" font-size="10">Testican-3 / HSPG</text>
+        <text x="329" y="104" text-anchor="middle" fill="#e9d5ff" font-size="9">Secreted ECM proteoglycan</text>
+
+        <!-- Branch left: MMP pathway -->
+        <!-- B1: MT1/MT3-MMP  y centre=195 -->
+        <rect x="247" y="163" width="160" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="327" y="182" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="10">MT1/MT3-MMP</text>
+        <text x="327" y="197" text-anchor="middle" fill="#3b0764" font-size="9">Protease inhibition</text>
+        <text x="327" y="210" text-anchor="middle" fill="#3b0764" font-size="9">(MMP-2 activation)</text>
+
+        <!-- B2: ECM Remodeling  y centre=290 -->
+        <rect x="247" y="258" width="160" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="327" y="277" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="10">ECM Remodeling</text>
+        <text x="327" y="292" text-anchor="middle" fill="#3b0764" font-size="9">Basement membrane</text>
+        <text x="327" y="306" text-anchor="middle" fill="#3b0764" font-size="9">integrity &amp; turnover</text>
+
+        <!-- B3: Neural Structure  y centre=390 -->
+        <rect x="247" y="358" width="160" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="327" y="377" text-anchor="middle" font-weight="700" fill="#3b0764" font-size="10">Neural Structure</text>
+        <text x="327" y="392" text-anchor="middle" fill="#3b0764" font-size="9">Corpus callosum,</text>
+        <text x="327" y="406" text-anchor="middle" fill="#3b0764" font-size="9">myelination, axon tracts</text>
+
+        <!-- B arrows -->
+        <line x1="329" y1="106" x2="329" y2="161" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="329" y1="211" x2="329" y2="256" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="329" y1="306" x2="329" y2="356" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ============================================================ -->
+        <!-- PANEL C: AD Pathology Links  x=455 w=215 -->
+        <!-- ============================================================ -->
+        <rect x="455" y="10" width="215" height="470" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.5" stroke-opacity="0.5"/>
+        <text x="562" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#991b1b" letter-spacing="1.5">C · AD PATHOLOGY LINKS</text>
+
+        <!-- C1: Regional Accumulation  y=52 -->
+        <rect x="473" y="48" width="178" height="50" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="562" y="68" text-anchor="middle" font-weight="700" fill="#991b1b" font-size="10">Regional Accumulation</text>
+        <text x="562" y="82" text-anchor="middle" fill="#7f1d1d" font-size="9">Hippocampus &amp; occipital cortex</text>
+        <text x="562" y="95" text-anchor="middle" fill="#7f1d1d" font-size="9">↓ striatum, absent cerebellum</text>
+
+        <!-- C2: Amyloid/Plaque ECM  y=148 -->
+        <rect x="473" y="143" width="178" height="50" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="562" y="163" text-anchor="middle" font-weight="700" fill="#991b1b" font-size="10">Plaque-Assoc. ECM</text>
+        <text x="562" y="178" text-anchor="middle" fill="#7f1d1d" font-size="9">Matrisome co-localisation;</text>
+        <text x="562" y="191" text-anchor="middle" fill="#7f1d1d" font-size="9">causality unresolved</text>
+
+        <!-- C3: APOE-tau link  y=248 -->
+        <rect x="473" y="243" width="178" height="50" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="562" y="263" text-anchor="middle" font-weight="700" fill="#991b1b" font-size="10">APOE ε4 → Tau Tangles</text>
+        <text x="562" y="278" text-anchor="middle" fill="#7f1d1d" font-size="9">DLPFC proteomics: strong</text>
+        <text x="562" y="291" text-anchor="middle" fill="#7f1d1d" font-size="9">SPOCK3–tau linker</text>
+
+        <!-- C4: Epigenetic Dysreg  y=348 -->
+        <rect x="473" y="343" width="178" height="50" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="562" y="363" text-anchor="middle" font-weight="700" fill="#991b1b" font-size="10">Epigenetic Dysregulation</text>
+        <text x="562" y="378" text-anchor="middle" fill="#7f1d1d" font-size="9">Fusiform gyrus: altered DNA</text>
+        <text x="562" y="391" text-anchor="middle" fill="#7f1d1d" font-size="9">methylation + expression</text>
+
+        <!-- C5: BBB/Vascular  y=443 -->
+        <rect x="473" y="418" width="178" height="50" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="562" y="438" text-anchor="middle" font-weight="700" fill="#991b1b" font-size="10">BBB / Vascular</text>
+        <text x="562" y="453" text-anchor="middle" fill="#7f1d1d" font-size="9">Capillary endothelial enrichment</text>
+        <text x="562" y="466" text-anchor="middle" fill="#7f1d1d" font-size="9">(human &gt; mouse)</text>
+
+        <!-- C arrows -->
+        <line x1="562" y1="98" x2="562" y2="141" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="562" y1="193" x2="562" y2="241" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="562" y1="293" x2="562" y2="341" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="562" y1="393" x2="562" y2="416" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- ============================================================ -->
+        <!-- PANEL D: Translational Outcomes  x=690 w=220 -->
+        <!-- ============================================================ -->
+        <rect x="690" y="10" width="220" height="470" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.5" stroke-opacity="0.5"/>
+        <text x="800" y="30" text-anchor="middle" font-weight="700" font-size="9" fill="#0f766e" letter-spacing="1.5">D · TRANSLATIONAL</text>
+
+        <!-- D1: Functional Validation  y=52 -->
+        <rect x="707" y="48" width="185" height="56" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="799" y="68" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="10">Functional Validation</text>
+        <text x="799" y="83" text-anchor="middle" fill="#134e4a" font-size="9">Test Aβ, tau, MMP-2/14,</text>
+        <text x="799" y="96" text-anchor="middle" fill="#134e4a" font-size="9">BBB, glial activation</text>
+
+        <!-- D2: Human Models  y=165 -->
+        <rect x="707" y="158" width="185" height="56" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="799" y="178" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="10">Human-Relevant Models</text>
+        <text x="799" y="193" text-anchor="middle" fill="#134e4a" font-size="9">iPSC-BBB, organoids,</text>
+        <text x="799" y="207" text-anchor="middle" fill="#134e4a" font-size="9">spatial proteomics</text>
+
+        <!-- D3: Biomarker Eval  y=275 -->
+        <rect x="707" y="264" width="185" height="56" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="799" y="284" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="10">Biomarker Evaluation</text>
+        <text x="799" y="299" text-anchor="middle" fill="#134e4a" font-size="9">Amyloid/tau PET, CSF,</text>
+        <text x="799" y="313" text-anchor="middle" fill="#134e4a" font-size="9">plasma, autopsy pathology</text>
+
+        <!-- D arrows -->
+        <line x1="799" y1="104" x2="799" y2="156" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="799" y1="214" x2="799" y2="262" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- ============================================================ -->
+        <!-- INTER-PANEL CONNECTORS (routed through gutters, horizontally) -->
+        <!-- ============================================================ -->
+        <!-- A1 -> B0: APOE ε4 -> SPOCK3 (same y ~73 for top edges) -->
+        <line x1="186" y1="73" x2="245" y2="73" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- B ECM -> C Plaque (row 2 B2 y centre 282, C2 y centre 168) -->
+        <!-- Route: right from B2 right edge (407) at y=282, elbow down to C2 at y=168 won't work cleanly -->
+        <!-- Instead: B0 right -> C1 left at same y=75 -->
+        <line x1="411" y1="75" x2="471" y2="75" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- C cluster -> D: from C right edge at y=168 -> D1 left at y=75 via elbow -->
+        <!-- C1 right (651) y=73, D1 left (707) y=76 -->
+        <line x1="651" y1="76" x2="705" y2="76" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+      <p class="fig-caption">
+        <strong>Panel A (Upstream Context):</strong> Genetic and epigenetic inputs — APOE ε4 risk allele, near-SPOCK3 AD GWAS locus, and memory-variant genetics — converge as upstream drivers.
+        <strong>Panel B (SPOCK3 Biology):</strong> The SPOCK3/testican-3 proteoglycan (central node) regulates MT1/MT3-MMP-mediated pro-MMP-2 activation, extracellular matrix remodeling and basement membrane integrity, and neural structural maintenance (corpus callosum, myelination, axon organization).
+        <strong>Panel C (AD Pathology Links):</strong> Five converging AD-relevant signals — regional accumulation in hippocampus/occipital cortex, plaque-associated matrisome co-localization, APOE ε4–tau tangle linkage in DLPFC proteomics, fusiform-gyrus epigenetic dysregulation, and human BBB/capillary endothelial enrichment — each pointing to distinct disease-relevant microenvironments.
+        <strong>Panel D (Translational):</strong> Priority next steps — functional validation experiments (Aβ, tau, MMP-2/14, BBB), human-relevant model systems (iPSC-BBB, organoids, spatial proteomics), and biomarker evaluation in AD cohorts.
+        Dashed arrows between panels represent cross-panel mechanistic links.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>ECM / Matrisome Identity</h3>
+        <p>SPOCK3 is a secreted, matrix-associated SPARC/testican-family proteoglycan positioned to influence extracellular structure, protease activity, cell signaling, and brain lesion microenvironments throughout the AD brain.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Regional Accumulation &amp; Selective Vulnerability</h3>
+        <p>SPOCK3 is enriched in hippocampus and occipital cortex, sparse in striatum, and absent in cerebellum — a distribution that mirrors AD's selectively vulnerable regions, especially in memory-related circuitry.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>APOE ε4 → Tau Tangle Linkage</h3>
+        <p>In large-scale DLPFC proteomics, SPOCK3/testican-3 emerged as one of the strongest proteins connecting APOE ε4 genotype to tau tangle density, placing it squarely within an APOE-driven tau-pathology mechanism.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>MMP/Protease Regulatory Biology</h3>
+        <p>Testican-3 and related splice variants inhibit MT1-MMP/MT3-MMP-mediated pro-MMP-2 activation, implicating SPOCK3 in matrix remodeling, basement membrane integrity, inflammatory cell migration, and possibly amyloid/tau lesion microenvironments. Testican-2 may antagonize this inhibition — the regulatory network matters.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>BBB Enrichment &amp; Translational Gap</h3>
+        <p>SPOCK3 is enriched in human capillary endothelial cells relative to mouse, raising concern that standard mouse AD models may substantially underrepresent its vascular and BBB-related functions — a direct translational hazard.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Epigenetic &amp; Genetic Convergence</h3>
+        <p>SPOCK3 is an AD epigenetic signature gene in fusiform gyrus (altered methylation and expression), lies near an AD GWAS signal in Ashkenazi Jewish cohorts, and has memory-GWAS variants linked to delayed recall — multiple independent lines of genetic and regulatory evidence converge.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Treat SPOCK3 as a candidate AD-associated ECM modifier, not yet a validated target.</b> The evidence demonstrates biological plausibility and disease association, but causal proof and druggability in AD remain unestablished.</li>
+      <li><b>Prioritize functional validation in human-relevant systems.</b> Key experiments should test whether SPOCK3 modulation affects Aβ aggregation, plaque matrix composition, tau neuritic pathology, neurofibrillary degeneration, synaptic injury, glial activation, BBB integrity, CAA, or MMP-2/MMP-14 activity.</li>
+      <li><b>Focus on hippocampus, cortex, fusiform gyrus, and vascular compartments.</b> These regions and cell types align with the strongest evidence: hippocampal enrichment, cortical APOE ε4/tau proteomics, fusiform-gyrus epigenetic dysregulation, and human BBB endothelial expression.</li>
+      <li><b>Resolve whether SPOCK3 is protective or pathogenic before committing therapeutic direction.</b> Increased SPOCK3 around lesions could reflect maladaptive matrix accumulation, compensatory repair, or a neutral remodeling marker — the therapeutic strategy inverts depending on the answer.</li>
+      <li><b>Integrate SPOCK3 into APOE ε4 and tau-pathology studies.</b> Because testican-3 was flagged as a strong APOE ε4-to-tau linker, future analyses must determine whether SPOCK3 mediates, modifies, or merely correlates with APOE-driven tau vulnerability.</li>
+      <li><b>Characterize testican-family interactions before therapeutic development.</b> Testican-2 can antagonize testican-family inhibition of MT-MMP/MMP-2 activation; targeting SPOCK3 in isolation may be insufficient without understanding this regulatory network.</li>
+      <li><b>Use caution with mouse-only AD models.</b> Given human BBB enrichment of SPOCK3, iPSC-derived BBB models, cerebral organoids, humanized vascular models, and postmortem spatial proteomics are more likely to capture physiologically relevant SPOCK3 biology.</li>
+      <li><b>Evaluate SPOCK3 as a biomarker candidate in AD cohorts.</b> Protein levels, DNA methylation, expression, and splicing patterns should be tested against amyloid PET, tau PET, CSF and plasma biomarkers, cognition scores, white matter injury, and autopsy pathology.</li>
+      <li><b>Therapeutic rationale is plausible but early-stage.</b> If SPOCK3 proves pathogenic, inhibition could reduce maladaptive plaque-associated ECM remodeling; if protective, enhancement could stabilize matrix, restrain excessive proteases, or preserve BBB and synaptic microenvironments.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — SPOCK3 / Testican-3 in Alzheimer's Disease</div>
+      <p>
+        SPOCK3 occupies a <strong>biologically plausible and multiply evidenced position</strong> in the AD landscape, supported by postmortem regional pathology, APOE ε4-linked tau proteomics, epigenetic dysregulation, and convergent genetic signals — but it <strong>has not been causally validated</strong> as an AD driver. Its ECM proteoglycan biology, MMP regulatory function, and selective enrichment in AD-vulnerable brain regions and human BBB endothelium make it a <strong>credible candidate for further mechanistic investigation</strong>. The critical unresolved question — whether SPOCK3 is <strong>pathogenic, protective, or a neutral bystander</strong> in disease tissue — must be answered before any therapeutic strategy can be defined. Mouse models are likely to underrepresent its human vascular role. The most productive near-term investments are <strong>functional studies in human-relevant systems</strong>, resolution of its role in the APOE ε4–tau axis, and systematic biomarker evaluation in well-characterized AD cohorts.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SPOCK3 / Testican-3 — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

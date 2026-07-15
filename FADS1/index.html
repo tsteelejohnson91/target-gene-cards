@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FADS1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2e7fb8;
+    --light: #e8f4fd;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue-card: #1e3a5f;
+    --blue-card-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2b40 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2f0fb;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.94rem;
+  }
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* PROSE */
+  p { margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 32px 0 12px 0;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 12px;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-color: #d97706; }
+  .card-warning h3 { color: var(--warning); }
+  .card-blue { background: var(--blue-card-light); border-color: var(--blue-card); }
+  .card-blue h3 { color: var(--blue-card); }
+  .card-slate { background: var(--neutral-bg); border-color: #64748b; }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  ol.takeaways { list-style: none; counter-reset: takeaway; padding: 0; }
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2b40 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .verdict p { color: rgba(255,255,255,0.92); }
+  .verdict strong { color: #bae6fd; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: FADS1 &nbsp;|&nbsp; Fatty Acid Desaturase 1 (Δ5-desaturase)</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety — see caution</span>
+  </div>
+  <h1>FADS1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> Inhibiting or enhancing FADS1 is not straightforwardly beneficial. FADS1 activity is bidirectionally important — suppression may reduce pro-inflammatory arachidonic acid flux but could simultaneously impair DHA/EPA synthesis, membrane integrity, and normal lipid signaling. Neither activation nor inhibition should be assumed universally safe or effective.
+    </div>
+
+    <p>FADS1 encodes fatty acid desaturase 1 — commonly termed Δ5-desaturase — a rate-limiting enzyme in long-chain polyunsaturated fatty acid (PUFA) metabolism. Its central biochemical role is the conversion of PUFA intermediates into downstream lipid products, most notably the omega-6 eicosanoid precursor arachidonic acid (AA) and the omega-3 lipid pools containing EPA and DHA.</p>
+
+    <p>The Alzheimer's disease (AD) relevance of FADS1 is primarily mechanistic and inferential. Direct AD evidence includes a Tunisian case-control study associating the FADS1 rs174556 TT genotype with increased AD risk, elevated plasma and erythrocyte arachidonic acid, a higher AA/DGLA ratio, and lower plasma DHA. Beyond this, a wider body of AD-adjacent evidence demonstrates that FADS1 regulates lipid pathways germane to AD — including neuroinflammation, glial activation, synaptic membrane biology, oxidative stress, ferroptosis-like lipid peroxidation, vascular-metabolic risk, and cognitive aging.</p>
+
+    <p>The most defensible AD hypothesis is that FADS1-mediated PUFA desaturation shifts the balance between potentially protective DHA/EPA-containing lipids and potentially harmful arachidonic-acid-derived inflammatory mediators. This balance may affect neuroinflammatory tone, neuronal membrane composition, synaptic function, oxidative lipid injury, vascular contributions to dementia, and heterogeneous responses to omega-3 or omega-6 dietary interventions.</p>
+  </section>
+
+  <!-- MECHANISM FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; max-width:900px; margin:0 auto;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e7fb8"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a4a6b"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream PUFA Substrate -->
+        <rect x="10" y="10" width="210" height="465" rx="12" fill="#e8f4fd" fill-opacity="0.6" stroke="#2e7fb8" stroke-width="1.2"/>
+        <text x="115" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a4a6b" letter-spacing="1">PANEL A · SUBSTRATES</text>
+
+        <!-- Node A1: Dietary PUFA -->
+        <rect x="38" y="44" width="154" height="44" rx="7" fill="#ffffff" stroke="#2e7fb8" stroke-width="1.4"/>
+        <text x="115" y="63" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Dietary PUFAs</text>
+        <text x="115" y="78" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">(LA, ALA)</text>
+
+        <!-- arrow A1 to A2 -->
+        <line x1="115" y1="88" x2="115" y2="112" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: FADS2 step -->
+        <rect x="38" y="113" width="154" height="44" rx="7" fill="#ffffff" stroke="#2e7fb8" stroke-width="1.4"/>
+        <text x="115" y="132" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">FADS2 (Δ6)</text>
+        <text x="115" y="147" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">GLA / ETA intermediates</text>
+
+        <!-- arrow A2 to A3 -->
+        <line x1="115" y1="157" x2="115" y2="181" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: FADS1 / Δ5 -->
+        <rect x="28" y="182" width="174" height="48" rx="7" fill="#1a4a6b" stroke="#0d2b40" stroke-width="1.6"/>
+        <text x="115" y="202" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="bold" fill="#ffffff">FADS1 (Δ5-desaturase)</text>
+        <text x="115" y="219" text-anchor="middle" font-family="Georgia" font-size="10" fill="#bae6fd">Rate-limiting enzyme</text>
+
+        <!-- Node A4: ELOVL elongases -->
+        <rect x="38" y="260" width="154" height="44" rx="7" fill="#ffffff" stroke="#2e7fb8" stroke-width="1.4"/>
+        <text x="115" y="279" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">ELOVL Elongases</text>
+        <text x="115" y="294" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">chain extension step</text>
+
+        <!-- arrow A3 to A4 -->
+        <line x1="115" y1="230" x2="115" y2="260" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: FADS cluster note -->
+        <rect x="38" y="338" width="154" height="44" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+        <text x="115" y="356" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#334155">FADS locus complex</text>
+        <text x="115" y="371" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#64748b">FADS2/3, TMEM258, MYRF</text>
+
+        <!-- arrow A4 to A5 -->
+        <line x1="115" y1="304" x2="115" y2="338" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Panel B: Omega-6 Branch -->
+        <rect x="232" y="10" width="210" height="330" rx="12" fill="#fef2f2" fill-opacity="0.7" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="337" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">PANEL B · ω-6 / AA BRANCH</text>
+
+        <!-- Node B1: Arachidonic Acid -->
+        <rect x="253" y="44" width="168" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="337" y="63" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Arachidonic Acid (AA)</text>
+        <text x="337" y="78" text-anchor="middle" font-family="Georgia" font-size="10" fill="#9b1c1c">↑ rs174556 TT genotype</text>
+
+        <!-- Node B2: Eicosanoids -->
+        <rect x="253" y="124" width="168" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="337" y="143" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Eicosanoids / PGs</text>
+        <text x="337" y="158" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">PGD2, PGE2, HETEs, LTs</text>
+
+        <!-- arrow B1 to B2 -->
+        <line x1="337" y1="88" x2="337" y2="124" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B3: Neuroinflammation -->
+        <rect x="253" y="204" width="168" height="44" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="337" y="223" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Neuroinflammation</text>
+        <text x="337" y="238" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Glial activation, DP1 sig.</text>
+
+        <!-- arrow B2 to B3 -->
+        <line x1="337" y1="168" x2="337" y2="204" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B4: Oxidative / Ferroptosis -->
+        <rect x="253" y="284" width="168" height="44" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="337" y="303" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Lipid Peroxidation</text>
+        <text x="337" y="318" text-anchor="middle" font-family="Georgia" font-size="10" fill="#b45309">Ferroptosis-like injury</text>
+
+        <!-- arrow B3 to B4 -->
+        <line x1="337" y1="248" x2="337" y2="284" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C: Omega-3 Branch -->
+        <rect x="454" y="10" width="210" height="330" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="559" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL C · ω-3 / DHA BRANCH</text>
+
+        <!-- Node C1: EPA / DHA -->
+        <rect x="475" y="44" width="168" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="559" y="63" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">EPA / DHA Pool</text>
+        <text x="559" y="78" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">↓ rs174556 TT genotype</text>
+
+        <!-- Node C2: SPMs / Resolvins -->
+        <rect x="475" y="124" width="168" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="559" y="143" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Pro-resolving Mediators</text>
+        <text x="559" y="158" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Resolvins, protectins, HEPEs</text>
+
+        <!-- arrow C1 to C2 -->
+        <line x1="559" y1="88" x2="559" y2="124" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C3: Membrane / Synaptic -->
+        <rect x="475" y="204" width="168" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="559" y="223" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Membrane Integrity</text>
+        <text x="559" y="238" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Synaptic function, fluidity</text>
+
+        <!-- arrow C2 to C3 -->
+        <line x1="559" y1="168" x2="559" y2="204" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C4: Cognitive / Neuroprotection -->
+        <rect x="475" y="284" width="168" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="559" y="303" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Neuroprotection</text>
+        <text x="559" y="318" text-anchor="middle" font-family="Georgia" font-size="10" fill="#0f766e">Cognitive aging resilience</text>
+
+        <!-- arrow C3 to C4 -->
+        <line x1="559" y1="248" x2="559" y2="284" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel D: Convergent AD Outcomes -->
+        <rect x="676" y="10" width="214" height="465" rx="12" fill="#eff6ff" fill-opacity="0.7" stroke="#1a4a6b" stroke-width="1.2"/>
+        <text x="783" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a4a6b" letter-spacing="1">PANEL D · AD OUTCOMES</text>
+
+        <!-- Node D1: AD Risk / Biomarkers -->
+        <rect x="697" y="44" width="172" height="44" rx="7" fill="#ffffff" stroke="#1a4a6b" stroke-width="1.4"/>
+        <text x="783" y="63" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">AD Risk &amp; Biomarkers</text>
+        <text x="783" y="78" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">AA/DGLA ↑, DHA ↓</text>
+
+        <!-- Node D2: Synaptic Dysfunction -->
+        <rect x="697" y="148" width="172" height="44" rx="7" fill="#ffffff" stroke="#1a4a6b" stroke-width="1.4"/>
+        <text x="783" y="167" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Synaptic Dysfunction</text>
+        <text x="783" y="182" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">Memory impairment</text>
+
+        <!-- Node D3: Vascular-Metabolic -->
+        <rect x="697" y="252" width="172" height="44" rx="7" fill="#ffffff" stroke="#1a4a6b" stroke-width="1.4"/>
+        <text x="783" y="271" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1e293b">Vascular-Metabolic Risk</text>
+        <text x="783" y="286" text-anchor="middle" font-family="Georgia" font-size="10" fill="#475569">TG, HDL, atherosclerosis</text>
+
+        <!-- Node D4: Therapeutic Target -->
+        <rect x="697" y="356" width="172" height="44" rx="7" fill="#1a4a6b" stroke="#0d2b40" stroke-width="1.6"/>
+        <text x="783" y="375" text-anchor="middle" font-family="Georgia" font-size="11" fill="#ffffff">Precision PUFA Strategy</text>
+        <text x="783" y="390" text-anchor="middle" font-family="Georgia" font-size="10" fill="#bae6fd">DHA suppl. / eicosanoid Rx</text>
+
+        <!-- Cross-panel connectors: B3 Neuroinflammation → D2 Synaptic (route via gutter at x=660, elbow) -->
+        <!-- From B3 right edge (421, 226) → elbow right to x=660, down to y=170, right to D2 left (697,170) -->
+        <polyline points="421,226 660,226 660,170 697,170" fill="none" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- From C4 right edge (643,306) → elbow right to x=664 down to y=274, right to D3 left (697,274) -->
+        <polyline points="643,306 664,306 664,274 697,274" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- From B4 bottom (337,328) → route down to y=410, right across gutter to 783 x, up to D4 -->
+        <polyline points="337,328 337,420 783,420 783,400" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-dark)"/>
+
+        <!-- From A3 FADS1 right edge → B1 AA left -->
+        <line x1="202" y1="206" x2="253" y2="66" stroke="#2e7fb8" stroke-width="1" stroke-opacity="0"/>
+        <!-- Use proper elbow: from A3 right (202,206) → x=220, y=66, → B1 left (253,66) -->
+        <polyline points="202,206 220,206 220,66 253,66" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- From A3 right → C1 EPA left: elbow through gutter -->
+        <polyline points="202,218 238,218 238,450 444,450 444,66 475,66" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B1 AA → D1 AD Risk: elbow through gutter -->
+        <polyline points="421,66 650,66 650,66 697,66" fill="none" stroke="#2e7fb8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- D1 → D2 vertical -->
+        <line x1="783" y1="88" x2="783" y2="148" stroke="#1a4a6b" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+        <!-- D2 → D3 vertical -->
+        <line x1="783" y1="192" x2="783" y2="252" stroke="#1a4a6b" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+        <!-- D3 → D4 vertical -->
+        <line x1="783" y1="296" x2="783" y2="356" stroke="#1a4a6b" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Figure:</strong> <strong>Panel A (Substrates)</strong> shows the upstream dietary PUFA pathway — dietary linoleic acid (LA) and alpha-linolenic acid (ALA) are processed through FADS2 (Δ6-desaturase) and ELOVL elongases before reaching FADS1 (Δ5-desaturase, the rate-limiting node), embedded in the pleiotropic FADS locus. <strong>Panel B (ω-6/AA Branch)</strong> traces FADS1-driven arachidonic acid production through eicosanoid/prostaglandin synthesis to neuroinflammation, glial activation, and ultimately ferroptosis-like lipid peroxidation. <strong>Panel C (ω-3/DHA Branch)</strong> shows the protective arm: EPA/DHA conversion to specialized pro-resolving mediators, supporting membrane integrity, synaptic function, and neuroprotective outcomes. <strong>Panel D (AD Outcomes)</strong> captures the convergent Alzheimer's-relevant consequences — elevated AD risk biomarkers (AA/DGLA ↑, DHA ↓), synaptic dysfunction, vascular-metabolic risk, and the resulting case for precision PUFA therapeutic strategies. Dashed connectors indicate cross-panel influences inferred from experimental and epidemiological evidence.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Association with AD Risk</h3>
+        <p>The FADS1 rs174556 TT genotype was associated with elevated AD risk in a Tunisian case-control study, linked to higher plasma and erythrocyte arachidonic acid, an elevated AA/DGLA ratio, and lower plasma DHA — a lipid signature consistent with pro-inflammatory desaturase over-activity.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>AA-Driven Neuroinflammation</h3>
+        <p>Arachidonic acid — the primary product of FADS1 — is the precursor for prostaglandins, leukotrienes, thromboxanes, and HETEs. Excess FADS1-driven AA flux could plausibly amplify neuroinflammation, microglial and astrocyte activation, vascular dysfunction, and oxidative injury in the AD brain.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>DHA/EPA Omega-3 Connection</h3>
+        <p>FADS1 and FADS2 variants repeatedly modify long-chain omega-3 status and responses to fish oil, DHA, and EPA supplementation. This may explain heterogeneous cognitive aging trial outcomes — low-conversion genotypes may require direct DHA supplementation rather than ALA-based precursor provision.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Mouse Model Mechanistic Support</h3>
+        <p>In an aged-mouse perioperative cognitive impairment model, hippocampal FADS1 upregulation increased AA, amplified PGD2/DP1 signaling, drove neuroinflammation, synaptic dysfunction, and memory impairment. FADS1 knockdown or DHA supplementation improved these outcomes, providing strong AD-adjacent mechanistic support.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ferroptosis &amp; Oxidative Lipid Risk</h3>
+        <p>By increasing highly unsaturated lipid substrates amenable to peroxidation, FADS1 could theoretically heighten neuronal and glial vulnerability under the oxidative and iron-stress conditions characteristic of AD pathology, linking PUFA desaturation biology to ferroptosis-like mechanisms.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Locus Complexity &amp; Pleiotropy</h3>
+        <p>The FADS locus is genetically complex: FADS1 is consistently co-inherited and co-expressed with FADS2, FADS3, ELOVL elongases, TMEM258, MYRF, and SUGP1/TM6SF2 across ancestry-specific haplotypes. Effects must not be attributed to FADS1 alone without colocalization and functional validation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Candidate, not validated target:</strong> Treat FADS1 as a high-priority AD-mechanism candidate rather than a validated standalone Alzheimer's therapeutic target. Direct AD evidence remains limited and largely inferential.</li>
+      <li><strong>Prioritize AD-specific functional studies:</strong> Commission studies testing whether FADS1 genotype or expression associates with amyloid burden, tau pathology, neuroinflammation, microglial/astrocyte activation, synaptic loss, CSF/plasma lipid mediators, brain DHA/AA balance, and cognitive decline.</li>
+      <li><strong>Genotype omega-3 intervention trials:</strong> Include FADS1/FADS-cluster variants (rs174556, rs174546, rs174547, rs174550, rs174537, rs174535, rs66698963) in omega-3, DHA/EPA, omega-6 reduction, and lipid-modifying AD prevention or treatment trials to detect genotype-by-intervention effects.</li>
+      <li><strong>Lipidomic pharmacodynamic biomarkers:</strong> Use plasma and erythrocyte AA, DHA, EPA, AA/DGLA, EPA/AA, DHA/AA, omega-6/omega-3 ratios, prostaglandins, HETEs, EETs, HEPEs, and specialized pro-resolving mediators as quantitative pharmacodynamic readouts.</li>
+      <li><strong>Precision nutrition over broad drugging:</strong> Consider direct DHA/EPA supplementation for low-conversion genotypes, reduction of excessive omega-6 flux where AA-derived inflammation is high, and genotype-aware dietary PUFA balancing rather than systemic FADS1 enzyme inhibition.</li>
+      <li><strong>Downstream eicosanoid pathway targets:</strong> Explore targeting AA-derived prostaglandin/eicosanoid signaling — especially PGD2/DP1 and PGE2 pathways — which may offer safer, more specific routes than systemic FADS1 modulation.</li>
+      <li><strong>Cell-type and context specificity:</strong> Evaluate FADS1 in microglia, astrocytes, oligodendrocytes, neurons, and blood-brain barrier cells, and account for APOE genotype, since FADS1 effects are almost certainly cell-type and tissue specific.</li>
+      <li><strong>Population and metabolic context:</strong> Account for ancestry, diet, metabolic disease, sex, age, and baseline lipid status. FADS-region genetic effects are shaped by population genetics, dietary PUFA history, and cardiometabolic state, making one-size-fits-all conclusions inappropriate.</li>
+      <li><strong>Restoration, not suppression:</strong> The therapeutic goal should be restoration of balanced PUFA flux and inflammatory resolution — not simple suppression or enhancement of FADS1 activity. Both extremes carry risk.</li>
+      <li><strong>Position as biomarker node:</strong> Most realistically, position FADS1 as a precision-lipidomics biomarker and pathway-modulation node for AD-related neuroinflammation, membrane lipid dysfunction, oxidative lipid injury, and vascular-metabolic risk, pending further direct AD evidence.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — FADS1 in Alzheimer's Disease</span>
+      <p>FADS1 represents a <strong>biologically compelling but mechanistically inferential</strong> Alzheimer's disease candidate. Its role as the rate-limiting Δ5-desaturase governing the balance between <strong>pro-inflammatory arachidonic acid</strong> and <strong>neuroprotective DHA/EPA lipid pools</strong> places it at the intersection of several core AD-relevant pathophysiological axes: neuroinflammation, glial biology, synaptic membrane composition, oxidative lipid injury, and vascular-metabolic risk. The strongest direct AD evidence — a single Tunisian case-control study linking rs174556 TT genotype to elevated AA/DGLA and reduced DHA alongside increased AD risk — is suggestive but insufficient for target validation. Richer mechanistic support derives from an aged-mouse perioperative cognitive model where FADS1 knockdown or DHA supplementation reversed neuroinflammatory and cognitive deficits. <strong>The therapeutic landscape is inherently bidirectional and context-dependent</strong>: suppressing FADS1 may curtail AA-driven inflammatory signaling but simultaneously risk impairing essential PUFA biosynthesis and membrane homeostasis. The FADS locus is additionally confounded by genetic pleiotropy, co-inherited variants, and ancestry-specific haplotype effects. The most scientifically defensible near-term strategy is to develop FADS1 as a <strong>precision-lipidomics biomarker</strong> and <strong>pharmacogenomics stratifier</strong> for omega-3/omega-6 dietary and nutritional intervention trials in cognitively at-risk populations, while directing mechanistic investment toward downstream eicosanoid pathway targets that may offer more tractable and specific therapeutic windows.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  FADS1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

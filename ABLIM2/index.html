@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABLIM2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 42px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e0eaf5;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-warning {
+    background: rgba(155, 28, 28, 0.25);
+    border-color: rgba(255,150,150,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #c8dff5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 28px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: var(--slate);
+    font-size: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.5;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+
+  .card-neutral {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: #475569; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 56px;
+    line-height: 1.75;
+    font-size: 1.01rem;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #7db8e0;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    color: #d4e8f8;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: #94a3b8;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ABLIM2 &nbsp;|&nbsp; Actin-Binding LIM Domain Protein 2</span>
+    <span class="chip chip-warning">⚠ Directionality Unestablished — Not a Validated Target</span>
+  </div>
+  <h1>ABLIM2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caution: Directionality Unknown</span>
+      Current evidence does not establish whether ABLIM2 activity is protective or detrimental in Alzheimer's disease. Therapeutic modulation cannot be responsibly considered without first determining the direction of effect.
+    </div>
+
+    <p>ABLIM2 is presented as an <strong>exploratory Alzheimer's disease (AD) candidate</strong> rather than a validated AD risk gene or therapeutic target. Its most direct AD connection stems from a 2019 amyloid PET network-genetics study, in which ABLIM2 was nominated through genome-wide, network-assisted association and enrichment analysis of AV-45 PET amyloid burden. The study identified protein–protein interaction modules enriched for genetic association signals and containing known AD-related genes, while also nominating ABLIM2 as a novel candidate.</p>
+
+    <p>Across the literature, ABLIM2 is repeatedly linked to nervous-system expression, actin cytoskeleton regulation, synaptic and neuronal organization, inflammatory neuronal stress, and epigenetic responsiveness. These themes overlap with major AD mechanisms — including synaptic failure, neuritic/cytoskeletal disruption, amyloid-associated neuronal vulnerability, and inflammation-related neurodegeneration — but no cited study demonstrates that ABLIM2 directly alters amyloid deposition, tau pathology, neuroinflammation, synaptic loss, cognition, or AD progression.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" aria-label="ABLIM2 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Molecular Identity -->
+        <rect x="10" y="10" width="250" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="135" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-decoration="none" letter-spacing="1">PANEL A: MOLECULAR IDENTITY</text>
+
+        <!-- Node 1: ABLIM2 Gene -->
+        <rect x="60" y="44" width="150" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="62" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a5f">ABLIM2 Gene</text>
+        <text x="135" y="76" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">LIM / VHP domains</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="135" y1="86" x2="135" y2="108" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node 2: Two mRNA Isoforms -->
+        <rect x="55" y="109" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="127" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a5f">Two mRNA Isoforms</text>
+        <text x="135" y="141" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">tissue-specific expression</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="135" y1="151" x2="135" y2="173" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node 3: F-Actin Binding -->
+        <rect x="55" y="174" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="192" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a5f">F-Actin Binding</text>
+        <text x="135" y="206" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">stress fiber localization</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="135" y1="216" x2="135" y2="238" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node 4: STARS Interaction -->
+        <rect x="55" y="239" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="257" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a5f">STARS Interaction</text>
+        <text x="135" y="271" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">SRF-dependent transcription</text>
+
+        <!-- Node 5: CNS Expression -->
+        <rect x="55" y="350" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="135" y="368" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a5f">Brain/CNS Expression</text>
+        <text x="135" y="382" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">rat brain &amp; eye; conserved</text>
+
+        <!-- Separator line in panel A -->
+        <line x1="30" y1="340" x2="240" y2="340" stroke="#2e6da4" stroke-width="0.7" stroke-dasharray="4,3"/>
+
+        <!-- Panel B: Downstream Signaling (branches) -->
+        <rect x="278" y="10" width="330" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="443" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f5e58" letter-spacing="1">PANEL B: DOWNSTREAM SIGNALING</text>
+
+        <!-- Node 6: Cytoskeletal Dynamics (shared entry) -->
+        <rect x="338" y="44" width="210" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="443" y="62" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f5e58">Cytoskeletal Dynamics</text>
+        <text x="443" y="76" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">actin remodeling / neurites</text>
+
+        <!-- Branch arrows from Node 6 -->
+        <!-- Left branch: to Synaptic Maintenance -->
+        <line x1="378" y1="86" x2="340" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Right branch: to SRF Transcription -->
+        <line x1="508" y1="86" x2="546" y2="130" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 7: Synaptic Maintenance (left branch) -->
+        <rect x="285" y="131" width="150" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="360" y="149" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f5e58">Synaptic Maintenance</text>
+        <text x="360" y="163" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">neurite integrity</text>
+
+        <!-- Node 8: SRF/MKL1 Transcription (right branch) -->
+        <rect x="453" y="131" width="148" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="527" y="149" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f5e58">SRF/MKL1 Signaling</text>
+        <text x="527" y="163" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">activity-dependent response</text>
+
+        <!-- Arrow left branch down -->
+        <line x1="360" y1="173" x2="360" y2="215" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- Arrow right branch down -->
+        <line x1="527" y1="173" x2="527" y2="215" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 9: Neuronal Plasticity (left) -->
+        <rect x="285" y="216" width="150" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="360" y="234" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f5e58">Neuronal Plasticity</text>
+        <text x="360" y="248" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">epilepsy / pain / sensory</text>
+
+        <!-- Node 10: Gene Expression Programs (right) -->
+        <rect x="453" y="216" width="148" height="42" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="527" y="234" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f5e58">Gene Expression</text>
+        <text x="527" y="248" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">neuronal stress programs</text>
+
+        <!-- Converge arrows to shared outcome -->
+        <line x1="360" y1="258" x2="390" y2="308" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <line x1="527" y1="258" x2="497" y2="308" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 11: Neuronal Resilience (shared outcome) -->
+        <rect x="338" y="309" width="210" height="42" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="443" y="327" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">Neuronal Resilience</text>
+        <text x="443" y="341" text-anchor="middle" font-family="Georgia" font-size="9" fill="#0f5e58">cytoskeletal-synaptic output</text>
+
+        <!-- Panel C: Disease Context & Epigenetics -->
+        <rect x="626" y="10" width="262" height="480" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="757" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1">PANEL C: DISEASE CONTEXT</text>
+
+        <!-- Node 12: Amyloid PET Genetics -->
+        <rect x="651" y="44" width="212" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="757" y="62" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Amyloid PET Genetics</text>
+        <text x="757" y="76" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">AV-45 network-nominated</text>
+
+        <!-- Arrow -->
+        <line x1="757" y1="86" x2="757" y2="108" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 13: MAPK / NF-κB Pathways -->
+        <rect x="651" y="109" width="212" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.5"/>
+        <text x="757" y="127" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">MAPK / NF-κB Pathways</text>
+        <text x="757" y="141" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">inflammatory bortezomib study</text>
+
+        <!-- Arrow -->
+        <line x1="757" y1="151" x2="757" y2="173" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 14: Epigenetic Regulation -->
+        <rect x="651" y="174" width="212" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="757" y="192" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#92400e">Epigenetic Regulation</text>
+        <text x="757" y="206" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">methylation / env. responsive</text>
+
+        <!-- Arrow -->
+        <line x1="757" y1="216" x2="757" y2="238" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 15: AD-Relevant Overlap -->
+        <rect x="651" y="239" width="212" height="42" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.5"/>
+        <text x="757" y="257" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#92400e">AD-Relevant Overlap</text>
+        <text x="757" y="271" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">synaptic loss / inflammation</text>
+
+        <!-- Arrow -->
+        <line x1="757" y1="281" x2="757" y2="309" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 16: Exploratory Candidate -->
+        <rect x="651" y="310" width="212" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.8"/>
+        <text x="757" y="328" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Exploratory AD Candidate</text>
+        <text x="757" y="342" text-anchor="middle" font-family="Georgia" font-size="9" fill="#9b1c1c">not a validated target</text>
+
+        <!-- Cross-panel connector: Panel B Neuronal Resilience → Panel C AD-Relevant Overlap -->
+        <!-- Route: right edge of Panel B node 11 (x=548, y=330) → gutter → left edge of Panel C node 15 (x=651, y=260) -->
+        <!-- Use elbow: go right to x=610 at y=330, then up to y=260, then right to x=651 -->
+        <polyline points="548,330 610,330 610,260 651,260" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel A node 4 STARS → Panel B node 6 entry via gutter -->
+        <!-- STARS right edge: x=215, y=260. Panel B Node 6 left edge: x=338, y=65. -->
+        <!-- Safe elbow: right from STARS to x=260, up to y=65, right to x=338 -->
+        <polyline points="215,260 260,260 260,65 338,65" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Panel labels note at bottom -->
+        <text x="135" y="462" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b" font-style="italic">Panel A</text>
+        <text x="443" y="462" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b" font-style="italic">Panel B</text>
+        <text x="757" y="462" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#64748b" font-style="italic">Panel C</text>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue):</strong> ABLIM2 molecular identity — from gene structure through two mRNA isoforms, F-actin binding, and STARS interaction to SRF-dependent transcription; CNS expression is noted separately below.
+      <strong>Panel B (teal):</strong> Downstream signaling branches from cytoskeletal dynamics: the left branch traces synaptic maintenance → neuronal plasticity; the right branch traces SRF/MKL1 signaling → gene expression programs; both converge on a shared neuronal resilience output.
+      <strong>Panel C (red/amber):</strong> Disease-context chain from amyloid PET genetics nomination through MAPK/NF-κB inflammatory pathways and epigenetic regulation to AD-relevant mechanistic overlap, concluding that ABLIM2 remains an exploratory, unvalidated candidate. Dashed connectors indicate cross-panel conceptual links.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>AD Nomination — Limited Confirmation</h3>
+        <p>ABLIM2 was nominated via amyloid PET network-genetics analysis (AV-45 PET amyloid burden) as part of protein–protein interaction modules containing known AD genes. It has <em>not</em> been confirmed as a causal AD gene in subsequent studies.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Actin Cytoskeleton — Core Mechanism</h3>
+        <p>The strongest mechanistic evidence centers on F-actin binding, localization to actin stress fibers, STARS interaction, and enhancement of SRF-dependent transcription — implying relevance to neurite structure, synaptic maintenance, and activity-dependent neuronal responses.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Broad CNS Expression Profile</h3>
+        <p>ABLIM2 shows high expression in rat brain and eye, conserved CNS-related promoter features, and conserved LIM/VHP domain architecture across human, mouse, and rat — situating it firmly in nervous-system biology.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Inflammatory &amp; Epigenetic Responsiveness</h3>
+        <p>A bortezomib-induced neuropathy study implicated ABLIM2 among inflammatory/synaptic driver genes enriched in MAPK and NF-κB pathways. Epigenetic studies further identify it as environmentally responsive through methylation and transcript regulation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Isoform Complexity — Neuronal Relevance</h3>
+        <p>Two experimentally identified mRNA isoforms exist and may underlie tissue-specific or neuron-specific function. No isoform has yet been directly linked to AD, making isoform-resolved studies a clear research priority.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Validated Directionality or Drug Target Status</h3>
+        <p>No study establishes whether ABLIM2 activity is protective or harmful in AD. It is more plausibly a pathway node or biomarker candidate within cytoskeletal-synaptic resilience networks than an immediate therapeutic target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Treat ABLIM2 as hypothesis-generating:</strong> It should be framed as an exploratory candidate, not a validated AD target — claims of therapeutic relevance require substantially stronger evidence.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize validation in AD datasets:</strong> Test whether ABLIM2 variants, expression levels, methylation status, splicing, or isoform usage correlate with amyloid burden, tau pathology, synaptic markers, neuroinflammation, brain-region vulnerability, or cognitive decline.</div>
+      </li>
+      <li>
+        <div><strong>Investigate function in human neurons and AD models:</strong> Conduct mechanistic studies under amyloid-β and tau stress, focusing on F-actin dynamics, neurite integrity, synaptic structure, and SRF/MKL1-related transcriptional signaling.</div>
+      </li>
+      <li>
+        <div><strong>Determine directionality before any therapeutic consideration:</strong> Current evidence does not establish whether ABLIM2 loss or gain of function is beneficial or harmful — this is a prerequisite for any modulation strategy.</div>
+      </li>
+      <li>
+        <div><strong>Study ABLIM2 within broader networks:</strong> Explore its role within cytoskeletal, synaptic, inflammatory, and epigenetic networks rather than as a standalone drug target. Context-dependent network positioning is likely more informative than isolated perturbation.</div>
+      </li>
+      <li>
+        <div><strong>Conduct isoform-resolved studies:</strong> The two identified transcript variants may have distinct neuronal or disease-relevant functions — isoform-specific approaches are necessary to fully characterize ABLIM2 biology in the CNS.</div>
+      </li>
+      <li>
+        <div><strong>Set a high bar for therapeutic development:</strong> Progression should require evidence that ABLIM2 perturbation improves AD-relevant phenotypes — such as synaptic preservation, reduced neuritic dystrophy, improved neuronal resilience, or cognitive benefit — in appropriate preclinical models.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <span class="verdict-label">Overall Assessment</span>
+    <p>
+      <strong>ABLIM2 occupies a speculative but scientifically coherent position</strong> in the AD target landscape. Its nomination from amyloid PET network-genetics provides a credible, if unconfirmed, entry point, while its consistent links to <strong>actin cytoskeleton regulation, SRF-dependent transcription, CNS expression, synaptic organization, and epigenetic responsiveness</strong> situate it within biology that is genuinely relevant to AD mechanisms. However, the critical gap is absolute: <strong>no study directly connects ABLIM2 to amyloid deposition, tau pathology, neuroinflammation, synaptic loss, or cognitive outcomes.</strong> Directionality is unknown. Until functional studies in human neurons and AD model systems resolve whether ABLIM2 is protective or harmful — and until its variants or expression are validated against core AD biomarkers — it should be treated strictly as a <strong>hypothesis-generating candidate and potential pathway biomarker</strong>, not as a drug target. Isoform-resolved, network-embedded, and longitudinal approaches will be essential to determine whether ABLIM2 warrants further investment.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  ABLIM2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

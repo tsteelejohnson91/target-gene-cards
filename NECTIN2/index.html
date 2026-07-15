@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NECTIN2 / PVRL2 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3bbf;
+    --light: #ede8f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2d9f3;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  p { margin-bottom: 1rem; }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 16px 12px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; max-width: 100%; height: auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card p { font-size: 0.9rem; margin-bottom: 0; }
+  .card-accent  { background: var(--light);          border-color: var(--mid);    }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);   border-color: var(--danger); }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue    { background: var(--blue-light);     border-color: var(--blue); }
+  .card-blue    h3 { color: var(--blue); }
+  .card-neutral { background: var(--neutral-light);  border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  /* TAKEAWAYS */
+  .takeaway-list { list-style: none; counter-reset: ta; }
+  .takeaway-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 0.96rem;
+  }
+  .takeaway-list li::before {
+    content: counter(ta);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .takeaway-list li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .verdict p { color: rgba(255,255,255,0.88); }
+  .verdict strong { color: #e9d5ff; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    padding: 20px 16px;
+    border-top: 1px solid var(--neutral-border);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: NECTIN2 &nbsp;|&nbsp; Poliovirus Receptor-Related Protein 2 (PVRL2 / CD112)</span>
+    <span class="chip chip-danger">⚠ Broad blockade risk flagged</span>
+  </div>
+  <h1>NECTIN2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> Broad systemic NECTIN2 blockade carries meaningful risk. NECTIN2 supports cell–cell adhesion, endothelial/epithelial barrier integrity, immune surveillance, leukocyte trafficking, platelet biology, and astrocytic perivascular endfoot maintenance. Systemic inhibition could impair vascular or immune functions; immune-checkpoint modulation could have context-dependent inflammatory effects. Direct modulation requires AD-specific functional validation before clinical consideration.
+    </div>
+
+    <p>NECTIN2 (also known as PVRL2, CD112, or nectin-2) emerges as an Alzheimer's disease (AD)-relevant gene principally through <strong>genetic association</strong>, the complex regulatory architecture of the chromosome 19 <em>APOE/TOMM40/APOC1/NECTIN2</em> region, hippocampal and cortical neurodegeneration, tau and amyloid-related biomarkers, microglial/TREM2 biology, infection susceptibility, vaccine-response stratification, lipid/vascular mechanisms, and immune-checkpoint signaling.</p>
+
+    <p>The strongest AD-specific evidence centers on <strong>rs6859</strong>—the A allele is consistently treated as a risk allele—rather than on direct pharmacologic modulation of NECTIN2. Reported associations include smaller hippocampal volume, worse MMSE trajectories, higher CSF pTau-181, altered risk in interaction with other APOE-region variants, and stronger protective associations from herpes zoster or pneumococcal vaccination in carriers.</p>
+
+    <p>As a therapeutic target, NECTIN2 is best viewed as <strong>exploratory</strong>. Current evidence most strongly supports its role as a precision-medicine biomarker, risk modifier, prevention-stratification marker, and mechanistic candidate rather than a validated AD drug target.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL PLAN (4 panels, 16 nodes total):
+          Panel A (Upstream genetics): rs6859 variant → APOE-region LD → NECTIN2 expression  [3 nodes]
+          Panel B (Neurodegeneration): NECTIN2 expression → branches:
+               branch 1: Hippocampal atrophy → Cognitive decline
+               branch 2: pTau-181 elevation → AD pathology
+               converge: Neurodegeneration outcome  [5 nodes + shared NECTIN2 node = 6 nodes counted separately in panel B]
+          Panel C (Microglial / Immune): sTREM2 ↑ → Microglial activation → Neuroinflammation  [3 nodes]
+          Panel D (Vascular / Infection / Vaccine): Lipid dysregulation | HV entry receptor | Vaccine stratification → [3 nodes]
+          
+          Total: Panel A: 3, Panel B: 6 (incl NECTIN2 hub), Panel C: 3, Panel D: 3 = 15 distinct labeled boxes.
+          That's within the 16-node limit. Let me count precisely and lay out carefully.
+
+          Exact node list:
+          1.  rs6859 / APOE-region variants  [Panel A]
+          2.  APOE-region LD / Haplotypes    [Panel A]
+          3.  NECTIN2 Expression (hub)       [Panel A / bridge]
+          4.  Hippocampal Atrophy            [Panel B branch 1]
+          5.  Cognitive Decline (MMSE↓)      [Panel B branch 1]
+          6.  pTau-181 Elevation             [Panel B branch 2]
+          7.  Tau Pathology / AD Risk        [Panel B branch 2]
+          8.  Neurodegeneration Outcome      [Panel B converge]
+          9.  sTREM2 Increase                [Panel C]
+         10.  Microglial Activation          [Panel C]
+         11.  Neuroinflammation              [Panel C]
+         12.  Lipid Dysregulation            [Panel D]
+         13.  HV Entry Receptor              [Panel D]
+         14.  Vaccine Stratification         [Panel D]
+         15.  AD Prevention Opportunity      [Panel D converge]
+
+          Total = 15 nodes. ✓ Under 16.
+          No badge shapes to avoid confusion.
+
+          Layout coordinates (viewBox="0 0 960 520"):
+          Panel A: x=10, y=10, w=200, h=500  — left strip
+          Panel B: x=220, y=10, w=370, h=500 — center
+          Panel C: x=600, y=10, w=185, h=240 — upper right
+          Panel D: x=600, y=260, w=185, h=250 — lower right
+
+          Node positions (cx, cy approximations; nodes are rect w=140,h=44 unless noted):
+          1. rs6859 variant:        x=35,  y=80,  w=160, h=44
+          2. APOE-region LD:        x=35,  y=200, w=160, h=44
+          3. NECTIN2 Expression:    x=35,  y=340, w=160, h=50  (hub, taller)
+          
+          Panel B nodes:
+          4. Hippocampal Atrophy:   x=240, y=120, w=155, h=44
+          5. Cognitive Decline:     x=240, y=240, w=155, h=44
+          6. pTau-181 Elevation:    x=415, y=120, w=155, h=44
+          7. Tau/AD Pathology:      x=415, y=240, w=155, h=44
+          8. Neurodegeneration:     x=310, y=380, w=175, h=48  (converge)
+          
+          Panel C nodes:
+          9.  sTREM2 Increase:      x=620, y=55,  w=150, h=44
+         10.  Microglial Activation:x=620, y=140, w=150, h=44
+         11.  Neuroinflammation:    x=620, y=225, w=150, h=44
+         
+          Panel D nodes:
+         12.  Lipid Dysregulation:  x=613, y=295, w=140, h=40
+         13.  HV Entry Receptor:    x=613, y=365, w=140, h=40
+         14.  Vaccine Stratification:x=613,y=430, w=140, h=40
+         15.  AD Prevention:        x=765, y=395, w=145, h=44  (right of panel D? need to fit in panel D area)
+
+          Re-check: Panel D x=600,w=185 → rightmost = 785. Node 15 at x=765,w=145 → right edge=910 which is outside panel D.
+          Let me keep Panel D x=600, w=355 (expand rightward to x=955). But then panels C and D share width 600-955.
+          Let me redesign:
+          
+          viewBox="0 0 960 520"
+          Panel A: x=10,  y=10, w=185, h=500 (genetics upstream)
+          Panel B: x=205, y=10, w=380, h=500 (neurodegeneration, two branches)
+          Panel C: x=595, y=10, w=185, h=245 (TREM2/microglia)
+          Panel D: x=595, y=265, w=355, h=245 (vascular/infection/vaccine — wider)
+
+          Panel D right edge = 595+355=950. Good.
+
+          Node coordinates (rect anchor = top-left x,y):
+          Node 1: x=22,  y=78,  w=160, h=44  — rs6859 Variant
+          Node 2: x=22,  y=190, w=160, h=44  — APOE-region LD
+          Node 3: x=22,  y=355, w=160, h=50  — NECTIN2 Expression (hub)
+
+          Node 4: x=220, y=90,  w=155, h=44  — Hippocampal Atrophy
+          Node 5: x=220, y=240, w=155, h=44  — Cognitive Decline
+          Node 6: x=395, y=90,  w=165, h=44  — pTau-181 Elevation
+          Node 7: x=395, y=240, w=165, h=44  — Tau Pathology
+          Node 8: x=278, y=380, w=185, h=48  — Neurodegeneration ★
+
+          Node 9:  x=608, y=45,  w=158, h=40 — sTREM2 Increase
+          Node 10: x=608, y=130, w=158, h=40 — Microglial Activation
+          Node 11: x=608, y=215, w=158, h=40 — Neuroinflammation
+
+          Node 12: x=608, y=295, w=148, h=40 — Lipid Dysregulation
+          Node 13: x=608, y=360, w=148, h=40 — HV Entry Receptor
+          Node 14: x=608, y=425, w=148, h=40 — Vaccine Stratification
+          Node 15: x=775, y=360, w=165, h=44 — AD Prevention Opportunity
+
+          Check panel D right: 775+165=940 < 950. ✓
+          
+          Arrows:
+          A panel internal:
+          1→2: from bottom of node1 (102,122) to top of node2 (102,190) — straight down
+          2→3: from bottom of node2 (102,234) to top of node3 (102,355) — straight down
+
+          A→B: NECTIN2 Expression (node3) right edge (182, 380) to left side of node 8 (278,404) — horizontal right
+            But node 8 top-left is (278,380). So the right edge of node3 is at x=182, y=380 (mid of node3 = 355+25=380).
+            Node 8 left edge center = (278, 380+24)=(278,404). Let's route: line from (182,380) rightward to (278,404).
+            Is this path clear? Panel A right=195, Panel B left=205. The gutter is 205-195=10px. Route through gutter at x=205.
+            Path: (182,380)→(205,380)→(205,404)→(278,404). But we need to check node 5 position: x=220,y=240,h=44→bottom=284. 
+            Node 5 bottom is at y=284. Path goes through y=380,404 which is below all of branch nodes. ✓
+
+          A→B branches: NECTIN2 Expression hub also connects to nodes 4 and 6.
+            Node3 right center: (182, 380). Node4 top-left: (220,90), center-left:(220,112).
+            Direct line would cross nodes 5,6,7,8. Too many obstructions. 
+            Better: draw elbow from node3 right (182,380) up through the gutter to above node4, then right.
+            Path: (182,380)→(200,380)→(200,112)→(220,112). Check: gutter x=195-205. x=200 is in gutter.
+            Does this path cross any node? Going up from y=380 to y=112 at x=200. 
+            Panel B starts at x=205, so x=200 is in the gutter. Nodes in Panel B start at x=220. ✓
+            Then (200,112)→(220,112): this is horizontal at y=112 which is within node4 (y=90, h=44, so y=90..134). 
+            The arrow enters node4 from left. ✓
+
+          Similarly node3→node6: 
+            Path: (182,380)→(200,380)→(200,112)→(395,112). 
+            At y=112, x goes from 200 to 395. Need to check node4: x=220,y=90,w=155→right=375. 
+            The horizontal at y=112 would cross through node4 (x=220..375, y=90..134 contains y=112). CONFLICT.
+            Instead, route node3→node6 via y=70 (above node4 and node6 top=90, so y=70 is clear):
+            Path: (182,380)→(200,380)→(200,70)→(560,70)→(560,90)→(395+165/2, 90) = center-top of node6 = (477,90).
+            Wait node6: x=395, w=165, so center-x=477, top-y=90.
+            Path: (182,380)→(200,380)→(200,70)→(477,70)→(477,90). 
+            Check: does (200,70) to (477,70) cross anything? y=70. Panel A top=10, nodes start at y=78. 
+            Node1 top=78 > 70. Panel B left=205, so from x=200 to x=477 at y=70: 
+            x=200..205 is gutter, x=205..477 is Panel B. Any node at y=70 in Panel B? Node4 top=90 > 70. ✓ Clear.
+            Then (477,70)→(477,90) enters top of node6. ✓
+
+          Panel B internal:
+          4→5: node4 bottom center (297,134) → node5 top center (297,240). Straight down. ✓
+          6→7: node6 bottom center (477,134) → node7 top center (477,240). Straight down. ✓
+          5→8: node5 bottom center (297,284) → node8 top center (370,380). 
+               node5 bottom: x=220+155/2=297, y=284. node8 top: x=278+185/2=370, y=380.
+               Diagonal: does it cross node7? node7: x=395,y=240,w=165,h=44 → x=395..560, y=240..284.
+               Line from (297,284) to (370,380): at x=395 this line is already past its endpoint (370<395). ✓ Clear.
+          7→8: node7 bottom center (477,284) → node8 top center (370,380).
+               node7 bottom: (477,284). node8 top-center: (370,380).
+               Diagonal from (477,284) to (370,380). Does it cross node5? node5: x=220..375, y=240..284.
+               At y=284, line starts at x=477. Moving left and down. At y=284 x=477, at y=380 x=370.
+               Intermediate: at y=340 (midpoint), x=477+(370-477)*(340-284)/(380-284)=477-107*56/96≈477-62=415.
+               Node5 right edge=375, at y=340 line x=415 > 375. ✓ No crossing.
+               Does line cross node8's own region? Ends at top center of node8. ✓
+
+          Panel C internal:
+          9→10: node9 bottom center (687,85)→node10 top center (687,130). Straight down. ✓
+          10→11: node10 bottom center (687,170)→node11 top center (687,215). Straight down. ✓
+
+          Node3 (NECTIN2 hub) → Node9 (sTREM2):
+          node3 right center: (182,380). node9 left center: (608,65).
+          Direct diagonal would cross many nodes. Route:
+          From node3 right (182,380)→up through gutter→then right above Panel B and C nodes.
+          Path: (182,380)→(200,380)→(200,30)→(687,30)→(687,45).
+          Check: (200,30) to (687,30) at y=30. Above all panels (panels start at y=10, panel labels at ~y=25, but nodes start at y=45+). 
+          Actually panel border starts at y=10. The path at y=30 runs through panel areas but are there nodes? Node1 at y=78, Node9 at y=45. 
+          y=30 < 45. So at y=30 the horizontal line is above all nodes. ✓
+          But wait — does this line run through panel borders? Panel borders are just visual strokes, not blocking. We just need to avoid node rectangles. ✓
+
+          Panel D internal:
+          No direct connection arrows within nodes 12,13,14 horizontally. 
+          12,13,14 are independent inputs → node15 (AD Prevention).
+          12→15: node12 right center (756,315)→node15 left center (775,382).
+               node12: x=608,y=295,w=148,h=40→right=756, center-y=315. node15: x=775,y=360,h=44→left=775,center-y=382.
+               Diagonal from (756,315) to (775,382). Check: does this cross node13? node13: x=608..756, y=360..400.
+               At y=360, line x = 756+(775-756)*(360-315)/(382-315)=756+19*45/67≈756+13=769. node13 right=756 < 769. ✓ Clear (x=769 is to the right of node13).
+          13→15: node13 right center (756,380)→node15 left center (775,382). Short horizontal. ✓
+          14→15: node14 right center (756,445)→node15 left center (775,382).
+               Diagonal from (756,445) to (775,382). Does this cross node15? It ends at node15 left. 
+               Does it cross node13? node13: x=608..756,y=360..400. At x=756 line is at y=445. node13 bottom=400<445. ✓ Clear.
+        -->
+        <svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#6d3bbf"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1e40af"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: Upstream Genetics ═══ -->
+          <rect x="10" y="10" width="185" height="500" rx="10" fill="#ede8f8" fill-opacity="0.5" stroke="#6d3bbf" stroke-width="1.2"/>
+          <text x="102" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1.5">A · UPSTREAM GENETICS</text>
+
+          <!-- Node 1: rs6859 Variant -->
+          <rect x="22" y="78" width="160" height="44" rx="7" fill="#c4b5fd" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="102" y="96" text-anchor="middle" font-size="10" font-weight="700" fill="#1e0a3c">rs6859 / APOE-region</text>
+          <text x="102" y="111" text-anchor="middle" font-size="9.5" fill="#1e0a3c">Risk Variants</text>
+
+          <!-- Node 2: APOE-region LD -->
+          <rect x="22" y="190" width="160" height="44" rx="7" fill="#ddd6fe" stroke="#6d3bbf" stroke-width="1.5"/>
+          <text x="102" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#1e0a3c">APOE-region LD</text>
+          <text x="102" y="223" text-anchor="middle" font-size="9.5" fill="#1e0a3c">Haplotypes &amp; Methylation</text>
+
+          <!-- Node 3: NECTIN2 Expression HUB -->
+          <rect x="22" y="340" width="160" height="52" rx="7" fill="#7c3aed" stroke="#3b1f6e" stroke-width="2"/>
+          <text x="102" y="360" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">NECTIN2</text>
+          <text x="102" y="376" text-anchor="middle" font-size="9.5" fill="#e9d5ff">Expression / Function</text>
+          <text x="102" y="389" text-anchor="middle" font-size="8.5" fill="#c4b5fd">(Central Hub)</text>
+
+          <!-- ═══ PANEL B: Neurodegeneration (two branches) ═══ -->
+          <rect x="205" y="10" width="380" height="500" rx="10" fill="#fef2f2" fill-opacity="0.45" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="395" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1.5">B · NEURODEGENERATION PATHWAYS</text>
+
+          <!-- Branch label: left -->
+          <text x="297" y="72" text-anchor="middle" font-size="8.5" fill="#991b1b" font-style="italic">Branch 1: Structural</text>
+          <!-- Branch label: right -->
+          <text x="477" y="72" text-anchor="middle" font-size="8.5" fill="#991b1b" font-style="italic">Branch 2: Biomarker</text>
+
+          <!-- Node 4: Hippocampal Atrophy -->
+          <rect x="220" y="82" width="155" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="297" y="100" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Hippocampal</text>
+          <text x="297" y="115" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Atrophy (rs6859)</text>
+
+          <!-- Node 5: Cognitive Decline -->
+          <rect x="220" y="190" width="155" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="297" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Cognitive Decline</text>
+          <text x="297" y="223" text-anchor="middle" font-size="9.5" fill="#7f1d1d">MMSE ↓ (longitudinal)</text>
+
+          <!-- Node 6: pTau-181 Elevation -->
+          <rect x="395" y="82" width="165" height="44" rx="7" fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+          <text x="477" y="100" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">CSF pTau-181</text>
+          <text x="477" y="115" text-anchor="middle" font-size="9.5" fill="#78350f">Elevation (+0.14 SD/allele)</text>
+
+          <!-- Node 7: Tau Pathology -->
+          <rect x="395" y="190" width="165" height="44" rx="7" fill="#fed7aa" stroke="#b45309" stroke-width="1.5"/>
+          <text x="477" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">Tau Pathology</text>
+          <text x="477" y="223" text-anchor="middle" font-size="9.5" fill="#78350f">~17–19% mediation</text>
+
+          <!-- Node 8: Neurodegeneration Outcome (converge) -->
+          <rect x="268" y="355" width="215" height="48" rx="8" fill="#991b1b" stroke="#7f1d1d" stroke-width="2"/>
+          <text x="375" y="374" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Neurodegeneration</text>
+          <text x="375" y="391" text-anchor="middle" font-size="9.5" fill="#fecaca">AD Risk &amp; Progression ↑</text>
+
+          <!-- ═══ PANEL C: Microglial / TREM2 ═══ -->
+          <rect x="595" y="10" width="185" height="248" rx="10" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="687" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.5">C · TREM2 / MICROGLIA</text>
+
+          <!-- Node 9: sTREM2 Increase -->
+          <rect x="612" y="42" width="150" height="42" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="687" y="59" text-anchor="middle" font-size="10" font-weight="700" fill="#134e4a">sTREM2 Increase</text>
+          <text x="687" y="74" text-anchor="middle" font-size="9" fill="#134e4a">(NECTIN2 overexpression)</text>
+
+          <!-- Node 10: Microglial Activation -->
+          <rect x="612" y="120" width="150" height="42" rx="7" fill="#6ee7b7" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="687" y="137" text-anchor="middle" font-size="10" font-weight="700" fill="#134e4a">Microglial</text>
+          <text x="687" y="152" text-anchor="middle" font-size="9.5" fill="#134e4a">Activation / eQTL</text>
+
+          <!-- Node 11: Neuroinflammation -->
+          <rect x="612" y="200" width="150" height="42" rx="7" fill="#34d399" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="687" y="217" text-anchor="middle" font-size="10" font-weight="700" fill="#064e3b">Neuroinflammation</text>
+          <text x="687" y="232" text-anchor="middle" font-size="9.5" fill="#064e3b">APOE-independent signal</text>
+
+          <!-- ═══ PANEL D: Vascular / Infection / Vaccine ═══ -->
+          <rect x="595" y="268" width="355" height="242" rx="10" fill="#eff6ff" fill-opacity="0.5" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="772" y="288" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af" letter-spacing="1.5">D · VASCULAR · INFECTION · PREVENTION</text>
+
+          <!-- Node 12: Lipid Dysregulation -->
+          <rect x="608" y="300" width="150" height="40" rx="7" fill="#bfdbfe" stroke="#1e40af" stroke-width="1.5"/>
+          <text x="683" y="317" text-anchor="middle" font-size="10" font-weight="700" fill="#1e3a8a">Lipid Dysregulation</text>
+          <text x="683" y="331" text-anchor="middle" font-size="9" fill="#1e3a8a">TG, VLDL, HDL, LDL</text>
+
+          <!-- Node 13: HV Entry Receptor -->
+          <rect x="608" y="364" width="150" height="40" rx="7" fill="#bfdbfe" stroke="#1e40af" stroke-width="1.5"/>
+          <text x="683" y="381" text-anchor="middle" font-size="10" font-weight="700" fill="#1e3a8a">HV Entry Receptor</text>
+          <text x="683" y="396" text-anchor="middle" font-size="9" fill="#1e3a8a">HSV / VZV / HHV-6B</text>
+
+          <!-- Node 14: Vaccine Stratification -->
+          <rect x="608" y="428" width="150" height="40" rx="7" fill="#bfdbfe" stroke="#1e40af" stroke-width="1.5"/>
+          <text x="683" y="445" text-anchor="middle" font-size="10" font-weight="700" fill="#1e3a8a">Vaccine Stratification</text>
+          <text x="683" y="460" text-anchor="middle" font-size="9" fill="#1e3a8a">rs6859A carrier OR 0.43–0.51</text>
+
+          <!-- Node 15: AD Prevention Opportunity -->
+          <rect x="775" y="368" width="162" height="48" rx="7" fill="#1e40af" stroke="#1e3a8a" stroke-width="2"/>
+          <text x="856" y="387" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">AD Prevention</text>
+          <text x="856" y="402" text-anchor="middle" font-size="9" fill="#bfdbfe">Opportunity (rs6859)</text>
+          <text x="856" y="415" text-anchor="middle" font-size="8.5" fill="#93c5fd">Precision Biomarker</text>
+
+          <!-- ═══════════ ARROWS ═══════════ -->
+          <!-- Panel A internal: Node1→Node2 (straight down) -->
+          <line x1="102" y1="122" x2="102" y2="188" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+          <!-- Node2→Node3 (straight down) -->
+          <line x1="102" y1="234" x2="102" y2="338" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node3 → Node4 (via left gutter, up the gutter, then right into node4) -->
+          <polyline points="182,366 200,366 200,104 220,104" fill="none" stroke="#6d3bbf" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node3 → Node6 (via left gutter up to y=62, then right to node6 top-center) -->
+          <polyline points="182,366 200,366 200,62 477,62 477,82" fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B Branch 1: Node4→Node5 (straight down) -->
+          <line x1="297" y1="126" x2="297" y2="188" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+          <!-- Node5→Node8 (diagonal down-right) -->
+          <line x1="297" y1="234" x2="340" y2="353" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B Branch 2: Node6→Node7 (straight down) -->
+          <line x1="477" y1="126" x2="477" y2="188" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-red)"/>
+          <!-- Node7→Node8 (diagonal down-left) -->
+          <line x1="477" y1="234" x2="415" y2="353" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- Node3 → Node9 (sTREM2): up through gutter y=30, across to Node9 top) -->
+          <polyline points="182,366 200,366 200,30 687,30 687,42" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel C internal: Node9→Node10 -->
+          <line x1="687" y1="84" x2="687" y2="118" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+          <!-- Node10→Node11 -->
+          <line x1="687" y1="162" x2="687" y2="198" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel D: Node12→Node15 -->
+          <line x1="758" y1="320" x2="775" y2="376" stroke="#1e40af" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+          <!-- Node13→Node15 (horizontal) -->
+          <line x1="758" y1="384" x2="773" y2="384" stroke="#1e40af" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+          <!-- Node14→Node15 -->
+          <line x1="758" y1="448" x2="775" y2="410" stroke="#1e40af" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+          <!-- Node11 (Neuroinflammation) connects conceptually to Panel B Node8: route through gap -->
+          <!-- Node11 right center (762,221) → elbow down to y=375 → left to Node8 right (483,379) -->
+          <polyline points="762,221 780,221 780,379 483,379" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Genetics):</strong> The rs6859 risk variant sits within the APOE-region linkage disequilibrium block; through haplotype and methylation effects, it modulates NECTIN2 expression — the central hub connecting all downstream mechanisms.
+        <strong>Panel B (Neurodegeneration — two branches):</strong> Branch 1 (left, red) links the rs6859 A-allele to hippocampal atrophy (β ≈ −0.15) and longitudinal cognitive decline (MMSE ↓); Branch 2 (right, amber) links the same variant to elevated CSF pTau-181 (~17–19% mediation) and tau pathology. Both branches converge on the neurodegeneration/AD-risk outcome node.
+        <strong>Panel C (TREM2/Microglia — teal):</strong> NECTIN2 overexpression increases soluble TREM2; the signal colocalizes with a cortex cis-eQTL independent of APOE genotype, feeding into microglial activation and neuroinflammation (dashed arrow to Panel B outcome).
+        <strong>Panel D (Vascular · Infection · Prevention — blue):</strong> Three parallel input nodes — lipid dysregulation (TG/VLDL/HDL/LDL), herpesvirus entry receptor function (HSV/VZV/HHV-6B), and vaccine-response stratification (rs6859A carriers OR 0.43–0.51) — converge on an AD Prevention Opportunity node, positioning NECTIN2 genotype primarily as a precision-prevention biomarker.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Association &amp; APOE-Region Complexity</h3>
+        <p>NECTIN2/PVRL2 lies within the chr19 <em>APOE/TOMM40/APOC1</em> AD-risk locus in strong linkage disequilibrium. Multiple variants (rs6859, rs34342646, rs41289512, rs6857) have been AD-associated or prioritized. At least one LOAD analysis concluded nearby signals likely lack direct effects after conditioning on APOE rs429358/rs7412, while other studies document APOE-independent regulatory signatures involving methylation and chromatin architecture.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Hippocampal Atrophy &amp; Tau Pathology</h3>
+        <p>The rs6859 A allele was associated in ADNI analyses with smaller hippocampal volumes (β ≈ −0.15, p = 0.04) — effects that mediated 43–50% of the rs6859–AD association. Separately, each A allele dose raised CSF pTau-181 by +0.144 SD (95% CI 0.041–0.248), mediating ~17–19% of the genetic–AD association. Effects on hippocampal volume were reported as significant only in males, underscoring the need for sex-stratified replication.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Microglial / TREM2 Functional Link</h3>
+        <p>A CSF sTREM2 proteo-genomic study identified an APOE-independent APOE-region signal colocalized with a NECTIN2 cortex cis-eQTL and CSF cis-pQTL. NECTIN2 overexpression experimentally increased soluble TREM2 — providing one of the strongest functional bridges between NECTIN2 and a recognized AD microglial/immune pathway.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Vaccine-Response Stratification</h3>
+        <p>Shingles vaccination (ages 65–75) was associated with lower AD odds after age 75, with markedly stronger effects in rs6859 A carriers: Health and Retirement Study OR 0.43 (p = 0.016) vs. non-carriers non-significant; UK Biobank OR 0.51 (p = 0.001). Pneumococcal and influenza vaccination analyses similarly favored A carriers, positioning NECTIN2 genotype as a precision-prevention stratifier rather than a treatment target.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Herpesvirus Receptor &amp; Infection Hypothesis</h3>
+        <p>NECTIN2 functions as an entry/fusion receptor for HSV-2, selected HSV-1 strains, B virus, HHV-6B, and other alphaherpesviruses. Herpesvirus infection hypotheses of AD propose links to amyloid formation, tau hyperphosphorylation, inflammation, oxidative stress, and APOE ε4 interactions. Current evidence does not prove NECTIN2-mediated viral entry causes AD, but supports its role as a plausible host-factor node in infection/neuroinflammation models.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Lipid, Vascular &amp; Therapeutic-Target Status</h3>
+        <p>NECTIN2/PVRL2 variants link to triglycerides, remnant cholesterol, VLDL/HDL/LDL-related atherosclerosis, endothelial inflammation, and leukocyte transendothelial migration — mechanisms relevant to APOE-related lipid handling and vascular AD risk. As a drug target, NECTIN2 remains exploratory: no evidence shows that inhibiting, activating, or checkpoint-modulating NECTIN2 improves AD pathology or cognition, and broad systemic blockade carries substantive safety concerns.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Treat NECTIN2 as a high-priority mechanistic candidate, not a validated drug target.</strong> Current support is strongest for genetic, biomarker, and prevention-stratification relevance; direct therapeutic modulation requires AD-specific functional validation before clinical consideration.</li>
+      <li><strong>Prioritize rs6859 genotyping in AD prevention and progression studies.</strong> A-allele carriers show higher risk for hippocampal atrophy, tau-related biomarker changes, and cognitive decline, yet stronger vaccine-associated protection. Sex-stratified analyses are essential given male-specific hippocampal effects and female-enriched vaccine-protection signals.</li>
+      <li><strong>Test NECTIN2 effects independently of APOE/TOMM40/APOC1.</strong> Fine-mapping, colocalization, conditional GWAS, allele-specific expression, and brain-region/cell-type eQTL analyses are needed to distinguish NECTIN2 causality from APOE-region linkage confounding.</li>
+      <li><strong>Expand mechanistic work on hippocampal atrophy and tau.</strong> The 43–50% mediation by hippocampal volume and 17–19% mediation by pTau-181 justify targeted experiments on whether NECTIN2 variation affects neuronal vulnerability, synapse loss, tau phosphorylation, or glial/neurovascular support.</li>
+      <li><strong>Investigate NECTIN2–TREM2 biology in AD models.</strong> Because NECTIN2 overexpression increased sTREM2 and colocalized with CSF/brain NECTIN2 QTLs, experiments should test whether NECTIN2 regulates microglial activation, phagocytosis, survival, inflammatory signaling, and amyloid/tau responses.</li>
+      <li><strong>Use NECTIN2 genotype as a candidate precision-prevention marker.</strong> Herpes zoster and pneumococcal vaccination findings suggest rs6859 A carriers represent an enriched subgroup for vaccine-based AD prevention trials — studies should be prospective, adequately powered, ancestry-diverse, sex-stratified, and adjusted for APOE genotype and health-care utilization confounding.</li>
+      <li><strong>Explore infection-linked mechanisms without assuming causality.</strong> NECTIN2's herpesvirus receptor biology supports studying HSV/VZV/HHV interactions in AD-relevant cell types (neurons, astrocytes, brain endothelial cells, organoids, APOE/NECTIN2 genotype-defined systems), but current evidence does not prove NECTIN2-mediated viral entry causes AD.</li>
+      <li><strong>Evaluate vascular and lipid pathways in metabolically vulnerable AD subgroups.</strong> NECTIN2/PVRL2 links to triglycerides, remnant lipoproteins, VLDL/HDL particles, LDL-related atherosclerosis, endothelial inflammation, and leukocyte migration suggest particular relevance in AD with comorbid diabetes, metabolic syndrome, dyslipidemia, or vascular cognitive impairment.</li>
+      <li><strong>Avoid broad systemic NECTIN2 blockade as an AD strategy until safety and mechanism are established.</strong> NECTIN2 supports adhesion, barrier integrity, immune surveillance, leukocyte trafficking, platelet biology, and likely astrocytic perivascular endfoot maintenance. Systemic inhibition could impair vascular or immune functions; immune-checkpoint modulation could have context-dependent inflammatory effects.</li>
+      <li><strong>Frame near-term clinical utility around biomarkers and stratification.</strong> The most defensible current uses are AD risk stratification, cognitive-decline trajectory modeling, vaccine-prevention subgrouping, APOE-region haplotype interpretation, and mechanistic biomarker studies involving hippocampal atrophy, pTau-181, sTREM2, lipid traits, and infection history.</li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — NECTIN2 / PVRL2 in Alzheimer's Disease</span>
+      <p>NECTIN2 is a <strong>genetically implicated, mechanistically plausible, but therapeutically unvalidated</strong> Alzheimer's disease candidate. The most actionable and reproducible evidence centers on the <strong>rs6859 A allele</strong>, which consistently associates with smaller hippocampal volume, elevated CSF pTau-181, and accelerated cognitive decline in ADNI cohorts, while simultaneously marking a subgroup with <strong>substantially stronger protective responses to shingles, pneumococcal, and influenza vaccination</strong>. A functional anchor is provided by the colocalization of APOE-region signals with NECTIN2 cortex eQTLs/pQTLs and the experimental demonstration that <strong>NECTIN2 overexpression elevates soluble TREM2</strong>, linking this gene to an established AD microglial pathway. Additional converging lines of evidence — herpesvirus receptor biology, lipid and endothelial vascular mechanisms, astrocytic perivascular endfoot support, and immune-checkpoint signaling — broaden its plausibility as a multi-pathway node in AD biology. However, <strong>NECTIN2 is not established as a standalone AD-causal gene</strong>; its signals are embedded in the complex chr19 APOE/TOMM40/APOC1 linkage block, and direct pharmacologic modulation has not been demonstrated to improve AD pathology or cognition. Broad systemic blockade carries meaningful safety risks given its roles in cell adhesion, barrier integrity, immune surveillance, and tissue homeostasis. <strong>The most defensible near-term role for NECTIN2 is as a precision-prevention biomarker and mechanistic research target</strong>, particularly for genotype-guided vaccination trials, TREM2-pathway investigations, and sex-stratified studies of hippocampal and tau-related neurodegeneration.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+<footer>
+  NECTIN2 / PVRL2 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

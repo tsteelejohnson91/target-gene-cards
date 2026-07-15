@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDYL — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3effe;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.30);
+    color: #f0e7ff;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.70;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.96rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .fig-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { margin: 0; }
+
+  .card-accent  { background: var(--light);         border-color: var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-color: var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light);border-color: var(--positive); }
+  .card-positive h3{ color: var(--positive); }
+  .card-blue    { background: var(--blue-light);    border-color: var(--blue);     }
+  .card-blue    h3 { color: var(--blue); }
+  .card-neutral { background: var(--neutral-bg);    border-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: tak;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: tak;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(tak);
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: var(--dark);
+    color: #fff;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li .lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0520 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 38px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict .label {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .verdict p {
+    font-size: 1.05rem;
+    opacity: 0.92;
+    margin: 0;
+  }
+
+  .verdict strong { color: #e9d5ff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    padding: 22px 16px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CDYL &nbsp;|&nbsp; Chromodomain Y-Like</span>
+    <span class="chip chip-danger">⚠ Safety: broad inhibition risks</span>
+  </div>
+  <h1>CDYL &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> CDYL is not a validated Alzheimer's disease target. All AD-relevance is mechanistic and inferential. No studies have directly tested CDYL or circCDYL in AD patients, AD brain tissue, amyloid-β models, or tau models. Global or chronic CDYL inhibition carries multi-system risk given its roles in neuronal excitability, development, reproduction, and vascular biology.
+    </div>
+
+    <p>CDYL is best characterized as a <strong>multifunctional epigenetic and RNA-related regulator</strong>. It functions as a chromatin-associated transcriptional corepressor, chromodomain protein, histone-mark regulator, and component of repressive complexes involving EZH2/PRC2, H3K27me3, G9a/EHMT2, REST, HDACs, and SETDB1. It also acts as a crotonyl-CoA hydratase, negatively regulating histone lysine crotonylation. CDYL-derived circular RNAs, especially circCDYL/circCdyl, further regulate gene-expression networks through miRNA sponging, protein interactions, m6A-dependent processing, and exosomal signaling.</p>
+
+    <p>The strongest AD-relevant rationale lies in CDYL's intersection with core neurodegenerative mechanisms: hippocampal neurogenesis, dendritic arborization, BDNF/VGF-linked neuronal plasticity, neuronal excitability, REST-dependent transcriptional repression, inflammatory polarization (Th17/IL-17), oxidative stress, pyroptosis, autophagy, APP-related regulation, DNA-damage responses, vascular dysfunction, and epigenetic aging. These overlaps make CDYL biologically plausible as an upstream disease-modifying node, but direct evidence in AD brain remains absent.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Epigenetic Repression Core  — 5 nodes
+        PANEL B (center-top): Neuronal / Plasticity Branch — 5 nodes
+        PANEL C (right): Downstream & Inflammatory Branch — 4 nodes
+        Shared upstream node: CDYL protein (at junction of A and B)
+        Total node count: 14  ✓ (≤16)
+      -->
+      <svg viewBox="0 0 940 500" width="900" height="476" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="12">
+
+        <!-- PANEL A — Epigenetic Core -->
+        <rect x="14" y="14" width="270" height="472" rx="12" fill="#f3effe" fill-opacity="0.6" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="149" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#3b0764" letter-spacing="1.5">A · EPIGENETIC CORE</text>
+
+        <!-- Node A1: CDYL Protein -->
+        <rect x="44" y="50" width="210" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="149" y="70" text-anchor="middle" font-weight="bold" fill="#3b0764" font-size="12">CDYL Protein</text>
+        <text x="149" y="86" text-anchor="middle" fill="#4c1d95" font-size="10.5">Chromodomain corepressor</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="149" y1="98" x2="149" y2="118" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: PRC2/EZH2 Complex -->
+        <rect x="44" y="118" width="210" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="149" y="138" text-anchor="middle" font-weight="bold" fill="#3b0764" font-size="12">EZH2/PRC2 Complex</text>
+        <text x="149" y="154" text-anchor="middle" fill="#4c1d95" font-size="10.5">H3K27me3 repression</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="149" y1="166" x2="149" y2="186" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: G9a/EHMT2 + REST -->
+        <rect x="44" y="186" width="210" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="149" y="206" text-anchor="middle" font-weight="bold" fill="#3b0764" font-size="12">REST-CDYL-EHMT2</text>
+        <text x="149" y="222" text-anchor="middle" fill="#4c1d95" font-size="10.5">H3K9me + HDAC repression</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="149" y1="234" x2="149" y2="254" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Crotonylation Control -->
+        <rect x="44" y="254" width="210" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="149" y="274" text-anchor="middle" font-weight="bold" fill="#3b0764" font-size="12">Crotonyl-CoA Hydratase</text>
+        <text x="149" y="290" text-anchor="middle" fill="#4c1d95" font-size="10.5">↓ H3K crotonylation, ↓ VGF</text>
+
+        <!-- Arrow A4→A5 -->
+        <line x1="149" y1="302" x2="149" y2="322" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: CDK5/TRIM32 Regulation -->
+        <rect x="44" y="322" width="210" height="48" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="149" y="342" text-anchor="middle" font-weight="bold" fill="#3b0764" font-size="12">CDK5-TRIM32 Axis</text>
+        <text x="149" y="358" text-anchor="middle" fill="#4c1d95" font-size="10.5">Phospho-Ser147 → ubiquitination</text>
+
+        <!-- PANEL B — Neuronal / Plasticity -->
+        <rect x="306" y="14" width="310" height="330" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="461" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#134e4a" letter-spacing="1.5">B · NEURONAL PLASTICITY</text>
+
+        <!-- Node B1: BDNF Repression -->
+        <rect x="320" y="50" width="140" height="52" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="390" y="71" text-anchor="middle" font-weight="bold" fill="#134e4a" font-size="11.5">BDNF Repression</text>
+        <text x="390" y="87" text-anchor="middle" fill="#134e4a" font-size="10">H3K27me3 at promoter</text>
+
+        <!-- Node B2: Dendritic Arborization -->
+        <rect x="472" y="50" width="132" height="52" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="538" y="71" text-anchor="middle" font-weight="bold" fill="#134e4a" font-size="11.5">Dendritic Structure</text>
+        <text x="538" y="87" text-anchor="middle" fill="#134e4a" font-size="10">KD → ↑ branching</text>
+
+        <!-- Arrows B1,B2 → B3 -->
+        <line x1="390" y1="102" x2="390" y2="136" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <line x1="538" y1="102" x2="538" y2="120" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="538" y1="120" x2="461" y2="136" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node B3: Synaptic Plasticity Hub -->
+        <rect x="360" y="136" width="202" height="48" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="461" y="156" text-anchor="middle" font-weight="bold" fill="#134e4a" font-size="12">Synaptic Plasticity Hub</text>
+        <text x="461" y="172" text-anchor="middle" fill="#134e4a" font-size="10">D03 inhibitor derepresses targets</text>
+
+        <!-- Arrow B3→B4 -->
+        <line x1="461" y1="184" x2="461" y2="204" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node B4: Hippocampal Neurogenesis (circCdyl) -->
+        <rect x="336" y="204" width="250" height="48" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="461" y="224" text-anchor="middle" font-weight="bold" fill="#134e4a" font-size="11.5">circCdyl / Neurogenesis</text>
+        <text x="461" y="240" text-anchor="middle" fill="#134e4a" font-size="10">miR-544-3p / Nr3c1 → NSC proliferation</text>
+
+        <!-- Arrow B4→B5 -->
+        <line x1="461" y1="252" x2="461" y2="272" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+        <!-- Node B5: Memory & Cognition -->
+        <rect x="336" y="272" width="250" height="48" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="461" y="292" text-anchor="middle" font-weight="bold" fill="#134e4a" font-size="12">Memory &amp; Cognition</text>
+        <text x="461" y="308" text-anchor="middle" fill="#134e4a" font-size="10">Fear memory, hippocampal function</text>
+
+        <!-- PANEL C — Downstream / Inflammation / Safety -->
+        <rect x="638" y="14" width="288" height="472" rx="12" fill="#fef2f2" fill-opacity="0.65" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="782" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#7f1d1d" letter-spacing="1.5">C · RISK / INFLAMMATION</text>
+
+        <!-- Node C1: Ion Channel Repression -->
+        <rect x="652" y="50" width="260" height="52" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="782" y="71" text-anchor="middle" font-weight="bold" fill="#7f1d1d" font-size="11.5">Ion Channel Repression</text>
+        <text x="782" y="87" text-anchor="middle" fill="#7f1d1d" font-size="10">SCN8A/Nav1.6 · Kcnb1/Kv2.1</text>
+
+        <!-- Arrow C1→C2 -->
+        <line x1="782" y1="102" x2="782" y2="132" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node C2: Excitability Risk -->
+        <rect x="652" y="132" width="260" height="48" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="782" y="152" text-anchor="middle" font-weight="bold" fill="#7f1d1d" font-size="11.5">Network Excitability Risk</text>
+        <text x="782" y="168" text-anchor="middle" fill="#7f1d1d" font-size="10">CDYL loss → ↑ Nav1.6, seizure risk</text>
+
+        <!-- Arrow C2→C3 -->
+        <line x1="782" y1="180" x2="782" y2="210" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node C3: Inflammation/Pyroptosis -->
+        <rect x="652" y="210" width="260" height="52" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="782" y="231" text-anchor="middle" font-weight="bold" fill="#7f1d1d" font-size="11.5">Inflammation &amp; Pyroptosis</text>
+        <text x="782" y="247" text-anchor="middle" fill="#7f1d1d" font-size="10">Th17/IL-17 · FABP4-ROS · AKI</text>
+
+        <!-- Arrow C3→C4 -->
+        <line x1="782" y1="262" x2="782" y2="290" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+        <!-- Node C4: D03 Inhibitor / Tractability -->
+        <rect x="652" y="290" width="260" height="52" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="782" y="311" text-anchor="middle" font-weight="bold" fill="#7f1d1d" font-size="11.5">Compound D03 Inhibitor</text>
+        <text x="782" y="327" text-anchor="middle" fill="#7f1d1d" font-size="10">Selective · ↓ pyroptosis · brain untested</text>
+
+        <!-- Cross-panel connector: Panel B (Memory) → Panel C (Excitability Risk) -->
+        <!-- Route: right edge of B5 → elbow at y=296 x=618 → top of C2 zone x=652 -->
+        <!-- B5 right edge: x=586, y=296 -->
+        <!-- Use elbow through gutter (x=618) -->
+        <polyline points="586,296 618,296 618,156 652,156" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-w)"/>
+        <text x="596" y="291" font-family="Arial,sans-serif" font-size="8.5" fill="#b45309" font-style="italic">E/I balance</text>
+
+        <!-- Cross-panel connector: Panel A (CDK5) → Panel B (Memory) -->
+        <!-- A5 right edge: x=254, y=346; B5 left edge: x=336, y=296 -->
+        <!-- Elbow: right from A5 to x=282, y=346 then up to y=296, right to B5 left -->
+        <polyline points="254,346 282,346 282,296 336,296" fill="none" stroke="#7c3aed" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Defs -->
+        <defs>
+          <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-g" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-r" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-w" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="fig-caption"><strong>Panel A — Epigenetic Core:</strong> CDYL protein anchors multi-complex epigenetic repression (EZH2/PRC2-H3K27me3, REST-EHMT2, HDAC), controls histone crotonylation as a crotonyl-CoA hydratase, and is itself regulated by activity-dependent CDK5-TRIM32-mediated phosphorylation and ubiquitination. <strong>Panel B — Neuronal Plasticity (branching):</strong> CDYL-mediated repression fans out across two parallel streams — BDNF promoter silencing and dendritic structural control — converging at a synaptic plasticity hub, which feeds forward into circCdyl-driven hippocampal neurogenesis and ultimately memory and cognition. <strong>Panel C — Risk &amp; Inflammation:</strong> CDYL loss de-represses Nav1.6/Kv2.1 ion channels raising network excitability, while CDYL upregulation promotes Th17/IL-17 inflammation, FABP4-ROS-mediated pyroptosis, and AKI; the selective inhibitor D03 addresses the latter but remains untested in brain. The dashed amber connector (gutter-routed) indicates the E/I balance tension between plasticity benefit and excitability risk.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Hippocampal Neurogenesis &amp; Cognition</h3>
+        <p>In a fimbria-fornix transection model, circCdyl promoted neural stem cell proliferation and neuronal differentiation through a <strong>miR-544-3p/Nr3c1 axis</strong>. In vivo overexpression enhanced hippocampal neurogenesis and improved cognitive dysfunction after injury — the most directly AD-relevant finding given cholinergic-circuit and memory overlap.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Dendritic Structure &amp; BDNF Signaling</h3>
+        <p>CDYL overexpression reduced dendritic complexity; knockdown increased branching. BDNF is repressed via <strong>EZH2/PRC2-H3K27me3</strong> at the BDNF promoter. Selective inhibitor D03 derepressed CDYL target genes and promoted dendritic development, suggesting CDYL inhibition could counter AD-linked synaptic and dendritic loss.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Memory Regulation &amp; Activity-Dependent Proteolysis</h3>
+        <p>CDYL ablation in CaMKIIα+ neurons increased fear memory. Neural activity triggers <strong>CDK5-Ser147 phosphorylation → TRIM32-mediated ubiquitination</strong> and CDYL degradation. An interfering peptide at Ser147 decreased contextual fear memory, connecting CDYL to ubiquitin-proteasome regulation of synaptic plasticity.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Excitability Risk from Broad Inhibition</h3>
+        <p>CDYL represses <strong>SCN8A/Nav1.6</strong> (epilepsy models) and <strong>Kcnb1/Kv2.1</strong> (sensory neurons) via H3K27me3. CDYL loss increased potassium currents and reduced nociceptive excitability but could raise network hyperexcitability in hippocampal circuits — a serious concern for AD patients already prone to E/I imbalance and seizures.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Crotonylation &amp; Stress-Related Transcription</h3>
+        <p>CDYL acts as a <strong>crotonyl-CoA hydratase</strong>, negatively regulating histone lysine crotonylation. In stress models, elevated CDYL reduced H3K crotonylation and repressed VGF, contributing to depression-like behavior. Given AD-linked impairment of neurotrophic support and transcriptional plasticity, CDYL-mediated crotonylation control is mechanistically relevant.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Drug Tractability: Compound D03</h3>
+        <p>D03 is a potent, selective CDYL inhibitor that engages endogenous CDYL, disrupts chromatin recruitment, derepresses target genes, and promotes dendritic branching. In acute kidney injury, D03 reduced <strong>FABP4-ROS-mediated pyroptosis</strong> without evident organ toxicity — establishing pharmacologic tractability, though brain efficacy and safety remain untested.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><span class="lead">Classify as hypothesis-generating, not target-validated.</span> Treat CDYL as a plausible AD-mechanism node whose current evidence supports hypothesis generation and preclinical prioritization, not therapeutic claims or clinical target nomination.</div>
+      </li>
+      <li>
+        <div><span class="lead">Conduct direct AD-tissue profiling.</span> Measure CDYL protein, isoforms, circCdyl/circCDYL levels, Ser147 phosphorylation, and CDYL degradation in human AD hippocampus and cortex with cell-type resolution across neurons, microglia, astrocytes, oligodendrocytes, endothelial cells, and vascular smooth muscle cells.</div>
+      </li>
+      <li>
+        <div><span class="lead">Test CDYL in amyloid and tau models.</span> Determine whether CDYL knockdown, overexpression, circCdyl enhancement, or D03-like inhibition affects amyloid-β burden, tau phosphorylation/aggregation, synaptic density, dendritic architecture, neuroinflammation, neuronal survival, network activity, and cognition in established AD preclinical models.</div>
+      </li>
+      <li>
+        <div><span class="lead">Evaluate the neurogenesis hypothesis in AD-relevant settings.</span> Test whether circCdyl improves hippocampal neurogenesis and cognitive performance in amyloid/tau-driven AD models, not only in fimbria-fornix injury, to establish disease-context specificity.</div>
+      </li>
+      <li>
+        <div><span class="lead">Define the therapeutic direction by cell type.</span> Neurons and neural stem cells may benefit from circCdyl enhancement or partial CDYL inhibition at plasticity genes. Immune and oxidative-stress pathways may benefit from CDYL inhibition. Vascular and excitatory circuits may require preservation of CDYL function — ruling out a one-size-fits-all strategy.</div>
+      </li>
+      <li>
+        <div><span class="lead">Map CDYL target genes in AD-relevant cells.</span> Use ChIP-seq, CUT&amp;RUN, and transcriptomics to determine whether CDYL controls BDNF, VGF, NNAT, SCN8A, KCNB1, REST targets, APP-processing genes, tau-related pathways, inflammatory mediators, autophagy genes, and oxidative-stress programs in neurons and glia.</div>
+      </li>
+      <li>
+        <div><span class="lead">Monitor excitability and seizure risk rigorously.</span> Because CDYL loss can increase Nav1.6/SCN8A-mediated excitability, all CDYL inhibitors must be tested for network hyperexcitability, epileptiform activity, and seizure susceptibility, especially in AD models already predisposed to E/I imbalance.</div>
+      </li>
+      <li>
+        <div><span class="lead">Investigate microglial immune mechanisms.</span> Test whether CDYL or circCDYL regulates microglial activation states, inflammasome and pyroptosis activity, IL-17-linked neuroinflammation, and peripheral Th17-cell interactions — establishing whether CDYL is a tractable neuroimmune target in AD.</div>
+      </li>
+      <li>
+        <div><span class="lead">Explore circCDYL as a biomarker cautiously.</span> CircCDYL is stable, disease-associated in several non-AD conditions, and exosome-enriched; it should be evaluated in AD CSF, plasma, and extracellular vesicle cohorts. It is not currently an established AD biomarker and should not be promoted as such ahead of validation.</div>
+      </li>
+      <li>
+        <div><span class="lead">Pursue cell-type-specific, locus-biased modulation.</span> Given that CDYL can be protective or pathogenic depending on tissue and disease context, the most rational AD strategy is cell-type-specific, brain-region-specific, timing-controlled, or locus-biased CDYL modulation — not broad systemic activation or inhibition.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="label">Overall Assessment — CDYL in Alzheimer's Disease</span>
+      <p>CDYL is a <strong>biologically compelling but not yet validated</strong> Alzheimer's disease target. Its intersections with hippocampal neurogenesis, dendritic plasticity, BDNF/VGF neurotrophic signaling, REST-dependent neuroprotective transcription, crotonylation-linked stress responses, neuroinflammatory polarization, pyroptosis, and APP-related regulation provide a mechanistically rich rationale for further investigation. The existence of the <strong>selective inhibitor compound D03</strong>, with demonstrated in vivo efficacy and acceptable tolerability in non-neural disease contexts, provides meaningful drug-tractability confidence. However, the <strong>complete absence of direct AD experimental evidence</strong> — in AD patient tissue, AD animal models, or AD-relevant cell types — means that every mechanistic bridge to AD remains inferential. Compounding the uncertainty, CDYL displays pronounced <strong>context-dependent duality</strong>: its loss can improve dendritic complexity and neurogenesis while simultaneously increasing network excitability and, in some vascular contexts, driving harmful phenotypic switching. The field's highest-priority obligation is therefore to conduct the direct AD-model experiments that would either elevate CDYL to a genuine target-prioritization candidate or clarify why its pleiotropic biology precludes safe, selective therapeutic exploitation in AD.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CDYL · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

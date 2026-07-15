@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACSL1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0d6e6e;
+    --positive-light: #e6f7f7;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #e0eaf8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(192,57,43,0.35);
+    border: 1px solid rgba(192,57,43,0.55);
+    color: #ffd5d0;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  .card-accent   { background: var(--blue-light);      border-color: var(--mid);        }
+  .card-accent h3   { color: var(--dark); }
+  .card-danger   { background: var(--danger-light);    border-color: var(--danger-mid); }
+  .card-danger h3   { color: var(--danger); }
+  .card-positive { background: var(--positive-light);  border-color: var(--positive);   }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning  { background: var(--warning-light);   border-color: var(--warning);    }
+  .card-warning h3  { color: var(--warning); }
+  .card-neutral  { background: var(--neutral-light);   border-color: var(--neutral);    }
+  .card-neutral h3  { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.94rem;
+  }
+
+  .takeaways-list li:last-child { border-bottom: none; }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 56px;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #93c5e8;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    color: #e2ecf5;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ACSL1 &nbsp;|&nbsp; Long-Chain Acyl-CoA Synthetase 1</span>
+    <span class="chip chip-danger">⚠ Systemic inhibition safety concern</span>
+  </div>
+  <h1>ACSL1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ============================================================ MAIN -->
+<main>
+
+  <!-- ==================== OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Broad systemic ACSL1 inhibition risks impairing essential
+      fatty-acid β-oxidation in heart, liver, skeletal muscle, and adipose tissue.
+      Therapeutic strategies should prioritize cell-type-selective targeting of pathogenic
+      microglial states rather than global enzyme blockade.
+    </div>
+
+    <p>
+      ACSL1 is best characterized as a <strong>lipid–mitochondrial–immunometabolic hub</strong>
+      with emerging relevance to Alzheimer's disease (AD), especially through
+      APOE4-associated microglial lipid dysfunction. ACSL1 encodes long-chain acyl-CoA
+      synthetase 1, an enzyme that activates long-chain fatty acids into acyl-CoA species,
+      routing them into β-oxidation, triglyceride/lipid-droplet storage, membrane remodeling,
+      inflammatory lipid signaling, and lipid-peroxidation-prone pathways.
+    </p>
+    <p>
+      The strongest AD-specific evidence identifies ACSL1-positive microglia as a
+      disease-associated lipid-droplet state enriched in APOE4/4 AD brain. In human iPSC-derived
+      microglia, fibrillar amyloid-β induced ACSL1 expression, triglyceride synthesis, and
+      lipid-droplet accumulation in an APOE-dependent manner. Conditioned media from
+      lipid-droplet-containing microglia promoted tau phosphorylation and neurotoxicity,
+      suggesting a mechanistic bridge among amyloid exposure, APOE4-dependent lipid
+      mishandling, microglial dysfunction, tau pathology, and neuronal injury.
+    </p>
+    <p>
+      Systems and network analyses, multi-omics Mendelian-randomization work, early-AD cortical
+      lipid-metabolism studies, and sex-specific prefrontal cortex transcriptomics collectively
+      position ACSL1 as a cross-domain driver rather than a passive lipid marker. These
+      findings implicate ACSL1 in AD-relevant interactions spanning lipid metabolism, microglial
+      activation, mitochondrial stress, ferroptosis/lipid peroxidation, and inflammatory signaling.
+    </p>
+  </section>
+
+  <!-- ==================== MECHANISM FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;min-width:640px;display:block;font-family:Arial,Helvetica,sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0d6e6e"/>
+          </marker>
+          <marker id="arr-o" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL A: Upstream Triggers (left) ── -->
+        <rect x="12" y="12" width="212" height="476" rx="10"
+              fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="118" y="30" text-anchor="middle" font-size="8" font-weight="bold"
+              fill="#1a3a5c" letter-spacing="1.2">A · UPSTREAM TRIGGERS</text>
+
+        <!-- Fibrillar Aβ -->
+        <rect x="30" y="42" width="176" height="38" rx="6"
+              fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="118" y="58" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="bold">Fibrillar Aβ</text>
+        <text x="118" y="72" text-anchor="middle" font-size="9" fill="#1e293b">(amyloid stimulus)</text>
+
+        <!-- APOE4 -->
+        <rect x="30" y="108" width="176" height="38" rx="6"
+              fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="118" y="124" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="bold">APOE4 Genotype</text>
+        <text x="118" y="138" text-anchor="middle" font-size="9" fill="#1e293b">(permissive context)</text>
+
+        <!-- TLR4/TNFα/IFN-γ -->
+        <rect x="30" y="174" width="176" height="38" rx="6"
+              fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="118" y="190" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="bold">TLR4 / TNFα / IFN-γ</text>
+        <text x="118" y="204" text-anchor="middle" font-size="9" fill="#1e293b">(inflammatory signals)</text>
+
+        <!-- PPARα/AMPK -->
+        <rect x="30" y="240" width="176" height="38" rx="6"
+              fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="118" y="256" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="bold">PPARα / AMPK / SIRT1</text>
+        <text x="118" y="270" text-anchor="middle" font-size="9" fill="#1e293b">(metabolic regulators)</text>
+
+        <!-- ACSL1 enzyme (central, panel A bottom) -->
+        <rect x="40" y="322" width="156" height="44" rx="8"
+              fill="#1a3a5c" stroke="#0b1e30" stroke-width="1.5"/>
+        <text x="118" y="340" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="bold">ACSL1 Enzyme</text>
+        <text x="118" y="356" text-anchor="middle" font-size="9" fill="#b0c8e8">Acyl-CoA Synthetase 1</text>
+
+        <!-- Arrows panel A → ACSL1 -->
+        <line x1="118" y1="80" x2="118" y2="108" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="118" y1="146" x2="118" y2="174" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="118" y1="212" x2="118" y2="240" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="118" y1="278" x2="118" y2="322" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ── PANEL B: Lipid-Droplet / Microglial Branch (centre-left) ── -->
+        <rect x="240" y="12" width="192" height="476" rx="10"
+              fill="rgba(180,83,9,0.06)" stroke="#b45309" stroke-width="1.2"/>
+        <text x="336" y="30" text-anchor="middle" font-size="8" font-weight="bold"
+              fill="#b45309" letter-spacing="1.2">B · MICROGLIAL LIPID STATE</text>
+
+        <!-- TG Synthesis / Lipid Droplets -->
+        <rect x="258" y="42" width="156" height="38" rx="6"
+              fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="336" y="58" text-anchor="middle" font-size="10" fill="#78350f" font-weight="bold">TG Synthesis &amp;</text>
+        <text x="336" y="72" text-anchor="middle" font-size="10" fill="#78350f" font-weight="bold">Lipid Droplet Accum.</text>
+
+        <!-- Impaired phagocytosis -->
+        <rect x="258" y="108" width="156" height="38" rx="6"
+              fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="336" y="124" text-anchor="middle" font-size="10" fill="#78350f" font-weight="bold">Impaired Phagocytosis</text>
+        <text x="336" y="138" text-anchor="middle" font-size="9" fill="#1e293b">&amp; oxidative stress</text>
+
+        <!-- NF-κB / MAPK -->
+        <rect x="258" y="174" width="156" height="38" rx="6"
+              fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="336" y="190" text-anchor="middle" font-size="10" fill="#78350f" font-weight="bold">NF-κB / MAPK</text>
+        <text x="336" y="204" text-anchor="middle" font-size="9" fill="#1e293b">(p38 / ERK / JNK)</text>
+
+        <!-- Inflammasome -->
+        <rect x="258" y="240" width="156" height="38" rx="6"
+              fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="336" y="256" text-anchor="middle" font-size="10" fill="#78350f" font-weight="bold">NLRP3 Inflammasome</text>
+        <text x="336" y="270" text-anchor="middle" font-size="9" fill="#1e293b">IL-1β / lysosomal dmg</text>
+
+        <!-- Neurotoxic secretions -->
+        <rect x="258" y="322" width="156" height="44" rx="8"
+              fill="#c0392b" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="336" y="340" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="bold">Neurotoxic Secretions</text>
+        <text x="336" y="356" text-anchor="middle" font-size="9" fill="#ffd5d0">Tau phosphorylation ↑</text>
+
+        <!-- Panel B internal arrows -->
+        <line x1="336" y1="80" x2="336" y2="108" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-o)"/>
+        <line x1="336" y1="146" x2="336" y2="174" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-o)"/>
+        <line x1="336" y1="212" x2="336" y2="240" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-o)"/>
+        <line x1="336" y1="278" x2="336" y2="322" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-o)"/>
+
+        <!-- ACSL1 → Panel B entry (horizontal) -->
+        <line x1="196" y1="344" x2="258" y2="61" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"
+              stroke-dasharray="0"/>
+        <!-- Route: from ACSL1 right edge (196,344) elbow to (228,344) then up to (228,61) then right to (258,61) -->
+        <polyline points="196,344 228,344 228,61 258,61"
+                  fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ── PANEL C: Ferroptosis / Mitochondria Branch (centre-right) ── -->
+        <rect x="448" y="12" width="192" height="476" rx="10"
+              fill="rgba(139,26,26,0.06)" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="544" y="30" text-anchor="middle" font-size="8" font-weight="bold"
+              fill="#8b1a1a" letter-spacing="1.2">C · FERROPTOSIS / MITO</text>
+
+        <!-- Acyl-CoA → β-oxidation -->
+        <rect x="466" y="42" width="156" height="38" rx="6"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="544" y="58" text-anchor="middle" font-size="10" fill="#7b0000" font-weight="bold">FA → β-Oxidation</text>
+        <text x="544" y="72" text-anchor="middle" font-size="9" fill="#1e293b">or lipotoxic diversion</text>
+
+        <!-- Acylcarnitine / ROS -->
+        <rect x="466" y="108" width="156" height="38" rx="6"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="544" y="124" text-anchor="middle" font-size="10" fill="#7b0000" font-weight="bold">Acylcarnitine / ROS</text>
+        <text x="544" y="138" text-anchor="middle" font-size="9" fill="#1e293b">mitochondrial stress</text>
+
+        <!-- GPX4 / GSH axis -->
+        <rect x="466" y="174" width="156" height="38" rx="6"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="544" y="190" text-anchor="middle" font-size="10" fill="#7b0000" font-weight="bold">GPX4 / SLC7A11 / GSH</text>
+        <text x="544" y="204" text-anchor="middle" font-size="9" fill="#1e293b">(ferroptosis defence axis)</text>
+
+        <!-- Lipid peroxidation -->
+        <rect x="466" y="240" width="156" height="38" rx="6"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="544" y="256" text-anchor="middle" font-size="10" fill="#7b0000" font-weight="bold">Lipid Peroxidation</text>
+        <text x="544" y="270" text-anchor="middle" font-size="9" fill="#1e293b">MDA / 4-HNE / Fe²⁺</text>
+
+        <!-- Ferroptosis / neuronal death -->
+        <rect x="466" y="322" width="156" height="44" rx="8"
+              fill="#c0392b" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="544" y="340" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="bold">Ferroptosis /</text>
+        <text x="544" y="356" text-anchor="middle" font-size="9" fill="#ffd5d0">Neuronal / Glial Death</text>
+
+        <!-- Panel C internal arrows -->
+        <line x1="544" y1="80" x2="544" y2="108" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <line x1="544" y1="146" x2="544" y2="174" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <line x1="544" y1="212" x2="544" y2="240" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <line x1="544" y1="278" x2="544" y2="322" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- ACSL1 → Panel C entry elbow -->
+        <polyline points="196,344 420,344 420,61 466,61"
+                  fill="none" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        <!-- ── PANEL D: AD Outcomes (right) ── -->
+        <rect x="656" y="12" width="232" height="476" rx="10"
+              fill="rgba(13,110,110,0.06)" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="772" y="30" text-anchor="middle" font-size="8" font-weight="bold"
+              fill="#0d6e6e" letter-spacing="1.2">D · AD PATHOLOGY OUTCOMES</text>
+
+        <!-- Synaptic / neuronal injury -->
+        <rect x="672" y="42" width="200" height="38" rx="6"
+              fill="#e6f7f7" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="772" y="58" text-anchor="middle" font-size="10" fill="#064e4e" font-weight="bold">Synaptic &amp; Neuronal Injury</text>
+        <text x="772" y="72" text-anchor="middle" font-size="9" fill="#1e293b">dendritic / axonal damage</text>
+
+        <!-- Tau pathology -->
+        <rect x="672" y="108" width="200" height="38" rx="6"
+              fill="#e6f7f7" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="772" y="124" text-anchor="middle" font-size="10" fill="#064e4e" font-weight="bold">Tau Hyperphosphorylation</text>
+        <text x="772" y="138" text-anchor="middle" font-size="9" fill="#1e293b">&amp; tangle propagation</text>
+
+        <!-- Neuroinflammation -->
+        <rect x="672" y="174" width="200" height="38" rx="6"
+              fill="#e6f7f7" stroke="#0d6e6e" stroke-width="1.2"/>
+        <text x="772" y="190" text-anchor="middle" font-size="10" fill="#064e4e" font-weight="bold">Sustained Neuroinflammation</text>
+        <text x="772" y="204" text-anchor="middle" font-size="9" fill="#1e293b">IFN-γ / MCP-1 / cytokines</text>
+
+        <!-- Cognitive decline -->
+        <rect x="672" y="260" width="200" height="44" rx="8"
+              fill="#0d6e6e" stroke="#064e4e" stroke-width="1.5"/>
+        <text x="772" y="278" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="bold">Cognitive Decline /</text>
+        <text x="772" y="294" text-anchor="middle" font-size="9" fill="#b2e8e8">AD Progression</text>
+
+        <!-- Panel D internal arrows -->
+        <line x1="772" y1="80" x2="772" y2="108" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+        <line x1="772" y1="146" x2="772" y2="174" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+        <line x1="772" y1="212" x2="772" y2="260" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+        <!-- Panel B outcome → Panel D outcomes (horizontal elbows through gutter at x=640) -->
+        <!-- Neurotoxic → Tau & Synaptic -->
+        <polyline points="414,344 636,344 636,61 672,61"
+                  fill="none" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <polyline points="414,344 636,344 636,127 672,127"
+                  fill="none" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+
+        <!-- Panel C ferroptosis → Panel D Neuroinflammation and Cognitive -->
+        <polyline points="622,344 638,344 638,193 672,193"
+                  fill="none" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+
+        <!-- Panel B Inflammasome → neuroinflammation direct elbow -->
+        <polyline points="414,259 432,259 432,450 636,450 636,282 672,282"
+                  fill="none" stroke="#b45309" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-o)"/>
+
+        <!-- Shared outcome label at bottom of panel D -->
+        <text x="772" y="420" text-anchor="middle" font-size="8.5" fill="#0d6e6e" font-style="italic">Multi-pathway convergence</text>
+        <text x="772" y="433" text-anchor="middle" font-size="8.5" fill="#0d6e6e" font-style="italic">on AD pathology</text>
+
+        <!-- ── Legend strip at very bottom ── -->
+        <line x1="30" y1="468" x2="66" y2="468" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <text x="70" y="472" font-size="8" fill="#1a3a5c">Induction</text>
+        <line x1="138" y1="468" x2="174" y2="468" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <text x="178" y="472" font-size="8" fill="#8b1a1a">Ferroptotic</text>
+        <line x1="250" y1="468" x2="286" y2="468" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-o)"/>
+        <text x="290" y="472" font-size="8" fill="#78350f">Inflammatory</text>
+        <line x1="366" y1="468" x2="402" y2="468" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <text x="406" y="472" font-size="8" fill="#8b1a1a">Cross-panel</text>
+        <line x1="470" y1="468" x2="506" y2="468" stroke="#0d6e6e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+        <text x="510" y="472" font-size="8" fill="#064e4e">AD outcome</text>
+
+      </svg>
+    </div>
+
+    <p class="figure-caption">
+      <strong>Figure:</strong>
+      <strong>Panel A (Upstream Triggers)</strong> — Fibrillar Aβ, APOE4 genotype, inflammatory signals (TLR4/TNFα/IFN-γ),
+      and metabolic regulators (PPARα/AMPK/SIRT1) converge to induce ACSL1 enzyme activity in microglia.
+      <strong>Panel B (Microglial Lipid State)</strong> — ACSL1 drives triglyceride synthesis, lipid-droplet accumulation,
+      impaired phagocytosis, NF-κB/MAPK inflammatory cascades, and NLRP3 inflammasome/IL-1β release, ultimately producing
+      neurotoxic secretions that elevate tau phosphorylation.
+      <strong>Panel C (Ferroptosis / Mitochondria)</strong> — ACSL1-activated fatty-acid flux also feeds β-oxidation or
+      lipotoxic diversion, generating acylcarnitine/ROS, overwhelming the GPX4/SLC7A11/GSH ferroptosis-defence axis,
+      causing lipid peroxidation (MDA/4-HNE/Fe²⁺) and ultimately ferroptotic neuronal/glial death.
+      <strong>Panel D (AD Pathology Outcomes)</strong> — Both the inflammatory (Panel B) and ferroptotic (Panel C) branches
+      converge on synaptic/neuronal injury, tau hyperphosphorylation, sustained neuroinflammation, and AD progression.
+      Dashed cross-panel arrows indicate convergent mechanisms; solid arrows indicate within-pathway steps.
+    </p>
+  </section>
+
+  <!-- ==================== KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>Amyloid → APOE4 → Lipid-Droplet → Tau Axis</h3>
+        <p>Fibrillar Aβ induces ACSL1 in microglia; ACSL1-driven triglyceride synthesis promotes lipid-droplet accumulation; conditioned media from these microglia causes tau phosphorylation and neurotoxicity. All effects are APOE-dependent, with strongest relevance in APOE4/4 AD.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Pathogenic Microglial Lipid-Droplet State</h3>
+        <p>ACSL1-positive microglia overlap with disease-associated microglial states linked to aging, impaired phagocytosis, oxidative stress, and pro-inflammatory behavior. ACSL1 may define or drive this pathogenic lipid-accumulating population in APOE4/4 AD brain.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Inflammasome &amp; Inflammatory Myeloid Activation</h3>
+        <p>ACSL1 promotes palmitate-induced fatty-acid crystal formation, lysosomal damage, and NLRP3 inflammasome/IL-1β release in macrophages. Across myeloid-cell studies, ACSL1 is linked to TNFα, NF-κB, MAPK (p38/ERK/JNK), MCP-1, and interferon signaling—all central to AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Ferroptosis &amp; Lipid Peroxidation Network</h3>
+        <p>ACSL1 sits within ferroptosis gene networks involving GPX4, SLC7A11, glutathione balance, iron, malondialdehyde, ROS, and peroxidized phospholipids. In AD, where iron dyshomeostasis and oxidative lipid damage are implicated, ACSL1 may tip fatty-acid flux toward toxic lipid peroxide pools.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Mitochondrial Metabolism &amp; Mitophagy</h3>
+        <p>ACSL1 can support β-oxidation under healthy conditions, but when uncoupled from mitochondrial quality control it associates with acylcarnitine accumulation, lipotoxic stress, defective PINK1/PRKN mitophagy, ROS, and mitochondrial injury—all plausible contributors to AD pathophysiology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Context-Dependent Role &amp; Druggable Network</h3>
+        <p>ACSL1 is not uniformly harmful: in some metabolic settings it supports lipid clearance and mitochondrial function. Upstream regulatory nodes include APOE, TREM2, PPARα/γ, AMPK/SIRT1/PGC-1α, TBK1, NLRP3, and m6A/noncoding RNA axes—making ACSL1 part of a broader modifiable lipid-immune network.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+
+    <ol class="takeaways-list">
+      <li>
+        <strong>Prioritize AD-specific validation in brain cell types.</strong>
+        Measure ACSL1 expression, protein localization, enzyme activity, and lipid products in microglia,
+        astrocytes, neurons, oligodendrocytes, endothelial cells, and perivascular macrophages across AD stage,
+        APOE genotype, sex, and brain region.
+      </li>
+      <li>
+        <strong>Test causality in APOE4-associated lipid-droplet microglia.</strong>
+        Direct ACSL1 knockdown, inhibition, overexpression, or localization modulation should be tested in
+        iPSC-derived microglia and AD animal/organoid models to determine effects on lipid droplets,
+        triglycerides, amyloid response, tau phosphorylation, neurotoxic secretions, phagocytosis, and neuronal survival.
+      </li>
+      <li>
+        <strong>Focus therapy on cell-type-selective modulation, not systemic blockade.</strong>
+        Broad ACSL1 inhibition could impair essential fatty-acid oxidation in heart, liver, skeletal muscle,
+        and adipose tissue. The strongest AD rationale is selective targeting of pathogenic ACSL1-high microglia
+        or perivascular macrophage states, especially in APOE4 carriers.
+      </li>
+      <li>
+        <strong>Evaluate ACSL1-linked ferroptosis pathways in AD models.</strong>
+        Test whether ACSL1 modulation changes oxidized phospholipids, malondialdehyde/4-HNE, Fe²⁺,
+        glutathione/GSSG ratio, GPX4, SLC7A11, lipid peroxidation, mitochondrial membrane potential,
+        and neuronal/glial ferroptosis markers.
+      </li>
+      <li>
+        <strong>Investigate subcellular localization and lipid routing.</strong>
+        ACSL1's effects may depend on whether it localizes to mitochondria, ER, lipid droplets, or
+        ER–mitochondria contact sites. Strategies may need to redirect fatty-acid flux away from
+        lipid-droplet accumulation and peroxidizable pools while preserving adaptive oxidation.
+      </li>
+      <li>
+        <strong>Use APOE genotype and inflammatory biomarkers for patient stratification.</strong>
+        ACSL1-targeted approaches may be most relevant in APOE4/4 or APOE4-enriched AD where biomarkers
+        indicate IFN-γ signaling, lipid-droplet microglia, inflammatory cytokines, ferroptosis markers,
+        or metabolic dysfunction.
+      </li>
+      <li>
+        <strong>Treat ACSL1 as mechanistically compelling but unvalidated therapeutically.</strong>
+        The evidence supports strong mechanistic plausibility and several AD-specific associations, but
+        definitive therapeutic validation requires demonstrating that ACSL1 modulation improves AD-relevant
+        pathology and cognition without unacceptable systemic metabolic toxicity.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ==================== VERDICT -->
+  <div class="verdict">
+    <div class="verdict-lead">Overall Assessment — ACSL1 in Alzheimer's Disease</div>
+    <p>
+      ACSL1 emerges from the current evidence as a <strong>mechanistically plausible and multi-dimensionally
+      supported</strong> Alzheimer's disease target, positioned at the intersection of
+      <strong>APOE4-dependent microglial lipid mishandling</strong>, inflammasome-mediated
+      neuroinflammation, ferroptotic lipid peroxidation, and mitochondrial dysfunction.
+      The most direct AD mechanism — fibrillar Aβ inducing ACSL1-driven lipid-droplet microglia that
+      release tau-phosphorylating neurotoxic factors in an APOE-dependent manner — has direct
+      experimental support in iPSC-derived human microglia. Cross-domain systems analyses,
+      Mendelian-randomization data, and sex-specific transcriptomics further reinforce
+      <strong>ACSL1 as a driver rather than a passive bystander</strong>.
+      However, its context-dependent biology — protective in some metabolic settings, pathogenic in
+      inflammatory or lipotoxic ones — and the <strong>systemic metabolic safety risk of broad
+      inhibition</strong> demand that therapeutic strategies be designed with cell-type selectivity,
+      APOE-stratified patient populations, and rigorous in vivo validation of both target engagement
+      and metabolic tolerability before clinical translation is pursued.
+    </p>
+  </div>
+
+</main>
+
+<!-- ============================================================ FOOTER -->
+<footer>
+  ACSL1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

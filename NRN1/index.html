@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRN1 / Neuritin — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7cbf;
+    --light: #e8f0fb;
+    --danger: #b91c1c;
+    --danger-light: #fef2f2;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-accent: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #111827 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    letter-spacing: 0.04em;
+    color: #e2e8f0;
+  }
+  .chip-danger {
+    background: rgba(185,28,28,0.28);
+    border-color: rgba(255,120,120,0.45);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 54px; }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* BODY TEXT */
+  p { margin-bottom: 16px; font-size: 0.97rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-accent); }
+  .card-blue h3 { color: var(--blue-accent); }
+  .card-gray { background: #f1f5f9; border-left: 4px solid #64748b; }
+  .card-gray h3 { color: #475569; }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: ta;
+    padding: 0;
+  }
+  .takeaways ol li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+  }
+  .takeaways ol li::before {
+    content: counter(ta);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #111827 100%);
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .verdict strong { color: #bfdbfe; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: NRN1 &nbsp;|&nbsp; Neuritin / CPG15</span>
+    <span class="chip chip-danger">⚠ Safety: growth-promoting &amp; excitability risks</span>
+  </div>
+  <h1>NRN1 / Neuritin — Synaptic Resilience in Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety &amp; Delivery Caveat:</strong> NRN1 carries growth-promoting, angiogenic, immune-modulatory, and cancer-associated roles in some contexts. It can influence calcium influx, glutamate release, and axonal sprouting, raising the possibility of maladaptive plasticity or excitability if over-activated. Any therapeutic programme would require CNS-targeted, dose-controlled, cell-type-aware strategies with rigorous oncologic and excitability safety assessment.
+    </div>
+
+    <p>NRN1/neuritin/CPG15 is an activity-dependent neurotrophic and synaptic-plasticity protein with growing relevance to Alzheimer's disease (AD). Across AD-focused and AD-relevant literature, <em>reduced NRN1 expression</em> is repeatedly associated with AD-like vulnerability, synaptic impairment, cognitive decline, tau-related pathology, apoptosis, neuroinflammation, and neuronal structural degeneration. Conversely, restoration, overexpression, or administration of neuritin is associated with neuroprotective and synaptoprotective effects in AD models and related neural injury models.</p>
+
+    <p>The strongest AD-specific evidence supports NRN1 as a <em>cognitive-resilience and synaptic-repair factor</em> rather than a direct amyloid- or tau-clearing agent. Human proteomic studies identify NRN1 as associated with preserved cognition despite AD pathology, and preclinical studies show that NRN1/neuritin can protect dendritic spines, normalize synaptic plasticity, reduce amyloid-β-induced neuronal hyperexcitability, reduce phosphorylated tau, suppress apoptosis, and improve cognition in AD-like models.</p>
+
+    <p>NRN1's therapeutic rationale in AD centers on restoring neuronal resilience: preserving synapses and dendritic spines, supporting neurite and axonal integrity, reducing tau phosphorylation, limiting caspase-mediated apoptosis, dampening inflammatory signaling, improving autophagic and stress-response pathways, and supporting activity-dependent plasticity in vulnerable hippocampal and cortical circuits.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN (counting nodes carefully — max 16):
+        Panel A (Upstream inputs / expression context): 3 nodes — row top
+        Panel B (Core NRN1 signaling — branching): NRN1 hub (1) → Branch 1: Synaptic (2 nodes) → Branch 2: Survival (2 nodes) — 5 nodes
+        Panel C (Downstream effects — 2 parallel outcomes): 4 nodes in 2×2 grid
+        Panel D (Disease context): 2 nodes
+        Total: 3 + 5 + 4 + 2 = 14 nodes ✓ (≤16)
+        Arrows all routed through clear empty gutters.
+      -->
+      <svg viewBox="0 0 880 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#4a7cbf"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#b91c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L8,3.5 L0,7 Z" fill="#d97706"/>
+          </marker>
+        </defs>
+
+        <!-- ─── Panel A: Disease Context / Expression ─── -->
+        <rect x="14" y="14" width="240" height="472" rx="12" ry="12"
+              fill="rgba(74,124,191,0.07)" stroke="#4a7cbf" stroke-width="1.2"/>
+        <text x="134" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#2d4a7a">EXPRESSION CONTEXT</text>
+
+        <!-- A1: AD Pathology -->
+        <rect x="34" y="50" width="200" height="46" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.2"/>
+        <text x="134" y="69" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b" font-weight="700">AD Pathology Load</text>
+        <text x="134" y="83" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">(Braak stage, NFTs, Aβ)</text>
+
+        <!-- A2: NRN1 Reduced -->
+        <rect x="34" y="128" width="200" height="46" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.2"/>
+        <text x="134" y="147" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#b91c1c" font-weight="700">NRN1 Expression ↓</text>
+        <text x="134" y="161" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">cortex, hippocampus, excitatory neurons</text>
+
+        <!-- A3: miRNA suppression -->
+        <rect x="34" y="208" width="200" height="46" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="134" y="227" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#92400e" font-weight="700">miRNA Suppression</text>
+        <text x="134" y="241" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">miR-199a, miR-194, miR-574</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="134" y1="96" x2="134" y2="126" stroke="#b91c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="134" y1="174" x2="134" y2="206" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Human proteomic note -->
+        <rect x="34" y="290" width="200" height="46" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="134" y="309" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#0f766e" font-weight="700">Human Resilience Data</text>
+        <text x="134" y="323" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">higher NRN1 → preserved memory</text>
+
+        <!-- Arrow A3→resilience (downward in panel, conceptual) -->
+        <line x1="134" y1="254" x2="134" y2="288" stroke="#4a7cbf" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- ─── Panel B: NRN1 Signaling Hub ─── -->
+        <rect x="274" y="14" width="230" height="472" rx="12" ry="12"
+              fill="rgba(45,74,122,0.06)" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="389" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#2d4a7a">NRN1 SIGNALING HUB</text>
+
+        <!-- B0: NRN1/Neuritin (central hub) -->
+        <rect x="294" y="50" width="190" height="48" rx="8" fill="#2d4a7a" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="389" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="white" font-weight="700">NRN1 / Neuritin</text>
+        <text x="389" y="86" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#bfdbfe">(GPI-anchored · activity-dependent)</text>
+
+        <!-- B1: Synaptic branch node -->
+        <rect x="294" y="140" width="185" height="44" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.3"/>
+        <text x="386" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b" font-weight="700">Synaptic Pathway</text>
+        <text x="386" y="172" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">AMPA-R, PSD95, LTP, spines</text>
+
+        <!-- B2: Survival branch node -->
+        <rect x="294" y="224" width="185" height="44" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.3"/>
+        <text x="386" y="242" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b" font-weight="700">Survival Pathway</text>
+        <text x="386" y="256" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">PI3K/Akt, MAPK/ERK, Bcl-2↑</text>
+
+        <!-- B3: Trophic signaling -->
+        <rect x="294" y="308" width="185" height="44" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.3"/>
+        <text x="386" y="326" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#1e293b" font-weight="700">Trophic Signaling</text>
+        <text x="386" y="340" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">BDNF, NGF, CREB, FGF, Nrf2/HO-1</text>
+
+        <!-- B4: Inflammatory control -->
+        <rect x="294" y="392" width="185" height="44" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+        <text x="386" y="410" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#92400e" font-weight="700">Inflammatory Control</text>
+        <text x="386" y="424" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#475569">NF-κB↓, TNF-α↓, cGAS-STING↓</text>
+
+        <!-- Hub → B1 -->
+        <line x1="389" y1="98" x2="389" y2="138" stroke="#4a7cbf" stroke-width="1.6" marker-end="url(#arr)"/>
+        <!-- B1 → B2 -->
+        <line x1="389" y1="184" x2="389" y2="222" stroke="#4a7cbf" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B2 → B3 -->
+        <line x1="389" y1="268" x2="389" y2="306" stroke="#4a7cbf" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B3 → B4 -->
+        <line x1="389" y1="352" x2="389" y2="390" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Cross-panel arrow: A2 → B0 (NRN1 reduced context feeds hub) -->
+        <!-- Route: from right edge of A2 (x=234,y=151) → enter panel B left edge → B0 -->
+        <path d="M234,151 L265,151 L265,74 L292,74" fill="none" stroke="#b91c1c" stroke-width="1.4"
+              stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- ─── Panel C: Downstream Outcomes ─── -->
+        <rect x="524" y="14" width="340" height="472" rx="12" ry="12"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="694" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#0f766e">DOWNSTREAM OUTCOMES</text>
+
+        <!-- Row 1 outcomes -->
+        <!-- C1: Dendritic / Synaptic -->
+        <rect x="540" y="50" width="145" height="60" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="612" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#0f766e" font-weight="700">Synaptic Restoration</text>
+        <text x="612" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">spine density ↑, PSD95 ↑</text>
+        <text x="612" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">LTP restored, complexity ↑</text>
+
+        <!-- C2: Cognitive -->
+        <rect x="703" y="50" width="145" height="60" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="775" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#0f766e" font-weight="700">Cognitive Benefit</text>
+        <text x="775" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">learning/memory ↑</text>
+        <text x="775" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">resilience preserved</text>
+
+        <!-- Row 2 outcomes -->
+        <!-- C3: Anti-apoptotic -->
+        <rect x="540" y="152" width="145" height="60" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.3"/>
+        <text x="612" y="172" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#2d4a7a" font-weight="700">Anti-Apoptotic</text>
+        <text x="612" y="186" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">caspase-3 ↓, Bax ↓</text>
+        <text x="612" y="199" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">Bcl-2/Bax ratio ↑</text>
+
+        <!-- C4: Tau / Aβ modulation -->
+        <rect x="703" y="152" width="145" height="60" rx="7" fill="#e8f0fb" stroke="#4a7cbf" stroke-width="1.3"/>
+        <text x="775" y="172" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#2d4a7a" font-weight="700">Tau &amp; Aβ Modulation</text>
+        <text x="775" y="186" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">p-tau ↓, hyperexcitability ↓</text>
+        <text x="775" y="199" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">PIGU-CASP3 axis</text>
+
+        <!-- Row 3 outcomes -->
+        <!-- C5: Autophagy/Stress -->
+        <rect x="540" y="256" width="145" height="60" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+        <text x="612" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#92400e" font-weight="700">Autophagy &amp; Stress</text>
+        <text x="612" y="290" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">LC3 ↑, p62 ↓, CHOP ↓</text>
+        <text x="612" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">ER stress ↓</text>
+
+        <!-- C6: Anti-inflammatory -->
+        <rect x="703" y="256" width="145" height="60" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+        <text x="775" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#92400e" font-weight="700">Anti-inflammatory</text>
+        <text x="775" y="290" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">IL-1β ↓, TNF-α ↓</text>
+        <text x="775" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#475569">astrogliosis ↓</text>
+
+        <!-- Shared outcome node -->
+        <rect x="612" y="370" width="163" height="50" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="693" y="391" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="white" font-weight="700">Neuronal Resilience</text>
+        <text x="693" y="408" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#a7f3d0">&amp; Cognitive Preservation</text>
+
+        <!-- Arrows panel B → panel C (from right edge of B nodes into C left edges) -->
+        <!-- B1 Synaptic → C1 Synaptic Restoration -->
+        <path d="M479,162 L522,162 L522,80 L538,80" fill="none" stroke="#4a7cbf" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B1 Synaptic → C2 Cognitive -->
+        <path d="M479,162 L510,162 L510,68 L701,68" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+        <!-- B2 Survival → C3 Anti-apoptotic -->
+        <path d="M479,246 L522,246 L522,182 L538,182" fill="none" stroke="#4a7cbf" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- B2 Survival → C4 Tau -->
+        <path d="M479,246 L511,246 L511,170 L701,170" fill="none" stroke="#4a7cbf" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- B3 Trophic → C5 Autophagy -->
+        <path d="M479,330 L522,330 L522,286 L538,286" fill="none" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- B4 Inflammatory → C6 Anti-inflammatory -->
+        <path d="M479,414 L522,414 L522,372 L538,372" fill="none" stroke="#d97706" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Outcomes → convergence node -->
+        <!-- C1 → convergence -->
+        <path d="M612,110 L612,135 L693,135 L693,368" fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- C3 → convergence -->
+        <path d="M612,212 L612,245 L598,245 L598,395 L610,395" fill="none" stroke="#4a7cbf" stroke-width="1.3" marker-end="url(#arr)"/>
+        <!-- C5 → convergence -->
+        <path d="M612,316 L612,368" fill="none" stroke="#d97706" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <!-- C2 → convergence -->
+        <path d="M775,110 L775,140 L757,140 L757,368" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+        <!-- C6 → convergence -->
+        <path d="M775,316 L775,340 L778,340 L778,368 L776,368" fill="none" stroke="#d97706" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel labels -->
+        <text x="44" y="476" font-family="Arial,sans-serif" font-size="8" fill="#64748b" font-style="italic">Panel A</text>
+        <text x="285" y="476" font-family="Arial,sans-serif" font-size="8" fill="#64748b" font-style="italic">Panel B</text>
+        <text x="534" y="476" font-family="Arial,sans-serif" font-size="8" fill="#64748b" font-style="italic">Panel C</text>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure: NRN1/Neuritin mechanism overview.</strong>
+      <em>Panel A (Expression Context):</em> AD pathological burden suppresses NRN1 expression in cortex and hippocampus, partly via miRNAs; human proteomic data show higher NRN1 associates with preserved memory.
+      <em>Panel B (NRN1 Signaling Hub):</em> NRN1/neuritin activates parallel branches — a synaptic pathway (AMPA-R, PSD95, LTP), a survival pathway (PI3K/Akt, MAPK/ERK, Bcl-2), a trophic-signaling arm (BDNF, CREB, Nrf2/HO-1), and an inflammatory-control arm (NF-κB↓, cGAS-STING↓).
+      <em>Panel C (Downstream Outcomes):</em> Signaling branches fan out into six outcome nodes — synaptic restoration, cognitive benefit, anti-apoptotic effects, tau/Aβ modulation, autophagy/stress resilience, and anti-inflammatory effects — all converging on the shared endpoint of neuronal resilience and cognitive preservation.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Cognitive Resilience in Human AD</h3>
+        Proteomic studies identify NRN1 as a hub protein in resilience-associated synaptic networks. Higher cortical NRN1 protein is associated with better-preserved semantic, episodic, and working memory despite neuropathologic burden, positioning NRN1 as a marker of cognitive resilience rather than simply a disease correlate.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Reduced Expression in AD</h3>
+        NRN1 is downregulated in AD patient cortex and hippocampus, correlates negatively with Braak stage and neurofibrillary tangle density, is decreased in AD mouse hippocampus, and declines in excitatory neurons with increasing AD pseudo-progression in SEA-AD single-nucleus datasets — yet whole-tissue differences are not always detected, suggesting cell-type- and compartment-specific regulation.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Synaptic Structure &amp; Plasticity</h3>
+        NRN1 promotes neurite outgrowth, dendritic arborization, spine maturation, PSD95 recruitment, AMPA receptor-associated synapse stabilization, basal synaptic transmission, and long-term potentiation. These mechanisms are directly relevant because synapse loss and impaired plasticity are among the strongest correlates of cognitive decline in AD.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Preclinical Functional Benefit</h3>
+        In Tg2576 mice, viral or recombinant neuritin restored dendritic spine density and complexity, spine maturity, hippocampal LTP, and learning/memory. In APP/PS1 and Aβ-damaged neuronal models, restoring NRN1-related signaling improved neuronal viability, neurite integrity, and synaptic protein levels.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Tau Pathology &amp; Apoptosis</h3>
+        NRN1 negatively correlates with MAPT, and NRN1 restoration reduces phosphorylated tau in AD cell models via the PIGU-CASP3 axis. NRN1 also suppresses apoptosis across multiple AD-relevant systems by decreasing cleaved caspase-3, cytochrome c, and Bax while increasing Bcl-2/Bax ratio.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Safety &amp; Delivery Concerns</h3>
+        NRN1 has growth-promoting, angiogenic, immune-modulatory, and cancer-associated roles in some contexts. Its influence on calcium influx, glutamate release, and axonal sprouting raises the possibility of maladaptive plasticity or excitability if over-activated. Therapeutic development requires CNS-targeted, dose-controlled, cell-type-aware strategies with rigorous oncologic safety monitoring.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Prioritize NRN1 as a synaptic-resilience target,</strong> especially for strategies aimed at preserving cognition rather than directly clearing amyloid or tau — its evidence base is strongest for the resilience-maintenance framing.</li>
+      <li><strong>Test gain- and loss-of-function across AD model types,</strong> measuring cognition, dendritic spine density, synaptic proteins, LTP, neuronal hyperexcitability, p-tau, apoptosis, neuroinflammation, and autophagic flux in amyloid, tau, and combined models.</li>
+      <li><strong>Focus on vulnerable cell types and compartments,</strong> particularly excitatory neurons in hippocampal and cortical regions, because single-nucleus data suggest NRN1 decline may be cell-type-specific and not visible in whole-tissue protein assays.</li>
+      <li><strong>Evaluate multiple therapeutic modalities,</strong> including recombinant neuritin protein, AAV-mediated NRN1 gene therapy, small-molecule or epigenetic upregulation, and inhibition of NRN1-suppressing miRNAs such as miR-199a, miR-194, and miR-574.</li>
+      <li><strong>Develop pharmacodynamic biomarkers</strong> around NRN1-linked synaptic and resilience signatures — MAP2, PSD95, synaptophysin, synapsin-1, AMPA receptor markers, p-tau, cleaved caspase-3, Bcl-2/Bax ratio, NF-κB/TNF-α/IL-1β, LC3/p62, and excitability measures.</li>
+      <li><strong>Clarify NRN1 receptor biology and downstream signaling,</strong> including whether it acts through insulin receptor-related pathways, AMPA receptor interactions, GPI-anchored membrane mechanisms, or other receptors — this is critical for rational drug design.</li>
+      <li><strong>Determine the optimal disease stage for intervention.</strong> NRN1 may be most useful in early or prodromal AD, when neurons and synapses are impaired but still recoverable, rather than in advanced stages with extensive neuronal loss.</li>
+      <li><strong>Assess safety rigorously and prospectively.</strong> Chronic NRN1 enhancement should be evaluated for aberrant sprouting, network hyperexcitability, angiogenesis, immune effects, proliferative risks, and cancer-related liabilities.</li>
+      <li><strong>Consider NRN1 as an adjunctive therapy,</strong> complementing amyloid- or tau-directed treatments by strengthening synaptic function, neuronal survival, and cognitive resilience rather than replacing disease-modifying approaches.</li>
+      <li><strong>Advance from target enablement to translational validation</strong> by demonstrating target engagement, dose-response, CNS delivery feasibility, durable cognitive benefit, and acceptable safety in AD-relevant animal and human cellular models.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — NRN1 / Neuritin in Alzheimer's Disease</span>
+      NRN1/neuritin represents a <strong>compelling synaptic-resilience target</strong> in Alzheimer's disease with a coherent mechanistic rationale, convergent preclinical evidence, and human proteomic data linking higher NRN1 to preserved cognitive function despite neuropathological burden. Its actions span <strong>synaptic structural maintenance, anti-apoptotic signaling, tau phosphorylation suppression, neuroinflammation dampening, and autophagic stress resilience</strong> — making it a multifaceted neuroprotective candidate. However, the evidence base remains <strong>predominantly preclinical and associative</strong>; robust target validation in human tissue and disease-relevant cellular models is still needed. The most significant translational challenges are <strong>CNS delivery, therapeutic window, and safety</strong> — NRN1's growth-promoting, angiogenic, and excitability-modulating properties demand rigorous dose-controlled evaluation before clinical development. Its most plausible near-term role is as an <strong>adjunct to amyloid- or tau-directed therapies</strong>, reinforcing synaptic integrity and neuronal survival in early or prodromal disease stages where recovery remains possible.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  NRN1 / Neuritin — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

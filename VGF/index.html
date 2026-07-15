@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VGF — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7fc1;
+    --light: #e8f0fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #64748b;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #3b82f6;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #111c2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW PROSE */
+  .overview-prose p {
+    margin-bottom: 18px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent   { background: var(--light);         border-color: var(--dark);    }
+  .card-accent   h3 { color: var(--dark); }
+
+  .card-mid      { background: var(--blue-light);    border-color: var(--blue-mid); }
+  .card-mid      h3 { color: #1d4ed8; }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-danger   { background: var(--danger-light);  border-color: var(--danger);   }
+  .card-danger   h3 { color: var(--danger); }
+
+  .card-neutral  { background: var(--slate-light);   border-color: var(--slate);    }
+  .card-neutral  h3 { color: var(--slate); }
+
+  .card-warning  { background: var(--warning-light); border-color: var(--warning);  }
+  .card-warning  h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: item;
+  }
+
+  .takeaways-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(item);
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #111c2e 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: #e2e8f0;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner p b {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: VGF &nbsp;|&nbsp; VGF Nerve Growth Factor Inducible</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety considerations</span>
+  </div>
+  <h1>VGF &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caution — Pleiotropic &amp; Context-Dependent Effects</span>
+      VGF is pleiotropic and context-dependent. TLQP-21 may exert beneficial or detrimental
+      effects depending on receptor engagement (C3aR1, C1qBP, purinergic), cell type, disease
+      stage, and inflammatory state. Global or poorly targeted VGF activation may affect pain,
+      metabolism, psychiatric-like behavior, endocrine secretion, or tumor-related pathways.
+      Therapeutic development must be peptide-, receptor-, brain-region-, and stage-specific.
+    </div>
+
+    <div class="overview-prose">
+      <p>
+        VGF is a neurotrophin-inducible neurosecretory and neuropeptide precursor repeatedly
+        linked to Alzheimer's disease (AD) through synaptic dysfunction, cognitive decline,
+        white matter and hippocampal integrity, neuroimmune signaling, amyloid/tau-associated
+        networks, and mitochondrial/metabolic pathways. Across the literature, VGF most often
+        appears as <em>reduced or dysregulated</em> in AD brain or CSF, while higher VGF or
+        specific VGF-derived peptides are associated with cognitive resilience, preserved
+        synaptic function, or slower decline.
+      </p>
+      <p>
+        The strongest AD-specific evidence supports VGF as a <strong>biomarker and
+        pathway-level therapeutic candidate</strong> rather than a fully validated drug target.
+        Human studies identify lower CSF VGF across preclinical AD, prodromal AD,
+        MCI-to-AD conversion, and AD dementia; associate lower VGF with poorer cognition,
+        hippocampal atrophy, ventricular enlargement, glucose hypometabolism, and white matter
+        microstructural damage; and place VGF in synaptic/neurosecretory modules alongside
+        NPTX2, SCG2, chromogranins, and other neuronal proteins.
+      </p>
+      <p>
+        Mechanistically, VGF is most relevant to AD through synaptic plasticity, neurotrophic
+        signaling, activity-dependent neuronal resilience, microglial/complement-mediated
+        amyloid clearance, inflammatory regulation, and peptide-specific signaling. VGF-derived
+        peptides such as TLQP-21 and TLQP-62 are especially important because VGF biology
+        depends on proteolytic processing; total VGF, proVGF, CSF peptides, tissue proteoforms,
+        and individual fragments may have distinct or even opposing effects.
+      </p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — VGF Signaling in AD</h2>
+
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#4a7fc1"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Induction -->
+        <rect x="10" y="10" width="200" height="200" rx="10"
+              fill="rgba(74,127,193,0.07)" stroke="#4a7fc1" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#2d4a7a" letter-spacing="0.08em">A — UPSTREAM INDUCTION</text>
+
+        <!-- NGF/BDNF node -->
+        <rect x="35" y="42" width="150" height="38" rx="6"
+              fill="#dbeafe" stroke="#4a7fc1" stroke-width="1.2"/>
+        <text x="110" y="57" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e40af">NGF / BDNF</text>
+        <text x="110" y="71" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Neurotrophin signals</text>
+
+        <!-- Arrow down -->
+        <line x1="110" y1="80" x2="110" y2="104" stroke="#4a7fc1" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- VGF Gene node -->
+        <rect x="35" y="105" width="150" height="38" rx="6"
+              fill="#bfdbfe" stroke="#2d4a7a" stroke-width="1.8"/>
+        <text x="110" y="121" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#1e3a8a">VGF (proVGF)</text>
+        <text x="110" y="135" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Precursor protein</text>
+
+        <!-- Arrow down -->
+        <line x1="110" y1="143" x2="110" y2="164" stroke="#4a7fc1" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Proteolytic Processing -->
+        <rect x="35" y="165" width="150" height="38" rx="6"
+              fill="#e0f2fe" stroke="#4a7fc1" stroke-width="1.2"/>
+        <text x="110" y="180" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0369a1">Proteolytic</text>
+        <text x="110" y="194" text-anchor="middle" font-family="Arial" font-size="9" fill="#0369a1">Processing → peptides</text>
+
+        <!-- Panel B: Peptide Branches -->
+        <rect x="225" y="10" width="440" height="310" rx="10"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="445" y="30" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#0f766e" letter-spacing="0.08em">B — PEPTIDE BRANCHES &amp; MECHANISMS</text>
+
+        <!-- TLQP-21 node -->
+        <rect x="240" y="42" width="120" height="38" rx="6"
+              fill="#d1fae5" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="300" y="58" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">TLQP-21</text>
+        <text x="300" y="72" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Microglial peptide</text>
+
+        <!-- TLQP-62 node -->
+        <rect x="530" y="42" width="120" height="38" rx="6"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="590" y="58" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">TLQP-62</text>
+        <text x="590" y="72" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Synaptic peptide</text>
+
+        <!-- C3aR1 node -->
+        <rect x="240" y="110" width="120" height="38" rx="6"
+              fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="300" y="126" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">C3aR1 Signaling</text>
+        <text x="300" y="140" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Complement receptor</text>
+
+        <!-- BDNF/TrkB node -->
+        <rect x="530" y="110" width="120" height="38" rx="6"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="590" y="126" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">BDNF/TrkB/CREB</text>
+        <text x="590" y="140" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Plasticity cascade</text>
+
+        <!-- Aβ Clearance -->
+        <rect x="240" y="178" width="120" height="38" rx="6"
+              fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="300" y="194" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">Aβ Clearance</text>
+        <text x="300" y="208" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Phago/lysosomal</text>
+
+        <!-- Synaptic Plasticity -->
+        <rect x="530" y="178" width="120" height="38" rx="6"
+              fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="590" y="194" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#065f46">Synaptic Plasticity</text>
+        <text x="590" y="208" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">AMPA/GluA1, spines</text>
+
+        <!-- Converge: Cognitive Resilience -->
+        <rect x="360" y="246" width="170" height="44" rx="7"
+              fill="#a7f3d0" stroke="#059669" stroke-width="1.8"/>
+        <text x="445" y="265" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#064e3b">Cognitive Resilience</text>
+        <text x="445" y="281" text-anchor="middle" font-family="Arial" font-size="9" fill="#065f46">Synaptic &amp; memory preservation</text>
+
+        <!-- Arrows Panel B internal -->
+        <!-- TLQP-21 → C3aR1 -->
+        <line x1="300" y1="80" x2="300" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- TLQP-62 → BDNF/TrkB -->
+        <line x1="590" y1="80" x2="590" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- C3aR1 → Aβ Clearance -->
+        <line x1="300" y1="148" x2="300" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- BDNF/TrkB → Synaptic Plasticity -->
+        <line x1="590" y1="148" x2="590" y2="178" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- Aβ Clearance → Resilience -->
+        <line x1="330" y1="216" x2="400" y2="246" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- Synaptic Plasticity → Resilience -->
+        <line x1="560" y1="216" x2="490" y2="246" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Arrow from Processing (Panel A) → TLQP-21 (Panel B) -->
+        <!-- Route: go right from x=185, y=184 to x=240, y=61 via elbow -->
+        <polyline points="185,184 215,184 215,61 240,61"
+                  fill="none" stroke="#4a7fc1" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow from Processing (Panel A) → TLQP-62 via top gutter -->
+        <polyline points="185,184 215,184 215,30 560,30 560,61 530,61"
+                  fill="none" stroke="#4a7fc1" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Panel C: Network Hubs & AD Pathology -->
+        <rect x="225" y="330" width="440" height="148" rx="10"
+              fill="rgba(45,74,122,0.06)" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="445" y="350" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#2d4a7a" letter-spacing="0.08em">C — NETWORK HUBS &amp; AD PATHOLOGY</text>
+
+        <!-- DUSP4/6 node -->
+        <rect x="245" y="360" width="110" height="38" rx="6"
+              fill="#e8f0fb" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="300" y="376" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#2d4a7a">DUSP4/DUSP6</text>
+        <text x="300" y="390" text-anchor="middle" font-family="Arial" font-size="9" fill="#2d4a7a">VGF-network hubs</text>
+
+        <!-- MAPK/ERK node -->
+        <rect x="395" y="360" width="110" height="38" rx="6"
+              fill="#e8f0fb" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="450" y="376" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#2d4a7a">MAPK/ERK</text>
+        <text x="450" y="390" text-anchor="middle" font-family="Arial" font-size="9" fill="#2d4a7a">Signaling cascade</text>
+
+        <!-- NPTX2/SCG2 node -->
+        <rect x="545" y="360" width="110" height="38" rx="6"
+              fill="#e8f0fb" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="600" y="376" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#2d4a7a">NPTX2/SCG2</text>
+        <text x="600" y="390" text-anchor="middle" font-family="Arial" font-size="9" fill="#2d4a7a">Synaptic module</text>
+
+        <!-- Shared outcome: AD Amyloid/Tau Burden -->
+        <rect x="340" y="428" width="210" height="38" rx="6"
+              fill="#dbeafe" stroke="#2d4a7a" stroke-width="1.6"/>
+        <text x="445" y="444" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a8a">Amyloid/Tau Burden</text>
+        <text x="445" y="458" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Reduced pathology in models</text>
+
+        <!-- Arrows Panel C -->
+        <line x1="300" y1="398" x2="380" y2="428" stroke="#2d4a7a" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="450" y1="398" x2="450" y2="428" stroke="#2d4a7a" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="600" y1="398" x2="520" y2="428" stroke="#2d4a7a" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Arrow: Cognitive Resilience (B) → Panel C label area via gutter -->
+        <polyline points="445,290 445,318 445,330"
+                  fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-pos)"/>
+
+        <!-- Panel D: Biomarker CSF box -->
+        <rect x="680" y="10" width="210" height="200" rx="10"
+              fill="rgba(100,116,139,0.07)" stroke="#64748b" stroke-width="1.2"/>
+        <text x="785" y="30" text-anchor="middle" font-family="Arial" font-size="9"
+              font-weight="700" fill="#475569" letter-spacing="0.08em">D — BIOMARKER CONTEXT</text>
+
+        <!-- CSF VGF ↓ -->
+        <rect x="700" y="42" width="170" height="38" rx="6"
+              fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="785" y="58" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#475569">CSF VGF ↓ in AD</text>
+        <text x="785" y="72" text-anchor="middle" font-family="Arial" font-size="9" fill="#64748b">Preclinical → dementia</text>
+
+        <!-- Cognitive decline -->
+        <rect x="700" y="110" width="170" height="38" rx="6"
+              fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="785" y="126" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#475569">Cognition / Hippoc.</text>
+        <text x="785" y="140" text-anchor="middle" font-family="Arial" font-size="9" fill="#64748b">Atrophy &amp; hypometabolism</text>
+
+        <!-- Multi-marker panel -->
+        <rect x="700" y="168" width="170" height="38" rx="6"
+              fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+        <text x="785" y="184" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#475569">Multi-marker Panel</text>
+        <text x="785" y="198" text-anchor="middle" font-family="Arial" font-size="9" fill="#64748b">+Aβ42, p-tau, NfL, GFAP</text>
+
+        <!-- Arrows Panel D -->
+        <line x1="785" y1="80" x2="785" y2="110" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+        <line x1="785" y1="148" x2="785" y2="168" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr-gray)"/>
+
+        <!-- Connect Panel B Resilience to Panel D CSF via gutter at top right of B -->
+        <polyline points="665,61 680,61 700,61"
+                  fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arr-gray)"/>
+      </svg>
+    </div>
+
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Induction:</strong> NGF/BDNF induce VGF gene expression, producing proVGF that undergoes
+      proteolytic processing into bioactive peptide fragments.
+      <strong>Panel B — Peptide Branches &amp; Mechanisms:</strong> Two major VGF peptides diverge from processing.
+      TLQP-21 (left branch) acts via C3aR1 to drive microglial Aβ phagocytosis and lysosomal clearance;
+      TLQP-62 (right branch) engages BDNF/TrkB/CREB to enhance synaptic plasticity and AMPA-receptor-mediated
+      memory consolidation. Both branches converge on a shared Cognitive Resilience outcome.
+      <strong>Panel C — Network Hubs &amp; AD Pathology:</strong> VGF-network modulators DUSP4/DUSP6, MAPK/ERK, and
+      the NPTX2/SCG2 synaptic module collectively reduce amyloid/tau burden in AD models.
+      <strong>Panel D — Biomarker Context:</strong> CSF VGF is consistently reduced across the AD continuum and
+      correlates with cognitive and hippocampal decline; it augments multi-marker biomarker panels.
+      Dashed arrows indicate inferred or indirect relationships.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Synaptic &amp; Cognitive AD Associations</h3>
+        <p>Lower CSF VGF is associated with poorer executive function, episodic memory decline, hippocampal
+        atrophy, glucose hypometabolism, and white matter microstructural abnormalities. These associations
+        sometimes persist after adjustment for amyloid/tau burden, suggesting VGF captures synaptic or
+        neurosecretory dysfunction beyond Aβ and tau alone.</p>
+      </div>
+
+      <div class="card card-mid">
+        <h3>Activity-Regulated Plasticity Network</h3>
+        <p>VGF clusters recurrently with NPTX2, BDNF, SST, SCG2, and chromogranins — placing it in a
+        co-regulated plasticity network. The VGF–NPTX2 pairing is especially notable, as both proteins link
+        to synaptic homeostasis, excitatory–inhibitory balance, and cognitive resilience in AD. VGF is also
+        a top-predicted regulator in AMP-AD causal networks.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Microglial Aβ Clearance — TLQP-21/C3aR1</h3>
+        <p>TLQP-21 enhances microglial chemotaxis, phagocytosis, Aβ uptake, and lysosomal degradation through
+        C3aR1-dependent signaling, reducing amyloid plaques and dystrophic neurites in 5xFAD mice. This is a
+        distinct, peptide-specific mechanism for improving amyloid clearance independent of general VGF levels.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurotrophic Signaling — TLQP-62/BDNF</h3>
+        <p>TLQP-62 engages BDNF/TrkB/CREB, AKT, ERK/MAPK, and mTOR pathways to support hippocampal memory
+        formation, spine formation, dendritic branching, and protection against inflammation-induced behavioral
+        deficits. VGF overexpression in 5xFAD mice partially rescued amyloid-mediated memory impairment
+        and neuropathology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety &amp; Context-Dependent Risks</h3>
+        <p>TLQP-21 may also signal through C1qBP or purinergic pathways, producing context-dependent effects
+        that could be harmful depending on disease stage, receptor availability, and inflammatory state. Global
+        VGF activation carries risks for pain, metabolism, endocrine secretion, and tumor-related pathways.
+        VGF is not AD-specific — it is altered in LBD, FTD, PD, ALS, and depression.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Biomarker Value &amp; Confounders</h3>
+        <p>CSF VGF or VGF-derived peptides may help detect early AD change, predict MCI-to-AD conversion,
+        and complement Aβ42/p-tau panels. However, interpretation requires adjustment for ventricular volume,
+        age, sex, APOE genotype, disease stage, and comorbid neurodegenerative disease, as CSF VGF may
+        reflect both biology and dilution or mixed pathology. Direction of change varies by compartment and assay.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+
+      <li>
+        <span><b>Treat VGF as a biomarker and pathway candidate, not yet a validated drug target.</b>
+        The evidence supports strong biological plausibility and some preclinical efficacy, but human
+        interventional proof is still lacking. Prioritize translational steps before clinical advancement.</span>
+      </li>
+
+      <li>
+        <span><b>Prioritize peptide-specific studies.</b>
+        Future AD work must distinguish full-length VGF, proVGF, total peptide signal, and specific fragments
+        — TLQP-21, TLQP-62, AQEE, NERP, NAPP, and LQEQ. Therapeutic effects are likely fragment-specific
+        and may be opposing between fragments.</span>
+      </li>
+
+      <li>
+        <span><b>Focus therapeutic development on defined mechanisms:</b>
+        restoring synaptic/neurotrophic resilience via VGF–BDNF/TrkB/CREB; enhancing microglial Aβ clearance
+        via TLQP-21/C3aR1; modulating network hubs DUSP4/DUSP6 and MAPK/ERK; and correcting disease-altered
+        VGF processing or secretion.</span>
+      </li>
+
+      <li>
+        <span><b>Use VGF in multimarker panels rather than alone.</b>
+        VGF adds value alongside Aβ42/Aβ40, p-tau181, total tau, hippocampal volume, NfL, GFAP, NPTX2, and
+        SCG2, especially for predicting cognitive decline, MCI-to-AD conversion, or synaptic pathology burden.</span>
+      </li>
+
+      <li>
+        <span><b>Account for confounders rigorously.</b>
+        CSF VGF analyses should adjust for ventricular volume, age, sex, disease stage, amyloid/tau status,
+        APOE genotype, cognitive status, and comorbid neurodegeneration, as VGF levels reflect both biology
+        and technical or pathological CSF dilution.</span>
+      </li>
+
+      <li>
+        <span><b>Validate VGF causality in AD models.</b>
+        Key experiments should test whether manipulating VGF or specific peptides changes amyloid burden, tau
+        pathology, synapse loss, microglial activation, mitochondrial dysfunction, white matter damage, and
+        cognition in amyloid, tau, aging, inflammatory, and APOE E4-relevant model systems.</span>
+      </li>
+
+      <li>
+        <span><b>Avoid nonspecific global VGF activation.</b>
+        Therapeutic strategies must be peptide-, receptor-, brain-region-, and disease-stage-specific.
+        Excessive or poorly targeted VGF signaling may affect pain, metabolism, psychiatric-like behavior,
+        inflammation, endocrine secretion, or tumor-related pathways.</span>
+      </li>
+
+      <li>
+        <span><b>Address delivery barriers early in development.</b>
+        VGF peptides may have short half-lives and limited blood–brain barrier penetration. Development paths
+        may require stabilized analogs, intranasal delivery, CNS-targeted nanoparticles, viral pVGF delivery,
+        receptor-biased agonists, or pharmacologic induction of endogenous VGF in selected circuits.</span>
+      </li>
+
+      <li>
+        <span><b>Stratify patients by VGF-relevant biology.</b>
+        VGF-targeted approaches may be most relevant for early/prodromal AD, APOE E4 carriers with low
+        protective VGF-network expression, and patients with prominent synaptic/neurosecretory dysfunction
+        or low CSF VGF despite modest amyloid/tau burden.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — VGF in Alzheimer's Disease</span>
+      <p>
+        VGF is a <b>convergent AD-relevant synaptic and neurosecretory resilience factor</b> with compelling
+        evidence across human biomarker studies, multi-omic network analyses, and preclinical AD models.
+        Its therapeutic promise lies principally in <b>restoring specific VGF-derived peptide pathways</b>
+        — particularly TLQP-21/C3aR1-mediated microglial amyloid clearance and TLQP-62/BDNF/TrkB/CREB-mediated
+        synaptic plasticity — that collectively support cognition, neurotrophic signaling, inflammatory balance,
+        and metabolic resilience. However, <b>clinical translation requires peptide-specific causal validation,
+        rigorous biomarker contextualization, and safe CNS-targeted modulation</b>. VGF's pleiotropic,
+        context-dependent nature demands that any therapeutic strategy be precisely targeted by peptide species,
+        receptor, brain region, and disease stage — making it an exciting but methodologically demanding
+        candidate for AD drug development.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  VGF / Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

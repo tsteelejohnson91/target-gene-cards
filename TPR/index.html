@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TPR — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #cbd5e1;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* ── FIGURE ── */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px 20px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* ── TAKEAWAYS ── */
+  .takeaways {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* ── VERDICT BANNER ── */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict .lead {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: inline;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TPR | Tetratricopeptide Repeat / Nuclear Pore Protein TPR</span>
+    <span class="chip chip-danger">⚠ Toxicity Risk: Broad Inhibition</span>
+  </div>
+  <h1>TPR &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> Broad pharmacologic inhibition of nuclear pore TPR (e.g., by norlichexanthone) causes nuclear membrane and transport defects. Any AD-directed strategy targeting nuclear pore TPR should aim to <em>preserve</em> function, not broadly inhibit it.
+    </div>
+
+    <p>TPR is <strong>not established</strong> as a validated Alzheimer's disease (AD) therapeutic target. Within the relevant biological literature, "TPR" has two meanings: the nuclear pore scaffold protein TPR, and tetratricopeptide repeat (TPR)-domain proteins as a protein family. Their relevance to AD is largely mechanistic and indirect, with meaningful overlap in proteostasis, chaperone regulation, ubiquitin–proteasome degradation, lysosomal/autophagic clearance, mitochondrial quality control, nucleocytoplasmic transport, RNA export, DNA damage and R-loop stress, chromatin regulation, inflammation, and tau aggregation.</p>
+
+    <p>The clearest AD-linked mechanism centers on the TPR-domain E3 ubiquitin ligase <strong>STUB1/CHIP</strong>, which catalyzes K48-linked polyubiquitination of full-length PINK1, enabling VCP/p97-mediated extraction and proteasomal degradation. Disruption of this axis has been reported as compromised in AD brains, with associated neuronal mitophagy defects and learning impairment modelled in <em>C. elegans</em>. A second explicit AD-relevant protein is <strong>FKBP51</strong>, a TPR-containing HSP90 co-chaperone described as promoting aberrant tau aggregation and thereby exacerbating AD progression.</p>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANEL A: STUB1/CHIP Mitophagy Axis  (left, y=20 to y=410)
+          PANEL B: FKBP51 / Tau Aggregation   (right-top, y=20 to y=210)
+          PANEL C: Nuclear Pore TPR            (right-bottom, y=230 to y=410)
+
+          Node count plan (max 16):
+          Panel A: 6 nodes
+            A1 Mitochondrial Damage   (x=60,  y=60,  w=150, h=44)
+            A2 STUB1/CHIP             (x=60,  y=140, w=150, h=44)
+            A3 K48 Ubiquitin–PINK1   (x=60,  y=220, w=150, h=44)
+            A4 VCP/p97 Extraction    (x=60,  y=300, w=150, h=44)
+            A5 Proteasomal Deg.      (x=40,  y=380, w=110, h=40)   branch left
+            A6 PRKN/Parkin Preserved (x=170, y=380, w=130, h=40)   branch right
+          Panel B: 4 nodes
+            B1 HSP90 Complex         (x=540, y=55,  w=150, h=44)
+            B2 FKBP51 (co-chaperone)(x=540, y=135, w=150, h=44)
+            B3 Tau Aggregation       (x=540, y=215, w=150, h=44)  — shared outcome label
+          Panel C: 4 nodes
+            C1 Nuclear Pore TPR      (x=540, y=290, w=150, h=44)
+            C2 RNA Export / NPC      (x=460, y=365, w=130, h=40)
+            C3 R-loop / DNA Damage   (x=610, y=365, w=140, h=40)
+
+          Also outcome node shared for Panel A:
+            A7 Mitophagy Impaired (AD)(x=60, y=460 -- out of bounds, move up)
+
+          Let me recalculate carefully with viewBox 0 0 960 490:
+
+          PANEL A bg: x=20 y=20 w=310 h=450
+          PANEL B bg: x=350 y=20 w=250 h=230
+          PANEL C bg: x=350 y=265 w=250 h=205
+
+          === PANEL A nodes ===
+          A1 (Mitochondrial Damage):   x=75  y=55  w=160 h=44  → rect(75,55,160,44)
+          A2 (STUB1/CHIP):            x=75  y=135 w=160 h=44
+          A3 (K48-Ub·PINK1):         x=75  y=215 w=160 h=44
+          A4 (VCP/p97):               x=75  y=295 w=160 h=44
+          A5 (Proteasomal Deg.):      x=40  y=382 w=120 h=40
+          A6 (Mitophagy Preserved):   x=190 y=382 w=120 h=40
+
+          === PANEL B nodes ===
+          B1 (HSP90 Complex):         x=400 y=60  w=160 h=44
+          B2 (FKBP51):                x=400 y=140 w=160 h=44
+          B3 (Tau Aggregation↑):      x=400 y=218 w=160 h=44   — bottom of panel B, y+h=262, panel B ends y=250
+
+          panel B h=250: x=355 y=20 w=245 h=250
+
+          === PANEL C nodes ===
+          C1 (Nuclear Pore TPR):      x=400 y=292 w=160 h=44
+          C2 (RNA Export blocked):    x=355 y=375 w=130 h=40
+          C3 (R-loop/DNA Damage):     x=500 y=375 w=130 h=40
+
+          panel C: x=355 y=280 w=245 h=195
+
+          All coords verified below.
+        -->
+        <svg viewBox="0 0 960 490" width="900" height="459" xmlns="http://www.w3.org/2000/svg" aria-label="TPR pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-positive" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A background ═══ -->
+          <rect x="22" y="18" width="318" height="452" rx="12"
+                fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="38" y="36" font-family="Helvetica Neue, Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#2e6da4"
+                text-rendering="geometricPrecision" letter-spacing="0.1em">
+            A · STUB1/CHIP–PINK1 MITOPHAGY AXIS
+          </text>
+
+          <!-- ═══ PANEL B background ═══ -->
+          <rect x="356" y="18" width="244" height="250" rx="12"
+                fill="rgba(153,27,27,0.06)" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="372" y="36" font-family="Helvetica Neue, Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#991b1b"
+                text-rendering="geometricPrecision" letter-spacing="0.1em">
+            B · FKBP51 / TAU AGGREGATION
+          </text>
+
+          <!-- ═══ PANEL C background ═══ -->
+          <rect x="356" y="278" width="244" height="192" rx="12"
+                fill="rgba(180,83,9,0.07)" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="372" y="296" font-family="Helvetica Neue, Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#b45309"
+                text-rendering="geometricPrecision" letter-spacing="0.1em">
+            C · NUCLEAR PORE TPR
+          </text>
+
+          <!-- ═══ PANEL D background (AD outcomes) ═══ -->
+          <rect x="630" y="18" width="306" height="452" rx="12"
+                fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="646" y="36" font-family="Helvetica Neue, Arial, sans-serif"
+                font-size="9" font-weight="700" fill="#0f766e"
+                text-rendering="geometricPrecision" letter-spacing="0.1em">
+            D · AD-RELEVANT OUTCOMES
+          </text>
+
+          <!-- ══════════════════════════════════════
+               PANEL A NODES
+          ══════════════════════════════════════ -->
+
+          <!-- A1: Mitochondrial Damage -->
+          <rect x="75" y="52" width="162" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e3a5f">
+            <tspan x="156" dy="0" y="70">Mitochondrial</tspan>
+            <tspan x="156" dy="14">Damage</tspan>
+          </text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="156" y1="96" x2="156" y2="132" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A2: STUB1/CHIP -->
+          <rect x="75" y="132" width="162" height="44" rx="7"
+                fill="#bfdbfe" stroke="#1e3a5f" stroke-width="1.8"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e3a5f">
+            <tspan x="156" y="150">STUB1/CHIP</tspan>
+            <tspan x="156" dy="14">(TPR E3 Ligase)</tspan>
+          </text>
+
+          <!-- Arrow A2→A3 -->
+          <line x1="156" y1="176" x2="156" y2="212" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A3: K48-Ub·PINK1 -->
+          <rect x="75" y="212" width="162" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e3a5f">
+            <tspan x="156" y="230">K48-Ub·PINK1</tspan>
+            <tspan x="156" dy="14">Polyubiquitination</tspan>
+          </text>
+
+          <!-- Arrow A3→A4 -->
+          <line x1="156" y1="256" x2="156" y2="292" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A4: VCP/p97 -->
+          <rect x="75" y="292" width="162" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e3a5f">
+            <tspan x="156" y="310">VCP/p97</tspan>
+            <tspan x="156" dy="14">Extraction</tspan>
+          </text>
+
+          <!-- Arrow A4 branches to A5 (left) and A6 (right) -->
+          <!-- Branch left: down then left -->
+          <polyline points="156,336 156,358 100,358 100,380"
+                    fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-positive)"/>
+          <!-- Branch right: down then right -->
+          <polyline points="156,336 156,358 218,358 218,380"
+                    fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-positive)"/>
+
+          <!-- A5: Proteasomal Deg. -->
+          <rect x="42" y="380" width="118" height="40" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#065f46">
+            <tspan x="101" y="396">Proteasomal</tspan>
+            <tspan x="101" dy="13">Degradation</tspan>
+          </text>
+
+          <!-- A6: Mitophagy / PRKN -->
+          <rect x="172" y="380" width="122" height="40" rx="7"
+                fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#065f46">
+            <tspan x="233" y="396">PRKN/Parkin</tspan>
+            <tspan x="233" dy="13">Preserved</tspan>
+          </text>
+
+          <!-- ══════════════════════════════════════
+               PANEL B NODES
+          ══════════════════════════════════════ -->
+
+          <!-- B1: HSP90 Complex -->
+          <rect x="398" y="55" width="162" height="44" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">
+            <tspan x="479" y="73">HSP90</tspan>
+            <tspan x="479" dy="14">Chaperone Complex</tspan>
+          </text>
+
+          <!-- Arrow B1→B2 -->
+          <line x1="479" y1="99" x2="479" y2="135" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-danger)"/>
+
+          <!-- B2: FKBP51 -->
+          <rect x="398" y="135" width="162" height="44" rx="7"
+                fill="#fecaca" stroke="#991b1b" stroke-width="1.8"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">
+            <tspan x="479" y="153">FKBP51</tspan>
+            <tspan x="479" dy="14">(TPR Co-chaperone)</tspan>
+          </text>
+
+          <!-- Arrow B2→B3 -->
+          <line x1="479" y1="179" x2="479" y2="214" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-danger)"/>
+
+          <!-- B3: Tau Aggregation -->
+          <rect x="398" y="214" width="162" height="44" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">
+            <tspan x="479" y="232">Aberrant Tau</tspan>
+            <tspan x="479" dy="14">Aggregation ↑</tspan>
+          </text>
+
+          <!-- ══════════════════════════════════════
+               PANEL C NODES
+          ══════════════════════════════════════ -->
+
+          <!-- C1: Nuclear Pore TPR -->
+          <rect x="398" y="305" width="162" height="44" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#78350f">
+            <tspan x="479" y="323">Nuclear Pore</tspan>
+            <tspan x="479" dy="14">TPR Scaffold</tspan>
+          </text>
+
+          <!-- Branch left from C1 -->
+          <polyline points="479,349 479,370 422,370 422,382"
+                    fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+          <!-- Branch right from C1 -->
+          <polyline points="479,349 479,370 534,370 534,382"
+                    fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-warn)"/>
+
+          <!-- C2: RNA Export Blocked -->
+          <rect x="365" y="382" width="116" height="40" rx="7"
+                fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">
+            <tspan x="423" y="398">RNA Export</tspan>
+            <tspan x="423" dy="13">Impaired</tspan>
+          </text>
+
+          <!-- C3: R-loop / DNA damage -->
+          <rect x="494" y="382" width="100" height="40" rx="7"
+                fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">
+            <tspan x="544" y="398">R-loop /</tspan>
+            <tspan x="544" dy="13">DNA Damage</tspan>
+          </text>
+
+          <!-- ══════════════════════════════════════
+               PANEL D NODES (AD Outcomes)
+          ══════════════════════════════════════ -->
+
+          <!-- D1: Mitophagy Impaired (AD) -->
+          <rect x="648" y="55" width="166" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">
+            <tspan x="731" y="73">Mitophagy</tspan>
+            <tspan x="731" dy="14">Impaired (AD)</tspan>
+          </text>
+
+          <!-- D2: Mitochondrial Dysfunction -->
+          <rect x="648" y="135" width="166" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">
+            <tspan x="731" y="153">Mitochondrial</tspan>
+            <tspan x="731" dy="14">Dysfunction</tspan>
+          </text>
+
+          <!-- D3: Tau Pathology / AD Progression -->
+          <rect x="648" y="220" width="166" height="44" rx="7"
+                fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">
+            <tspan x="731" y="238">Tau Pathology /</tspan>
+            <tspan x="731" dy="14">AD Progression</tspan>
+          </text>
+
+          <!-- D4: Neurodegeneration -->
+          <rect x="648" y="300" width="166" height="44" rx="7"
+                fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">
+            <tspan x="731" y="318">Neurodegeneration</tspan>
+            <tspan x="731" dy="14">&amp; Cognitive Loss</tspan>
+          </text>
+
+          <!-- D5: Nuclear / RNA Homeostasis Disrupted -->
+          <rect x="648" y="380" width="166" height="40" rx="7"
+                fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+          <text text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">
+            <tspan x="731" y="396">Nuclear / RNA</tspan>
+            <tspan x="731" dy="13">Homeostasis Disrupted</tspan>
+          </text>
+
+          <!-- ══════════════════════════════════════
+               CROSS-PANEL CONNECTORS
+               (go through the gutter between panels,
+                not through any node boxes)
+          ══════════════════════════════════════ -->
+
+          <!-- A5 (Proteasomal Deg.) → D1 (Mitophagy Impaired)
+               Route: right from A5 (x=160,y=400) → gutter x=348 → up to y=77 → right to D1 (x=648,y=77)
+               But gutter between panel A (ends x=340) and panel B/C (starts x=356) = 340 to 356.
+               Need to go ABOVE panel B and panel C without crossing nodes.
+               Safer: elbow right from A5/A6 center, then up through gutter, then into D1.
+               Actually, let me route from PANEL A outcome region (A5+A6 midpoint x=167, y=400 bottom=420)
+               upward through left gutter of panel A (x=22 left edge) is messy.
+               Better: elbow from x=295 (right gutter of panel A, outside its boxes) y=400 → right gutter x=346 → up y=77 → right to D1 x=648.
+               Check: right edge of panel A at x=340. Gutter = 340 to 356.
+               Line: from (295,420) → (346,420) → (346,77) → (648,77)
+               Panel B left edge = 356, gutter is 340-356. x=346 is in the gutter, OK.
+               No boxes in that vertical segment from y=420 up to y=77 at x=346.
+               Check: panel B bg is x=356 (not 346), panel C bg is x=356. So x=346 is in gutter. ✓
+               From A5 right edge (42+118=160) and A6 right edge (172+122=294) — route from x=294+4=298,y=400 right and up.
+          -->
+          <!-- From branch outcome area to D column: use exit at right of panel A -->
+          <!-- A-outcomes → gutter → D1 -->
+          <polyline points="294,400 334,400 334,77 648,77"
+                    fill="none" stroke="#0f766e" stroke-width="1.5"
+                    stroke-dasharray="5 3" marker-end="url(#arr-positive)"/>
+
+          <!-- A-outcomes → D2 Mitochondrial Dysfunction -->
+          <polyline points="294,420 330,420 330,157 648,157"
+                    fill="none" stroke="#0f766e" stroke-width="1.5"
+                    stroke-dasharray="5 3" marker-end="url(#arr-positive)"/>
+
+          <!-- B3 Tau Aggregation → D3 Tau Pathology
+               B3 right edge = 398+162=560. D3 left edge=648. Gutter x=560-648.
+               Straight horizontal line at y=242 from x=560 to x=648. Check no boxes in path.
+               No Panel D node overlaps y=214-258 range except D3 itself starting at x=648. ✓
+          -->
+          <line x1="560" y1="236" x2="648" y2="236"
+                stroke="#991b1b" stroke-width="1.5"
+                stroke-dasharray="5 3" marker-end="url(#arr-danger)"/>
+
+          <!-- C2/C3 (nuclear outcomes) → D5 Nuclear/RNA Homeostasis
+               C2 right edge = 365+116=481, C3 right edge=494+100=594
+               D5 at y=380-420. Route from C3 right (594,402) across gutter to D5 (648,400).
+               Straight line y=402 from x=594 to x=648. Check: no boxes in path at that y. ✓
+          -->
+          <line x1="594" y1="402" x2="648" y2="402"
+                stroke="#b45309" stroke-width="1.5"
+                stroke-dasharray="5 3" marker-end="url(#arr-warn)"/>
+
+          <!-- C1 Nuclear Pore → D4 Neurodegeneration (indirect link)
+               C1 right edge = 398+162=560. D4 at y=300-344.
+               Straight line at y=327 from x=560 to x=648. No panel C boxes overlap y=300-349 in x=560-648 region. ✓
+          -->
+          <line x1="560" y1="327" x2="648" y2="327"
+                stroke="#b45309" stroke-width="1.5"
+                stroke-dasharray="5 3" marker-end="url(#arr-warn)"/>
+
+          <!-- D1→D2→D3→D4 vertical flow inside panel D -->
+          <line x1="731" y1="99"  x2="731" y2="132" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-positive)"/>
+          <line x1="731" y1="179" x2="731" y2="217" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+          <line x1="731" y1="264" x2="731" y2="297" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A</strong> — STUB1/CHIP (TPR E3 ligase) catalyzes K48 polyubiquitination of full-length PINK1 following mitochondrial damage; VCP/p97 extracts and routes PINK1 to proteasomal degradation (left branch) while preserving PRKN/Parkin-dependent mitophagy (right branch).
+        <strong>Panel B</strong> — FKBP51 (TPR co-chaperone) within the HSP90 complex promotes aberrant tau aggregation, directly linking this TPR-domain protein to AD progression.
+        <strong>Panel C</strong> — Nuclear pore TPR scaffold, when disrupted, bifurcates into impaired RNA export and R-loop/DNA damage accumulation.
+        <strong>Panel D</strong> — Convergent AD-relevant outcomes: mitophagy failure, mitochondrial dysfunction, tau pathology, neurodegeneration/cognitive loss, and nuclear/RNA homeostasis disruption.
+        Dashed arrows denote cross-panel mechanistic links; solid arrows denote direct sequential steps.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>TPR Domains as Scaffold Modules</h3>
+        TPR-domain proteins repeatedly organize chaperone complexes, E3 ligase–substrate recognition, degradation machinery, mitochondrial import systems, RNA export complexes, and stress-response assemblies. Their modular interaction surfaces make them versatile but difficult to target broadly.
+      </div>
+
+      <div class="card card-accent">
+        <h3>STUB1/CHIP — Strongest AD-Relevant Mechanism</h3>
+        STUB1's TPR-containing quality-control machinery regulates full-length PINK1 after mitochondrial damage via K48 ubiquitination and VCP/p97-mediated extraction. Compromised STUB1–VCP/p97 function has been reported in AD brains, with downstream neuronal mitophagy defects and learning impairment in <em>C. elegans</em>.
+      </div>
+
+      <div class="card card-danger">
+        <h3>FKBP51 — Tau-Focused AD Link</h3>
+        FKBP51, a TPR-containing HSP90 co-chaperone, is described as promoting aberrant tau aggregation, directly exacerbating AD progression. Selective FKBP51 inhibition or functional modulation is a plausible therapeutic concept for reducing tau pathology.
+      </div>
+
+      <div class="card card-positive">
+        <h3>TPR-Mediated Proteostasis as Therapeutic Theme</h3>
+        CHIP/STUB1 directs substrates to K48-linked polyubiquitination and proteasomal clearance; FKBP8 connects cargo to lysosomal degradation via RAB7A and LAMP1 recruitment. These mechanisms overlap with the AD need to clear toxic, misfolded proteins, though most examples lack direct AD model validation.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Nuclear Pore TPR — Toxicity Risk</h3>
+        Pharmacologic disruption of nuclear pore TPR (e.g., by norlichexanthone) causes nuclear membrane abnormalities, broad RNA nuclear retention, R-loop accumulation, and DNA damage. AD-directed strategies must aim to <em>preserve</em> nuclear pore TPR function, not inhibit it.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Disambiguation Required</h3>
+        Many uses of "TPR" in the literature (true positive rate, total peripheral resistance, tumor-to-pancreas ratio, plant TOPLESS-related proteins, <em>Treponema pallidum</em> repeat proteins) are biologically unrelated to AD. Only nuclear pore TPR and tetratricopeptide repeat-domain proteins are mechanistically relevant here.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <div>
+          <strong>Treat TPR as a hypothesis-generating target class, not a validated AD target.</strong>
+          The evidence supports investigation of specific TPR-domain proteins and interfaces rather than generic targeting of "TPR." Broad approaches are unlikely to be tractable or safe.
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong>Prioritize the STUB1–VCP/p97–PINK1 axis for AD-focused validation.</strong>
+          Key experiments should test whether restoring STUB1-mediated K48 ubiquitination of excess full-length PINK1 improves mitophagy, preserves PRKN/Parkin, reduces mitochondrial stress, and improves neuronal function in AD-relevant models.
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong>Evaluate FKBP51 as a tau-modifying therapeutic node.</strong>
+          Selective FKBP51 inhibitors or modulators should be assessed for effects on HSP90-associated tau aggregation, tau proteostasis, neuronal survival, and cognition-related phenotypes in AD models.
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong>Explore TPR-domain-mediated degradation strategies.</strong>
+          Beneficial approaches may include enhancing selective CHIP/STUB1 activity, recruiting toxic proteins to lysosomal/autophagic pathways through TPR-domain adaptors, or stabilizing chaperone triage systems that favor clearance over aggregation.
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong>Avoid broad inhibition of nuclear pore TPR.</strong>
+          Because nuclear pore TPR supports essential nuclear architecture and RNA/nucleocytoplasmic transport, AD-directed strategies should focus on preserving TPR function, nuclear pore integrity, RNA export, and reduction of downstream R-loop and DNA damage stress.
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong>Establish disease specificity before therapeutic development.</strong>
+          Needed evidence includes TPR protein expression and localization changes in AD brain, altered TPR-domain interactions in neurons or glia, causal links to tau, amyloid, mitophagy, RNA export, nuclear pore integrity, or inflammation, and rescue of AD-relevant phenotypes after selective modulation.
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment —</span>
+      TPR-domain proteins represent a <strong>mechanistically diverse, hypothesis-generating target class</strong> for Alzheimer's disease research rather than a single validated therapeutic target. The strongest evidence centers on <strong>STUB1/CHIP-mediated regulation of the PINK1–mitophagy axis</strong>, which is directly reported as compromised in AD brains, and on <strong>FKBP51's role in promoting aberrant tau aggregation</strong> through the HSP90 co-chaperone network. Both represent selective, protein-specific opportunities. Wider TPR-domain mechanisms — including OGT O-GlcNAcylation and FKBP8-lysosomal crosstalk — are thematically relevant to AD proteostasis but lack direct model validation. <strong>Nuclear pore TPR carries an essential, non-inhibitable role</strong>; any neurodegeneration strategy at this node must preserve rather than disrupt its function. Therapeutic progress will require rigorous disambiguation of TPR biology, target-specific experimental validation in AD-relevant systems, and demonstration of disease-context specificity before any clinical translation is warranted.
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  TPR / Tetratricopeptide Repeat — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

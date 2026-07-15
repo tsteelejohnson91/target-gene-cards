@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGM5 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e36 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.45);
+    border: 1px solid rgba(255,180,180,0.45);
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1.05rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.96rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.98rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-top: 8px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-light);
+  }
+  .card.danger h3 { color: var(--danger); }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+  .card.positive h3 { color: var(--positive); }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+  .card.warning h3 { color: var(--warning); }
+
+  .card.neutral {
+    border-left-color: var(--neutral);
+    background: var(--neutral-light);
+  }
+  .card.neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  ol.takeaways li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e36 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    line-height: 1.75;
+    font-size: 0.98rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.65);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #fff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 56px;
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PGM5 &nbsp;|&nbsp; Phosphoglucomutase 5 / Aciculin</span>
+    <span class="chip chip-danger">⚠ Indirect / Unvalidated AD Evidence</span>
+  </div>
+  <h1>PGM5 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Epistemic Caution</strong>
+      PGM5 is <em>not</em> directly established as an Alzheimer's disease gene, biomarker, or therapeutic target. All current evidence is indirect, derived from cancer, placental, inflammatory-trait genetics, aging GWAS, cytoskeletal, infection, and toxin-injured-brain or Parkinsonism models. No cited study directly tests PGM5 in AD patients, amyloid-β/tau models, or AD-specific neuroinflammation.
+    </div>
+
+    <p>PGM5 (also known as aciculin) is a phosphoglucomutase-family protein characterized by strong structural and cytoskeletal roles — including association with adherens-type junctions, focal adhesions, dystrophin/utrophin complexes, and membrane-cytoskeleton coupling — but with limited or absent classic enzymatic phosphoglucomutase activity in several studies. Its most Alzheimer's-adjacent evidence derives from a rotenone-injured mouse brain organoid model, where gene-body hypermethylation silenced <em>Pgm5</em> alongside <em>Zic4</em> and <em>Camta1</em>, and where restoration of PGM5 expression — achieved via Codonopsis pilosula polysaccharide treatment — coincided with improved glutathione activity, cell-cycle progression, and reduced cytotoxicity.</p>
+
+    <p>Beyond this organoid study, PGM5's potential relevance to Alzheimer's disease is speculative. Cancer biology repeatedly links PGM5 and its noncoding counterparts (PGM5-AS1, circPGM5) to suppression of glycolysis, LDHA expression, lactate production, and STAT3 phosphorylation — pathways that conceptually overlap with AD brain glucose hypometabolism, glial metabolic reprogramming, and neuroinflammatory signaling, but have not been validated in AD systems. Inflammatory-trait GWAS data also place a locus near PGM5 among shared genetic architecture for fibrinogen and C-reactive protein, both relevant to vascular inflammation and dementia risk, without establishing causality.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" aria-label="PGM5 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-pos" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-danger" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-neutral" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Stress / Epigenetic Silencing -->
+          <rect x="14" y="14" width="260" height="472" rx="12"
+                fill="rgba(30,58,95,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="144" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">PANEL A · UPSTREAM STRESS</text>
+
+          <!-- Node A1: Rotenone / MPTP -->
+          <rect x="38" y="48" width="152" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="114" y="67" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Rotenone / MPTP</text>
+          <text x="114" y="83" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Mitochondrial toxin</text>
+
+          <!-- A1 → A2 -->
+          <line x1="114" y1="92" x2="114" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Organelle damage / Ox stress -->
+          <rect x="34" y="118" width="160" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="114" y="137" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Organelle Damage</text>
+          <text x="114" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">+ Oxidative Stress</text>
+
+          <!-- A2 → A3 -->
+          <line x1="114" y1="162" x2="114" y2="188" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A3: Gene-body hypermethylation -->
+          <rect x="28" y="188" width="172" height="44" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="114" y="207" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Gene-Body</text>
+          <text x="114" y="222" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Hypermethylation</text>
+
+          <!-- A3 → A4 -->
+          <line x1="114" y1="232" x2="114" y2="258" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-danger)"/>
+
+          <!-- Node A4: PGM5 Silenced -->
+          <rect x="38" y="258" width="152" height="44" rx="7"
+                fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="114" y="277" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#9b1c1c">PGM5 Silenced</text>
+          <text x="114" y="293" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">+ ZIC4, CAMTA1↓</text>
+
+          <!-- A4 → A5 -->
+          <line x1="114" y1="302" x2="114" y2="328" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-danger)"/>
+
+          <!-- Node A5: Reduced survival -->
+          <rect x="34" y="328" width="160" height="44" rx="7"
+                fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="114" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Reduced Cell Survival</text>
+          <text x="114" y="364" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">↑ Cytotoxicity</text>
+
+          <!-- Panel B: Restoration / Protective Branch -->
+          <rect x="294" y="14" width="280" height="472" rx="12"
+                fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="434" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">PANEL B · RESTORATION &amp; PROTECTION</text>
+
+          <!-- Node B1: Codonopsis polysaccharide -->
+          <rect x="316" y="48" width="176" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="404" y="67" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#134e4a">Codonopsis pilosula</text>
+          <text x="404" y="83" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Polysaccharide treatment</text>
+
+          <!-- B1 → B2 -->
+          <line x1="404" y1="92" x2="404" y2="118" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+          <!-- Node B2: Methylation reversal -->
+          <rect x="314" y="118" width="180" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="404" y="137" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#134e4a">Methylation Reversal</text>
+          <text x="404" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">PGM5 / ZIC4 / CAMTA1↑</text>
+
+          <!-- B2 → Branch left B3a and right B3b -->
+          <!-- Branch left: Glutathione -->
+          <line x1="370" y1="162" x2="346" y2="188" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+          <!-- Branch right: Cell cycle -->
+          <line x1="438" y1="162" x2="462" y2="188" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+          <!-- Node B3a: Glutathione -->
+          <rect x="300" y="188" width="136" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="368" y="207" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#134e4a">↑ Glutathione</text>
+          <text x="368" y="223" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Antioxidant activity</text>
+
+          <!-- Node B3b: Cell cycle -->
+          <rect x="448" y="188" width="112" height="44" rx="7"
+                fill="#ccfbf1" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="504" y="207" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#134e4a">Cell Cycle</text>
+          <text x="504" y="223" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Progression↑</text>
+
+          <!-- B3a → B4 convergence -->
+          <line x1="368" y1="232" x2="404" y2="284" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+          <!-- B3b → B4 convergence -->
+          <line x1="504" y1="232" x2="456" y2="284" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-pos)"/>
+
+          <!-- Node B4: Neural Resilience -->
+          <rect x="322" y="284" width="164" height="44" rx="7"
+                fill="#134e4a" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="404" y="303" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#fff">Neural Cell Resilience</text>
+          <text x="404" y="319" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#99f6e4">↓ Cytotoxicity</text>
+
+          <!-- Panel C: Downstream Signaling -->
+          <rect x="594" y="14" width="292" height="472" rx="12"
+                fill="rgba(46,109,164,0.06)" stroke="#64748b" stroke-width="1.2"/>
+          <text x="740" y="36" text-anchor="middle" font-family="Arial,sans-serif"
+                font-size="9" font-weight="700" fill="#475569" letter-spacing="1">PANEL C · DOWNSTREAM / STRUCTURAL ROLES</text>
+
+          <!-- Node C1: PGM5 / Aciculin -->
+          <rect x="624" y="48" width="172" height="44" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="710" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#1e3a5f">PGM5 / Aciculin</text>
+          <text x="710" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#2e6da4">Structural protein</text>
+
+          <!-- C1 → C2 (left branch: cytoskeletal) -->
+          <line x1="672" y1="92" x2="660" y2="128" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- C1 → C3 (right branch: metabolic) -->
+          <line x1="748" y1="92" x2="760" y2="128" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node C2: Cytoskeletal/junction -->
+          <rect x="610" y="128" width="130" height="52" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="675" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Adherens Junctions</text>
+          <text x="675" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Focal Adhesions</text>
+          <text x="675" y="178" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Dystrophin complex</text>
+
+          <!-- Node C3: Metabolic signaling -->
+          <rect x="750" y="128" width="122" height="52" rx="7"
+                fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="811" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">LDHA / Lactate</text>
+          <text x="811" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Glycolysis↓</text>
+          <text x="811" y="178" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">STAT3 phosph.↓</text>
+
+          <!-- C2 → C4 -->
+          <line x1="675" y1="180" x2="675" y2="216" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr-neutral)"/>
+          <!-- C3 → C4 -->
+          <line x1="811" y1="180" x2="756" y2="216" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr-neutral)"/>
+
+          <!-- Node C4: BBB / Vascular -->
+          <rect x="624" y="216" width="172" height="44" rx="7"
+                fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+          <text x="710" y="235" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">BBB / Vascular</text>
+          <text x="710" y="250" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Smooth muscle integrity</text>
+
+          <!-- C4 → C5 -->
+          <line x1="710" y1="260" x2="710" y2="286" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr-neutral)"/>
+
+          <!-- Node C5: ncRNA axis -->
+          <rect x="618" y="286" width="184" height="52" rx="7"
+                fill="#fef9c3" stroke="#b45309" stroke-width="1.2"/>
+          <text x="710" y="308" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#78350f">PGM5-AS1 / circPGM5</text>
+          <text x="710" y="322" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#78350f">miRNA axes: PTEN, PI3K-AKT</text>
+          <text x="710" y="336" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#92400e">Ferroptosis / Pyroptosis sigs.</text>
+
+          <!-- Cross-panel connector: A4 (silenced) → B2 region via gutter -->
+          <!-- Route: from right edge of A4 (190,280) → into gutter at x=280 → up to 162 → into B2 left edge -->
+          <!-- Actually let's do A5 bottom → B4 via gutter below panels - but complex. Instead connect A4 to B2 through gutter -->
+          <!-- A4 right edge: x=190, y=280; B2 left edge: x=314, y=140 -->
+          <!-- Gutter x range: 190→294. Use elbow at x=265 -->
+          <polyline points="190,280 242,280 242,140 314,140"
+                    fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3"
+                    marker-end="url(#arr-neutral)"/>
+
+          <!-- Cross-panel: B4 → C4 via gutter -->
+          <!-- B4 right edge: x=486, y=306; C4 left edge: x=624, y=238 -->
+          <!-- Gutter: x 486→594. Elbow at x=555 -->
+          <polyline points="486,306 555,306 555,238 624,238"
+                    fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3"
+                    marker-end="url(#arr-pos)"/>
+
+          <!-- Label for dashed connector A→B -->
+          <text x="216" y="272" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#b45309">reversal</text>
+          <!-- Label for dashed connector B→C -->
+          <text x="555" y="295" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#0f766e">→ AD relevance</text>
+
+          <!-- GWAS / inflammatory note at bottom Panel C -->
+          <rect x="622" y="364" width="254" height="44" rx="7"
+                fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+          <text x="749" y="383" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">GWAS: PGM5 locus shared with</text>
+          <text x="749" y="397" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">CRP / Fibrinogen (indirect)</text>
+
+          <!-- C5 → GWAS box -->
+          <line x1="710" y1="338" x2="710" y2="364" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr-neutral)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (left, blue):</strong> Upstream stress cascade — rotenone/MPTP causes organelle damage and oxidative stress, triggering gene-body hypermethylation that silences PGM5 (alongside ZIC4 and CAMTA1), leading to reduced cell survival and increased cytotoxicity.
+        <strong>Panel B (centre, teal):</strong> Restoration branch — Codonopsis pilosula polysaccharide reverses methylation and restores PGM5 expression; the pathway then fans into two parallel protective sub-cascades (↑ glutathione antioxidant activity; ↑ cell-cycle progression) converging on enhanced neural cell resilience.
+        <strong>Panel C (right, slate):</strong> Downstream/structural roles — PGM5/aciculin branches into cytoskeletal-junction biology (adherens junctions, focal adhesions, dystrophin complex) and metabolic signaling (LDHA/lactate/STAT3 suppression), converging on blood–brain barrier and vascular smooth-muscle integrity, with the noncoding RNA axis (PGM5-AS1/circPGM5) and GWAS inflammatory-trait signals noted below. Dashed connectors link the panels to indicate cross-panel mechanistic flow.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Hypothesis-Generating Candidate</h3>
+        PGM5 is currently a <em>hypothesis-generating</em> Alzheimer's candidate, not a validated therapeutic target. No existing study directly tests PGM5 in AD patients, amyloid-β models, tau models, or Alzheimer's-specific neuroinflammation.
+      </div>
+
+      <div class="card positive">
+        <h3>Neural Protection Signal</h3>
+        The strongest neural evidence shows that higher PGM5 expression is protective in rotenone-injured mouse brain organoids, correlating with increased glutathione activity, restored cell-cycle progression, and reversal of epigenetic silencing at the ZIC4/PGM5/CAMTA1 axis.
+      </div>
+
+      <div class="card warning">
+        <h3>Metabolic &amp; Signaling Overlap</h3>
+        Cancer studies link PGM5 and PGM5-AS1 to suppression of LDHA, lactate production, and STAT3 phosphorylation — pathways that conceptually overlap with AD brain glucose hypometabolism, glial metabolic reprogramming, and neuroinflammatory STAT3 signaling, though not yet validated in AD systems.
+      </div>
+
+      <div class="card">
+        <h3>Structural / Cytoskeletal Roles</h3>
+        PGM5 (aciculin) functions primarily as a structural scaffold: it associates with adherens junctions, focal adhesions, and dystrophin/utrophin complexes. If relevant to AD, it may act through synaptic stability, BBB integrity, vascular smooth-muscle biology, or cytoskeletal-junction organisation rather than direct glucose-1-phosphate catalysis.
+      </div>
+
+      <div class="card neutral">
+        <h3>Noncoding RNA Complexity</h3>
+        PGM5-AS1 and circPGM5 regulate multiple miRNA-linked cancer pathways (PTEN, PI3K-AKT, Hippo, p53, FoxO, ferroptosis, pyroptosis) that conceptually overlap with aging and neuroinflammation, but have not been validated in AD systems. Their effects may be tissue-specific and independent of PGM5 protein function.
+      </div>
+
+      <div class="card danger">
+        <h3>Major Limitations</h3>
+        Key limitations include: lack of AD-specific data, highly context-dependent PGM5 effects across tissues, uncertainty about protein versus lncRNA functions, inconsistent PGM5-AS1 directionality across cancers, and unclear consequences of PGM5 modulation specifically in neurons or glia.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+
+      <li>
+        <span><strong>Treat as a candidate node, not a validated target.</strong> PGM5 should be approached as a mechanistic hypothesis-generating candidate for AD research; no therapeutic development is warranted without first establishing AD-system validity.</span>
+      </li>
+
+      <li>
+        <span><strong>Prioritise expression mapping across AD-relevant cell types.</strong> Measure PGM5, PGM5-AS1, and circPGM5 in AD brain tissue, CSF, blood, and single-cell datasets across neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, and vascular smooth muscle cells.</span>
+      </li>
+
+      <li>
+        <span><strong>Investigate the ZIC4/PGM5/CAMTA1 epigenetic axis.</strong> Determine whether the methylation-mediated PGM5 suppression observed in rotenone-injured brain organoids occurs in AD models exposed to amyloid-β, tau, APOE genotype, hypoxia, inflammatory cytokines, or aging-associated stress.</span>
+      </li>
+
+      <li>
+        <span><strong>Test LDHA/lactate/STAT3 regulation in glial cells.</strong> Specifically examine whether PGM5 modulates LDHA expression, lactate production, and STAT3 activation in activated astrocytes and microglia, given their roles in AD neuroinflammation and metabolic reprogramming.</span>
+      </li>
+
+      <li>
+        <span><strong>Distinguish protein from noncoding RNA functions.</strong> PGM5-AS1 and circPGM5 may carry tissue-specific miRNA targets entirely independent of PGM5 protein biology; experiments must separate these contributions rather than conflating the locus as a unit.</span>
+      </li>
+
+      <li>
+        <span><strong>Do not assume PGM1-like enzymatic activity.</strong> Structural studies indicate PGM5 may function primarily through scaffolding, binding, localization, and cytoskeletal interactions rather than classic phosphoglucomutase catalysis; functional assays should reflect this.</span>
+      </li>
+
+      <li>
+        <span><strong>Mandate cell-type specificity and safety testing.</strong> PGM5-associated effects on apoptosis, proliferation, metabolism, and lactate signaling are highly context-dependent; a strategy beneficial in activated glia could be harmful to neurons that rely on astrocyte-derived lactate support.</span>
+      </li>
+
+      <li>
+        <span><strong>Evaluate functional restoration outcomes.</strong> If PGM5 expression can be restored in AD-relevant models, assess mitochondrial function, glutathione balance, oxidative-stress resistance, ferroptosis resistance, synaptic integrity, cytoskeletal stability, and inflammatory signaling as primary readouts.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PGM5 in Alzheimer's Disease</span>
+      <p>
+        PGM5 represents an <strong>indirect, hypothesis-generating candidate</strong> for Alzheimer's disease research, with no direct evidential link to core AD mechanisms such as amyloid-β pathology, tau hyperphosphorylation, or AD-specific neurodegeneration. Its most compelling neural evidence stems from a <strong>rotenone-injured brain organoid model</strong>, where epigenetic silencing of PGM5 tracks with mitochondrial stress and cytotoxicity, and where its restoration coincides with improved antioxidant capacity and cell survival. PGM5's characterization as <strong>aciculin — a structural scaffold</strong> at adherens junctions, focal adhesions, and dystrophin complexes — suggests any AD relevance may operate through cytoskeletal integrity, vascular smooth muscle biology, or stress-response scaffolding rather than direct metabolic catalysis. Cancer-derived data tentatively connect PGM5 to the <strong>LDHA/lactate/STAT3 axis</strong> and a rich noncoding RNA landscape (PGM5-AS1, circPGM5), both of which conceptually intersect with glial metabolic reprogramming and neuroinflammation in AD. Inflammatory-trait GWAS nominally implicate the PGM5 locus in fibrinogen and CRP biology, adding circumstantial vascular relevance. The path forward requires <strong>rigorous AD-system validation</strong>: expression mapping in AD brain and CSF, mechanistic testing in amyloid/tau/APOE models, and careful separation of protein, lncRNA, and circRNA contributions — before any therapeutic hypothesis can be advanced with confidence.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PGM5 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

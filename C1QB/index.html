@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C1QB — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+    color: #e2eaf5;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 20px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 1.1em;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.86rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue-mid);
+  }
+  .card-blue h3 { color: var(--blue-mid); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #e2eaf5;
+    border-radius: 12px;
+    padding: 36px 36px;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict b {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: C1QB &nbsp;|&nbsp; Complement C1q B Chain</span>
+    <span class="chip chip-danger">⚠ Broad inhibition risk: immune &amp; clearance deficits</span>
+  </div>
+  <h1>C1QB &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Caveat</span>
+      Complete C1q/C1QB blockade carries real risk: C1q supports immune-complex clearance, apoptotic-cell removal, debris phagocytosis, and host defense. C1q deficiency is associated with recurrent infections and lupus-like autoimmunity. Any therapeutic strategy must aim for partial, brain-targeted, or pathway-selective modulation — not broad chronic suppression.
+    </div>
+
+    <div class="overview-text">
+      <p>C1QB encodes the B-chain subunit of C1q, the initiating recognition component of the classical complement pathway. In the AD literature, C1QB is most consistently described as part of a coordinated C1q module with C1QA and C1QC, rather than as an isolated AD gene. Across AD-specific, dementia-related, and neuroinflammatory studies, C1QB is linked to amyloid-associated microglial activation, complement-mediated synaptic tagging and pruning, neuroinflammation, gliosis, disrupted neuron–glia coordination, vascular and amyloid inflammatory injury, and AD-associated behavioral phenotypes such as apathy.</p>
+      <p>The strongest AD-relevant pattern places C1QB within a broader innate immune and complement network involving C1QA, C1QC, C3, C3AR1, C4, TYROBP/DAP12, TREM2, CD14, CSF1R, FCER1G, ITGAM/ITGB2, and other microglial or macrophage-lineage genes. This network defines disease-associated microglial states that localize around amyloid-β plaques, correlate with amyloid or tau pathology, and may contribute to synapse loss and cognitive or neuropsychiatric dysfunction.</p>
+      <p>As a therapeutic target, C1QB is biologically plausible but not yet validated as a standalone AD target. The evidence more strongly supports C1QB as a mechanistic biomarker, pathway node, and pharmacodynamic readout within the C1q/classical complement–microglia axis. Direct AD interventions in the literature generally target downstream complement signaling, upstream microglial regulators, or broader immunomodulatory pathways rather than C1QB itself.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; min-width:600px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Activation -->
+        <rect x="10" y="10" width="280" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="150" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" letter-spacing="0.1em" fill="#1e3a5f" text-transform="uppercase">A · UPSTREAM TRIGGERS</text>
+
+        <!-- Amyloid-beta plaques -->
+        <rect x="55" y="45" width="150" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="130" y="60" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Amyloid-β Plaques</text>
+        <text x="130" y="75" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c7ddf5">&amp; Tau Pathology</text>
+
+        <!-- Arrow down to C1q complex -->
+        <line x1="130" y1="83" x2="130" y2="113" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- C1q complex node -->
+        <rect x="42" y="115" width="176" height="40" rx="7" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="130" y="131" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">C1q Complex</text>
+        <text x="130" y="147" text-anchor="middle" font-family="Georgia" font-size="10" fill="#93c5fd">C1QA · C1QB · C1QC</text>
+
+        <!-- Arrow down to TYROBP/TREM2 -->
+        <line x1="130" y1="155" x2="130" y2="185" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- TYROBP/TREM2 node -->
+        <rect x="42" y="187" width="176" height="38" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="130" y="202" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">TYROBP / TREM2</text>
+        <text x="130" y="217" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c7ddf5">DAP12 microglial axis</text>
+
+        <!-- Arrow down to DAM state -->
+        <line x1="130" y1="225" x2="130" y2="255" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Disease-associated microglia -->
+        <rect x="32" y="257" width="196" height="38" rx="7" fill="#1e4080" stroke="#2e6da4" stroke-width="1"/>
+        <text x="130" y="272" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Disease-Associated</text>
+        <text x="130" y="287" text-anchor="middle" font-family="Georgia" font-size="10" fill="#93c5fd">Microglia (DAM)</text>
+
+        <!-- Arrow down to C3 activation -->
+        <line x1="130" y1="295" x2="130" y2="323" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- C3/C4 activation -->
+        <rect x="55" y="325" width="150" height="38" rx="7" fill="#2563a8" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="130" y="340" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">C3 / C4 Activation</text>
+        <text x="130" y="355" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c7ddf5">Downstream complement</text>
+
+        <!-- Panel B: Pathological Outcomes (branching) -->
+        <rect x="308" y="10" width="340" height="480" rx="12" fill="#fff1f1" fill-opacity="0.45" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="478" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" letter-spacing="0.1em" fill="#991b1b">B · PATHOLOGICAL CASCADES</text>
+
+        <!-- Entry node: Synapse Tagging -->
+        <rect x="360" y="45" width="156" height="38" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="438" y="61" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Synapse Tagging</text>
+        <text x="438" y="76" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">C1q opsonisation</text>
+
+        <!-- Branch left arrow: to Synaptic Pruning -->
+        <line x1="380" y1="83" x2="345" y2="138" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+        <!-- Branch right arrow: to Neuroinflammation -->
+        <line x1="496" y1="83" x2="531" y2="138" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+
+        <!-- Left branch: Synaptic Pruning -->
+        <rect x="313" y="140" width="148" height="38" rx="7" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="387" y="155" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Synaptic Pruning</text>
+        <text x="387" y="170" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">Microglial engulfment</text>
+
+        <!-- Left branch step 2: Dendritic Spine Loss -->
+        <line x1="387" y1="178" x2="387" y2="208" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+        <rect x="313" y="210" width="148" height="38" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="387" y="225" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Spine Density Loss</text>
+        <text x="387" y="240" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">Dendritic retraction</text>
+
+        <!-- Right branch: Neuroinflammation -->
+        <rect x="491" y="140" width="148" height="38" rx="7" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="565" y="155" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Neuroinflammation</text>
+        <text x="565" y="170" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">IL-1β, IL-6, gliosis</text>
+
+        <!-- Right branch step 2: Vascular / CAA -->
+        <line x1="565" y1="178" x2="565" y2="208" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+        <rect x="491" y="210" width="148" height="38" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="565" y="225" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Vascular Injury</text>
+        <text x="565" y="240" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">CAA inflammation</text>
+
+        <!-- Converge arrows down to shared outcome -->
+        <line x1="387" y1="248" x2="420" y2="308" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+        <line x1="565" y1="248" x2="532" y2="308" stroke="#991b1b" stroke-width="1.7" marker-end="url(#arr-red)"/>
+
+        <!-- Shared outcome: Cognitive / Neuropsychiatric Dysfunction -->
+        <rect x="340" y="310" width="276" height="40" rx="7" fill="#7f1d1d" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="478" y="326" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Cognitive &amp; Neuropsychiatric</text>
+        <text x="478" y="341" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fecaca">Dysfunction &amp; Apathy (5xFAD)</text>
+
+        <!-- Cross-panel arrow from C3 activation to Synapse Tagging -->
+        <line x1="205" y1="344" x2="340" y2="64" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- This diagonal crosses panel B boxes; reroute as elbow -->
+        <!-- Remove diagonal; use elbow through gutter instead -->
+
+        <!-- Panel C: Therapeutic / Protective -->
+        <rect x="666" y="10" width="265" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="798" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" letter-spacing="0.1em" fill="#0f766e">C · MODULATION &amp; BIOMARKERS</text>
+
+        <!-- C3aR Antagonism node -->
+        <rect x="690" y="45" width="218" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="799" y="61" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">C3aR Antagonism</text>
+        <text x="799" y="76" text-anchor="middle" font-family="Georgia" font-size="10" fill="#99f6e4">SB290157 + methylphenidate</text>
+
+        <!-- Arrow down -->
+        <line x1="799" y1="83" x2="799" y2="113" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Treg Immunomodulation -->
+        <rect x="690" y="115" width="218" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="799" y="131" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">Treg Transfer</text>
+        <text x="799" y="147" text-anchor="middle" font-family="Georgia" font-size="10" fill="#99f6e4">Reduces C1qb/C4a gliosis</text>
+
+        <!-- Arrow down -->
+        <line x1="799" y1="153" x2="799" y2="183" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- TYROBP/DAP12 deficiency -->
+        <rect x="690" y="185" width="218" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="799" y="201" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">TYROBP/DAP12 Deficiency</text>
+        <text x="799" y="217" text-anchor="middle" font-family="Georgia" font-size="10" fill="#99f6e4">Represses C1qa/b/c</text>
+
+        <!-- Arrow down -->
+        <line x1="799" y1="223" x2="799" y2="253" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Pharmacodynamic Biomarker -->
+        <rect x="690" y="255" width="218" height="40" rx="7" fill="#065f46" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="799" y="271" text-anchor="middle" font-family="Georgia" font-size="11" fill="white" font-weight="bold">C1QB as PD Biomarker</text>
+        <text x="799" y="286" text-anchor="middle" font-family="Georgia" font-size="10" fill="#99f6e4">Multi-gene panel readout</text>
+
+        <!-- Arrow down to safety note -->
+        <line x1="799" y1="295" x2="799" y2="325" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Safety node -->
+        <rect x="690" y="327" width="218" height="40" rx="7" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+        <text x="799" y="343" text-anchor="middle" font-family="Georgia" font-size="11" fill="#991b1b" font-weight="bold">⚠ Preserve Clearance</text>
+        <text x="799" y="358" text-anchor="middle" font-family="Georgia" font-size="10" fill="#b91c1c">Partial/targeted inhibition only</text>
+
+        <!-- Connector: Panel A C3 → Panel B Synapse Tagging via gutter -->
+        <!-- Elbow: from right edge of C3 node (205,344) go right to gutter x=295, then up to y=64, then right to panel B left edge 360 at y=64 -->
+        <polyline points="205,344 295,344 295,64 360,64" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Connector: Panel B outcome → Panel C C3aR (through gutter at right of Panel B) -->
+        <!-- From right of outcome box (616,330) elbow down to y=370, right to x=680, up to y=64, right to panel C -->
+        <polyline points="616,330 650,330 650,64 690,64" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel labels text -->
+        <!-- Panel A label already drawn above -->
+
+      </svg>
+
+      <p class="figure-caption">
+        <b>Panel A (blue) — Upstream Triggers:</b> Amyloid-β plaques and tau pathology drive assembly and deposition of the C1q complex (C1QA·C1QB·C1QC), activating the TYROBP/TREM2 microglial axis that establishes disease-associated microglia (DAM) and downstream C3/C4 complement. Dashed blue arrow routes through the inter-panel gutter into Panel B.
+        <b>Panel B (red) — Pathological Cascades:</b> C1q-mediated synapse tagging branches into two parallel streams — left: microglial synaptic pruning → dendritic spine density loss; right: neuroinflammation (IL-1β, IL-6, gliosis) → vascular/CAA injury. Both streams converge on cognitive and neuropsychiatric dysfunction (apathy, memory loss). Dashed teal arrow routes into Panel C.
+        <b>Panel C (teal) — Modulation &amp; Biomarkers:</b> Therapeutic interventions (C3aR antagonism, Treg transfer, TYROBP/DAP12 deficiency) reduce C1QB-containing inflammatory signatures. C1QB is positioned as a pharmacodynamic biomarker in a multi-gene panel, with a safety note emphasizing partial/targeted inhibition to preserve beneficial clearance functions.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>🧬 C1q Complex Biology</h3>
+        C1QB acts as part of the C1q heterotrimer with C1QA and C1QC. The relevant biology is C1q-complex activation, not C1QB acting in isolation. Repeated co-expression of all three subunits in AD datasets confirms this module-level biology.
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠ Synaptic Pruning &amp; Spine Loss</h3>
+        C1QA, C1QB, C1QC, C1R, C1S, and C3 are upregulated in AD brains. These genes correlate with amyloid and tau pathology, implicating disrupted microglia–astrocyte–neuron coordination and excessive complement-mediated synapse elimination as a driver of cognitive decline.
+      </div>
+
+      <div class="card card-warning">
+        <h3>🧠 Neuropsychiatric Symptoms</h3>
+        In 5xFAD mice, elevated C1qb/C1qa/C1qc in prefrontal cortex strongly correlated with apathy-like behavior. This links C1QB-containing complement activation not only to neurodegeneration but also to noncognitive AD symptoms — a clinically underappreciated dimension.
+      </div>
+
+      <div class="card card-positive">
+        <h3>✔ Therapeutic Modulation Works</h3>
+        C3aR antagonist SB290157 combined with methylphenidate restored dendritic spine density and nest-building behavior in 5xFAD prefrontal cortex. Treg transfer reduced C1qa/b/c, C4a/b, and reactive gliosis. These results support a tractable C1q-to-C3/C3aR therapeutic cascade.
+      </div>
+
+      <div class="card card-blue">
+        <h3>💊 Biomarker vs. Drug Target</h3>
+        The strongest evidence supports C1QB as a <em>mechanistic biomarker and pharmacodynamic readout</em>, not a validated standalone drug target. It is most valuable alongside C1QA, C1QC, C3, C3AR1, TYROBP, TREM2, CD14, and APOE in a multi-gene panel reflecting the C1q/complement–microglia axis.
+      </div>
+
+      <div class="card card-slate">
+        <h3>⚖ CSF &amp; Contextual Caveats</h3>
+        One AD CSF proteomics study found <em>lower</em> C1QB and C1QC in AD versus controls — counter-intuitive given elevated brain expression. This may reflect sequestration in plaques, stage effects, or production changes. Sex, age, brain region, and disease stage all modulate C1QB-related biology, underscoring the need for careful stratification.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span><b>Treat C1QB as a pathway-level candidate, not a standalone target.</b> The most defensible therapeutic concept is selective modulation of the C1q/classical complement–microglia axis, treating C1QB as a key node within a broader network.</span>
+      </li>
+      <li>
+        <span><b>Prioritize direct causal experiments in AD models.</b> Key studies should assess whether C1QB or C1q reduction alters synapse loss, dendritic spine density, microglial engulfment, amyloid-associated inflammation, tau pathology, cognition, and apathy-like behaviors.</span>
+      </li>
+      <li>
+        <span><b>Compare upstream C1q modulation with downstream C3/C3aR blockade.</b> Existing evidence favors downstream C3/C3aR targeting; experiments should determine whether C1q/C1QB inhibition upstream offers superior synaptic protection or creates unacceptable clearance deficits.</span>
+      </li>
+      <li>
+        <span><b>Deploy C1QB within a multi-gene complement biomarker panel.</b> Pair it with C1QA, C1QC, C3, C3AR1, C4, TYROBP, TREM2, CD14, CSF1R, ITGAM/ITGB2, APOE, and SPP1 for robust pharmacodynamic and disease-state readouts.</span>
+      </li>
+      <li>
+        <span><b>Evaluate C1QB spatially and by cell type.</b> Spatial transcriptomics, single-cell RNA-seq, and proteomics should distinguish plaque-associated microglia, vascular cells, astrocytes, infiltrating macrophages, and CSF/tissue compartments to map true activity.</span>
+      </li>
+      <li>
+        <span><b>Stratify by disease stage, sex, age, and brain region.</b> C1QB-related complement biology is context-dependent; therapeutic windows may differ between early synaptic dysfunction, plaque-associated inflammation, advanced neurodegeneration, and CAA-dominant AD.</span>
+      </li>
+      <li>
+        <span><b>Investigate C1QB in noncognitive AD symptoms.</b> The prefrontal cortex C1qb-apathy link suggests C1QB-related pathways may be relevant to neuropsychiatric symptom treatment, not only memory decline.</span>
+      </li>
+      <li>
+        <span><b>Avoid broad, chronic systemic C1QB suppression.</b> Any approach must target pathological synapse tagging while preserving beneficial C1q-dependent debris clearance, plaque containment, immune regulation, and tissue repair — partial or brain-targeted modulation is essential.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — C1QB in Alzheimer's Disease</span>
+      C1QB represents a <b>biologically credible pathway node</b> within the classical complement–microglia axis of AD pathogenesis, but its evidence base positions it primarily as a <b>mechanistic biomarker and pharmacodynamic readout</b> rather than a validated, standalone therapeutic target. The gene's pathological relevance is well-supported: it marks <b>disease-associated microglia around amyloid-β plaques</b>, participates in complement-mediated <b>synaptic pruning and dendritic spine loss</b>, and its expression correlates with both cognitive dysfunction and <b>apathy-like neuropsychiatric symptoms</b> in mouse models. Therapeutic interventions — C3aR antagonism, Treg-based immunomodulation, and TYROBP/DAP12 disruption — can suppress C1QB-containing inflammatory signatures and improve functional outcomes, validating the pathway if not the specific subunit. The most important safety consideration is that <b>complete or systemic C1q blockade risks impairing immune clearance and may trigger lupus-like autoimmunity</b>; precision strategies that selectively dampen maladaptive synaptic complement tagging while preserving debris clearance and host defense are the correct therapeutic ambition. C1QB is best advanced as a <b>component of a multi-gene complement panel</b>, embedded in carefully staged, spatially resolved, and sex- and age-stratified experimental programs, with downstream C3/C3aR modulation currently representing the more mature therapeutic entry point in the cascade.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  C1QB / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

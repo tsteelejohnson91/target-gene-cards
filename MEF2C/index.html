@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEF2C — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* OVERVIEW PROSE */
+  .prose p {
+    margin-bottom: 16px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.87rem;
+    color: var(--neutral);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.97rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: var(--white);
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.8;
+    font-size: 0.98rem;
+  }
+
+  .verdict strong.lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.05rem;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.8rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MEF2C &nbsp;|&nbsp; Myocyte Enhancer Factor 2C</span>
+    <span class="chip chip-danger">⚠ Pleiotropic — Systemic modulation risk</span>
+  </div>
+  <h1>MEF2C &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caution:</strong> MEF2C is a context-dependent, pleiotropic transcription factor. Indiscriminate systemic activation or inhibition is not supported by current evidence. Direction-of-effect in myeloid cells is state-dependent, and off-target risks span cardiac, immune, developmental, vascular, and oncologic biology.
+    </div>
+
+    <div class="prose">
+      <p>MEF2C is a context-dependent transcriptional regulator linked to Alzheimer's disease (AD) through several converging mechanisms: microglial/macrophage lipid clearance and inflammation, neuronal resilience and synaptic plasticity, tau- and amyloid-associated stress responses, blood–brain barrier (BBB) integrity, mitochondrial/oxidative stress regulation, ferroptosis resistance, epigenomic dysregulation, and AD genetic-risk architecture.</p>
+      <p>The strongest AD-specific evidence positions MEF2C as both a genetic/regulatory risk node and a resilience-associated transcription factor. In myeloid cells, MEF2C regulates disease-associated lipid-handling, lysosomal, cholesterol-efflux, phagocytic, and inflammatory programs that overlap with AD microglial biology. In neurons, MEF2C is linked to preserved synaptic integrity, excitatory/inhibitory balance, cognitive resilience, neurotrophin signaling, mitochondrial function, antioxidant defenses, and resistance to excitotoxic or ferroptotic stress.</p>
+      <p>Therapeutically, MEF2C is promising but complex. Evidence supports precise, cell-type- and context-specific modulation of MEF2C-dependent programs — especially in microglia, vulnerable excitatory neurons, inhibitory interneurons, hippocampal neurons, and brain endothelial cells — rather than broad systemic targeting.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 880 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream / Genetic & Epigenomic -->
+          <rect x="12" y="12" width="210" height="476" rx="10" ry="10"
+                fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="117" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1">UPSTREAM / GENETIC</text>
+
+          <!-- Node A1: AD Risk Variants -->
+          <rect x="30" y="44" width="176" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="118" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">AD Risk Variants</text>
+          <text x="118" y="74" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">(myeloid cis-regulatory)</text>
+
+          <!-- Node A2: MEF2C Enhancers -->
+          <rect x="30" y="104" width="176" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="118" y="120" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">MEF2C Enhancers</text>
+          <text x="118" y="134" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">&amp; Noncoding Variants</text>
+
+          <!-- Node A3: Epigenomic Regulators -->
+          <rect x="30" y="164" width="176" height="40" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="118" y="180" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">HDAC4/5, miRNA,</text>
+          <text x="118" y="194" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">lncRNA, m6A / paRNA</text>
+
+          <!-- Node A4: MEF2C (hub) -->
+          <rect x="42" y="230" width="152" height="44" rx="9" fill="#1a3a5c" stroke="#0a1f35" stroke-width="1.5"/>
+          <text x="118" y="249" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="white">MEF2C</text>
+          <text x="118" y="264" text-anchor="middle" font-family="Arial" font-size="9" fill="#93c5fd">Transcription Factor Hub</text>
+
+          <!-- Arrow A1→A2 -->
+          <line x1="118" y1="84" x2="118" y2="104" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- Arrow A2→A3 -->
+          <line x1="118" y1="144" x2="118" y2="164" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- Arrow A3→MEF2C -->
+          <line x1="118" y1="204" x2="118" y2="230" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Panel B: Myeloid / Microglial -->
+          <rect x="238" y="12" width="210" height="340" rx="10" ry="10"
+                fill="rgba(155,28,28,0.06)" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="343" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#7f1d1d" letter-spacing="1">MYELOID / MICROGLIAL</text>
+
+          <!-- Node B1: Lipid/Lysosomal -->
+          <rect x="254" y="44" width="176" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="342" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Lipid Clearance &amp;</text>
+          <text x="342" y="74" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Lysosomal Function</text>
+
+          <!-- Node B2: Cholesterol/Phagocytosis -->
+          <rect x="254" y="104" width="176" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="342" y="120" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Cholesterol Efflux &amp;</text>
+          <text x="342" y="134" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Phagocytosis / Efferocytosis</text>
+
+          <!-- Node B3: DLAM state -->
+          <rect x="254" y="164" width="176" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="342" y="180" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">DLAM/LAM State</text>
+          <text x="342" y="194" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">(loss → ↑ or ↓ clearance)</text>
+
+          <!-- Node B4: Neuroinflammation -->
+          <rect x="254" y="224" width="176" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="342" y="240" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Neuroinflammation &amp;</text>
+          <text x="342" y="254" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Cytokine Release</text>
+
+          <!-- Node B5: Amyloid Response -->
+          <rect x="254" y="284" width="176" height="40" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="342" y="300" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Aβ Response &amp;</text>
+          <text x="342" y="314" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d">Synapse Remodeling</text>
+
+          <!-- Arrows B1→B2→B3→B4→B5 -->
+          <line x1="342" y1="84" x2="342" y2="104" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="342" y1="144" x2="342" y2="164" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="342" y1="204" x2="342" y2="224" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="342" y1="264" x2="342" y2="284" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+          <!-- Connector: MEF2C → Panel B entry (B1) -->
+          <!-- Route: right from MEF2C (x=194,y=252) → elbow up to B1 -->
+          <polyline points="194,252 220,252 220,64 254,64"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Panel C: Neuronal Resilience -->
+          <rect x="464" y="12" width="210" height="340" rx="10" ry="10"
+                fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="569" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#134e4a" letter-spacing="1">NEURONAL RESILIENCE</text>
+
+          <!-- Node C1: Synaptic/Circuit -->
+          <rect x="480" y="44" width="178" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="569" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">Synaptic Integrity &amp;</text>
+          <text x="569" y="74" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">E/I Balance (PV interneurons)</text>
+
+          <!-- Node C2: Resilience Genes -->
+          <rect x="480" y="104" width="178" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="569" y="120" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">RELN, BDNF–NTRK2,</text>
+          <text x="569" y="134" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">ANGPT2–TEK Signaling</text>
+
+          <!-- Node C3: cGAS-IFN-tau axis -->
+          <rect x="480" y="164" width="178" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="569" y="180" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">τ → cGAS → IFN-I</text>
+          <text x="569" y="194" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">suppresses MEF2C networks</text>
+
+          <!-- Node C4: Mito/ROS/Ferroptosis -->
+          <rect x="480" y="224" width="178" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="569" y="240" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">Mitochondrial Function,</text>
+          <text x="569" y="254" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">GPX4/Nrf2, Ferroptosis</text>
+
+          <!-- Node C5: Cognitive Resilience -->
+          <rect x="480" y="284" width="178" height="40" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="569" y="300" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">Cognitive Resilience &amp;</text>
+          <text x="569" y="314" text-anchor="middle" font-family="Georgia" font-size="10" fill="#134e4a">Memory Preservation</text>
+
+          <!-- Arrows C1→C2→C3→C4→C5 -->
+          <line x1="569" y1="84" x2="569" y2="104" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="569" y1="144" x2="569" y2="164" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="569" y1="204" x2="569" y2="224" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="569" y1="264" x2="569" y2="284" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Connector: MEF2C → Panel C (C1) -->
+          <polyline points="194,252 452,252 452,64 480,64"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Panel D: Vascular / BBB -->
+          <rect x="690" y="12" width="178" height="200" rx="10" ry="10"
+                fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="779" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1">VASCULAR / BBB</text>
+
+          <!-- Node D1: RBM3 -->
+          <rect x="704" y="44" width="150" height="38" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="779" y="59" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Aβ → RBM3 loss</text>
+          <text x="779" y="73" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">↓ MEF2C mRNA stability</text>
+
+          <!-- Node D2: ZO-1/Occludin -->
+          <rect x="704" y="102" width="150" height="38" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="779" y="117" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">↓ ZO-1 / Occludin</text>
+          <text x="779" y="131" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Tight Junction Proteins</text>
+
+          <!-- Node D3: BBB Permeability -->
+          <rect x="704" y="160" width="150" height="38" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="779" y="175" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">↑ BBB Permeability &amp;</text>
+          <text x="779" y="189" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Vascular Dysfunction</text>
+
+          <!-- Arrows D1→D2→D3 -->
+          <line x1="779" y1="82" x2="779" y2="102" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="779" y1="140" x2="779" y2="160" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Connector: MEF2C hub → Panel D (D1) via top gutter -->
+          <!-- Route up from MEF2C top (118,230), along top gutter y=8 is too close to panel borders
+               Instead: route right from MEF2C right edge at y=252, across gutter at y=252 to x=670,
+               then up to y=63, then right to D1 left edge -->
+          <!-- But gutter between Panel C and D is at x=674..690; D1 left=704 -->
+          <!-- We need to cross Panel C's right edge (x=674). Let's go around the top. -->
+          <!-- Elbow: from MEF2C right (194,252) right to x=675, up to y=8, right to x=779, down to 44 -->
+          <!-- y=8 is above all panels (panels start at y=12). Safe. -->
+          <polyline points="194,238 194,8 779,8 779,44"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+          <!-- Shared outcome row: bottom of figure, spans all panels -->
+          <!-- Panel E: Shared AD Outcomes -->
+          <rect x="12" y="370" width="856" height="118" rx="10" ry="10"
+                fill="rgba(71,85,105,0.07)" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <text x="440" y="388" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700"
+                fill="#334155" letter-spacing="1">SHARED AD OUTCOMES</text>
+
+          <!-- Outcome node 1 -->
+          <rect x="28" y="396" width="148" height="82" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+          <text x="102" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Amyloid &amp; Tau</text>
+          <text x="102" y="428" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Pathology Response</text>
+          <text x="102" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">(BACE1/2, Aβ42/40,</text>
+          <text x="102" y="459" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">cGAS–IFN axis)</text>
+
+          <!-- Outcome node 2 -->
+          <rect x="194" y="396" width="148" height="82" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+          <text x="268" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Synaptic &amp; Circuit</text>
+          <text x="268" y="428" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Integrity</text>
+          <text x="268" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">(spine density, LTP,</text>
+          <text x="268" y="459" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">gamma synchrony)</text>
+
+          <!-- Outcome node 3 -->
+          <rect x="360" y="396" width="148" height="82" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+          <text x="434" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Neuroinflammation</text>
+          <text x="434" y="428" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">&amp; Immune State</text>
+          <text x="434" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">(microglial activation,</text>
+          <text x="434" y="459" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">lipid debris clearance)</text>
+
+          <!-- Outcome node 4 -->
+          <rect x="526" y="396" width="148" height="82" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+          <text x="600" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Oxidative Stress &amp;</text>
+          <text x="600" y="428" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Ferroptosis</text>
+          <text x="600" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">(GPX4, Nrf2,</text>
+          <text x="600" y="459" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">lipid peroxidation)</text>
+
+          <!-- Outcome node 5 -->
+          <rect x="692" y="396" width="164" height="82" rx="7" fill="#f1f5f9" stroke="#475569" stroke-width="1.2"/>
+          <text x="774" y="414" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">BBB &amp; Vascular</text>
+          <text x="774" y="428" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1e293b">Integrity</text>
+          <text x="774" y="445" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">(ZO-1, occludin,</text>
+          <text x="774" y="459" text-anchor="middle" font-family="Georgia" font-size="9" fill="#475569">Aβ-driven leakage)</text>
+
+          <!-- Arrows from panels to outcomes -->
+          <!-- Panel B (B5 bottom=324) → Outcome 1 center (x=102,y=396) -->
+          <line x1="342" y1="324" x2="342" y2="358" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="342" y1="358" x2="102" y2="358" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="102" y1="358" x2="102" y2="396" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B → Outcome 3 -->
+          <line x1="342" y1="324" x2="342" y2="360" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="342" y1="360" x2="434" y2="360" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="434" y1="360" x2="434" y2="396" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr-red)"/>
+
+          <!-- Panel C (C5 bottom=324) → Outcome 1 -->
+          <line x1="530" y1="324" x2="530" y2="362" stroke="#0f766e" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="530" y1="362" x2="268" y2="362" stroke="#0f766e" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="268" y1="362" x2="268" y2="396" stroke="#0f766e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel C → Outcome 4 -->
+          <line x1="600" y1="324" x2="600" y2="396" stroke="#0f766e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel D (D3 bottom=198) → Outcome 5 -->
+          <line x1="779" y1="198" x2="779" y2="370" stroke="#2e6da4" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Figure.</strong> MEF2C mechanistic landscape across four thematic panels.
+        <strong>Panel A (Upstream/Genetic):</strong> AD risk variants in myeloid cis-regulatory elements converge — through MEF2C enhancers and epigenomic regulators (HDAC4/5, miRNA, lncRNA, m6A) — onto the MEF2C transcription factor hub.
+        <strong>Panel B (Myeloid/Microglial):</strong> MEF2C regulates a cascade from lipid/lysosomal function and cholesterol efflux through disease-associated microglial states (DLAM/LAM), neuroinflammation, and amyloid response — with direction-of-effect dependent on cellular state.
+        <strong>Panel C (Neuronal Resilience):</strong> MEF2C sustains synaptic integrity, resilience-gene networks (RELN, BDNF–NTRK2), and mitochondrial/antioxidant/ferroptosis defenses; the tau→cGAS→IFN-I axis suppresses this program. All steps converge on cognitive resilience and memory.
+        <strong>Panel D (Vascular/BBB):</strong> Aβ-driven RBM3 loss destabilizes MEF2C mRNA, reducing tight junction proteins ZO-1/occludin and increasing BBB permeability.
+        <strong>Shared Outcomes (bottom):</strong> All upstream panels converge on five key AD disease dimensions — amyloid/tau pathology, synaptic integrity, neuroinflammation, oxidative stress/ferroptosis, and BBB function. Dashed connectors indicate multi-step convergence.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Risk Architecture</h3>
+        <p>Late-onset AD risk variants are enriched in myeloid cis-regulatory elements, and MEF2C-regulated enhancers may connect AD-associated noncoding variants to downstream risk genes. MEF2C is listed among immune-associated AD risk genes highly expressed in microglia, making it a genetic risk node as well as a functional effector.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>State-Dependent Myeloid Effects</h3>
+        <p>MEF2C loss can paradoxically induce a DLAM/LAM-like lipid-clearance state with increased lysosomal activity and reduced Aβ42/40 ratio in some AD models, yet in other contexts MEF2C deficiency drives hyperinflammation, phagocytic impairment, lysosomal dysfunction, and cytokine release. This bidirectionality makes MEF2C a state-dependent, not a simple "activate or inhibit," target.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Cognitive Resilience Marker</h3>
+        <p>Resilient brains — carrying heavy amyloid and tau burden yet retaining cognition — show MEF2C-high excitatory neuronal populations and MEF2C-positive inhibitory interneurons. MEF2C appears in protective networks involving RELN, ATP8B1, BDNF–NTRK2, ANGPT2–TEK signaling, preserved E/I balance, and reduced network hyperexcitability.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>cGAS–IFN–MEF2C Axis (Tau)</h3>
+        <p>Pathogenic tau activates microglial cGAS, driving type I interferon signaling that suppresses neuronal MEF2C transcriptional networks. Pharmacological cGAS inhibition restored MEF2C network activity, synaptic integrity, plasticity, memory, and cognition <em>without</em> reducing tau burden — demonstrating MEF2C-linked resilience can be rescued independently of tau clearance.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Ferroptosis &amp; Oxidative Stress Protection</h3>
+        <p>MEF2C loss impairs mitochondrial gene expression, membrane potential, and ATP production. MEF2C overexpression activated GPX4 transcription, reduced lipid peroxidation and iron accumulation, improved antioxidant capacity via Nrf2-ARE signaling, and protected memory — directly relevant to AD mechanisms of iron dyshomeostasis and ferroptotic neuronal injury.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Pleiotropy Risk</h3>
+        <p>MEF2C has major roles in neurodevelopment, cardiac biology, skeletal muscle, endothelial function, immune regulation, bone, cancer, and differentiation. Global MEF2C modulation carries substantial risk of off-target cardiovascular, developmental, oncologic, and immune consequences. Any therapeutic program requires cell-type-selective, brain-penetrant, and disease-stage-aware delivery.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <div><strong>Treat MEF2C as a regulatory hub, not a single-pathway target.</strong> AD-relevant strategies should focus on tuning specific MEF2C-dependent transcriptional programs rather than broadly increasing or suppressing MEF2C expression across all tissues.</div>
+      </li>
+
+      <li>
+        <div><strong>Prioritize cell-type-specific validation.</strong> Key contexts requiring rigorous functional testing include disease-associated microglia/macrophages, MEF2C-high excitatory neurons, MEF2C-positive inhibitory interneurons, hippocampal and entorhinal cortical neurons, and brain microvascular endothelial cells.</div>
+      </li>
+
+      <li>
+        <div><strong>Clarify directionality before any therapeutic intervention.</strong> In some myeloid contexts, reducing MEF2C may enhance lipid and lysosomal clearance; in others, MEF2C loss worsens inflammation and phagolysosomal dysfunction. In neurons and endothelial cells, evidence more consistently supports preserving or restoring MEF2C-linked protective programs.</div>
+      </li>
+
+      <li>
+        <div><strong>Prioritize the cGAS–IFN–MEF2C axis for tau-related AD resilience.</strong> This axis carries the strongest preclinical support: cGAS inhibition restored MEF2C networks, synaptic plasticity, memory, and cognition without altering tau burden, offering a functional improvement pathway decoupled from tau clearance.</div>
+      </li>
+
+      <li>
+        <div><strong>Explore indirect therapeutic routes targeting MEF2C's regulatory inputs.</strong> Practical intervention points include cGAS/type I interferon inhibition, HDAC4/HDAC5–MEF2C regulation, SIK3–HDAC4–MEF2C signaling, MAPT-paRNA/m6A pathways, miRNA/lncRNA/circRNA control, RBM3-mediated MEF2C mRNA stabilization, Nrf2/GPX4 antioxidant–ferroptosis programs, and BDNF–NTRK2 or LINGO1-linked resilience pathways.</div>
+      </li>
+
+      <li>
+        <div><strong>Use MEF2C regulon activity as a biomarker of AD resilience state.</strong> MEF2C chromatin binding, phosphorylation, enhancer engagement, downstream target expression, and cell-type-specific network activity are more informative readouts than MEF2C mRNA level alone.</div>
+      </li>
+
+      <li>
+        <div><strong>Test MEF2C-linked BBB protection in AD vascular models.</strong> The RBM3–MEF2C–ZO-1/occludin axis should be evaluated in human BBB organoid models and AD animal models to determine whether restoring MEF2C expression can reduce Aβ-associated vascular leakage.</div>
+      </li>
+
+      <li>
+        <div><strong>Investigate MEF2C in microglial precision medicine using patient-derived hiPSC models.</strong> Gene-edited hiPSC-derived microglia should be used to test how MEF2C risk variants affect inflammation, phagocytosis, autophagy, lysosomal function, cholesterol efflux, lipid accumulation, and amyloid/tau-related responses under disease-relevant conditions.</div>
+      </li>
+
+      <li>
+        <div><strong>Avoid systemic MEF2C modulation until selectivity is solved.</strong> Any therapeutic program must demonstrate brain-penetrant, dose-controlled, cell-type-selective, and disease-stage-aware delivery or downstream targeting to mitigate cardiovascular, immune, developmental, muscle, vascular, and oncologic risks.</div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p><strong class="lead">Overall Assessment —</strong> MEF2C is a <strong>compelling but context-dependent AD target candidate</strong> whose therapeutic promise is matched by the complexity of its biology. It functions as a <strong>multidimensional resilience hub</strong> — linking AD genetic risk architecture, microglial lipid-inflammatory state control, neuronal synaptic and circuit preservation, tau-driven network suppression, mitochondrial and ferroptosis defense, and blood–brain barrier integrity into a single regulatory node. The strongest actionable axis is the <strong>cGAS–IFN–MEF2C pathway</strong>, where preclinical evidence supports cognitive and synaptic benefit independent of tau removal. However, the <strong>state-dependent, direction-variable effects in myeloid cells</strong> and <strong>extensive off-target risks</strong> from systemic modulation mean that MEF2C cannot be responsibly pursued as a blunt-force target. The most defensible hypothesis is to <strong>preserve or restore beneficial MEF2C-dependent resilience programs</strong> in neurons and endothelial cells, while selectively and carefully tuning microglial lipid-clearance and inflammatory states — demanding rigorous cell-type-selective, disease-stage-aware functional validation well before any consideration of clinical translation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  MEF2C / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

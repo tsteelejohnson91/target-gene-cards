@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNTNAP2 / CASPR2 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2eaf5;
+    border-radius: 20px;
+    padding: 5px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-warning {
+    background: rgba(153, 27, 27, 0.35);
+    border: 1px solid rgba(253, 160, 160, 0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.975rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 2px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+    position: relative;
+  }
+
+  .takeaway-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.975rem;
+    line-height: 1.75;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .verdict-banner p {
+    color: #e2eaf5;
+    margin-bottom: 0;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px 28px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CNTNAP2 &nbsp;|&nbsp; Contactin-Associated Protein-Like 2 (CASPR2)</span>
+    <span class="chip chip-warning">⚠ Autoimmune mimic — caution in dementia workup</span>
+  </div>
+  <h1>CNTNAP2 / CASPR2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Clinical Caution:</strong> CASPR2-antibody autoimmune encephalitis can present as rapidly progressive, seizure-associated, or limbic dementia mimicking Alzheimer's disease. This is immunotherapy-responsive and must not be conflated with typical AD pathology.
+    </div>
+
+    <p>CNTNAP2, encoding CASPR2 (contactin-associated protein-like 2), is <strong>not established as a causal Alzheimer's disease gene or a validated AD therapeutic target</strong> based on the available evidence. Its AD relevance is predominantly indirect, arising from substantial overlap between CNTNAP2/CASPR2 biology and core AD-relevant mechanisms: synaptic failure, neuronal membrane remodeling, network hyperexcitability, excitatory/inhibitory imbalance, calcium dysregulation, oxidative and nitrosative stress, impaired proteostasis, neuroinflammation, microglial activation, sleep disruption, and extracellular vesicle biology.</p>
+
+    <p>The strongest direct AD-related evidence is <strong>biomarker-oriented</strong>: CNTNAP2-positive neuronal extracellular vesicles can be isolated from plasma and demonstrate increased phosphorylated tau in Alzheimer's disease. A second noteworthy AD-relevant finding is enrichment of CNTNAP2 among AD-linked cortical membrane proteins in APP/PS1 mice, implicating possible disease-associated neuronal membrane and synaptic remodeling. Additional AD-adjacent evidence includes reduced CTCF binding at CNTNAP2 and other synaptic adhesion genes in AD frontal cortex, a sex-by-APOE4 interaction affecting CNTNAP2 expression in aged brain datasets, and CNTNAP2 selection in a multimodal fMRI/genetic AD classification study.</p>
+
+    <p>Overall, CNTNAP2/CASPR2 is best characterized as a <strong>promising AD biomarker-enrichment handle and exploratory mechanistic candidate</strong>, not as a proven disease-modifying target for Alzheimer's disease.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; min-width:660px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: CNTNAP2 Protein & Processing -->
+        <rect x="10" y="10" width="260" height="480" rx="12" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1e3a5f" letter-spacing="0.1em">PANEL A — PROTEIN &amp; PROCESSING</text>
+
+        <!-- A1: CNTNAP2/CASPR2 -->
+        <rect x="55" y="44" width="170" height="40" rx="7" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="140" y="61" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#fff">CNTNAP2 / CASPR2</text>
+        <text x="140" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#dbeafe">Neuronal membrane protein</text>
+
+        <!-- Arrow A1 -> A2 -->
+        <line x1="140" y1="84" x2="140" y2="110" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: Secretase Processing -->
+        <rect x="52" y="112" width="176" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="129" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">α-Secretase (ADAM10/17)</text>
+        <text x="140" y="143" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">γ-Secretase / Presenilin</text>
+
+        <!-- Arrow A2 -> A3 -->
+        <line x1="140" y1="152" x2="140" y2="178" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: CICD Fragment -->
+        <rect x="68" y="180" width="144" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="197" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Intracellular fragment</text>
+        <text x="140" y="210" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">(CICD)</text>
+
+        <!-- Arrow A3 -> A4 -->
+        <line x1="140" y1="216" x2="140" y2="242" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A4: Proteostasis -->
+        <rect x="52" y="244" width="176" height="36" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="259" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">UPS / Autophagy-Lysosome</text>
+        <text x="140" y="273" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Protein turnover</text>
+
+        <!-- Arrow A4 -> A5 -->
+        <line x1="140" y1="280" x2="140" y2="306" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A5: Oxidative/Metabolic -->
+        <rect x="43" y="308" width="194" height="38" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="140" y="325" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">NO / S-nitrosylation</text>
+        <text x="140" y="339" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Redox &amp; mTOR/Autophagy</text>
+
+        <!-- PANEL B: Synaptic & Network -->
+        <rect x="284" y="10" width="280" height="320" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="424" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#0f766e" letter-spacing="0.1em">PANEL B — SYNAPTIC &amp; NETWORK</text>
+
+        <!-- B1: Synaptic Organizer -->
+        <rect x="334" y="44" width="180" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="424" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Synaptic Organizer</text>
+        <text x="424" y="74" text-anchor="middle" font-family="Arial" font-size="9" fill="#ccfbf1">Cell adhesion / axon-glia</text>
+
+        <!-- B1 branches down-left to B2, down-right to B3 -->
+        <!-- Left branch arrow -->
+        <polyline points="390,82 370,82 370,118" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Right branch arrow -->
+        <polyline points="458,82 478,82 478,118" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B2: AMPAR / Dendritic -->
+        <rect x="294" y="120" width="148" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="368" y="136" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">AMPAR trafficking</text>
+        <text x="368" y="150" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Dendritic spines</text>
+
+        <!-- B3: Kv1 / PV interneurons -->
+        <rect x="454" y="120" width="100" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="504" y="136" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Kv1 channel</text>
+        <text x="504" y="150" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">PV interneurons</text>
+
+        <!-- B2 -> B4 converge -->
+        <line x1="368" y1="158" x2="368" y2="188" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- B3 -> B4 converge -->
+        <polyline points="504,158 504,174 424,174 424,188" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B4: E/I Balance + Hippocampal Oscillations -->
+        <rect x="304" y="190" width="240" height="38" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="424" y="206" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">E/I Balance &amp; hippocampal</text>
+        <text x="424" y="220" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">gamma/theta oscillations</text>
+
+        <!-- B4 -> B5 -->
+        <line x1="424" y1="228" x2="424" y2="256" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- B5: Network Hyperexcitability -->
+        <rect x="314" y="258" width="220" height="36" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="424" y="274" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Network hyperexcitability</text>
+        <text x="424" y="288" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">AD-relevant seizure risk</text>
+
+        <!-- PANEL C: Neuroinflammation -->
+        <rect x="578" y="10" width="332" height="220" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="744" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#991b1b" letter-spacing="0.1em">PANEL C — NEUROINFLAMMATION</text>
+
+        <!-- C1: CASPR2 disruption -->
+        <rect x="618" y="44" width="160" height="38" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <text x="698" y="60" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">CASPR2 disruption</text>
+        <text x="698" y="74" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">Abs / gene loss</text>
+
+        <!-- C1 -> C2 -->
+        <line x1="698" y1="82" x2="698" y2="108" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C2: Microglial Activation -->
+        <rect x="618" y="110" width="160" height="38" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="698" y="126" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Microglial activation</text>
+        <text x="698" y="140" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Synaptic pruning ↑</text>
+
+        <!-- C2 -> C3 -->
+        <line x1="698" y1="148" x2="698" y2="174" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- C3: Cytokines / Complement -->
+        <rect x="610" y="176" width="176" height="38" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="698" y="192" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Cytokines / Complement</text>
+        <text x="698" y="206" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">Oxidative stress</text>
+
+        <!-- PANEL D: Biomarker -->
+        <rect x="578" y="244" width="332" height="246" rx="12" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+        <text x="744" y="266" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#b45309" letter-spacing="0.1em">PANEL D — AD BIOMARKER RELEVANCE</text>
+
+        <!-- D1: Neuronal EVs -->
+        <rect x="614" y="278" width="168" height="38" rx="7" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="698" y="294" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">CNTNAP2+ Neuronal EVs</text>
+        <text x="698" y="308" text-anchor="middle" font-family="Arial" font-size="9" fill="#fef3c7">Plasma-accessible</text>
+
+        <!-- D1 -> D2 left branch & right branch -->
+        <polyline points="666,316 645,316 645,354" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <polyline points="730,316 751,316 751,354" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- D2a: p-tau cargo -->
+        <rect x="590" y="356" width="118" height="36" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="649" y="371" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">p-tau cargo ↑</text>
+        <text x="649" y="385" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">in AD plasma</text>
+
+        <!-- D2b: EV capture tool -->
+        <rect x="718" y="356" width="118" height="36" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="777" y="371" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">EV enrichment</text>
+        <text x="777" y="385" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">capture marker</text>
+
+        <!-- D2a -> D3 converge -->
+        <polyline points="649,392 649,432 698,432 698,432" fill="none" stroke="#b45309" stroke-width="1.5"/>
+        <!-- D2b -> D3 converge -->
+        <polyline points="777,392 777,432 698,432" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- D3: AD Biomarker -->
+        <rect x="618" y="434" width="160" height="38" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="698" y="451" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">AD Biomarker tool</text>
+        <text x="698" y="465" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#1e293b">(not therapeutic target)</text>
+
+        <!-- Cross-panel connector: Panel A (A4) -> Panel B B4 via gutter -->
+        <!-- A4 right edge ~228, B4 left edge ~304, gutter center ~266, row center ~265 -->
+        <polyline points="228,262 256,262 256,209 304,209" fill="none" stroke="#475569" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: Panel B B5 -> Panel D via gutter below B -->
+        <!-- B5 bottom ~294, Panel D top ~244, route down then right -->
+        <polyline points="424,294 424,380 580,380 580,395 612,395" fill="none" stroke="#475569" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A (blue) — Protein &amp; Processing:</strong> CNTNAP2/CASPR2 undergoes α- and γ-secretase cleavage to yield intracellular fragments; these feed into UPS/autophagy degradation and downstream redox/mTOR stress pathways. <strong>Panel B (teal) — Synaptic &amp; Network:</strong> As a synaptic organizer, CNTNAP2 branches into two parallel paths (AMPAR/dendritic spine regulation and Kv1/PV-interneuron organization), reconverging at E/I balance and hippocampal oscillations, ultimately shaping network hyperexcitability. <strong>Panel C (red) — Neuroinflammation:</strong> CASPR2 disruption (antibodies or gene loss) drives microglial activation, synaptic pruning, cytokine release, and oxidative stress — mechanisms overlapping with AD neuroinflammation. <strong>Panel D (amber) — AD Biomarker Relevance:</strong> CNTNAP2-positive neuronal plasma EVs branch into two actionable findings (elevated p-tau cargo in AD; utility as an EV enrichment/capture marker), converging on CNTNAP2's best-supported AD role as a biomarker tool rather than a therapeutic target. Dashed gray connectors indicate mechanistic links between panels.</p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-warning">
+        <h3>🧪 EV Biomarker — Strongest AD Finding</h3>
+        <p>CNTNAP2-positive plasma EVs show a robust AD-associated increase in phosphorylated tau. CNTNAP2 (with STX1B) is neuronal, brain-enriched, and surface-accessible — making it a practical capture handle for isolating neuronal EVs carrying AD-relevant cargo from blood.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>🔬 AD Membrane Remodeling in APP/PS1 Mice</h3>
+        <p>CNTNAP2 is selectively enriched among cortical membrane proteins in APP/PS1 mice, alongside RyR2, PLD3, and ITM2C. This supports a possible role in altered neuronal membrane architecture, synaptic organization, calcium signaling, and membrane trafficking in AD models — though no rescue experiments have been reported.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>⚙️ Secretase Processing — Mechanistic Bridge</h3>
+        <p>CNTNAP2 is cleaved by ADAM10/17-dependent α-secretase and presenilin-dependent γ-secretase, generating CICD fragments. Because ADAM10, presenilin, and γ-secretase are central to APP processing in AD, CNTNAP2 may be an additional substrate within AD-relevant protease networks — though no evidence yet links CNTNAP2 cleavage to amyloid-β levels or AD progression.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>⚡ Calcium &amp; Excitability Links</h3>
+        <p>CNTNAP2/CASPR2 influences Kv1 potassium-channel organization, AMPAR/GluA1 regulation, PMCA2-mediated calcium handling, IP3R1-related signaling, hippocampal oscillations, parvalbumin interneuron function, and seizure susceptibility — all aligning with AD-related hippocampal hyperexcitability and impaired gamma/theta network dynamics.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>⚠️ Autoimmune CASPR2 Disease — Dementia Mimic</h3>
+        <p>CASPR2 antibodies cause limbic encephalitis, Morvan syndrome, memory impairment, seizures, psychiatric symptoms, sleep disturbance, and dysautonomia. These syndromes resemble atypical dementia and are often immunotherapy-responsive. They are not evidence that CASPR2 autoimmunity drives typical AD, but must be excluded in appropriate presentations.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>🧬 Weak Genetic Evidence for AD</h3>
+        <p>CNTNAP2 is strongly supported as a neurodevelopmental risk gene for autism, epilepsy, intellectual disability, and circuit dysfunction. AD-related genetic evidence is limited to network-level classification, expression-interaction findings, and a sex-by-APOE4 expression interaction — insufficient to establish CNTNAP2 as a robust inherited AD risk locus.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Prioritize CNTNAP2+ EVs as a biomarker platform.</strong> Evaluate CNTNAP2-positive plasma EVs for phosphorylated tau, other tau species, amyloid-related cargo, synaptic proteins, inflammatory markers, and longitudinal change across AD stages — this is the most immediately actionable AD application.</li>
+      <li><strong>Validate EV p-tau against established AD measures.</strong> Test whether CNTNAP2+ EV p-tau tracks with amyloid PET, tau PET, CSF Aβ42/40, CSF p-tau/t-tau, neurodegeneration markers, cognition, disease stage, and therapeutic response.</li>
+      <li><strong>Treat CNTNAP2 as an exploratory mechanistic candidate, not a drug target.</strong> Direct modulation of CNTNAP2/CASPR2 should not be considered AD-ready until studies demonstrate that altering CNTNAP2 changes amyloid processing, tau phosphorylation/spread, synaptic loss, neuroinflammation, network hyperexcitability, or cognitive decline in AD models.</li>
+      <li><strong>Characterize CNTNAP2 in human AD brain tissue.</strong> Investigate CNTNAP2 mRNA/protein levels, CTCF binding, H3K27ac status, secretase-derived fragments, EV release, and cortical membrane enrichment across AD stages, sexes, APOE genotypes, brain regions, and cell types.</li>
+      <li><strong>Explore downstream nodes before direct targeting.</strong> More tractable AD-relevant entry points include AMPA receptor trafficking, Kv1-channel organization, parvalbumin interneuron stability, calcium homeostasis, mTOR/autophagy balance, nitric oxide/nitrosative stress, microglial synapse pruning, and membrane trafficking.</li>
+      <li><strong>Apply CASPR2 antibody testing selectively in atypical dementia presentations.</strong> Testing is most warranted when cognitive decline is subacute, rapidly progressive, fluctuating, seizure-associated, limbic-predominant, psychiatric, dysautonomic, sleep-disruptive, painful, or inflammatory. Positive CASPR2-specific autoimmunity may indicate treatable autoimmune encephalitis.</li>
+      <li><strong>Do not over-interpret nonspecific VGKC-complex antibody results.</strong> Only CASPR2- or LGI1-specific antibodies carry clinical significance; double-negative VGKC-complex results are frequently nonspecific and should not be treated as evidence of AD-related CASPR2 pathology.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — CNTNAP2 / CASPR2 in Alzheimer's Disease</div>
+      <p>CNTNAP2/CASPR2 occupies a <strong>biologically plausible but evidentially limited</strong> position in the Alzheimer's disease landscape. Its most compelling and immediately actionable AD relevance lies in <strong>blood-based neuronal extracellular vesicle biomarker development</strong>, where CNTNAP2-positive EVs have been shown to carry elevated phosphorylated tau in AD patients. Beyond biomarkers, CNTNAP2 presents a rich network of mechanistic overlaps with AD pathophysiology — including secretase substrate biology, synaptic E/I balance, calcium and potassium channel regulation, neuroinflammation, and proteostatic stress — but <strong>none of these connections have been validated as causal or therapeutically exploitable in AD models</strong>. The gene's strongest genetic associations remain in neurodevelopmental disorders. Clinically, <strong>CASPR2-antibody autoimmune encephalitis must be actively excluded</strong> in atypical or rapidly progressive dementia presentations, as it is immunotherapy-responsive and can convincingly mimic Alzheimer's disease. In summary, CNTNAP2/CASPR2 merits continued investigation as a <strong>biomarker handle and mechanistic hypothesis generator</strong>, while direct therapeutic targeting in AD awaits foundational mechanistic validation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CNTNAP2 / CASPR2 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

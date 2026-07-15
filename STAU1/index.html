@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STAU1 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d1b69;
+    --mid: #6c3fc5;
+    --light: #ede8fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0820 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: #e2e8f0;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  .overview-text p { margin-bottom: 1.1em; }
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--slate);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .cards-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-slate { background: var(--slate-light); border-left: 4px solid var(--slate); }
+  .card-slate h3 { color: var(--slate); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  ol.takeaways { list-style: none; counter-reset: ta; padding: 0; }
+  ol.takeaways li {
+    counter-increment: ta;
+    padding: 14px 0 14px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--slate-border);
+    font-size: 0.97rem;
+  }
+  ol.takeaways li:last-child { border-bottom: none; }
+  ol.takeaways li::before {
+    content: counter(ta);
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    padding-top: 1px;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d0820 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+  }
+  .verdict-banner .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+  }
+  .verdict-banner p {
+    font-size: 1.02rem;
+    color: #e2e8f0;
+  }
+  .verdict-banner p strong { color: #ffffff; }
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--slate);
+    border-top: 1px solid var(--slate-border);
+    padding: 20px 16px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: STAU1 &nbsp;|&nbsp; Staufen RNA Binding Protein 1</span>
+    <span class="chip chip-danger">⚠ Pathological Overabundance Flagged</span>
+  </div>
+  <h1>STAU1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> STAU1 has essential physiological roles in neuronal RNA transport, synaptic plasticity, local translation, and stress adaptation. Therapeutic suppression must be carefully titrated — global inhibition risks disrupting hippocampal LTP, dendritic mRNA localization, and synaptic protein synthesis.
+    </div>
+    <div class="overview-text">
+      <p>STAU1 (Staufen1) is a double-stranded RNA-binding protein implicated in Alzheimer's disease (AD) through post-transcriptional RNA regulation, mRNA localization and translation, Staufen-mediated mRNA decay (SMD), stress granule biology, mTOR/autophagy signaling, ER-stress responses, apoptosis, synaptic RNA transport, and neuroinflammation-related pathways.</p>
+      <p>The strongest direct AD-related evidence is that STAU1 is elevated in AD-relevant models and can promote both amyloid and tau pathology. In APP-expressing cells and APP/PS1 mouse brains, STAU1 levels were increased. STAU1 knockdown reduced BACE1 protein and Aβ levels, while overexpression increased them. Mechanistically, STAU1 binds the BACE1 mRNA 3′ UTR and prolongs BACE1 mRNA half-life, placing STAU1 directly upstream of amyloidogenic APP processing. STAU1 also increased GADD45B expression and activated a GADD45B–p38 MAPK pathway promoting tau phosphorylation at Ser396 and Thr181.</p>
+      <p>Elevated STAU1 is also repeatedly associated with increased mTOR translation and signaling, impaired autophagic flux, biomolecular condensate accumulation, stress granule abnormalities, unfolded protein response activation, glial activation, and p53-mediated apoptosis — all mechanisms overlapping strongly with AD pathobiology. Overall, STAU1 is best supported as a disease-modifying RNA-regulatory node rather than a fully validated AD drug target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanism Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; min-width:600px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#6c3fc5"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Context -->
+        <rect x="10" y="10" width="200" height="480" rx="10" fill="#ede8fb" fill-opacity="0.5" stroke="#6c3fc5" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#2d1b69" letter-spacing="1">A · UPSTREAM</text>
+
+        <!-- Node: APP/PS1 Models -->
+        <rect x="30" y="42" width="160" height="40" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="110" y="58" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b" font-weight="600">APP/PS1 Models</text>
+        <text x="110" y="73" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">PSEN1-mutant / AD</text>
+
+        <!-- Arrow down -->
+        <line x1="110" y1="82" x2="110" y2="105" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: STAU1 Elevated -->
+        <rect x="30" y="107" width="160" height="40" rx="7" fill="#2d1b69" stroke="#2d1b69" stroke-width="1.5"/>
+        <text x="110" y="123" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">STAU1 Elevated</text>
+        <text x="110" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#c4b5fd">Overabundant in disease</text>
+
+        <!-- Arrow down -->
+        <line x1="110" y1="147" x2="110" y2="170" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: RNA Binding -->
+        <rect x="30" y="172" width="160" height="40" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="110" y="188" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b" font-weight="600">dsRNA Binding</text>
+        <text x="110" y="202" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">3′/5′ UTR interactions</text>
+
+        <!-- Arrow down -->
+        <line x1="110" y1="212" x2="110" y2="235" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: Condensates -->
+        <rect x="30" y="237" width="160" height="40" rx="7" fill="#fff" stroke="#6c3fc5" stroke-width="1.5"/>
+        <text x="110" y="253" text-anchor="middle" font-family="Arial" font-size="10" fill="#1e293b" font-weight="600">STAU1 Condensates</text>
+        <text x="110" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Stress granule assembly</text>
+
+        <!-- Arrow down to Synaptic -->
+        <line x1="110" y1="277" x2="110" y2="300" stroke="#6c3fc5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: Synaptic Transport -->
+        <rect x="30" y="302" width="160" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="110" y="318" text-anchor="middle" font-family="Arial" font-size="10" fill="#0f766e" font-weight="600">Synaptic RNA Transport</text>
+        <text x="110" y="332" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">PSD-95 / GluA1 / LTP</text>
+
+        <!-- Panel B: Amyloid & Tau Branch -->
+        <rect x="225" y="10" width="215" height="480" rx="10" fill="#fef2f2" fill-opacity="0.5" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="332" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">B · AMYLOID &amp; TAU</text>
+
+        <!-- Connector from STAU1 Elevated to BACE1 mRNA -->
+        <path d="M190,127 L245,127 L245,142 L243,142" fill="none" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Branch B1: Amyloid -->
+        <!-- Node: BACE1 mRNA -->
+        <rect x="245" y="107" width="175" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="123" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">BACE1 mRNA (3′ UTR)</text>
+        <text x="332" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Stabilized by STAU1</text>
+
+        <!-- Arrow down -->
+        <line x1="332" y1="147" x2="332" y2="170" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node: BACE1 Protein ↑ -->
+        <rect x="245" y="172" width="175" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="188" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">BACE1 Protein ↑</text>
+        <text x="332" y="202" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Prolonged mRNA half-life</text>
+
+        <!-- Arrow down -->
+        <line x1="332" y1="212" x2="332" y2="235" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Aβ Production ↑ -->
+        <rect x="245" y="237" width="175" height="40" rx="7" fill="#991b1b" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="253" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">Aβ Production ↑</text>
+        <text x="332" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">Amyloidogenic processing</text>
+
+        <!-- Branch B2: Tau -->
+        <!-- Connector from STAU1 Elevated to GADD45B (elbow through gutter) -->
+        <path d="M190,127 L218,127 L218,322 L243,322" fill="none" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- Node: GADD45B -->
+        <rect x="245" y="302" width="175" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="318" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">GADD45B ↑</text>
+        <text x="332" y="332" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">STAU1-induced expression</text>
+
+        <!-- Arrow down -->
+        <line x1="332" y1="342" x2="332" y2="365" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node: p38 MAPK -->
+        <rect x="245" y="367" width="175" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="383" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">p38 MAPK Activation</text>
+        <text x="332" y="397" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Tau phosphorylation</text>
+
+        <!-- Node: Tau p-Ser396/Thr181 -->
+        <rect x="245" y="422" width="175" height="40" rx="7" fill="#991b1b" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="332" y="438" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">Tau p-Ser396 / Thr181</text>
+        <text x="332" y="452" text-anchor="middle" font-family="Arial" font-size="9" fill="#fecaca">AD-relevant epitopes</text>
+        <line x1="332" y1="407" x2="332" y2="420" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C: mTOR/Proteostasis -->
+        <rect x="455" y="10" width="215" height="330" rx="10" fill="#eff6ff" fill-opacity="0.5" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="562" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">C · mTOR / PROTEOSTASIS</text>
+
+        <!-- Connector from STAU1 Condensates to MTOR mRNA -->
+        <path d="M190,252 L455,252" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: MTOR mRNA (5′ UTR) -->
+        <rect x="468" y="237" width="185" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="560" y="253" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="600">MTOR mRNA (5′ UTR)</text>
+        <text x="560" y="267" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Recruited to condensates</text>
+
+        <!-- Arrow up to mTOR Signaling -->
+        <line x1="560" y1="237" x2="560" y2="212" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: mTOR Signaling ↑ -->
+        <rect x="468" y="172" width="185" height="40" rx="7" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="560" y="188" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">mTOR Signaling ↑</text>
+        <text x="560" y="202" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">Translation hyperactivation</text>
+
+        <!-- Arrow up to Autophagy Impaired -->
+        <line x1="560" y1="172" x2="560" y2="147" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: Autophagy Impaired -->
+        <rect x="468" y="107" width="185" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="560" y="123" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="600">Autophagy Impaired</text>
+        <text x="560" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Lysosome dysfunction</text>
+
+        <!-- Arrow up to Protein Aggregation -->
+        <line x1="560" y1="107" x2="560" y2="82" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: Protein Aggregation -->
+        <rect x="468" y="42" width="185" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="560" y="58" text-anchor="middle" font-family="Arial" font-size="10" fill="#1d4ed8" font-weight="600">Protein Aggregation</text>
+        <text x="560" y="73" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Aβ / tau clearance failure</text>
+
+        <!-- Arrow down from MTOR mRNA to ER Stress -->
+        <line x1="560" y1="277" x2="560" y2="300" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node: ER Stress / UPR -->
+        <rect x="468" y="302" width="185" height="40" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.5"/>
+        <text x="560" y="318" text-anchor="middle" font-family="Arial" font-size="10" fill="#b45309" font-weight="600">ER Stress / UPR</text>
+        <text x="560" y="332" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">PERK–CHOP signaling</text>
+
+        <!-- Panel D: Downstream Outcomes -->
+        <rect x="685" y="10" width="205" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="787" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">D · OUTCOMES</text>
+
+        <!-- Connector from Protein Aggregation to Neurodegeneration -->
+        <line x1="653" y1="62" x2="685" y2="62" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Neurodegeneration -->
+        <rect x="697" y="42" width="178" height="40" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="786" y="58" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">Neurodegeneration</text>
+        <text x="786" y="73" text-anchor="middle" font-family="Arial" font-size="9" fill="#99f6e4">Multi-disease convergence</text>
+
+        <!-- Connector from Autophagy Impaired to Neuronal Vulnerability -->
+        <line x1="653" y1="127" x2="685" y2="127" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Neuronal Vulnerability -->
+        <rect x="697" y="107" width="178" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="786" y="123" text-anchor="middle" font-family="Arial" font-size="10" fill="#0f766e" font-weight="600">Neuronal Vulnerability</text>
+        <text x="786" y="137" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">p53 apoptosis signaling</text>
+
+        <!-- Connector from mTOR to Glial Activation -->
+        <line x1="653" y1="192" x2="685" y2="192" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: Glial Activation -->
+        <rect x="697" y="172" width="178" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="786" y="188" text-anchor="middle" font-family="Arial" font-size="10" fill="#0f766e" font-weight="600">Glial Activation</text>
+        <text x="786" y="202" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">Neuroinflammation</text>
+
+        <!-- Connector from ER Stress to BBB Dysfunction -->
+        <line x1="653" y1="322" x2="685" y2="322" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node: BBB Dysfunction -->
+        <rect x="697" y="302" width="178" height="40" rx="7" fill="#fff" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="786" y="318" text-anchor="middle" font-family="Arial" font-size="10" fill="#991b1b" font-weight="600">BBB Dysfunction</text>
+        <text x="786" y="332" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">PART1–PPP2R3A–NFκB</text>
+
+        <!-- Node: Synaptic Failure -->
+        <rect x="697" y="367" width="178" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="786" y="383" text-anchor="middle" font-family="Arial" font-size="10" fill="#0f766e" font-weight="600">Synaptic Failure</text>
+        <text x="786" y="397" text-anchor="middle" font-family="Arial" font-size="9" fill="#475569">LTP / memory impairment</text>
+
+        <!-- Connector from Synaptic Transport to Synaptic Failure -->
+        <path d="M190,322 L207,322 L207,390 L697,390" fill="none" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Therapeutic node at bottom of Panel D -->
+        <rect x="697" y="432" width="178" height="40" rx="7" fill="#2d1b69" stroke="#2d1b69" stroke-width="1.5"/>
+        <text x="786" y="448" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff" font-weight="700">RNAi / ASO Therapy</text>
+        <text x="786" y="462" text-anchor="middle" font-family="Arial" font-size="9" fill="#c4b5fd">Selective suppression</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (Upstream):</strong> AD-relevant models drive STAU1 overabundance; elevated STAU1 engages dsRNA-binding activities, forms condensates with stress granule properties, and participates in dendritic synaptic RNA transport.
+      <strong>Panel B (Amyloid &amp; Tau):</strong> Two parallel branches fan out from STAU1 elevation — the upper arm stabilizes BACE1 mRNA via the 3′ UTR, raising BACE1 protein and Aβ production; the lower arm induces GADD45B, activates p38 MAPK, and drives tau phosphorylation at AD-relevant Ser396/Thr181 epitopes.
+      <strong>Panel C (mTOR/Proteostasis):</strong> STAU1 condensates recruit MTOR mRNA through its 5′ UTR, amplifying mTOR signaling, impairing autophagy and lysosomal clearance of aggregates, and co-activating ER stress/UPR through PERK–CHOP.
+      <strong>Panel D (Outcomes):</strong> Converging downstream consequences include neurodegeneration (multi-disease), neuronal vulnerability via p53 apoptosis, glial/neuroinflammatory activation, blood–brain barrier disruption (PART1–PPP2R3A–NFκB axis), synaptic failure, and the therapeutic opportunity of selective RNAi/ASO-mediated STAU1 suppression.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-danger">
+        <h3>Amyloidogenesis via BACE1 mRNA Stabilization</h3>
+        <p>STAU1 binds the BACE1 3′ UTR, inhibits BACE1 mRNA decay, increases BACE1 protein, and raises Aβ production in AD-relevant models — placing STAU1 directly upstream of amyloid pathology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Tau Pathology via GADD45B–p38 MAPK</h3>
+        <p>STAU1-induced GADD45B expression activates a p38 MAPK pathway that promotes tau phosphorylation at the AD-relevant sites Ser396 and Thr181, linking STAU1 to neurofibrillary pathology.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>mTOR Hyperactivation &amp; Autophagy Impairment</h3>
+        <p>STAU1 condensates recruit MTOR mRNA via its 5′ UTR, promoting MTOR translation and mTOR signaling, which impairs autophagy-lysosome function and thus the clearance of Aβ and tau aggregates.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Broad Neurodegeneration Overabundance</h3>
+        <p>Elevated STAU1 is reported not only in AD models but in ALS, SCA2, Huntington's, Parkinson's, and FTD-related systems, suggesting a shared stress-amplifying role across proteinopathies.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Blood–Brain Barrier Disruption</h3>
+        <p>In Aβ(1–42)-treated endothelial cells, PART1 destabilizes PPP2R3A mRNA via STAU1, increasing p-NFκB-p65 activity, reducing tight junction proteins, and elevating BBB permeability — a less-appreciated STAU1 disease axis.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Opportunity &amp; Complexity</h3>
+        <p>RNAi-mediated STAU1 reduction improved mTOR/autophagy abnormalities, glial activation, and p53-apoptotic signaling in neurodegeneration models. However, STAU1 also supports normal LTP, synaptic mRNA transport, and stress adaptation — selective modulation is essential.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Prioritize AD-specific STAU1 validation.</strong> Assess STAU1 abundance, localization, condensate formation, and RNA targets in human AD brain, APP/PS1 and tauopathy models, PSEN1-mutant systems, neurons, astrocytes, microglia, and brain endothelial cells.</li>
+      <li><strong>Test STAU1 reduction in AD animal models.</strong> STAU1 knockdown or partial suppression in AD mice should measure BACE1, Aβ, tau phosphorylation, mTOR activity, autophagic flux, neuroinflammation, synaptic markers, and cognition together with safety readouts.</li>
+      <li><strong>Target selective modulation, not global inhibition.</strong> Therapeutic strategies should reduce pathological overabundance, disrupt excessive condensates, or block specific pathogenic interactions — STAU1–BACE1 mRNA, STAU1–MTOR mRNA, or STAU1-containing BBB-disruptive RNA complexes — rather than eliminating STAU1 function broadly.</li>
+      <li><strong>Pursue RNA-targeted therapeutic modalities.</strong> Antisense oligonucleotides, RNAi, or small molecules targeting STAU1 expression or specific STAU1–RNA interactions (particularly BACE1 3′ UTR and MTOR 5′ UTR binding) represent actionable entry points.</li>
+      <li><strong>Explore structural druggability via dimerization.</strong> STAU1 dimerization depends on its Staufen-swapping motif; disrupting dimerization or structural dynamics may reduce pathological SMD or condensate activity without fully ablating RNA-binding functions.</li>
+      <li><strong>Stratify patients by STAU1 status.</strong> STAU1 modulation is likely most beneficial in AD subgroups or disease stages where STAU1 is elevated, mislocalized, or actively driving mTOR/autophagy dysfunction, rather than as a universal intervention.</li>
+      <li><strong>Monitor a comprehensive safety endpoint panel.</strong> Any STAU1-targeted therapy must assess hippocampal LTP, dendritic mRNA localization, synaptic protein synthesis, neuronal survival, glial function, peripheral metabolism, immune signaling, and tissue-specific RNA regulation.</li>
+      <li><strong>Frame STAU1 as an emerging disease-modifying candidate.</strong> Current evidence positions STAU1 at the intersection of amyloid, tau, mTOR/autophagy, RNA granules, BBB integrity, apoptosis, and synaptic plasticity — mechanistically compelling but not yet clinically validated.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="lead">Overall Assessment — STAU1 in Alzheimer's Disease</div>
+      <p>
+        STAU1 is best characterized as a <strong>disease-modifying RNA-regulatory node</strong> at the convergence of multiple AD-relevant pathways. The most direct evidence places STAU1 <strong>upstream of amyloidogenesis</strong> through BACE1 mRNA stabilization and upstream of tau phosphorylation through the GADD45B–p38 MAPK axis — both experimentally demonstrated in AD-relevant cellular and mouse models. Broader support comes from its role in <strong>mTOR hyperactivation and autophagy impairment</strong> via condensate-mediated MTOR mRNA recruitment, ER stress/UPR activation, BBB disruption, glial neuroinflammation, and p53-apoptotic signaling — mechanisms with strong independent AD relevance. <strong>RNAi-mediated suppression</strong> has shown proof-of-concept benefit in related neurodegeneration models. The principal complexity is that STAU1 performs essential physiological roles in synaptic RNA transport, local translation, LTP, and stress adaptation, meaning <strong>selective rather than global suppression</strong> will be required. STAU1 is not yet a clinically validated target, but the mechanistic case for further investigation — particularly in AD subgroups with elevated STAU1 — is substantial and warrants prioritized experimental investment.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  STAU1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

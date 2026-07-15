@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPALIN/TMEM10 — Oligodendrocyte & Myelin Biology in Alzheimer's Disease</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2e7fb8;
+    --light: #e8f4fc;
+    --danger: #b91c1c;
+    --danger-light: #fef2f2;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3f 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+  }
+  .chip-warning {
+    background: rgba(185,28,28,0.35);
+    border: 1px solid rgba(255,160,160,0.4);
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-slate { background: #f1f5f9; border-left: 4px solid #94a3b8; }
+  .card-slate h3 { color: #475569; }
+  .card-blue { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+  .takeaways ol li {
+    margin-bottom: 18px;
+    font-size: 0.96rem;
+  }
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3f 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+  .verdict .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    opacity: 0.7;
+    margin-bottom: 10px;
+  }
+  .verdict p {
+    font-size: 1.02rem;
+    opacity: 0.92;
+  }
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene: OPALIN | TMEM10 · Oligodendrocyte/Myelin Protein</span>
+    <span class="chip chip-warning">⚠ Indirect AD relevance — causality not established</span>
+  </div>
+  <h1>OPALIN / TMEM10 &mdash; Myelin Biology &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package &mdash; AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Interpretive Caution:</strong> OPALIN is not a validated Alzheimer's disease gene. Its relevance to AD is indirect — it does not demonstrably regulate amyloid-β, tau pathology, synaptic loss, or AD-specific cognitive decline based on the current evidence. It is best treated as a candidate biomarker and contextual modulator of myelin integrity.
+    </div>
+
+    <p>OPALIN/TMEM10 is best characterized as a CNS oligodendrocyte- and myelin-associated protein rather than a validated Alzheimer's disease gene. The available evidence links OPALIN most strongly to <strong>oligodendrocyte differentiation</strong>, mature myelinating oligodendrocytes, paranodal/inner-loop myelin structures, myelin gene expression, remyelination, and white-matter integrity.</p>
+
+    <p>Its relevance to Alzheimer's disease is <em>indirect but biologically plausible</em>. AD and AD-related dementias increasingly involve mechanisms beyond amyloid-β and tau, including oligodendrocyte dysfunction, myelin breakdown, impaired remyelination, neuroinflammation, metabolic/mitochondrial impairment, lysosomal and lipid abnormalities, hippocampal vulnerability, and neural-network disconnection. OPALIN intersects with several of these processes.</p>
+
+    <p>As a therapeutic target, OPALIN is currently more credible as a <strong>biomarker or component of pro-remyelination/oligodendrocyte-restoration strategies</strong> than as a stand-alone AD target. The strongest functional evidence shows that OPALIN supports oligodendrocyte maturation and myelination — notably through LGI1–OPALIN signaling — but other knockout data suggest possible redundancy under baseline conditions. This makes OPALIN a candidate marker or context-dependent modulator rather than a fully validated disease-modifying target for AD.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Figure</h2>
+    <div class="figure-wrap">
+      <!--
+        PANELS:
+        A) Upstream Regulation (left)  ~x:20–310
+        B) OPALIN Core Biology (center) ~x:330–580
+        C) Downstream / AD-relevance (right) ~x:600–870
+
+        NODES (counting all):
+        Panel A: 1=LGI1, 2=Smoothened/AMPK, 3=Sox10/Olig2, 4=cAMP/CREB → 4
+        Panel B: 5=OPALIN/TMEM10, 6=Myelin Genes (MAG CNP CGT), 7=OL Maturation, 8=LGI1-binding mutant (no rescue) → 4
+        Panel C – branch 1: 9=Myelination/WM integrity, 10=Remyelination → 2
+        Panel C – branch 2: 11=Hippocampal Vulnerability, 12=Dementia Biomarker → 2
+        Panel C – shared: 13=Neuroinflammation suppresses, 14=Lysosomal/Lipid turnover → 2
+        Total = 14 nodes. Within limit.
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="OPALIN mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e7fb8"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b91c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#d97706"/>
+          </marker>
+        </defs>
+
+        <!-- ====== PANEL A: Upstream Regulation ====== -->
+        <rect x="18" y="18" width="278" height="464" rx="12" fill="rgba(30,74,107,0.06)" stroke="#2e7fb8" stroke-width="1.2"/>
+        <text x="30" y="38" font-family="Arial" font-size="9" font-weight="700" fill="#1a4a6b" letter-spacing="0.1em" text-anchor="start">A · UPSTREAM REGULATION</text>
+
+        <!-- Node 1: LGI1 -->
+        <rect x="54" y="56" width="154" height="46" rx="7" fill="#dbeafe" stroke="#2e7fb8" stroke-width="1.3"/>
+        <text x="131" y="75" font-family="Georgia,serif" font-size="11.5" fill="#1a4a6b" text-anchor="middle" font-weight="700">LGI1</text>
+        <text x="131" y="91" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">(Oligodendrocyte membrane)</text>
+
+        <!-- Node 2: Smoothened/AMPK -->
+        <rect x="54" y="148" width="154" height="46" rx="7" fill="#dbeafe" stroke="#2e7fb8" stroke-width="1.3"/>
+        <text x="131" y="167" font-family="Georgia,serif" font-size="11" fill="#1a4a6b" text-anchor="middle" font-weight="700">Smoothened / AMPK</text>
+        <text x="131" y="183" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">activation (GSA-10)</text>
+
+        <!-- Node 3: Sox10 / Olig2 -->
+        <rect x="54" y="244" width="154" height="46" rx="7" fill="#dbeafe" stroke="#2e7fb8" stroke-width="1.3"/>
+        <text x="131" y="263" font-family="Georgia,serif" font-size="11.5" fill="#1a4a6b" text-anchor="middle" font-weight="700">Sox10 / Olig2</text>
+        <text x="131" y="279" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Transcription factors</text>
+
+        <!-- Node 4: cAMP/CREB -->
+        <rect x="54" y="338" width="154" height="46" rx="7" fill="#dbeafe" stroke="#2e7fb8" stroke-width="1.3"/>
+        <text x="131" y="357" font-family="Georgia,serif" font-size="11.5" fill="#1a4a6b" text-anchor="middle" font-weight="700">cAMP / CREB</text>
+        <text x="131" y="373" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Myt1 / p38-MK2 signaling</text>
+
+        <!-- Arrows within Panel A -->
+        <!-- LGI1 → Sox10/Olig2 (route down left side, clear of node 2) -->
+        <line x1="131" y1="102" x2="131" y2="140" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Node2 → Sox10/Olig2 -->
+        <line x1="131" y1="194" x2="131" y2="236" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Sox10/Olig2 → cAMP/CREB -->
+        <line x1="131" y1="290" x2="131" y2="330" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Small label between LGI1 and Smo/AMPK -->
+        <text x="140" y="125" font-family="Arial" font-size="8.5" fill="#2e7fb8" text-anchor="start" font-style="italic">binds OPALIN →</text>
+
+        <!-- ====== PANEL B: OPALIN Core Biology ====== -->
+        <rect x="316" y="18" width="258" height="464" rx="12" fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="328" y="38" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.1em">B · OPALIN CORE BIOLOGY</text>
+
+        <!-- Node 5: OPALIN/TMEM10 (central) -->
+        <rect x="348" y="58" width="162" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+        <text x="429" y="80" font-family="Georgia,serif" font-size="13" fill="#0f766e" text-anchor="middle" font-weight="700">OPALIN / TMEM10</text>
+        <text x="429" y="97" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">CNS myelin/OL protein</text>
+
+        <!-- Node 6: Myelin Genes -->
+        <rect x="348" y="164" width="162" height="46" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="429" y="183" font-family="Georgia,serif" font-size="11.5" fill="#065f46" text-anchor="middle" font-weight="700">Myelin Genes ↑</text>
+        <text x="429" y="199" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">MAG, CNP, CGT, MBP</text>
+
+        <!-- Node 7: OL Maturation -->
+        <rect x="348" y="264" width="162" height="46" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="429" y="283" font-family="Georgia,serif" font-size="11.5" fill="#065f46" text-anchor="middle" font-weight="700">OL Maturation</text>
+        <text x="429" y="299" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Paranodal / inner-loop</text>
+
+        <!-- Node 8: LGI1-binding mutant (no rescue) -->
+        <rect x="348" y="360" width="162" height="52" rx="7" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.3"/>
+        <text x="429" y="379" font-family="Georgia,serif" font-size="10.5" fill="#b91c1c" text-anchor="middle" font-weight="700">LGI1-binding mutant</text>
+        <text x="429" y="394" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">OPALIN fails to</text>
+        <text x="429" y="407" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">rescue myelination</text>
+
+        <!-- Arrows within Panel B -->
+        <!-- OPALIN → Myelin Genes -->
+        <line x1="429" y1="110" x2="429" y2="156" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Myelin Genes → OL Maturation -->
+        <line x1="429" y1="210" x2="429" y2="256" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- OL Maturation → LGI1-binding mutant -->
+        <line x1="429" y1="310" x2="429" y2="352" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- ====== PANEL C: Downstream / AD-Relevance ====== -->
+        <rect x="594" y="18" width="330" height="464" rx="12" fill="rgba(217,119,6,0.05)" stroke="#d97706" stroke-width="1.2"/>
+        <text x="606" y="38" font-family="Arial" font-size="9" font-weight="700" fill="#92400e" letter-spacing="0.1em">C · DOWNSTREAM &amp; AD-RELEVANCE</text>
+
+        <!-- Node 9: Myelination / WM integrity -->
+        <rect x="614" y="58" width="148" height="52" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+        <text x="688" y="78" font-family="Georgia,serif" font-size="11" fill="#92400e" text-anchor="middle" font-weight="700">Myelination &amp;</text>
+        <text x="688" y="93" font-family="Georgia,serif" font-size="11" fill="#92400e" text-anchor="middle">WM Integrity</text>
+
+        <!-- Node 10: Remyelination -->
+        <rect x="614" y="160" width="148" height="46" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+        <text x="688" y="179" font-family="Georgia,serif" font-size="11.5" fill="#92400e" text-anchor="middle" font-weight="700">Remyelination</text>
+        <text x="688" y="195" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">MSC exosomes, GSA-10</text>
+
+        <!-- Node 11: Hippocampal Vulnerability -->
+        <rect x="776" y="58" width="128" height="52" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+        <text x="840" y="76" font-family="Georgia,serif" font-size="10.5" fill="#92400e" text-anchor="middle" font-weight="700">Hippocampal</text>
+        <text x="840" y="91" font-family="Georgia,serif" font-size="10.5" fill="#92400e" text-anchor="middle">Vulnerability</text>
+        <text x="840" y="104" font-family="Georgia,serif" font-size="9.5" fill="#1e293b" text-anchor="middle">(NEC / chemobrain)</text>
+
+        <!-- Node 12: Dementia Biomarker -->
+        <rect x="776" y="160" width="128" height="46" rx="7" fill="#fef3c7" stroke="#d97706" stroke-width="1.3"/>
+        <text x="840" y="179" font-family="Georgia,serif" font-size="11" fill="#92400e" text-anchor="middle" font-weight="700">Dementia</text>
+        <text x="840" y="194" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Biomarker signal</text>
+
+        <!-- Node 13: Neuroinflammation suppresses -->
+        <rect x="614" y="264" width="148" height="52" rx="7" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.3"/>
+        <text x="688" y="284" font-family="Georgia,serif" font-size="10.5" fill="#b91c1c" text-anchor="middle" font-weight="700">Neuroinflammation</text>
+        <text x="688" y="299" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">suppresses OPALIN</text>
+        <text x="688" y="312" font-family="Georgia,serif" font-size="9.5" fill="#1e293b" text-anchor="middle">(EAE, cuprizone)</text>
+
+        <!-- Node 14: Lysosomal/Lipid turnover -->
+        <rect x="776" y="264" width="128" height="52" rx="7" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.3"/>
+        <text x="840" y="284" font-family="Georgia,serif" font-size="10.5" fill="#b91c1c" text-anchor="middle" font-weight="700">Lysosomal &amp;</text>
+        <text x="840" y="299" font-family="Georgia,serif" font-size="10.5" fill="#b91c1c" text-anchor="middle">Lipid Turnover</text>
+        <text x="840" y="312" font-family="Georgia,serif" font-size="9.5" fill="#1e293b" text-anchor="middle">(sphingolipid, glycos.)</text>
+
+        <!-- Shared outcome node -->
+        <rect x="674" y="380" width="188" height="52" rx="8" fill="#e0e7ff" stroke="#3b82f6" stroke-width="1.8"/>
+        <text x="768" y="400" font-family="Georgia,serif" font-size="11.5" fill="#1d4ed8" text-anchor="middle" font-weight="700">AD / Dementia Relevance</text>
+        <text x="768" y="416" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Myelin repair · WM connectivity</text>
+        <text x="768" y="429" font-family="Georgia,serif" font-size="10" fill="#1e293b" text-anchor="middle">Biomarker · Glial resilience</text>
+
+        <!-- Arrows in Panel C -->
+        <!-- Node9 → Node10 (myelination → remyelination) -->
+        <line x1="688" y1="110" x2="688" y2="152" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Node11 → Node12 -->
+        <line x1="840" y1="110" x2="840" y2="152" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Node10 → shared outcome (route down-right through gutter) -->
+        <polyline points="688,206 688,238 768,238 768,372" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Node12 → shared outcome (route down) -->
+        <polyline points="840,206 840,238 768,238" fill="none" stroke="#d97706" stroke-width="1.5"/>
+        <!-- Node13 → shared outcome -->
+        <polyline points="688,316 688,372" fill="none" stroke="#b91c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Node14 → shared outcome -->
+        <polyline points="840,316 840,350 862,350 862,372 862,406 862,406" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+        <line x1="862" y1="380" x2="862" y2="380" stroke="none"/>
+        <polyline points="840,316 840,354 862,354 862,406 854,406" fill="none" stroke="#b91c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- INTER-PANEL ARROWS (Panel A → Panel B through gutter) -->
+        <!-- Sox10/Olig2 (Panel A, node3, right edge ~208) → OPALIN (Panel B, node5, left edge ~348) -->
+        <!-- Route: from x=208 y=267 → x=296 y=267 → x=296 y=84 → x=348 y=84 -->
+        <polyline points="208,267 296,267 296,84 348,84" fill="none" stroke="#2e7fb8" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- cAMP/CREB (node4) → OPALIN: route via gutter as well -->
+        <polyline points="208,361 308,361 308,96 348,96" fill="none" stroke="#2e7fb8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- INTER-PANEL ARROWS (Panel B → Panel C through gutter) -->
+        <!-- OL Maturation (node7 right edge ~510) → Myelination WM (node9 left edge ~614) -->
+        <polyline points="510,287 562,287 562,84 614,84" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- OPALIN (node5 right edge ~510) → Hippocampal (node11 left ~776) -->
+        <polyline points="510,84 562,84 562,120 614,120" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+        <!-- route node5 to node11: goes right along row, but 614-776 gap crosses node9 area, so go through gutter at y=46 -->
+        <!-- Actually re-route: panel B right gutter = 574-594 strip, panel C left = 614 -->
+        <!-- OPALIN → Hippocampal: y=72 gutter -->
+        <polyline points="510,72 574,72 574,42 762,42 762,58" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+        <!-- OPALIN → Neuroinflammation: route via bottom gutter -->
+        <polyline points="510,97 574,97 574,470 600,470 600,290 614,290" fill="none" stroke="#b91c1c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Upstream Regulation:</strong> Key signals activating OPALIN expression, including the direct LGI1–OPALIN interaction on oligodendrocyte membranes, Smoothened/AMPK activation, and transcription factor control via Sox10/Olig2 and cAMP/CREB/Myt1/p38-MK2.
+      <strong>Panel B — OPALIN Core Biology:</strong> OPALIN promotes myelin gene expression (MAG, CNP, CGT, MBP) and oligodendrocyte maturation; an LGI1-binding-deficient mutant (dashed red arrow) fails to rescue myelination, confirming the LGI1–OPALIN axis is functionally required.
+      <strong>Panel C — Downstream &amp; AD-Relevance:</strong> Two parallel branches capture (i) myelination/WM integrity and remyelination and (ii) hippocampal vulnerability and dementia biomarker signals; neuroinflammation and lysosomal/lipid turnover act as suppressors/modifiers. All branches converge on a shared AD/dementia relevance node emphasizing myelin repair, white-matter connectivity, and biomarker potential.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Oligodendrocyte &amp; Myelin Identity</h3>
+        <p>OPALIN is CNS-enriched and oligodendrocyte-specific, colocalizing with canonical myelin and OL markers including MBP, MOG, MAG, CNP, and CC1. Its expression rises during oligodendrocyte maturation and myelination, positioning it as a marker of OL differentiation state.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>LGI1–OPALIN: Strongest Mechanistic Evidence</h3>
+        <p>OPALIN was identified as an LGI1-binding protein on OL membranes. Conditional knockout of OPALIN in OL-lineage cells produced hypomyelination and white-matter abnormalities mirroring LGI1 deficiency. Re-expression of wild-type OPALIN rescued myelination, but an LGI1-binding-deficient mutant did not — directly implicating this axis in CNS myelination.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Remyelination &amp; Therapeutic Signatures</h3>
+        <p>Pro-remyelinating interventions — including mesenchymal stem cell exosomes in a chemobrain model and Smoothened/AMPK activation via GSA-10 — increased OPALIN alongside MBP, MAL, and other OL markers. OPALIN can thus serve as a pharmacodynamic readout in remyelination-focused therapeutic studies.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Hippocampal &amp; Cognitive Vulnerability</h3>
+        <p>OPALIN changes appear in hippocampal stress, inflammatory, toxic-exposure, and chemobrain models. Because the hippocampus is central to AD-related memory impairment, OPALIN may serve as a marker of oligodendrocyte/myelin state in memory circuits — though this link to AD cognition remains indirect.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neuroinflammation Suppresses OPALIN</h3>
+        <p>OPALIN decreases in inflammatory and toxic CNS states including EAE, cuprizone demyelination, necrotizing enterocolitis-associated hippocampal inflammation, and phenobarbital developmental exposure. This is relevant because microglial activation, complement signaling, and immune-metabolic dysfunction all contribute to AD progression.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Mixed Evidence for Essential Function</h3>
+        <p>Some studies show OPALIN loss impairs myelination with rescue by re-expression. However, other OPALIN knockout work found broadly normal myelin structure, axonal domain organization, and basic sensory/motor behavior under conventional conditions — suggesting functional redundancy or context-dependent roles. OPALIN's AD-specific causality remains unestablished.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Dementia Biomarker Signal — Weak Specificity</h3>
+        <p>A dementia bioinformatics study included OPALIN among six oligodendrocyte-related feature genes linked to dementia. In vascular dementia, OPALIN appeared in an initial diagnostic gene set but showed inconsistent validation. These data support association with dementia-related biology, not direct AD causality.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Lysosomal, Lipid &amp; Post-Translational Regulation</h3>
+        <p>In fatty acid hydroxylase deficiency, OPALIN protein accumulated in myelin without increased gene expression, suggesting altered lysosomal turnover influenced by sphingolipid composition. OPALIN also undergoes glycosylation/sialylation and S-nitrosylation — modifications relevant to age-related neurodegeneration but as yet indirect evidence for AD.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong style="color:var(--dark)">Position OPALIN as a candidate biomarker, not a proven driver:</strong> Treat OPALIN as a marker of mature oligodendrocytes, myelin integrity, and remyelination in AD research rather than a validated disease-modifying target.</li>
+      <li><strong style="color:var(--dark)">Test OPALIN directly in AD models:</strong> Prioritize experiments examining whether OPALIN expression changes with amyloid, tau, aging, neuroinflammation, vascular injury, or cognitive decline in established AD model systems.</li>
+      <li><strong style="color:var(--dark)">Evaluate OPALIN in the context of the broader OL marker panel:</strong> Assess OPALIN alongside MBP, MOG, MAG, CNP, Olig2, Sox10, MAL, and MOBP to determine whether changes reflect broad OL maturation shifts or OPALIN-specific biology.</li>
+      <li><strong style="color:var(--dark)">Prioritize the LGI1–OPALIN axis in white-matter and hippocampal studies:</strong> This pathway has the strongest mechanistic evidence for regulating CNS myelination and should be investigated in AD-relevant white-matter and hippocampal dysfunction models.</li>
+      <li><strong style="color:var(--dark)">Use OPALIN as a pharmacodynamic readout in remyelination trials:</strong> Increased OPALIN together with improved MBP/MOG/MAG expression and restored oligodendrocyte morphology could indicate enhanced myelin repair in dementia-focused interventions.</li>
+      <li><strong style="color:var(--dark)">Target upstream pathways rather than OPALIN alone:</strong> Explore Smoothened/AMPK signaling, LIF-related signaling, cAMP/CREB regulation, Myt1-associated transcriptional control, p38-MK2 differentiation signaling, and Sox10/Olig2 pathways as more realistic therapeutic entry points.</li>
+      <li><strong style="color:var(--dark)">Investigate neuroinflammation–OPALIN relationships in AD:</strong> Test relationships between OPALIN loss and microglial activation, complement genes, cytokines (IL-6, TNF-α), oxidative stress, and systemic inflammatory states in AD-relevant models.</li>
+      <li><strong style="color:var(--dark)">Assess OPALIN protein turnover in aging and AD contexts:</strong> Its connections to lysosomal degradation, sphingolipid-dependent stability, glycosylation/sialylation, and nitrosative stress make OPALIN relevant to age-related myelin vulnerability and worth examining in aging tissues.</li>
+      <li><strong style="color:var(--dark)">Do not overinterpret OPALIN as an anti-amyloid or anti-tau target:</strong> The available evidence does not show that OPALIN modulation changes Aβ generation/clearance, tau phosphorylation, neurofibrillary tangles, or canonical AD pathology.</li>
+      <li><strong style="color:var(--dark)">Focus OPALIN's therapeutic promise on myelin/OL restoration:</strong> Its value in AD would most plausibly come from supporting remyelination, preserving white-matter connectivity, and improving glial-network resilience — not from directly targeting hallmark AD lesions.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="verdict-lead">Overall Assessment — OPALIN / TMEM10 in Alzheimer's Disease</p>
+      <p>
+        OPALIN/TMEM10 is a <strong>CNS oligodendrocyte- and myelin-associated protein</strong> whose relevance to Alzheimer's disease is <strong>indirect but biologically plausible</strong>. The strongest evidence positions it as a regulator of oligodendrocyte maturation and CNS myelination through the <strong>LGI1–OPALIN signaling axis</strong>, with supporting roles in myelin gene expression, paranodal structure, and remyelination. It is consistently reduced in neuroinflammatory, demyelinating, and toxic CNS injury states that overlap with AD-adjacent mechanisms, and it responds to pro-remyelinating interventions. However, OPALIN does not demonstrably regulate <strong>amyloid-β, tau pathology, synaptic loss, or AD-specific cognitive decline</strong>, and some knockout data suggest functional redundancy under basal conditions. Its most credible near-term role in AD research is as a <strong>pharmacodynamic biomarker of myelin integrity and oligodendrocyte restoration</strong> — particularly in studies targeting the white-matter and oligodendrocyte component of dementia — rather than as a stand-alone disease-modifying target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  OPALIN / TMEM10 &mdash; Myelin Biology in Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

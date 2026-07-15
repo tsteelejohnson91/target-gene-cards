@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARID5B — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7cc7;
+    --light: #e8f0fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  section { margin-bottom: 56px; }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW prose */
+  .prose p { margin-bottom: 1.1em; font-size: 0.97rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    margin-top: 14px;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card.accent   { background: var(--light);          border-left: 4px solid var(--mid);      }
+  .card.accent h3{ color: var(--dark); }
+  .card.danger   { background: var(--danger-light);   border-left: 4px solid var(--danger);   }
+  .card.danger h3{ color: var(--danger); }
+  .card.positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card.positive h3{ color: var(--positive); }
+  .card.warning  { background: var(--warning-light);  border-left: 4px solid var(--warning);  }
+  .card.warning h3{ color: var(--warning); }
+  .card.blue     { background: var(--blue-light);     border-left: 4px solid #3b82f6;         }
+  .card.blue h3  { color: #1d4ed8; }
+  .card.slate    { background: var(--neutral-bg);     border-left: 4px solid var(--neutral-text); }
+  .card.slate h3 { color: var(--neutral-text); }
+
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: take; }
+  .takeaways ol li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+  .takeaways ol li::before {
+    content: counter(take);
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--mid);
+    background: var(--light);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+  .verdict .label {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+  .verdict strong { color: #bfdbfe; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ARID5B &nbsp;|&nbsp; AT-Rich Interactive Domain 5B</span>
+    <span class="chip chip-danger">⚠ Broad safety concerns — systemic roles</span>
+  </div>
+  <h1>ARID5B &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> ARID5B has broad roles in hematologic malignancy susceptibility, immune-cell development, cancer transcriptional programs, metabolism, liver and vascular biology, bone and reproductive biology, and neurological excitability. Global systemic modulation could produce substantial oncologic, immune, metabolic, or vascular off-target effects.
+    </div>
+
+    <div class="prose">
+      <p>ARID5B is an <strong>epigenetic and transcriptional regulator</strong> with emerging but still early-stage relevance to Alzheimer's disease (AD). The strongest AD-specific evidence positions ARID5B within a replicated transcriptional-regulatory network controlling a <strong>DAM2-like disease-associated microglial state</strong> in a large human single-cell microglial atlas (441,088 live microglia, 161 donors). Additional AD-focused evidence links ARID5B to histone lactylation-related diagnostic biomarker signatures, upregulation in AD model mouse cerebral tissue, differential methylation in AD entorhinal cortex, and weak or nominal genetic associations that are not yet robustly validated.</p>
+      <p>Mechanistically, ARID5B is most consistently connected to <strong>chromatin-state control, enhancer/promoter regulation, immune-cell transcriptional programs, inflammatory signaling, lipid and glucose metabolism, mitochondrial function, and cell-state transitions</strong>. These processes overlap substantially with major AD mechanisms, especially microglial activation, neuroinflammation, immunometabolism, lipid handling, phagocytosis, epigenetic remodeling, vascular-metabolic risk, mitochondrial dysfunction, and aging-associated immune changes.</p>
+      <p>ARID5B is <strong>not yet a validated AD therapeutic target</strong>. The current evidence supports it as a high-priority candidate for functional validation, particularly in microglial AD models, rather than as an established drug target. Its direction of effect, causal role, cell-type specificity, and safety profile remain unresolved.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        LAYOUT PLAN (count carefully — max 16 nodes):
+        Panel A (Upstream / Epigenetic): 4 nodes  → ARID5B Hub, HDAC1/2 Repression, PHF2/H3K9me2, H3K4me3 Activation
+        Panel B (Microglial / AD): 5 nodes         → DAM2-like State, Phagocytosis/Lipids, Neuroinflammation, Amyloid Response, Spatial (neocortex)
+        Panel C (Metabolic-Immune): 4 nodes        → IL-6/STAT3/NLRP3, AMPK/Lipid OX, Glucose/Mitochond., CCR2/MCP-1
+        Panel D (AD Biomarker / Outcomes): 3 nodes → Histone Lactylation, Entorhinal Methylation, Biomarker (SESN1/XPA)
+        TOTAL = 16 nodes exactly ✓
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;" aria-label="ARID5B mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4a7cc7"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ══ PANEL A: Upstream Epigenetic ══ -->
+        <rect x="10" y="10" width="210" height="480" rx="12" fill="#e8f0fb" fill-opacity="0.5" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="115" y="30" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700" fill="#2d4a7a" letter-spacing="1">UPSTREAM · EPIGENETIC</text>
+
+        <!-- A1: ARID5B Hub -->
+        <rect x="30" y="42" width="170" height="52" rx="7" fill="#4a7cc7" stroke="#2d4a7a" stroke-width="1.2"/>
+        <text x="115" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#fff">ARID5B</text>
+        <text x="115" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#dbeafe">Epigenetic Regulator</text>
+
+        <!-- A2: HDAC1/2 Repression -->
+        <rect x="30" y="130" width="170" height="48" rx="7" fill="#fff" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="115" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">HDAC1/HDAC2</text>
+        <text x="115" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Chromatin Repression</text>
+
+        <!-- A3: PHF2/H3K9me2 -->
+        <rect x="30" y="216" width="170" height="48" rx="7" fill="#fff" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="115" y="236" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">PHF2 / H3K9me2</text>
+        <text x="115" y="251" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Histone Demethylation</text>
+
+        <!-- A4: H3K4me3 Activation -->
+        <rect x="30" y="302" width="170" height="48" rx="7" fill="#fff" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="115" y="322" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">H3K4me3 Activation</text>
+        <text x="115" y="337" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Enhancer/Promoter Ctrl</text>
+
+        <!-- A arrows -->
+        <line x1="115" y1="94" x2="115" y2="128" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="115" y1="178" x2="115" y2="214" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="115" y1="264" x2="115" y2="300" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══ PANEL B: Microglial / AD ══ -->
+        <rect x="240" y="10" width="235" height="480" rx="12" fill="#fef2f2" fill-opacity="0.45" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="357" y="30" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700" fill="#9b1c1c" letter-spacing="1">MICROGLIAL · AD STATES</text>
+
+        <!-- B1: DAM2-like State -->
+        <rect x="258" y="42" width="200" height="52" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="358" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#fff">DAM2-like State</text>
+        <text x="358" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#fecaca">w/ CEBPA, MITF, PPARG</text>
+
+        <!-- B2: Phagocytosis/Lipids -->
+        <rect x="258" y="130" width="90" height="60" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="303" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Phagocytosis</text>
+        <text x="303" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">&amp; Lipid</text>
+        <text x="303" y="178" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Handling</text>
+
+        <!-- B3: Neuroinflammation -->
+        <rect x="368" y="130" width="90" height="60" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="413" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Neuro-</text>
+        <text x="413" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">inflammation</text>
+        <text x="413" y="178" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">&amp; Remodeling</text>
+
+        <!-- B2+B3 arrows from DAM2 — branch lines go to B2 and B3 -->
+        <line x1="358" y1="94" x2="303" y2="128" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="358" y1="94" x2="413" y2="128" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B4: Amyloid Response (converge from B2) -->
+        <rect x="258" y="232" width="90" height="56" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="303" y="253" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Amyloid</text>
+        <text x="303" y="266" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Plaque</text>
+        <text x="303" y="279" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Response</text>
+
+        <!-- B5: Spatial (neocortex) (converge from B3) -->
+        <rect x="368" y="232" width="90" height="56" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="413" y="253" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Neocortical</text>
+        <text x="413" y="266" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Distribution</text>
+        <text x="413" y="279" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">(Spatial Tx)</text>
+
+        <!-- B2→B4, B3→B5 -->
+        <line x1="303" y1="190" x2="303" y2="230" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="413" y1="190" x2="413" y2="230" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B4+B5 converge to shared outcome label (text only, not a node box, below both) -->
+        <!-- convergence lines to bottom area — drawn below B4/B5 going to a horizontal line, then to panel edge -->
+        <line x1="303" y1="288" x2="303" y2="308" stroke="#b45309" stroke-width="1.2"/>
+        <line x1="413" y1="288" x2="413" y2="308" stroke="#b45309" stroke-width="1.2"/>
+        <line x1="303" y1="308" x2="413" y2="308" stroke="#b45309" stroke-width="1.2"/>
+        <text x="358" y="326" text-anchor="middle" font-family="Arial" font-size="8" font-style="italic" fill="#9b1c1c">AD Microglial Program</text>
+
+        <!-- ══ PANEL C: Metabolic-Immune ══ -->
+        <rect x="495" y="10" width="220" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="605" y="30" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700" fill="#0f766e" letter-spacing="1">METABOLIC · IMMUNE</text>
+
+        <!-- C1: IL-6/STAT3/NLRP3 -->
+        <rect x="513" y="42" width="184" height="52" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="605" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">IL-6 / STAT3 / NLRP3</text>
+        <text x="605" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Inflammasome Signaling</text>
+
+        <!-- C2: AMPK/Lipid OX -->
+        <rect x="513" y="130" width="84" height="56" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="555" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">AMPK</text>
+        <text x="555" y="163" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Lipid / FA</text>
+        <text x="555" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Oxidation</text>
+
+        <!-- C3: Glucose/Mitochondria -->
+        <rect x="613" y="130" width="84" height="56" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="655" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e293b">Glucose</text>
+        <text x="655" y="163" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Mitochondrial</text>
+        <text x="655" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Function</text>
+
+        <!-- C1 → C2, C3 branches -->
+        <line x1="605" y1="94" x2="555" y2="128" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="605" y1="94" x2="655" y2="128" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- C4: CCR2/MCP-1 Migration -->
+        <rect x="513" y="230" width="184" height="52" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="605" y="250" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">CCR2 / MCP-1 Signaling</text>
+        <text x="605" y="265" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Monocyte Migration / Polarization</text>
+
+        <!-- C2 + C3 converge → C4 -->
+        <line x1="555" y1="186" x2="555" y2="215" stroke="#0f766e" stroke-width="1.2"/>
+        <line x1="655" y1="186" x2="655" y2="215" stroke="#0f766e" stroke-width="1.2"/>
+        <line x1="555" y1="215" x2="655" y2="215" stroke="#0f766e" stroke-width="1.2"/>
+        <line x1="605" y1="215" x2="605" y2="228" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- ══ PANEL D: AD Biomarker / Epigenetic Outcomes ══ -->
+        <rect x="735" y="10" width="195" height="480" rx="12" fill="#fffbeb" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="832" y="30" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700" fill="#b45309" letter-spacing="1">AD BIOMARKER · EPIGENOME</text>
+
+        <!-- D1: Histone Lactylation -->
+        <rect x="753" y="42" width="159" height="52" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="832" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Histone Lactylation</text>
+        <text x="832" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Metabolic-Epigenetic Link</text>
+
+        <!-- D2: Entorhinal Methylation -->
+        <rect x="753" y="132" width="159" height="52" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="832" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">Entorhinal Cortex</text>
+        <text x="832" y="167" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">Differential Methylation</text>
+
+        <!-- D3: Biomarker (SESN1/XPA) -->
+        <rect x="753" y="222" width="159" height="52" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="832" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">AD Biomarker</text>
+        <text x="832" y="257" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#64748b">w/ SESN1, XPA</text>
+
+        <!-- D arrows -->
+        <line x1="832" y1="94" x2="832" y2="130" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="832" y1="184" x2="832" y2="220" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- ══ CROSS-PANEL CONNECTORS ══ -->
+        <!-- A → B: ARID5B hub (A1 right edge, y=68) → DAM2 node (B1 left edge, y=68) -->
+        <line x1="200" y1="68" x2="256" y2="68" stroke="#4a7cc7" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- A → C: H3K4me3 (A4 right, y=326) → IL-6 panel C (C1 left, y=68) — route through gutter: right from A at y=326, up to y=68, right to C -->
+        <polyline points="200,326 225,326 225,68 511,68" fill="none" stroke="#4a7cc7" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- A → D: A1 ARID5B right → D1 Histone Lactylation: route along top gutter -->
+        <polyline points="200,62 228,62 228,18 748,18 748,62 751,62" fill="none" stroke="#4a7cc7" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-amber)"/>
+
+        <!-- B → D: DAM2 AD Microglial Program (convergence note near y=326, x~413) → D2 Entorhinal: route along bottom gutter -->
+        <polyline points="458,340 480,340 480,420 730,420 730,158 751,158" fill="none" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+        <!-- C → D: CCR2/MCP-1 (C4, right edge y=256) → D3 Biomarker (D3 left y=248) -->
+        <polyline points="697,256 720,256 720,248 751,248" fill="none" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+
+      </svg>
+      <p class="figure-caption">
+        <strong>Panel A (Upstream · Epigenetic):</strong> ARID5B acts as a central epigenetic hub, participating in HDAC1/HDAC2-mediated chromatin repression, PHF2/H3K9me2 histone demethylation, and H3K4me3-linked enhancer/promoter activation.
+        <strong>Panel B (Microglial · AD States):</strong> ARID5B (together with CEBPA, MITF, and PPARG) regulates a DAM2-like AD microglial state that branches into parallel sub-programs: phagocytosis/lipid handling and neuroinflammatory remodeling, both feeding into amyloid plaque responses and neocortically distributed microglial activation.
+        <strong>Panel C (Metabolic · Immune):</strong> ARID5B-linked inflammatory signaling (IL-6/STAT3/NLRP3) branches into AMPK/lipid-fatty-acid oxidation and glucose/mitochondrial function sub-pathways, converging on CCR2/MCP-1-mediated monocyte migration and polarization.
+        <strong>Panel D (AD Biomarker · Epigenome):</strong> AD-specific epigenetic outputs include histone lactylation (metabolic-epigenetic coupling), entorhinal cortex differential methylation, and validated AD biomarker status alongside SESN1 and XPA. Dashed cross-panel arrows indicate connections across mechanistic layers.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card accent">
+        <h3>DAM2-like Microglial Regulation</h3>
+        A 2025 single-cell atlas of 441,088 human microglia (161 donors) identified ARID5B — together with CEBPA, MITF, and PPARG — as a replicated regulator of an AD-related DAM2-like microglial transcriptional state linked to neurodegeneration, amyloid responses, lipid handling, phagocytosis, and antigen presentation. Spatial transcriptomics showed broad neocortical distribution, suggesting a widespread disease-relevant program.
+      </div>
+
+      <div class="card accent">
+        <h3>Epigenetic Chromatin Mechanisms</h3>
+        ARID5B participates in chromatin regulatory complexes including HDAC1/HDAC2-associated repression and PHF2-associated H3K9me2 demethylation, and influences H3K4me3-linked transcriptional activation and methylation-sensitive gene regulation — placing it as a plausible upstream coordinator of disease-associated transcriptional programs.
+      </div>
+
+      <div class="card warning">
+        <h3>Histone Lactylation &amp; Entorhinal Methylation</h3>
+        ARID5B was identified among histone lactylation-related AD diagnostic genes (validated alongside SESN1 and XPA), with RT-qPCR and Western blot confirmation of upregulation in AD model mouse cerebral tissue. It was also among the most significant differentially methylated regions in AD entorhinal cortex — a region affected early in disease — though validation was weaker than for ANK1.
+      </div>
+
+      <div class="card blue">
+        <h3>Broad Neuroinflammatory &amp; Metabolic Overlap</h3>
+        In non-AD models, ARID5B has been linked to IL-6, TNF-α, STAT3, NLRP3 inflammasome, IL-1β, IL-18, pyroptosis, CCR2/MCP-1 monocyte signaling, AMPK, fatty-acid oxidation, adipogenesis, glucose uptake, mitochondrial oxygen consumption, and vascular inflammation — pathways broadly relevant to AD neuroinflammation and immunometabolism.
+      </div>
+
+      <div class="card positive">
+        <h3>Context-Dependent Microglial Effects</h3>
+        DAM-like microglial states can be protective (plaque containment and clearance) or harmful (chronic inflammatory degeneration). The AD microglial atlas study does not resolve whether ARID5B promotes protective or pathogenic microglial activity, making directionality determination a critical next step before any therapeutic design.
+      </div>
+
+      <div class="card danger">
+        <h3>Safety &amp; Genetic Evidence Limitations</h3>
+        Genetic evidence for ARID5B in AD is limited: LOAD-associated variants showed only nominal association, losing significance after adjustment for age, sex, and APOE ε4. Critically, ARID5B has broad roles in hematologic malignancy, immune-cell development, cancer, liver, vascular, bone, and reproductive biology — making systemic modulation a substantial safety concern.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat as early-stage candidate:</strong> ARID5B should be approached as a biologically plausible early-stage AD candidate regulator, not a validated therapeutic target. Rigorous functional validation must precede any drug-discovery investment.</li>
+      <li><strong>Prioritize microglial functional testing:</strong> Test ARID5B knockdown and overexpression in human iPSC-derived microglia, primary-like human microglial systems, and AD co-culture models to determine whether perturbation alters DAM2-like transcriptional programs, amyloid-β uptake, lipid droplet biology, phagocytosis, cytokine production, inflammasome activation, and neurotoxicity.</li>
+      <li><strong>Resolve directionality before therapeutic design:</strong> Determine whether ARID5B activity drives harmful chronic microglial activation, supports beneficial plaque containment and clearance, or has stage-dependent bidirectional effects — this is essential before defining any therapeutic modality.</li>
+      <li><strong>Map single-cell epigenomics in AD brain:</strong> Profile ARID5B expression, methylation, hydroxymethylation, chromatin binding, and isoform usage at single-cell resolution across microglia, astrocytes, neurons, endothelial cells, and infiltrating immune cells in human AD brain.</li>
+      <li><strong>Investigate the co-regulatory circuit:</strong> Evaluate ARID5B in relation to co-regulators CEBPA, MITF, and PPARG, and explore whether ARID5B-regulated enhancers and downstream effector genes — rather than ARID5B itself — represent better druggable nodes.</li>
+      <li><strong>Apply isoform-specific analysis:</strong> Evidence from leukemia and inflammatory models indicates that long and short ARID5B isoforms have distinct functional associations; AD studies must not treat ARID5B as a single uniform transcript.</li>
+      <li><strong>Explore targeted epigenetic pathways:</strong> Investigate HDAC1/HDAC2 repression, PHF2/H3K9me2 demethylation, H3K4me3 activation, H3K27/NF-κB inflammatory regulation, and histone lactylation-associated AD signatures as mechanistic entry points.</li>
+      <li><strong>Build safety assessment into early validation:</strong> Because ARID5B is involved in immune development, hematologic malignancy, metabolism, vascular inflammation, and cell-state regulation, include oncologic, immune, metabolic, and vascular risk profiling from the earliest functional studies.</li>
+      <li><strong>Fill key missing evidence gaps:</strong> Critical missing evidence includes causal perturbation data in AD models, in vivo Arid5b manipulation on amyloid/tau pathology and cognition, validation in human AD brain cell types, and pharmacologic evidence that ARID5B-linked pathways can be safely and beneficially modulated.</li>
+    </ol>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="label">Target Enabling Package — Synthesis</div>
+      <p><strong>Overall Assessment —</strong> ARID5B is a <strong>biologically plausible, epigenetically and immunologically relevant AD target candidate</strong>, most compellingly supported by its identification as a replicated regulator of a <strong>DAM2-like disease-associated microglial state</strong> in a large human single-cell atlas, with corroborating evidence from histone lactylation-related AD biomarker signatures, entorhinal cortex differential methylation, and upregulation in AD mouse models. Its mechanistic breadth — spanning chromatin remodeling, neuroimmune regulation, lipid metabolism, and inflammatory signaling — creates genuine overlap with core AD pathophysiology. However, <strong>causal, directional, and cell-type-specific evidence is entirely absent</strong>; genetic support is weak; and its broad systemic roles in cancer, immune development, metabolism, and vascular biology present <strong>substantial safety concerns</strong> for any global modulation strategy. The most defensible current position is to advance ARID5B as a <strong>high-priority functional validation candidate</strong> in microglial AD models, with careful attention to directionality, isoform specificity, co-regulatory context, and safety profiling, before considering it an actionable therapeutic target.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  ARID5B / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCP5 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7cc7;
+    --light: #e8f0fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #111e35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(239,68,68,0.45);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.98rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px 20px 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-slate h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    position: relative;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.96rem;
+  }
+
+  .takeaways ol li:last-child { border-bottom: none; }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #111e35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 40px 36px;
+    margin-bottom: 56px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: HCP5 &nbsp;|&nbsp; HLA Complex P5 (long non-coding RNA)</span>
+    <span class="chip chip-danger">⚠ Unvalidated in AD — safety direction unclear</span>
+  </div>
+  <h1>HCP5 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Important Caveat:</span>
+      HCP5 is <em>not</em> established in the supplied literature as an Alzheimer's disease mechanism, biomarker, or validated therapeutic target. No direct AD studies confirming HCP5 expression changes in AD brain, CSF, or blood are described. All AD relevance is indirect and hypothesis-generating.
+    </div>
+
+    <p>HCP5 is a multifunctional long non-coding RNA situated within the HLA/MHC genomic region, with well-documented roles in immune regulation, inflammation, ceRNA/miRNA signaling, oxidative stress, ferroptosis, apoptosis, autophagy, DNA repair, metabolic regulation, and treatment response — all established in non-AD disease contexts.</p>
+
+    <p>Its biological plausibility as an AD-relevant gene rests on mechanistic overlap: AD involves chronic neuroinflammation, immune dysregulation, oxidative injury, metabolic dysfunction, ferroptosis and lipid peroxidation, and neuronal stress responses — all pathways in which HCP5 has been implicated elsewhere. However, the mechanistic bridge remains to be demonstrated by direct experimentation in AD-relevant systems.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Landscape</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:640px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#4a7cc7"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: HCP5 Origin & ceRNA -->
+        <rect x="10" y="10" width="270" height="460" rx="12" fill="#e8f0fb" fill-opacity="0.5" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="22" y="30" font-family="Arial" font-size="9" font-weight="bold" fill="#2d4a7a" letter-spacing="1">PANEL A · ORIGIN &amp; ceRNA</text>
+
+        <!-- HCP5 locus -->
+        <rect x="75" y="44" width="120" height="38" rx="6" fill="#2d4a7a" stroke="#1e3a5f" stroke-width="1.2"/>
+        <text x="135" y="58" font-family="Georgia" font-size="10" fill="white" text-anchor="middle">HCP5 lncRNA</text>
+        <text x="135" y="72" font-family="Georgia" font-size="9" fill="#93c5fd" text-anchor="middle">HLA/MHC Region</text>
+
+        <!-- arrow down to ceRNA sponge -->
+        <line x1="135" y1="82" x2="135" y2="116" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ceRNA sponge node -->
+        <rect x="68" y="116" width="134" height="36" rx="6" fill="#dbeafe" stroke="#4a7cc7" stroke-width="1.2"/>
+        <text x="135" y="129" font-family="Georgia" font-size="10" fill="#1e3a5f" text-anchor="middle">ceRNA / miRNA</text>
+        <text x="135" y="143" font-family="Georgia" font-size="9" fill="#1e3a5f" text-anchor="middle">Sponge Activity</text>
+
+        <!-- arrow down -->
+        <line x1="135" y1="152" x2="135" y2="186" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- miRNA targets cluster -->
+        <rect x="26" y="186" width="98" height="36" rx="6" fill="#bfdbfe" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="75" y="199" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">miR-93-5p</text>
+        <text x="75" y="213" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">miR-138-5p</text>
+
+        <rect x="146" y="186" width="104" height="36" rx="6" fill="#bfdbfe" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="198" y="199" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">miR-195-5p</text>
+        <text x="198" y="213" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">miR-29 family</text>
+
+        <!-- arrows from ceRNA to miRNA nodes -->
+        <line x1="110" y1="165" x2="75" y2="186" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+        <line x1="160" y1="165" x2="198" y2="186" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <!-- arrow from miRNA clusters down to downstream axis label -->
+        <line x1="75" y1="222" x2="75" y2="254" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+        <line x1="198" y1="222" x2="198" y2="254" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <rect x="26" y="254" width="98" height="36" rx="6" fill="#e8f0fb" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="75" y="268" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">SIRT1 / IL6R</text>
+        <text x="75" y="282" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">target de-rep.</text>
+
+        <rect x="146" y="254" width="104" height="36" rx="6" fill="#e8f0fb" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="198" y="268" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">miR-125b-5p</text>
+        <text x="198" y="282" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">/ IL6R axis</text>
+
+        <!-- HCP5 peptides note -->
+        <line x1="135" y1="82" x2="135" y2="116" stroke="#4a7cc7" stroke-width="0" />
+        <!-- arrow from HCP5 straight down to peptides -->
+        <line x1="135" y1="82" x2="75" y2="116" stroke="#4a7cc7" stroke-width="0"/>
+
+        <!-- HCP5-derived peptides -->
+        <rect x="44" y="336" width="182" height="36" rx="6" fill="#dbeafe" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="135" y="349" font-family="Georgia" font-size="9.5" fill="#1e3a5f" text-anchor="middle">HCP5-derived Peptides</text>
+        <text x="135" y="363" font-family="Georgia" font-size="9" fill="#1e3a5f" text-anchor="middle">HCP5-132aa / HCP5-SP</text>
+
+        <line x1="75" y1="290" x2="90" y2="336" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+        <line x1="198" y1="290" x2="180" y2="336" stroke="#4a7cc7" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <!-- arrow down to cAMP/autophagy -->
+        <line x1="135" y1="372" x2="135" y2="406" stroke="#4a7cc7" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="58" y="406" width="154" height="36" rx="6" fill="#e8f0fb" stroke="#4a7cc7" stroke-width="1"/>
+        <text x="135" y="420" font-family="Georgia" font-size="9.5" fill="#1e293b" text-anchor="middle">cAMP · Proliferation</text>
+        <text x="135" y="434" font-family="Georgia" font-size="9" fill="#1e293b" text-anchor="middle">Autophagy Flux</text>
+
+        <!-- Panel B: Immune/MHC -->
+        <rect x="300" y="10" width="270" height="230" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="313" y="30" font-family="Arial" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1">PANEL B · IMMUNE / MHC</text>
+
+        <rect x="360" y="44" width="150" height="36" rx="6" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="435" y="58" font-family="Georgia" font-size="10" fill="white" text-anchor="middle">HLA/MHC Context</text>
+        <text x="435" y="72" font-family="Georgia" font-size="9" fill="#a7f3d0" text-anchor="middle">MICA/MICB linkage</text>
+
+        <line x1="435" y1="80" x2="395" y2="114" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="435" y1="80" x2="475" y2="114" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <rect x="310" y="114" width="116" height="36" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="368" y="128" font-family="Georgia" font-size="9.5" fill="#065f46" text-anchor="middle">Antigen Presentation</text>
+        <text x="368" y="142" font-family="Georgia" font-size="9" fill="#065f46" text-anchor="middle">Autoimmune Risk</text>
+
+        <rect x="450" y="114" width="100" height="36" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="500" y="128" font-family="Georgia" font-size="9.5" fill="#065f46" text-anchor="middle">Viral Defense</text>
+        <text x="500" y="142" font-family="Georgia" font-size="9" fill="#065f46" text-anchor="middle">Immune Phenotype</text>
+
+        <line x1="368" y1="150" x2="368" y2="182" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <line x1="500" y1="150" x2="500" y2="182" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <rect x="310" y="182" width="250" height="36" rx="6" fill="#d1fae5" stroke="#0f766e" stroke-width="1"/>
+        <text x="435" y="196" font-family="Georgia" font-size="9.5" fill="#065f46" text-anchor="middle">Neuroinflammation Relevance</text>
+        <text x="435" y="210" font-family="Georgia" font-size="9" fill="#065f46" text-anchor="middle">(microglia / astrocytes — unproven in AD)</text>
+
+        <!-- Panel C: Oxidative Stress / Ferroptosis -->
+        <rect x="300" y="260" width="270" height="210" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="313" y="280" font-family="Arial" font-size="9" font-weight="bold" fill="#991b1b" letter-spacing="1">PANEL C · OXIDATIVE / FERROPTOSIS</text>
+
+        <rect x="360" y="292" width="150" height="36" rx="6" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="435" y="306" font-family="Georgia" font-size="10" fill="white" text-anchor="middle">Oxidative Stress Hub</text>
+        <text x="435" y="320" font-family="Georgia" font-size="9" fill="#fca5a5" text-anchor="middle">ROS · Lipid Peroxidation</text>
+
+        <line x1="435" y1="328" x2="390" y2="362" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="435" y1="328" x2="480" y2="362" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <rect x="308" y="362" width="112" height="36" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1"/>
+        <text x="364" y="376" font-family="Georgia" font-size="9.5" fill="#7f1d1d" text-anchor="middle">G6PD · GPX4</text>
+        <text x="364" y="390" font-family="Georgia" font-size="9" fill="#7f1d1d" text-anchor="middle">SLC7A11 · GSH</text>
+
+        <rect x="450" y="362" width="102" height="36" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1"/>
+        <text x="501" y="376" font-family="Georgia" font-size="9.5" fill="#7f1d1d" text-anchor="middle">ACSL4 · 4-HNE</text>
+        <text x="501" y="390" font-family="Georgia" font-size="9" fill="#7f1d1d" text-anchor="middle">MDA · Iron pools</text>
+
+        <line x1="364" y1="398" x2="390" y2="424" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+        <line x1="501" y1="398" x2="476" y2="424" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <rect x="350" y="424" width="170" height="36" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1"/>
+        <text x="435" y="438" font-family="Georgia" font-size="9.5" fill="#7f1d1d" text-anchor="middle">Ferroptosis / Apoptosis</text>
+        <text x="435" y="452" font-family="Georgia" font-size="9" fill="#7f1d1d" text-anchor="middle">Cell Death Outcome</text>
+
+        <!-- Panel D: CNS Injury / AD Relevance -->
+        <rect x="590" y="10" width="320" height="460" rx="12" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+        <text x="602" y="30" font-family="Arial" font-size="9" font-weight="bold" fill="#b45309" letter-spacing="1">PANEL D · CNS INJURY &amp; AD RELEVANCE</text>
+
+        <rect x="650" y="44" width="190" height="36" rx="6" fill="#b45309" stroke="#92400e" stroke-width="1.2"/>
+        <text x="745" y="58" font-family="Georgia" font-size="10" fill="white" text-anchor="middle">CNS Injury Models</text>
+        <text x="745" y="72" font-family="Georgia" font-size="9" fill="#fde68a" text-anchor="middle">ICH · Ischemia/Reperfusion</text>
+
+        <line x1="745" y1="80" x2="700" y2="114" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="745" y1="80" x2="790" y2="114" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <rect x="603" y="114" width="120" height="36" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+        <text x="663" y="128" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Neuroinflammation</text>
+        <text x="663" y="142" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Oxidative Injury</text>
+
+        <rect x="760" y="114" width="130" height="36" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+        <text x="825" y="128" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">HCP5 Silencing</text>
+        <text x="825" y="142" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">→ Neuroprotective</text>
+
+        <line x1="663" y1="150" x2="663" y2="182" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="825" y1="150" x2="745" y2="182" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <rect x="613" y="182" width="264" height="36" rx="6" fill="#fde68a" stroke="#b45309" stroke-width="1"/>
+        <text x="745" y="196" font-family="Georgia" font-size="9.5" fill="#78350f" text-anchor="middle">Neuronal-like Cell Death (non-AD)</text>
+        <text x="745" y="210" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Context-Dependent Direction</text>
+
+        <!-- AD Relevance Gap -->
+        <rect x="620" y="248" width="250" height="60" rx="8" fill="#fff7ed" stroke="#d97706" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="745" y="268" font-family="Georgia" font-size="9.5" fill="#78350f" font-style="italic" text-anchor="middle">AD-Specific Evidence Gap:</text>
+        <text x="745" y="284" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">No AD brain / CSF / tau /</text>
+        <text x="745" y="296" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Aβ / synapse studies exist</text>
+
+        <line x1="745" y1="218" x2="745" y2="248" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)" stroke-dasharray="4,3"/>
+
+        <!-- Therapeutic Uncertainty -->
+        <line x1="745" y1="308" x2="745" y2="340" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <rect x="630" y="340" width="230" height="36" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+        <text x="745" y="354" font-family="Georgia" font-size="9.5" fill="#78350f" text-anchor="middle">Therapeutic Direction Unknown</text>
+        <text x="745" y="368" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Inhibition vs. Restoration unclear</text>
+
+        <line x1="745" y1="376" x2="745" y2="408" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+
+        <rect x="622" y="408" width="246" height="46" rx="6" fill="#fde68a" stroke="#92400e" stroke-width="1.2"/>
+        <text x="745" y="424" font-family="Georgia" font-size="9.5" fill="#78350f" font-weight="bold" text-anchor="middle">Exploratory AD Candidate</text>
+        <text x="745" y="438" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Neuroimmune · ceRNA · Ferroptosis</text>
+        <text x="745" y="450" font-family="Georgia" font-size="9" fill="#78350f" text-anchor="middle">Requires direct AD validation</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue):</strong> HCP5 in the HLA/MHC locus acts as a ceRNA sponge for multiple miRNAs (miR-93-5p, miR-138-5p, miR-195-5p, miR-29 family, miR-125b-5p), de-repressing downstream targets including SIRT1 and IL6R. HCP5 may also encode functional small peptides (HCP5-132aa, HCP5-SP) that influence cAMP signaling, proliferation, and autophagy.&emsp;
+      <strong>Panel B (teal):</strong> HCP5's MHC context links it to antigen presentation, autoimmune risk, and viral defense; both branches converge on neuroinflammation relevance, though direct evidence in AD microglia or astrocytes is absent.&emsp;
+      <strong>Panel C (red):</strong> HCP5 intersects oxidative stress pathways (G6PD, GPX4, SLC7A11/glutathione, ACSL4, lipid peroxidation markers), fanning into two parallel arms that reconverge on ferroptosis/apoptosis outcomes — mechanisms relevant to AD neurodegeneration, though shown only in cancer and peripheral disease.&emsp;
+      <strong>Panel D (amber):</strong> In CNS injury models (ICH, ischemia/reperfusion), HCP5 silencing was neuroprotective. Crucially, a dashed box marks the AD-specific evidence gap; therapeutic direction and safety remain unresolved for AD.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card card-accent">
+        <h3>Immune / MHC Context — Strongest AD-Relevant Feature</h3>
+        <p>HCP5 is repeatedly linked to HLA-region biology, antigen presentation, autoimmune disease, viral control, inflammatory signaling, and immune-cell phenotypes. AD involves chronic neuroinflammation and immune dysregulation, making this the most compelling indirect rationale — though no evidence places HCP5 in AD microglia, astrocytes, or peripheral immune cells specifically.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>ceRNA / miRNA Sponge Activity</h3>
+        <p>Across non-AD diseases, HCP5 operates through axes including miR-93-5p, miR-138-5p/SIRT1, miR-195-5p, miR-652-3p, miR-29 family members, and miR-125b-5p/IL6R. These networks could plausibly regulate AD-relevant gene expression, but no AD-specific HCP5–miRNA–mRNA axis has been demonstrated.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>CNS Injury Evidence — Neuro-Adjacent Support</h3>
+        <p>In intracerebral hemorrhage and ischemia/reperfusion models, HCP5 was implicated in neuroinflammation, oxidative stress, neuronal-like cell death, and miRNA-mediated injury pathways. HCP5 silencing was protective in some CNS injury contexts — providing suggestive but non-AD mechanistic support for neurodegenerative relevance.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Ferroptosis &amp; Oxidative Stress Links</h3>
+        <p>HCP5 and HCP5-derived peptides connect to G6PD, SLC7A11, GPX4, glutathione, lipid ROS, malondialdehyde, 4-HNE, ACSL4, and iron/lipid-peroxidation pathways — all of which are mechanistically relevant to AD neurodegeneration. Evidence derives almost entirely from cancer or peripheral disease models.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependent &amp; Bidirectional Effects</h3>
+        <p>HCP5 appears pathogenic or pro-survival in many cancers and inflammatory models, but protective or anti-inflammatory in sepsis, ischemia/reperfusion, allergic inflammation, and immune-regulatory contexts. The AD therapeutic direction — inhibition versus restoration — cannot be assumed from existing literature.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Genetic &amp; Molecular Complexity Require Caution</h3>
+        <p>HCP5 SNP signals occur in the dense HLA/MHC region and may reflect linkage disequilibrium with MICA/MICB or other immune genes rather than direct HCP5 function. Additionally, HCP5-derived peptides (HCP5-132aa, HCP5-SP) may mediate effects independently of the lncRNA itself, complicating both interpretation and therapeutic targeting.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <strong>Treat HCP5 as an exploratory candidate, not a validated target.</strong> Current evidence supports further investigation only because HCP5 intersects with AD-relevant immune, oxidative, metabolic, ferroptotic, and cell-survival pathways — no direct AD validation exists.
+      </li>
+      <li>
+        <strong>Prioritize direct AD expression profiling before therapeutic development.</strong> Key studies should measure HCP5 expression in AD versus control brain regions, CSF, plasma, PBMCs, extracellular vesicles, and single-cell datasets from neurons, astrocytes, microglia, endothelial cells, and infiltrating immune cells.
+      </li>
+      <li>
+        <strong>Correlate HCP5 with established AD pathology and progression markers.</strong> Studies should examine associations with amyloid burden, tau pathology, Braak stage, cognitive decline, synaptic markers, neuroinflammatory cytokines, oxidative stress and ferroptosis markers, APOE genotype, and vascular pathology.
+      </li>
+      <li>
+        <strong>Functionally manipulate HCP5 in AD-relevant experimental models.</strong> Test iPSC-derived neurons, astrocytes, microglia, co-cultures, organoids, and amyloid/tau animal models, with readouts for amyloid-β production/clearance, tau phosphorylation, synaptic integrity, cytokine release, microglial activation/phagocytosis, ROS, lipid peroxidation, GPX4/SLC7A11/G6PD activity, autophagy-lysosomal flux, and neuronal viability.
+      </li>
+      <li>
+        <strong>Map AD-specific HCP5 regulatory networks from scratch.</strong> Identify which miRNAs and mRNA targets HCP5 binds in AD-relevant cells rather than extrapolating from cancer or peripheral inflammatory disease data.
+      </li>
+      <li>
+        <strong>Resolve therapeutic direction and rigorously assess safety before advancing.</strong> Because HCP5 can be harmful or protective depending on cell type and disease context, AD studies must determine whether inhibition, restoration, or cell-specific modulation is appropriate. Systemic targeting could affect immune regulation, HLA-linked pharmacogenetics, viral defense, autoimmunity, cancer biology, reproductive repair pathways, and HCP5-derived peptide signaling.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-label">Overall Assessment</div>
+    <p>HCP5 is a <strong>biologically plausible but wholly unvalidated</strong> Alzheimer's disease-relevant lncRNA. Its most compelling rationale lies in <strong>neuroimmune and MHC/HLA biology</strong>, <strong>ceRNA/miRNA regulatory networks</strong>, <strong>oxidative-stress and ferroptosis mechanisms</strong>, and <strong>metabolic pathway overlap</strong> with known AD pathophysiology — but every piece of supporting evidence originates in non-AD disease contexts. <strong>No direct AD-specific functional, expression, or genetic evidence for HCP5 is described</strong> in the supplied literature. Before HCP5 can be considered a credible therapeutic target, substantial investment in direct AD validation across human tissue, biofluids, single-cell platforms, and disease-relevant models will be required — along with careful resolution of its bidirectional context-dependent biology and the distinct contributions of its lncRNA versus peptide-derived activities.</p>
+  </div>
+
+</main>
+
+<footer>
+  HCP5 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FLT1 / VEGFR1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark:   #1a3a5c;
+    --mid:    #2e6da4;
+    --light:  #e8f1fa;
+    --danger:      #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning:     #b45309;
+    --warning-light:#fffbeb;
+    --positive:    #0f766e;
+    --positive-light:#f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border:#cbd5e1;
+    --neutral-bg:   #f1f5f9;
+    --slate:        #64748b;
+    --blue-light:   #eff6ff;
+    --blue-mid:     #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(180, 40, 40, 0.35);
+    border-color: rgba(255,180,180,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.94rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* OVERVIEW BODY */
+  .overview-body p { margin-bottom: 1rem; font-size: 0.98rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card p { line-height: 1.6; }
+
+  .card-accent    { background: var(--light);          border-left-color: var(--mid);      }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger    { background: var(--danger-light);   border-left-color: var(--danger);   }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive  { background: var(--positive-light); border-left-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue      { background: var(--blue-light);     border-left-color: var(--blue-mid); }
+  .card-blue h3   { color: var(--blue-mid); }
+
+  .card-neutral   { background: var(--neutral-bg);     border-left-color: var(--slate);    }
+  .card-neutral h3 { color: var(--slate); }
+
+  .card-warning   { background: var(--warning-light);  border-left-color: var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: take; padding: 0; }
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+  }
+  .takeaways li::before {
+    content: counter(take);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .takeaways li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict-banner .lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .verdict-banner strong { color: #93c5fd; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: FLT1 &nbsp;|&nbsp; fms-like tyrosine kinase 1 / VEGFR1</span>
+    <span class="chip chip-danger">⚠ Safety caveat: systemic blockade risk</span>
+  </div>
+  <h1>FLT1 / VEGFR1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety Caveat:</strong> FLT1 regulates angiogenesis, vascular permeability, endothelial survival, blood-pressure biology, and immune responses. Nonspecific systemic FLT1 blockade carries significant risk; therapeutic approaches must be isoform-specific, cell-targeted, and stage-aware.
+    </div>
+
+    <div class="overview-body">
+      <p>FLT1 (VEGFR1 / fms-like tyrosine kinase 1) is positioned across the supplied evidence as an Alzheimer's disease-relevant vascular, immune, and neuronal stress-response molecule. The strongest AD-specific support establishes FLT1 as a mechanistically plausible but still incompletely validated therapeutic target.</p>
+      <p>FLT1 is elevated in AD brain transcriptomic and proteomic datasets, enriched near amyloid plaque-associated dystrophic neurites, and upregulated in endothelial cells, microglia, and neurons in disease-relevant contexts. Increased FLT1 is associated with greater amyloid burden, tau pathology, worse cognition, and faster cognitive decline.</p>
+      <p>Mechanistically, FLT1 sits at the intersection of amyloid-β toxicity, hypoxia, neurovascular injury, neuroinflammation, oxidative stress, apoptosis, VEGF/PlGF signaling imbalance, and impaired neuronal survival pathways. Critically, siRNA-mediated FLT1 knockdown protected neuronal cells and primary neurons from hypoxia-, Aβ1-42 oligomer-, and fibril-induced toxicity, while restoring VEGFR2 and YAP1 survival signaling and reducing inflammatory, interferon-stimulated, oxidative stress, and cell-death gene programs.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANELS:
+          A (left, rows 1-5, cols 1-2):  Upstream AD Stressors → FLT1 Induction
+          B (centre, rows 1-5, cols 3-4): FLT1 Signaling Branches (neuronal & vascular-immune)
+          C (right, rows 2-5, cols 5):   Downstream Consequences / Rescue
+
+          NODE COUNT PLAN (max 16):
+           Panel A: 3 stressor nodes + 1 FLT1 hub = 4
+           Panel B: VEGFR2↓, YAP1↓ (survival branch) + IL1B/IFN, Ox-stress (inflammatory branch) = 4
+           Panel C: Apoptosis↑, Aβ clearance↓, Tau pathology, Neuroprotection (knockdown) = 4
+           Shared output: Cognitive Decline = 1
+           sFLT1 decoy node = 1
+           Total = 14 nodes ✓ (≤16)
+        -->
+        <svg viewBox="0 0 960 480" width="940" height="468" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ PANEL A: Upstream AD Stressors ═══ -->
+          <rect x="10" y="10" width="240" height="440" rx="12" ry="12"
+                fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="130" y="34" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1.2" text-transform="uppercase">A · UPSTREAM STRESSORS</text>
+
+          <!-- Stressor nodes -->
+          <!-- Hypoxia -->
+          <rect x="30" y="50" width="200" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="130" y="69" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a5c">Hypoxia</text>
+          <text x="130" y="85" text-anchor="middle" font-size="9.5" fill="#475569">HIF-1α-mediated</text>
+
+          <!-- Aβ oligomers / fibrils -->
+          <rect x="30" y="118" width="200" height="46" rx="7" fill="#ffffff" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="130" y="137" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">Aβ1-42 Oligomers</text>
+          <text x="130" y="153" text-anchor="middle" font-size="9.5" fill="#475569">&amp; Fibrils (not monomers)</text>
+
+          <!-- Neurovascular injury -->
+          <rect x="30" y="186" width="200" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="130" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Neurovascular Injury</text>
+          <text x="130" y="221" text-anchor="middle" font-size="9.5" fill="#475569">HHcy, BBB dysfunction</text>
+
+          <!-- FLT1 Hub -->
+          <rect x="38" y="300" width="184" height="52" rx="9" fill="#1a3a5c" stroke="#0a1e30" stroke-width="1.5"/>
+          <text x="130" y="322" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">FLT1 / VEGFR1</text>
+          <text x="130" y="341" text-anchor="middle" font-size="9.5" fill="#93c5fd">Elevated in AD brain</text>
+
+          <!-- sFLT1 decoy -->
+          <rect x="38" y="390" width="184" height="46" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+          <text x="130" y="409" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">sFLT1 (soluble)</text>
+          <text x="130" y="425" text-anchor="middle" font-size="9.5" fill="#475569">Anti-angiogenic decoy receptor</text>
+
+          <!-- Arrows A: stressors → FLT1 hub -->
+          <line x1="130" y1="96" x2="130" y2="118" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="130" y1="164" x2="130" y2="186" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="130" y1="232" x2="130" y2="268" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3"/>
+          <!-- vertical gap connector to FLT1 hub -->
+          <line x1="130" y1="268" x2="130" y2="300" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+          <!-- FLT1 → sFLT1 -->
+          <line x1="130" y1="352" x2="130" y2="390" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+
+          <!-- ═══ PANEL B: FLT1 Signaling Branches ═══ -->
+          <rect x="268" y="10" width="408" height="440" rx="12" ry="12"
+                fill="#f0fdfa" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="472" y="34" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#0f766e" letter-spacing="1.2">B · FLT1 SIGNALING BRANCHES</text>
+
+          <!-- Branch label: Survival suppression (left sub) -->
+          <text x="356" y="54" text-anchor="middle" font-size="8.5" fill="#1a3a5c" font-style="italic">Survival Suppression Branch</text>
+
+          <!-- VEGFR2 suppressed -->
+          <rect x="282" y="62" width="148" height="46" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.3"/>
+          <text x="356" y="81" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a5c">VEGFR2 ↓</text>
+          <text x="356" y="97" text-anchor="middle" font-size="9.5" fill="#475569">Survival kinase suppressed</text>
+
+          <!-- YAP1 suppressed -->
+          <rect x="282" y="138" width="148" height="46" rx="7" fill="#ffffff" stroke="#1a3a5c" stroke-width="1.3"/>
+          <text x="356" y="157" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a5c">YAP1 ↓</text>
+          <text x="356" y="173" text-anchor="middle" font-size="9.5" fill="#475569">Hippo pathway impaired</text>
+
+          <!-- Caspase-3 activation -->
+          <rect x="282" y="214" width="148" height="46" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="356" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">Caspase-3 ↑</text>
+          <text x="356" y="249" text-anchor="middle" font-size="9.5" fill="#475569">Apoptosis activated</text>
+
+          <!-- Branch label: Inflammatory branch (right sub) -->
+          <text x="588" y="54" text-anchor="middle" font-size="8.5" fill="#8b1a1a" font-style="italic">Inflammatory Branch</text>
+
+          <!-- IL1B / IFN-stimulated -->
+          <rect x="514" y="62" width="148" height="46" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="588" y="81" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">IL1B+ Microglia</text>
+          <text x="588" y="97" text-anchor="middle" font-size="9.5" fill="#475569">IFN-stimulated genes ↑</text>
+
+          <!-- Oxidative stress -->
+          <rect x="514" y="138" width="148" height="46" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="588" y="157" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Oxidative Stress ↑</text>
+          <text x="588" y="173" text-anchor="middle" font-size="9.5" fill="#475569">Cell-death gene programs</text>
+
+          <!-- Aβ phagocytosis impaired -->
+          <rect x="514" y="214" width="148" height="46" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="588" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">Aβ Phagocytosis ↓</text>
+          <text x="588" y="249" text-anchor="middle" font-size="9.5" fill="#475569">Microglial clearance impaired</text>
+
+          <!-- FLT1 knockdown rescue node (shared) -->
+          <rect x="350" y="300" width="244" height="52" rx="9" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+          <text x="472" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">FLT1 Knockdown (siRNA)</text>
+          <text x="472" y="341" text-anchor="middle" font-size="9.5" fill="#ccfbf1">Restores VEGFR2, YAP1 · reduces inflammation</text>
+
+          <!-- Tau-associated node -->
+          <rect x="350" y="390" width="244" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="472" y="409" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Tau Pathology Link</text>
+          <text x="472" y="425" text-anchor="middle" font-size="9.5" fill="#475569">FLT1+/IL1B+ microglia ↑ with p-tau</text>
+
+          <!-- Panel B internal arrows -->
+          <!-- survival branch: VEGFR2 → YAP1 → Caspase3 -->
+          <line x1="356" y1="108" x2="356" y2="138" stroke="#1a3a5c" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+          <line x1="356" y1="184" x2="356" y2="214" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <!-- inflammatory branch: IL1B → OxStress → Phagocytosis -->
+          <line x1="588" y1="108" x2="588" y2="138" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="588" y1="184" x2="588" y2="214" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Both branches converge into knockdown rescue -->
+          <!-- Caspase-3 → rescue (elbow) -->
+          <polyline points="356,260 356,278 472,278 472,300"
+                    fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- Phagocytosis → rescue (elbow) -->
+          <polyline points="588,260 588,278 472,278"
+                    fill="none" stroke="#0f766e" stroke-width="1.4"/>
+
+          <!-- Knockdown → Tau -->
+          <line x1="472" y1="352" x2="472" y2="390" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+
+          <!-- ═══ PANEL C: Downstream Consequences ═══ -->
+          <rect x="690" y="10" width="260" height="440" rx="12" ry="12"
+                fill="#fdf0f0" fill-opacity="0.4" stroke="#8b1a1a" stroke-width="1.2"/>
+          <text x="820" y="34" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#8b1a1a" letter-spacing="1.2">C · DOWNSTREAM OUTCOMES</text>
+
+          <!-- Neuronal Toxicity -->
+          <rect x="706" y="55" width="228" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="820" y="77" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">Neuronal Toxicity</text>
+          <text x="820" y="95" text-anchor="middle" font-size="9.5" fill="#475569">ICD overexpression → SH-SY5Y death</text>
+
+          <!-- Amyloid burden -->
+          <rect x="706" y="131" width="228" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.3"/>
+          <text x="820" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#8b1a1a">Amyloid Burden ↑</text>
+          <text x="820" y="171" text-anchor="middle" font-size="9.5" fill="#475569">FLT1 near plaque dystrophic neurites</text>
+
+          <!-- Neuroprotection (rescue) -->
+          <rect x="706" y="218" width="228" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="820" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">Neuroprotection</text>
+          <text x="820" y="258" text-anchor="middle" font-size="9.5" fill="#475569">Knockdown rescues Aβ/hypoxia injury</text>
+
+          <!-- Cognitive Decline -->
+          <rect x="706" y="318" width="228" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.5"/>
+          <text x="820" y="340" text-anchor="middle" font-size="12" font-weight="700" fill="#8b1a1a">Cognitive Decline</text>
+          <text x="820" y="358" text-anchor="middle" font-size="9.5" fill="#475569">FLT1 ↑ assoc. with faster progression</text>
+
+          <!-- Biomarker / stratification -->
+          <rect x="706" y="398" width="228" height="42" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="820" y="415" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1a3a5c">Biomarker Utility</text>
+          <text x="820" y="431" text-anchor="middle" font-size="9.5" fill="#475569">CMV/immune–cognitive moderation</text>
+
+          <!-- Panel C internal arrows -->
+          <line x1="820" y1="107" x2="820" y2="131" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="820" y1="183" x2="820" y2="218" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+          <line x1="820" y1="270" x2="820" y2="318" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-teal)"/>
+          <line x1="820" y1="370" x2="820" y2="398" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arr)"/>
+
+
+          <!-- ═══ INTER-PANEL CONNECTORS ═══ -->
+          <!-- FLT1 hub (Panel A, right edge ~222) → VEGFR2 node (Panel B, left edge ~282):
+               Route through gutter y~85 (centre of VEGFR2 row) -->
+          <polyline points="222,326 246,326 246,85 282,85"
+                    fill="none" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+          <!-- FLT1 hub → IL1B microglia (Panel B right branch):
+               Route via gutter then to y~85 right side -->
+          <polyline points="222,326 246,326 246,85 514,85"
+                    fill="none" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Knockdown rescue (Panel B right edge ~594) → Neuroprotection (Panel C left ~706) -->
+          <polyline points="594,326 650,326 650,244 706,244"
+                    fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Caspase-3 (Panel B right edge ~430) → Neuronal Toxicity (Panel C left ~706) -->
+          <polyline points="430,237 650,237 650,81 706,81"
+                    fill="none" stroke="#8b1a1a" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Aβ Phagocytosis (Panel B) → Amyloid burden (Panel C):
+               Route via gutter -->
+          <polyline points="662,237 662,157 706,157"
+                    fill="none" stroke="#8b1a1a" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Tau (Panel B bottom) → Cognitive Decline (Panel C):
+               Route through gutter at y~411 then up -->
+          <polyline points="594,413 650,413 650,344 706,344"
+                    fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (left, blue):</strong> Upstream AD stressors — hypoxia, aggregated Aβ1-42 species, and neurovascular injury — converge to induce FLT1/VEGFR1 elevation; soluble sFLT1 acts as an anti-angiogenic decoy.
+        <strong>Panel B (centre, teal):</strong> FLT1 activation fans into two parallel branches — a survival-suppression branch (VEGFR2 ↓ → YAP1 ↓ → Caspase-3 ↑) and an inflammatory branch (IL1B+ microglia / IFN genes → oxidative stress → impaired Aβ phagocytosis); siRNA FLT1 knockdown rescues both branches and links to tau pathology.
+        <strong>Panel C (right, red/teal):</strong> Downstream consequences include neuronal toxicity, worsening amyloid burden, and cognitive decline; knockdown-mediated neuroprotection and biomarker utility are also shown. Dashed lines indicate proposed or indirect relationships.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>FLT1 Elevation in AD Brain</h3>
+        <p>Increased FLT1/VEGFR1 was reported across AD brain transcriptomic and proteomic datasets and associated with greater neuropathology burden, amyloid load, tau pathology, and cognitive decline. Single-cell data show elevated FLT1 in endothelial cells and microglia in clinical AD versus controls.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Toxic Aggregates Drive Neuronal FLT1</h3>
+        <p>Hypoxia, Aβ1-42 oligomers, and Aβ1-42 fibrils increased neuronal FLT1 and cleaved caspase-3 activation. Notably, Aβ1-42 monomers did <em>not</em> increase FLT1, indicating selectivity for toxic, aggregated amyloid species. Overexpression of FLT1 intracellular domains directly induced toxicity in SH-SY5Y cells.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>FLT1 Knockdown Is Neuroprotective</h3>
+        <p>siRNA-mediated FLT1 knockdown protected neurons from hypoxia-, Aβ oligomer-, and Aβ fibril-induced cell death, and restored VEGFR2 and YAP1 survival pathway expression. In Aβ oligomer-exposed mouse neurons, knockdown reduced interferon-stimulated, inflammatory, oxidative stress, and cell-death gene programs. This is the strongest therapeutic-target evidence in the text.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Neurovascular–Immune Cell Roles</h3>
+        <p>Higher FLT1 in endothelial cells was associated with Aβ burden and worse cognition. FLT1+/IL1B+ microglia increased with global phosphorylated tau in the caudate. In a hyperhomocysteinemia-related AD study, FLT1 was among HHcy-suppressed phagocytic microglial genes, linking it to impaired Aβ clearance and methylation changes.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>sFLT1 and Vascular Complexity</h3>
+        <p>Soluble FLT1 acts as an anti-angiogenic decoy receptor binding VEGF and PlGF. Non-AD vascular studies connect high sFLT1 or high sFLT1/PlGF ratio to endothelial dysfunction, vascular injury, hypoxia, and impaired angiogenic balance — mechanisms relevant to vascular contributions to AD. Cellular FLT1 and sFLT1 may have distinct biological effects that require separate measurement.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Context-Dependent Biology</h3>
+        <p>FLT1 is not uniformly harmful. Non-AD evidence shows FLT1 signaling can support angiogenesis, endothelial repair, macrophage regulation, or neuronal survival depending on isoform, ligand, cell type, and disease stage. Plasma FLT1 also moderated associations between CMV antibody titers and cognitive decline, suggesting roles at the peripheral immune–neurovascular interface.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Prioritize FLT1 for mechanistic validation</strong> in amyloid-positive, hypoxic, vascular-dysfunction, or neuroinflammatory AD subtypes, where the biological rationale is strongest.</div>
+      </li>
+      <li>
+        <div><strong>Focus on selective neuronal FLT1 attenuation</strong> rather than broad inhibition: siRNA knockdown protected neurons from multiple AD-relevant insults and normalized VEGFR2 and YAP1 survival pathways.</div>
+      </li>
+      <li>
+        <div><strong>Distinguish membrane FLT1 from soluble sFLT1</strong> — AD studies should separately measure cellular FLT1/VEGFR1 and sFLT1 in brain, CSF, and plasma, as their biological effects likely differ.</div>
+      </li>
+      <li>
+        <div><strong>Define cell-type-specific roles</strong> — endothelial, microglial, neuronal, and astrocytic FLT1 should be analyzed separately to determine whether each is pathogenic, compensatory, or context-dependent.</div>
+      </li>
+      <li>
+        <div><strong>Test causal effects in validated AD models</strong> by assessing whether FLT1 inhibition or knockdown reduces Aβ-induced apoptosis, tau phosphorylation, microglial IL1B states, oxidative stress, BBB dysfunction, and cognitive impairment.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate FLT1 as a biomarker and patient stratification tool</strong> to identify individuals with vascular–immune AD biology, amyloid-associated vascular injury, CMV/immune-modulated cognitive decline, or faster disease progression.</div>
+      </li>
+      <li>
+        <div><strong>Avoid nonspecific systemic FLT1 blockade</strong> without comprehensive safety data. FLT1 regulates angiogenesis, vascular permeability, blood pressure biology, and immune responses; therapeutic development must be isoform-specific, cell-targeted, and stage-aware.</div>
+      </li>
+      <li>
+        <div><strong>Consider pathway-balancing rather than simple inhibition</strong> — the most promising strategy may be normalization of pathological FLT1/VEGF/PlGF signaling, preserving beneficial VEGF-mediated vascular and neuronal support while reducing harmful neuronal or soluble FLT1 effects.</div>
+      </li>
+      <li>
+        <div><strong>Use brain-relevant assay systems</strong> including human neurons, microglia, endothelial cells, BBB models, and organoids under amyloid/tau/hypoxia stress paradigms — not peripheral vascular models alone.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="lead">Overall Assessment —</div>
+      <p>
+        <strong>FLT1 / VEGFR1 is a credible, mechanistically supported, but not yet clinically validated Alzheimer's therapeutic target.</strong>
+        Evidence converges on FLT1 elevation across AD brain cell types, enrichment near amyloid plaque-associated neuritic injury, and association with worse amyloid, tau, and cognitive outcomes.
+        The strongest interventional evidence — <strong>siRNA-mediated neuronal FLT1 knockdown protecting against hypoxia- and Aβ-induced cell death while restoring VEGFR2 and YAP1 survival signaling</strong> — provides a clear mechanistic hypothesis for therapeutic development.
+        Endothelial and microglial FLT1 data add neurovascular and immune dimensions.
+        However, <strong>FLT1's context-dependent biology, isoform diversity (membrane vs. soluble), and critical roles in angiogenesis and vascular homeostasis demand isoform-specific, cell-targeted approaches</strong>.
+        The most promising near-term path is <strong>selective pathological neuronal FLT1 attenuation, neurovascular–immune biomarker-guided patient stratification, and rigorous causal testing in human brain-relevant AD model systems</strong>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  FLT1 / VEGFR1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>

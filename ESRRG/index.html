@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESRRG / ERRγ — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf3;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.38);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e2eaf3;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+  section { margin-bottom: 54px; }
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* BODY TEXT */
+  p { margin-bottom: 1em; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media(max-width: 620px){ .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.neutral { border-left-color: var(--neutral); background: var(--neutral-light); }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+  .card.danger h3 { color: var(--danger); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: var(--neutral); }
+  .card p { font-size: 0.9rem; margin: 0; }
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: take;
+    padding: 0;
+  }
+  .takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+  }
+  .takeaways li::before {
+    content: counter(take);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #e2eaf3;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+  }
+  .verdict p { margin: 0; font-size: 1rem; }
+  .verdict strong { color: #93c5fd; }
+  .verdict .verdict-lead {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ESRRG &nbsp;|&nbsp; Estrogen-Related Receptor Gamma (ERRγ)</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety — see caveats</span>
+  </div>
+  <h1>ESRRG / ERR&gamma; &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> ESRRG biology is highly context-dependent. Systemic activation may drive harmful programs (CYP2E1, fibrinogen, hepcidin, PDK4, vascular calcification, cancer-associated transcription) in peripheral and non-neuronal cell types. Benefit in neurons does not imply global safety; cell-type-selective modulation is essential.
+    </div>
+
+    <p>ESRRG (ERRγ) is a <strong>constitutively active orphan nuclear receptor</strong> and transcription factor with a broad regulatory portfolio spanning mitochondrial metabolism, oxidative phosphorylation, stress-response signaling, inflammatory regulation, lipid/endocrine biology, neuronal function, and pharmacologic ligandability. The supplied literature provides several direct or near-direct Alzheimer's disease–relevant findings alongside a larger body of indirect evidence from non-AD systems.</p>
+
+    <p>The strongest direct AD-relevant evidence comes from a propofol/postoperative cognitive dysfunction study in male 3xTg-AD mice, where hippocampal ESRRG and HSD11B2 were reduced. ESRRG overexpression improved spatial learning and memory and restored mitochondrial integrity; HSD11B2 knockdown reversed these benefits. A second major AD-focused mechanism is the ERRα/ERRγ repression of DKK1 in human neuronal cells, linking ESRRG activity to preserved Wnt signaling and reduced tau phosphorylation.</p>
+
+    <p>Across broader neuroscience studies, ESRRG repeatedly emerges as a regulator of neuronal mitochondrial oxidative metabolism, hippocampal LTP and memory, autophagy/lysosomal and synaptic gene programs, BDNF-TrkB/ERK-CREB signaling, neuronal excitability, and proteinopathy resilience — mechanisms that map directly onto core Alzheimer's disease pathophysiology. ESRRG is pharmacologically tractable with both agonists (DY131, GSK4716, HPB2, SLU-PP-332-related compounds) and inverse agonists/antagonists (GSK5182, DN200434, 4-hydroxytamoxifen analogs, kaempferol, apigenin).</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — ESRRG in AD-Relevant Biology</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!-- SVG: 920 wide x 500 tall; 4 panels; ~15 nodes total -->
+        <svg viewBox="0 0 920 500" width="920" height="500" xmlns="http://www.w3.org/2000/svg" aria-label="ESRRG mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Triggers (left) -->
+          <rect x="10" y="10" width="210" height="480" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="115" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">A — UPSTREAM TRIGGERS</text>
+
+          <!-- Node A1: Propofol/Surgery -->
+          <rect x="28" y="44" width="174" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="115" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1a3a5c">Propofol / Surgery</text>
+          <text x="115" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">(3xTg-AD mice)</text>
+
+          <!-- Node A2: ESRRG/ERRγ (central) -->
+          <rect x="28" y="130" width="174" height="46" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.4"/>
+          <text x="115" y="147" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#ffffff">ESRRG / ERRγ</text>
+          <text x="115" y="162" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">Orphan Nuclear Receptor</text>
+
+          <!-- Node A3: BPA / EDCs -->
+          <rect x="28" y="222" width="174" height="44" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+          <text x="115" y="238" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#334155">BPA / Endocrine</text>
+          <text x="115" y="252" text-anchor="middle" font-family="Arial" font-size="9" fill="#64748b">Disruptors bind ERRγ</text>
+
+          <!-- Node A4: Sex/Estrogen Context -->
+          <rect x="28" y="310" width="174" height="44" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+          <text x="115" y="326" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#334155">Sex / Estrogen</text>
+          <text x="115" y="340" text-anchor="middle" font-family="Arial" font-size="9" fill="#64748b">Signaling context</text>
+
+          <!-- Arrows in panel A -->
+          <!-- A1 → A2 -->
+          <line x1="115" y1="90" x2="115" y2="128" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+          <!-- A3 → A2 -->
+          <line x1="115" y1="222" x2="115" y2="178" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr-gray)"/>
+          <!-- A4 → A2 (elbow: up to y=200, right clear) -->
+          <polyline points="115,310 115,270 115,222" fill="none" stroke="#64748b" stroke-width="1.1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+          <!-- Panel B: Neuronal/Mitochondrial (center-left) -->
+          <rect x="232" y="10" width="210" height="480" rx="12" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="337" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">B — NEURONAL / MITO</text>
+
+          <!-- Node B1: HSD11B2 transcription -->
+          <rect x="250" y="44" width="174" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="337" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">HSD11B2 Transcription</text>
+          <text x="337" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Mitochondrial protection</text>
+
+          <!-- Node B2: Mito membrane / ATP -->
+          <rect x="250" y="148" width="174" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="337" y="165" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Mitochondrial Integrity</text>
+          <text x="337" y="179" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Membrane potential · ATP</text>
+
+          <!-- Node B3: LTP / Hippocampal Memory -->
+          <rect x="250" y="252" width="174" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="337" y="269" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">Hippocampal LTP</text>
+          <text x="337" y="283" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Spatial memory / cognition</text>
+
+          <!-- Node B4: BDNF-TrkB/ERK-CREB -->
+          <rect x="250" y="356" width="174" height="46" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="337" y="373" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#134e4a">BDNF · TrkB</text>
+          <text x="337" y="387" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">ERK-CREB · neurite growth</text>
+
+          <!-- Arrows in panel B -->
+          <!-- A2 → B1 (horizontal from panel A to B, at y~153 center of A2 box) -->
+          <line x1="202" y1="153" x2="248" y2="67" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- B1 → B2 -->
+          <line x1="337" y1="90" x2="337" y2="146" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+          <!-- B2 → B3 -->
+          <line x1="337" y1="194" x2="337" y2="250" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+          <!-- B2 → B4 (branch from mito → BDNF axis via elbow on left side clear of B3) -->
+          <polyline points="251,171 235,171 235,379 248,379" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-pos)"/>
+
+          <!-- Panel C: DKK1-Wnt-Tau (center-right) -->
+          <rect x="454" y="10" width="210" height="480" rx="12" fill="#fffbeb" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="559" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">C — DKK1 / WNT / TAU</text>
+
+          <!-- Node C1: ERRγ/ERRα represses DKK1 -->
+          <rect x="472" y="44" width="174" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="559" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">ERRγ/ERRα repress DKK1</text>
+          <text x="559" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">H3K9ac · Pol II access</text>
+
+          <!-- Node C2: Preserved Wnt Signaling -->
+          <rect x="472" y="148" width="174" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="559" y="165" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">Preserved Wnt Signaling</text>
+          <text x="559" y="179" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Lower DKK1 antagonism</text>
+
+          <!-- Node C3: Reduced Tau Phosphorylation -->
+          <rect x="472" y="252" width="174" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="559" y="269" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">↓ Tau Phosphorylation</text>
+          <text x="559" y="283" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Improved neuronal state</text>
+
+          <!-- Node C4: Proteostasis/Autophagy -->
+          <rect x="472" y="356" width="174" height="46" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="559" y="373" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#78350f">Proteostasis / Autophagy</text>
+          <text x="559" y="387" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Lysosome · synuclein ↓</text>
+
+          <!-- Arrows in panel C -->
+          <!-- A2 → C1 (horizontal from A to C — route through B gutter: elbow over top clear band) -->
+          <polyline points="202,153 222,153 222,18 462,18 462,67 470,67" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- C1 → C2 -->
+          <line x1="559" y1="90" x2="559" y2="146" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- C2 → C3 -->
+          <line x1="559" y1="194" x2="559" y2="250" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- C2 → C4 (branch right side elbow clear of C3) -->
+          <polyline points="645,171 662,171 662,379 646,379" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Panel D: Safety / Context-Dependent Risk (right) -->
+          <rect x="676" y="10" width="234" height="480" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="793" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">D — SAFETY / CAVEATS</text>
+
+          <!-- Node D1: Peripheral Harmful Programs -->
+          <rect x="694" y="44" width="198" height="46" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="793" y="61" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">CYP2E1 · PDK4 · MAOA/B</text>
+          <text x="793" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Hepatic oxidative programs</text>
+
+          <!-- Node D2: Inflammation / Immune -->
+          <rect x="694" y="148" width="198" height="46" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="793" y="165" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">NLRP3 · NF-κB · IL-6</text>
+          <text x="793" y="179" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Context-dependent inflam.</text>
+
+          <!-- Node D3: Vascular / Fibrinogen -->
+          <rect x="694" y="252" width="198" height="46" rx="7" fill="#ffffff" stroke="#991b1b" stroke-width="1.4"/>
+          <text x="793" y="269" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#7f1d1d">Fibrinogen · Hepcidin</text>
+          <text x="793" y="283" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Vascular calcification risk</text>
+
+          <!-- Node D4: Shared AD Outcome -->
+          <rect x="694" y="410" width="198" height="46" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.4"/>
+          <text x="793" y="427" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#ffffff">Cell-Type–Selective</text>
+          <text x="793" y="441" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">Modulation Required</text>
+
+          <!-- Arrows in panel D -->
+          <!-- B3 → D4 (elbow: right across C panel top band, but route under all nodes: go y=492 under all) -->
+          <polyline points="337,298 337,492 793,492 793,458" fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-pos)"/>
+          <!-- C3 → D4 -->
+          <polyline points="559,298 559,480 693,480 693,458" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <!-- D1 → D4 (elbow right clear) -->
+          <polyline points="891,90 906,90 906,433 892,433" fill="none" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <!-- D2 → D4 -->
+          <polyline points="891,171 909,171 909,433 892,433" fill="none" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <!-- D3 → D4 -->
+          <line x1="793" y1="298" x2="793" y2="408" stroke="#991b1b" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel connector A2 → B2 (direct horizontal) -->
+          <line x1="202" y1="165" x2="248" y2="165" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Triggers):</strong> Propofol/surgery in 3xTg-AD mice suppresses ESRRG; BPA/endocrine disruptors and sex/estrogen context also modulate ERRγ activity, feeding into a central ESRRG hub.
+        <strong>Panel B (Neuronal / Mitochondrial):</strong> ESRRG drives HSD11B2 transcription → mitochondrial membrane integrity and ATP → hippocampal LTP and spatial memory; a parallel branch supports BDNF-TrkB/ERK-CREB neurotrophic signaling.
+        <strong>Panel C (DKK1 / Wnt / Tau):</strong> ERRγ/ERRα repress DKK1 via chromatin remodeling → preserved Wnt signaling → reduced tau phosphorylation; a secondary branch covers proteostasis, autophagy, and lysosomal gene programs relevant to synucleinopathy.
+        <strong>Panel D (Safety / Caveats):</strong> In peripheral/non-neuronal contexts, ESRRG can drive harmful oxidative (CYP2E1, PDK4, MAOA/B), inflammatory (NLRP3, NF-κB), and vascular (fibrinogen, hepcidin, calcification) programs — all converging on the imperative for cell-type–selective modulation. Dashed connectors from Panels B and C indicate that only cell-selective therapeutic approaches yield net benefit.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card positive">
+        <h3>🧬 ESRRG–HSD11B2 Mitochondrial-Protection Axis</h3>
+        <p>The most specific AD mechanism: reduced hippocampal ESRRG lowers HSD11B2 transcription. Propofol further disrupts this axis, causing mitochondrial depolarization, ROS, lipid peroxidation, cytochrome C release, DRP1 phosphorylation, and cognitive impairment. ESRRG overexpression restores mitochondrial membrane potential and cognition; HSD11B2 knockdown negates this protection.</p>
+      </div>
+
+      <div class="card">
+        <h3>🔗 DKK1 Repression → Wnt → Tau Phosphorylation</h3>
+        <p>ERRγ/ERRα repress DKK1 — a Wnt antagonist — by reducing RNA Pol II accessibility and modulating H3K9ac at the DKK1 promoter. This supports a pathway from ERRγ activity to lower DKK1, preserved Wnt signaling, and reduced tau phosphorylation in human neuronal cells and brain.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>⚡ Hippocampal LTP and Synaptic Plasticity</h3>
+        <p>Neuronal ERRγ deficiency impairs hippocampal LTP, rescued by pyruvate, confirming a metabolic mechanism. Cortical/hippocampal neuronal ERRγ deletion causes spatial learning and memory defects. This is one of the strongest mechanistic bridges to AD-related hippocampal dysfunction.</p>
+      </div>
+
+      <div class="card">
+        <h3>🌱 BDNF-TrkB Neurotrophic Support</h3>
+        <p>The ERRγ agonist HPB2 increased BDNF and TrkB expression through ERK-CREB signaling in neuronal models, promoted neurite outgrowth, and enhanced dopaminergic neuronal phenotype markers. BDNF-TrkB deficits are strongly relevant to AD synaptic dysfunction and cognitive decline.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>⚖️ Inflammatory / Immune Directionality Varies</h3>
+        <p>ERRγ can suppress NLRP3-related inflammasome activity in myocardial injury and regulate T-cell mitochondrial homeostasis. Conversely, ESRRG can also participate in NLRP3/pyroptosis, IL-6-driven hepatic acute-phase responses, type I interferon production, and TGF-β2 induction. Context is determinative.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>🚨 Limitations and Safety Concerns</h3>
+        <p>Direct AD evidence is limited to the 3xTg-AD propofol/POCD model and the DKK1/Wnt/tau axis. The literature does not establish that ESRRG modifies amyloid-β deposition, tau aggregation in vivo, synaptic loss, microglial AD phenotypes, or clinical outcomes. Peripheral activation risks driving CYP2E1, fibrinogen, hepcidin, vascular calcification, and cancer-associated programs.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <div class="takeaways">
+      <ol>
+        <li>
+          <div><strong>Prioritize the ESRRG–HSD11B2 axis for perioperative AD vulnerability studies.</strong> Test whether ESRRG activation prevents anesthesia/surgery-triggered cognitive decline in additional AD models, female animals, aged animals, and non-propofol anesthetic contexts beyond the initial 3xTg-AD male mouse findings.</div>
+        </li>
+        <li>
+          <div><strong>Validate ESRRG effects on AD core pathology directly.</strong> Test whether ESRRG activation or inhibition modifies amyloid-β production/clearance, tau phosphorylation and aggregation, synaptic density, neuronal survival, neuroinflammation, and cognition in AD mouse, organoid, iPSC-neuron, astrocyte, and microglial models.</div>
+        </li>
+        <li>
+          <div><strong>Investigate ESRRG as a mitochondrial-resilience target in hippocampal neurons.</strong> Measure effects on mitochondrial membrane potential, ATP production, oxidative phosphorylation, mtDNA/TFAM maintenance, ROS, cytochrome C release, DRP1 phosphorylation, mitophagy, and LTP under amyloid-β, tau, inflammatory, hypoxic, or metabolic stress.</div>
+        </li>
+        <li>
+          <div><strong>Test the ERRγ/ERRα–DKK1–Wnt–tau pathway in AD models.</strong> Determine whether neuronal ESRRG enhancement lowers DKK1, preserves Wnt signaling, reduces tau phosphorylation, and improves synaptic function in tauopathy and combined amyloid/tau systems.</div>
+        </li>
+        <li>
+          <div><strong>Define cell-type–specific directionality before therapeutic development.</strong> Neurons may benefit from ESRRG activation; microglia, astrocytes, endothelial cells, liver, vascular smooth muscle, or peripheral immune cells may require inhibition or pathway-selective modulation depending on downstream targets.</div>
+        </li>
+        <li>
+          <div><strong>Develop brain-penetrant, selective ESRRG modulators.</strong> Focus on compounds that enhance neuronal mitochondrial, HSD11B2, BDNF, and Wnt-protective programs without activating CYP2E1, fibrinogen, hepcidin, PDK4, vascular calcification, or cancer-associated pathways in peripheral tissues.</div>
+        </li>
+        <li>
+          <div><strong>Include sex and endocrine context in all study designs.</strong> ESRRG intersects with estrogen-related signaling, BPA sensitivity, glucocorticoid metabolism, and sex-specific neuroprotection; AD studies should stratify by sex, age, hormonal state, and APOE genotype.</div>
+        </li>
+        <li>
+          <div><strong>Evaluate systemic safety carefully.</strong> Systemic ESRRG modulation could affect cardiac conduction and energetics, hepatic glucose output, lipid metabolism, steroidogenesis, vascular calcification, immune activation, bone biology, and cancer-related transcription. Brain-targeted delivery or downstream pathway-selective approaches may be necessary.</div>
+        </li>
+        <li>
+          <div><strong>Use biomarker-driven experiments.</strong> Track ESRRG activity via HSD11B2, DKK1, Wnt targets, mitochondrial genes, PGC-1α programs, TFAM, BDNF, MAOB, inflammatory markers, ApoE/lipid genes, ROS markers, and synaptic markers in AD tissues and models.</div>
+        </li>
+        <li>
+          <div><strong>Treat ESRRG as a promising but unvalidated AD target.</strong> The strongest current rationale is mitochondrial and transcriptional neuroprotection through HSD11B2 maintenance, DKK1 repression/Wnt preservation, hippocampal bioenergetics, and synaptic plasticity. Direct disease-model validation and determination of optimal modulation direction remain essential next steps.</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — ESRRG / ERRγ as an Alzheimer's Disease Therapeutic Target</span>
+      <p>ESRRG / ERRγ represents a <strong>biologically compelling but preclinically immature</strong> target for Alzheimer's disease. Its strongest AD rationale rests on two mechanistically grounded pillars: the <strong>ESRRG–HSD11B2 mitochondrial-protection axis</strong> demonstrated in 3xTg-AD mice, where ESRRG overexpression reverses propofol-induced mitochondrial failure and cognitive decline, and the <strong>ERRγ/ERRα–DKK1–Wnt–tau phosphorylation pathway</strong> established in human neuronal cells. Converging indirect evidence — hippocampal LTP dependence on neuronal ERRγ, BDNF-TrkB neurotrophic support, proteostasis and synaptic gene regulation, and broad mitochondrial transcriptional control — reinforces its relevance to the metabolic, synaptic, and proteostatic failures central to AD. However, <strong>direct evidence for ESRRG modification of amyloid-β pathology, in vivo tau aggregation, synaptic loss in AD models, microglial phenotypes, or clinical outcomes is absent</strong> from the current literature. Furthermore, ESRRG biology is <strong>context-dependent and potentially hazardous if modulated systemically</strong>: activation may drive harmful oxidative, inflammatory, vascular, and metabolic programs in non-neuronal tissues. The most productive near-term strategy is <strong>cell-type–resolved mechanistic validation in AD-relevant models</strong>, combined with development of brain-penetrant, pathway-selective modulators and rigorous safety profiling across peripheral organ systems.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>ESRRG / ERRγ — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHF24 / GINIP — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7cc7;
+    --light: #e8f0fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #111c30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 42px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    display: block;
+    margin-bottom: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* PROSE */
+  p {
+    margin-bottom: 14px;
+    color: var(--slate);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.65rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-neutral {
+    background: var(--neutral-bg);
+    border-left: 4px solid var(--neutral-text);
+  }
+  .card-neutral h3 { color: #475569; }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.96rem;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #111c30 100%);
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .verdict-banner p {
+    color: #e2e8f0;
+    margin: 0;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PHF24 &nbsp;|&nbsp; PHD Finger Protein 24 (GINIP)</span>
+    <span class="chip chip-danger">⚠ Indirect AD Relevance — Not a Validated AD Target</span>
+  </div>
+  <h1>PHF24 / GINIP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Interpretive Caution</strong>
+      PHF24/GINIP is <em>not</em> a validated Alzheimer's disease gene, biomarker, or therapeutic target. Its AD relevance is mechanistic and indirect — primarily through shared circuit-level processes such as inhibitory signaling, synaptic balance, and network hyperexcitability.
+    </div>
+
+    <p>PHF24 (PHD finger protein 24), also known as GINIP, is principally implicated in neuronal inhibitory signaling. It interacts with Gαi proteins, modulates GABA<sub>B</sub>/GPCR pathways, and is enriched in inhibitory interneuron populations. The strongest evidence links PHF24 to network stability, seizure susceptibility, and cognitive circuit function — not to amyloid-β, tau, or canonical Alzheimer's pathology.</p>
+
+    <p>Relevance to Alzheimer's disease arises by analogy: AD is characterised by impaired inhibitory interneuron function, altered GABAergic signaling, neuronal hyperexcitability, elevated seizure risk, synaptic failure, and cognitive decline — all processes in which PHF24 appears to play a regulatory role. Its therapeutic potential should therefore be viewed as speculative and circuit-focused.</p>
+
+    <p>Additional signals emerge from an α-synuclein pS129 interactome study (linking PHF24 to nuclear/postsynaptic compartments and potentially to mixed proteinopathies) and a stroke proteomics study (altered Phf24 expression after ischemic stroke). Neither establishes an Alzheimer's-specific role.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Upstream — PHF24 Molecular Mechanism  (nodes 1-6)
+        PANEL B (right): Downstream — Circuit & Disease Relevance  (nodes 7-14)
+        Total planned nodes: 14 (within ≤16 limit)
+      -->
+      <svg viewBox="0 0 940 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#4a7cc7"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2d4a7a"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Molecular Mechanism -->
+        <rect x="14" y="14" width="420" height="462" rx="14" ry="14"
+              fill="rgba(74,124,199,0.06)" stroke="#4a7cc7" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="28" y="36" font-family="Arial,sans-serif" font-size="9.5" font-weight="700"
+              fill="#2d4a7a" letter-spacing="0.12em">A — MOLECULAR MECHANISM</text>
+
+        <!-- Node 1: GABA-B / GPCR Stimulus -->
+        <rect x="142" y="50" width="150" height="44" rx="8" fill="#2d4a7a" stroke="#2d4a7a" stroke-width="1"/>
+        <text x="217" y="68" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="bold">GABA-B / Inhibitory</text>
+        <text x="217" y="83" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle">GPCR Stimulus</text>
+
+        <!-- arrow 1→2 -->
+        <line x1="217" y1="94" x2="217" y2="116" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 2: Gαi Activation (Gαi-GTP) -->
+        <rect x="132" y="116" width="170" height="44" rx="8" fill="#e8f0fb" stroke="#4a7cc7" stroke-width="1.4"/>
+        <text x="217" y="134" font-family="Georgia,serif" font-size="11.5" fill="#1e293b" text-anchor="middle">Gαi Activation</text>
+        <text x="217" y="149" font-family="Georgia,serif" font-size="11.5" fill="#1e293b" text-anchor="middle">(Gαi-GTP formed)</text>
+
+        <!-- arrow 2→3 left branch -->
+        <line x1="175" y1="160" x2="120" y2="210" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+        <!-- arrow 2→4 right branch -->
+        <line x1="259" y1="160" x2="314" y2="210" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 3: PHF24/GINIP Binds Gαi-GTP -->
+        <rect x="44" y="210" width="152" height="44" rx="8" fill="#4a7cc7" stroke="#2d4a7a" stroke-width="1.4"/>
+        <text x="120" y="228" font-family="Georgia,serif" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">PHF24/GINIP</text>
+        <text x="120" y="243" font-family="Georgia,serif" font-size="11" fill="#fff" text-anchor="middle">Binds Gαi-GTP</text>
+
+        <!-- Node 4: Gβγ Released -->
+        <rect x="238" y="210" width="148" height="44" rx="8" fill="#e8f0fb" stroke="#4a7cc7" stroke-width="1.4"/>
+        <text x="312" y="228" font-family="Georgia,serif" font-size="11.5" fill="#1e293b" text-anchor="middle">Gβγ Subunit</text>
+        <text x="312" y="243" font-family="Georgia,serif" font-size="11.5" fill="#1e293b" text-anchor="middle">Released</text>
+
+        <!-- arrow 3→5 -->
+        <line x1="120" y1="254" x2="120" y2="302" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+        <!-- arrow 4→6 -->
+        <line x1="312" y1="254" x2="312" y2="302" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 5: Dampens Gαi Effectors -->
+        <rect x="44" y="302" width="152" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="120" y="320" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">Dampens Gαi-GTP</text>
+        <text x="120" y="335" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">Effector Signaling</text>
+
+        <!-- Node 6: Enhances Gβγ Signaling -->
+        <rect x="238" y="302" width="148" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="312" y="320" font-family="Georgia,serif" font-size="11.5" fill="#0f766e" text-anchor="middle">Enhances Gβγ</text>
+        <text x="312" y="335" font-family="Georgia,serif" font-size="11.5" fill="#0f766e" text-anchor="middle">Signaling</text>
+
+        <!-- converge arrows → Node 7 (in Panel B, but draw connectors through gutter) -->
+        <!-- Node 7 is at x=510, y=330. Gutter between panels is x=434–466.
+             Route: from node5 right edge (x=196,y=324) → elbow at (x=450,y=324)
+             from node6 right edge (x=386,y=322) → elbow at (x=450,y=322)
+             then down to x=450,y=356 → into node7
+             Actually node7 will be placed at x=490,y=338. Draw below. -->
+
+        <!-- Shared outcome label within Panel A -->
+        <rect x="100" y="392" width="234" height="44" rx="8" fill="#2d4a7a" stroke="#111c30" stroke-width="1.4"/>
+        <text x="217" y="410" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="bold">Inhibitory Synapse</text>
+        <text x="217" y="425" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle">Regulation (Net)</text>
+
+        <!-- arrows 5 → PanelA outcome -->
+        <line x1="120" y1="346" x2="120" y2="382" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+        <line x1="120" y1="382" x2="148" y2="392" stroke="#4a7cc7" stroke-width="1.8"/>
+        <!-- arrows 6 → PanelA outcome -->
+        <line x1="312" y1="346" x2="312" y2="382" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+        <line x1="312" y1="382" x2="286" y2="392" stroke="#0f766e" stroke-width="1.8"/>
+
+        <!-- PANEL B: Circuit & Disease Relevance -->
+        <rect x="506" y="14" width="420" height="462" rx="14" ry="14"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="520" y="36" font-family="Arial,sans-serif" font-size="9.5" font-weight="700"
+              fill="#0f766e" letter-spacing="0.12em">B — CIRCUIT &amp; DISEASE RELEVANCE</text>
+
+        <!-- Node 8: PHF24 Loss / Knockdown -->
+        <rect x="622" y="50" width="160" height="44" rx="8" fill="#2d4a7a" stroke="#2d4a7a" stroke-width="1"/>
+        <text x="702" y="68" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle" font-weight="bold">PHF24 Loss</text>
+        <text x="702" y="83" font-family="Georgia,serif" font-size="11.5" fill="#fff" text-anchor="middle">(Null / ERV insertion)</text>
+
+        <!-- arrow down to branch -->
+        <line x1="702" y1="94" x2="702" y2="118" stroke="#4a7cc7" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 9: Inhibitory Interneuron Deficit -->
+        <rect x="522" y="118" width="165" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="604" y="136" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">↓ Inhibitory Neuron</text>
+        <text x="604" y="151" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">&amp; Synapse Density</text>
+
+        <!-- Node 10: Excitatory/Inhibitory Imbalance -->
+        <rect x="714" y="118" width="162" height="44" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="795" y="136" font-family="Georgia,serif" font-size="11" fill="#b45309" text-anchor="middle">↑ Excit./Inhib.</text>
+        <text x="795" y="151" font-family="Georgia,serif" font-size="11" fill="#b45309" text-anchor="middle">Imbalance</text>
+
+        <!-- arrows from node8 -->
+        <line x1="660" y1="118" x2="644" y2="118" stroke="#9b1c1c" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <line x1="744" y1="118" x2="760" y2="118" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- arrow node9 → node11 -->
+        <line x1="604" y1="162" x2="604" y2="210" stroke="#9b1c1c" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <!-- arrow node10 → node11 -->
+        <line x1="795" y1="162" x2="795" y2="210" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 11: Seizure Susceptibility / Hyperexcitability -->
+        <rect x="536" y="210" width="175" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="623" y="228" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">↑ Seizure Susceptibility</text>
+        <text x="623" y="243" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">Hyperexcitability</text>
+
+        <!-- Node 12: Age-related Behavioral Deficits -->
+        <rect x="726" y="210" width="164" height="44" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="808" y="228" font-family="Georgia,serif" font-size="11" fill="#b45309" text-anchor="middle">Hyperactivity &amp;</text>
+        <text x="808" y="243" font-family="Georgia,serif" font-size="11" fill="#b45309" text-anchor="middle">Emotional Alteration</text>
+
+        <!-- arrows → Node 13 converge -->
+        <line x1="623" y1="254" x2="623" y2="302" stroke="#9b1c1c" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <line x1="808" y1="254" x2="808" y2="282" stroke="#b45309" stroke-width="1.8"/>
+        <line x1="808" y1="282" x2="730" y2="302" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 13: Cognitive Decline (Morris Water Maze) -->
+        <rect x="556" y="302" width="184" height="44" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="648" y="320" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">Cognitive Deficits</text>
+        <text x="648" y="335" font-family="Georgia,serif" font-size="11" fill="#9b1c1c" text-anchor="middle">(Morris Water Maze)</text>
+
+        <!-- arrow node13 → node14 -->
+        <line x1="648" y1="346" x2="648" y2="392" stroke="#9b1c1c" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Node 14: Overlap with AD Phenotype -->
+        <rect x="538" y="392" width="320" height="44" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="698" y="410" font-family="Georgia,serif" font-size="11.5" fill="#0f766e" text-anchor="middle" font-weight="bold">Overlap with AD Circuit Phenotype</text>
+        <text x="698" y="425" font-family="Georgia,serif" font-size="11" fill="#0f766e" text-anchor="middle">(E/I imbalance, synaptic loss, cognition)</text>
+
+        <!-- Cross-panel connector: PanelA outcome → PanelB Node8
+             PanelA outcome right edge: x=334, y=414
+             Node8 left edge: x=622, y=72
+             Route: right from 334,414 → elbow at 460,414 → up to 460,72 → right to 622,72
+             Check: gutter x=434-506, path at x=460 clears all boxes. -->
+        <polyline points="334,414 460,414 460,72 622,72"
+                  fill="none" stroke="#2d4a7a" stroke-width="1.6" stroke-dasharray="6,3"
+                  marker-end="url(#arr-dark)"/>
+
+        <!-- Small annotation badge for PHF24 in Panel A -->
+        <!-- Placed at 44,370 — clear of all boxes (nearest box bottom=346, badge top=370, gap=24px) -->
+        <rect x="44" y="366" width="90" height="20" rx="10" fill="#2d4a7a"/>
+        <text x="89" y="380" font-family="Arial,sans-serif" font-size="9" fill="#fff" text-anchor="middle">knockdown ↓</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Molecular Mechanism:</strong> GABA-B/inhibitory GPCR stimulation activates Gαi (forming Gαi-GTP). PHF24/GINIP binds active Gαi-GTP and bifurcates signaling: it dampens Gαi-GTP effector output (left branch, red) while simultaneously enhancing Gβγ signaling (right branch, teal). Both branches converge on net inhibitory synapse regulation.
+      <strong>Panel B — Circuit &amp; Disease Relevance:</strong> PHF24 loss (via null mutation or endogenous retroviral insertion) reduces inhibitory neuron/synapse density and shifts excitatory/inhibitory balance; these converge on increased seizure susceptibility, behavioural alterations, and cognitive deficits in animal models — a phenotypic pattern that overlaps with Alzheimer's disease circuit pathology.
+      A dashed cross-panel connector illustrates how synaptic regulation in Panel A feeds circuit-level consequences in Panel B.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Inhibitory Signaling Hub</h3>
+        <p>PHF24/GINIP is strongly associated with inhibitory neurotransmission and network stability. It is enriched in inhibitory interneuron populations, localises to presynaptic terminals and synaptic membranes, and plays a regulatory role within the GABA<sub>B</sub>/GPCR-Gαi/Gβγ signaling axis.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Gαi-GTP Modulator</h3>
+        <p>Structural and molecular studies show that GINIP binds active Gαi-GTP, dampening its effector signaling while enhancing downstream Gβγ signaling. This dual modulation fine-tunes the balance of inhibitory GPCR output at the synapse.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Seizure Susceptibility &amp; Circuit Vulnerability</h3>
+        <p>In Noda epileptic rats an endogenous retrovirus insertion in <em>Phf24</em> nearly abolishes PHF24 protein and is linked to seizure susceptibility. Phf24-null rats show increased susceptibility to chemically induced seizures, kindling, age-related hyperactivity, emotional alterations, and cognitive deficits in the Morris water maze.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Complex Morphological Phenotypes</h3>
+        <p>Morphological findings are model-dependent and potentially confounded by seizure history. Noda epileptic rats showed decreased total neurons but increased inhibitory neurons/synapses; Phf24-null rats showed decreased inhibitory neurons/synapses. Some changes likely reflect secondary consequences of repeated hyperexcitability rather than direct PHF24 loss.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mechanistic Overlap with Alzheimer's Disease</h3>
+        <p>PHF24's role in GABAergic signaling, inhibitory interneuron function, synaptic balance, network hyperexcitability, and cognitive circuit maintenance overlaps with key Alzheimer's disease endophenotypes — making it a plausible circuit-level candidate even without a direct AD genetic or proteomic link.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Broader Neurodegenerative Signals</h3>
+        <p>PHF24 was identified among nuclear-associated pS129-specific α-synuclein interactors, connecting it to mixed proteinopathy contexts. Separately, stroke proteomics found altered Phf24 expression after ischemic injury. Neither finding establishes an Alzheimer's-specific role, but both situate PHF24 within injury-response and neurodegeneration-adjacent biology.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Treat PHF24 as mechanism-adjacent, not validated.</strong> Current evidence positions PHF24 as a plausible candidate through shared circuit-level biology with AD — not as a validated Alzheimer's gene, biomarker, or therapeutic target. Communicate this distinction clearly in all research contexts.</div>
+      </li>
+      <li>
+        <div><strong>Prioritise excitation/inhibition balance studies.</strong> The most informative next experiments would test whether PHF24 modulation can restore E/I balance, reduce network hyperexcitability, protect inhibitory interneurons, or improve cognitive circuit function specifically in Alzheimer's disease models.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate the full GABA<sub>B</sub>/Gαi/Gβγ signaling axis.</strong> Assess PHF24/GINIP effects on seizure threshold, GPCR-Gαi/Gβγ signaling balance, synaptic stoichiometry, inhibitory interneuron survival, and cognition using AD-relevant biological systems.</div>
+      </li>
+      <li>
+        <div><strong>Do not assume canonical AD mechanism involvement.</strong> There is no current evidence that PHF24 directly modifies amyloid-β, tau, or Alzheimer's-specific neuroinflammation. Avoid extrapolating findings from seizure models to amyloid or tau pathways without direct experimental demonstration.</div>
+      </li>
+      <li>
+        <div><strong>Frame therapeutic potential as circuit-level modulation.</strong> Any PHF24-directed strategy should be positioned as stabilising inhibitory signaling and reducing hyperexcitability — a complementary approach to amyloid/tau targeting, not a substitute for it.</div>
+      </li>
+      <li>
+        <div><strong>Validate carefully given model complexity.</strong> Morphological and behavioural phenotypes in Phf24-null and Noda epileptic rats may include secondary consequences of repeated seizures. Any therapeutic strategy — activation, replacement, inhibition, or pathway modulation — requires rigorous mechanistic validation before clinical translation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — PHF24 / GINIP in Alzheimer's Disease</span>
+      <p>
+        PHF24/GINIP occupies an <strong>interesting but indirect</strong> position in the Alzheimer's disease target landscape. Its core biology — modulating Gαi-GTP and Gβγ signaling downstream of inhibitory GPCRs, supporting inhibitory interneuron function, and maintaining synaptic excitation/inhibition balance — is highly relevant to the <strong>circuit-level dysfunctions</strong> that characterise Alzheimer's disease. Animal models lacking PHF24 recapitulate several AD-relevant endophenotypes: seizure susceptibility, network hyperexcitability, synaptic imbalance, and cognitive decline. However, <strong>no direct evidence links PHF24 to amyloid-β, tau, or Alzheimer's-specific neuroinflammatory mechanisms</strong>. Its candidacy therefore rests on biological analogy rather than genetic or proteomic validation in AD. The most productive path forward is mechanistic investigation of <strong>PHF24 as a circuit stabiliser</strong> — asking whether its modulation can reduce E/I imbalance and network hyperexcitability in AD models — while rigorously distinguishing primary PHF24 biology from secondary seizure-related confounds.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PHF24 / GINIP &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

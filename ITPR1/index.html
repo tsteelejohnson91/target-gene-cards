@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITPR1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3e8ff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0320 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153, 27, 27, 0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-top: 14px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-color: var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--mid);
+    background: var(--light);
+    border-radius: 50%;
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0320 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner p {
+    font-size: 1rem;
+    opacity: 0.92;
+  }
+
+  .verdict-banner strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ITPR1 &nbsp;|&nbsp; Inositol 1,4,5-Trisphosphate Receptor Type 1</span>
+    <span class="chip chip-danger">⚠ Narrow Therapeutic Window — LOF &amp; GOF Both Pathogenic</span>
+  </div>
+  <h1>ITPR1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Therapeutic Caution:</span>
+      Human ITPR1 loss-of-function (haploinsufficiency, deletions) and gain-of-function/sensitized variants are both
+      pathogenic, causing cerebellar ataxia (SCA15/SCA29), Gillespie syndrome, intellectual disability, and other
+      neurodevelopmental disorders. Global inhibition or activation strategies carry inherent neurological risk;
+      therapeutic approaches must aim for precise normalization of pathological signaling.
+    </div>
+
+    <p>
+      <em>ITPR1</em> encodes <strong>IP3R1</strong>, an endoplasmic-reticulum calcium-release channel that serves as
+      a central regulator of intracellular Ca²⁺ signaling. The gene's broad biological remit spans ER-to-cytosol
+      calcium release, ER–mitochondria calcium transfer, mitochondrial bioenergetics, oxidative stress,
+      autophagy/mitophagy, ER stress, apoptosis/pyroptosis, synaptic signaling, neuronal excitability, vascular
+      function, and immune-cell activation.
+    </p>
+    <p>
+      ITPR1's relevance to Alzheimer's disease is <em>mixed but mechanistically compelling</em>. It is not established
+      as a canonical AD gene or validated AD therapeutic target; however, it converges on mechanisms that are central
+      to AD pathophysiology: calcium dyshomeostasis, mitochondrial dysfunction, oxidative stress, neuroinflammation,
+      impaired autophagy/proteostasis, synaptic dysfunction, vascular dysfunction, and neuronal death. The strongest
+      AD-specific or AD-adjacent signals arise from monocyte-regulated AD resilience/inflammation analyses, platelet
+      protein panels in MCI/AD, rare-variant neuroimaging endophenotypes, AD-versus-vascular-dementia transcriptomic
+      classification, calcium-signaling hubs shared between COVID-19 and AD, predicted targets in betanin and
+      curcumin/piperine network studies, and IP3R-related calcium dysregulation in Aβ42-challenged astrocytes
+      where nobiletin reduced cytotoxicity, ROS, inflammation, and calcium abnormalities.
+    </p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Upstream Activation & IP3R1 Channel — nodes 1-4
+        PANEL B (top-right): Neuronal/Synaptic Outcomes — nodes 5-8
+        PANEL C (bottom-right): Mitochondrial & Inflammatory Outcomes — nodes 9-13
+        Shared outcome node: node 14 (AD-Relevant Pathology)
+        Total planned: 14 nodes — within limit.
+      -->
+      <svg viewBox="0 0 940 500" width="900" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream & Channel (x:10, y:30, w:260, h:440) -->
+        <rect x="10" y="30" width="260" height="440" rx="12" fill="#f3e8ff" fill-opacity="0.55" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="140" y="52" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="0.12em" fill="#3b0764" text-transform="uppercase">A · UPSTREAM ACTIVATION</text>
+
+        <!-- Node 1: GPCR/mGluR/PLC -->
+        <rect x="40" y="65" width="160" height="44" rx="7" fill="#7c3aed" fill-opacity="0.18" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="120" y="83" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">GPCR / mGluR</text>
+        <text x="120" y="97" text-anchor="middle" font-size="9.5" fill="#3b0764">PLC activation → IP3</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="120" y1="109" x2="120" y2="133" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 2: IP3R1 Channel (ER membrane) -->
+        <rect x="30" y="134" width="180" height="50" rx="7" fill="#3b0764" fill-opacity="0.82" stroke="#7c3aed" stroke-width="1.8"/>
+        <text x="120" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">IP3R1 / ITPR1</text>
+        <text x="120" y="171" text-anchor="middle" font-size="9.5" fill="#e9d5ff">ER Ca²⁺-release channel</text>
+
+        <!-- Arrow 2→3 -->
+        <line x1="120" y1="184" x2="120" y2="208" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Cytosolic Ca2+ elevation -->
+        <rect x="40" y="209" width="160" height="44" rx="7" fill="#7c3aed" fill-opacity="0.18" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="120" y="227" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Cytosolic Ca²⁺ ↑</text>
+        <text x="120" y="241" text-anchor="middle" font-size="9.5" fill="#3b0764">ER → cytosol release</text>
+
+        <!-- Arrow 3→4 -->
+        <line x1="120" y1="253" x2="120" y2="277" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node 4: IP3R1–GRP75–VDAC1 MAM -->
+        <rect x="28" y="278" width="184" height="50" rx="7" fill="#7c3aed" fill-opacity="0.26" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="120" y="298" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">IP3R1–GRP75–VDAC1</text>
+        <text x="120" y="313" text-anchor="middle" font-size="9" fill="#3b0764">ER–Mito contact (MAM)</text>
+
+        <!-- Arrow 4→ branches described below -->
+
+        <!-- PANEL B: Synaptic / Neuronal (x:290, y:30, w:295, h:215) -->
+        <rect x="290" y="30" width="295" height="215" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="437" y="52" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="0.12em" fill="#0f766e">B · SYNAPTIC &amp; NEURONAL</text>
+
+        <!-- Node 5: Dendritic Ca2+ / Spine -->
+        <rect x="305" y="65" width="126" height="44" rx="7" fill="#0f766e" fill-opacity="0.14" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="368" y="83" text-anchor="middle" font-size="10" font-weight="700" fill="#0f4c43">Dendritic Ca²⁺</text>
+        <text x="368" y="97" text-anchor="middle" font-size="9" fill="#0f4c43">Spine maintenance</text>
+
+        <!-- Node 6: BDNF/AMPAR/Homer -->
+        <rect x="447" y="65" width="126" height="44" rx="7" fill="#0f766e" fill-opacity="0.14" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="510" y="83" text-anchor="middle" font-size="10" font-weight="700" fill="#0f4c43">BDNF / AMPAR</text>
+        <text x="510" y="97" text-anchor="middle" font-size="9" fill="#0f4c43">Homer / mGluR–IP3R1</text>
+
+        <!-- Arrows 5→7 and 6→7 -->
+        <line x1="368" y1="109" x2="368" y2="153" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <line x1="510" y1="109" x2="510" y2="153" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 7: Synaptic Plasticity / LTP -->
+        <rect x="340" y="154" width="190" height="44" rx="7" fill="#0f766e" fill-opacity="0.22" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="435" y="172" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f4c43">Synaptic Plasticity / LTP</text>
+        <text x="435" y="186" text-anchor="middle" font-size="9" fill="#0f4c43">Purkinje &amp; hippocampal circuits</text>
+
+        <!-- Arrow 7→ shared outcome (described further below) -->
+
+        <!-- PANEL C: Mitochondrial & Inflammatory (x:290, y:265, w:295, h:205) -->
+        <rect x="290" y="265" width="295" height="205" rx="12" fill="#fef2f2" fill-opacity="0.70" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="437" y="285" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="0.12em" fill="#991b1b">C · MITOCHONDRIAL &amp; INFLAMMATORY</text>
+
+        <!-- Node 8: Mito Ca2+ overload -->
+        <rect x="305" y="298" width="126" height="44" rx="7" fill="#991b1b" fill-opacity="0.12" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="368" y="316" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">Mito Ca²⁺ Overload</text>
+        <text x="368" y="330" text-anchor="middle" font-size="9" fill="#7f1d1d">ΔΨm loss, ATP ↓</text>
+
+        <!-- Node 9: ROS / Oxidative stress -->
+        <rect x="447" y="298" width="126" height="44" rx="7" fill="#991b1b" fill-opacity="0.12" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="510" y="316" text-anchor="middle" font-size="10" font-weight="700" fill="#7f1d1d">ROS / Ox. Stress</text>
+        <text x="510" y="330" text-anchor="middle" font-size="9" fill="#7f1d1d">NF-κB, STING, Nrf2</text>
+
+        <!-- Arrows 8→10 and 9→10 -->
+        <line x1="368" y1="342" x2="368" y2="378" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+        <line x1="510" y1="342" x2="510" y2="378" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node 10: Apoptosis / Pyroptosis / Autophagy -->
+        <rect x="310" y="379" width="255" height="44" rx="7" fill="#991b1b" fill-opacity="0.20" stroke="#991b1b" stroke-width="1.4"/>
+        <text x="437" y="397" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7f1d1d">Apoptosis · Pyroptosis</text>
+        <text x="437" y="411" text-anchor="middle" font-size="9" fill="#7f1d1d">Impaired mitophagy / autophagy</text>
+
+        <!-- PANEL D: Shared AD Outcome (x:610, y:30, w:320, h:440) -->
+        <rect x="610" y="30" width="320" height="440" rx="12" fill="#fffbeb" fill-opacity="0.70" stroke="#b45309" stroke-width="1.5"/>
+        <text x="770" y="52" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="0.12em" fill="#b45309">D · AD-RELEVANT CONVERGENCE</text>
+
+        <!-- Node 11: Astrocyte IP3R / Aβ -->
+        <rect x="628" y="65" width="150" height="50" rx="7" fill="#b45309" fill-opacity="0.13" stroke="#b45309" stroke-width="1.3"/>
+        <text x="703" y="85" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">Astrocyte IP3R</text>
+        <text x="703" y="99" text-anchor="middle" font-size="9" fill="#78350f">Aβ42 → Ca²⁺ dysreg.</text>
+        <text x="703" y="111" text-anchor="middle" font-size="8.5" fill="#78350f">nobiletin / TLR4-NF-κB</text>
+
+        <!-- Node 12: Biomarker Signals -->
+        <rect x="795" y="65" width="126" height="50" rx="7" fill="#b45309" fill-opacity="0.13" stroke="#b45309" stroke-width="1.3"/>
+        <text x="858" y="85" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">Biomarker Signals</text>
+        <text x="858" y="99" text-anchor="middle" font-size="9" fill="#78350f">Platelet, monocyte</text>
+        <text x="858" y="111" text-anchor="middle" font-size="8.5" fill="#78350f">imaging endophenotypes</text>
+
+        <!-- Arrow 11→central and 12→central converge to node 13 -->
+        <line x1="703" y1="115" x2="703" y2="196" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-slate)"/>
+        <line x1="858" y1="115" x2="858" y2="155" stroke="#b45309" stroke-width="1.6"/>
+        <line x1="858" y1="155" x2="770" y2="155" stroke="#b45309" stroke-width="1.6"/>
+        <line x1="770" y1="155" x2="770" y2="196" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-slate)"/>
+
+        <!-- Node 13: AD Pathology Convergence -->
+        <rect x="628" y="197" width="284" height="56" rx="8" fill="#3b0764" fill-opacity="0.80" stroke="#7c3aed" stroke-width="1.8"/>
+        <text x="770" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">AD Pathology Node</text>
+        <text x="770" y="237" text-anchor="middle" font-size="9.5" fill="#e9d5ff">Ca²⁺ dysreg · Neuroinflammation</text>
+        <text x="770" y="251" text-anchor="middle" font-size="9" fill="#c4b5fd">Synaptic loss · Cognitive decline</text>
+
+        <!-- Node 14: Therapeutic / Diagnostic Considerations -->
+        <rect x="628" y="310" width="284" height="64" rx="8" fill="#475569" fill-opacity="0.13" stroke="#475569" stroke-width="1.4"/>
+        <text x="770" y="331" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e293b">Therapeutic Considerations</text>
+        <text x="770" y="347" text-anchor="middle" font-size="9" fill="#1e293b">Partial modulation, CA8/IRBIT,</text>
+        <text x="770" y="361" text-anchor="middle" font-size="9" fill="#1e293b">MAM targeting; rule out ITPR1-IgG</text>
+
+        <!-- Arrow 13→14 -->
+        <line x1="770" y1="253" x2="770" y2="310" stroke="#475569" stroke-width="1.6" marker-end="url(#arr-slate)"/>
+
+        <!-- Cross-panel connectors -->
+        <!-- Panel A node 3 → Panel B node 5 (horizontal at y≈231, entering Panel B top) -->
+        <!-- Route: from right edge of node 3 (x=200,y=231) → horizontal to x=305, y=231 → up to y=87 → into node 5 -->
+        <!-- Check: gutter between panel A right (x=270) and panel B left (x=290) is clear -->
+        <polyline points="200,231 270,231 270,87 305,87" stroke="#7c3aed" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+        <!-- Panel A node 3 → Panel C node 8 -->
+        <!-- From right edge of node 3 (x=200,y=231) down in gutter to y=320, then right to node 8 -->
+        <!-- but we already used the gutter at y=231. Use node 4 instead for mito path -->
+        <!-- From node 4 right edge (x=212,y=303) → gutter x=270 → right to panel C node 8 (x=305,y=320) -->
+        <polyline points="212,303 270,303 270,320 305,320" stroke="#991b1b" stroke-width="1.6" fill="none" marker-end="url(#arr-red)"/>
+
+        <!-- Panel A node 4 → Panel C node 9 (ROS branch) -->
+        <!-- route from node4 right edge at y=303 → x=270,y=303 already used for node8. Go at y=310 for node9 -->
+        <polyline points="212,310 265,310 265,320 447,320" stroke="#991b1b" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B node7 → Panel D node 13 (synaptic into convergence) -->
+        <!-- node7 right edge x=530, y=176. Gutter between panel B (x=585) and panel D (x=610). Route right then down -->
+        <polyline points="530,176 597,176 597,230 628,230" stroke="#0f766e" stroke-width="1.6" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C node10 → Panel D node 13 -->
+        <!-- node10 right edge x=565, y=401. Gutter x=597. Up to y=240 then right to panel D -->
+        <polyline points="565,401 597,401 597,245 628,245" stroke="#991b1b" stroke-width="1.6" fill="none" marker-end="url(#arr-red)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Activation &amp; IP3R1 Channel:</strong> GPCR/mGluR stimulation activates PLC, generating IP3 that gates the IP3R1 channel at the ER membrane, elevating cytosolic Ca²⁺ and engaging the IP3R1–GRP75–VDAC1 MAM complex.
+        <strong>Panel B — Synaptic &amp; Neuronal Branch:</strong> Ca²⁺ signals bifurcate into dendritic spine/Ca²⁺ maintenance and BDNF/AMPAR/Homer-mGluR signaling, converging on synaptic plasticity and LTP in hippocampal and cerebellar circuits.
+        <strong>Panel C — Mitochondrial &amp; Inflammatory Branch:</strong> MAM-mediated Ca²⁺ transfer drives mitochondrial overload (ATP deficit, ΔΨm loss) and oxidative stress (ROS, NF-κB/STING/Nrf2), converging on apoptosis, pyroptosis, and impaired mitophagy.
+        <strong>Panel D — AD-Relevant Convergence:</strong> Astrocytic IP3R signaling in Aβ42 contexts (nobiletin-sensitive) and biomarker signals (platelet, monocyte, imaging) feed into a central AD pathology node (Ca²⁺ dysregulation, neuroinflammation, synaptic loss), with downstream therapeutic and diagnostic considerations including precision modulation and ITPR1-IgG exclusion.
+        Dashed arrow: indirect/inferred route.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>ER–Mitochondria Calcium Transfer</h3>
+        <p>IP3R1 operates at ER–mitochondria contact sites via the <strong>IP3R1–GRP75–VDAC1</strong> complex. Dysregulated ITPR1 activity drives mitochondrial Ca²⁺ overload, membrane depolarization, ATP deficits, ROS accumulation, impaired oxidative phosphorylation, and mitophagy disruption — all features of AD mitochondrial pathology.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Astrocytic &amp; Synaptic Relevance</h3>
+        <p>In Aβ42-challenged astrocytes, IP3R-driven calcium dysregulation, ROS, and TLR4/NF-κB inflammation were attenuated by <strong>nobiletin</strong>. Separately, ITPR1 underlies hippocampal dendritic Ca²⁺ signals, BDNF/AMPAR trafficking, Homer/mGluR signaling, and synaptic plasticity — processes that are among the strongest correlates of cognitive decline in AD.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>AD-Adjacent Biomarker Signals</h3>
+        <p>The most specific AD signals include ITPR1 as a <strong>monocyte-linked AD resilience/inflammation gene</strong>; ITPR1/2 in a platelet protein panel for MCI/AD; rare ITPR1 variants linked to AD neuroimaging endophenotypes; a key AD-vs.-vascular-dementia transcriptomic marker; and a calcium-signaling hub shared between COVID-19 and AD.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Narrow Therapeutic Window</h3>
+        <p>ITPR1 deletions, haploinsufficiency, missense variants, and gain-of-function alleles all cause neurological disease: <strong>SCA15, SCA29, Gillespie syndrome</strong>, congenital ataxia, cerebellar hypoplasia, tremor, dystonia, and intellectual disability. Both reduced and excessive ITPR1 function are pathogenic, mandating normalization rather than blanket inhibition or activation.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Autophagy &amp; Proteostasis Link</h3>
+        <p>ITPR1 is repeatedly connected to <strong>autophagy/mitophagy regulation</strong> across cancer, inflammatory, muscle, retinal, and neurodegeneration-adjacent models. In AD, where impaired autophagy-lysosomal clearance contributes to amyloid/tau accumulation, calcium-dependent autophagic flux via ITPR1 represents a plausible mechanistic bridge to disease modification.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Autoimmune Mimic &amp; Diagnostic Alert</h3>
+        <p>ITPR1 autoantibody (ITPR1-IgG/anti-Sj) disease can mimic AD with <strong>rapidly progressive cognitive decline, hallucinations, limbic features, inflammatory CSF, and even AD-like amyloid/tau biomarkers</strong>. Atypical or rapidly progressive presentations warrant neural autoantibody testing, where immunotherapy — not AD-directed treatment — may be indicated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div>
+          <span class="takeaway-lead">Treat ITPR1 as a pathway-level emerging target, not a validated AD drug target.</span>
+          The strongest rationale is mechanistic convergence on calcium dyshomeostasis, mitochondrial dysfunction, oxidative stress, autophagy failure, neuroinflammation, synaptic dysfunction, and neuronal death — not direct genetic or clinical AD validation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Prioritize AD-specific experimental validation.</span>
+          Key experiments should test whether ITPR1 expression, localization, phosphorylation, splicing, protein interactions, or channel activity are altered in AD neurons, astrocytes, microglia, endothelial cells, and brain regions most vulnerable to AD (hippocampus, entorhinal cortex, cortex).
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Distinguish cell-type-specific roles.</span>
+          ITPR1 likely has distinct effects in neurons (calcium overload), astrocytes (inflammatory activation), monocytes/microglia (immune modulation), and endothelial cells (BBB dysfunction). AD studies must resolve which cell compartment drives pathological signaling.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Avoid assuming global inhibition is beneficial.</span>
+          Human ITPR1 loss-of-function and haploinsufficiency cause severe neurological disease, and gain-of-function variants are equally harmful. Therapeutic strategies must aim for normalization of pathological signaling, not blanket blockade or activation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Explore precision-modulation strategies.</span>
+          Candidate approaches include partial/allosteric IP3R1 modulation, stabilizing CA8- or IRBIT-like endogenous inhibitory interfaces, targeting the IP3R1–GRP75–VDAC1 MAM complex, correcting abnormal phosphorylation/proteolysis/splicing, and addressing downstream MCU, calpain, ROS, NF-κB, STAT3, ER stress, or autophagy effectors.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Investigate ITPR1 as a biomarker in defined AD subgroups.</span>
+          Priority angles include monocyte inflammatory/resilience endotypes, platelet proteomic MCI/AD signatures, rare-variant neuroimaging endophenotypes, AD-versus-vascular-dementia transcriptomic classifiers, and AD/COVID-19 calcium-signaling hub networks.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Include autoimmune differential diagnosis in atypical presentations.</span>
+          Rapidly progressive, hallucination-associated, limbic, or inflammatory-CSF cognitive decline — even with AD-like amyloid/tau biomarkers — should prompt testing for ITPR1-IgG/anti-Sj, where immunotherapy is more relevant than AD-directed treatment.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Evaluate therapeutic endpoints beyond amyloid and tau.</span>
+          Because ITPR1 acts through calcium, mitochondrial, inflammatory, synaptic, and autophagy pathways, AD model studies should measure ER Ca²⁺ release, mitochondrial Ca²⁺ overload, ATP production, ROS, mitophagy/autophagic flux, synaptic plasticity, neuronal excitability, glial activation, BBB integrity, and cognition as primary readouts.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — ITPR1 in Alzheimer's Disease</span>
+      <p>
+        ITPR1/IP3R1 is a <strong>biologically plausible but not yet validated AD therapeutic target</strong>.
+        Its candidacy rests on deep mechanistic convergence: it is a master regulator of the same calcium,
+        mitochondrial, oxidative, synaptic, autophagic, and neuroinflammatory processes that are disrupted
+        in AD. <strong>AD-specific genetic and clinical evidence exists but remains sparse</strong> —
+        strongest in monocyte resilience/inflammation analyses, platelet proteomics, rare-variant neuroimaging
+        endophenotypes, and astrocytic Aβ42 calcium models. The most defensible hypothesis is that
+        <strong>pathological ITPR1 signaling amplifies AD progression</strong> by disrupting ER–mitochondria
+        calcium homeostasis, oxidative and inflammatory stress, autophagy/proteostasis, and synaptic
+        stability. However, <strong>the narrow therapeutic window defined by human genetics</strong> —
+        where both loss and gain of ITPR1 function cause neurological disease — demands precision
+        modulation strategies and rigorous disease-context-specific validation before clinical translation.
+        An often-overlooked but immediately clinically actionable implication is that
+        <strong>ITPR1-IgG autoimmune encephalopathy can closely mimic AD</strong>, warranting inclusion
+        in the differential diagnosis of atypical or rapidly progressive cognitive decline.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ITPR1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

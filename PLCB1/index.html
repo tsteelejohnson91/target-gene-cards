@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLCB1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b0764;
+    --mid: #7c3aed;
+    --light: #f3eeff;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --blue: #1d4ed8;
+    --blue-light: #eff6ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0120 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,100,100,0.4);
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  p { margin-bottom: 1em; }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+  .card-slate { background: var(--neutral-bg); border-color: var(--neutral-text); }
+  .card-slate h3 { color: #475569; }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: takeaway; padding: 0; }
+  .takeaways li {
+    counter-increment: takeaway;
+    padding: 14px 0 14px 52px;
+    border-bottom: 1px solid var(--neutral-border);
+    position: relative;
+    font-size: 0.95rem;
+  }
+  .takeaways li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .takeaways li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f0120 100%);
+    border-radius: 14px;
+    padding: 38px 36px;
+    color: #fff;
+  }
+  .verdict p { font-size: 1.02rem; line-height: 1.8; margin: 0; opacity: 0.95; }
+  .verdict strong { color: #d8b4fe; }
+  .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.08rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+    color: #e9d5ff;
+  }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PLCB1 &nbsp;|&nbsp; Phospholipase C Beta 1</span>
+    <span class="chip chip-danger">⚠ Hyperexcitability / Seizure Risk</span>
+  </div>
+  <h1>PLCB1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Safety Caveat:</strong> PLCB1 loss-of-function is associated with severe epilepsy, developmental epileptic encephalopathy, and network hyperexcitability. Because AD patients already carry elevated seizure risk, broad inhibition of PLCB1 could destabilize neural circuits — therapeutic direction must be precisely defined before advancing any modulation strategy.
+    </div>
+    <p>PLCB1 encodes phospholipase C beta 1, a Gq/GPCR-linked phosphoinositide signaling enzyme that hydrolyzes PIP2 to generate IP3 and diacylglycerol (DAG), thereby regulating intracellular Ca²⁺ release, DAG/PKC signaling, receptor-coupled neuronal excitability, synaptic plasticity, nuclear signaling, and transcriptional/cell-state responses.</p>
+    <p>Across the evidence surveyed, PLCB1 is most relevant to Alzheimer's disease (AD) through calcium dyshomeostasis, glutamatergic and cholinergic synaptic signaling, hippocampal/cortical network function, neuroinflammation, lipid/phosphoinositide signaling, oxidative and metabolic stress, and disease-stage-associated neuronal expression.</p>
+    <p>The strongest direct AD evidence includes: Aβ42 oligomers upregulating PLCB1 in SH-SY5Y neuronal cells; PLCB1 overexpression reproducing Aβ-induced calcium overload; PLCB1 knockdown reducing Aβ42-induced calcium overload; and elevated PLCB1 expression in 5×FAD AD-model mouse brain. Computational studies further identify PLCB1 as a hub gene correlated with Braak stage, a shared AD–intracranial aneurysm hub gene, and a SNP-level contributor to MCI/AD classification. Overall, PLCB1 is best characterized as a mechanistically plausible and increasingly prioritized AD signaling node — a candidate therapeutic target rather than a clinically validated disease-modifying target.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" aria-label="PLCB1 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Triggers -->
+        <rect x="10" y="10" width="210" height="480" rx="12" fill="#f3eeff" stroke="#7c3aed" stroke-width="1.2" opacity="0.55"/>
+        <text x="115" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#3b0764" letter-spacing="1">UPSTREAM TRIGGERS</text>
+
+        <!-- Node 1: Aβ42 Oligomers -->
+        <rect x="30" y="42" width="170" height="44" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="115" y="60" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Aβ42 Oligomers</text>
+        <text x="115" y="76" text-anchor="middle" font-size="9.5" fill="#3b0764">(AD stimulus)</text>
+
+        <!-- Node 2: mGluR5 / Gq -->
+        <rect x="30" y="112" width="170" height="44" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="115" y="130" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">mGluR5 / Gq GPCR</text>
+        <text x="115" y="146" text-anchor="middle" font-size="9.5" fill="#3b0764">Glutamatergic input</text>
+
+        <!-- Node 3: Muscarinic / M1 -->
+        <rect x="30" y="182" width="170" height="44" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.3"/>
+        <text x="115" y="200" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3b0764">Muscarinic M1 / Gq</text>
+        <text x="115" y="216" text-anchor="middle" font-size="9.5" fill="#3b0764">Cholinergic input</text>
+
+        <!-- Node 4: PLCB1 enzyme (central, panel A bottom) -->
+        <rect x="30" y="260" width="170" height="50" rx="7" fill="#7c3aed" stroke="#3b0764" stroke-width="1.5"/>
+        <text x="115" y="281" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">PLCB1</text>
+        <text x="115" y="298" text-anchor="middle" font-size="9.5" fill="#e9d5ff">PIP2 → IP3 + DAG</text>
+
+        <!-- Arrow: Aβ → PLCB1 (upregulates) -->
+        <line x1="115" y1="86" x2="115" y2="108" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow: mGluR5 → PLCB1 (with elbow, skip muscarinic row) -->
+        <line x1="115" y1="156" x2="115" y2="178" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Arrow: Muscarinic → PLCB1 -->
+        <line x1="115" y1="226" x2="115" y2="256" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- PANEL B: IP3 branch (Calcium arm) -->
+        <rect x="240" y="10" width="200" height="300" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" opacity="0.55"/>
+        <text x="340" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="1">IP3 / Ca²⁺ ARM</text>
+
+        <!-- Node 5: IP3 -->
+        <rect x="260" y="42" width="160" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="340" y="60" text-anchor="middle" font-size="10.5" font-weight="700" fill="#991b1b">IP3 Generation</text>
+        <text x="340" y="76" text-anchor="middle" font-size="9.5" fill="#7f1d1d">ER Ca²⁺ release</text>
+
+        <!-- Node 6: Ca2+ Overload -->
+        <rect x="260" y="118" width="160" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="340" y="137" text-anchor="middle" font-size="10.5" font-weight="700" fill="#991b1b">Ca²⁺ Overload</text>
+        <text x="340" y="153" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Dyshomeostasis</text>
+
+        <!-- Node 7: Synaptic Dysfunction -->
+        <rect x="260" y="194" width="160" height="44" rx="7" fill="#fee2e2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="340" y="213" text-anchor="middle" font-size="10.5" font-weight="700" fill="#991b1b">Synaptic Dysfunction</text>
+        <text x="340" y="229" text-anchor="middle" font-size="9.5" fill="#7f1d1d">Excitotoxicity / LTP↓</text>
+
+        <!-- Arrow IP3 → Ca2+ -->
+        <line x1="340" y1="86" x2="340" y2="114" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Arrow Ca2+ → Synaptic -->
+        <line x1="340" y1="162" x2="340" y2="190" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- PANEL C: DAG branch (PKC / Nuclear arm) -->
+        <rect x="460" y="10" width="200" height="300" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2" opacity="0.55"/>
+        <text x="560" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">DAG / PKC ARM</text>
+
+        <!-- Node 8: DAG -->
+        <rect x="480" y="42" width="160" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="560" y="60" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">DAG Generation</text>
+        <text x="560" y="76" text-anchor="middle" font-size="9.5" fill="#065f46">Membrane signaling</text>
+
+        <!-- Node 9: PKC activation -->
+        <rect x="480" y="118" width="160" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="560" y="137" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">PKC Activation</text>
+        <text x="560" y="153" text-anchor="middle" font-size="9.5" fill="#065f46">Phosphoinositide turn.</text>
+
+        <!-- Node 10: Nuclear PLCβ1 -->
+        <rect x="480" y="194" width="160" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="560" y="213" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Nuclear PLCβ1</text>
+        <text x="560" y="229" text-anchor="middle" font-size="9.5" fill="#065f46">Cyclin / ERK / cell-cycle</text>
+
+        <!-- Arrow DAG → PKC -->
+        <line x1="560" y1="86" x2="560" y2="114" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Arrow PKC → Nuclear -->
+        <line x1="560" y1="162" x2="560" y2="190" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL D: Downstream Outcomes -->
+        <rect x="680" y="10" width="228" height="480" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2" opacity="0.5"/>
+        <text x="794" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1">DOWNSTREAM OUTCOMES</text>
+
+        <!-- Node 11: Neurodegeneration -->
+        <rect x="698" y="42" width="192" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="794" y="61" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e3a8a">Neurodegeneration</text>
+        <text x="794" y="77" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Mitochondrial stress / death</text>
+
+        <!-- Node 12: Network Hyperexcitability -->
+        <rect x="698" y="118" width="192" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+        <text x="794" y="137" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">Network Hyperexcit.</text>
+        <text x="794" y="153" text-anchor="middle" font-size="9.5" fill="#92400e">Seizure risk / AD overlap</text>
+
+        <!-- Node 13: Neuroinflammation -->
+        <rect x="698" y="194" width="192" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.3"/>
+        <text x="794" y="213" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e3a8a">Neuroinflammation</text>
+        <text x="794" y="229" text-anchor="middle" font-size="9.5" fill="#1e3a8a">DAG / AA / lipid mediators</text>
+
+        <!-- Node 14: Cognitive Impairment -->
+        <rect x="698" y="270" width="192" height="44" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+        <text x="794" y="289" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e3a8a">Cognitive Impairment</text>
+        <text x="794" y="305" text-anchor="middle" font-size="9.5" fill="#1e3a8a">Hippocampal / cortical θ↓</text>
+
+        <!-- Node 15: Biomarker / Target -->
+        <rect x="698" y="346" width="192" height="44" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="794" y="365" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Biomarker Candidate</text>
+        <text x="794" y="381" text-anchor="middle" font-size="9.5" fill="#065f46">Braak correlation / hub gene</text>
+
+        <!-- CONNECTOR arrows: PLCB1 (panel A) → IP3 (panel B) via elbow in gutter -->
+        <!-- PLCB1 right edge x=200, IP3 left edge x=260 -->
+        <!-- PLCB1 center y=285, IP3 center y=64 -->
+        <!-- Route: from (200,285) right to (228,285) up to (228,64) right to (260,64) -->
+        <polyline points="200,285 228,285 228,64 260,64" fill="none" stroke="#991b1b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- PLCB1 → DAG (panel C) route through gutter between panel B and C -->
+        <!-- PLCB1 right edge 200, Panel B right edge 440, Panel C left 460, gutter center 450 -->
+        <!-- route: from (200,285) right to (450,285) up to (450,64) right to (480,64) -->
+        <polyline points="200,285 450,285 450,64 480,64" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Synaptic Dysfunction (340,238) → Neurodegeneration (698,64): route via gutter -->
+        <!-- Panel B right=440, Panel C left=460, gutter x=450; Panel D left=680, gutter x=670 -->
+        <!-- But must not pass through panel C boxes. Route: right along y=238 to gutter at 450, up to y=64, right to 698 -->
+        <!-- Check: Panel C boxes are at x=480+. Gutter at x=450 is clear. -->
+        <polyline points="420,216 450,216 450,360 670,360 670,64 698,64" fill="none" stroke="#991b1b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        <!-- PKC (560,140) → Neuroinflammation (698,216): route right via gutter x=670 -->
+        <!-- Panel C right edge=660, Panel D left=680, gutter x=670 -->
+        <polyline points="640,140 670,140 670,216 698,216" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Nuclear PLCβ1 (560,216) → Cognitive (794,292): route via gutter x=670 -->
+        <polyline points="640,216 670,216 670,292 698,292" fill="none" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Ca2+ Overload → Network Hyperexcit (right panel B right→gutter→panel D) -->
+        <polyline points="420,140 450,140 450,400 670,400 670,140 698,140" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+        <!-- Biomarker label connector: Synaptic Dysfunction → Biomarker candidate (panel D bottom) -->
+        <polyline points="420,238 450,238 450,430 670,430 670,368 698,368" fill="none" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+        <!-- Panel A: arrows Aβ→ mGluR and Aβ note already drawn above -->
+        <!-- Panel label note row at bottom of Panel A for context -->
+        <rect x="30" y="340" width="170" height="38" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+        <text x="115" y="356" text-anchor="middle" font-size="9.5" fill="#3b0764" font-weight="700">5×FAD Mouse Brain</text>
+        <text x="115" y="370" text-anchor="middle" font-size="9" fill="#3b0764">PLCB1 expression ↑</text>
+        <!-- Arrow from PLCB1 (panel A) down to the 5xFAD note -->
+        <line x1="115" y1="310" x2="115" y2="336" stroke="#7c3aed" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- Panel B: small badge for knockdown experiment -->
+        <rect x="260" y="270" width="160" height="32" rx="6" fill="#fee2e2" stroke="#991b1b" stroke-width="1"/>
+        <text x="340" y="283" text-anchor="middle" font-size="9.5" fill="#991b1b" font-weight="700">Knockdown ↓</text>
+        <text x="340" y="296" text-anchor="middle" font-size="9" fill="#7f1d1d">Ca²⁺ overload rescued</text>
+        <!-- Arrow synaptic→badge -->
+        <line x1="340" y1="238" x2="340" y2="266" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C bottom: Transcriptional badge -->
+        <rect x="480" y="270" width="160" height="32" rx="6" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+        <text x="560" y="283" text-anchor="middle" font-size="9.5" fill="#065f46" font-weight="700">Transcriptional Stress</text>
+        <text x="560" y="296" text-anchor="middle" font-size="9" fill="#065f46">Cell-cycle re-entry</text>
+        <line x1="560" y1="238" x2="560" y2="266" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel D bottom: Therapeutic badge -->
+        <rect x="698" y="420" width="192" height="38" rx="7" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+        <text x="794" y="436" text-anchor="middle" font-size="9.5" fill="#1e3a8a" font-weight="700">Therapeutic Window?</text>
+        <text x="794" y="450" text-anchor="middle" font-size="9" fill="#1e3a8a">Stage-specific modulation</text>
+        <line x1="794" y1="390" x2="794" y2="416" stroke="#1d4ed8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+      </svg>
+      <figcaption><strong>Panel A (purple) — Upstream Triggers:</strong> Aβ42 oligomers, mGluR5/Gq glutamatergic, and muscarinic M1/Gq cholinergic inputs converge on PLCB1, which catalyzes PIP2 hydrolysis. Elevated PLCB1 in 5×FAD mouse brain is noted at the bottom. <strong>Panel B (red) — IP3/Ca²⁺ Arm:</strong> IP3 drives ER calcium release leading to Ca²⁺ overload, synaptic dysfunction, and excitotoxicity; PLCB1 knockdown rescues this overload. <strong>Panel C (teal) — DAG/PKC Arm:</strong> DAG activates PKC and phosphoinositide turnover; nuclear PLCβ1 engages cyclin/ERK and cell-cycle programs linked to transcriptional stress. <strong>Panel D (blue) — Downstream Outcomes:</strong> The two arms converge on neurodegeneration, network hyperexcitability, neuroinflammation, cognitive impairment, and a biomarker/target profile correlated with Braak staging. Dashed arrows indicate multi-step indirect connections routed through gutters between panels.</figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Aβ–PLCB1–Ca²⁺ Overload Axis</h3>
+        <p>The strongest experimental AD evidence directly links Aβ42 oligomers to PLCB1 upregulation in SH-SY5Y neuronal cells. PLCB1 overexpression mimics Aβ-induced calcium overload, while PLCB1 knockdown alleviates it. Elevated PLCB1 in 5×FAD mouse brain strengthens in vivo disease relevance.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Calcium Hypothesis Alignment</h3>
+        <p>By generating IP3 and DAG, PLCB1 amplifies intracellular Ca²⁺ release and PKC-dependent signaling. Calcium dyshomeostasis is central to AD, contributing to synaptic dysfunction, altered excitability, mitochondrial stress, impaired plasticity, excitotoxicity, and neurodegeneration.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Computational Biomarker Prioritization</h3>
+        <p>PLCB1 was identified as one of five AD hub genes with high diagnostic value and correlation with Braak stages and neuronal expression. Additional models identify it among AD–intracranial aneurysm shared hub genes and as a SNP-level contributor to MCI/AD prediction classifiers.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Hippocampal &amp; Synaptic Vulnerability</h3>
+        <p>PLCB1 is placed downstream of mGluR/Gq, muscarinic cholinergic, and other GPCR pathways that regulate hippocampal memory, dentate gyrus fear memory, CA3 excitability, theta/gamma oscillations, TRPC channel trafficking, NMDA receptor modulation, and synaptic plasticity — all disrupted in AD.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Hyperexcitability &amp; Safety Concern</h3>
+        <p>PLCB1 disruption is associated with epilepsy, developmental epileptic encephalopathy, and altered hippocampal excitability. Because AD patients carry elevated seizure risk, PLCB1 modulation could either stabilize or destabilize circuits depending on direction, timing, and cell-type context.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Context-Dependent &amp; Adaptive Roles</h3>
+        <p>In some contexts PLCB1 supports adaptive survival: theanine and DHPG restored PLCβ1 expression after glutamate exposure and protected cortical neurons, suggesting neuroprotective roles. PLCB1 deficiency can impair memory and disrupt hippocampal signaling, arguing against simple global inhibition.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Nuclear &amp; Transcriptional Roles</h3>
+        <p>Nuclear PLCβ1 participates in nuclear phosphoinositide signaling, DAG/PKC/cyclin pathways, ERK-regulated activation, cell-cycle progression, and differentiation. This may be relevant to AD-related transcriptional stress and aberrant neuronal cell-cycle re-entry, though direct AD validation is lacking.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Unresolved Therapeutic Direction</h3>
+        <p>Reducing PLCB1 can protect against Aβ-induced calcium overload, yet PLCB1 loss impairs memory, causes severe neurological disease, and reduces adaptive signaling. Computationally nominated compounds (Noscapine, PX-316, TAK-901) remain hypothesis-generating leads without AD-model validation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat PLCB1 as a high-priority mechanistic candidate.</strong> Focus especially on the Aβ–PLCB1–IP3/Ca²⁺ overload axis, which has the strongest direct experimental AD support available in the current evidence base.</li>
+      <li><strong>Prioritize validation in AD-relevant human systems.</strong> Human AD brain tissue, iPSC-derived neurons and glia, organoids, and amyloid/tau mouse models should be used to determine whether PLCB1 expression, activity, isoform distribution, and localization change by disease stage and brain region.</li>
+      <li><strong>Clarify directionality before therapeutic development.</strong> Determine whether PLCB1 is pathologically increased, decreased, mislocalized, stabilized, or functionally uncoupled in hippocampus, cortex, microglia, astrocytes, vascular cells, and peripheral immune cells across AD stages.</li>
+      <li><strong>Test causal effects on core AD endpoints.</strong> PLCB1 modulation should be assessed for effects on Aβ-induced calcium overload, tau phosphorylation, amyloid burden, synaptic loss, mitochondrial dysfunction, neuroinflammation, neuronal survival, network hyperexcitability, and cognition.</li>
+      <li><strong>Avoid assuming global inhibition is beneficial.</strong> Although PLCB1 knockdown reduced Aβ42-induced calcium overload in neuronal cells, PLCB1 deficiency is linked to severe epilepsy, developmental encephalopathy, memory impairment, and abnormal network function. Broad inhibition could worsen cognition or excitability in AD patients.</li>
+      <li><strong>Explore precision modulation strategies.</strong> More plausible approaches include normalizing PLCB1-associated signaling, targeting specific receptor-coupled complexes (mGluR5–Gq–PLCB1 or muscarinic–Gq–PLCB1), modulating downstream IP3/Ca²⁺ versus DAG/PKC arms selectively, or targeting disease-specific PLCB1 localization or post-translational regulation.</li>
+      <li><strong>Investigate biomarker potential rigorously.</strong> PLCB1's reported diagnostic value, Braak-stage correlation, neuronal expression, AD–vascular hub-gene status, and SNP contribution to MCI/AD classifiers support evaluation as a biomarker of disease progression, neuronal vulnerability, or calcium-signaling dysfunction.</li>
+      <li><strong>Evaluate computationally nominated compounds with caution.</strong> Noscapine, PX-316, and TAK-901 were nominated based on PLCB1-related computational analyses but lack AD-model validation or a clear mechanism of PLCB1 modulation; they should be treated as hypothesis-generating leads only.</li>
+      <li><strong>Study PLCB1 in neurovascular and immune contexts.</strong> PLCB1's involvement in vascular remodeling, endothelial inflammation, innate immune signaling, and AD–intracranial aneurysm shared networks suggests it may link neurodegeneration with vascular dysfunction and neuroinflammation.</li>
+      <li><strong>Define the therapeutic window by disease stage.</strong> PLCB1 may have distinct roles in early synaptic compensation, Aβ-induced calcium toxicity, later neurodegeneration, and inflammatory/vascular remodeling. Stage-specific profiling will be essential before target prioritization decisions are made.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment —</div>
+      <p>PLCB1 is a <strong>biologically credible and increasingly prioritized AD-relevant signaling hub</strong> with direct experimental support for a central role in <strong>Aβ-induced calcium overload</strong> and strong computational prioritization as an AD-associated biomarker and target candidate. Its mechanism — Gq/GPCR-coupled PIP2 hydrolysis generating IP3 and DAG — positions it at the intersection of <strong>cholinergic, glutamatergic, calcium, lipid, and inflammatory signaling pathways</strong> that are all disrupted in AD. However, its therapeutic potential is <strong>promising but unproven</strong>: PLCB1 loss carries severe neurological consequences, adaptive protective roles exist, and effects are highly context-dependent by cell type, brain region, disease stage, and signaling compartment. Any intervention will require <strong>precise, context-specific modulation</strong> — targeting selective receptor–PLCB1 complexes or downstream effector arms — rather than blunt global activation or suppression. PLCB1 is best positioned currently as a <strong>Stage 2–3 mechanistic candidate</strong> warranting rigorous target validation in human AD systems before therapeutic advancement.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>PLCB1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only</p>
+</footer>
+
+</body>
+</html>

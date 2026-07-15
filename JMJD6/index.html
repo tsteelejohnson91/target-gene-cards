@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JMJD6 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #3b1f6e;
+    --mid: #6d3fc0;
+    --light: #f0ebfa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --dark-text: #1e293b;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--dark-text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #110a22 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e2d9f3;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(253,164,175,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 16px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-light); border-color: var(--blue); }
+  .card-blue h3 { color: var(--blue); }
+
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-text); }
+  .card-neutral h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 1.6rem;
+  }
+
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #110a22 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 36px 32px;
+    margin-bottom: 56px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.88);
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #d8b4fe;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c4b5fd;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: JMJD6 &nbsp;|&nbsp; Jumonji Domain Containing 6</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unresolved</span>
+  </div>
+  <h1>JMJD6 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Key Caveat:</strong> The therapeutic direction for JMJD6 in Alzheimer's disease remains unresolved. It is not established whether inhibition, activation, or pathway-specific modulation would be beneficial — effects may differ substantially by cell type and disease stage.
+    </div>
+
+    <p>JMJD6 is a multifunctional Fe(II)- and 2-oxoglutarate-dependent Jumonji C-domain oxygenase implicated in chromatin regulation, transcriptional pause release, RNA splicing, lysine hydroxylation, arginine methylation/demethylation-related biology, stress responses, immune signaling, ferroptosis resistance, Wnt signaling, vascular remodeling, and proteostasis.</p>
+
+    <p>The strongest direct Alzheimer's disease-relevant evidence comes from a human multi-omics and network modeling study that prioritized JMJD6 as a <em>neuron-specific predicted key driver</em> of Alzheimer's pathology and experimentally tested it in human iPSC-derived neurons. JMJD6 knockdown significantly altered amyloid-β and/or phosphorylated tau peptide levels, establishing it as a candidate upstream regulator of core AD molecular phenotypes. Knockdown RNA-seq further implicated REST and VGF as downstream targets — both relevant to neuronal resilience and synaptic biology.</p>
+
+    <p>Additional evidence is indirect but mechanistically rich. JMJD6 intersects with aging and senescence-associated chromatin changes, neuroinflammation and innate immune signaling, proteotoxic stress adaptation, RNA splicing and m6A-linked transcript regulation, ferroptosis and redox metabolism, hypoxia/iron sensing, Wnt/GSK3β signaling, vascular/endothelial dysfunction, DNA-damage responses, nucleolar/rDNA integrity, stress granule biology, and phagocytic mechanisms — all centrally relevant to AD.</p>
+
+    <p>Overall, JMJD6 is a promising but not yet validated Alzheimer's therapeutic target. Its case is supported by one direct neuronal AD network/perturbation study plus broad mechanistic convergence with AD biology. The supplied evidence does not, however, establish a clear therapeutic direction.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" width="880" height="470" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- Defs: arrowhead -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#6d3fc0"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 Z" fill="#1e40af"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: JMJD6 Core & Inputs -->
+          <rect x="10" y="10" width="210" height="478" rx="12" fill="#f0ebfa" fill-opacity="0.55" stroke="#6d3fc0" stroke-width="1.2"/>
+          <text x="115" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">PANEL A · JMJD6 CORE</text>
+
+          <!-- Node: Fe(II)/O2/2-OG -->
+          <rect x="30" y="40" width="170" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="115" y="56" text-anchor="middle" font-weight="700" fill="#3b1f6e">Fe(II) · O₂ · 2-OG</text>
+          <text x="115" y="70" text-anchor="middle" fill="#64748b">Catalytic cofactors</text>
+
+          <!-- Arrow down to JMJD6 -->
+          <line x1="115" y1="80" x2="115" y2="105" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: JMJD6 -->
+          <rect x="38" y="106" width="154" height="42" rx="7" fill="#6d3fc0" stroke="#3b1f6e" stroke-width="1.8"/>
+          <text x="115" y="123" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">JMJD6</text>
+          <text x="115" y="139" text-anchor="middle" font-size="10" fill="#e2d9f3">Jumonji C Oxygenase</text>
+
+          <!-- Arrow down to enzymatic outputs label area -->
+          <line x1="115" y1="148" x2="115" y2="172" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: Lys-OH / Arg-demeth -->
+          <rect x="28" y="173" width="174" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="115" y="189" text-anchor="middle" fill="#3b1f6e">Lys-Hydroxylation</text>
+          <text x="115" y="202" text-anchor="middle" fill="#3b1f6e">Arg-Demethylation</text>
+
+          <!-- Arrow to Chromatin -->
+          <line x1="115" y1="213" x2="115" y2="237" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: Chromatin / BRD4 -->
+          <rect x="28" y="238" width="174" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="115" y="254" text-anchor="middle" fill="#3b1f6e">Chromatin · BRD4</text>
+          <text x="115" y="268" text-anchor="middle" fill="#64748b">Txn Pause Release</text>
+
+          <!-- Arrow to RNA Splicing -->
+          <line x1="115" y1="278" x2="115" y2="302" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: RNA Splicing / U2AF65 -->
+          <rect x="28" y="303" width="174" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="115" y="319" text-anchor="middle" fill="#3b1f6e">RNA Splicing · U2AF65</text>
+          <text x="115" y="333" text-anchor="middle" fill="#64748b">m6A · Isoform Control</text>
+
+          <!-- Arrow to Stress Granules -->
+          <line x1="115" y1="343" x2="115" y2="367" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: Stress Granules / G3BP1 -->
+          <rect x="28" y="368" width="174" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="115" y="384" text-anchor="middle" fill="#3b1f6e">Stress Granules · G3BP1</text>
+          <text x="115" y="398" text-anchor="middle" fill="#64748b">Phase Separation / IDPs</text>
+
+          <!-- Arrow to DNA Damage -->
+          <line x1="115" y1="408" x2="115" y2="432" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: DNA Damage / rDNA -->
+          <rect x="28" y="433" width="174" height="40" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="115" y="449" text-anchor="middle" fill="#3b1f6e">DNA Damage · rDNA</text>
+          <text x="115" y="463" text-anchor="middle" fill="#64748b">Nucleolar Integrity</text>
+
+          <!-- PANEL B: Neuronal AD Biology -->
+          <rect x="233" y="10" width="226" height="310" rx="12" fill="#fdf4ff" fill-opacity="0.55" stroke="#a855f7" stroke-width="1.2"/>
+          <text x="346" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#3b1f6e" letter-spacing="1">PANEL B · NEURONAL AD</text>
+
+          <!-- Arrow from JMJD6 panel to AD panel (horizontal, row of JMJD6 node y≈127) -->
+          <line x1="192" y1="127" x2="233" y2="127" stroke="#6d3fc0" stroke-width="1.8" marker-end="url(#arr)"/>
+
+          <!-- Node: iPSC Neurons / Network -->
+          <rect x="250" y="110" width="192" height="42" rx="7" fill="#6d3fc0" fill-opacity="0.12" stroke="#6d3fc0" stroke-width="1.5"/>
+          <text x="346" y="127" text-anchor="middle" font-weight="700" fill="#3b1f6e">iPSC-Neuron Network</text>
+          <text x="346" y="142" text-anchor="middle" fill="#64748b">JMJD6 Key Driver (AD)</text>
+
+          <!-- Arrow down -->
+          <line x1="346" y1="152" x2="346" y2="175" stroke="#6d3fc0" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Node: JMJD6 Knockdown -->
+          <rect x="250" y="176" width="192" height="38" rx="7" fill="#ffffff" stroke="#6d3fc0" stroke-width="1.3"/>
+          <text x="346" y="192" text-anchor="middle" fill="#3b1f6e">JMJD6 Knockdown</text>
+          <text x="346" y="207" text-anchor="middle" fill="#64748b">Human iPSC Neurons</text>
+
+          <!-- Branch: two arrows down-left and down-right -->
+          <line x1="316" y1="214" x2="284" y2="240" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="376" y1="214" x2="408" y2="240" stroke="#6d3fc0" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node: Aβ / p-Tau -->
+          <rect x="250" y="241" width="90" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="295" y="257" text-anchor="middle" fill="#991b1b">Aβ / p-Tau</text>
+          <text x="295" y="271" text-anchor="middle" fill="#64748b">Altered levels</text>
+
+          <!-- Node: REST / VGF -->
+          <rect x="352" y="241" width="90" height="38" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="397" y="257" text-anchor="middle" fill="#0f766e">REST · VGF</text>
+          <text x="397" y="271" text-anchor="middle" fill="#64748b">Neuronal resilience</text>
+
+          <!-- Converge arrows to Synaptic/Cognitive -->
+          <line x1="295" y1="279" x2="295" y2="305" stroke="#991b1b" stroke-width="1.3" marker-end="url(#arr-red)"/>
+          <line x1="397" y1="279" x2="397" y2="305" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+          <!-- Node: Synaptic / Cognitive -->
+          <rect x="250" y="306" width="192" height="38" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.3"/>
+          <text x="346" y="322" text-anchor="middle" fill="#334155">Synaptic Markers</text>
+          <text x="346" y="336" text-anchor="middle" fill="#64748b">Cognitive Phenotype</text>
+
+          <!-- PANEL C: Immune / Vascular / Redox -->
+          <rect x="233" y="334" width="226" height="154" rx="12" fill="#fef9f0" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+          <text x="346" y="353" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e" letter-spacing="1">PANEL C · IMMUNE · VASCULAR · REDOX</text>
+
+          <!-- Three side-by-side nodes -->
+          <rect x="243" y="363" width="60" height="44" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="273" y="380" text-anchor="middle" fill="#92400e">NF-κB</text>
+          <text x="273" y="393" text-anchor="middle" fill="#64748b">TLR/TRAF6</text>
+
+          <rect x="316" y="363" width="60" height="44" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="346" y="380" text-anchor="middle" fill="#92400e">VEGF/Flt1</text>
+          <text x="346" y="393" text-anchor="middle" fill="#64748b">Angiogenesis</text>
+
+          <rect x="389" y="363" width="60" height="44" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+          <text x="419" y="380" text-anchor="middle" fill="#92400e">GPX4/GSH</text>
+          <text x="419" y="393" text-anchor="middle" fill="#64748b">Ferroptosis</text>
+
+          <!-- Arrows from these three nodes converging to AD Relevance -->
+          <line x1="273" y1="407" x2="290" y2="435" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="346" y1="407" x2="346" y2="435" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+          <line x1="419" y1="407" x2="402" y2="435" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Node: AD Neuro-inflammation / BBB -->
+          <rect x="249" y="436" width="192" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+          <text x="345" y="452" text-anchor="middle" fill="#92400e">Neuroinflammation · BBB</text>
+          <text x="345" y="466" text-anchor="middle" fill="#64748b">Microglial · Vascular AD</text>
+
+          <!-- PANEL D: Proteostasis / Wnt / Senescence -->
+          <rect x="472" y="10" width="436" height="478" rx="12" fill="#eff6ff" fill-opacity="0.45" stroke="#1e40af" stroke-width="1.2"/>
+          <text x="690" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="1">PANEL D · PROTEOSTASIS · WNT · SENESCENCE · DRUGGABILITY</text>
+
+          <!-- Arrow from JMJD6 node in panel A to Panel D (horizontal) -->
+          <line x1="192" y1="238" x2="472" y2="238" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+          <!-- Node: HSF1 / JMJD6 / HSP70 -->
+          <rect x="487" y="42" width="176" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="575" y="58" text-anchor="middle" fill="#1e40af">HSF1 – JMJD6 – HSP70</text>
+          <text x="575" y="72" text-anchor="middle" fill="#64748b">Proteostasis Feedback</text>
+
+          <!-- Node: Wnt/GSK3β -->
+          <rect x="672" y="42" width="156" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="750" y="58" text-anchor="middle" fill="#1e40af">Wnt / GSK3β</text>
+          <text x="750" y="72" text-anchor="middle" fill="#64748b">β-catenin · Tau-P</text>
+
+          <!-- Arrows from both down to Aging/Senescence -->
+          <line x1="575" y1="82" x2="575" y2="110" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="750" y1="82" x2="750" y2="110" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+          <!-- Node: Aging / Senescence (Chromatin) -->
+          <rect x="487" y="111" width="176" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="575" y="127" text-anchor="middle" fill="#1e40af">Aging · Senescence</text>
+          <text x="575" y="141" text-anchor="middle" fill="#64748b">H4R3 · H3K79me3</text>
+
+          <!-- Node: Hypoxia / HIF / Iron -->
+          <rect x="672" y="111" width="156" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="750" y="127" text-anchor="middle" fill="#1e40af">Hypoxia · HIF · Iron</text>
+          <text x="750" y="141" text-anchor="middle" fill="#64748b">VHL · Vascular sensing</text>
+
+          <!-- Arrows down -->
+          <line x1="575" y1="151" x2="575" y2="175" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="750" y1="151" x2="750" y2="175" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+          <!-- Node: Glial / Neuronal State -->
+          <rect x="487" y="176" width="176" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="575" y="192" text-anchor="middle" fill="#1e40af">Glial · Neuronal State</text>
+          <text x="575" y="206" text-anchor="middle" fill="#64748b">Transcriptional Remodeling</text>
+
+          <!-- Node: cGAS-STING / IRF3 -->
+          <rect x="672" y="176" width="156" height="40" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="750" y="192" text-anchor="middle" fill="#1e40af">cGAS-STING · IRF3</text>
+          <text x="750" y="206" text-anchor="middle" fill="#64748b">Innate Immune / IFN</text>
+
+          <!-- Arrows converge to AD Convergence -->
+          <line x1="575" y1="216" x2="620" y2="250" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+          <line x1="750" y1="216" x2="706" y2="250" stroke="#1e40af" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+          <!-- Node: AD Convergence -->
+          <rect x="560" y="251" width="226" height="40" rx="7" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+          <text x="673" y="268" text-anchor="middle" font-weight="700" fill="#1e3a8a">AD Biology Convergence</text>
+          <text x="673" y="282" text-anchor="middle" fill="#1e40af">Epigenome · RNA · Redox · Immune</text>
+
+          <!-- Arrow down to Druggability -->
+          <line x1="673" y1="291" x2="673" y2="315" stroke="#1e40af" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- Node: Druggability -->
+          <rect x="560" y="316" width="226" height="42" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.3"/>
+          <text x="673" y="333" text-anchor="middle" fill="#1e40af">Druggable Target</text>
+          <text x="673" y="347" text-anchor="middle" fill="#64748b">JMJD6-IN-1 · iJMJD6 · SKLB325</text>
+
+          <!-- Arrow to Caution node -->
+          <line x1="673" y1="358" x2="673" y2="382" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Node: Context Dependency -->
+          <rect x="554" y="383" width="238" height="42" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="673" y="400" text-anchor="middle" font-weight="700" fill="#991b1b">Context-Dependent Effects</text>
+          <text x="673" y="415" text-anchor="middle" fill="#64748b">Cancer vs. Neuron biology differs</text>
+
+          <!-- Arrow to unresolved -->
+          <line x1="673" y1="425" x2="673" y2="449" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Node: Unresolved Direction -->
+          <rect x="562" y="450" width="222" height="38" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="673" y="466" text-anchor="middle" font-weight="700" fill="#991b1b">Direction Unresolved</text>
+          <text x="673" y="479" text-anchor="middle" fill="#64748b">Inhibit · Activate · Pathway-specific?</text>
+
+          <!-- small druggability note -->
+          <rect x="487" y="383" width="60" height="30" rx="5" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+          <text x="517" y="396" text-anchor="middle" font-size="9" fill="#1e3a8a">Brain</text>
+          <text x="517" y="408" text-anchor="middle" font-size="9" fill="#1e3a8a">Penetration?</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (purple, left):</strong> JMJD6 core biology — Fe(II)/O₂/2-OG cofactor requirements flowing into enzymatic outputs (Lys-hydroxylation, Arg-demethylation), chromatin/BRD4 interactions, RNA splicing, stress granule regulation, and DNA/rDNA maintenance.
+        <strong>Panel B (lavender, upper centre):</strong> Direct AD neuronal evidence — JMJD6 as iPSC-neuron key driver, with knockdown branching into altered Aβ/p-Tau levels and REST/VGF downstream effects, converging on synaptic and cognitive phenotype.
+        <strong>Panel C (amber, lower centre):</strong> Three parallel indirect AD-relevant axes — NF-κB/TLR immune signaling, VEGF/Flt1 vascular/angiogenic effects, and GPX4/glutathione ferroptosis resistance — converging on neuroinflammation and blood-brain barrier dysfunction.
+        <strong>Panel D (blue, right):</strong> Proteostasis (HSF1–JMJD6–HSP70), Wnt/GSK3β, aging/senescence chromatin, hypoxia/HIF/iron sensing, glial/neuronal state remodeling, and cGAS-STING innate immunity converge on an AD biology node, flowing through current druggability and terminating at an unresolved therapeutic direction — the major barrier to clinical translation.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Direct AD Neuronal Evidence</h3>
+        A human multi-omics/network study prioritized JMJD6 as a <em>neuron-specific key driver</em> of AD pathology. JMJD6 knockdown in human iPSC-derived neurons significantly altered amyloid-β and/or phosphorylated tau peptide levels, and RNA-seq implicated REST and VGF as downstream targets relevant to neuronal resilience.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Direction Unresolved</h3>
+        The text does not consistently specify whether knockdown reduced or increased pathological peptides. It cannot be concluded that JMJD6 should simply be inhibited in AD — inhibition, activation, stabilization, or pathway-specific modulation may each have distinct and context-dependent effects.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Proteostasis & HSF1 Circuit</h3>
+        A reported HSF1–JMJD6–HSP70 feedback circuit enhances adaptation to proteotoxic stress — highly relevant to AD, where amyloid-β and tau aggregation impose chronic proteostasis burden. However, supporting survival of dysfunctional cells could also be maladaptive.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Ferroptosis & Redox Biology</h3>
+        JMJD6 promotes ferroptosis resistance through GPX4, PPARγ, ATF4, SLC7A11, GCLM, ME1, and glutathione pathways in cancer. These are relevant to AD neuronal vulnerability, but cancer-style JMJD6 inhibition that promotes ferroptosis could be harmful in neurons.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Hypoxia, Iron & Vascular Dysfunction</h3>
+        JMJD6 catalytic activity depends on O₂, Fe(II), and 2-oxoglutarate. It regulates HIF-related pathways, VHL expression, VEGF/Flt1 splicing, and endothelial inflammatory injury — overlapping with AD vascular contributions, blood-brain barrier dysfunction, and impaired clearance.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Druggable but Translationally Immature</h3>
+        Reported modulators include JMJD6-IN-1, SKLB325, iJMJD6, WL12, compound 7p, A29, and BRD4/JMJD6 peptide disruptors. These are largely oncology or antiviral tools. Brain penetration, chronic CNS safety, and AD efficacy remain entirely unestablished.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat JMJD6 as hypothesis-generating, not validated.</strong> The strongest support is the human iPSC-neuron perturbation showing effects on amyloid-β and/or phosphorylated tau, but direct in vivo validation in AD models is absent.</li>
+      <li><strong>Define directionality first.</strong> Future studies must determine whether JMJD6 knockdown, overexpression, catalytic inhibition, or pathway-specific disruption reduces or worsens Aβ, p-tau, synaptic markers, neuronal survival, and inflammatory activation before any therapeutic direction is chosen.</li>
+      <li><strong>Prioritize cell-type-specific profiling in AD tissue.</strong> Measure JMJD6 expression, localization, isoforms, post-translational modifications, and catalytic activity across neurons, microglia, astrocytes, oligodendrocytes, endothelial cells, pericytes, and infiltrating immune cells at each stage of AD.</li>
+      <li><strong>Test the most plausible AD mechanisms experimentally.</strong> These include amyloid-β production/clearance, tau phosphorylation and aggregation, REST/VGF regulation, synaptophysin and synaptic function, HSF1/HSP70 proteostasis, GSK3β/Wnt signaling, interferon/cGAS-STING/NF-κB activation, ferroptosis/lipid peroxidation, GPX4 pathways, and blood-brain barrier function.</li>
+      <li><strong>Separate catalytic from non-catalytic functions.</strong> JMJD6 also has scaffold, RNA-binding, BRD4-interaction, chromatin-architecture, and extracellular functions. Active-site inhibitors may not block all disease-relevant actions.</li>
+      <li><strong>Do not assume cancer findings translate to AD neurons.</strong> In cancer, promoting ferroptosis and suppressing proliferation can be therapeutic; in AD neurons, increased ferroptosis, impaired proteostasis, or reduced DNA-damage tolerance could be actively harmful.</li>
+      <li><strong>Evaluate brain-penetrant, cell-selective modulators.</strong> Existing JMJD6 inhibitors need testing for blood-brain barrier penetration, selectivity over related 2-oxoglutarate oxygenases, neuronal and glial safety, and chronic dosing feasibility.</li>
+      <li><strong>Consider pathway-specific rather than global modulation.</strong> Targeted strategies could include modulating JMJD6-BRD4 interaction, JMJD6-U2AF65 splicing effects, JMJD6-G3BP1 stress granule regulation, or downstream Flt1/VEGF and inflammatory outputs.</li>
+      <li><strong>Include safety endpoints early.</strong> Because JMJD6 affects immune tolerance, development, vascular remodeling, p53/apoptosis, RNA processing, DNA repair, and proteostasis, AD studies should monitor neurotoxicity, immune dysregulation, vascular effects, hematopoietic effects, oncogenic risk, and systemic inflammation.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — JMJD6 in Alzheimer's Disease</span>
+      <p>
+        <strong>JMJD6 sits at a convergence point</strong> for AD-relevant neuronal network regulation, epigenetic and transcriptional control, RNA processing, neuroinflammation, ferroptosis and redox biology, hypoxia and vascular dysfunction, and proteostasis. Its claim to AD relevance is substantiated by <strong>one direct human neuronal perturbation study</strong> — combining predictive network modeling with iPSC-neuron knockdown affecting amyloid-β and/or phosphorylated tau — plus <strong>broad mechanistic overlap</strong> with virtually every major pathway implicated in AD pathophysiology. However, <strong>current evidence is insufficient</strong> to nominate broad JMJD6 inhibition or activation as an Alzheimer's therapy. The field must first resolve directionality, establish cell-type-specific roles in the AD brain, develop brain-penetrant modulators, and disentangle the enzyme's protective functions in neuronal homeostasis from its potentially deleterious roles in cancer-like stress adaptation. <strong>JMJD6 merits targeted, mechanistically driven investigation in AD models</strong>, approached with the caution warranted by its profound context-dependence.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  JMJD6 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

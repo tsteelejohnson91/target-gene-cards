@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHRS11 — Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-tint: #fef2f2;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,180,180,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-tint);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.96rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.79rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-tint);
+    border-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning {
+    background: var(--warning-tint);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-positive {
+    background: var(--positive-tint);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaways-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .take-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .take-body strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 38px 40px;
+    line-height: 1.75;
+  }
+
+  .verdict p {
+    margin: 0;
+    opacity: 0.92;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+    font-style: normal;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.77rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DHRS11 &nbsp;|&nbsp; Short-Chain Dehydrogenase/Reductase 11</span>
+    <span class="chip chip-danger">⚠ No validated AD link</span>
+  </div>
+  <h1>DHRS11 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Evidence Caveat</span>
+      DHRS11 has little to no direct support as an Alzheimer's disease gene, biomarker, or therapeutic target. Any AD-adjacent link is indirect, non-human, and involves a different gene (KLHL20). Treat DHRS11's AD relevance as speculative and hypothesis-generating only.
+    </div>
+
+    <p>DHRS11 is primarily characterized as a <strong>short-chain dehydrogenase/reductase enzyme</strong> with 17β-hydroxysteroid dehydrogenase activity. Its strongest evidence base relates to steroid metabolism — particularly production of active androgens — and to androgen receptor-driven cancers such as prostate cancer and luminal androgen receptor-positive triple-negative breast cancer (AR+ TNBC).</p>
+
+    <p>Its only AD-adjacent mention in the supplied evidence is indirect and non-human: a cross-kingdom miRNA prediction study named DHRS11 as a predicted <em>cattle</em> target involved in steroid biosynthesis, while the AD-associated human gene in that context was KLHL20, not DHRS11. Formal AD target-prioritization analyses instead identify proteins such as BIN1, GRN, RET, ACE, ICA1L, MAP1S, SLC20A2, and TOM1L2.</p>
+
+    <p>For neurodegenerative disease broadly, DHRS11 appears only as an exploratory candidate in ALS and possibly multiple sclerosis risk studies — not among prioritized AD targets.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 920 wide x 490 tall viewBox -->
+      <svg viewBox="0 0 920 490" width="880" height="462" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: DHRS11 Core Biology -->
+        <rect x="10" y="10" width="280" height="470" rx="12" ry="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="22" y="32" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2">PANEL A — CORE BIOLOGY</text>
+
+        <!-- Node 1: DHRS11 Enzyme -->
+        <rect x="60" y="44" width="160" height="44" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="140" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">DHRS11 Enzyme</text>
+        <text x="140" y="79" text-anchor="middle" font-size="9.5" fill="#93c5fd">17β-HSD / SDR family</text>
+
+        <!-- Arrow down -->
+        <line x1="140" y1="88" x2="140" y2="112" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 2: Steroid Metabolism -->
+        <rect x="60" y="112" width="160" height="42" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="140" y="130" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-weight="700">Steroid Metabolism</text>
+        <text x="140" y="146" text-anchor="middle" font-size="9.5" fill="#475569">Androgen activation</text>
+
+        <!-- Arrow down -->
+        <line x1="140" y1="154" x2="140" y2="178" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 3: Active Androgens -->
+        <rect x="60" y="178" width="160" height="42" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="140" y="196" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-weight="700">Active Androgens</text>
+        <text x="140" y="212" text-anchor="middle" font-size="9.5" fill="#475569">DHT / androgens ↑</text>
+
+        <!-- Arrow down -->
+        <line x1="140" y1="220" x2="140" y2="244" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node 4: Androgen Receptor -->
+        <rect x="60" y="244" width="160" height="42" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="140" y="262" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-weight="700">Androgen Receptor</text>
+        <text x="140" y="278" text-anchor="middle" font-size="9.5" fill="#475569">AR signaling activated</text>
+
+        <!-- Redox note -->
+        <rect x="40" y="360" width="200" height="42" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="140" y="378" text-anchor="middle" font-size="10" fill="#92400e" font-weight="700">Redox / Carbonyl Role</text>
+        <text x="140" y="394" text-anchor="middle" font-size="9.5" fill="#78350f">Methylglyoxal reduction</text>
+
+        <!-- Panel B: Cancer Context -->
+        <rect x="315" y="10" width="280" height="340" rx="12" ry="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="327" y="32" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1.2">PANEL B — CANCER CONTEXT</text>
+
+        <!-- Arrow from AR to Panel B: Prostate Cancer branch -->
+        <!-- Branch left: Prostate Cancer -->
+        <line x1="220" y1="265" x2="314" y2="265" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 5: Prostate Cancer -->
+        <rect x="325" y="46" width="130" height="42" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="390" y="64" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="700">Prostate Cancer</text>
+        <text x="390" y="80" text-anchor="middle" font-size="9.5" fill="#475569">AR-driven growth</text>
+
+        <!-- Node 6: AR+ TNBC -->
+        <rect x="465" y="46" width="120" height="42" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="525" y="64" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="700">AR+ TNBC</text>
+        <text x="525" y="80" text-anchor="middle" font-size="9.5" fill="#475569">Breast cancer subtype</text>
+
+        <!-- Arrows from Node 5 & 6 down to inhibitors -->
+        <line x1="390" y1="88" x2="390" y2="112" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="525" y1="88" x2="525" y2="112" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 7: Kobochromone A -->
+        <rect x="325" y="112" width="130" height="42" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="390" y="130" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="700">Kobochromone A</text>
+        <text x="390" y="146" text-anchor="middle" font-size="9.5" fill="#475569">DHRS11 inhibitor</text>
+
+        <!-- Node 8: WH23 Inhibitor -->
+        <rect x="465" y="112" width="120" height="42" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="525" y="130" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="700">WH23</text>
+        <text x="525" y="146" text-anchor="middle" font-size="9.5" fill="#475569">IC₅₀ = 37 nM</text>
+
+        <!-- Both arrows down to converge node -->
+        <line x1="390" y1="154" x2="390" y2="200" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="525" y1="154" x2="525" y2="200" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 9: AR Signaling Suppressed (converge) -->
+        <rect x="355" y="200" width="200" height="42" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="455" y="218" text-anchor="middle" font-size="10.5" fill="#7f1d1d" font-weight="700">AR Signaling Suppressed</text>
+        <text x="455" y="234" text-anchor="middle" font-size="9.5" fill="#475569">PI3K/AKT↓, proliferation↓</text>
+
+        <!-- Node 10: Drug Resistance context -->
+        <rect x="355" y="268" width="200" height="42" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+        <text x="455" y="286" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="700">Drug Resistance Role</text>
+        <text x="455" y="302" text-anchor="middle" font-size="9.5" fill="#475569">Cancer-specific only</text>
+
+        <line x1="455" y1="242" x2="455" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel C: Neuro / AD Context -->
+        <rect x="620" y="10" width="290" height="470" rx="12" ry="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="632" y="32" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">PANEL C — NEURO / AD CONTEXT</text>
+
+        <!-- Node 11: ALS Exploratory -->
+        <rect x="640" y="46" width="250" height="42" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="765" y="64" text-anchor="middle" font-size="10.5" fill="#134e4a" font-weight="700">ALS — Exploratory Signal</text>
+        <text x="765" y="80" text-anchor="middle" font-size="9.5" fill="#475569">Candidate; not prioritized</text>
+
+        <!-- Node 12: MS Risk -->
+        <rect x="640" y="112" width="250" height="42" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="765" y="130" text-anchor="middle" font-size="10.5" fill="#134e4a" font-weight="700">Multiple Sclerosis Risk</text>
+        <text x="765" y="146" text-anchor="middle" font-size="9.5" fill="#475569">Proteomic signal, weak</text>
+
+        <line x1="765" y1="88" x2="765" y2="112" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 13: AD — No Direct Link -->
+        <rect x="640" y="200" width="250" height="52" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="765" y="221" text-anchor="middle" font-size="10.5" fill="#134e4a" font-weight="700">Alzheimer's Disease</text>
+        <text x="765" y="237" text-anchor="middle" font-size="9.5" fill="#0f766e">NO direct mechanism</text>
+        <text x="765" y="251" text-anchor="middle" font-size="9" fill="#475569">No amyloid/tau/neuro evidence</text>
+
+        <line x1="765" y1="154" x2="765" y2="200" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 14: Hypothetical Pathway -->
+        <rect x="640" y="285" width="250" height="52" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+        <text x="765" y="306" text-anchor="middle" font-size="10.5" fill="#334155" font-weight="700">Hypothetical AD Bridge</text>
+        <text x="765" y="322" text-anchor="middle" font-size="9.5" fill="#475569">Neurosteroids / oxidative</text>
+        <text x="765" y="336" text-anchor="middle" font-size="9" fill="#64748b">stress — unconfirmed</text>
+
+        <line x1="765" y1="252" x2="765" y2="285" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- AD Prioritized genes note -->
+        <rect x="640" y="368" width="250" height="52" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="1.1"/>
+        <text x="765" y="389" text-anchor="middle" font-size="10" fill="#334155" font-weight="700">AD-Prioritized Genes</text>
+        <text x="765" y="405" text-anchor="middle" font-size="9" fill="#475569">BIN1, GRN, RET, ACE,</text>
+        <text x="765" y="419" text-anchor="middle" font-size="9" fill="#475569">ICA1L, MAP1S, TOM1L2…</text>
+
+        <!-- Cross-panel arrow: AR node → AD context panel (routed through gutter safely) -->
+        <!-- Arrow from Node 4 (Panel A, AR) pointing to Panel C header area — route through bottom -->
+        <!-- We skip a cross-panel arrow to avoid geometry violations; panels are self-contained -->
+
+        <!-- Dashed label: not established -->
+        <text x="700" y="450" text-anchor="middle" font-size="9" fill="#9b1c1c" font-style="italic">DHRS11 not in AD target lists</text>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue):</strong> DHRS11's core enzymatic biology — SDR/17β-HSD activity converting steroids to active androgens, driving AR signaling, with a separate redox/carbonyl reduction role (methylglyoxal). &nbsp;
+      <strong>Panel B (red):</strong> Cancer context — DHRS11 drives AR-dependent proliferation in prostate cancer and AR+ triple-negative breast cancer; two inhibitors (Kobochromone A and WH23, IC₅₀ 37 nM) converge on suppressing AR signaling and PI3K/AKT. &nbsp;
+      <strong>Panel C (teal):</strong> Neurodegenerative / AD context — DHRS11 has only weak, exploratory signals in ALS and MS; its link to Alzheimer's disease is absent (solid line) or purely hypothetical (dashed lines); formal AD target lists name other genes entirely.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Mechanism</h3>
+        <p>The evidence contains no demonstration that DHRS11 affects amyloid-β production, tau phosphorylation, synaptic function, neuroinflammation, microglial activation, neuronal survival, blood–brain barrier integrity, or cognition in any model system.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Only Hypothetical AD Relevance</h3>
+        <p>DHRS11's roles in steroid metabolism, redox/carbonyl metabolism, and methylglyoxal reduction <em>could theoretically</em> intersect with neurodegenerative mechanisms, but no supplied evidence confirms this in AD models or human AD tissue.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Chemically Tractable — In Cancer</h3>
+        <p>Kobochromone A and WH23 (IC₅₀ = 37 nM) are validated DHRS11 inhibitors that suppress androgen receptor signaling and PI3K/AKT activity in prostate cancer and AR+ TNBC models. This tractability does not translate to an AD therapeutic rationale.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cancer Evidence ≠ AD Benefit</h3>
+        <p>Evidence that DHRS11 inhibition affects androgen-driven proliferation or drug resistance in cancer does not demonstrate benefit in Alzheimer's disease. These are distinct biological contexts requiring independent validation.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Neurodegenerative Signals Are Peripheral</h3>
+        <p>DHRS11 was discussed as a possible ALS-related target and a possible multiple sclerosis risk-associated protein, but it was not prioritized in any AD-focused genetic, proteomic, or mechanistic study in the supplied evidence.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>AD Target Field Identifies Others</h3>
+        <p>Formal AD target-prioritization in the supplied text identifies BIN1, GRN, RET, ACE, ICA1L, MAP1S, SLC20A2, and TOM1L2 — not DHRS11. The non-human miRNA cross-kingdom study that mentioned DHRS11 linked the human AD signal to KLHL20, not DHRS11.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span class="take-num">1</span>
+        <span class="take-body"><strong>Do not classify DHRS11 as a validated AD target.</strong> The supplied evidence does not support DHRS11 as a validated or prioritized Alzheimer's disease therapeutic target. Any such classification would be unsupported by the current data.</span>
+      </li>
+      <li>
+        <span class="take-num">2</span>
+        <span class="take-body"><strong>Treat any DHRS11–AD connection as speculative.</strong> Hypotheses linking DHRS11 to AD via neurosteroid balance, oxidative stress, or carbonyl stress pathways are hypothesis-generating only and require experimental confirmation before informing drug discovery decisions.</span>
+      </li>
+      <li>
+        <span class="take-num">3</span>
+        <span class="take-body"><strong>Define the minimum evidentiary bar before AD pursuit.</strong> Key missing evidence includes: AD brain expression or protein changes, genetic association with AD risk, central nervous system target engagement, effects on amyloid/tau/neuroinflammation pathways, and efficacy in AD-relevant cellular or animal models.</span>
+      </li>
+      <li>
+        <span class="take-num">4</span>
+        <span class="take-body"><strong>Use DHRS11 inhibitors (KC-A, WH23) as exploratory research tools only.</strong> These compounds may be useful to probe whether DHRS11 modulation has any AD-relevant effect in appropriate model systems, but current evidence supports their relevance primarily in androgen-dependent cancers.</span>
+      </li>
+      <li>
+        <span class="take-num">5</span>
+        <span class="take-body"><strong>Position DHRS11 accurately in scientific communications.</strong> Based strictly on the supplied evidence, DHRS11 should be described as a steroid-metabolizing enzyme and cancer-relevant therapeutic target, with exploratory neurodegenerative signals outside AD — not as an Alzheimer's disease target.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — DHRS11 in Alzheimer's Disease</span>
+      <p>
+        Based strictly on the supplied evidence, <strong>DHRS11 is a steroid-metabolizing SDR-family enzyme</strong> whose primary relevance lies in <strong>androgen-dependent cancers</strong>, not in Alzheimer's disease. Its only AD-adjacent mention is indirect, non-human, and implicates a different gene (KLHL20). <strong>No direct AD mechanism has been established</strong> — there is no evidence connecting DHRS11 to amyloid, tau, neuroinflammation, or any other core AD pathology. While DHRS11 is chemically tractable (<strong>WH23 IC₅₀ = 37 nM</strong>), that tractability is validated only in cancer models. Exploratory signals in ALS and multiple sclerosis exist but are weak and unconfirmed. <strong>DHRS11 should not be advanced as an AD therapeutic target</strong> without substantially new and direct evidence in AD-relevant systems.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DHRS11 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

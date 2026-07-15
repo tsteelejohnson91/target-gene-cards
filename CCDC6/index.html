@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCDC6 — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 4px 14px;
+    color: #e2e8f0;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #e2e8f0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    margin-right: 6px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 22px 18px 14px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-size: 0.84rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+  .card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card p {
+    font-size: 0.91rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-color: var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-bg); border-color: var(--neutral-border); }
+  .card-neutral h3 { color: var(--neutral-text); }
+  .card-blue { background: #eff6ff; border-color: #3b82f6; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--dark);
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .takeaway-list li span {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .takeaway-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+  .verdict-banner p {
+    color: #e2e8f0;
+    margin-bottom: 0;
+  }
+  .verdict-banner b {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.76rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CCDC6 &nbsp;|&nbsp; Coiled-Coil Domain Containing 6</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Systemic Inhibition Risk</span>
+  </div>
+  <h1>CCDC6 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <div class="callout">
+      <span class="callout-label">⚠ Safety Caveat:</span>
+      Native CCDC6 plays roles in DNA repair, apoptosis, tumor suppression, PP2A regulation, and protein turnover. Systemic inhibition could impair genome maintenance or alter cancer risk; indiscriminate activation could dysregulate transcriptional and phosphorylation networks.
+    </div>
+    <p>CCDC6 has limited and mostly indirect support as an Alzheimer's disease (AD)-relevant gene. The strongest AD-specific evidence is genetic and functional but still preliminary: a 2021 Nature Genetics AD GWAS meta-analysis identified a new AD risk association near CCDC6 and prioritized it as a possible causal gene, while a 2026 <em>C. elegans</em> LOAD-gene functional study found that knockdown of the CCDC6 homolog <em>T09B9.4</em> reduced late-life degeneration of PVD neurons without altering overall lifespan.</p>
+    <p>These findings position CCDC6 as a candidate modifier of neuronal aging or AD risk, not as an established AD driver. The supplied text does not show that CCDC6 directly affects amyloid-β toxicity, tau pathology, synaptic function, neuroinflammation, cognition, or mammalian AD phenotypes. In the <em>C. elegans</em> Aβ model, the reported rescue of Aβ-induced neuronal degeneration involved <em>ech-2</em>, not <em>T09B9.4/CCDC6</em>.</p>
+    <p>Most CCDC6 literature is oncology-focused. CCDC6 is repeatedly described as a DNA damage response and homologous recombination factor, a regulator of apoptosis and protein stability, a CREB1 transcriptional repressor, a component of PP2A/proteasome regulation, and a recurrent fusion partner in oncogenic kinase fusions such as CCDC6-RET. These pathways overlap conceptually with AD-relevant biology—DNA damage, oxidative stress, ferroptosis, mitochondrial stress, proteostasis, phosphorylation control, and CREB signaling—but direct AD-specific mechanistic validation is lacking.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- PANEL A: Genetic / AD Nomination -->
+          <rect x="8" y="8" width="210" height="200" rx="12" fill="#e8f1f9" fill-opacity="0.7" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="18" y="26" font-family="Arial" font-size="8" font-weight="700" fill="#1e3a5f" letter-spacing="0.1em">A — AD NOMINATION</text>
+
+          <!-- Node A1: GWAS -->
+          <rect x="24" y="36" width="178" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="113" y="54" font-family="Arial" font-size="9.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">AD GWAS Meta-analysis</text>
+          <text x="113" y="68" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">Risk locus near CCDC6</text>
+
+          <!-- Arrow A1->A2 -->
+          <line x1="113" y1="78" x2="113" y2="97" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A2: Fine mapping -->
+          <rect x="24" y="97" width="178" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="113" y="115" font-family="Arial" font-size="9.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">Fine Mapping + eQTL</text>
+          <text x="113" y="129" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">CCDC6 prioritized as causal</text>
+
+          <!-- Arrow A2->A3 -->
+          <line x1="113" y1="139" x2="113" y2="158" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node A3: C. elegans -->
+          <rect x="24" y="158" width="178" height="42" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="113" y="176" font-family="Arial" font-size="9.5" font-weight="700" fill="#1e3a5f" text-anchor="middle">C. elegans T09B9.4 KD</text>
+          <text x="113" y="190" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">↓ PVD neuron degeneration</text>
+
+          <!-- PANEL B: Molecular Mechanism (branches) -->
+          <rect x="238" y="8" width="416" height="310" rx="12" fill="#e8f1f9" fill-opacity="0.45" stroke="#1e3a5f" stroke-width="1.4"/>
+          <text x="250" y="26" font-family="Arial" font-size="8" font-weight="700" fill="#1e3a5f" letter-spacing="0.1em">B — MOLECULAR MECHANISM (ONCOLOGY-BASED)</text>
+
+          <!-- Central CCDC6 node -->
+          <rect x="348" y="36" width="196" height="42" rx="7" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.3"/>
+          <text x="446" y="54" font-family="Arial" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle">CCDC6 Protein</text>
+          <text x="446" y="68" font-family="Georgia" font-size="8.5" fill="#93c5fd" text-anchor="middle">ATM-regulated · tumor suppressor</text>
+
+          <!-- Branch left: DNA Damage -->
+          <!-- Arrow from CCDC6 to DDR -->
+          <line x1="348" y1="57" x2="312" y2="57" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="312" y1="57" x2="312" y2="110" stroke="#2e6da4" stroke-width="1.4"/>
+
+          <rect x="248" y="110" width="128" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="312" y="127" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-anchor="middle">DDR / HR Repair</text>
+          <text x="312" y="141" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">RAD51, γH2AX, PP4c</text>
+
+          <line x1="312" y1="150" x2="312" y2="175" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="248" y="175" width="128" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="312" y="192" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-anchor="middle">Checkpoint Control</text>
+          <text x="312" y="206" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">PARP inhibitor sensitivity</text>
+
+          <line x1="312" y1="215" x2="312" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Convergence node genome integrity -->
+          <rect x="248" y="244" width="128" height="40" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="312" y="261" font-family="Arial" font-size="9" font-weight="700" fill="#1d4ed8" text-anchor="middle">Genome Integrity</text>
+          <text x="312" y="275" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">Apoptosis regulation</text>
+
+          <!-- Branch right: Proteostasis / CREB -->
+          <line x1="544" y1="57" x2="580" y2="57" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="580" y1="57" x2="580" y2="110" stroke="#2e6da4" stroke-width="1.4"/>
+
+          <rect x="516" y="110" width="128" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="580" y="127" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-anchor="middle">PP2A / Proteasome</text>
+          <text x="580" y="141" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">FBXO42-CCDC6-PP2Ac</text>
+
+          <line x1="580" y1="150" x2="580" y2="175" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="516" y="175" width="128" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="580" y="192" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a5f" text-anchor="middle">CREB1 Repression</text>
+          <text x="580" y="206" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">Transcriptional control</text>
+
+          <line x1="580" y1="215" x2="580" y2="244" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="516" y="244" width="128" height="40" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="580" y="261" font-family="Arial" font-size="9" font-weight="700" fill="#1d4ed8" text-anchor="middle">Phospho-balance</text>
+          <text x="580" y="275" font-family="Georgia" font-size="8" fill="#475569" text-anchor="middle">Protein turnover</text>
+
+          <!-- PANEL C: Indirect AD Bridges -->
+          <rect x="238" y="330" width="416" height="152" rx="12" fill="#fef2f2" fill-opacity="0.5" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="250" y="348" font-family="Arial" font-size="8" font-weight="700" fill="#9b1c1c" letter-spacing="0.1em">C — INDIRECT AD-RELEVANT LINKS</text>
+
+          <!-- Three boxes in a row -->
+          <rect x="248" y="358" width="120" height="52" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="308" y="378" font-family="Arial" font-size="8.5" font-weight="700" fill="#9b1c1c" text-anchor="middle">Ferroptosis</text>
+          <text x="308" y="392" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">GPX4 / SLC7A11</text>
+          <text x="308" y="403" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">indirect link</text>
+
+          <rect x="386" y="358" width="120" height="52" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="446" y="378" font-family="Arial" font-size="8.5" font-weight="700" fill="#9b1c1c" text-anchor="middle">Mitochondrial Stress</text>
+          <text x="446" y="392" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">Mitophagy signatures</text>
+          <text x="446" y="403" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">cancer context only</text>
+
+          <rect x="524" y="358" width="120" height="52" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="584" y="378" font-family="Arial" font-size="8.5" font-weight="700" fill="#9b1c1c" text-anchor="middle">circCCDC6</text>
+          <text x="584" y="392" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">miR-128-3p/TXNIP/</text>
+          <text x="584" y="403" font-family="Georgia" font-size="7.5" fill="#475569" text-anchor="middle">NLRP3 pyroptosis</text>
+
+          <!-- Arrow from C boxes up to Panel B convergence nodes — route through gutter -->
+          <!-- Panel B genome integrity (312,284) to Panel C ferroptosis: route in gutter (y 326) -->
+          <line x1="308" y1="358" x2="308" y2="326" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+          <line x1="308" y1="326" x2="312" y2="326" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <line x1="312" y1="326" x2="312" y2="284" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B phospho-balance (580,284) to Panel C CREB: route in gutter -->
+          <line x1="584" y1="358" x2="584" y2="326" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+          <line x1="584" y1="326" x2="580" y2="326" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <line x1="580" y1="326" x2="580" y2="284" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- PANEL D: Oncology Fusion (right) -->
+          <rect x="670" y="8" width="222" height="200" rx="12" fill="#fffbeb" fill-opacity="0.75" stroke="#b45309" stroke-width="1.4"/>
+          <text x="682" y="26" font-family="Arial" font-size="8" font-weight="700" fill="#b45309" letter-spacing="0.1em">D — ONCOLOGY CONTEXT</text>
+
+          <!-- Node D1 -->
+          <rect x="682" y="36" width="198" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="781" y="54" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e" text-anchor="middle">CCDC6-RET Fusion</text>
+          <text x="781" y="68" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">+ FGFR, ALK, PDGFRB</text>
+
+          <line x1="781" y1="78" x2="781" y2="97" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-warn)"/>
+
+          <!-- Node D2 -->
+          <rect x="682" y="97" width="198" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="781" y="115" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e" text-anchor="middle">Kinase Inhibitor Therapy</text>
+          <text x="781" y="129" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">Actionable in cancer only</text>
+
+          <line x1="781" y1="139" x2="781" y2="158" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-warn)"/>
+
+          <!-- Node D3 -->
+          <rect x="682" y="158" width="198" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="781" y="176" font-family="Arial" font-size="9.5" font-weight="700" fill="#92400e" text-anchor="middle">Not Directly Translatable</text>
+          <text x="781" y="190" font-family="Georgia" font-size="8.5" fill="#475569" text-anchor="middle">to neurodegeneration</text>
+
+          <!-- Panel A to Panel B connector (through gutter at x=230) -->
+          <line x1="202" y1="179" x2="230" y2="179" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="230" y1="179" x2="230" y2="57" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="4,3"/>
+          <line x1="230" y1="57" x2="348" y2="57" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Panel C label arrows (circCCDC6 to mitochondrial) -->
+          <line x1="446" y1="358" x2="446" y2="326" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> AD genetic and functional nomination — GWAS risk locus near CCDC6, fine-mapping/eQTL prioritization, and <em>C. elegans</em> knockdown reducing PVD neuron degeneration.
+        <strong>Panel B (center):</strong> Core molecular mechanism from oncology literature, branching from the central CCDC6 protein into two parallel sub-cascades: left branch covers DNA damage response (DDR/HR repair → checkpoint control → genome integrity/apoptosis); right branch covers proteostasis and transcription (PP2A/proteasome → CREB1 repression → phosphorylation balance/protein turnover).
+        <strong>Panel C (red, lower center):</strong> Indirect AD-relevant links — ferroptosis (GPX4/SLC7A11), mitochondrial stress/mitophagy, and circCCDC6-driven neuronal pyroptosis (miR-128-3p/TXNIP/NLRP3) — all established in non-AD contexts.
+        <strong>Panel D (amber, right):</strong> Oncology fusion context (CCDC6-RET and related fusions), actionable with kinase inhibitors in cancer but not directly translatable to neurodegeneration. Dashed arrows indicate conceptual/indirect connections.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Genetic Nomination in AD</h3>
+        <p>A 2021 Nature Genetics AD GWAS meta-analysis identified a risk association near CCDC6 and prioritized it using fine mapping, eQTL colocalization, protein interaction networks, and tissue-specific expression data — a genetic signal, not mechanistic validation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuronal-Aging Evidence in C. elegans</h3>
+        <p>Knockdown of the worm CCDC6 homolog <em>T09B9.4</em> attenuated age-associated degeneration of PVD neurons, suggesting neuron-class-selective protection that is independent of organismal lifespan. This is the sole functional neurodegeneration finding.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>CCDC6 Did Not Rescue Aβ Toxicity</h3>
+        <p>In the <em>C. elegans</em> Aβ model, Aβ1-42 accelerated PVD degeneration but the knockdown that abolished the Aβ effect was <em>ech-2</em>, not <em>T09B9.4/CCDC6</em>. CCDC6 was not shown to modify amyloid-β toxicity.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>DNA Damage Response — Key Mechanistic Bridge</h3>
+        <p>CCDC6 is an ATM-regulated DDR protein involved in checkpoint control, γH2AX signaling, homologous recombination, RAD51 foci formation, PP4c regulation, and PARP inhibitor sensitivity. Neuronal DNA damage is relevant to aging and AD, making CCDC6 biologically plausible but unproven in this context.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Proteostasis &amp; PP2A Regulation</h3>
+        <p>CCDC6 forms an FBXO42-CCDC6-PP2Ac assembly promoting proteasomal degradation of free PP2A catalytic subunits. PP2A regulation is conceptually relevant to neuronal phosphorylation balance and tau biology, but no supplied study directly connects this to tau or AD.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Substantial Safety Concerns</h3>
+        <p>Systemic CCDC6 inhibition risks impairing genome maintenance and altering cancer susceptibility. Indiscriminate activation could dysregulate transcriptional and phosphorylation networks. Oncology druggability (CCDC6-RET fusions, kinase inhibitors) does not translate to neurodegeneration.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><span><b>Treat CCDC6 as a candidate, not a target.</b> Position CCDC6 as a genetically nominated neuronal-aging modifier and candidate AD risk gene, not a validated therapeutic target requiring immediate drug development.</span></li>
+      <li><span><b>Prioritize validation in human AD datasets.</b> Test whether AD-associated variants near CCDC6 alter CCDC6 expression, splicing, protein abundance, or localization in neurons, astrocytes, microglia, oligodendrocytes, and brain-region-specific AD tissue.</span></li>
+      <li><span><b>Replicate functional findings in mammalian systems.</b> Assess whether CCDC6 knockdown, overexpression, or stabilization affects neuronal aging, survival, DNA repair, oxidative stress responses, ferroptosis, mitochondrial function, proteostasis, and synaptic phenotypes.</span></li>
+      <li><span><b>Directly test AD-relevant endpoints.</b> Evaluate amyloid-β toxicity, tau phosphorylation/aggregation, synaptic maintenance, neuroinflammation, glial activation, neuronal loss, and cognition in cellular and animal models before advancing.</span></li>
+      <li><span><b>Clarify therapeutic direction before any drug development.</b> The worm data suggest reduced homolog activity may protect one neuron class, but cancer and DNA-repair data suggest CCDC6 supports genome maintenance — AD studies must resolve whether loss, gain, or dysregulation is pathogenic.</span></li>
+      <li><span><b>Investigate circCCDC6 as a separate lead.</b> Test whether circCCDC6 is elevated in AD brain, CSF, or blood and whether its miR-128-3p/TXNIP/NLRP3 axis contributes to AD-associated inflammasome activation or pyroptosis.</span></li>
+      <li><span><b>Evaluate safety early and rigorously.</b> Any CCDC6-directed intervention should include assays for DNA damage accumulation, impaired homologous recombination, altered PP2A activity, apoptosis, tumor-suppressor disruption, and cell-type-specific toxicity.</span></li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — CCDC6 in Alzheimer's Disease</div>
+      <p>CCDC6 is best viewed as an <b>understudied, genetically nominated AD candidate</b> with one supportive neuronal-aging phenotype in <em>C. elegans</em> and several indirect mechanistic links to AD-relevant pathways. The genetic signal from the AD GWAS meta-analysis provides a credible starting point, and the <b>PVD neuron protection observed upon <em>T09B9.4</em> knockdown</b> offers a functional hint. However, the absence of direct AD mechanistic validation — no Aβ rescue, no tau biology, no mammalian models, no synaptic or cognitive data — means CCDC6 remains firmly in the discovery-validation phase. <b>Safety considerations are non-trivial</b>: native CCDC6 supports DNA repair, apoptotic balance, tumor suppression, and phosphatase regulation, making indiscriminate modulation potentially harmful. The current evidence <b>supports mechanistic validation, not immediate therapeutic development</b> for Alzheimer's disease.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CCDC6 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

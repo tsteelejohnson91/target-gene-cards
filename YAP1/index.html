@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAP1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfb;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .header-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #e2eaf5;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(220,80,80,0.4);
+    color: #fdd;
+  }
+
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.7;
+    letter-spacing: 0.01em;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* BODY TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: #c0392b;
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #d97706;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-color: #94a3b8;
+  }
+  .card-slate h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #e8f1fa;
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-chips">
+    <span class="chip">Gene: YAP1 &nbsp;|&nbsp; Yes-Associated Protein 1</span>
+    <span class="chip chip-danger">⚠ Oncogenic / Fibrotic Risk in Non-AD Contexts</span>
+  </div>
+  <h1>YAP1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety / Context Caveat:</strong> YAP1 activation is firmly linked to tumor growth, fibrosis, immune evasion, and pathological remodeling in non-AD settings. Any neurologically targeted therapeutic strategy must employ brain-selective, cell-type-specific, dose-controlled, and temporally limited modulation to minimize these systemic risks.
+    </div>
+
+    <div class="overview-text">
+      <p>YAP1 is a Hippo-pathway transcriptional cofactor and mechanotransduction effector with roles spanning cell survival, nuclear transcription, oxidative-stress control, ferroptosis suppression, autophagy and mitophagy, inflammation, cytoskeletal remodeling, senescence, vascular biology, and tissue repair.</p>
+      <p>In relation to Alzheimer's disease (AD), the evidence base is mixed but meaningfully suggestive. Reduced nuclear YAP1 has been detected in AD brain tissue; YAP1 appears as a dysregulated hub gene in AD transcriptomic networks; AD-associated stressors (Aβ, hypoxia) suppress YAP1 survival signaling; and an FGF22/FGFR2/YAP axis has been shown to suppress ferroptosis and cognitive impairment in Aβ1–42 mouse and HT22 cell models.</p>
+      <p>YAP1 is best framed not as a primary AD driver, but as a <em>context-dependent signaling node</em> contributing to neuronal resilience, mitochondrial and oxidative-stress control, anti-ferroptotic defense, synaptic maintenance, glial inflammatory responses, and vascular remodeling. Its therapeutic potential is plausible but not yet fully validated as a standalone AD drug target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Upstream stressors → YAP1 suppression  [4 nodes]
+        PANEL B (centre): YAP1 hub with two branches           [6 nodes]
+        PANEL C (right): Downstream outcomes (cluster)         [5 nodes]
+        Total: 15 nodes — within limit.
+        Arrows routed only through empty gutters between panels.
+      -->
+      <svg viewBox="0 0 940 490" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif" font-size="12">
+
+        <!-- ============================================================
+             PANEL A — AD Stressors / Upstream inputs
+             x: 18–230, y: 30–460
+        ============================================================ -->
+        <rect x="18" y="30" width="212" height="430" rx="12"
+              fill="rgba(139,26,26,0.06)" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="124" y="54" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#8b1a1a" letter-spacing="1.5">A — AD STRESSORS</text>
+
+        <!-- Node A1: Aβ Oligomers / Fibrils -->
+        <rect x="36" y="68" width="176" height="46" rx="7"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="124" y="86" text-anchor="middle" font-size="11" fill="#6b1a1a" font-weight="700">Aβ Oligomers</text>
+        <text x="124" y="103" text-anchor="middle" font-size="10" fill="#6b1a1a">&amp; Fibrils</text>
+
+        <!-- Node A2: Hypoxia -->
+        <rect x="36" y="138" width="176" height="46" rx="7"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="124" y="156" text-anchor="middle" font-size="11" fill="#6b1a1a" font-weight="700">Hypoxia</text>
+        <text x="124" y="173" text-anchor="middle" font-size="10" fill="#6b1a1a">VEGFR-1 upregulation</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="124" y1="114" x2="124" y2="138" stroke="#c0392b" stroke-width="1.4"
+              marker-end="url(#arr-red)"/>
+
+        <!-- Node A3: Ferroptosis / Oxidative Stress -->
+        <rect x="36" y="208" width="176" height="46" rx="7"
+              fill="#fdf0f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="124" y="226" text-anchor="middle" font-size="11" fill="#6b1a1a" font-weight="700">Ferroptosis Drive</text>
+        <text x="124" y="243" text-anchor="middle" font-size="10" fill="#6b1a1a">Iron accum. / lipid perox.</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="124" y1="184" x2="124" y2="208" stroke="#c0392b" stroke-width="1.4"
+              marker-end="url(#arr-red)"/>
+
+        <!-- Node A4: Reduced Nuclear YAP1 (AD brain) -->
+        <rect x="36" y="278" width="176" height="56" rx="7"
+              fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.6"/>
+        <text x="124" y="298" text-anchor="middle" font-size="11" fill="#6b1a1a" font-weight="700">↓ Nuclear YAP1</text>
+        <text x="124" y="314" text-anchor="middle" font-size="10" fill="#6b1a1a">Reduced in AD brain</text>
+        <text x="124" y="328" text-anchor="middle" font-size="10" fill="#6b1a1a">nuclear fractions</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="124" y1="254" x2="124" y2="278" stroke="#c0392b" stroke-width="1.4"
+              marker-end="url(#arr-red)"/>
+
+
+        <!-- ============================================================
+             PANEL B — YAP1 Hub + two branches
+             x: 258–614, y: 30–460
+        ============================================================ -->
+        <rect x="258" y="30" width="356" height="430" rx="12"
+              fill="rgba(26,58,92,0.05)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="436" y="54" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#1a3a5c" letter-spacing="1.5">B — YAP1 SIGNALING HUB</text>
+
+        <!-- Node B1: YAP1 Hub -->
+        <rect x="340" y="68" width="192" height="52" rx="9"
+              fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="436" y="90" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="700">YAP1</text>
+        <text x="436" y="108" text-anchor="middle" font-size="10" fill="#bfdbfe">Hippo-pathway cofactor</text>
+
+        <!-- Branch 1 label (left): FGF22/FGFR2 Axis -->
+        <rect x="274" y="150" width="160" height="48" rx="7"
+              fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="354" y="169" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">FGF22 / FGFR2</text>
+        <text x="354" y="186" text-anchor="middle" font-size="10" fill="#1a3a5c">Upstream activator</text>
+
+        <!-- Branch 2 label (right): VEGFR-1 Knockdown Axis -->
+        <rect x="462" y="150" width="138" height="48" rx="7"
+              fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="531" y="169" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">VEGFR-1 KD</text>
+        <text x="531" y="186" text-anchor="middle" font-size="10" fill="#1a3a5c">Restores YAP1 / VEGFR-2</text>
+
+        <!-- Arrows B1 → branches (diagonal paths, gutter is clear) -->
+        <line x1="400" y1="120" x2="354" y2="150" stroke="#2e6da4" stroke-width="1.4"
+              marker-end="url(#arr-blue)"/>
+        <line x1="472" y1="120" x2="531" y2="150" stroke="#2e6da4" stroke-width="1.4"
+              marker-end="url(#arr-blue)"/>
+
+        <!-- Node B3: Anti-Ferroptosis / Apoptosis (branch 1 step 2) -->
+        <rect x="274" y="222" width="160" height="48" rx="7"
+              fill="#f0fdfb" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="354" y="241" text-anchor="middle" font-size="11" fill="#0f5f5a" font-weight="700">↓ Ferroptosis</text>
+        <text x="354" y="258" text-anchor="middle" font-size="10" fill="#0f5f5a">↓ Neuronal apoptosis</text>
+
+        <!-- Arrow branch1 step1 → step2 -->
+        <line x1="354" y1="198" x2="354" y2="222" stroke="#0f766e" stroke-width="1.4"
+              marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: Neuroprotection (branch 2 step 2) -->
+        <rect x="462" y="222" width="138" height="48" rx="7"
+              fill="#f0fdfb" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="531" y="241" text-anchor="middle" font-size="11" fill="#0f5f5a" font-weight="700">Neuroprotection</text>
+        <text x="531" y="258" text-anchor="middle" font-size="10" fill="#0f5f5a">vs. Aβ &amp; hypoxia</text>
+
+        <!-- Arrow branch2 step1 → step2 -->
+        <line x1="531" y1="198" x2="531" y2="222" stroke="#0f766e" stroke-width="1.4"
+              marker-end="url(#arr-teal)"/>
+
+        <!-- Converge node B5: Synaptic + Cognitive improvement -->
+        <rect x="312" y="298" width="248" height="52" rx="9"
+              fill="#0f766e" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="436" y="320" text-anchor="middle" font-size="11.5" fill="#ffffff" font-weight="700">Synaptic Preservation</text>
+        <text x="436" y="338" text-anchor="middle" font-size="10" fill="#ccfbf1">&amp; Cognitive Improvement</text>
+
+        <!-- Arrows branches → converge: routes through clear gutters -->
+        <!-- Branch 1 converge arrow: from bottom of B3 down then right into B5 -->
+        <polyline points="354,270 354,285 436,285 436,298"
+                  fill="none" stroke="#0f766e" stroke-width="1.4"
+                  marker-end="url(#arr-teal)"/>
+        <!-- Branch 2 converge arrow: from bottom of B4 down then left into B5 -->
+        <polyline points="531,270 531,285 436,285"
+                  fill="none" stroke="#0f766e" stroke-width="1.4"/>
+
+        <!-- Node B6: YAP1 Transcriptional Output (neuronal proteins) -->
+        <rect x="286" y="374" width="300" height="68" rx="7"
+              fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="436" y="394" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">YAP1 Transcriptional Targets</text>
+        <text x="436" y="411" text-anchor="middle" font-size="9.8" fill="#1a3a5c">ARHGEF1, NECAP2, NENF, NEDD9</text>
+        <text x="436" y="428" text-anchor="middle" font-size="9.8" fill="#1a3a5c">↓ p16INK4a (anti-senescence)</text>
+
+        <!-- Arrow B5 → B6 -->
+        <line x1="436" y1="350" x2="436" y2="374" stroke="#2e6da4" stroke-width="1.4"
+              marker-end="url(#arr-blue)"/>
+
+
+        <!-- ============================================================
+             PANEL C — Downstream / CNS Context
+             x: 650–922, y: 30–460
+        ============================================================ -->
+        <rect x="650" y="30" width="272" height="430" rx="12"
+              fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="786" y="54" text-anchor="middle" font-family="Arial" font-size="9.5"
+              font-weight="700" fill="#0f5f5a" letter-spacing="1.5">C — CNS CONTEXTS</text>
+
+        <!-- Node C1: Mitophagy / Mitochondrial QC -->
+        <rect x="668" y="68" width="236" height="54" rx="7"
+              fill="#f0fdfb" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="786" y="89" text-anchor="middle" font-size="11" fill="#0f5f5a" font-weight="700">Parkin-Mitophagy / Mito QC</text>
+        <text x="786" y="107" text-anchor="middle" font-size="9.8" fill="#0f5f5a">↓ ROS, restored membrane Δψ</text>
+
+        <!-- Node C2: Nrf2 / Antioxidant Defense -->
+        <rect x="668" y="146" width="236" height="48" rx="7"
+              fill="#f0fdfb" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="786" y="165" text-anchor="middle" font-size="11" fill="#0f5f5a" font-weight="700">Nrf2 Antioxidant Defense</text>
+        <text x="786" y="182" text-anchor="middle" font-size="9.8" fill="#0f5f5a">Oxidative-stress resistance</text>
+
+        <!-- Arrow C1→C2 -->
+        <line x1="786" y1="122" x2="786" y2="146" stroke="#0f766e" stroke-width="1.4"
+              marker-end="url(#arr-teal)"/>
+
+        <!-- Node C3: NF-κB / NLRP3 Inflammation -->
+        <rect x="668" y="218" width="236" height="54" rx="7"
+              fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="786" y="239" text-anchor="middle" font-size="11" fill="#78350f" font-weight="700">NF-κB / NLRP3</text>
+        <text x="786" y="256" text-anchor="middle" font-size="9.8" fill="#78350f">Glial inflammatory modulation</text>
+
+        <!-- Arrow C2→C3 -->
+        <line x1="786" y1="194" x2="786" y2="218" stroke="#d97706" stroke-width="1.4"
+              marker-end="url(#arr-amber)"/>
+
+        <!-- Node C4: Astrocyte Reactivity / Repair -->
+        <rect x="668" y="296" width="236" height="54" rx="7"
+              fill="#f0fdfb" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="786" y="315" text-anchor="middle" font-size="11" fill="#0f5f5a" font-weight="700">Astrocytic YAP1</text>
+        <text x="786" y="332" text-anchor="middle" font-size="9.8" fill="#0f5f5a">Reactive gliosis, limits injury</text>
+
+        <!-- Arrow C3→C4 -->
+        <line x1="786" y1="272" x2="786" y2="296" stroke="#0f766e" stroke-width="1.4"
+              marker-end="url(#arr-teal)"/>
+
+        <!-- Node C5: Endothelial / Vascular Barrier -->
+        <rect x="668" y="374" width="236" height="68" rx="7"
+              fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="786" y="394" text-anchor="middle" font-size="11" fill="#1a3a5c" font-weight="700">Endothelial / Vascular</text>
+        <text x="786" y="411" text-anchor="middle" font-size="9.8" fill="#1a3a5c">Barrier integrity, mechanotrans-</text>
+        <text x="786" y="428" text-anchor="middle" font-size="9.8" fill="#1a3a5c">duction, ECM remodeling</text>
+
+        <!-- Arrow C4→C5 -->
+        <line x1="786" y1="350" x2="786" y2="374" stroke="#2e6da4" stroke-width="1.4"
+              marker-end="url(#arr-blue)"/>
+
+        <!-- Cross-panel connector: Panel A (A4, bottom-right) → Panel B (B1, left) -->
+        <!-- A4 bottom: x=212, y=334. B1 left: x=340, y=94. Route: right from A4, up through gutter x=242, then right to B1 -->
+        <polyline points="212,306 242,306 242,94 340,94"
+                  fill="none" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="5,3"
+                  marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connector: Panel B (B6, right edge) → Panel C (C1, left) -->
+        <!-- B6 right: x=586, y=408. C1 left: x=668, y=95. Route: right to gutter x=628, up, then right -->
+        <polyline points="586,408 628,408 628,95 668,95"
+                  fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3"
+                  marker-end="url(#arr-blue)"/>
+
+        <!-- DEFS: arrow markers -->
+        <defs>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#d97706"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (red)</strong> — AD stressors (Aβ, hypoxia, ferroptotic drive) converge on reduced nuclear YAP1, as observed in AD brain tissue. Dashed red arrow into Panel B indicates this suppressive input.
+      <strong>Panel B (blue/teal)</strong> — YAP1 hub branches into two upstream activating axes: FGF22/FGFR2 (left branch, anti-ferroptotic / anti-apoptotic) and VEGFR-1 knockdown (right branch, neuroprotective), both converging on synaptic preservation and cognitive improvement; transcriptional targets (ARHGEF1, NECAP2, NENF, NEDD9, ↓p16INK4a) flow downstream.
+      <strong>Panel C (teal/amber)</strong> — Broader CNS contexts of YAP1: mitophagy and mitochondrial quality control, Nrf2 antioxidant defense, NF-κB/NLRP3 glial inflammation, astrocytic repair responses, and endothelial/vascular barrier functions. Dashed blue arrow from Panel B feeds these contexts.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-accent">
+        <h3>FGF22/FGFR2/YAP Axis — Direct AD Evidence</h3>
+        <p>FGF22 protected Aβ1–42-treated mice and HT22 neuronal cells via FGFR2/YAP signaling, reducing ferroptosis and neuronal apoptosis, attenuating synaptic impairment and neuronal injury, and improving cognitive deficits. This is the most direct AD-specific mechanistic link to YAP1 in the supplied evidence.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Anti-Ferroptotic Role</h3>
+        <p>YAP1 signaling suppresses ferroptosis — iron accumulation and lipid peroxidation — positioning it as relevant to oxidative and lipid-damage mechanisms increasingly implicated in AD neurodegeneration. The FGF22/FGFR2/YAP model directly demonstrates this connection in Aβ-exposed cells.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>VEGFR-1 Knockdown Restores YAP1</h3>
+        <p>Aβ1–42 oligomers and hypoxia suppressed YAP1 and VEGFR-2. VEGFR-1 knockdown normalized both and conferred protection against Aβ oligomer-, fibril-, and hypoxia-induced neuronal toxicity. YAP1 may function as a downstream survival mediator in this neuroprotective axis.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Reduced Nuclear YAP1 in Human AD Brain</h3>
+        <p>YAP1 protein is selectively reduced in nuclear fractions of AD brain tissue. Because YAP1's transcriptional coactivator function requires nuclear localization, this implies <em>impaired activity</em> — not merely altered total protein — and flags nuclear YAP1 as a functionally meaningful biomarker.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuronal Transcriptional Targets</h3>
+        <p>YAP1 expression in neuronal-lineage cells upregulates ARHGEF1 (RhoA / dendritic spine regulation), NECAP2 (clathrin-mediated endocytosis), NENF/neudesin (neurotrophic factor), and NEDD9 (neurite formation / synaptic connections), while reducing the senescence marker p16INK4a — a multi-pronged pro-resilience profile.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Context-Dependency &amp; Therapeutic Risk</h3>
+        <p>YAP1 is simultaneously protective in neurons (survival, mitophagy, anti-ferroptosis) and pathological in cancer, fibrosis, and inflammatory remodeling (proliferation, immune evasion, ECM remodeling). Therapeutic approaches must be cell-type-specific and carefully dose-controlled to avoid oncogenic or fibrotic systemic effects.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Frame YAP1 as a context-dependent pathway node.</strong> Treat it as a promising but not yet validated standalone AD therapeutic target; additional AD-specific validation is required before advancing it as a primary drug target.</div>
+      </li>
+      <li>
+        <div><strong>Measure subcellular and cell-type-specific YAP1 activity.</strong> Prioritize nuclear versus cytoplasmic YAP1 ratios, YAP1 phosphorylation state, YAP/TEAD transcriptional output, and cell-type-resolved expression across neurons, astrocytes, microglia, endothelial cells, pericytes, and oligodendrocytes.</div>
+      </li>
+      <li>
+        <div><strong>Validate the FGF22/FGFR2/YAP axis in additional AD models.</strong> Test whether activating this axis reproducibly reduces ferroptosis, neuronal apoptosis, synaptic injury, and cognitive deficits across amyloid and tau model systems beyond the initial Aβ1–42 study.</div>
+      </li>
+      <li>
+        <div><strong>Investigate YAP1's role in VEGFR-1-mediated neuroprotection.</strong> Use YAP1 loss-of-function and gain-of-function experiments during VEGFR-1 inhibition under Aβ and hypoxic stress to determine whether YAP1 restoration is required for the observed neuroprotective effect.</div>
+      </li>
+      <li>
+        <div><strong>Develop a YAP1 biomarker panel for neuronal resilience.</strong> Track ARHGEF1, NECAP2, NENF, NEDD9, p16INK4a, VEGFR-2, ferroptosis markers, mitochondrial integrity markers, and synaptic/neuritic measures as a composite readout of YAP1 activity in AD models.</div>
+      </li>
+      <li>
+        <div><strong>Pursue selective pathway modulation, not systemic YAP1 activation.</strong> Candidate upstream strategies include FGF22/FGFR2 agonism, VEGFR-1 inhibition, Hippo kinase modulation, YAP nuclear localization control, YAP/TEAD tuning, and enhancement of YAP-linked mitochondrial and anti-ferroptotic programs.</div>
+      </li>
+      <li>
+        <div><strong>Separate therapeutic hypotheses by cell type.</strong> Neuronal YAP1 activation may protect against Aβ/hypoxia, ferroptosis, and mitochondrial dysfunction; astrocytic/microglial YAP1 modulation requires tighter calibration given dual repair vs. inflammatory potential; endothelial YAP1 affects vascular barrier integrity and resilience.</div>
+      </li>
+      <li>
+        <div><strong>Integrate safety assessment from the outset.</strong> Because YAP1 activation is linked to tumor growth, fibrosis, immune evasion, and pathological remodeling, any AD-directed therapeutic approach must be brain-selective, cell-type-specific, dose-controlled, and temporally limited to minimize systemic risk.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — YAP1 in Alzheimer's Disease</span>
+      <p>YAP1 emerges from the available evidence as a <strong>biologically plausible, multifunctional resilience node</strong> in the AD context — not a proven causal driver. The most compelling direct evidence points to <strong>reduced nuclear YAP1 activity in AD brain</strong>, <strong>FGF22/FGFR2/YAP-mediated suppression of ferroptosis and cognitive deficits</strong> in Aβ1–42 models, and <strong>VEGFR-1-linked restoration of YAP1 survival signaling</strong> under Aβ and hypoxic stress. Downstream transcriptional targets (ARHGEF1, NECAP2, NENF, NEDD9, ↓p16INK4a) further support YAP1's role in maintaining dendritic, synaptic, neurotrophic, and anti-senescence programs relevant to AD. Broader biology — mitophagy, Nrf2-antioxidant defense, NF-κB/NLRP3 modulation, astrocytic repair, and endothelial barrier function — adds mechanistic depth but remains indirect. <strong>The most defensible therapeutic concept is selective restoration of protective YAP1-associated signaling in AD-relevant neural cells</strong>, pursued through cell-type-specific, brain-targeted, and carefully dose-controlled strategies that capitalize on the FGF22/FGFR2/YAP anti-ferroptotic axis and VEGFR-1 inhibitory neuroprotection, while rigorously managing the well-documented oncogenic and fibrotic risks of non-selective YAP1 activation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  YAP1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

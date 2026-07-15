@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLC35C1 — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a4a6b;
+    --mid: #2e7db5;
+    --light: #e8f3fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,160,160,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent .card-heading { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger .card-heading { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive .card-heading { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning .card-heading { color: var(--warning); }
+
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral .card-heading { color: var(--neutral); }
+
+  .card-blue { background: #eff6ff; border-left: 4px solid #2563eb; }
+  .card-blue .card-heading { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: item;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: item;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways ol li:last-child { border-bottom: none; }
+
+  .takeaways ol li::before {
+    content: counter(item);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaways ol li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d2a3e 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+
+  .verdict p { color: rgba(255,255,255,0.9); margin-bottom: 0; }
+  .verdict strong { color: #93c5fd; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SLC35C1 &nbsp;|&nbsp; Solute Carrier Family 35 Member C1</span>
+    <span class="chip chip-danger">⚠ Safety concern: inhibition causes immunodeficiency</span>
+  </div>
+  <h1>SLC35C1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Indirect &amp; Unvalidated Target:</strong> The supplied literature does <em>not</em> establish SLC35C1 as an Alzheimer's disease mechanism or validated therapeutic target. Its relevance to AD is entirely inferential. Direct inhibition carries documented immune and systemic safety risks from inherited deficiency phenotypes.
+    </div>
+
+    <p>SLC35C1 is the primary Golgi GDP-fucose transporter required for cellular fucosylation of glycoproteins and glycoconjugates. By shuttling GDP-fucose into the Golgi lumen, it enables the full repertoire of fucosyltransferases to generate fucosylated glycans on secreted and membrane-bound proteins.</p>
+
+    <p>The supplied text does not provide direct evidence linking SLC35C1 to Alzheimer's disease, amyloid-beta, tau pathology, synaptic loss, microglial dysfunction, dementia progression, or cognitive decline in AD models or patients. Its relevance to AD is therefore inferential: fucosylation affects immune-cell adhesion, inflammatory signaling, cell–cell recognition, receptor signaling, intracellular trafficking, Notch signaling, Wnt signaling, EGFR/NF-κB signaling, and glycoprotein homeostasis — processes that overlap with AD-relevant biology — but the causal links remain undemonstrated in AD systems.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanism &amp; Pathway Overview</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e7db5"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream / Transport Mechanism -->
+        <rect x="10" y="10" width="230" height="478" rx="12" fill="#e8f3fb" fill-opacity="0.55" stroke="#2e7db5" stroke-width="1.2"/>
+        <text x="125" y="32" text-anchor="middle" font-weight="700" font-size="9" fill="#1a4a6b" letter-spacing="1.2">A · GOLGI TRANSPORT</text>
+
+        <!-- Node: GDP-fucose -->
+        <rect x="45" y="42" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="125" y="59" text-anchor="middle" font-weight="700" fill="#1a4a6b">GDP-Fucose</text>
+        <text x="125" y="74" text-anchor="middle" fill="#475569">(cytoplasmic pool)</text>
+
+        <!-- Arrow A1 -->
+        <line x1="125" y1="84" x2="125" y2="108" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: SLC35C1 -->
+        <rect x="37" y="108" width="176" height="42" rx="7" fill="#1a4a6b" stroke="#0d2a3e" stroke-width="1.4"/>
+        <text x="125" y="125" text-anchor="middle" font-weight="700" fill="#ffffff">SLC35C1</text>
+        <text x="125" y="140" text-anchor="middle" fill="#93c5fd">Golgi GDP-Fucose Transporter</text>
+
+        <!-- Arrow A2 -->
+        <line x1="125" y1="150" x2="125" y2="174" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: Fucosyltransferases -->
+        <rect x="45" y="174" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="125" y="191" text-anchor="middle" font-weight="700" fill="#1a4a6b">Fucosyltransferases</text>
+        <text x="125" y="206" text-anchor="middle" fill="#475569">FUT8 &amp; others</text>
+
+        <!-- Arrow A3 -->
+        <line x1="125" y1="216" x2="125" y2="240" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node: Fucosylated Glycans -->
+        <rect x="45" y="240" width="160" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="125" y="257" text-anchor="middle" font-weight="700" fill="#1a4a6b">Fucosylated Glycans</text>
+        <text x="125" y="272" text-anchor="middle" fill="#475569">on glycoproteins</text>
+
+        <!-- Node: Deficiency badge area — Loss/Mutation -->
+        <rect x="45" y="306" width="160" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="125" y="323" text-anchor="middle" font-weight="700" fill="#9b1c1c">Loss / Mutation</text>
+        <text x="125" y="338" text-anchor="middle" fill="#9b1c1c">→ LAD-II / CDG-IIc</text>
+
+        <!-- Arrow connecting Fucosylated Glycans to Loss box via gap -->
+        <line x1="125" y1="282" x2="125" y2="305" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- L-Fucose rescue note -->
+        <rect x="45" y="372" width="160" height="42" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="125" y="389" text-anchor="middle" font-weight="700" fill="#0f766e">L-Fucose Supplement</text>
+        <text x="125" y="404" text-anchor="middle" fill="#0f766e">partial rescue in LAD-II</text>
+
+        <line x1="125" y1="348" x2="125" y2="371" stroke="#0f766e" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL B: Downstream Signaling Branches -->
+        <rect x="258" y="10" width="380" height="290" rx="12" fill="#e8f3fb" fill-opacity="0.35" stroke="#2e7db5" stroke-width="1.2"/>
+        <text x="448" y="32" text-anchor="middle" font-weight="700" font-size="9" fill="#1a4a6b" letter-spacing="1.2">B · DOWNSTREAM SIGNALING BRANCHES</text>
+
+        <!-- Shared upstream node in Panel B -->
+        <rect x="339" y="42" width="218" height="42" rx="7" fill="#1a4a6b" stroke="#0d2a3e" stroke-width="1.4"/>
+        <text x="448" y="59" text-anchor="middle" font-weight="700" fill="#ffffff">Fucosylated Glycoproteins</text>
+        <text x="448" y="74" text-anchor="middle" fill="#93c5fd">(surface &amp; secreted)</text>
+
+        <!-- Branch arrow left: Notch -->
+        <line x1="390" y1="84" x2="330" y2="120" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Branch arrow right: Wnt -->
+        <line x1="506" y1="84" x2="556" y2="120" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Notch branch -->
+        <rect x="270" y="120" width="128" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="334" y="137" text-anchor="middle" font-weight="700" fill="#1a4a6b">Notch EGF</text>
+        <text x="334" y="152" text-anchor="middle" fill="#475569">Repeats Fucosylated</text>
+
+        <line x1="334" y1="162" x2="334" y2="186" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <rect x="270" y="186" width="128" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="334" y="203" text-anchor="middle" font-weight="700" fill="#1a4a6b">Notch Ligand</text>
+        <text x="334" y="218" text-anchor="middle" fill="#475569">Binding Enhanced</text>
+
+        <!-- Wnt branch -->
+        <rect x="506" y="120" width="122" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="567" y="137" text-anchor="middle" font-weight="700" fill="#1a4a6b">Wnt / β-Catenin</text>
+        <text x="567" y="152" text-anchor="middle" fill="#475569">Modulated</text>
+
+        <line x1="567" y1="162" x2="567" y2="186" stroke="#2e7db5" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <rect x="506" y="186" width="122" height="42" rx="7" fill="#ffffff" stroke="#2e7db5" stroke-width="1.4"/>
+        <text x="567" y="203" text-anchor="middle" font-weight="700" fill="#1a4a6b">Synaptic / Dev.</text>
+        <text x="567" y="218" text-anchor="middle" fill="#475569">Pathway Signaling</text>
+
+        <!-- Converge arrows to shared outcome -->
+        <line x1="334" y1="228" x2="334" y2="258" stroke="#2e7db5" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="567" y1="228" x2="567" y2="258" stroke="#2e7db5" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="334" y1="258" x2="567" y2="258" stroke="#2e7db5" stroke-width="1.3"/>
+
+        <rect x="370" y="258" width="156" height="36" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+        <text x="448" y="272" text-anchor="middle" font-weight="700" fill="#1d4ed8">Shared Downstream:</text>
+        <text x="448" y="286" text-anchor="middle" fill="#1d4ed8">Cell Fate / Signaling</text>
+
+        <!-- PANEL C: Immune & Inflammatory Outputs -->
+        <rect x="258" y="318" width="380" height="170" rx="12" fill="#fff7ed" fill-opacity="0.55" stroke="#b45309" stroke-width="1.2"/>
+        <text x="448" y="340" text-anchor="middle" font-weight="700" font-size="9" fill="#92400e" letter-spacing="1.2">C · IMMUNE &amp; INFLAMMATORY OUTPUTS</text>
+
+        <!-- Selectin Ligands -->
+        <rect x="270" y="350" width="140" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="340" y="367" text-anchor="middle" font-weight="700" fill="#92400e">Selectin Ligands</text>
+        <text x="340" y="382" text-anchor="middle" fill="#475569">Leukocyte Rolling</text>
+
+        <!-- CEACAM1/CCL2 -->
+        <rect x="430" y="350" width="140" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+        <text x="500" y="367" text-anchor="middle" font-weight="700" fill="#92400e">CEACAM1 Fucosylation</text>
+        <text x="500" y="382" text-anchor="middle" fill="#475569">CCL2/CXCL2 ↓</text>
+
+        <!-- arrows from panel B shared outcome to panel C -->
+        <line x1="448" y1="294" x2="448" y2="316" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- arrow from selectin to combined output -->
+        <line x1="340" y1="392" x2="340" y2="438" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="500" y1="392" x2="500" y2="438" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="340" y1="438" x2="500" y2="438" stroke="#b45309" stroke-width="1.3"/>
+
+        <rect x="363" y="438" width="170" height="36" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="448" y="452" text-anchor="middle" font-weight="700" fill="#92400e">Immune Adhesion &amp;</text>
+        <text x="448" y="466" text-anchor="middle" fill="#92400e">Inflammation Modulation</text>
+
+        <!-- PANEL D: Safety / AD context -->
+        <rect x="656" y="10" width="234" height="478" rx="12" fill="#fef2f2" fill-opacity="0.45" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="773" y="32" text-anchor="middle" font-weight="700" font-size="9" fill="#9b1c1c" letter-spacing="1.2">D · SAFETY &amp; AD CONTEXT</text>
+
+        <!-- LAD-II Phenotype cluster -->
+        <rect x="668" y="42" width="210" height="42" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="773" y="59" text-anchor="middle" font-weight="700" fill="#9b1c1c">LAD-II / CDG-IIc</text>
+        <text x="773" y="74" text-anchor="middle" fill="#9b1c1c">Congenital Deficiency</text>
+
+        <line x1="773" y1="84" x2="773" y2="108" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <rect x="668" y="108" width="210" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="773" y="125" text-anchor="middle" font-weight="700" fill="#9b1c1c">Immunodeficiency</text>
+        <text x="773" y="140" text-anchor="middle" fill="#475569">Recurrent infections</text>
+
+        <line x1="773" y1="150" x2="773" y2="174" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <rect x="668" y="174" width="210" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="773" y="191" text-anchor="middle" font-weight="700" fill="#9b1c1c">Neurodevelopmental</text>
+        <text x="773" y="206" text-anchor="middle" fill="#475569">Delay, ID, autism features</text>
+
+        <line x1="773" y1="216" x2="773" y2="240" stroke="#9b1c1c" stroke-width="1.3" marker-end="url(#arr-red)"/>
+
+        <rect x="668" y="240" width="210" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="773" y="257" text-anchor="middle" font-weight="700" fill="#9b1c1c">Growth Defects</text>
+        <text x="773" y="272" text-anchor="middle" fill="#475569">Short stature, leukocytosis</text>
+
+        <!-- AD Link note -->
+        <rect x="668" y="312" width="210" height="56" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+        <text x="773" y="331" text-anchor="middle" font-weight="700" fill="#b45309">AD Relevance:</text>
+        <text x="773" y="346" text-anchor="middle" fill="#475569">Indirect — via Notch,</text>
+        <text x="773" y="361" text-anchor="middle" fill="#475569">Wnt, neuroinflammation</text>
+
+        <!-- Biomanufacturing note -->
+        <rect x="668" y="390" width="210" height="56" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="773" y="409" text-anchor="middle" font-weight="700" fill="#0f766e">Afucosylated Ab</text>
+        <text x="773" y="424" text-anchor="middle" fill="#475569">Production platform</text>
+        <text x="773" y="439" text-anchor="middle" fill="#475569">(CHO cells — not therapy)</text>
+
+        <!-- Cross-panel connector: Panel A deficiency → Panel D LAD -->
+        <line x1="240" y1="327" x2="668" y2="327" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="4,3"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> The core transport mechanism — GDP-fucose moves from the cytoplasm through SLC35C1 into the Golgi lumen, enabling fucosyltransferases (including FUT8) to generate fucosylated glycans; loss of SLC35C1 causes LAD-II/CDG-IIc, partially rescued by L-fucose supplementation.
+      <strong>Panel B (blue centre-top):</strong> Fucosylated glycoproteins branch into two parallel signaling cascades — Notch EGF-repeat fucosylation enhancing ligand binding (left branch), and Wnt/β-catenin modulation affecting synaptic/developmental signaling (right branch) — reconverging on shared downstream cell-fate signaling.
+      <strong>Panel C (amber, centre-bottom):</strong> Immune and inflammatory outputs — SLC35C1-dependent selectin ligands govern leukocyte rolling/adhesion, while CEACAM1 fucosylation suppresses CCL2/CXCL2-driven inflammation; both converge on immune adhesion and inflammation modulation.
+      <strong>Panel D (red, right):</strong> Safety and AD context — inherited SLC35C1 deficiency produces immunodeficiency, neurodevelopmental delay, and growth defects; AD relevance remains indirect (via Notch/Wnt/neuroinflammation overlap); the afucosylated-antibody CHO-cell platform is a biomanufacturing application, not a patient-therapy indication.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <div class="card-heading">Core Golgi Fucosylation Role</div>
+        <p>SLC35C1 transports GDP-fucose into the Golgi lumen, enabling fucosyltransferases to generate fucosylated glycans on glycoproteins and glycoconjugates. Loss causes global hypofucosylation and is causative for Leukocyte Adhesion Deficiency Type II (LAD-II / CDG-IIc).</p>
+      </div>
+
+      <div class="card card-danger">
+        <div class="card-heading">Immune Safety Risk from Deficiency</div>
+        <p>Inherited SLC35C1 deficiency produces recurrent infections, leukocytosis/neutrophilia, impaired wound healing, and failure to recruit leukocytes via fucosylated selectin ligands. These phenotypes mean broad SLC35C1 inhibition in patients carries documented immunological safety risks.</p>
+      </div>
+
+      <div class="card card-warning">
+        <div class="card-heading">Neurodevelopmental — Not AD — Disease</div>
+        <p>Human SLC35C1-related disease includes psychomotor delay, intellectual disability, speech/cognitive impairment, autistic features, growth retardation, and altered blood-group antigens. These support nervous-system relevance but are congenital neurodevelopmental, not adult-onset neurodegeneration.</p>
+      </div>
+
+      <div class="card card-accent">
+        <div class="card-heading">Notch &amp; Wnt Pathway Intersections</div>
+        <p>Notch receptor EGF-like repeats require fucosylation for optimal ligand response; SLC35C2 may partially compensate for SLC35C1 loss. SLC35C1 also modulates canonical Wnt/β-catenin signaling — indirectly relevant because Wnt is implicated in synaptic maintenance and neurodegeneration, but without AD-specific validation.</p>
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Therapeutic Signal: L-Fucose Supplementation</div>
+        <p>Oral or exogenous L-fucose can partially restore fucosylation, selectin ligands, immune function, and some developmental/behavioral features in LAD-II patients or models. Responses are mutation-dependent and may carry adverse immune or blood-antigen effects; this is the strongest therapeutic evidence available.</p>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-heading">Biomanufacturing vs. Therapeutic Targeting</div>
+        <p>SLC35C1-deficient CHO-cell systems produce afucosylated therapeutic antibodies with enhanced Fc effector function — a valuable biomanufacturing tool. This is entirely separate from any rationale for targeting SLC35C1 in AD patients and should not be conflated with a therapeutic hypothesis.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div><strong>Treat as exploratory, not validated:</strong> Position SLC35C1 as a mechanistically plausible but entirely unvalidated node in AD biology; do not advance it as a prioritised therapeutic target without disease-specific evidence.</div>
+      </li>
+      <li>
+        <div><strong>Characterise SLC35C1 in AD tissues first:</strong> Determine whether SLC35C1 expression, GDP-fucose transport activity, or fucosylated glycan profiles are altered in AD brain, CSF, plasma, microglia, astrocytes, neurons, or vascular/immune compartments.</div>
+      </li>
+      <li>
+        <div><strong>Test AD-relevant functional endpoints:</strong> Investigate whether SLC35C1 perturbation affects amyloid processing/clearance, tau phosphorylation or aggregation, synaptic function, endosomal–lysosomal trafficking, microglial activation, chemokine signaling, complement activity, and cognition in established AD models.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate the broader fucosylation pathway:</strong> Assess GDP-fucose de novo synthesis, salvage-pathway metabolism, SLC35C2 compensation, and downstream fucosyltransferases such as FUT8 alongside SLC35C1 — no single node tells the full story.</div>
+      </li>
+      <li>
+        <div><strong>Prefer fucose supplementation over inhibition:</strong> If hypofucosylation is found in AD-relevant tissues or subgroups, fucose supplementation or salvage-pathway enhancement is a more plausible and better-characterised intervention than broad SLC35C1 inhibition.</div>
+      </li>
+      <li>
+        <div><strong>Do not assume inhibition is therapeutic:</strong> Human and mouse SLC35C1 deficiency phenotypes indicate substantial immune and systemic safety risks; inhibition is not supported as an AD strategy by any evidence in the supplied literature.</div>
+      </li>
+      <li>
+        <div><strong>Explore fucosylated glycan biomarkers:</strong> If SLC35C1-linked glycosylation changes are detected in AD tissues or biofluids, consider fucosylated glycan signatures as candidate biomarkers for patient stratification or disease-stage monitoring.</div>
+      </li>
+      <li>
+        <div><strong>Keep biomanufacturing applications separate:</strong> Explore SLC35C1-deficient antibody-production platforms independently from patient-directed SLC35C1 targeting — especially relevant if Fc glycosylation tuning matters for Alzheimer's immunotherapy safety or efficacy.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — SLC35C1 in Alzheimer's Disease</div>
+      <p>The supplied evidence establishes SLC35C1 as a <strong>central regulator of Golgi fucosylation</strong> with broad effects on immune-cell adhesion, inflammatory signaling, glycoprotein trafficking, Notch/Wnt signaling, and neurodevelopmental phenotypes. However, its connection to Alzheimer's disease <strong>remains indirect and unvalidated</strong>: no supplied study examines SLC35C1 in AD brain, AD models, or AD patients. The overlap between fucosylation biology and AD-relevant processes — neuroinflammation, receptor signaling, endosomal trafficking, synaptic maintenance — is <strong>conceptually plausible but scientifically unconfirmed</strong>. Meanwhile, the human deficiency syndrome demonstrates that loss of SLC35C1 function carries serious immunological, developmental, and systemic consequences, making <strong>direct inhibition an unsupported and potentially unsafe AD strategy</strong>. Any therapeutic hypothesis must await direct, disease-specific evidence and rigorous safety assessment before SLC35C1 can be considered a credible Alzheimer's disease target.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  SLC35C1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

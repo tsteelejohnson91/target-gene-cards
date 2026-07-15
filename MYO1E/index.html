@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYO1E — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.38);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.68);
+    font-size: 0.97rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+  section { margin-bottom: 54px; }
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW PROSE */
+  .prose p { margin-bottom: 1.1em; font-size: 1rem; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 20px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.blue { border-left-color: var(--blue-mid); background: var(--blue-light); }
+  .card.neutral { border-left-color: var(--neutral); background: var(--neutral-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .card p { font-size: 0.92rem; line-height: 1.65; }
+  /* TAKEAWAYS */
+  .takeaways ol { list-style: none; counter-reset: item; padding: 0; }
+  .takeaways ol li {
+    counter-increment: item;
+    margin-bottom: 20px;
+    padding-left: 2.2em;
+    position: relative;
+    font-size: 0.97rem;
+  }
+  .takeaways ol li::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    background: var(--mid);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #e2e8f0;
+    border-radius: 14px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+  .verdict .lead { font-size: 1.05rem; font-weight: bold; color: #fff; margin-bottom: 10px; display: block; }
+  .verdict strong { color: #93c5fd; }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.77rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 16px 18px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: MYO1E &nbsp;|&nbsp; Myosin IE</span>
+    <span class="chip chip-danger">⚠ Renal Toxicity Risk — Podocyte Essentiality</span>
+  </div>
+  <h1>MYO1E &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Safety Caveat:</strong> MYO1E loss-of-function is strongly linked to steroid-resistant nephrotic syndrome, focal segmental glomerulosclerosis, podocyte foot-process effacement, proteinuria, and kidney failure. Systemic MYO1E inhibition therefore carries a plausible renal toxicity risk and must be considered in any therapeutic program.
+    </div>
+
+    <div class="prose">
+      <p>MYO1E is an Alzheimer's disease-relevant candidate primarily through microglial biology, cytoskeletal remodeling, endocytosis/phagocytosis, and disease-associated immune states. The strongest direct AD evidence comes from late-onset Alzheimer's disease (LOAD) single-nucleus multi-omics and AD microglial transcriptomic analyses, where MYO1E appears in LOAD-associated microglial regulatory networks and in anti-inflammatory/phagocytic disease-associated microglia (DAM) programs alongside genes such as APOE, IGF1, and CXCR4.</p>
+      <p>MYO1E is not yet a validated Alzheimer's therapeutic target. The supplied evidence does not show that direct MYO1E modulation improves amyloid-β, tau pathology, synapse preservation, cognition, or neurodegeneration in AD models. Instead, MYO1E is best interpreted as a mechanistic pathway node that may influence AD through microglial motility, phagocytosis, apoptotic-cell clearance, endocytosis, membrane tension responses, cholesterol trafficking, phosphoinositide signaling, and actin–membrane coupling.</p>
+      <p>Its therapeutic relevance is plausible but unresolved. Enhancing MYO1E-associated protective microglial programs could theoretically improve amyloid/debris clearance and reduce harmful inflammation, but broad MYO1E inhibition or activation may carry risks because MYO1E is essential in kidney podocytes and broadly involved in immune-cell migration, adhesion, endocytosis, and cytoskeletal organization.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANELS:
+          Panel A (left, blue):  Upstream LOAD Evidence (nodes: LOAD Multi-Omics, GWAS Variants, cis-Reg Elements, MYO1E Expression, APOE co-DEG)
+          Panel B (center, teal): MYO1E Core Mechanisms — branches: Phagocytosis branch (MYO1E Active, Actin Remodel, Phagocytic Cup → Clearance) and Endocytosis branch (CME Recruitment, Membrane Tension, Vesicle Trafficking → Clearance)
+          Panel C (right, amber): Downstream AD Relevance (Microglial DAM State, IGF1/TGFB1 Signaling, Cholesterol/Lipid Raft) → AD Outcomes
+          Safety node bottom-right.
+
+        Node count (strict check):
+          Panel A: 5 nodes
+          Panel B: 7 nodes (MYO1E Active, Actin Remodel, Phagocytic Cup, CME Recruitment, Membrane Tension, Vesicle Traffic, Clearance Outcome)
+          Panel C: 4 nodes (DAM State, IGF1/TGFB1, Cholesterol Axis, AD Outcomes)
+          Safety: 1 node
+          TOTAL: 17 — trim one. Remove "cis-Reg Elements" and fold into LOAD Multi-Omics label.
+          Revised Panel A: 4 nodes → TOTAL = 16. ✓
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:940px;display:block;margin:0 auto;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: LOAD Evidence ═══ -->
+        <rect x="14" y="18" width="210" height="464" rx="14" fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="119" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#2e6da4" letter-spacing="1">LOAD EVIDENCE</text>
+
+        <!-- A1: LOAD Multi-Omics (includes cis-reg, snRNA context) -->
+        <rect x="34" y="52" width="170" height="50" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="119" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a5f">LOAD Multi-Omics</text>
+        <text x="119" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">snRNA + cis-reg elements</text>
+        <text x="119" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">+ chromatin accessibility</text>
+
+        <!-- A2: GWAS Variants -->
+        <rect x="34" y="128" width="170" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="119" y="147" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a5f">GWAS Overlap</text>
+        <text x="119" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">Functional SNPs / variants</text>
+
+        <!-- A3: APOE co-DEG -->
+        <rect x="34" y="206" width="170" height="44" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="119" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a5f">APOE co-DEG</text>
+        <text x="119" y="240" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#1e3a5f">Microglial regulatory network</text>
+
+        <!-- A4: MYO1E Expression (microglial) -->
+        <rect x="34" y="284" width="170" height="44" rx="8" fill="#1a3a5c" stroke="#0a1f35" stroke-width="1.2"/>
+        <text x="119" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff">MYO1E Expression</text>
+        <text x="119" y="318" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#93c5fd">LOAD microglial subtype</text>
+
+        <!-- A arrows -->
+        <line x1="119" y1="102" x2="119" y2="126" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="119" y1="172" x2="119" y2="204" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+        <line x1="119" y1="250" x2="119" y2="282" stroke="#2e6da4" stroke-width="1.3" marker-end="url(#arr)"/>
+
+        <!-- ═══ PANEL B: Core Mechanisms ═══ -->
+        <rect x="242" y="18" width="438" height="464" rx="14" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="461" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">MYO1E CORE MECHANISMS</text>
+
+        <!-- B0: MYO1E Active (shared hub) -->
+        <rect x="362" y="52" width="198" height="48" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="461" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" fill="#fff">MYO1E (Active)</text>
+        <text x="461" y="87" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#a7f3d0">Actin–membrane motor</text>
+
+        <!-- Branch 1: Phagocytosis (left branch) -->
+        <!-- B1a: Actin Remodeling -->
+        <rect x="258" y="142" width="160" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="338" y="161" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46">Actin Remodeling</text>
+        <text x="338" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.2" fill="#065f46">WIP/N-WASP/Arp2/3</text>
+
+        <!-- B1b: Phagocytic Cup -->
+        <rect x="258" y="228" width="160" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="338" y="247" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46">Phagocytic Cup</text>
+        <text x="338" y="262" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.2" fill="#065f46">Podosome / engulfment</text>
+
+        <!-- Branch 2: Endocytosis (right branch) -->
+        <!-- B2a: CME Recruitment -->
+        <rect x="462" y="142" width="160" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="542" y="161" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46">CME Recruitment</text>
+        <text x="542" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.2" fill="#065f46">Dynamin / synaptojanin-1</text>
+
+        <!-- B2b: Membrane Tension -->
+        <rect x="462" y="228" width="160" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="542" y="247" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46">Membrane Tension</text>
+        <text x="542" y="262" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.2" fill="#065f46">Rescue endocytosis</text>
+
+        <!-- B Convergence: Vesicle Trafficking -->
+        <rect x="346" y="318" width="230" height="46" rx="8" fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="461" y="337" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#065f46">Vesicle &amp; Lipid Trafficking</text>
+        <text x="461" y="352" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.2" fill="#065f46">Cholesterol/caveolin · endolysosomal</text>
+
+        <!-- B Clearance Outcome -->
+        <rect x="362" y="408" width="198" height="46" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="461" y="427" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff">Clearance Outcome</text>
+        <text x="461" y="442" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#a7f3d0">Amyloid · debris · apoptotic cells</text>
+
+        <!-- Panel B arrows -->
+        <!-- Hub → left branch -->
+        <path d="M 420,100 L 338,100 L 338,140" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Hub → right branch -->
+        <path d="M 502,100 L 542,100 L 542,140" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Left branch cascade -->
+        <line x1="338" y1="188" x2="338" y2="226" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <!-- Right branch cascade -->
+        <line x1="542" y1="188" x2="542" y2="226" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+        <!-- Left branch → convergence -->
+        <path d="M 338,274 L 338,306 L 346,316" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Right branch → convergence -->
+        <path d="M 542,274 L 542,306 L 576,316" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+        <!-- Convergence → Clearance -->
+        <line x1="461" y1="364" x2="461" y2="406" stroke="#0f766e" stroke-width="1.3" marker-end="url(#arr-teal)"/>
+
+        <!-- ═══ PANEL C: Downstream AD Relevance ═══ -->
+        <rect x="698" y="18" width="228" height="464" rx="14" fill="rgba(180,83,9,0.06)" stroke="#b45309" stroke-width="1.2"/>
+        <text x="812" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">AD RELEVANCE</text>
+
+        <!-- C1: DAM State -->
+        <rect x="716" y="52" width="192" height="50" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="812" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#78350f">DAM State</text>
+        <text x="812" y="85" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">Anti-inflam / phagocytic</text>
+        <text x="812" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">APOE · CXCR4 co-expression</text>
+
+        <!-- C2: IGF1/TGFB1 Signaling -->
+        <rect x="716" y="140" width="192" height="50" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="812" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#78350f">IGF1 / TGFB1 Signaling</text>
+        <text x="812" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">Wnt/β-catenin · suppress</text>
+        <text x="812" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">inflammatory cytokines</text>
+
+        <!-- C3: Cholesterol / Lipid Axis -->
+        <rect x="716" y="234" width="192" height="50" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="812" y="252" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#78350f">Cholesterol / Lipid Axis</text>
+        <text x="812" y="267" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">Lipid rafts · ApoE biology</text>
+        <text x="812" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#78350f">APP processing</text>
+
+        <!-- C4: AD Outcomes -->
+        <rect x="716" y="408" width="192" height="46" rx="8" fill="#b45309" stroke="#78350f" stroke-width="1.5"/>
+        <text x="812" y="427" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff">AD Outcomes</text>
+        <text x="812" y="442" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#fde68a">Plaque · synapse · cognition</text>
+
+        <!-- C arrows -->
+        <line x1="812" y1="102" x2="812" y2="138" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <line x1="812" y1="190" x2="812" y2="232" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr-amber)"/>
+        <!-- C3 → AD Outcomes (skip gap, draw vertical through empty space) -->
+        <line x1="812" y1="284" x2="812" y2="406" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+        <!-- CROSS-PANEL connectors -->
+        <!-- Panel A (MYO1E Expr, right edge x=204, cy=306) → Panel B hub (left edge x=362, cy=76) 
+             Route: right from A4 into gutter, up, right into B hub -->
+        <path d="M 204,306 L 230,306 L 230,76 L 360,76" stroke="#1a3a5c" stroke-width="1.4" fill="none" marker-end="url(#arr-dark)" stroke-dasharray="5,3"/>
+
+        <!-- Panel B Clearance (right edge ~560, cy=431) → Panel C AD Outcomes (left edge 716, cy=431) 
+             straight horizontal through gutter -->
+        <path d="M 560,431 L 714,431" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel B hub (right edge ~560, cy=76) → Panel C DAM State (left edge 716, cy=77) -->
+        <path d="M 560,76 L 714,77" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Panel A — LOAD Evidence:</strong> Upstream genomic and transcriptomic evidence linking MYO1E to late-onset Alzheimer's disease through multi-omics, GWAS overlapping variants, APOE co-differential expression, and microglial subtype-specific expression. <strong>Panel B — Core Mechanisms:</strong> MYO1E acts as a shared hub branching into two parallel sub-cascades — a phagocytosis arm (actin remodeling via WIP/N-WASP/Arp2/3 → phagocytic cup formation) and an endocytosis arm (clathrin-mediated endocytic site recruitment / dynamin interaction → membrane tension rescue) — converging on vesicle and lipid trafficking and ultimately on clearance of amyloid, debris, and apoptotic cells. <strong>Panel C — AD Relevance:</strong> Downstream contextual significance for AD, including MYO1E's association with anti-inflammatory/phagocytic DAM states (with APOE/CXCR4), IGF1/TGFB1/Wnt signaling that suppresses neuroinflammation, and the cholesterol/lipid raft axis influencing ApoE biology and APP processing, all potentially converging on AD pathological outcomes. Dashed arrows indicate indirect or contextually inferred relationships.</p>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Direct LOAD Evidence</h3>
+        <p>MYO1E is identified in a LOAD-relevant microglial subtype through single-nucleus multi-omics, linked to LOAD-associated cis-regulatory elements, putative functional SNPs, transcriptional networks, and GWAS-overlapping regions. APOE and MYO1E are highlighted together as LOAD differentially expressed genes connected to microglial regulatory elements.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Protective Microglial-State Signal</h3>
+        <p>MYO1E appears alongside APOE and IGF1 in anti-inflammatory/phagocytic disease-associated microglia modules in AD models. In kainic acid epileptogenesis models, MYO1E marks an IGF1-positive microglial phenotype driven by TGFB1/Wnt/β-catenin signaling that suppresses inflammatory cytokines and improves neuronal-like cell survival — suggesting MYO1E may mark protective or repair-associated microglial programs.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Phagocytosis &amp; Trogocytosis Relevance</h3>
+        <p>MYO1E/MYO1F-deficient macrophages show impaired uptake of IgG-coated particles, abnormal phagocytic cup actin architecture, stalled engulfment, disrupted podosomes, and increased trogocytosis. In AD, this is relevant because microglia may either clear pathological material efficiently or contribute to harmful synaptic nibbling and pruning.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Endocytosis Mechanism &amp; AD Relevance</h3>
+        <p>MYO1E is recruited to clathrin-mediated endocytic sites, interacts with dynamin and synaptojanin-1, and promotes actin assembly through WIP/WIRE/N-WASP/Arp2/3 machinery, helping rescue endocytosis under increased membrane tension. These mechanisms are relevant to AD via APP processing, receptor trafficking, synaptic biology, and endolysosomal function.</p>
+      </div>
+
+      <div class="card">
+        <h3>Cholesterol &amp; Migration Axes</h3>
+        <p>MYO1E contributes to actin-dependent delivery of cholesterol-containing caveolin-coated vesicles to the plasma membrane — mechanistically relevant to AD through lipid rafts, ApoE biology, APP processing, and microglial activation. MYO1E also regulates lamellipodia, focal adhesion turnover, podosome dynamics, cell migration, and membrane ruffling, potentially affecting microglial surveillance and plaque recruitment.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Safety Concern: Renal &amp; Immune Risk</h3>
+        <p>MYO1E loss-of-function is strongly linked to steroid-resistant nephrotic syndrome, focal segmental glomerulosclerosis, podocyte foot-process effacement, proteinuria, and kidney failure risk. Systemic MYO1E inhibition could plausibly cause renal toxicity and immune dysfunction. MYO1E also influences TLR4 responses, CCL2 secretion, MHC-II surface delivery, and antigen processing.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Treat MYO1E as an exploratory candidate, not a validated drug target.</strong> Current evidence supports prioritization for functional study, especially in microglia, but direct therapeutic development requires further validation.</li>
+      <li><strong>Focus AD experiments on microglial mechanisms.</strong> Test whether MYO1E alters amyloid-β uptake, plaque-associated phagocytosis, apoptotic-cell clearance, synapse engulfment/trogocytosis, inflammatory cytokine output, chemotaxis toward plaques, and endolysosomal trafficking.</li>
+      <li><strong>Resolve directionality before targeting.</strong> Determine whether MYO1E activity is protective, harmful, or context-dependent across AD stages and microglial subtypes. Evidence suggests possible protective association with anti-inflammatory/phagocytic and IGF1-positive microglia, but MYO1E may also support inflammatory-cell migration.</li>
+      <li><strong>Use MYO1E as a biomarker candidate for beneficial microglial reprogramming.</strong> It may be useful in signatures including IGF1, APOE, and CXCR4 when evaluating interventions such as LXR agonism or Kv1.3 blockade.</li>
+      <li><strong>Prioritize cell-specific strategies.</strong> Brain- or microglia-selective modulation would be safer than systemic targeting given MYO1E's essential role in kidney podocytes and immune-cell function.</li>
+      <li><strong>Investigate regulatory mechanisms in LOAD.</strong> Follow up on MYO1E-linked cis-regulatory elements, chromatin accessibility changes, transcription-factor networks, and GWAS-overlapping variants in AD microglial subtypes.</li>
+      <li><strong>Explore pathway-level targeting rather than direct MYO1E inhibition.</strong> Potentially safer approaches may involve modulating upstream/downstream pathways shaping MYO1E-associated protective microglial states — such as TGFB1/Wnt/β-catenin/IGF1 signaling, LXR pathways, Kv1.3-linked DAM modulation, or specific MYO1E adaptor-domain interactions.</li>
+      <li><strong>Include safety screens early.</strong> Any MYO1E-directed program should assess podocyte integrity, renal filtration markers, immune-cell migration, antigen presentation, and vascular effects before advancing.</li>
+      <li><strong>Meet the key validation requirement.</strong> Demonstrate that MYO1E modulation changes AD-relevant outcomes — amyloid burden, tau pathology, synapse loss, neuroinflammation, or cognition — in human AD tissue, iPSC-derived microglia/neurons, organoids, or AD animal models.</li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead">Overall Assessment — MYO1E in Alzheimer's Disease</span>
+      MYO1E is a <strong>biologically plausible but pre-validation candidate</strong> for AD relevance, supported by its presence in <strong>LOAD-associated microglial regulatory networks</strong>, anti-inflammatory and phagocytic disease-associated microglia programs, and mechanistic roles in <strong>phagocytosis, endocytosis, vesicle trafficking, actin remodeling, cholesterol distribution, and cell migration</strong>. Its co-expression with <strong>APOE, IGF1, and CXCR4</strong> in protective microglial states is encouraging, but no evidence yet demonstrates that MYO1E modulation directly improves amyloid burden, tau pathology, synapse preservation, or cognition in AD models. <strong>Safety is a principal constraint</strong>: MYO1E's essential role in kidney podocytes creates substantial renal toxicity risk for any systemic approach. The most defensible near-term strategy is to use MYO1E as an <strong>exploratory mechanistic and biomarker tool</strong> in microglial functional studies, pursue cell-selective or pathway-level modulation strategies, and rigorously validate AD-relevant phenotypic outcomes before any therapeutic commitment.
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+  MYO1E · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

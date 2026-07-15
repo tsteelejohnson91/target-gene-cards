@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TLR2 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fc;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 14px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE WRAPPER */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 14px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.91rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning { background: var(--warning-light); border-left: 4px solid #d97706; }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate { background: var(--neutral-bg); border-left: 4px solid #64748b; }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaway-list li {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 34px 36px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .verdict-banner p strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.77rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TLR2 &nbsp;|&nbsp; Toll-Like Receptor 2</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety concern</span>
+  </div>
+  <h1>TLR2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Caveat:</strong> TLR2 signaling is context-dependent — chronic maladaptive activation drives neuroinflammation, yet some TLR2 activity supports host defense, gut barrier integrity, and phagocytic repair. Indiscriminate systemic blockade risks undermining protective immune functions.
+    </div>
+
+    <div class="overview-body">
+      <p>TLR2 is an innate immune pattern-recognition receptor with strong mechanistic relevance to Alzheimer's disease (AD) through its roles in microglial activation, NF-κB/MyD88 signaling, NLRP3 inflammasome priming, cytokine release, oxidative stress, impaired proteostasis, synaptic dysfunction, blood–brain barrier (BBB) injury, and peripheral immune priming.</p>
+      <p>The clearest AD-specific mechanism is an Aβ<sub>1-42</sub>-driven pathway in which TLR2 activates NF-κB and NLRP3, promoting neuronal pyroptosis. TLR2 silencing reduced Aβ<sub>1-42</sub>-induced pyroptosis in SH-SY5Y cells, while NF-κB overexpression or NLRP3 activation partially reversed this protection, supporting a causal sequence: TLR2 → NF-κB → NLRP3 → pyroptosis. In APP/PS1 mice, sh-TLR2 treatment confirmed in vivo relevance.</p>
+      <p>A second AD-relevant mechanism involves infection-associated amyloid accumulation: <em>Treponema pallidum</em> increased Aβ<sub>1-42</sub> burden by upregulating BACE1 and impairing microglial Aβ clearance via TLR2/PI3K/AKT activation. Pharmacologic inhibition of this pathway restored microglial proteostatic function.</p>
+      <p>Therapeutically, the most compelling evidence comes from a PLGA nanoparticle anti-TLR2 scFv33 gene-delivery study in 5xFAD mice: a single intra-cisterna magna injection produced microglia-biased brain-wide expression, improved recognition memory, reduced hippocampal Aβ plaques, restored microglial ramification and process complexity, and enhanced Aβ phagocytosis — supporting TLR2 modulation as a potentially disease-modifying strategy.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;" aria-label="TLR2 signaling and AD mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Activation -->
+        <rect x="10" y="10" width="270" height="478" rx="12" fill="#e8f2fc" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.12em">A · UPSTREAM ACTIVATION</text>
+
+        <!-- Node A1: DAMPs/PAMPs -->
+        <rect x="72" y="42" width="146" height="38" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="58" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">DAMPs / PAMPs</text>
+        <text x="145" y="72" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1e293b">Aβ, HMGB1, S100, LPS</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="145" y1="80" x2="145" y2="102" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: TLR2 receptor -->
+        <rect x="66" y="102" width="158" height="38" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="118" text-anchor="middle" font-family="Georgia" font-size="11" fill="#ffffff" font-weight="700">TLR2 Receptor</text>
+        <text x="145" y="132" text-anchor="middle" font-family="Georgia" font-size="9" fill="#bfdbfe">TLR2/1 or TLR2/6</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="145" y1="140" x2="145" y2="162" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: MyD88 adaptor -->
+        <rect x="76" y="162" width="138" height="36" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="178" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">MyD88 Adaptor</text>
+        <text x="145" y="192" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1e293b">TIRAP recruitment</text>
+
+        <!-- Branch arrows from A3 -->
+        <!-- Left branch to NF-κB -->
+        <line x1="110" y1="198" x2="80" y2="228" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Right branch to MAPK/PI3K -->
+        <line x1="180" y1="198" x2="210" y2="228" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4a: NF-κB -->
+        <rect x="24" y="228" width="118" height="36" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="83" y="244" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">NF-κB Activation</text>
+        <text x="83" y="258" text-anchor="middle" font-family="Georgia" font-size="9" fill="#bfdbfe">pro-inflam genes</text>
+
+        <!-- Node A4b: MAPK/PI3K/AKT -->
+        <rect x="158" y="228" width="104" height="36" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="210" y="244" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">MAPK / PI3K</text>
+        <text x="210" y="258" text-anchor="middle" font-family="Georgia" font-size="9" fill="#bfdbfe">AKT, Syk, IRF3</text>
+
+        <!-- Arrow A4a → Cytokines -->
+        <line x1="83" y1="264" x2="83" y2="308" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Arrow A4b → Cytokines -->
+        <line x1="210" y1="264" x2="210" y2="296" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="210" y1="296" x2="165" y2="308" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: Cytokine Release -->
+        <rect x="28" y="308" width="220" height="38" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="324" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Cytokine Release</text>
+        <text x="138" y="338" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1e293b">IL-1β, IL-6, TNF-α, IL-18</text>
+
+        <!-- Arrow A5 → Microglial Activation -->
+        <line x1="138" y1="346" x2="138" y2="380" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A6: Microglial Activation -->
+        <rect x="40" y="380" width="196" height="36" rx="7" fill="#bfdbfe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="138" y="396" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">Microglial Activation</text>
+        <text x="138" y="410" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1e293b">morphology, phagocytosis</text>
+
+        <!-- Arrow A6 → BBB / Synaptic -->
+        <line x1="138" y1="416" x2="138" y2="449" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A7: BBB & Synaptic Injury -->
+        <rect x="26" y="449" width="220" height="32" rx="7" fill="#e0e7ff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="136" y="465" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a3a5c">BBB Injury &amp; Synaptic Loss</text>
+        <text x="136" y="477" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1e293b">oxidative stress, ROS</text>
+
+        <!-- Panel B: AD-Specific Cascade -->
+        <rect x="294" y="10" width="276" height="478" rx="12" fill="#fef2f2" fill-opacity="0.60" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="432" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#991b1b" letter-spacing="0.12em">B · AD-SPECIFIC CASCADE</text>
+
+        <!-- Node B1: Aβ1-42 -->
+        <rect x="348" y="42" width="166" height="36" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="431" y="58" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d" font-weight="700">Aβ₁₋₄₂ Stimulus</text>
+        <text x="431" y="72" text-anchor="middle" font-family="Georgia" font-size="9" fill="#991b1b">T. pallidum / BACE1↑</text>
+
+        <!-- Arrow B1→B2 -->
+        <line x1="431" y1="78" x2="431" y2="106" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B2: TLR2 upregulation -->
+        <rect x="348" y="106" width="166" height="36" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="431" y="122" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">TLR2 Upregulation</text>
+        <text x="431" y="136" text-anchor="middle" font-family="Georgia" font-size="9" fill="#fecaca">SH-SY5Y &amp; APP/PS1</text>
+
+        <!-- Arrow B2→B3 -->
+        <line x1="431" y1="142" x2="431" y2="170" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B3: NF-κB -->
+        <rect x="348" y="170" width="166" height="36" rx="7" fill="#fca5a5" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="431" y="186" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d" font-weight="700">NF-κB Activation</text>
+        <text x="431" y="200" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">pro-inflammatory</text>
+
+        <!-- Arrow B3→B4 -->
+        <line x1="431" y1="206" x2="431" y2="234" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B4: NLRP3 Inflammasome -->
+        <rect x="340" y="234" width="182" height="36" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="431" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">NLRP3 Inflammasome</text>
+        <text x="431" y="264" text-anchor="middle" font-family="Georgia" font-size="9" fill="#fecaca">caspase-1, GSDMD</text>
+
+        <!-- Arrow B4→B5 -->
+        <line x1="431" y1="270" x2="431" y2="298" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B5: Pyroptosis -->
+        <rect x="348" y="298" width="166" height="38" rx="7" fill="#fca5a5" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="431" y="314" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d" font-weight="700">Neuronal Pyroptosis</text>
+        <text x="431" y="328" text-anchor="middle" font-family="Georgia" font-size="9" fill="#7f1d1d">IL-1β / IL-18 release</text>
+
+        <!-- Panel B continued: Amyloid Clearance arm -->
+        <!-- Arrow B2 side-branch to Clearance impairment -->
+        <line x1="431" y1="142" x2="431" y2="170" stroke="#991b1b" stroke-width="0" /><!-- already drawn -->
+
+        <!-- Node B6: Impaired Aβ Clearance -->
+        <rect x="332" y="372" width="198" height="38" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="431" y="388" text-anchor="middle" font-family="Georgia" font-size="10" fill="#7f1d1d" font-weight="700">Impaired Aβ Clearance</text>
+        <text x="431" y="402" text-anchor="middle" font-family="Georgia" font-size="9" fill="#991b1b">PI3K/AKT block</text>
+
+        <!-- Arrow B5→B6 -->
+        <line x1="431" y1="336" x2="431" y2="372" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node B7: Plaque Accumulation -->
+        <rect x="340" y="438" width="182" height="36" rx="7" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="431" y="454" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">Plaque Accumulation</text>
+        <text x="431" y="468" text-anchor="middle" font-family="Georgia" font-size="9" fill="#fecaca">cognitive decline</text>
+
+        <!-- Arrow B6→B7 -->
+        <line x1="431" y1="410" x2="431" y2="438" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Panel C: Therapeutic / Protective -->
+        <rect x="584" y="10" width="328" height="478" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="748" y="30" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.12em">C · THERAPEUTIC &amp; PROTECTIVE</text>
+
+        <!-- Node C1: TLR2 Modulation Strategies -->
+        <rect x="610" y="42" width="274" height="36" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="747" y="58" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">TLR2 Modulation Strategies</text>
+        <text x="747" y="72" text-anchor="middle" font-family="Georgia" font-size="9" fill="#a7f3d0">antagonists, antibodies, scFvs</text>
+
+        <!-- Arrow C1→ two branches -->
+        <line x1="700" y1="78" x2="680" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="794" y1="78" x2="814" y2="110" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C2a: PLGA Nanoparticle -->
+        <rect x="594" y="110" width="172" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="680" y="126" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">PLGA NP scFv33</text>
+        <text x="680" y="140" text-anchor="middle" font-family="Georgia" font-size="9" fill="#065f46">intra-cisterna magna</text>
+
+        <!-- Node C2b: Small-molecule -->
+        <rect x="778" y="110" width="126" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="841" y="126" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">Small Molecules</text>
+        <text x="841" y="140" text-anchor="middle" font-family="Georgia" font-size="9" fill="#065f46">T9, T2, B1</text>
+
+        <!-- Arrow C2a→C3 -->
+        <line x1="680" y1="148" x2="680" y2="185" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow C2b→C3 (elbow route) -->
+        <line x1="841" y1="148" x2="841" y2="168" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="841" y1="168" x2="756" y2="185" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C3: Microglia-biased Expression -->
+        <rect x="606" y="185" width="296" height="36" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="754" y="201" text-anchor="middle" font-family="Georgia" font-size="10" fill="#ffffff" font-weight="700">Microglia-biased CNS Expression</text>
+        <text x="754" y="215" text-anchor="middle" font-family="Georgia" font-size="9" fill="#a7f3d0">5xFAD model, brain-wide</text>
+
+        <!-- Arrow C3→ two outcomes -->
+        <line x1="700" y1="221" x2="675" y2="255" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="808" y1="221" x2="833" y2="255" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C4a: Reduced Plaques -->
+        <rect x="598" y="255" width="154" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="675" y="271" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">Reduced Aβ Plaques</text>
+        <text x="675" y="285" text-anchor="middle" font-family="Georgia" font-size="9" fill="#065f46">hippocampal small plaques</text>
+
+        <!-- Node C4b: Restored Microglial -->
+        <rect x="762" y="255" width="142" height="38" rx="7" fill="#a7f3d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="833" y="271" text-anchor="middle" font-family="Georgia" font-size="10" fill="#064e3b" font-weight="700">Ramified Microglia</text>
+        <text x="833" y="285" text-anchor="middle" font-family="Georgia" font-size="9" fill="#065f46">process complexity ↑</text>
+
+        <!-- Arrow C4a→C5 -->
+        <line x1="675" y1="293" x2="675" y2="330" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="675" y1="330" x2="720" y2="344" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow C4b→C5 -->
+        <line x1="833" y1="293" x2="833" y2="330" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="833" y1="330" x2="788" y2="344" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node C5: Cognitive Benefit -->
+        <rect x="638" y="344" width="228" height="38" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="752" y="360" text-anchor="middle" font-family="Georgia" font-size="11" fill="#ffffff" font-weight="700">Improved Recognition</text>
+        <text x="752" y="374" text-anchor="middle" font-family="Georgia" font-size="9" fill="#a7f3d0">memory, Aβ phagocytosis ↑</text>
+
+        <!-- Node C6: Context-dependent risk note -->
+        <rect x="614" y="420" width="286" height="54" rx="7" fill="#fef9c3" stroke="#d97706" stroke-width="1.2"/>
+        <text x="757" y="438" text-anchor="middle" font-family="Georgia" font-size="10" fill="#78350f" font-weight="700">Context-Dependent Signaling</text>
+        <text x="757" y="452" text-anchor="middle" font-family="Georgia" font-size="9" fill="#92400e">Protective: host defense, gut barrier,</text>
+        <text x="757" y="466" text-anchor="middle" font-family="Georgia" font-size="9" fill="#92400e">mitochondrial redox, immune regulation</text>
+
+        <!-- Cross-panel connector: Panel A Microglial → Panel B Plaque (through gutter, elbow) -->
+        <!-- Route: right edge of panel A gutter between panels, not through any box -->
+        <!-- Panel A node A6 (BBB/Synaptic, y=449-481) right edge x=236 → elbow down to y=462, then right to Panel B node B7 left edge x=340 at y=456 -->
+        <line x1="236" y1="465" x2="282" y2="465" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+        <line x1="282" y1="465" x2="340" y2="456" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+        <!-- Cross-panel connector: Panel B plaque → Panel C therapeutic (gutter between B and C) -->
+        <!-- Route: right of B (B5 node at x=514, y=317), horizontal to gutter, then to C2a -->
+        <!-- B7 right edge x=522, y=456 → elbow up to y=420 in gutter → right to C context box—skip, use B5 → C5 connection instead to show reversal -->
+        <!-- B5 right x=514, y=317, route through gutter x=570 → C3 bottom ... too complex, skip to avoid overlap -->
+        <!-- Draw a simple dashed arrow from B's Clearance impaired node to C's outcome, via gutter -->
+        <!-- B6 right edge x=530 y=391, go to gutter x=570 y=391, down to 400, right to C5 left x=638 y=362—path would cross C context box edge, abort -->
+        <!-- Instead, annotate with a small badge only -->
+        <!-- No cross-panel connector drawn to avoid geometry violations -->
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue) — Upstream Activation:</strong> DAMPs/PAMPs (including Aβ) bind TLR2, recruiting MyD88/TIRAP and branching into NF-κB (left) and MAPK/PI3K/AKT (right) cascades, converging on cytokine release, microglial activation, and downstream BBB &amp; synaptic injury.
+      <strong>Panel B (red) — AD-Specific Cascade:</strong> Aβ<sub>1-42</sub> upregulates TLR2, driving NF-κB → NLRP3 → neuronal pyroptosis, while also impairing microglial Aβ clearance via PI3K/AKT, worsening plaque accumulation.
+      <strong>Panel C (teal) — Therapeutic &amp; Protective:</strong> TLR2 modulation (PLGA-NP scFv33 or small molecules) achieves microglia-biased CNS expression, branching to reduced Aβ plaques and restored microglial ramification, converging on improved recognition memory; a warning node highlights context-dependent protective TLR2 functions that must be preserved.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>TLR2 Links Aβ to Inflammatory Cell Death</h3>
+        <p>In AD-relevant models, Aβ<sub>1-42</sub> engages or upregulates TLR2, activating NF-κB and NLRP3 to promote neuronal pyroptosis with caspase-1 activation, gasdermin D cleavage, and IL-1β/IL-18 release. TLR2 knockdown reduces this injury pathway, and NF-κB overexpression reverses the protection.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>TLR2 Can Impair Amyloid Clearance</h3>
+        <p><em>Treponema pallidum</em> activated microglial TLR2/PI3K/AKT signaling, reducing Aβ<sub>1-42</sub> phagocytosis and degradation, while simultaneously increasing Aβ production via BACE1 upregulation. Pharmacologic inhibition of this pathway restored microglial clearance function.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>TLR2 as a Major Inflammatory Amplifier</h3>
+        <p>Across multiple cell types and models, TLR2 activation induces NF-κB, MAPK, MyD88, PI3K/AKT, Syk, and IRF3 pathways, generating IL-1β, IL-6, TNF-α, IL-8/CXCL8, MCP-1/CCL2, CXCL1, CXCL10, and IL-18 — sustaining chronic microglial and macrophage inflammatory loops relevant to neurodegeneration.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>PLGA-NP scFv33 Delivery Shows AD-Model Efficacy</h3>
+        <p>A single intra-cisterna magna injection of PLGA anti-TLR2 scFv33 nanoparticles in 5xFAD mice produced brain-wide, microglia-biased expression, improved recognition memory, reduced small hippocampal Aβ plaques, restored microglial process complexity, and enhanced Aβ phagocytosis in co-culture — the strongest direct AD-model evidence in the dataset.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>DAMPs &amp; Peripheral Priming Sustain TLR2 Activity</h3>
+        <p>Endogenous damage signals (HMGB1, galectin-3, S100 proteins, extracellular histones, lipid debris) and peripheral sources (gut dysbiosis, periodontal pathogens, systemic infection, microbial vesicles) can chronically engage TLR2, elevating systemic cytokines, injuring the BBB, and resetting microglial inflammatory tone — a route linking systemic health to AD neuroinflammation.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>TLR2 Is Context-Dependent — Not Uniformly Harmful</h3>
+        <p>TLR2 signaling supports host defense, vaccine responses, gut barrier integrity, mitochondrial redox protection, and regulated phagocytic repair. This context-dependence, along with differences in heterodimer usage (TLR2/1 vs. TLR2/6), cell type, disease stage, and ligand identity, argues strongly against indiscriminate systemic TLR2 blockade.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Prioritize selective TLR2 modulation, not blanket inhibition.</strong> The most plausible AD strategy is to dampen chronic maladaptive microglial TLR2/NF-κB/NLRP3 signaling while preserving protective functions such as antimicrobial defense, debris clearance, tissue repair, and regulated phagocytosis.</li>
+      <li><strong>Validate TLR2 targets in AD-specific systems.</strong> Key next experiments should test TLR2 antagonists, anti-TLR2 antibodies/scFvs, or TLR2 knockdown in human iPSC-derived microglia/neurons, AD organoids, APP/PS1 or 5xFAD models, tau models, and human AD single-cell datasets.</li>
+      <li><strong>Focus on mechanistic endpoints relevant to AD:</strong> Aβ uptake/degradation, tau-associated inflammation, synaptic loss, microglial morphology, neuronal pyroptosis, NLRP3 activation, IL-1β/IL-18 release, NF-κB activation, mitochondrial ROS, autophagy/proteostasis, and cognition.</li>
+      <li><strong>Advance CNS-targeted delivery approaches.</strong> The PLGA anti-TLR2 scFv33 nanoparticle data suggest that local, sustained, microglia-biased CNS delivery may outperform repeated systemic biologic dosing and reduce peripheral immune risks.</li>
+      <li><strong>Develop biomarkers to identify patients most likely to benefit.</strong> Candidate biomarkers include TLR2 expression, soluble TLR2 ligands, galectin-3, HMGB1, S100 proteins, NLRP3/ASC/caspase-1/IL-1β signatures, APOE/cholesterol-linked microglial states, trained-immunity epigenetic markers, and BBB injury markers.</li>
+      <li><strong>Consider AD subtypes where TLR2 may be most relevant:</strong> infection-associated or post-infectious cognitive decline, diabetes/metabolic syndrome-associated AD risk, vascular-inflammatory or BBB-disrupted dementia, periodontal/gut dysbiosis-associated inflammation, and patients with evidence of activated NLRP3/IL-1β pathways.</li>
+      <li><strong>Explore combination strategies.</strong> TLR2 modulation may pair best with anti-Aβ or anti-tau therapies, NLRP3 inhibitors, NF-κB pathway modulators, autophagy/proteostasis enhancers, antioxidant or mitochondrial therapies, BBB-protective agents, and microbiome/oral-health interventions.</li>
+      <li><strong>Treat current evidence as promising but not definitive.</strong> The evidence supports TLR2 as a mechanistically credible and increasingly druggable AD target, especially for neuroinflammatory and amyloid-clearance mechanisms, but clinical translation requires proof of CNS exposure, chronic safety, preserved host defense, and cognitive benefit in AD-relevant models and ultimately in patients.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment</div>
+      <p>
+        TLR2 is a <strong>mechanistically credible and increasingly druggable target</strong> for Alzheimer's disease neuroinflammation. The strongest evidence positions TLR2 as an <strong>upstream driver of Aβ-induced NF-κB/NLRP3/pyroptosis signaling</strong> in neurons and a <strong>suppressor of microglial amyloid clearance</strong> under pathological inflammatory conditions. The PLGA nanoparticle anti-TLR2 scFv33 study in 5xFAD mice provides direct AD-model proof-of-concept for <strong>CNS-targeted, microglia-biased TLR2 modulation</strong> improving both amyloid pathology and cognition. However, the breadth of TLR2's physiological roles demands <strong>selective, context-aware intervention strategies</strong> rather than systemic blockade. Progress requires rigorous validation in human iPSC-derived and AD-specific systems, development of <strong>pharmacodynamic and patient-stratification biomarkers</strong>, and careful attention to preserving protective TLR2 functions in immune defense, gut barrier integrity, and mitochondrial health.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TLR2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

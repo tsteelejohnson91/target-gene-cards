@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZPR1 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger-dark: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fef3c7;
+    --positive: #0f766e;
+    --positive-light: #f0fdf9;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(180, 40, 40, 0.28);
+    border: 1px solid rgba(220, 80, 80, 0.45);
+    color: #ffd6d6;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.68);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #e9a0a0;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--danger-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    color: #5a1a1a;
+    margin-bottom: 0;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    line-height: 1.5;
+    padding: 0 4px;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger-dark);
+    background: var(--danger-light);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-light);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-light);
+  }
+
+  .card.neutral {
+    border-left-color: #94a3b8;
+    background: var(--neutral-bg);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--slate);
+  }
+
+  .card.danger h3 { color: var(--danger-dark); }
+  .card.positive h3 { color: var(--positive); }
+  .card.warning h3 { color: var(--warning); }
+  .card.neutral h3 { color: #475569; }
+
+  .card p {
+    font-size: 0.92rem;
+    margin-bottom: 0;
+    color: var(--slate);
+  }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway-counter;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway-counter);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways li .lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  .takeaways li p {
+    margin-bottom: 0;
+    font-size: 0.96rem;
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 40px 44px;
+    margin-bottom: 56px;
+  }
+
+  .verdict .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #a8d4f5;
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ZPR1 &nbsp;|&nbsp; Zinc Finger Protein ZPR1 (ZNF259)</span>
+    <span class="chip chip-danger">⚠ Safety: Essential gene — systemic loss-of-function is severe</span>
+  </div>
+  <h1>ZPR1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Safety &amp; Essentiality Concern</div>
+      <p>ZPR1 is essential for development, cell-cycle progression, ribosomal function, and systemic organ homeostasis. Pediatric biallelic loss-of-function variants cause severe multisystem disease (growth restriction, microcephaly, kidney and liver disease, hypotonia, hearing and visual impairment). Broad ZPR1 inhibition or activation without tissue-specific control would carry serious safety liabilities.</p>
+    </div>
+
+    <p>ZPR1 is a pleiotropic, essential zinc-finger protein with <em>indirect</em> relevance to Alzheimer's disease (AD) through cardiometabolic, vascular, proteostasis, neuronal-survival, and genome-stability pathways. The available evidence does not establish ZPR1 as a proven AD driver or validated therapeutic target; its strongest AD-relevant evidence is mechanistic and risk-pathway based rather than disease-specific.</p>
+
+    <p>The most direct cognition-related evidence derives from a 2025 <em>Alzheimer's &amp; Dementia</em> study in 5,111 rural Indians, where the <strong>APOC3–APOA4–APOA5–ZPR1–BUD13 region</strong> was linked to cognition through cardiometabolic traits. Mendelian randomization implicated adverse effects of cardiometabolic traits on multiple cognitive domains, positioning ZPR1 primarily within a lipid-metabolic and vascular-risk network that may influence late-life cognitive decline.</p>
+
+    <p>Across the literature, ZPR1/ZNF259-region variants — especially <strong>rs964184</strong> and <strong>rs2075290</strong> — are repeatedly associated with triglycerides, HDL/LDL cholesterol, metabolic syndrome, type 2 diabetes-related traits, NAFLD, coronary artery disease, myocardial infarction, coagulation traits, and dietary lipid responses. These systemic traits are recognized contributors to cognitive impairment and dementia risk.</p>
+
+    <p>ZPR1 also carries neurodegeneration-relevant biology independent of lipid genetics: interaction with SMN and senataxin, R-loop resolution, genome maintenance, neuronal survival in SMA models, JNK/caspase-mediated apoptosis modulation, and essential chaperone activity for eEF1A biogenesis. However, the text does not demonstrate that ZPR1 directly modifies amyloid-β, tau, synaptic loss, microglial activation, neuroinflammation, or clinical AD progression.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="880" height="476" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+
+        <!-- Panel A: Cardiometabolic / Vascular Risk -->
+        <rect x="10" y="10" width="420" height="478" rx="12" ry="12"
+              fill="rgba(30,90,160,0.07)" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="24" y="32" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#2e6da4" text-anchor="start">PANEL A — CARDIOMETABOLIC &amp; VASCULAR RISK</text>
+
+        <!-- Node A1: ZPR1 locus -->
+        <rect x="140" y="44" width="152" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="216" y="62" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">ZPR1 / ZNF259</text>
+        <text x="216" y="78" font-size="9.5" fill="#cde" text-anchor="middle">11q23.3 locus</text>
+
+        <!-- Arrow A1 -> A2a and A1 -> A2b (branches) -->
+        <!-- A1 to A2a (left branch) -->
+        <line x1="187" y1="88" x2="100" y2="140" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+        <!-- A1 to A2b (right branch) -->
+        <line x1="245" y1="88" x2="310" y2="140" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A2a: TG/HDL dysregulation -->
+        <rect x="30" y="140" width="152" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="106" y="158" font-size="10.5" font-weight="700" fill="#1a3a5c" text-anchor="middle">TG/HDL</text>
+        <text x="106" y="174" font-size="9.5" fill="#2e6da4" text-anchor="middle">Dyslipidemia</text>
+
+        <!-- Node A2b: MetSyn/T2D traits -->
+        <rect x="248" y="140" width="152" height="44" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="324" y="158" font-size="10.5" font-weight="700" fill="#1a3a5c" text-anchor="middle">MetSyn / T2D</text>
+        <text x="324" y="174" font-size="9.5" fill="#2e6da4" text-anchor="middle">Insulin Resistance</text>
+
+        <!-- Arrows A2a -> A3, A2b -> A3 (converge) -->
+        <line x1="106" y1="184" x2="106" y2="232" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="324" y1="184" x2="324" y2="232" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node A3a: Atherosclerosis/CVD -->
+        <rect x="30" y="232" width="152" height="44" rx="7" fill="#dbeafe" stroke="#1e4e8c" stroke-width="1.2"/>
+        <text x="106" y="250" font-size="10.5" font-weight="700" fill="#1a3a5c" text-anchor="middle">Atherosclerosis</text>
+        <text x="106" y="266" font-size="9.5" fill="#1e4e8c" text-anchor="middle">CAD / MI risk</text>
+
+        <!-- Node A3b: NAFLD / Hepatic stress -->
+        <rect x="248" y="232" width="152" height="44" rx="7" fill="#dbeafe" stroke="#1e4e8c" stroke-width="1.2"/>
+        <text x="324" y="250" font-size="10.5" font-weight="700" fill="#1a3a5c" text-anchor="middle">NAFLD</text>
+        <text x="324" y="266" font-size="9.5" fill="#1e4e8c" text-anchor="middle">Hepatic-metabolic stress</text>
+
+        <!-- Arrows A3a, A3b -> A4 (converge to shared outcome) -->
+        <line x1="106" y1="276" x2="175" y2="330" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+        <line x1="324" y1="276" x2="255" y2="330" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+        <!-- Node A4: Vascular cognitive impairment -->
+        <rect x="108" y="330" width="216" height="44" rx="7" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1.4"/>
+        <text x="216" y="348" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Vascular &amp; Metabolic</text>
+        <text x="216" y="364" font-size="9.5" fill="#a8d4f5" text-anchor="middle">Cognitive Impairment Risk</text>
+
+        <!-- Arrow A4 -> A5 -->
+        <line x1="216" y1="374" x2="216" y2="420" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+
+        <!-- Node A5: 2025 A&D study -->
+        <rect x="78" y="420" width="276" height="48" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="216" y="441" font-size="10" font-weight="700" fill="#2e6da4" text-anchor="middle">2025 A&amp;D Study (n=5,111)</text>
+        <text x="216" y="457" font-size="9" fill="#475569" text-anchor="middle">MR: cardiometabolic traits → cognition</text>
+
+        <!-- Panel B: Neuronal / Genome Biology -->
+        <rect x="448" y="10" width="462" height="478" rx="12" ry="12"
+              fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="464" y="32" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#0f766e" text-anchor="start">PANEL B — NEURONAL SURVIVAL &amp; GENOME INTEGRITY</text>
+
+        <!-- Node B1: ZPR1 protein -->
+        <rect x="584" y="44" width="160" height="44" rx="7" fill="#0f766e" stroke="#065f57" stroke-width="1.2"/>
+        <text x="664" y="62" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">ZPR1 Protein</text>
+        <text x="664" y="78" font-size="9.5" fill="#a7f3d0" text-anchor="middle">Zinc-finger / chaperone</text>
+
+        <!-- B1 branches to B2a and B2b -->
+        <line x1="620" y1="88" x2="530" y2="138" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="708" y1="88" x2="790" y2="138" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2a: SMN / SMA biology -->
+        <rect x="458" y="138" width="150" height="44" rx="7" fill="#f0fdf9" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="533" y="156" font-size="10.5" font-weight="700" fill="#065f57" text-anchor="middle">SMN Interaction</text>
+        <text x="533" y="172" font-size="9.5" fill="#0f766e" text-anchor="middle">Neuronal survival (SMA)</text>
+
+        <!-- Node B2b: Senataxin / R-loop -->
+        <rect x="718" y="138" width="162" height="44" rx="7" fill="#f0fdf9" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="799" y="156" font-size="10.5" font-weight="700" fill="#065f57" text-anchor="middle">Senataxin / R-loop</text>
+        <text x="799" y="172" font-size="9.5" fill="#0f766e" text-anchor="middle">Transcription-coupled repair</text>
+
+        <!-- B2a -> B3a -->
+        <line x1="533" y1="182" x2="533" y2="232" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+        <!-- B2b -> B3b -->
+        <line x1="799" y1="182" x2="799" y2="232" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3a: JNK/Caspase apoptosis -->
+        <rect x="458" y="232" width="150" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="533" y="250" font-size="10.5" font-weight="700" fill="#78350f" text-anchor="middle">MLK3-MKK7-JNK3</text>
+        <text x="533" y="266" font-size="9.5" fill="#92400e" text-anchor="middle">Caspase-3 apoptosis</text>
+
+        <!-- Node B3b: DNA damage / Genomic instability -->
+        <rect x="718" y="232" width="162" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="799" y="250" font-size="10.5" font-weight="700" fill="#78350f" text-anchor="middle">DNA Damage</text>
+        <text x="799" y="266" font-size="9.5" fill="#92400e" text-anchor="middle">Genomic instability</text>
+
+        <!-- B3a -> B4 and B3b -> B4 (converge) -->
+        <line x1="533" y1="276" x2="600" y2="330" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="799" y1="276" x2="740" y2="330" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node B4: Neuronal vulnerability -->
+        <rect x="550" y="330" width="216" height="44" rx="7" fill="#065f57" stroke="#044037" stroke-width="1.4"/>
+        <text x="658" y="348" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Neuronal Vulnerability</text>
+        <text x="658" y="364" font-size="9.5" fill="#a7f3d0" text-anchor="middle">Axonal defects / neurodegeneration</text>
+
+        <!-- B4 -> B5 -->
+        <line x1="658" y1="374" x2="658" y2="420" stroke="#065f57" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B5: Proteostasis / eEF1A -->
+        <rect x="518" y="420" width="280" height="48" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="658" y="441" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle">Proteostasis / eEF1A Chaperone</text>
+        <text x="658" y="457" font-size="9" fill="#475569" text-anchor="middle">ISR activation · ER-stress / UPR / CHOP axis</text>
+
+        <!-- Arrow defs -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+      </svg>
+    </div>
+    <p class="figure-caption"><strong>Figure.</strong> <em>Panel A (blue)</em> shows how the ZPR1/ZNF259 locus at 11q23.3 branches into two parallel cardiometabolic risk cascades — dyslipidemia (TG/HDL axis) and metabolic syndrome/insulin resistance — that independently converge on atherosclerosis/CAD and NAFLD/hepatic stress, ultimately reconverging on vascular and metabolic cognitive impairment risk; the dashed node represents the 2025 Mendelian randomization evidence. <em>Panel B (teal/amber)</em> shows ZPR1 protein bifurcating into an SMN-interaction/neuronal-survival branch (leading through JNK–caspase apoptosis) and a senataxin/R-loop resolution branch (leading through DNA damage and genomic instability), both reconverging on neuronal vulnerability and axonal neurodegeneration; the dashed node highlights proteostasis/eEF1A chaperone functions and ER-stress/UPR involvement.</em></p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>🔗 Cardiometabolic Mediation</h3>
+        <p>ZPR1's strongest AD connection is indirect: the APOC3–APOA4–APOA5–ZPR1–BUD13 locus governs triglyceride-rich lipoprotein metabolism and metabolic syndrome. These systemic pathways contribute to vascular cognitive impairment via endothelial dysfunction, atherosclerosis, insulin resistance, and reduced cerebrovascular reserve.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>⚖ Causal Uncertainty at the Locus</h3>
+        <p>Many associations arise from a dense 11q23.3 lipid-regulatory cluster. Due to linkage disequilibrium, signals attributed to ZPR1 may instead reflect neighboring apolipoprotein genes (<em>APOA5, APOA4, APOC3, APOA1</em>), regulatory variants, or methylation effects. ZPR1-specific causality is not established.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>🧠 Neuroprotective Biology (Non-AD Models)</h3>
+        <p>In SMA and motor-neuron models, reduced ZPR1 promotes R-loop accumulation, DNA damage, impaired SMN biology, axonal defects, and neuronal apoptosis. ZPR1 overexpression can rescue neuronal phenotypes and reduce genomic instability — findings suggesting neuronal-resilience roles, though untested in AD systems.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>🔬 Proteostasis &amp; Stress Signalling</h3>
+        <p>ZPR1 is an essential chaperone for eEF1A biogenesis. Its depletion causes proteotoxicity, integrated stress response activation, and impaired protein synthesis. ZPR1 also participates in ER-stress/UPR signalling via a liquid–liquid phase separation, K63-ubiquitin, and CHOP–UPR<sup>ER</sup> axis — all processes broadly relevant to AD proteostasis.</p>
+      </div>
+
+      <div class="card">
+        <h3>🍔 High-Fat Diet &amp; Hippocampal Hypothesis</h3>
+        <p>One review proposes that high-fat diet may reduce ZPR1, lower BDNF via PPAR-γ/TrkB/CREB signalling, reduce SMN, activate MLK3–MKK7–JNK3/caspase-3 apoptosis, and impair hippocampal plasticity. This hypothesis aligns with AD-relevant mechanisms but represents hypothesis, not direct validation.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>🚨 Essentiality &amp; Safety Liability</h3>
+        <p>Biallelic ZPR1 loss-of-function variants in children cause severe multisystem disease: growth restriction, microcephaly, kidney disease, liver disease, alopecia, glucose abnormalities, hypotonia, and sensory impairment. This argues forcefully against broad, indiscriminate ZPR1 inhibition or activation as a therapeutic strategy.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <p><span class="lead">Prioritize as a precision-risk marker:</span> Focus on ZPR1-region variants — especially rs964184, rs2075290, and haplotypes across the APOC3–APOA4–APOA5–ZPR1–BUD13 cluster — as biomarkers for cardiometabolic contributions to cognitive decline, particularly in ancestry-specific risk prediction.</p>
+      </li>
+      <li>
+        <p><span class="lead">Do not yet nominate as an AD therapeutic target:</span> Current evidence supports hypothesis generation, biomarker development, and pathway investigation — not direct Alzheimer's drug development. The data do not demonstrate that ZPR1 directly drives amyloid-β, tau, or clinical AD progression.</p>
+      </li>
+      <li>
+        <p><span class="lead">Disentangle ZPR1 from the apolipoprotein cluster:</span> Apply fine mapping, conditional analyses, brain and liver eQTLs, methylation profiling, chromatin interaction data, and functional perturbation to separate ZPR1's contribution from APOA5, APOC3, APOA4, APOA1, and BUD13.</p>
+      </li>
+      <li>
+        <p><span class="lead">Test in AD-specific biological systems:</span> Required experiments include AD brain expression analyses, single-cell ZPR1 profiling, iPSC-neuron/glia models, amyloid and tau model testing, and assessment of whether ZPR1 modulation changes synaptic integrity, neuroinflammation, DNA damage, R-loops, tau phosphorylation, or amyloid processing.</p>
+      </li>
+      <li>
+        <p><span class="lead">Explore vascular-metabolic dementia prevention:</span> ZPR1-region genotypes may identify individuals who benefit from aggressive management of triglycerides, HDL/TG ratio, insulin resistance, NAFLD, obesity, smoking, dietary quality, and cardiovascular risk factors.</p>
+      </li>
+      <li>
+        <p><span class="lead">Investigate gene–environment interactions:</span> ZPR1-region effects appear to vary with diet, BMI, smoking, carbohydrate quality, alcohol use, and fish-oil supplementation. These interactions may be more immediately actionable for dementia prevention than ZPR1-directed pharmacology.</p>
+      </li>
+      <li>
+        <p><span class="lead">Target downstream pathways rather than ZPR1 directly:</span> Potentially safer entry points include triglyceride metabolism, PPAR signalling, BDNF/TrkB/CREB signalling, JNK/caspase apoptosis, senataxin-mediated R-loop resolution, DNA repair, ER-stress/CHOP signalling, and integrated stress response pathways.</p>
+      </li>
+      <li>
+        <p><span class="lead">Apply rigorous safety evaluation to any ZPR1-directed concept:</span> Given its essential, systemic roles, any ZPR1-targeting intervention would require high tissue specificity, careful dose control, and clear evidence of disease-relevant dysregulation prior to any therapeutic application.</p>
+      </li>
+      <li>
+        <p><span class="lead">Contextualise relevance to metabolic AD subtypes:</span> ZPR1's Alzheimer's relevance is strongest in metabolically driven or vascular-metabolic cognitive decline subtypes. The most defensible current position is that ZPR1 may mark or contribute to risk pathways that intersect with AD, without directly driving core AD pathology.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-label">Overall Assessment — ZPR1 &amp; Alzheimer's Disease</div>
+    <p>ZPR1 is a <strong>pleiotropic, essential zinc-finger protein</strong> whose relevance to Alzheimer's disease is currently <strong>indirect and mechanistic</strong> rather than direct or validated. Its most credible AD-relevant role lies as a <strong>cardiometabolic risk-pathway marker</strong>: variants in the dense 11q23.3 apolipoprotein/ZPR1 locus robustly associate with dyslipidaemia, metabolic syndrome, NAFLD, and cardiovascular disease — all recognised contributors to vascular cognitive impairment and dementia risk. The 2025 <em>Alzheimer's &amp; Dementia</em> Mendelian randomization study provides the strongest direct cognitive link, but implicates the broader locus rather than ZPR1 protein specifically. <strong>Neuronal-biology findings</strong> in SMA models — spanning R-loop resolution, SMN interaction, DNA-damage suppression, JNK/caspase apoptosis, and proteostasis/eEF1A chaperone functions — provide biologically plausible but <strong>untested-in-AD mechanistic bridges</strong>. Critically, ZPR1 is essential for systemic organismal function, and paediatric biallelic loss causes severe multisystem disease, imposing a <strong>major safety constraint</strong> on any therapeutic concept. The most scientifically defensible near-term application is to use <strong>ZPR1-region genotypes as precision biomarkers</strong> for metabolically and vascularly mediated cognitive risk, while downstream pathway targets (PPAR, BDNF/TrkB, JNK/caspase, senataxin, ER-stress axes) are explored as safer, more tractable intervention points.</p>
+  </div>
+
+</main>
+
+<footer>
+  ZPR1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

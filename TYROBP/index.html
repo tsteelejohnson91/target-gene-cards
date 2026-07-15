@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TYROBP / DAP12 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,150,150,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--dark);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+
+  .takeaways-list li span {
+    font-size: 0.93rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1f33 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    font-size: 0.96rem;
+    opacity: 0.92;
+  }
+
+  .verdict-banner strong {
+    color: #bfdbfe;
+    font-weight: 700;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 20px;
+  }
+
+  p.body-text {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    line-height: 1.78;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TYROBP &nbsp;|&nbsp; DAP12 — Transmembrane Immune Signaling Adaptor</span>
+    <span class="chip chip-danger">⚠ Dosage-Sensitive: Loss-of-function causes Nasu-Hakola / PLOSL dementia</span>
+  </div>
+  <h1>TYROBP / DAP12 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Genetic Safety Caveat</div>
+      Biallelic loss of TYROBP or TREM2 causes <strong>Nasu-Hakola disease / PLOSL</strong> — a presenile dementia with bone cysts, leukoencephalopathy, and microglial dysfunction. Heterozygous deletion or rare coding variants have also been reported as possible AD/dementia risk factors. Simple global inhibition is therefore contraindicated.
+    </div>
+
+    <p class="body-text">TYROBP (also known as DAP12) is a central microglial and myeloid immune-signaling adaptor that is repeatedly linked to Alzheimer's disease (AD) through TREM2-dependent signaling, disease-associated microglia (DAM), neuroinflammation, complement activation, phagocytosis, amyloid-β plaque response, tau-related injury, synaptic dysfunction, neurovascular changes, and genetic dementia risk.</p>
+
+    <p class="body-text">TYROBP is not a classical amyloid- or tau-processing enzyme. Its AD relevance is primarily glial and immune: it transduces signals from receptors such as TREM2, TREM1, SIRPβ1, CR3, and other myeloid receptors into downstream ITAM/SYK, ERK/MAPK, PI3K-AKT, NF-κB, JNK, calcium, and cytoskeletal signaling programs. These pathways govern microglial activation, survival, proliferation, migration, cytokine release, phagocytosis, lysosomal function, plaque engagement, complement-associated synaptic pruning, and inflammatory state transitions.</p>
+
+    <p class="body-text">TYROBP is embedded in an <strong>APOE–TREM2–TYROBP microglial/DAM module</strong> accompanied by complement genes (C1QA/B/C, C3, C3AR1). Multi-omics and network studies identify TYROBP as a Tier 1 AD immune hub alongside APOE, TREM2, and CX3CR1.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;font-family:Arial,Helvetica,sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1a3a5c"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Upstream Receptors -->
+          <rect x="10" y="10" width="200" height="480" rx="10" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="110" y="30" text-anchor="middle" font-size="8.5" font-weight="700" fill="#1a3a5c" letter-spacing="1">UPSTREAM RECEPTORS</text>
+
+          <!-- TREM2 node -->
+          <rect x="30" y="42" width="160" height="38" rx="6" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="110" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="white">TREM2</text>
+          <text x="110" y="71" text-anchor="middle" font-size="8.5" fill="#bfdbfe">Lipids · APOE · AβM · PS</text>
+
+          <!-- TREM1 node -->
+          <rect x="30" y="102" width="74" height="34" rx="6" fill="#4a90c4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="67" y="117" text-anchor="middle" font-size="10" font-weight="700" fill="white">TREM1</text>
+          <text x="67" y="129" text-anchor="middle" font-size="8" fill="#dbeafe">pro-inflam</text>
+
+          <!-- SIRPβ1 node -->
+          <rect x="116" y="102" width="74" height="34" rx="6" fill="#4a90c4" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="153" y="117" text-anchor="middle" font-size="10" font-weight="700" fill="white">SIRPβ1</text>
+          <text x="153" y="129" text-anchor="middle" font-size="8" fill="#dbeafe">CR3 · CD33</text>
+
+          <!-- TYROBP/DAP12 central node -->
+          <rect x="30" y="162" width="160" height="38" rx="6" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1.5"/>
+          <text x="110" y="177" text-anchor="middle" font-size="10.5" font-weight="700" fill="white">TYROBP / DAP12</text>
+          <text x="110" y="191" text-anchor="middle" font-size="8.5" fill="#93c5fd">ITAM adaptor · TM interface</text>
+
+          <!-- Arrows panel A internal -->
+          <!-- TREM2 → TYROBP -->
+          <line x1="110" y1="80" x2="110" y2="162" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+          <!-- TREM1 → TYROBP -->
+          <line x1="67" y1="136" x2="80" y2="162" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- SIRPβ1 → TYROBP -->
+          <line x1="153" y1="136" x2="140" y2="162" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- SYK node -->
+          <rect x="30" y="226" width="160" height="34" rx="6" fill="#1a3a5c" stroke="#0b1f33" stroke-width="1"/>
+          <text x="110" y="241" text-anchor="middle" font-size="10" font-weight="700" fill="white">SYK Kinase</text>
+          <text x="110" y="255" text-anchor="middle" font-size="8.5" fill="#93c5fd">ITAM phosphorylation</text>
+
+          <!-- TYROBP → SYK -->
+          <line x1="110" y1="200" x2="110" y2="226" stroke="#1a3a5c" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+
+          <!-- APOE node -->
+          <rect x="30" y="286" width="74" height="34" rx="6" fill="#3b6fa0" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="67" y="301" text-anchor="middle" font-size="10" font-weight="700" fill="white">APOE</text>
+          <text x="67" y="315" text-anchor="middle" font-size="8" fill="#bfdbfe">lipid · DAM</text>
+
+          <!-- C1Q/C3 node -->
+          <rect x="116" y="286" width="74" height="34" rx="6" fill="#3b6fa0" stroke="#1a3a5c" stroke-width="1"/>
+          <text x="153" y="301" text-anchor="middle" font-size="10" font-weight="700" fill="white">C1Q · C3</text>
+          <text x="153" y="315" text-anchor="middle" font-size="8" fill="#bfdbfe">complement</text>
+
+          <!-- SYK → APOE (elbow) -->
+          <polyline points="80,260 67,260 67,286" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+          <!-- SYK → C1Q/C3 (elbow) -->
+          <polyline points="140,260 153,260 153,286" stroke="#2e6da4" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+
+          <!-- Panel B: Protective Branch -->
+          <rect x="220" y="10" width="215" height="480" rx="10" fill="#f0fdfa" fill-opacity="0.6" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="327" y="30" text-anchor="middle" font-size="8.5" font-weight="700" fill="#0f766e" letter-spacing="1">PROTECTIVE FUNCTIONS</text>
+
+          <!-- PI3K-AKT node -->
+          <rect x="238" y="42" width="180" height="34" rx="6" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+          <text x="328" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="white">PI3K–AKT Pathway</text>
+          <text x="328" y="70" text-anchor="middle" font-size="8.5" fill="#ccfbf1">survival · metabolism</text>
+
+          <!-- Phagocytosis node -->
+          <rect x="238" y="102" width="84" height="34" rx="6" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+          <text x="280" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Phagocytosis</text>
+          <text x="280" y="129" text-anchor="middle" font-size="8" fill="#f0fdfa">Aβ uptake</text>
+
+          <!-- Lysosomal node -->
+          <rect x="334" y="102" width="84" height="34" rx="6" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+          <text x="376" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Lysosomal</text>
+          <text x="376" y="129" text-anchor="middle" font-size="8" fill="#f0fdfa">activity</text>
+
+          <!-- PI3K-AKT → Phagocytosis -->
+          <polyline points="295,76 280,76 280,102" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+          <!-- PI3K-AKT → Lysosomal -->
+          <polyline points="361,76 376,76 376,102" stroke="#0f766e" stroke-width="1.4" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- Plaque Compaction node -->
+          <rect x="238" y="162" width="180" height="34" rx="6" fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+          <text x="328" y="177" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Plaque Compaction</text>
+          <text x="328" y="191" text-anchor="middle" font-size="8.5" fill="#ccfbf1">microglial barrier · containment</text>
+
+          <!-- Phagocytosis → Plaque Compaction (elbow) -->
+          <polyline points="280,136 280,149 328,149 328,162" stroke="#0f766e" stroke-width="1.3" fill="none" marker-end="url(#arr-teal)"/>
+          <!-- Lysosomal → Plaque Compaction (elbow) -->
+          <polyline points="376,136 376,149 328,149" stroke="#0f766e" stroke-width="1.3" fill="none"/>
+
+          <!-- DAM Transition node -->
+          <rect x="238" y="222" width="180" height="34" rx="6" fill="#0d9488" stroke="#065f46" stroke-width="1"/>
+          <text x="328" y="237" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">DAM Transition</text>
+          <text x="328" y="251" text-anchor="middle" font-size="8.5" fill="#ccfbf1">APOE·AXL·CLEC7A·GPNMB</text>
+
+          <!-- Plaque Compaction → DAM Transition -->
+          <line x1="328" y1="196" x2="328" y2="222" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Cognitive Protection node -->
+          <rect x="238" y="282" width="180" height="34" rx="6" fill="#115e59" stroke="#065f46" stroke-width="1"/>
+          <text x="328" y="297" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Cognitive Protection</text>
+          <text x="328" y="311" text-anchor="middle" font-size="8.5" fill="#ccfbf1">synaptic · electrophysiology</text>
+
+          <!-- DAM Transition → Cognitive Protection -->
+          <line x1="328" y1="256" x2="328" y2="282" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Panel C: Harmful Branch -->
+          <rect x="445" y="10" width="215" height="480" rx="10" fill="#fef2f2" fill-opacity="0.6" stroke="#991b1b" stroke-width="1.2"/>
+          <text x="552" y="30" text-anchor="middle" font-size="8.5" font-weight="700" fill="#991b1b" letter-spacing="1">HARMFUL OUTPUTS</text>
+
+          <!-- NF-κB / ERK node -->
+          <rect x="463" y="42" width="180" height="34" rx="6" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+          <text x="553" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="white">NF-κB · ERK · JNK</text>
+          <text x="553" y="70" text-anchor="middle" font-size="8.5" fill="#fecaca">inflammatory kinases</text>
+
+          <!-- Cytokine Release node -->
+          <rect x="463" y="102" width="84" height="34" rx="6" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+          <text x="505" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Cytokine</text>
+          <text x="505" y="129" text-anchor="middle" font-size="8" fill="#fee2e2">release</text>
+
+          <!-- Oxidative Stress node -->
+          <rect x="559" y="102" width="84" height="34" rx="6" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+          <text x="601" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Oxidative</text>
+          <text x="601" y="129" text-anchor="middle" font-size="8" fill="#fee2e2">stress</text>
+
+          <!-- NF-κB → Cytokine (elbow) -->
+          <polyline points="520,76 505,76 505,102" stroke="#991b1b" stroke-width="1.4" fill="none" marker-end="url(#arr-red)"/>
+          <!-- NF-κB → Oxidative (elbow) -->
+          <polyline points="586,76 601,76 601,102" stroke="#991b1b" stroke-width="1.4" fill="none" marker-end="url(#arr-red)"/>
+
+          <!-- Complement Pruning node -->
+          <rect x="463" y="162" width="180" height="34" rx="6" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1"/>
+          <text x="553" y="177" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Complement Pruning</text>
+          <text x="553" y="191" text-anchor="middle" font-size="8.5" fill="#fecaca">C1Q · C3 · C3AR1</text>
+
+          <!-- Cytokine → Complement (elbow) -->
+          <polyline points="505,136 505,149 553,149 553,162" stroke="#991b1b" stroke-width="1.3" fill="none" marker-end="url(#arr-red)"/>
+          <!-- Oxidative → Complement (elbow) -->
+          <polyline points="601,136 601,149 553,149" stroke="#991b1b" stroke-width="1.3" fill="none"/>
+
+          <!-- Tau / Neuronal Injury node -->
+          <rect x="463" y="222" width="180" height="34" rx="6" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+          <text x="553" y="237" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Tau · Neuronal Injury</text>
+          <text x="553" y="251" text-anchor="middle" font-size="8.5" fill="#fecaca">phospho-tau · apoptosis</text>
+
+          <!-- Complement Pruning → Tau/Neuronal -->
+          <line x1="553" y1="196" x2="553" y2="222" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Synaptic Dysfunction node -->
+          <rect x="463" y="282" width="180" height="34" rx="6" fill="#7f1d1d" stroke="#450a0a" stroke-width="1"/>
+          <text x="553" y="297" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Synaptic Dysfunction</text>
+          <text x="553" y="311" text-anchor="middle" font-size="8.5" fill="#fecaca">spine loss · cognitive deficits</text>
+
+          <!-- Tau/Neuronal → Synaptic Dysfunction -->
+          <line x1="553" y1="256" x2="553" y2="282" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Panel D: Therapeutics -->
+          <rect x="670" y="10" width="220" height="480" rx="10" fill="#fffbeb" fill-opacity="0.65" stroke="#b45309" stroke-width="1.2"/>
+          <text x="780" y="30" text-anchor="middle" font-size="8.5" font-weight="700" fill="#b45309" letter-spacing="1">THERAPEUTIC NODES</text>
+
+          <!-- TREM2 Interface node -->
+          <rect x="688" y="42" width="184" height="34" rx="6" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+          <text x="780" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">TREM2–TYROBP Interface</text>
+          <text x="780" y="70" text-anchor="middle" font-size="8.5" fill="#fef3c7">agonists · stabilizers</text>
+
+          <!-- SYK Inhibitor node -->
+          <rect x="688" y="102" width="86" height="34" rx="6" fill="#d97706" stroke="#b45309" stroke-width="1"/>
+          <text x="731" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">SYK Inhib.</text>
+          <text x="731" y="129" text-anchor="middle" font-size="8" fill="#fef3c7">pSYK target</text>
+
+          <!-- MS4A node -->
+          <rect x="786" y="102" width="86" height="34" rx="6" fill="#d97706" stroke="#b45309" stroke-width="1"/>
+          <text x="829" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">MS4A4A/6A</text>
+          <text x="829" y="129" text-anchor="middle" font-size="8" fill="#fef3c7">neg. regulation</text>
+
+          <!-- TREM2 Interface → SYK Inhib (elbow) -->
+          <polyline points="746,76 731,76 731,102" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+          <!-- TREM2 Interface → MS4A (elbow) -->
+          <polyline points="814,76 829,76 829,102" stroke="#b45309" stroke-width="1.4" fill="none" marker-end="url(#arr)"/>
+
+          <!-- INPP5D node -->
+          <rect x="688" y="162" width="86" height="34" rx="6" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+          <text x="731" y="177" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">INPP5D</text>
+          <text x="731" y="191" text-anchor="middle" font-size="8" fill="#fef3c7">PI3P·actin axis</text>
+
+          <!-- Complement Rx node -->
+          <rect x="786" y="162" width="86" height="34" rx="6" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+          <text x="829" y="177" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Complement</text>
+          <text x="829" y="191" text-anchor="middle" font-size="8" fill="#fef3c7">C1q·C3 block</text>
+
+          <!-- SYK Inhib → INPP5D -->
+          <line x1="731" y1="136" x2="731" y2="162" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+          <!-- MS4A → Complement Rx -->
+          <line x1="829" y1="136" x2="829" y2="162" stroke="#b45309" stroke-width="1.3" marker-end="url(#arr)"/>
+
+          <!-- Small molecules node -->
+          <rect x="688" y="222" width="184" height="34" rx="6" fill="#78350f" stroke="#451a03" stroke-width="1"/>
+          <text x="780" y="237" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Small Molecules</text>
+          <text x="780" y="251" text-anchor="middle" font-size="8.5" fill="#fef3c7">berberine · varenicline · bexarotene</text>
+
+          <!-- INPP5D → Small molecules (elbow) -->
+          <polyline points="731,196 731,209 780,209 780,222" stroke="#b45309" stroke-width="1.3" fill="none" marker-end="url(#arr)"/>
+          <!-- Complement Rx → Small molecules (elbow) -->
+          <polyline points="829,196 829,209 780,209" stroke="#b45309" stroke-width="1.3" fill="none"/>
+
+          <!-- Biomarker Panel node -->
+          <rect x="688" y="282" width="184" height="34" rx="6" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+          <text x="780" y="297" text-anchor="middle" font-size="9.5" font-weight="700" fill="white">Biomarker Panel</text>
+          <text x="780" y="311" text-anchor="middle" font-size="8.5" fill="#fef3c7">pSYK·TREM2·IBA1·C3·synaptophysin</text>
+
+          <!-- Small molecules → Biomarker Panel -->
+          <line x1="780" y1="256" x2="780" y2="282" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: SYK (Panel A) → PI3K-AKT (Panel B) via elbow in gutter -->
+          <polyline points="190,243 210,243 210,59 238,59" stroke="#2e6da4" stroke-width="1.5" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel connector: SYK (Panel A) → NF-κB/ERK (Panel C) via gutter top -->
+          <!-- Route: SYK bottom (110,260) → down to row 340, across to panel C entry at x=438,340, then up to NF-κB at (463,59) -->
+          <polyline points="110,260 110,340 438,340 438,59 463,59" stroke="#991b1b" stroke-width="1.4" fill="none" marker-end="url(#arr-red)"/>
+
+          <!-- Cross-panel connector: TREM2 Interface (Panel D) → SYK Inhib text already internal -->
+          <!-- Cross-panel connector: Panel D therapeutics target Panel B outcome — route below all panels -->
+          <polyline points="688,299 660,299 660,440 328,440 328,316" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3" fill="none" marker-end="url(#arr-teal)"/>
+
+          <!-- Bottom row: shared outcomes -->
+          <!-- Converge node: AD Outcome -->
+          <rect x="238" y="358" width="180" height="36" rx="6" fill="#1e293b" stroke="#0b1f33" stroke-width="1.5"/>
+          <text x="328" y="373" text-anchor="middle" font-size="10" font-weight="700" fill="white">AD Disease Outcome</text>
+          <text x="328" y="387" text-anchor="middle" font-size="8.5" fill="#94a3b8">cognition · plaque · tau · synapses</text>
+
+          <!-- Converge node: AD Outcome (harmful side) -->
+          <rect x="463" y="358" width="180" height="36" rx="6" fill="#1e293b" stroke="#0b1f33" stroke-width="1.5"/>
+          <text x="553" y="373" text-anchor="middle" font-size="10" font-weight="700" fill="white">AD Disease Outcome</text>
+          <text x="553" y="387" text-anchor="middle" font-size="8.5" fill="#94a3b8">neuroinflammation · decline</text>
+
+          <!-- Cognitive Protection → AD Outcome (protective) -->
+          <line x1="328" y1="316" x2="328" y2="358" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+          <!-- Synaptic Dysfunction → AD Outcome (harmful) -->
+          <line x1="553" y1="316" x2="553" y2="358" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+          <!-- Biomarker Panel → AD Outcome (therapeutic, elbow) -->
+          <polyline points="780,316 780,395 643,395 643,376 643,376" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
+
+          <!-- A label for cross-panel arrow -->
+          <rect x="196" y="228" width="40" height="16" rx="3" fill="#e8f2fb" stroke="#2e6da4" stroke-width="0.8"/>
+          <text x="216" y="240" text-anchor="middle" font-size="7.5" fill="#1a3a5c" font-weight="700">protect</text>
+
+          <rect x="126" y="327" width="44" height="16" rx="3" fill="#fef2f2" stroke="#991b1b" stroke-width="0.8"/>
+          <text x="148" y="339" text-anchor="middle" font-size="7.5" fill="#991b1b" font-weight="700">harm ↑</text>
+
+          <!-- Dashed legend line -->
+          <line x1="688" y1="460" x2="720" y2="460" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3"/>
+          <text x="724" y="464" font-size="8" fill="#0f766e">therapeutic rescue</text>
+          <line x1="795" y1="460" x2="827" y2="460" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="831" y="464" font-size="8" fill="#2e6da4">signal flow</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> Upstream myeloid receptors — TREM2, TREM1, SIRPβ1/CR3 — converge on TYROBP/DAP12, which recruits and activates SYK kinase; APOE and complement genes (C1Q·C3) are co-regulated downstream.
+        <strong>Panel B (teal, centre-left):</strong> Protective branch: SYK activates PI3K–AKT, driving phagocytosis and lysosomal activity that converge on plaque compaction and the homeostatic-to-DAM transition, ultimately yielding cognitive protection.
+        <strong>Panel C (red, centre-right):</strong> Harmful branch: SYK also fuels NF-κB·ERK·JNK kinases, producing cytokine release and oxidative stress that feed complement-mediated synaptic pruning, tau/neuronal injury, and synaptic dysfunction.
+        <strong>Panel D (amber, right):</strong> Therapeutic intervention nodes — TREM2–TYROBP interface modulators, SYK inhibitors, MS4A regulators, INPP5D/PI3P-actin, complement blockade, and small molecules (berberine, varenicline, bexarotene) — with a biomarker panel for monitoring. Dashed arrows denote therapeutic rescue of disease outcome.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>TREM2–TYROBP Axis: Core AD Mechanism</h3>
+        <p>The TREM2–TYROBP/DAP12 complex is the most consistent AD-relevant pathway. TREM2 binds lipids, APOE particles, amyloid-related material, phosphatidylserine, and cellular debris; TYROBP transduces these signals via ITAM/SYK and related kinase cascades. Multiple structure-based and screening studies position this interface as a priority therapeutic target.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Immune Hub, Not Amyloid Enzyme</h3>
+        <p>TYROBP is a glial signaling adaptor — not a classical amyloid- or tau-processing enzyme. It controls how microglia respond to plaques, damaged cells, lipids, and complement signals. Multi-omics studies rank it as a Tier 1 AD immune hub alongside APOE, TREM2, and CX3CR1.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Protective Microglial Functions</h3>
+        <p>TREM2/TYROBP signaling supports microglial plaque clustering, plaque compaction, amyloid-β uptake, phagocytosis, lysosomal activity, metabolic fitness, and formation of a microglial barrier that may limit plaque toxicity and neuritic dystrophy — effects that should be preserved by any therapeutic strategy.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Harmful Inflammatory Programs</h3>
+        <p>TYROBP-associated networks also drive SYK/ERK/NF-κB/JNK inflammatory signaling, cytokine release, complement activation, oxidative stress, microglial pyroptosis, neuronal apoptosis, synaptic dysfunction, and behavioral/cognitive deficits. Chronic overactivation may therefore worsen neuroinflammation.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Complement-Mediated Synaptic Injury</h3>
+        <p>TYROBP repeatedly co-occurs with C1Q/C3 pathway genes. In AD-like models, TYROBP-linked complement activation is associated with synaptic dysfunction, dendritic spine loss, apathy-like behavior, and pathological synaptic pruning — a distinct maladaptive output that warrants targeted intervention.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Dosage Sensitivity &amp; Genetic Risk</h3>
+        <p>Biallelic TYROBP/TREM2 loss-of-function causes Nasu-Hakola disease (PLOSL). Partial loss may dysregulate inflammatory programs rather than simply reduce immune activation. Amyloid and tau effects can diverge: TYROBP modulation may improve amyloid clearance while worsening tau phosphorylation or inflammatory gliosis.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span><strong>Treat TYROBP as a Tier 1 neuroimmune node.</strong> Prioritize it within the APOE–TREM2–TYROBP–C1Q/C3 microglial module in AD target selection and network analyses.</span>
+      </li>
+      <li>
+        <span><strong>Avoid simple inhibit-or-activate framing.</strong> The evidence demands selective tuning of TYROBP-dependent signaling based on disease stage, receptor context, pathology dominance, and microglial state — not global blockade or overactivation.</span>
+      </li>
+      <li>
+        <span><strong>Preserve beneficial TREM2–TYROBP functions.</strong> Therapeutic strategies should maintain amyloid/debris phagocytosis, plaque containment, microglial survival, lysosomal activity, lipid handling, and tissue repair outputs.</span>
+      </li>
+      <li>
+        <span><strong>Simultaneously limit maladaptive outputs.</strong> Target chronic SYK/ERK/NF-κB inflammatory signaling, excessive cytokine release, complement-mediated synaptic pruning, oxidative injury, microglial pyroptosis, tau-promoting inflammation, and synaptotoxic DAM states.</span>
+      </li>
+      <li>
+        <span><strong>Pursue receptor-specific targeting.</strong> Consider stabilizing or agonizing TREM2–TYROBP signaling while selectively inhibiting proinflammatory receptor-adaptor complexes (e.g., TREM1–DAP12) where appropriate, rather than pan-TYROBP blockade.</span>
+      </li>
+      <li>
+        <span><strong>Use downstream pathway modulation as an alternative.</strong> SYK, ERK/MAPK, PI3K-AKT, JNK, NF-κB, INPP5D/PI(3,4,5)P3-actin, complement C1Q/C3/C3aR, and MS4A4A/MS4A6A regulation are all actionable pathway points with emerging small-molecule or antibody evidence.</span>
+      </li>
+      <li>
+        <span><strong>Monitor both amyloid and tau endpoints.</strong> TYROBP modulation may improve amyloid clearance or cognition while producing different or adverse effects on tau phosphorylation, neuritic dystrophy, astrocytosis, or inflammatory gliosis — both must be tracked.</span>
+      </li>
+      <li>
+        <span><strong>Include synaptic and behavioral readouts.</strong> Several findings show TYROBP modulation improves learning, electrophysiology, dendritic spine density, and neuropsychiatric behavior even without large reductions in total Aβ load.</span>
+      </li>
+      <li>
+        <span><strong>Develop cell-state- and stage-specific biomarkers.</strong> Useful markers include TYROBP/DAP12, TREM2, APOE, CX3CR1, CD68/AIF1, ITGAX, CLEC7A, CST7, GPNMB, C1QA/B/C, C3, C3AR1, pSYK, pERK, inflammatory cytokines, lysosomal markers, and synaptic markers (synaptophysin, SNAP25).</span>
+      </li>
+      <li>
+        <span><strong>Require experimental validation before clinical translation.</strong> Much evidence is computational or model-based. Priority next steps include human iPSC-microglia experiments, receptor-specific TYROBP modulation assays, AD mouse studies across amyloid and tau stages, brain-penetrant SYK/interface modulators, and careful immune safety evaluation.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — TYROBP / DAP12 in Alzheimer's Disease</div>
+      <p>
+        TYROBP/DAP12 is a <strong>high-confidence, high-priority neuroimmune target</strong> in Alzheimer's disease, functioning as the central signaling adaptor for the TREM2-mediated microglial response to amyloid, tau, lipids, and cellular damage. Its importance lies not in direct amyloid or tau processing but in <strong>orchestrating whether microglia engage in protective plaque containment and phagocytic clearance versus destructive inflammatory and complement-mediated synaptic injury</strong>. The APOE–TREM2–TYROBP–C1Q/C3 module represents one of the most reproducibly implicated neuroimmune axes in AD multi-omics. Critically, TYROBP is a <strong>dosage-sensitive, context-dependent node</strong>: complete loss causes severe microgliopathy (Nasu-Hakola disease), partial dysregulation can worsen inflammation, and chronic overactivation may amplify neuroinflammatory damage. The optimal therapeutic strategy is therefore <strong>selective pathway tuning</strong> — preserving beneficial TREM2-driven phagocytosis and plaque compaction while curbing maladaptive SYK/NF-κB/complement outputs — pursued through receptor-interface modulators, downstream kinase inhibitors, or glial state-reprogramming approaches, with rigorous monitoring of both amyloid and tau readouts alongside synaptic and behavioral outcomes.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TYROBP / DAP12 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

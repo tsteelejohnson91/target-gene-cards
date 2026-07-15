@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DOCK4 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #2d4a7a;
+    --mid: #4a7cc7;
+    --light: #eaf0fb;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border-color: rgba(255,160,160,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fde68a;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* Figure */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg { display: block; margin: 0 auto; }
+  figcaption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+  .card.accent { border-left-color: var(--mid); background: var(--light); }
+  .card.danger { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.neutral { border-left-color: var(--neutral); background: var(--neutral-light); }
+  .card.blue { border-left-color: #1d4ed8; background: #eff6ff; }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+  .card p { font-size: 0.92rem; margin-bottom: 0; }
+
+  /* Takeaways */
+  ol.takeaways { list-style: none; counter-reset: tw; padding: 0; }
+  ol.takeaways li {
+    counter-increment: tw;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  ol.takeaways li::before {
+    content: counter(tw);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+  ol.takeaways li strong { color: var(--dark); }
+
+  /* Verdict */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f1f3d 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .verdict p { font-size: 1.02rem; opacity: 0.93; }
+  .verdict strong { color: #93c5fd; font-style: normal; }
+
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 48px;
+    padding: 22px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DOCK4 &nbsp;|&nbsp; Dedicator of Cytokinesis 4</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unresolved</span>
+  </div>
+  <h1>DOCK4 &amp; Alzheimer's Disease / ADRD</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caution — Exploratory Candidate Only:</strong> DOCK4 has not been validated as a therapeutic target. The precise variant, direction of genetic effect, causal cell type, and AD-specific expression changes remain uncharacterised. No study in the supplied literature demonstrates that DOCK4 modulation alters amyloid-β, tau, TDP-43, Lewy body pathology, neurodegeneration, or cognition in an AD model. Broad systemic activation or inhibition carries meaningful risk of off-target effects.
+    </div>
+
+    <p>DOCK4 is best characterised as an <em>exploratory</em> Alzheimer's disease (AD) / AD-related dementia (ADRD) candidate rather than a validated therapeutic target. The strongest direct AD-relevant evidence comes from an autopsy-based GWAS of neuropathologic lesions in 12,509 individuals, where variants at or near DOCK4 were identified among novel genome-wide significant loci across dementia-associated brain pathologies. This positions DOCK4 as a candidate locus linked to autopsy-confirmed neuropathology, not to broad clinical AD diagnosis alone.</p>
+
+    <p>Additional AD relevance is indirect but biologically plausible. DOCK4 functions as a guanine nucleotide exchange factor (GEF) and signalling scaffold — particularly for Rac1 and sometimes Rap1/Rap1A — governing actin cytoskeletal remodelling, dendritic spine structure, neurite outgrowth, synaptic transmission, neuronal excitability, cell migration, adherens junctions, endothelial transport, vascular barrier integrity, immune microenvironment regulation, and Wnt/β-catenin/GSK3β-linked signalling. These mechanisms overlap extensively with core AD processes including synaptic failure, hippocampal dysfunction, neuroinflammation, vascular dysfunction, lipid dysregulation, oxidative stress, impaired trafficking, and blood-brain barrier disruption.</p>
+
+    <p>The supplied literature does not establish the precise DOCK4 variant, target lesion, direction of genetic effect, causal cell type, or therapeutic direction. No supplied study demonstrates that DOCK4 modulation changes amyloid-β, tau, TDP-43, Lewy body pathology, neurodegeneration, or cognition in an AD model.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" width="860" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- Defs -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#4a7cc7" />
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b" />
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e" />
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2d4a7a" />
+            </marker>
+          </defs>
+
+          <!-- ===== PANEL A: Upstream Genetics & GEF Function ===== -->
+          <rect x="10" y="10" width="248" height="475" rx="12" fill="#eaf0fb" fill-opacity="0.6" stroke="#4a7cc7" stroke-width="1.2" />
+          <text x="134" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#2d4a7a" letter-spacing="1">A · GENETICS &amp; GEF FUNCTION</text>
+
+          <!-- Node A1: GWAS Neuropathology -->
+          <rect x="30" y="40" width="208" height="44" rx="7" fill="#2d4a7a" />
+          <text x="134" y="58" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">Neuropathology GWAS</text>
+          <text x="134" y="73" text-anchor="middle" fill="#bfdbfe" font-size="9.5">12,509 autopsy individuals</text>
+
+          <!-- arrow A1→A2 -->
+          <line x1="134" y1="84" x2="134" y2="102" stroke="#4a7cc7" stroke-width="1.6" marker-end="url(#arr)" />
+
+          <!-- Node A2: DOCK4 locus -->
+          <rect x="30" y="102" width="208" height="44" rx="7" fill="#4a7cc7" />
+          <text x="134" y="120" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">DOCK4 Candidate Locus</text>
+          <text x="134" y="135" text-anchor="middle" fill="#dbeafe" font-size="9.5">Novel genome-wide sig.</text>
+
+          <!-- arrow A2→A3 -->
+          <line x1="134" y1="146" x2="134" y2="164" stroke="#4a7cc7" stroke-width="1.6" marker-end="url(#arr)" />
+
+          <!-- Node A3: GEF/Scaffold -->
+          <rect x="30" y="164" width="208" height="44" rx="7" fill="#1d4ed8" />
+          <text x="134" y="182" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">GEF &amp; Signalling Scaffold</text>
+          <text x="134" y="197" text-anchor="middle" fill="#bfdbfe" font-size="9.5">Activates Rac1 / Rap1</text>
+
+          <!-- arrow A3→A4 -->
+          <line x1="134" y1="208" x2="134" y2="226" stroke="#4a7cc7" stroke-width="1.6" marker-end="url(#arr)" />
+
+          <!-- Node A4: Epigenetic Regulation -->
+          <rect x="30" y="226" width="208" height="44" rx="7" fill="#e0f2fe" stroke="#4a7cc7" stroke-width="1" />
+          <text x="134" y="244" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Epigenetic Regulation</text>
+          <text x="134" y="259" text-anchor="middle" fill="#334155" font-size="9.5">Lactylation, miR-181d, methylation</text>
+
+          <!-- Node A5: Unresolved direction -->
+          <rect x="30" y="400" width="208" height="44" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" />
+          <text x="134" y="418" text-anchor="middle" fill="#991b1b" font-weight="bold" font-size="10.5">Therapeutic Direction</text>
+          <text x="134" y="433" text-anchor="middle" fill="#7f1d1d" font-size="9.5">Unresolved — no AD model data</text>
+
+          <!-- ===== PANEL B: Neuronal / Synaptic Branch ===== -->
+          <rect x="268" y="10" width="348" height="340" rx="12" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.2" />
+          <text x="442" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1">B · NEURONAL &amp; SYNAPTIC</text>
+
+          <!-- Node B1: Rac1 Activation (shared entry) -->
+          <rect x="340" y="40" width="204" height="44" rx="7" fill="#0f766e" />
+          <text x="442" y="58" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">Rac1 Activation</text>
+          <text x="442" y="73" text-anchor="middle" fill="#ccfbf1" font-size="9.5">Actin cytoskeleton remodelling</text>
+
+          <!-- Branch B-left: Dendritic spine -->
+          <!-- arrow B1→B2 -->
+          <line x1="390" y1="84" x2="350" y2="104" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+          <!-- Node B2: Dendritic Spines -->
+          <rect x="278" y="104" width="152" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1" />
+          <text x="354" y="122" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Dendritic Spines</text>
+          <text x="354" y="137" text-anchor="middle" fill="#134e4a" font-size="9.5">Density &amp; arborization</text>
+
+          <!-- arrow B2→B4 -->
+          <line x1="354" y1="148" x2="354" y2="168" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+          <!-- Node B4: AMPA/NMDA trafficking -->
+          <rect x="278" y="168" width="152" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1" />
+          <text x="354" y="186" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">AMPA/NMDA</text>
+          <text x="354" y="201" text-anchor="middle" fill="#134e4a" font-size="9.5">Receptor trafficking</text>
+
+          <!-- Branch B-right: Neurite outgrowth -->
+          <!-- arrow B1→B3 -->
+          <line x1="494" y1="84" x2="528" y2="104" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+          <!-- Node B3: Neurite Outgrowth -->
+          <rect x="460" y="104" width="148" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1" />
+          <text x="534" y="122" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Neurite Outgrowth</text>
+          <text x="534" y="137" text-anchor="middle" fill="#134e4a" font-size="9.5">Hippocampal function</text>
+
+          <!-- arrow B3→B5 -->
+          <line x1="534" y1="148" x2="534" y2="168" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+          <!-- Node B5: Excitatory Synaptic -->
+          <rect x="460" y="168" width="148" height="44" rx="7" fill="#99f6e4" stroke="#0f766e" stroke-width="1" />
+          <text x="534" y="186" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Excitatory Synapse</text>
+          <text x="534" y="201" text-anchor="middle" fill="#134e4a" font-size="9.5">GluN2B / Nav1.7 / Dynein</text>
+
+          <!-- Converge arrows B4→B6 and B5→B6 -->
+          <line x1="354" y1="212" x2="354" y2="256" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="534" y1="212" x2="534" y2="256" stroke="#0f766e" stroke-width="1.5" />
+          <!-- horizontal convergence line -->
+          <line x1="354" y1="256" x2="534" y2="256" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="442" y1="256" x2="442" y2="274" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+          <!-- Node B6: Synaptic Integrity / Cognition -->
+          <rect x="340" y="274" width="204" height="44" rx="7" fill="#0f766e" />
+          <text x="442" y="292" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">Synaptic Integrity</text>
+          <text x="442" y="307" text-anchor="middle" fill="#ccfbf1" font-size="9.5">Spatial memory &amp; cognition</text>
+
+          <!-- ===== PANEL C: Vascular / Inflammatory ===== -->
+          <rect x="626" y="10" width="262" height="340" rx="12" fill="#fff7ed" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2" />
+          <text x="757" y="30" text-anchor="middle" font-size="9" font-weight="bold" fill="#b45309" letter-spacing="1">C · VASCULAR &amp; IMMUNE</text>
+
+          <!-- Node C1: Rap1 / Endothelial -->
+          <rect x="645" y="40" width="224" height="44" rx="7" fill="#b45309" />
+          <text x="757" y="58" text-anchor="middle" fill="white" font-weight="bold" font-size="10.5">Rap1 / Endothelial</text>
+          <text x="757" y="73" text-anchor="middle" fill="#fde68a" font-size="9.5">Adherens junctions &amp; barrier</text>
+
+          <!-- arrow C1→C2 -->
+          <line x1="757" y1="84" x2="757" y2="104" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)" />
+
+          <!-- Node C2: SR-B1 LDL Transcytosis -->
+          <rect x="645" y="104" width="224" height="44" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1" />
+          <text x="757" y="122" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">SR-B1 LDL Transcytosis</text>
+          <text x="757" y="137" text-anchor="middle" fill="#78350f" font-size="9.5">Vascular lipid transport</text>
+
+          <!-- arrow C2→C3 -->
+          <line x1="757" y1="148" x2="757" y2="168" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)" />
+
+          <!-- Node C3: Neuroinflammation / Immune -->
+          <rect x="645" y="168" width="224" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1" />
+          <text x="757" y="186" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Immune &amp; Inflammatory</text>
+          <text x="757" y="201" text-anchor="middle" fill="#78350f" font-size="9.5">Macrophage / infiltration</text>
+
+          <!-- arrow C3→C4 -->
+          <line x1="757" y1="212" x2="757" y2="232" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)" />
+
+          <!-- Node C4: Wnt/GSK3β -->
+          <rect x="645" y="232" width="224" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2" />
+          <text x="757" y="250" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Wnt / β-catenin / GSK3β</text>
+          <text x="757" y="265" text-anchor="middle" fill="#78350f" font-size="9.5">Synaptic resilience / tau-related</text>
+
+          <!-- ===== PANEL D: AD Pathology Outcomes (bottom row shared) ===== -->
+          <rect x="268" y="360" width="620" height="120" rx="12" fill="#fef2f2" fill-opacity="0.65" stroke="#991b1b" stroke-width="1.2" />
+          <text x="578" y="378" text-anchor="middle" font-size="9" font-weight="bold" fill="#991b1b" letter-spacing="1">D · AD-RELEVANT OUTCOMES (UNTESTED IN AD MODELS)</text>
+
+          <!-- Node D1 -->
+          <rect x="280" y="388" width="140" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1" />
+          <text x="350" y="406" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">BBB / Vascular</text>
+          <text x="350" y="421" text-anchor="middle" fill="#7f1d1d" font-size="9.5">Barrier integrity</text>
+
+          <!-- Node D2 -->
+          <rect x="432" y="388" width="140" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1" />
+          <text x="502" y="406" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Synapse / Spine</text>
+          <text x="502" y="421" text-anchor="middle" fill="#7f1d1d" font-size="9.5">Loss → cognitive decline</text>
+
+          <!-- Node D3 -->
+          <rect x="584" y="388" width="140" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1" />
+          <text x="654" y="406" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Neuroinflammation</text>
+          <text x="654" y="421" text-anchor="middle" fill="#7f1d1d" font-size="9.5">Neuroimmune remodelling</text>
+
+          <!-- Node D4 -->
+          <rect x="736" y="388" width="140" height="44" rx="7" fill="#fecaca" stroke="#991b1b" stroke-width="1" />
+          <text x="806" y="406" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="10.5">Oxidative Stress</text>
+          <text x="806" y="421" text-anchor="middle" fill="#7f1d1d" font-size="9.5">Apoptosis / survival</text>
+
+          <!-- Connectors Panel A → Panel B (A3 → B1) through gutter -->
+          <line x1="238" y1="186" x2="260" y2="186" stroke="#4a7cc7" stroke-width="1.4" />
+          <line x1="260" y1="186" x2="260" y2="62" stroke="#4a7cc7" stroke-width="1.4" />
+          <line x1="260" y1="62" x2="340" y2="62" stroke="#4a7cc7" stroke-width="1.4" marker-end="url(#arr)" />
+
+          <!-- Connector Panel B → Panel D (B6 → D2) vertical -->
+          <line x1="442" y1="318" x2="442" y2="350" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="442" y1="350" x2="502" y2="350" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="502" y1="350" x2="502" y2="388" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+
+          <!-- Connector Panel C → Panel D (C4 → D1 via gutter) -->
+          <line x1="757" y1="276" x2="757" y2="330" stroke="#b45309" stroke-width="1.5" />
+          <line x1="757" y1="330" x2="654" y2="330" stroke="#b45309" stroke-width="1.5" />
+          <line x1="654" y1="330" x2="654" y2="388" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)" />
+
+          <!-- Connector C4 → D4 -->
+          <line x1="869" y1="254" x2="880" y2="254" stroke="#b45309" stroke-width="1.5" />
+          <line x1="880" y1="254" x2="880" y2="344" stroke="#b45309" stroke-width="1.5" />
+          <line x1="880" y1="344" x2="806" y2="344" stroke="#b45309" stroke-width="1.5" />
+          <line x1="806" y1="344" x2="806" y2="388" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-red)" />
+
+          <!-- Connector A4 → A5 (epigenetic → unresolved) through empty space -->
+          <line x1="134" y1="270" x2="134" y2="400" stroke="#64748b" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-dark)" />
+
+          <!-- Connector C1 → D3 via right gutter -->
+          <line x1="757" y1="84" x2="757" y2="104" stroke="none" />
+          <!-- already connected via cascade above; skip to avoid overlap -->
+
+          <!-- Connector B Panel to D1 -->
+          <line x1="354" y1="318" x2="354" y2="344" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="354" y1="344" x2="350" y2="344" stroke="#0f766e" stroke-width="1.5" />
+          <line x1="350" y1="344" x2="350" y2="388" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)" />
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> Genetic and molecular foundation — DOCK4 emerges as a candidate locus from a large autopsy GWAS; it encodes a GEF that activates Rac1/Rap1 and is subject to epigenetic regulation (miR-181d, histone lactylation, methylation). The dashed arrow indicates that the therapeutic direction remains unresolved.
+        <strong>Panel B (teal, centre):</strong> Neuronal and synaptic pathway — Rac1 activation bifurcates into two parallel sub-cascades: (left) dendritic spine density / AMPA–NMDA receptor trafficking, and (right) neurite outgrowth / hippocampal excitatory synaptic function via GluN2B and Nav1.7/Dynein; both converge on synaptic integrity and spatial cognition.
+        <strong>Panel C (amber, right):</strong> Vascular and immune pathway — Rap1/endothelial signalling governs barrier adherens junctions, SR-B1-mediated LDL transcytosis, immune/macrophage infiltration, and Wnt/β-catenin/GSK3β synaptic resilience.
+        <strong>Panel D (red, bottom):</strong> AD-relevant outcome nodes — BBB/vascular integrity, synapse/spine loss, neuroinflammation, and oxidative stress/apoptosis — all biologically plausible DOCK4-relevant endpoints that remain untested in AD models.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card accent">
+        <h3>Direct Genetic Evidence</h3>
+        <p>DOCK4 variants were identified among novel genome-wide significant loci in an autopsy-based GWAS of dementia-related neuropathologic lesions across 12,509 individuals — the strongest direct AD link in the supplied literature. This is neuropathology-association evidence, not a previously validated causal mechanism.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Synaptic &amp; Cytoskeletal Mechanism</h3>
+        <p>DOCK4 activates Rac1/Rap-related pathways that regulate actin dynamics, dendritic spine density, neurite outgrowth, and excitatory synaptic strength. In non-AD models, Dock4 deficiency impairs dendritic arborization, reduces AMPA/NMDA receptor content, and causes hippocampal spatial-memory deficits — processes highly relevant to AD-linked synaptic failure.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Glutamatergic &amp; Excitability Pathways</h3>
+        <p>DOCK4 connects to GluN2B/NMDA receptor signalling, AMPA receptor trafficking, and Nav1.7 ion-channel transport via a Dynein/DOCK4/Nav1.7 complex. These mechanisms are indirectly relevant to AD network dysfunction, hyperexcitability, and excitotoxicity, though none have been directly tested in AD.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Vascular &amp; Lipid Dementia Pathways</h3>
+        <p>In endothelial contexts, DOCK4 modulates SR-B1-mediated LDL transcytosis, lipoprotein association, Rac1-dependent barrier regulation, and vascular remodelling — mechanisms relevant to vascular contributions to cognitive impairment. These studies are not brain-endothelium AD studies, but provide plausible mechanistic links.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Neuroinflammation &amp; Epigenetic Regulation</h3>
+        <p>Cancer, inflammatory, and photobiomodulation studies associate DOCK4 with immune infiltration, macrophage biology, and inflammatory gene networks — hypothesis-generating for AD neuroimmune mechanisms. DOCK4 expression is also regulated by histone lactylation, chromatin accessibility, and a miR-181d axis in ischaemia/reperfusion, suggesting dynamic stress-state control.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Unresolved Therapeutic Direction</h3>
+        <p>Some evidence supports preserving DOCK4 function for neuronal and barrier integrity; other evidence shows DOCK4 can promote migration, invasion, and pathological vascular remodelling. No supplied study demonstrates DOCK4 modulation alters amyloid-β, tau, TDP-43, or cognition in any AD model. Broad activation or inhibition carries meaningful off-target risk.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat DOCK4 as exploratory, not validated:</strong> Current genetic and mechanistic evidence positions DOCK4 as a high-priority candidate locus, not a confirmed AD therapeutic target. Research investment should reflect this exploratory status.</li>
+      <li><strong>Fine-map the GWAS signal:</strong> Prioritise identification of the lead variant, causal gene, regulatory element, affected transcript, and direction of effect within the AD/ADRD neuropathology locus at or near DOCK4.</li>
+      <li><strong>Determine the linked neuropathologic phenotype:</strong> Establish whether the GWAS signal associates with amyloid plaques, tau-related AD neuropathologic change, Lewy body disease, TDP-43 pathology, vascular brain injury, or mixed lesions.</li>
+      <li><strong>Profile DOCK4 expression in AD-relevant brain tissue:</strong> Test expression and splicing across hippocampus, cortex, vascular compartments, and synaptic-vulnerability regions in human AD brain and relevant biobanks.</li>
+      <li><strong>Conduct cell-type-specific analyses:</strong> Determine in which cell types — neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, or vascular smooth muscle — DOCK4 is most likely to act in AD pathogenesis.</li>
+      <li><strong>Functionally validate in AD models:</strong> Use gain- and loss-of-function approaches in amyloid, tau, mixed-pathology, vascular dementia, and ageing models, measuring synapse density, spine stability, AMPA/NMDA receptor trafficking, neuroinflammation, oxidative stress, BBB integrity, and cognition.</li>
+      <li><strong>Investigate downstream pathways as safer intervention nodes:</strong> Rac1/Rap1 signalling, cortactin-actin remodelling, AMPA/NMDA receptor trafficking, Wnt/β-catenin/GSK3β, miR-181d-mediated repression, and endothelial SR-B1/DOCK4/Rac1 transport may offer more tractable and specific entry points than direct DOCK4 modulation.</li>
+      <li><strong>Avoid premature therapeutic assumptions:</strong> No evidence justifies broad DOCK4 inhibition or activation in AD. Any intervention would require cell-type, brain-region, disease-stage, and pathway specificity to avoid promoting pathological plasticity, migration, or vascular remodelling.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <p class="lead">Overall Assessment — DOCK4 in Alzheimer's Disease</p>
+      <p>
+        DOCK4 is a <strong>biologically compelling but pre-validatory exploratory candidate</strong> for AD/ADRD. Its emergence from a large autopsy-based neuropathology GWAS provides the most direct genetic hook, but the precise variant, causal direction, and affected cell type remain unknown. The gene's role as a <strong>Rac1/Rap1 GEF and cytoskeletal scaffold</strong> aligns mechanistically with core AD vulnerabilities — synaptic loss, dendritic spine instability, hippocampal dysfunction, excitatory signalling, vascular lipid transport, blood-brain barrier integrity, and neuroinflammatory remodelling — yet <strong>none of these connections have been demonstrated in a bona fide AD model</strong>. The <strong>therapeutic direction is unresolved</strong>: DOCK4 may be neuroprotective in some cellular contexts and pathologically active in others, precluding simple activation or inhibition strategies. The most productive near-term path is <strong>systematic genetic fine-mapping combined with cell-type-resolved expression profiling and targeted functional validation</strong> in AD-relevant experimental systems, treating downstream pathway nodes (Rac1, AMPA/NMDA trafficking, Wnt/GSK3β, miR-181d) as potentially more tractable intervention points than DOCK4 itself.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DOCK4 · Alzheimer's Disease / ADRD &nbsp;TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No clinical decisions should be based on this document
+</footer>
+
+</body>
+</html>

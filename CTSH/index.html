@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTSH — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1a6b;
+    --mid: #7c3aad;
+    --light: #f3eafa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8f7fc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0529 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #f0e8ff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(185,28,28,0.28);
+    border-color: rgba(248,113,113,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    border: 1.5px solid #fca5a5;
+    background: var(--danger-light);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+  }
+
+  .callout .lead {
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    color: var(--danger);
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  .callout p {
+    font-size: 0.93rem;
+    color: #7f1d1d;
+    margin-bottom: 0;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 18px 14px 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.accent   { border-left-color: var(--mid); background: var(--light); }
+  .card.danger   { border-left-color: var(--danger); background: var(--danger-light); }
+  .card.positive { border-left-color: var(--positive); background: var(--positive-light); }
+  .card.warning  { border-left-color: var(--warning); background: var(--warning-light); }
+  .card.blue     { border-left-color: #1d4ed8; background: #eff6ff; }
+  .card.slate    { border-left-color: #475569; background: #f1f5f9; }
+
+  .card h3 {
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    color: var(--slate);
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: take;
+  }
+
+  .takeaway-list li {
+    counter-increment: take;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(take);
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-list li .lead-in {
+    font-weight: 700;
+    color: var(--dark);
+    font-family: 'Arial', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .takeaway-list li p {
+    font-size: 0.92rem;
+    margin-bottom: 0;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0529 100%);
+    color: #f0e8ff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict .verdict-lead {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #e9d5ff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: 'Arial', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: CTSH &nbsp;|&nbsp; Cathepsin H</span>
+    <span class="chip chip-danger">⚠ Context-dependent safety — broad inhibition risk</span>
+  </div>
+  <h1>CTSH &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="lead">⚠ Safety / Caveats</div>
+      <p>CTSH is a lysosomal protease with essential roles in protein degradation, antigen processing, and cellular homeostasis across immune, metabolic, vascular, and CNS contexts. Broad systemic inhibition risks impairing beneficial lysosomal clearance and microglial plaque-directed phagocytosis. CNS-targeted or cell-type-specific modulation is strongly preferred over global CTSH blockade.</p>
+    </div>
+
+    <p>CTSH (cathepsin H) is a lysosomal cysteine protease repeatedly linked to Alzheimer's disease (AD)-relevant immune, microglial, and lysosomal biology. Across AD-focused evidence, higher CTSH expression or protein abundance is generally associated with increased AD risk or AD-related pathology, while reduced CTSH expression or function appears potentially protective in some genetic and cellular evidence.</p>
+
+    <p>The strongest AD-specific findings include Mendelian randomization, proteomic, colocalization, and functional-genomics studies identifying CTSH as an AD-associated gene/protein. Reported associations include genetically predicted or measured CTSH linked to increased AD risk, replicated effect sizes around OR ~1.04–1.06, cortical CTSH overexpression in AD postmortem tissue, and CTSH involvement in immune-cell-specific AD risk architecture.</p>
+
+    <p>Mechanistically, CTSH is most consistently connected to lysosomal proteostasis, microglial/macrophage biology, inflammatory activation, and phagocytosis. A key functional finding is that CTSH knockout in human microglial cells increased amyloid-β phagocytosis, suggesting CTSH may restrain Aβ clearance and that CTSH downregulation or inhibition could be beneficial in some AD contexts. CTSH is also placed in AD-relevant networks involving GRN/progranulin, TMEM106B, TREM2, IL-34, APOE-linked glial regulatory modules, and other immune/lysosomal genes.</p>
+
+    <p>CTSH is therefore best characterized as an <em>emerging AD-associated immune-lysosomal candidate</em> rather than a fully validated therapeutic target. Its therapeutic potential is plausible, especially for modulating microglial lysosomal and inflammatory states, but the optimal direction of intervention remains context-dependent.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Upstream Regulators / Genetic Evidence  — nodes: 4
+        PANEL B (centre): CTSH in Microglia — Branching Mechanism — nodes: 6
+        PANEL C (right): Downstream Consequences / Network — nodes: 5
+        Total: 15 nodes — within limit
+        Layout: viewBox 960 x 490
+      -->
+      <svg viewBox="0 0 960 490" width="960" height="490" xmlns="http://www.w3.org/2000/svg" aria-label="CTSH mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#7c3aad"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#475569"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: GENETIC & UPSTREAM ===== -->
+        <rect x="10" y="10" width="220" height="465" rx="12" fill="#f3eafa" fill-opacity="0.6" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="120" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#4a1a6b" letter-spacing="1.5">A · GENETIC EVIDENCE</text>
+
+        <!-- A1: rs2289702 variant -->
+        <rect x="30" y="46" width="180" height="54" rx="7" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="120" y="67" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#4a1a6b">rs2289702</text>
+        <text x="120" y="82" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">Protective T-allele</text>
+        <text x="120" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">↓ CTSH expression</text>
+
+        <!-- Arrow A1 → A2 -->
+        <line x1="120" y1="100" x2="120" y2="122" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: MR / Proteomic evidence -->
+        <rect x="30" y="122" width="180" height="54" rx="7" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="120" y="143" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#4a1a6b">MR / Proteomic</text>
+        <text x="120" y="158" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">Elevated CTSH</text>
+        <text x="120" y="171" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">→ AD risk OR 1.04–1.06</text>
+
+        <!-- Arrow A2 → A3 -->
+        <line x1="120" y1="176" x2="120" y2="198" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: Postmortem overexpression -->
+        <rect x="30" y="198" width="180" height="54" rx="7" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="120" y="219" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#4a1a6b">AD Postmortem Brain</text>
+        <text x="120" y="234" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">Cortical CTSH</text>
+        <text x="120" y="247" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">overexpression</text>
+
+        <!-- Arrow A3 → A4 -->
+        <line x1="120" y1="252" x2="120" y2="274" stroke="#7c3aad" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A4: Peripheral immune eQTL -->
+        <rect x="30" y="274" width="180" height="54" rx="7" fill="#e9d5ff" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="120" y="295" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#4a1a6b">Peripheral Immune</text>
+        <text x="120" y="310" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">Cell-type eQTL/MR</text>
+        <text x="120" y="323" text-anchor="middle" font-family="Arial" font-size="9" fill="#4a1a6b">activation-state specific</text>
+
+        <!-- ===== PANEL B: MICROGLIAL MECHANISM (BRANCHING) ===== -->
+        <rect x="248" y="10" width="464" height="465" rx="12" fill="#faf5ff" fill-opacity="0.55" stroke="#7c3aad" stroke-width="1.2"/>
+        <text x="480" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#4a1a6b" letter-spacing="1.5">B · MICROGLIAL &amp; LYSOSOMAL MECHANISM</text>
+
+        <!-- B1: CTSH — central hub -->
+        <rect x="379" y="46" width="202" height="52" rx="7" fill="#7c3aad" stroke="#4a1a6b" stroke-width="1.4"/>
+        <text x="480" y="68" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff">CTSH (Cathepsin H)</text>
+        <text x="480" y="85" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#e9d5ff">Lysosomal cysteine protease</text>
+
+        <!-- Arrows from B1 branching LEFT and RIGHT -->
+        <!-- Left branch arrow B1 → B2 -->
+        <line x1="430" y1="98" x2="370" y2="140" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Right branch arrow B1 → B3 -->
+        <line x1="530" y1="98" x2="590" y2="140" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B2 LEFT branch: Inflammatory activation -->
+        <rect x="268" y="140" width="178" height="52" rx="7" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="357" y="161" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#991b1b">Inflammatory Activation</text>
+        <text x="357" y="176" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">NF-κB · IL-6 · TNF-α · ROS</text>
+        <text x="357" y="189" text-anchor="middle" font-family="Arial" font-size="9" fill="#7f1d1d">Necroptosis / Apoptosis</text>
+
+        <!-- B2 → B4 -->
+        <line x1="357" y1="192" x2="357" y2="234" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- B3 RIGHT branch: Lysosomal proteostasis -->
+        <rect x="514" y="140" width="178" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="603" y="161" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f766e">Lysosomal Proteostasis</text>
+        <text x="603" y="176" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Protein degradation</text>
+        <text x="603" y="189" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">Antigen processing</text>
+
+        <!-- B3 → B5 -->
+        <line x1="603" y1="192" x2="603" y2="234" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- B4 LEFT: Neuroinflammation / AD pathology -->
+        <rect x="268" y="234" width="178" height="52" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+        <text x="357" y="255" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#92400e">Neuroinflammation</text>
+        <text x="357" y="270" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">Oxidative stress</text>
+        <text x="357" y="283" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">Microglial dysfunction</text>
+
+        <!-- B5 RIGHT: Aβ phagocytosis / clearance -->
+        <rect x="514" y="234" width="178" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="603" y="255" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0f766e">Aβ Phagocytosis</text>
+        <text x="603" y="270" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">CTSH KO → ↑Aβ uptake</text>
+        <text x="603" y="283" text-anchor="middle" font-family="Arial" font-size="9" fill="#134e4a">↓CTSH may improve clearance</text>
+
+        <!-- Converge arrows: B4 → B6, B5 → B6 -->
+        <line x1="357" y1="286" x2="412" y2="358" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+        <line x1="603" y1="286" x2="548" y2="358" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- B6 CONVERGENCE: AD Pathological Outcome -->
+        <rect x="379" y="358" width="202" height="54" rx="7" fill="#1a0529" stroke="#7c3aad" stroke-width="1.4"/>
+        <text x="480" y="379" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="700" fill="#e9d5ff">AD Pathological State</text>
+        <text x="480" y="395" text-anchor="middle" font-family="Arial" font-size="9" fill="#c4b5fd">Plaque burden · tau · synapse loss</text>
+        <text x="480" y="408" text-anchor="middle" font-family="Arial" font-size="9" fill="#c4b5fd">Cognitive decline</text>
+
+        <!-- ===== PANEL C: NETWORK & THERAPEUTIC ===== -->
+        <rect x="730" y="10" width="220" height="465" rx="12" fill="#eff6ff" fill-opacity="0.65" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="840" y="32" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1e3a8a" letter-spacing="1.5">C · NETWORK &amp; THERAPY</text>
+
+        <!-- C1: Lysosomal immune network -->
+        <rect x="750" y="46" width="180" height="54" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="840" y="64" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a8a">Lysosomal Network</text>
+        <text x="840" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">GRN · TMEM106B</text>
+        <text x="840" y="92" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">CTSB · TREM2 · IL-34</text>
+
+        <!-- Arrow C1 → C2 -->
+        <line x1="840" y1="100" x2="840" y2="122" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- C2: APOE glial regulation -->
+        <rect x="750" y="122" width="180" height="54" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="840" y="140" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a8a">APOE Glial Network</text>
+        <text x="840" y="155" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">snRNA-seq co-regulation</text>
+        <text x="840" y="168" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Microglial/astrocyte states</text>
+
+        <!-- Arrow C2 → C3 -->
+        <line x1="840" y1="176" x2="840" y2="198" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- C3: Candidate inhibitors -->
+        <rect x="750" y="198" width="180" height="54" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="840" y="216" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#92400e">Candidate Inhibitors</text>
+        <text x="840" y="231" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">Eriocitrin · SSR 69071</text>
+        <text x="840" y="244" text-anchor="middle" font-family="Arial" font-size="9" fill="#78350f">PF429242 · E64d/E64</text>
+
+        <!-- Arrow C3 → C4 -->
+        <line x1="840" y1="252" x2="840" y2="274" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- C4: Biomarker potential -->
+        <rect x="750" y="274" width="180" height="54" rx="7" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+        <text x="840" y="292" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#1e3a8a">Biomarker Potential</text>
+        <text x="840" y="307" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Plasma · CSF · Brain</text>
+        <text x="840" y="320" text-anchor="middle" font-family="Arial" font-size="9" fill="#1e3a8a">Multi-protein immune panel</text>
+
+        <!-- Arrow C4 → C5 -->
+        <line x1="840" y1="328" x2="840" y2="358" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- C5: Therapeutic hypothesis -->
+        <rect x="750" y="358" width="180" height="54" rx="7" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.4"/>
+        <text x="840" y="376" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#ffffff">Therapeutic Hypothesis</text>
+        <text x="840" y="391" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">↓ CTSH in defined contexts</text>
+        <text x="840" y="404" text-anchor="middle" font-family="Arial" font-size="9" fill="#bfdbfe">CNS/cell-type specific</text>
+
+        <!-- Cross-panel connector: Panel A (A4 bottom) → Panel B (B1 left) via top gutter -->
+        <!-- Route: from right edge of A4 → horizontal to B1 left edge -->
+        <!-- A4 right edge: x=210, y=301. B1 left edge: x=379, y=72 -->
+        <!-- Use elbow: go right from A4 right at y=301, then up to y=72, then right to B1 -->
+        <polyline points="210,301 232,301 232,72 379,72" fill="none" stroke="#7c3aad" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: Panel B (B6 right) → Panel C (C5 left) via bottom gutter -->
+        <!-- B6 right: x=581, y=385. C5 left: x=750, y=385 -->
+        <line x1="581" y1="385" x2="750" y2="385" fill="none" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-gray)"/>
+
+        <!-- Panel labels at bottom -->
+        <text x="120" y="458" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#7c3aad" font-style="italic">Genetic &amp; Upstream</text>
+        <text x="480" y="458" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#4a1a6b" font-style="italic">Microglial Branching Mechanism</text>
+        <text x="840" y="458" text-anchor="middle" font-family="Arial" font-size="8.5" fill="#1d4ed8" font-style="italic">Network &amp; Therapeutic</text>
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (left) — Genetic &amp; Upstream Evidence:</strong> The rs2289702 protective T-allele lowers CTSH expression; MR/proteomic studies link elevated CTSH to AD risk (OR 1.04–1.06); postmortem cortex shows CTSH overexpression; peripheral immune cell eQTLs are activation-state specific. A dashed connector routes through the gutter into Panel B's central hub.
+      <strong>Panel B (centre) — Microglial Branching Mechanism:</strong> CTSH (central hub) fans into two parallel sub-cascades: a pro-inflammatory branch (NF-κB / IL-6 / TNF-α / ROS → neuroinflammation) and a lysosomal/phagocytic branch (protein degradation/antigen processing → Aβ phagocytosis; CTSH KO ↑ Aβ uptake), both converging on a shared AD pathological outcome node.
+      <strong>Panel C (right) — Network &amp; Therapeutic:</strong> CTSH sits within a GRN/TMEM106B/TREM2 lysosomal network and an APOE glial co-regulatory module. Candidate inhibitors (Eriocitrin, SSR 69071, PF429242, E64d) and biomarker potential (plasma/CSF panels) point toward a context-specific therapeutic hypothesis of reduced CTSH activity.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card accent">
+        <h3>Genetic Risk Association</h3>
+        <p>Multiple Mendelian randomization and proteomic analyses report that elevated genetically predicted or plasma/brain CTSH is associated with increased AD risk, with replicated effect sizes around OR 1.04–1.06. The functional-genomics protective variant rs2289702 (T-allele) is associated with <em>decreased</em> CTSH expression, reinforcing a causal direction.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Microglial Aβ Clearance — Key Functional Finding</h3>
+        <p>CTSH knockout in human microglia significantly increased amyloid-β peptide phagocytosis. This supports a mechanism in which higher CTSH restrains Aβ clearance, and lower CTSH improves microglial amyloid handling — a direct functional link to AD pathology.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Lysosomal Immune Network Membership</h3>
+        <p>CTSH is embedded within a CTSH–GRN–TMEM106B lysosomal network, alongside TREM2, IL-34, APOE, CTSB, and SIGLEC/HLA immune genes. Plasma CTSH and TMEM106B were risk-associated while GRN appeared protective, yet all three were upregulated in AD brain tissue — reflecting complex co-regulation.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>APOE-Centered Glial Co-Regulation</h3>
+        <p>Single-nucleus RNA-seq regulatory-network analysis placed CTSH among AD GWAS-associated genes co-regulated with APOE in disease-relevant microglial and astrocytic states, linking CTSH to the most established genetic risk factor in AD biology.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Druggable But Not AD-Validated</h3>
+        <p>Candidate inhibitors including Eriocitrin, SSR 69071, PF429242, and E64d/E64 demonstrate that CTSH modulation can affect inflammatory and pathological phenotypes. None are validated as AD therapies in the current evidence, but they establish druggability of the target.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>Context-Dependent Intervention Direction</h3>
+        <p>Although the strongest AD-specific evidence favors lower CTSH (protective allele, enhanced phagocytosis on KO), broad CTSH inhibition risks impairing beneficial lysosomal clearance, antigen processing, plaque compaction, and normal immune function. Cell-type- and disease-stage-specific modulation is essential.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <div>
+          <span class="lead-in">Prioritize CTSH as a target-validation candidate, not an established target.</span>
+          <p>The evidence supports strong mechanistic interest but still requires direct disease-model and clinical validation before CTSH is treated as a confirmed therapeutic target.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Test whether CTSH inhibition or knockdown improves AD-relevant outcomes.</span>
+          <p>Key experimental endpoints should include Aβ uptake/degradation, plaque burden, tau pathology, lysosomal flux, microglial activation state, synapse loss, neuronal survival, and cognition.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Define cell-type specificity rigorously.</span>
+          <p>CTSH should be studied separately in microglia, astrocytes, neurons, endothelial cells, infiltrating monocytes/macrophages, and peripheral immune cells, because the evidence suggests strongly cell-state-specific effects.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Determine disease-stage specificity.</span>
+          <p>CTSH inhibition might be beneficial by reducing maladaptive inflammation or enhancing Aβ clearance, but could be harmful if CTSH is needed for beneficial plaque compaction, debris clearance, or lysosomal degradation at certain disease stages.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Measure CTSH activity, not only expression.</span>
+          <p>Future studies should distinguish CTSH mRNA, total protein, mature active enzyme, pro-CTSH, intracellular lysosomal CTSH, secreted CTSH, and CTSH/cystatin inhibitor balance to capture the biologically relevant form.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Evaluate CTSH within its lysosomal immune network.</span>
+          <p>CTSH should be analyzed together with GRN, TMEM106B, TREM2, IL-34, APOE, CTSB, SIRPA, SIGLEC7/9, and HLA-related immune genes to identify AD endophenotypes most likely to respond to CTSH modulation.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Explore biomarker potential within multi-protein panels.</span>
+          <p>Plasma, CSF, urine, and brain proteomic evidence suggests CTSH may be useful as part of a multi-protein immune/lysosomal AD biomarker panel, but its modest effect size makes it unlikely to be sufficient as a standalone biomarker.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Avoid broad systemic inhibition without safety data.</span>
+          <p>CTSH has context-dependent roles across immune, metabolic, vascular, pulmonary, cancer, and neurodegenerative biology. CNS-targeted, cell-type-specific, or activation-state-specific modulation is strongly preferred over global CTSH blockade.</p>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <span class="lead-in">Treat CTSH downregulation in defined contexts as the leading therapeutic hypothesis.</span>
+          <p>The convergence of three independent lines of evidence — the protective allele lowering CTSH expression, increased CTSH in AD tissue, and enhanced Aβ phagocytosis after CTSH knockout — supports testing reduced CTSH activity as a therapeutic strategy, while preserving beneficial lysosomal clearance functions.</p>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-lead">Overall Assessment — CTSH in Alzheimer's Disease</div>
+      <p>
+        CTSH (cathepsin H) emerges from the available evidence as a <strong>biologically credible, mechanistically grounded, but not yet therapeutically validated</strong> AD candidate. Its repeated identification across MR studies, proteomics, postmortem transcriptomics, and functional-genomics datasets — with consistent directional signals linking <strong>elevated CTSH to increased AD risk</strong> — places it firmly above the threshold of coincidental association. The pivotal functional observation that <strong>CTSH knockout in human microglia enhances Aβ phagocytosis</strong> provides a direct mechanistic hypothesis: CTSH may act as a brake on microglial amyloid clearance, and its selective inhibition could relieve that brake. Embedding this within the broader <strong>GRN–TMEM106B–TREM2–APOE lysosomal immune network</strong> adds further biological coherence. Nevertheless, the evidence also demands caution: CTSH is a pleiotropic lysosomal enzyme with essential homeostatic roles, modest population-level effect sizes, and no validated AD inhibitor. The path forward requires <strong>cell-type-resolved, disease-stage-aware, activity-focused studies</strong> and careful attention to preserving beneficial lysosomal function. CTSH warrants prioritized target-enabling investment — but as a candidate entering rigorous validation, not as a target ready for drug development.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  CTSH / Cathepsin H — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

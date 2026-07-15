@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCN3 — Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 46px 24px 42px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,100,100,0.38);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.1rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.93rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 40px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.93rem;
+    color: var(--danger);
+  }
+  .callout strong { color: var(--danger); }
+
+  /* BODY TEXT */
+  p { margin-bottom: 14px; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 18px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 6px;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.9rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card.accent    { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card.accent h3 { color: var(--dark); }
+  .card.danger    { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card.danger h3 { color: var(--danger); }
+  .card.warning   { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card.warning h3{ color: var(--warning); }
+  .card.positive  { background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card.positive h3{ color: var(--positive); }
+  .card.neutral   { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card.neutral h3{ color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+  .takeaways-list li {
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+  }
+  .takeaways-list li strong { color: var(--dark); }
+  .sub-list {
+    list-style: disc;
+    padding-left: 22px;
+    margin-top: 6px;
+  }
+  .sub-list li { margin-bottom: 6px; font-size: 0.91rem; }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f33 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+  .verdict p {
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+  }
+  .verdict strong { color: #93c5fd; }
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: FSCN3 &nbsp;|&nbsp; Fascin Actin-Bundling Protein 3</span>
+    <span class="chip chip-danger">⚠ No AD Evidence — Speculative Link Only</span>
+  </div>
+  <h1>FSCN3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Evidence Caveat:</strong> The supplied text contains <strong>no direct evidence</strong> linking FSCN3 to Alzheimer's disease, amyloid-β, tau pathology, synaptic dysfunction, neuroinflammation, or any other AD-relevant mechanism. Any FSCN3–AD connection is speculative and should be treated as low-confidence.
+    </div>
+
+    <p>FSCN3 is a member of the fascin family of actin-binding and actin-bundling proteins. Unlike its paralogs, FSCN3 is characterized by <strong>highly testis-specific expression</strong>, with the most prominent localization in elongating spermatids. Its best-characterized biological roles concern spermatogenesis, spermatid head elongation, and actin cytoskeletal remodeling in germ cells.</p>
+
+    <p>The provided evidence base does not support FSCN3 as an Alzheimer's disease mechanism gene or therapeutic target. No data in the text connect FSCN3 to neurons, dendritic spines, synapses, tau, amyloid-β, microglia, astrocytes, blood–brain barrier biology, or cognitive decline. Broader pathway annotations — actin cytoskeleton regulation, focal adhesion, endocytosis — could theoretically intersect with neuronal biology, but the text provides no such evidence.</p>
+
+    <p>Additional contexts described in the literature include associations with <strong>testicular germ-cell tumors</strong>, nonobstructive azoospermia, testicular regeneration, clear-cell renal cell carcinoma (with prognostic correlates), and one genetic back-pain study that named FSCN3 as a candidate drug target for back pain — not Alzheimer's disease.</p>
+
+    <p>Notably, a CRISPR/Cas9 knockout mouse study found <em>Fscn3</em> dispensable for spermatogenesis and fertility, suggesting that even within its primary biological context, FSCN3 may not be essential.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 490" xmlns="http://www.w3.org/2000/svg" width="100%" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-danger" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-neutral" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#475569"/>
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Molecular Identity -->
+        <rect x="12" y="14" width="270" height="462" rx="12" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="147" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">PANEL A — MOLECULAR IDENTITY</text>
+
+        <!-- Node A1: FSCN3 Gene -->
+        <rect x="62" y="48" width="170" height="46" rx="8" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="147" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">FSCN3</text>
+        <text x="147" y="83" text-anchor="middle" font-size="9.5" fill="#dbeafe">Fascin-Family Gene</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="147" y1="94" x2="147" y2="118" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A2: Actin-Bundling Protein -->
+        <rect x="62" y="118" width="170" height="46" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="147" y="137" text-anchor="middle" font-size="10.5" fill="#1a3a5c">Actin-Bundling Protein</text>
+        <text x="147" y="153" text-anchor="middle" font-size="9" fill="#475569">F-actin binding / bundling</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="147" y1="164" x2="147" y2="188" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A3: Testis-Specific Expression -->
+        <rect x="52" y="188" width="190" height="46" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="147" y="207" text-anchor="middle" font-size="10.5" fill="#1a3a5c">Testis-Specific Expression</text>
+        <text x="147" y="223" text-anchor="middle" font-size="9" fill="#475569">Elongating spermatids</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="147" y1="234" x2="147" y2="258" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Pathway Annotations -->
+        <rect x="42" y="258" width="210" height="56" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="147" y="277" text-anchor="middle" font-size="10.5" fill="#1a3a5c">Broad Pathway Annotations</text>
+        <text x="147" y="292" text-anchor="middle" font-size="9" fill="#475569">Actin cytoskeleton · Focal adhesion</text>
+        <text x="147" y="305" text-anchor="middle" font-size="9" fill="#475569">Endocytosis (generic)</text>
+
+        <!-- PANEL B: Reproductive Biology -->
+        <rect x="302" y="14" width="280" height="462" rx="12" fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="442" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.1em">PANEL B — REPRODUCTIVE BIOLOGY</text>
+
+        <!-- Node B1: Spermatid Development -->
+        <rect x="342" y="48" width="200" height="46" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.2"/>
+        <text x="442" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">Spermatid Development</text>
+        <text x="442" y="83" text-anchor="middle" font-size="9.5" fill="#ccfbf1">Cytoskeletal remodeling</text>
+
+        <!-- Arrow B1 → B2 left branch -->
+        <line x1="400" y1="94" x2="375" y2="118" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+        <!-- Arrow B1 → B3 right branch -->
+        <line x1="484" y1="94" x2="509" y2="118" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node B2: Head Elongation -->
+        <rect x="318" y="118" width="142" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="389" y="137" text-anchor="middle" font-size="10" fill="#1a3a5c">Spermatid Head</text>
+        <text x="389" y="151" text-anchor="middle" font-size="10" fill="#1a3a5c">Elongation</text>
+
+        <!-- Node B3: Anterior Localization -->
+        <rect x="472" y="118" width="98" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="521" y="137" text-anchor="middle" font-size="10" fill="#1a3a5c">Anterior</text>
+        <text x="521" y="151" text-anchor="middle" font-size="10" fill="#1a3a5c">Localization</text>
+
+        <!-- Arrows B2+B3 → B4 (converge) -->
+        <line x1="389" y1="162" x2="389" y2="190" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="521" y1="162" x2="521" y2="190" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="389" y1="190" x2="430" y2="190" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="521" y1="190" x2="480" y2="190" stroke="#0f766e" stroke-width="1.5"/>
+        <line x1="455" y1="190" x2="455" y2="210" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node B4: Reproductive Disorders -->
+        <rect x="360" y="210" width="190" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="455" y="230" text-anchor="middle" font-size="10" fill="#1a3a5c">Azoospermia / Testicular</text>
+        <text x="455" y="244" text-anchor="middle" font-size="10" fill="#1a3a5c">Toxicity Contexts</text>
+
+        <!-- Arrow B4→B5 -->
+        <line x1="455" y1="254" x2="455" y2="276" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node B5: KO Mouse -->
+        <rect x="340" y="276" width="230" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="455" y="296" text-anchor="middle" font-size="10" fill="#1a3a5c">CRISPR KO Mouse</text>
+        <text x="455" y="310" text-anchor="middle" font-size="9.5" fill="#475569">Fertility intact — dispensable</text>
+
+        <!-- Arrow B5→B6 -->
+        <line x1="455" y1="320" x2="455" y2="342" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Node B6: Testicular GCT -->
+        <rect x="340" y="342" width="230" height="44" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="455" y="362" text-anchor="middle" font-size="10" fill="#1a3a5c">Testicular Germ-Cell</text>
+        <text x="455" y="376" text-anchor="middle" font-size="10" fill="#1a3a5c">Tumors (expression marker)</text>
+
+        <!-- PANEL C: Non-AD Contexts -->
+        <rect x="602" y="14" width="306" height="462" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="755" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="0.1em">PANEL C — NON-AD CONTEXTS &amp; GAPS</text>
+
+        <!-- Node C1: Cancer Upregulation -->
+        <rect x="632" y="48" width="246" height="46" rx="8" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="755" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">Cancer Upregulation</text>
+        <text x="755" y="83" text-anchor="middle" font-size="9.5" fill="#fecaca">ccRCC — stage/grade/survival</text>
+
+        <!-- Arrow C1→C2 left -->
+        <line x1="720" y1="94" x2="700" y2="118" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+        <!-- Arrow C1→C3 right -->
+        <line x1="790" y1="94" x2="810" y2="118" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- Node C2: Immune Infiltration -->
+        <rect x="632" y="118" width="136" height="44" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="700" y="137" text-anchor="middle" font-size="10" fill="#1a3a5c">Immune-Cell</text>
+        <text x="700" y="151" text-anchor="middle" font-size="10" fill="#1a3a5c">Infiltration</text>
+
+        <!-- Node C3: Prognosis -->
+        <rect x="780" y="118" width="118" height="44" rx="8" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="839" y="137" text-anchor="middle" font-size="10" fill="#1a3a5c">Tumor Prognosis</text>
+        <text x="839" y="151" text-anchor="middle" font-size="10" fill="#475569">Survival correlate</text>
+
+        <!-- Arrow C2→C4 -->
+        <line x1="700" y1="162" x2="700" y2="212" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+        <!-- Arrow C3→C4 -->
+        <line x1="839" y1="162" x2="839" y2="202" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="839" y1="202" x2="760" y2="202" stroke="#9b1c1c" stroke-width="1.5"/>
+        <line x1="760" y1="202" x2="760" y2="212" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-danger)"/>
+
+        <!-- Node C4: No AD Mechanism -->
+        <rect x="632" y="212" width="246" height="46" rx="8" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.8"/>
+        <text x="755" y="232" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9b1c1c">No AD Mechanism Link</text>
+        <text x="755" y="247" text-anchor="middle" font-size="9.5" fill="#475569">Not amyloid · Not tau · Not neuro</text>
+
+        <!-- Arrow C4→C5 -->
+        <line x1="755" y1="258" x2="755" y2="282" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-neutral)"/>
+
+        <!-- Node C5: Back Pain Genetics -->
+        <rect x="642" y="282" width="226" height="44" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="755" y="301" text-anchor="middle" font-size="10" fill="#1a3a5c">Back-Pain Genetics Study</text>
+        <text x="755" y="315" text-anchor="middle" font-size="9.5" fill="#b45309">Drug target — back pain, not AD</text>
+
+        <!-- Arrow C5→C6 -->
+        <line x1="755" y1="326" x2="755" y2="348" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-neutral)"/>
+
+        <!-- Node C6: Evidence Gap -->
+        <rect x="632" y="348" width="246" height="56" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+        <text x="755" y="368" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b45309">Evidence Gap for AD</text>
+        <text x="755" y="383" text-anchor="middle" font-size="9.5" fill="#475569">No brain expression · No CNS data</text>
+        <text x="755" y="396" text-anchor="middle" font-size="9.5" fill="#475569">No genetic AD association</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> — Molecular identity of FSCN3: from gene to actin-bundling protein function, testis-specific expression, and generic pathway annotations.
+      <strong>Panel B</strong> — Reproductive biology context: spermatid development branches into head elongation and anterior localization, reconverging on azoospermia/testicular-toxicity associations; downstream nodes capture CRISPR knockout dispensability and testicular germ-cell tumour expression.
+      <strong>Panel C</strong> — Non-AD contexts and evidence gaps: cancer upregulation in ccRCC branches into immune-cell infiltration and prognostic correlates, converging on an explicit "No AD Mechanism" node, with further downstream nodes for the back-pain genetics finding and the overall AD evidence gap.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card danger">
+        <h3>No Alzheimer's Disease Evidence</h3>
+        <p>The supplied text contains zero direct evidence connecting FSCN3 to Alzheimer's disease, amyloid-β, tau, synaptic dysfunction, neuroinflammation, microglia, astrocytes, or the blood–brain barrier. Any FSCN3–AD hypothesis is speculative.</p>
+      </div>
+
+      <div class="card accent">
+        <h3>Testis-Specific Actin Bundler</h3>
+        <p>FSCN3 is repeatedly characterized as a fascin-family actin-bundling protein with highly specific expression in elongating spermatids, localizing to the anterior spermatid head and co-distributing with F-actin structures during spermatogenesis.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Dispensable in Spermatogenesis</h3>
+        <p>A CRISPR/Cas9 knockout mouse study found <em>Fscn3</em> dispensable for spermatogenesis and fertility. Even within its primary biological context, FSCN3 is not essential — weakening its candidacy as a high-priority functional target.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>Cancer Associations — Not AD-Relevant</h3>
+        <p>FSCN3 is upregulated in clear-cell renal cell carcinoma and associates with tumour stage, grade, immune-cell infiltration, and patient survival. These oncological findings do not establish relevance to Alzheimer's disease pathology.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>Back Pain, Not Neurodegeneration</h3>
+        <p>A genetics study identified FSCN3 as a candidate drug target — but for back pain, not Alzheimer's disease. This distinction is important when interpreting "drug target" language associated with FSCN3 in the literature.</p>
+      </div>
+
+      <div class="card neutral">
+        <h3>Conceptual Pathway Overlap Only</h3>
+        <p>FSCN3's pathway annotations — actin cytoskeleton, focal adhesion, endocytosis — could theoretically intersect with neuronal biology. However, the text provides no evidence of FSCN3 brain expression or function, and testis-specificity argues against an obvious CNS role.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <strong>Do not classify FSCN3 as an established AD target.</strong> The provided evidence base offers no direct mechanistic, genetic, or expression-level support for FSCN3 as an Alzheimer's disease therapeutic target.
+      </li>
+      <li>
+        <strong>Treat any FSCN3–AD hypothesis as low-confidence and speculative.</strong> Broad cytoskeletal pathway overlap is insufficient justification for prioritization without disease-specific data.
+      </li>
+      <li>
+        <strong>Define the minimum required evidence package before investment:</strong>
+        <ul class="sub-list">
+          <li>FSCN3 expression changes in AD brain tissue, CSF, or AD-relevant single-cell RNA-seq datasets.</li>
+          <li>Genetic association with AD risk, onset, progression, or cognitive decline in human cohort data.</li>
+          <li>Functional effects on APP processing, amyloid-β production or clearance, tau phosphorylation or aggregation, neuronal survival, synaptic integrity, or cognition.</li>
+          <li>Evidence of FSCN3 activity in neurons, glia, or blood–brain barrier cells.</li>
+          <li>Disease-model data showing FSCN3 modulation alters AD-relevant phenotypes.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Reframe FSCN3's primary context.</strong> Current evidence supports FSCN3 as a reproductive biology and cancer-associated cytoskeletal gene — not an Alzheimer's disease gene. Research planning should reflect this classification.
+      </li>
+      <li>
+        <strong>If further AD investigation is warranted, start with exploratory validation.</strong> The most logical entry point would be examining brain expression databases and testing cytoskeletal/endosomal functions in AD-relevant neuronal cell models before committing to larger studies.
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — FSCN3 as an Alzheimer's Disease Target</span>
+      <p>
+        Based on the supplied evidence, <strong>FSCN3 is not a supported Alzheimer's disease target</strong>. The gene is best understood as a <strong>testis-specific actin-bundling protein</strong> whose primary characterized roles lie in spermatogenesis, reproductive disorders, and — separately — cancer biology and back-pain genetics. Crucially, a CRISPR knockout study found FSCN3 <strong>dispensable even for its best-established function</strong> in spermatid development. There is <strong>no reported brain expression, no CNS mechanistic data, no genetic association with AD</strong>, and no connection to amyloid, tau, synaptic, or neuroinflammatory pathways. While generic pathway annotations in actin regulation and endocytosis could theoretically intersect with neuronal biology, this represents conceptual inference rather than empirical evidence. <strong>FSCN3 should not be prioritized for Alzheimer's disease research</strong> without a substantial body of AD-specific discovery data that is entirely absent from the current evidence base.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  FSCN3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

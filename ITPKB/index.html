@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITPKB — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chip-danger {
+    background: rgba(153, 27, 27, 0.35);
+    border: 1px solid rgba(255, 150, 150, 0.45);
+    color: rgba(255, 210, 210, 0.95);
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--neutral-text);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card-mechanism {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-mechanism .card-heading { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger .card-heading { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive .card-heading { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning .card-heading { color: var(--warning); }
+
+  .card-neutral {
+    background: #f1f5f9;
+    border-color: #64748b;
+  }
+  .card-neutral .card-heading { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue .card-heading { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+  }
+
+  .takeaways-list li:last-child {
+    border-bottom: none;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* VERDICT BANNER */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner p {
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .verdict-banner strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ITPKB &nbsp;|&nbsp; Inositol-Trisphosphate 3-Kinase B</span>
+    <span class="chip chip-danger">⚠ Safety Concern: Immune &amp; Systemic Risk</span>
+  </div>
+  <h1>ITPKB &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Safety &amp; Context Caveat</span>
+      ITPKB plays important physiological roles in immune-cell development, hematopoiesis, inflammatory signaling, and neuronal survival. Global or systemic inhibition carries risk of immune, hematologic, oncologic, and off-target consequences. Additionally, Parkinson's disease data indicate that ITPKB can be neuroprotective in some contexts, underscoring the need for careful, selective modulation strategies.
+    </div>
+
+    <div class="overview-text">
+      <p>ITPKB is an Alzheimer's disease–relevant calcium and IP3–IP4 signaling enzyme that is repeatedly reported as dysregulated or upregulated in AD brain tissue and AD-related transcriptomic analyses. The enzyme converts IP3 to IP4, thereby influencing intracellular calcium homeostasis, ER-to-mitochondria calcium transfer, store-operated calcium entry, ERK/MAPK signaling, PI3K/Akt/mTOR-related pathways, apoptosis, immune activation, and inflammatory responses.</p>
+      <p>The strongest mechanistic evidence links elevated or de-repressed ITPKB to worsened amyloid and tau pathology through ERK1/2 activation, increased BACE1 activity, amyloid-β production, tau phosphorylation, neuroinflammation, and plaque-associated dystrophic neurite pathology. Human AD cortex shows increased ITPKB mRNA and protein in multiple studies, including a ~3-fold increase in protein accompanied by accumulation in dystrophic neurites around amyloid plaques. ITPKB also appears as a hub gene and diagnostic biomarker in multiple AD transcriptomic datasets.</p>
+      <p>Hormonal regulation adds a further mechanistic layer: ERβ1 represses ITPKB promoter activity in neuronal cells, and gelsolin is required for ligand-independent ERβ1 nuclear translocation. Loss of the gelsolin–ERβ1 interaction with aging may reduce repression of both ITPKB and APP, directly linking aging, estrogen receptor signaling, amyloid biology, and calcium dysregulation.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (viewBox 0 0 940 500):
+        Panel A (Upstream Regulation):  x=10  y=10  w=200  h=480
+        Panel B (Core Mechanism):       x=225 y=10  w=240  h=480
+        Panel C (Downstream Pathology): x=480 y=10  w=240  h=480
+        Panel D (Therapeutic):          x=735 y=10  w=195  h=480
+
+        NODE COUNT PLAN (max 16):
+        1. ERβ1/GSN          Panel A top
+        2. miR-132           Panel A mid
+        3. ITPKB (hub)       Panel B top-center
+        4. IP3→IP4 conv.     Panel B mid
+        5. Ca²⁺ dysreg.      Panel B lower
+        6. ERK1/2 activ.     Panel C branch-left top
+        7. BACE1↑            Panel C branch-left mid
+        8. Amyloid-β↑        Panel C branch-left bot
+        9. Tau phosphoryl.   Panel C branch-right top
+        10. Neuroinflam.     Panel C branch-right mid
+        11. Plaque/Neurite   Panel C branch-right bot  (shared outcome)
+        12. ITPKB inhibitor  Panel D top
+        13. miR-711 EV       Panel D mid
+        14. Neuroprotection? Panel D bot (PD caution)
+        TOTAL: 14 nodes — within limit ✓
+      -->
+      <svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="min-width:600px; display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ── PANEL A: Upstream Regulation ── -->
+        <rect x="10" y="10" width="200" height="480" rx="12" ry="12"
+              fill="rgba(30,58,95,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#1e3a5f" text-decoration="none">UPSTREAM REGULATION</text>
+
+        <!-- Node 1: ERβ1 / Gelsolin -->
+        <rect x="25" y="42" width="170" height="50" rx="8" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1e3a5f">ERβ1 / Gelsolin</text>
+        <text x="110" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Represses ITPKB promoter</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="110" y1="92" x2="110" y2="148" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: miR-132 -->
+        <rect x="25" y="150" width="170" height="50" rx="8" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="110" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1e3a5f">miR-132</text>
+        <text x="110" y="186" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Suppresses ITPKB mRNA</text>
+
+        <!-- Aging annotation -->
+        <rect x="30" y="218" width="150" height="24" rx="6" fill="rgba(180,83,9,0.12)" stroke="#b45309" stroke-width="1"/>
+        <text x="105" y="234" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#b45309" font-weight="700">Aging → ERβ1/GSN loss ↓</text>
+
+        <!-- Arrow A2→hub (exits panel A rightward at y=175) -->
+        <line x1="195" y1="175" x2="262" y2="175" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ── PANEL B: Core Mechanism ── -->
+        <rect x="220" y="10" width="245" height="480" rx="12" ry="12"
+              fill="rgba(30,58,95,0.05)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="342" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#1e3a5f">CORE MECHANISM</text>
+
+        <!-- Node 3: ITPKB hub -->
+        <rect x="257" y="42" width="170" height="54" rx="8" fill="#1e3a5f" stroke="#0d1f35" stroke-width="1.5"/>
+        <text x="342" y="64" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#ffffff">ITPKB</text>
+        <text x="342" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="rgba(255,255,255,0.82)">IP3-Kinase B (hub)</text>
+
+        <!-- Arrow 3→4 -->
+        <line x1="342" y1="96" x2="342" y2="153" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 4: IP3 → IP4 -->
+        <rect x="257" y="155" width="170" height="50" rx="8" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="342" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1e3a5f">IP3 → IP4 Conversion</text>
+        <text x="342" y="191" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">Modulates calcium signaling</text>
+
+        <!-- Arrow 4→5 -->
+        <line x1="342" y1="205" x2="342" y2="262" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 5: Ca²⁺ dysregulation -->
+        <rect x="257" y="264" width="170" height="52" rx="8" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="342" y="284" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#1e3a5f">Ca²⁺ Dysregulation</text>
+        <text x="342" y="300" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e3a5f">ER-mito transfer, SOCE</text>
+
+        <!-- Arrow 5→downstream panel C (exits at y=290 rightward) -->
+        <line x1="427" y1="290" x2="488" y2="290" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ERK1/2 label on panel B exit route — only if space; placed below node 5 as badge -->
+        <rect x="262" y="332" width="160" height="22" rx="6" fill="rgba(46,109,164,0.12)" stroke="#2e6da4" stroke-width="1"/>
+        <text x="342" y="347" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#2e6da4" font-weight="700">ERK1/2 activation ↑</text>
+
+        <!-- ── PANEL C: Downstream Pathology ── -->
+        <rect x="475" y="10" width="250" height="480" rx="12" ry="12"
+              fill="rgba(153,27,27,0.05)" stroke="#991b1b" stroke-width="1.2"/>
+        <text x="600" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#991b1b">DOWNSTREAM PATHOLOGY</text>
+
+        <!-- Node 6: ERK1/2 activ. (branch root) -->
+        <rect x="490" y="260" width="220" height="44" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="600" y="279" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">ERK1/2 Activation</text>
+        <text x="600" y="295" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Upstream of both branches</text>
+
+        <!-- Arrow from ERK node upward LEFT to BACE1 -->
+        <line x1="545" y1="260" x2="530" y2="203" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Arrow from ERK node upward RIGHT to Tau phosphoryl. -->
+        <line x1="655" y1="260" x2="670" y2="203" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 7: BACE1↑ (left branch) -->
+        <rect x="487" y="150" width="112" height="50" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="543" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">BACE1 ↑</text>
+        <text x="543" y="186" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Increased activity</text>
+
+        <!-- Arrow 7→8 -->
+        <line x1="543" y1="200" x2="543" y2="95" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 8: Amyloid-β↑ (left branch top) -->
+        <rect x="487" y="42" width="112" height="50" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="543" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">Amyloid-β ↑</text>
+        <text x="543" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Plaque deposition</text>
+
+        <!-- Node 9: Tau phosphorylation (right branch) -->
+        <rect x="612" y="150" width="108" height="50" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="666" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">Tau Phosphoryl.</text>
+        <text x="666" y="186" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">miR-132 loss</text>
+
+        <!-- Arrow 9→10 -->
+        <line x1="666" y1="200" x2="666" y2="95" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Node 10: Neuroinflammation (right branch top) -->
+        <rect x="608" y="42" width="112" height="50" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.3"/>
+        <text x="664" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">Neuroinflam.</text>
+        <text x="664" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">M1 microglia↑</text>
+
+        <!-- Convergence arrow: Amyloid-β → Plaque/Neurite (goes via bottom of panel C) -->
+        <!-- Node 11: Plaque/Dystrophic Neurites (shared outcome, centered at bottom) -->
+        <rect x="490" y="390" width="220" height="52" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="600" y="412" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#991b1b">Plaque &amp; Dystrophic</text>
+        <text x="600" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7f1d1d">Neurite Pathology</text>
+
+        <!-- Arrows from ERK → Plaque node (converge downward) -->
+        <line x1="600" y1="304" x2="600" y2="390" stroke="#991b1b" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- ── PANEL D: Therapeutic Strategies ── -->
+        <rect x="740" y="10" width="192" height="480" rx="12" ry="12"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="836" y="30" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" letter-spacing="1.2" fill="#0f766e">THERAPEUTIC STRATEGIES</text>
+
+        <!-- Node 12: ITPKB inhibitor -->
+        <rect x="755" y="42" width="162" height="52" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="836" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0f766e">ITPKB Inhibitor</text>
+        <text x="836" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">APP/PS1 plaque ↓</text>
+
+        <!-- Arrow 12→13 -->
+        <line x1="836" y1="94" x2="836" y2="163" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 13: miR-711 EV -->
+        <rect x="755" y="165" width="162" height="52" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="836" y="186" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#0f766e">miR-711 / EV</text>
+        <text x="836" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#134e4a">Targets Itpkb; tau↓</text>
+
+        <!-- Arrow 13→14 -->
+        <line x1="836" y1="217" x2="836" y2="288" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 14: Context-dependent caution -->
+        <rect x="755" y="290" width="162" height="64" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="836" y="311" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#b45309">Context-Dependent</text>
+        <text x="836" y="327" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">PD: ITPKB may be</text>
+        <text x="836" y="343" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">neuroprotective</text>
+
+        <!-- Cross-panel arrow: therapeutic → amyloid plaque (from node 12 left side to panel C right edge) -->
+        <!-- Route: from (755, 68) left → through gutter → to (720, 68) → then angle not needed; draw elbow -->
+        <!-- Panel D x=740, Panel C right edge=725. Gutter between x=725 and x=740. -->
+        <!-- Arrow from ITPKB inhibitor (node 12) → Amyloid-β node (node 8) via horizontal then up -->
+        <!-- Node 8 is at x=487-599, y=42-92, center (543,67). Node 12 center is (836,68). -->
+        <!-- Route: (755,68) → (730,68) then down gutter to y=67, then left to (599,67) -->
+        <polyline points="755,68 728,68 728,67 599,67"
+                  fill="none" stroke="#0f766e" stroke-width="1.3" stroke-dasharray="5,3"
+                  marker-end="url(#arr-teal)"/>
+
+        <!-- "reduces" label removed — no safe space -->
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Upstream Regulation:</strong> ERβ1/gelsolin transcriptionally represses the ITPKB promoter; miR-132 suppresses ITPKB mRNA. Aging-associated loss of gelsolin–ERβ1 reduces this repression, de-repressing ITPKB.
+        <strong>Panel B — Core Mechanism:</strong> Elevated ITPKB drives IP3→IP4 conversion and downstream Ca²⁺ dysregulation (including ER-mitochondria transfer and SOCE) and ERK1/2 activation.
+        <strong>Panel C — Downstream Pathology (branching):</strong> ERK1/2 activation branches into two parallel cascades — a left branch through BACE1↑ to Amyloid-β overproduction, and a right branch through tau hyperphosphorylation and neuroinflammation — converging on a shared outcome of plaque and dystrophic neurite pathology.
+        <strong>Panel D — Therapeutic Strategies:</strong> Pharmacologic ITPKB inhibition and microglial EV-delivered miR-711 represent intervention points; a context-dependent caution flags that ITPKB may be neuroprotective in Parkinson's disease settings.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards-grid">
+
+      <div class="card card-mechanism">
+        <div class="card-heading">Core Biochemical Role</div>
+        <p>ITPKB converts IP3 to IP4, influencing intracellular calcium homeostasis, ER-to-mitochondria calcium transfer, store-operated calcium entry, ERK/MAPK signaling, PI3K/Akt/mTOR pathways, apoptosis, and inflammatory responses. Its position at this signaling nexus makes it consequential for both neuronal and immune biology.</p>
+      </div>
+
+      <div class="card card-danger">
+        <div class="card-heading">Human AD Evidence</div>
+        <p>ITPKB mRNA and protein are elevated in AD cortex across multiple studies. One study found a ~3-fold increase in ITPKB protein in AD cerebral cortex, with notable accumulation in dystrophic neurites surrounding amyloid plaques. ITPKB appears as a hub gene and diagnostic biomarker in multiple AD transcriptomic and senescence-related analyses.</p>
+      </div>
+
+      <div class="card card-danger">
+        <div class="card-heading">Amyloid &amp; Tau Pathology</div>
+        <p>ITPKB overexpression increased BACE1 activity and amyloid-β production in neuronal models. In 5XFAD mice, active ITPKB worsened amyloid-β40 and astrogliosis. Pharmacologic inhibition in APP/PS1 mice reduced amyloid plaque deposition. Loss of miR-132 de-represses ITPKB, worsening amyloid and tau pathology; microglial EV-delivered miR-711 targeting Itpkb reduced tau phosphorylation in an AD-like model.</p>
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Microglial &amp; Inflammatory Modulation</div>
+        <p>ITPKB sits at an intersection of calcium and inflammatory signaling. Itpkb suppression in AD-like models shifted microglia toward a higher M2/M1 ratio and reduced inflammatory markers. Broader immune literature confirms ITPKB regulates dendritic-cell, T-cell, and B-cell activation and survival, highlighting its systemic immunological role.</p>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-heading">Hormonal &amp; Aging Regulation</div>
+        <p>ERβ1 represses ITPKB promoter activity in neuronal cells, and gelsolin is required for ligand-independent ERβ1 nuclear translocation. Age-associated loss of gelsolin–ERβ1 interaction reduces repression of both ITPKB and APP, linking aging, estrogen receptor biology, amyloid production, and calcium dysregulation in an integrated mechanism.</p>
+      </div>
+
+      <div class="card card-warning">
+        <div class="card-heading">Therapeutic Ambiguity &amp; Safety</div>
+        <p>Most AD-focused evidence supports reducing excessive ITPKB activity; however, Parkinson's disease data indicate ITPKB can protect neurons from α-synuclein aggregation by limiting calcium-driven mitochondrial stress and preserving autophagy. ITPKB effects are therefore disease-, cell-type-, and context-dependent. Systemic inhibition risks immune, hematologic, and oncologic consequences.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <span><span class="takeaway-lead">Prioritize ITPKB as an early-stage AD therapeutic target candidate,</span> particularly for mechanisms involving calcium dyshomeostasis, ERK/BACE1 signaling, amyloid accumulation, tau phosphorylation, and neuroinflammation, where convergent mouse and human evidence supports its causal involvement.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Focus on selective modulation rather than broad systemic inhibition.</span> Brain-selective, neuron-specific, microglia-specific, stage-specific, or pathway-selective approaches are likely safer than global ITPKB blockade given its important physiological roles in immune cells and hematopoiesis.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Validate directionality in AD-relevant systems.</span> Key unanswered questions include whether ITPKB should be inhibited, normalized, or differentially modulated by cell type and disease stage, especially given conflicting evidence from Parkinson's disease models.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Investigate ITPKB inhibitors in AD models using full outcome panels:</span> amyloid burden, tau phosphorylation, synaptic function, neuroinflammation, calcium dynamics, mitochondrial health, autophagy, cognition, and safety endpoints must all be assessed together.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Explore upstream regulatory strategies,</span> including restoration of miR-132 repression, EV/miRNA-based Itpkb suppression via miR-711 approaches, and ERβ1/gelsolin-mediated transcriptional repression of ITPKB and APP as alternatives to direct kinase inhibition.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Treat ITPKB as both a biomarker and a therapeutic target candidate.</span> Its strong diagnostic performance across several AD datasets, including early-stage AD, supports further evaluation in patient stratification and pharmacodynamic monitoring strategies.</span>
+      </li>
+      <li>
+        <span><span class="takeaway-lead">Address safety risks early in development.</span> Because ITPKB is important in immune-cell development, inflammatory signaling, hematopoietic biology, and oxidative stress responses, therapeutic programs should include comprehensive immune, hematologic, inflammatory, and oncologic safety assessments from the outset.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — ITPKB in Alzheimer's Disease</span>
+      <p>
+        ITPKB represents a <strong>mechanistically credible, multi-pathway AD target</strong> supported by convergent human transcriptomic data, in vitro neuronal models, and in vivo mouse pharmacology. Its central role in <strong>IP3–IP4 calcium signaling, ERK1/2 activation, BACE1-mediated amyloid-β production, tau phosphorylation, and microglial neuroinflammation</strong> places it at the intersection of the major pathological hallmarks of Alzheimer's disease. The additional hormonal regulatory axis — whereby aging-associated gelsolin–ERβ1 loss de-represses ITPKB and APP expression simultaneously — provides a compelling biological rationale linking age, estrogen biology, and amyloid cascade initiation. However, the <strong>context-dependent nature of ITPKB biology</strong> (neuroprotective in some Parkinson's disease settings; essential in immune-cell development and inflammatory homeostasis) demands that any therapeutic strategy prioritize selectivity, staging, and safety monitoring. The path forward is <strong>selective modulation guided by cell-type- and stage-resolved mechanistic studies</strong>, with ITPKB evaluated simultaneously as a pharmacodynamic biomarker and a drug target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>ITPKB · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application</p>
+</footer>
+
+</body>
+</html>

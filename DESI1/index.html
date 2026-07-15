@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DESI1 — Target Enabling Package · AI-Assisted Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-card: #eff6ff;
+    --blue-border: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e0ecff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,150,150,0.35);
+    color: #fecaca;
+    font-family: Georgia, serif;
+    font-size: 0.75rem;
+    font-style: italic;
+    border-radius: 999px;
+    padding: 4px 14px;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-body p {
+    margin-bottom: 16px;
+    font-size: 1.02rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+    font-size: 0.93rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent { background: var(--light); border-color: var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger { background: var(--danger-light); border-color: var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-blue { background: var(--blue-card); border-color: var(--blue-border); }
+  .card-blue h3 { color: var(--blue-border); }
+
+  .card-neutral { background: var(--neutral-light); border-color: var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaways-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaways-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1a2e 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 40px 36px;
+  }
+
+  .verdict-banner p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #dbeafe;
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DESI1 &nbsp;|&nbsp; DeSUMOylating Isopeptidase 1</span>
+    <span class="chip-danger">⚠ Safety concern: mitotic checkpoint impairment</span>
+  </div>
+  <h1>DESI1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Caveat &amp; Safety Flag</strong><br/>
+      DESI1 perturbation impairs mitotic checkpoint function, promotes chromosome segregation errors,
+      and is implicated in cancer-associated proliferation, EMT, and vincristine response. Systemic
+      modulation carries potential oncological safety risks that must be assessed before any
+      therapeutic development.
+    </div>
+
+    <div class="overview-body">
+      <p>
+        DESI1 is a non-SENP deSUMOylating isopeptidase belonging to the PPPDE superfamily. The available
+        evidence positions DESI1 as a selective SUMO protease involved in deSUMOylation, transcriptional
+        regulation, mitotic checkpoint control, chromosome segregation, and cancer-associated proliferation
+        or stress phenotypes.
+      </p>
+      <p>
+        No direct evidence links DESI1 to Alzheimer's disease, amyloid-β, tau pathology, synaptic
+        dysfunction, neuroinflammation, neuronal death, or cognitive decline. Its Alzheimer's relevance
+        is therefore indirect and hypothetical, resting principally on its participation in SUMO biology
+        and cell-cycle regulation — processes that intersect broadly with neuronal homeostasis and stress.
+      </p>
+      <p>
+        DESI1 may be mechanistically relevant to Alzheimer's disease insofar as SUMOylation and
+        deSUMOylation govern proteostasis, stress responses, transcription, DNA repair, mitochondrial
+        biology, and neuronal function. However, the available studies do not identify AD-relevant DESI1
+        substrates such as tau, APP, presenilin, BACE1, synaptic proteins, or other neurodegeneration-linked
+        targets, leaving the AD connection speculative and requiring dedicated experimental validation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview — DESI1 Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (16 nodes max):
+          Panel A (left) — Biochemistry & Structure: 4 nodes in a 2×2 grid
+            A1 SUMO-conjugated Substrate
+            A2 DESI1 Homodimer (active site)
+            A3 Free SUMO released
+            A4 DeSUMOylated BZEL
+          Panel B (centre) — Mitotic Checkpoint: branching from DESI1 hub
+            B1 DESI1 Activity (shared hub)
+            B2 Aurora B expression
+            B3 FoxM1 targets (Cyclin B1, CENP-F)
+            B4 Spindle Assembly Checkpoint — shared outcome
+          Panel C (right) — Disease & Safety: 4 nodes
+            C1 Knockdown / loss
+            C2 Chromosome seg. errors
+            C3 Cancer / EMT / hypoxia
+            C4 AD-indirect biology
+          Plus 2 badge pills: "SENP-independent" and "Probe engagement"
+
+          Total counting: A1,A2,A3,A4 + B1,B2,B3,B4 + C1,C2,C3,C4 + 2 badges = 14 ✓ (≤16)
+        -->
+        <svg viewBox="0 0 940 490" width="900" height="469" xmlns="http://www.w3.org/2000/svg" aria-label="DESI1 mechanistic pathway diagram">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- ══ PANEL A: BIOCHEMISTRY & STRUCTURE ══ -->
+          <rect x="14" y="14" width="270" height="462" rx="12" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2" opacity="0.55"/>
+          <text x="149" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f" letter-spacing="1.5" text-transform="uppercase">A · BIOCHEMISTRY &amp; STRUCTURE</text>
+
+          <!-- A1: SUMO-conjugated Substrate -->
+          <rect x="44" y="54" width="190" height="50" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="139" y="74" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">SUMO-conjugated</text>
+          <text x="139" y="90" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Substrate</text>
+
+          <!-- arrow A1→A2 -->
+          <line x1="139" y1="104" x2="139" y2="136" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A2: DESI1 Homodimer -->
+          <rect x="44" y="136" width="190" height="58" rx="8" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1.3"/>
+          <text x="139" y="158" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#ffffff">DESI1 Homodimer</text>
+          <text x="139" y="174" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#93c5fd">Cys–His catalytic dyad</text>
+          <text x="139" y="188" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#93c5fd">active-site groove</text>
+
+          <!-- fork arrows from A2 -->
+          <!-- A2→A3 (left branch) -->
+          <line x1="100" y1="194" x2="80" y2="270" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+          <!-- A2→A4 (right branch) -->
+          <line x1="178" y1="194" x2="198" y2="270" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- A3: Free SUMO released -->
+          <rect x="28" y="270" width="116" height="48" rx="8" fill="#ffffff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="86" y="291" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Free SUMO</text>
+          <text x="86" y="307" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">released</text>
+
+          <!-- A4: DeSUMOylated BZEL -->
+          <rect x="156" y="270" width="116" height="48" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="214" y="291" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">DeSUMOylated</text>
+          <text x="214" y="307" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#0f766e">BZEL</text>
+
+          <!-- Badge: SENP-independent -->
+          <rect x="46" y="354" width="136" height="24" rx="12" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+          <text x="114" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a5f">SENP-independent</text>
+
+          <!-- Note about low maturation activity -->
+          <rect x="36" y="396" width="206" height="42" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+          <text x="139" y="413" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">Low SUMO precursor</text>
+          <text x="139" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#0f766e">maturation activity</text>
+          <text x="139" y="443" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#475569">→ primary role: deconjugation</text>
+
+          <!-- ══ PANEL B: MITOTIC CHECKPOINT ══ -->
+          <rect x="300" y="14" width="328" height="462" rx="12" fill="#fff7ed" stroke="#b45309" stroke-width="1.2" opacity="0.55"/>
+          <text x="464" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#92400e" letter-spacing="1.5">B · MITOTIC CHECKPOINT</text>
+
+          <!-- B1: DESI1 Activity (hub) -->
+          <rect x="355" y="54" width="218" height="52" rx="8" fill="#b45309" stroke="#92400e" stroke-width="1.3"/>
+          <text x="464" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#ffffff" font-weight="700">DESI1 Activity</text>
+          <text x="464" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fef3c7">enzymatic function required</text>
+
+          <!-- B1 → B2 (left) -->
+          <line x1="410" y1="106" x2="390" y2="176" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+          <!-- B1 → B3 (right) -->
+          <line x1="518" y1="106" x2="538" y2="176" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- B2: Aurora B expression -->
+          <rect x="316" y="176" width="148" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="390" y="197" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Aurora B</text>
+          <text x="390" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">expression &amp; loc.</text>
+
+          <!-- B3: FoxM1 targets -->
+          <rect x="476" y="176" width="136" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="544" y="197" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">FoxM1 target</text>
+          <text x="544" y="213" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">transcription</text>
+          <!-- sub-label inside empty area below B3, well clear of box -->
+          <text x="544" y="240" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#92400e" font-style="italic">Cyclin B1 · CENP-F</text>
+
+          <!-- B2 + B3 → B4 (converging) -->
+          <line x1="390" y1="228" x2="390" y2="346" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+          <line x1="544" y1="246" x2="544" y2="310" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="390" y1="346" x2="464" y2="346" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="544" y1="310" x2="544" y2="346" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="464" y1="346" x2="544" y2="346" stroke="#b45309" stroke-width="1.4"/>
+          <line x1="464" y1="346" x2="464" y2="362" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- B4: Spindle Assembly Checkpoint -->
+          <rect x="355" y="362" width="218" height="52" rx="8" fill="#fff7ed" stroke="#b45309" stroke-width="1.6"/>
+          <text x="464" y="383" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#92400e" font-weight="700">Spindle Assembly</text>
+          <text x="464" y="399" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#92400e" font-weight="700">Checkpoint integrity</text>
+
+          <!-- Badge: Probe engagement -->
+          <rect x="370" y="432" width="188" height="24" rx="12" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1"/>
+          <text x="464" y="448" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#1e3a5f">Activity-probe engagement</text>
+
+          <!-- ══ PANEL C: DISEASE RELEVANCE & SAFETY ══ -->
+          <rect x="644" y="14" width="282" height="462" rx="12" fill="#fef2f2" stroke="#991b1b" stroke-width="1.2" opacity="0.55"/>
+          <text x="785" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#7f1d1d" letter-spacing="1.2">C · DISEASE RELEVANCE &amp; SAFETY</text>
+
+          <!-- C1: Knockdown / loss -->
+          <rect x="672" y="54" width="226" height="52" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="785" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">DESI1 knockdown</text>
+          <text x="785" y="91" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#991b1b">accelerates cell-cycle</text>
+
+          <!-- C1→C2 -->
+          <line x1="785" y1="106" x2="785" y2="162" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- C2: Chromosome seg. errors -->
+          <rect x="672" y="162" width="226" height="60" rx="8" fill="#ffffff" stroke="#991b1b" stroke-width="1.3"/>
+          <text x="785" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">Chromosome segregation</text>
+          <text x="785" y="199" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#1e293b">errors</text>
+          <text x="785" y="215" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#991b1b">mitotic slippage ↑</text>
+
+          <!-- C2→C3 -->
+          <line x1="785" y1="222" x2="785" y2="286" stroke="#991b1b" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- C3: Cancer / EMT -->
+          <rect x="672" y="286" width="226" height="60" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="1.5"/>
+          <text x="785" y="307" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#7f1d1d" font-weight="700">Cancer / EMT / hypoxia</text>
+          <text x="785" y="323" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#991b1b">vincristine response</text>
+          <text x="785" y="339" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">prognosis gene networks</text>
+
+          <!-- C3→C4 -->
+          <line x1="785" y1="346" x2="785" y2="396" stroke="#64748b" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arr-gray)"/>
+
+          <!-- C4: AD-indirect biology -->
+          <rect x="672" y="396" width="226" height="54" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+          <text x="785" y="416" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#475569">AD-indirect:</text>
+          <text x="785" y="432" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#475569">cell-cycle re-entry ·</text>
+          <text x="785" y="446" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#475569">SUMO stress biology</text>
+
+          <!-- Cross-panel connector: Panel A (deSUMOylated BZEL) → Panel B (DESI1 hub) via gutter -->
+          <!-- Route: from right edge of Panel A (x=284) at y=80, then across gutter to Panel B entry at x=355, y=80 -->
+          <line x1="284" y1="80" x2="355" y2="80" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Cross-panel connector: Panel B checkpoint outcome → Panel C (implying mitotic disruption flows to safety) -->
+          <!-- Route: from right edge of panel B (x=628) at y=388 to left edge of panel C (x=644) at y=388, through gutter -->
+          <line x1="628" y1="388" x2="644" y2="194" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arr-red)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Biochemistry &amp; Structure):</strong> SUMO-conjugated substrates are cleaved by the DESI1 homodimer via a cysteine–histidine dyad, releasing free SUMO and the deSUMOylated substrate BZEL. DESI1 acts independently of SENP-family proteases and has low SUMO precursor maturation activity, indicating a primary role in deconjugation.
+        <strong>Panel B (Mitotic Checkpoint):</strong> DESI1 enzymatic activity branches to maintain Aurora B expression/localization and FoxM1-driven transcription (Cyclin B1, CENP-F), both converging on spindle assembly checkpoint integrity. An activity-based probe strategy enables chemical profiling of DESI1 in cells.
+        <strong>Panel C (Disease Relevance &amp; Safety):</strong> DESI1 knockdown accelerates the cell cycle, leading to chromosome segregation errors and mitotic slippage. Downstream, DESI1 implicates cancer-associated processes (EMT, hypoxia, vincristine response); its Alzheimer's connection (dashed) remains speculative, mediated by SUMO-dependent stress biology and potential aberrant neuronal cell-cycle re-entry.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Selective, Non-SENP SUMO Protease</h3>
+        <p>DESI1 belongs to the PPPDE superfamily and is distinct from SENP-family proteases. It regulates a selective subset of SUMOylated proteins, deSUMOylating BZEL (a transcriptional repressor) but not canonical SENP substrates such as PML or ΔNp63, indicating a narrow, specific substrate range.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Homodimeric Structure &amp; Catalytic Mechanism</h3>
+        <p>Structural studies reveal that DESI1 forms a homodimer with the active-site groove between subunits, employing a conserved cysteine–histidine catalytic dyad. Its low activity toward SUMO precursor maturation suggests that substrate deconjugation, not precursor processing, is its primary biochemical function.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Mitotic Checkpoint Control &amp; Safety Risk</h3>
+        <p>DESI1 enzymatic activity is required for proper mitotic regulation: knockdown accelerates cell-cycle progression, increases chromosome segregation errors, weakens nocodazole-induced mitotic arrest, and promotes mitotic slippage. It maintains Aurora B expression/localization and FoxM1 target gene transcription (Aurora B, Cyclin B1, CENP-F), underscoring an essential role in spindle assembly checkpoint integrity.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cancer-Associated Biology &amp; Safety Concerns</h3>
+        <p>DESI1 participates in cancer-relevant processes including proliferation, epithelial–mesenchymal transition, hypoxia/reoxygenation responses, prognosis-linked gene networks, and vincristine chemotherapy response. Systemic modulation of DESI1 carries oncological safety implications that require careful preclinical evaluation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Chemical Profilability via Activity-Based Probes</h3>
+        <p>Activity-based probes originally designed for USP30 unexpectedly engage DESI1 and DESI2, establishing proof-of-concept that DESI1 can be chemically profiled in cellular contexts. This makes DESI1 potentially amenable to probe or inhibitor development, though USP30's mitochondrial/mitophagy functions must not be conflated with those of DESI1.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Indirect &amp; Hypothetical Alzheimer's Relevance</h3>
+        <p>No published evidence directly links DESI1 to AD-relevant biology such as tau, APP, presenilin, BACE1, synaptic dysfunction, neuroinflammation, or neuronal death. Its AD relevance is inferred indirectly from SUMO biology's broad roles in proteostasis, DNA damage, mitochondrial stress, and neuronal function, and from possible parallels with aberrant neuronal cell-cycle re-entry — all of which remain untested for DESI1 specifically.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Treat DESI1 as an unvalidated AD target.</strong> The current evidence is mechanistically plausible but does not establish DESI1 as a therapeutic Alzheimer's disease target. It should be investigated as a candidate, not assumed to be actionable.</div>
+      </li>
+      <li>
+        <div><strong>Prioritize AD-specific validation experiments.</strong> Test DESI1 expression, activity, and localization in human AD brain tissue, primary neuronal and glial models, amyloid and tauopathy animal models, and aging contexts before advancing toward therapeutic development.</div>
+      </li>
+      <li>
+        <div><strong>Identify neurologically relevant substrates.</strong> Systematically determine which DESI1 substrates are present in neurons and glia, focusing on proteins involved in tau biology, APP processing, synaptic maintenance, proteostasis, DNA damage response, mitochondrial stress, and inflammatory signaling.</div>
+      </li>
+      <li>
+        <div><strong>Deploy activity-based probe strategies in disease-relevant systems.</strong> Adapt existing probe tools to measure DESI1 catalytic activity and target engagement in AD-relevant cell systems, enabling quantitative assessment of functional state in disease contexts.</div>
+      </li>
+      <li>
+        <div><strong>Determine the direction of therapeutic modulation before committing to a strategy.</strong> It is unknown whether DESI1 is protective or harmful in AD-relevant settings. This must be resolved before deciding between inhibition, activation, or stabilization as the appropriate approach.</div>
+      </li>
+      <li>
+        <div><strong>Rigorously assess mitotic and oncological safety risks.</strong> DESI1 perturbation impairs chromosome segregation and mitotic checkpoint function. Any therapeutic program must evaluate effects on proliferative tissues, cancer risk, and tissue renewal in the relevant species and dosing regimen.</div>
+      </li>
+      <li>
+        <div><strong>Avoid extrapolating unrelated biological contexts.</strong> Plant DESI1-family developmental biology and the "Desi-1" chickpea cultivar are entirely unrelated to human neurodegeneration and must not be used as evidence for human DESI1 function or AD relevance.</div>
+      </li>
+      <li>
+        <div><strong>Pursue brain- or cell-type-selective strategies if therapeutically advanced.</strong> Given systemic safety concerns, any drug development program should focus on CNS-targeted or cell-type-restricted delivery approaches and evaluate off-target effects in dividing cell populations throughout development.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── VERDICT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-label">Overall Assessment — DESI1 in Alzheimer's Disease</div>
+      <p>
+        DESI1 is a <strong>structurally and biochemically characterized selective deSUMOylase</strong> with
+        well-documented roles in mitotic checkpoint integrity, spindle assembly checkpoint regulation, and
+        transcriptional control through substrate-specific deconjugation. Its relevance to Alzheimer's disease
+        is <strong>entirely indirect and hypothetical</strong>: the broad importance of SUMO biology to
+        neuronal homeostasis, proteostasis, DNA damage, and stress responses provides a plausible mechanistic
+        rationale, but <strong>no DESI1-specific substrates or functional studies in AD-relevant biological
+        systems have been reported</strong>. Significant safety considerations — including impaired chromosome
+        segregation, mitotic slippage, and cancer-associated biology — impose a high preclinical bar before
+        any therapeutic direction can be responsibly chosen. DESI1's chemical profilability via activity-based
+        probes offers a pragmatic entry point for target validation. The field's immediate priority should be
+        <strong>rigorous, neurologically contextualized target validation</strong> rather than premature
+        therapeutic optimization.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer>
+  DESI1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

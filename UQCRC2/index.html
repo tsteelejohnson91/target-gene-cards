@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UQCRC2 — Alzheimer's Disease | Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #e0eaf4;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(180,30,30,0.32);
+    border: 1px solid rgba(255,160,160,0.35);
+    color: #ffd0d0;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+    color: #c8dff2;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    font-weight: 700;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); }
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 1.0rem;
+    color: var(--slate);
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    margin-top: 6px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.95rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 0.93rem; line-height: 1.65; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-slate { background: var(--neutral-bg); border-left: 4px solid #64748b; }
+  .card-slate h3 { color: #334155; }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: take-counter;
+  }
+  .takeaways-list li {
+    counter-increment: take-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+  .takeaways-list li::before {
+    content: counter(take-counter);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .takeaways-list li strong { color: var(--dark); }
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    border-radius: 12px;
+    padding: 36px 36px;
+    color: #e0eaf4;
+    line-height: 1.75;
+  }
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #90b8d8;
+    margin-bottom: 10px;
+  }
+  .verdict-banner p {
+    font-size: 1.0rem;
+    color: #cddff0;
+  }
+  .verdict-banner strong { color: #ffffff; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: UQCRC2 &nbsp;|&nbsp; Ubiquinol-Cytochrome C Reductase Core Protein 2</span>
+    <span class="chip chip-danger">⚠ Complex III Deficiency Risk</span>
+  </div>
+  <h1>UQCRC2 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+    <div class="callout">
+      <strong>Caution — Rare Genetic Disease:</strong> Pathogenic UQCRC2 loss-of-function variants cause severe mitochondrial complex III deficiency syndrome with lactic acidosis, hypoglycemia, hepatopathy, renal tubular dysfunction, white matter lesions, neurological impairment, and metabolic crises. Direct inhibition of UQCRC2 is therefore contraindicated as a neuronal therapeutic strategy.
+    </div>
+    <div class="overview-text">
+      <p>UQCRC2 is a nuclear-encoded core subunit of mitochondrial respiratory-chain complex III (ubiquinol-cytochrome c reductase). Its relevance to Alzheimer's disease (AD) centers on mitochondrial oxidative phosphorylation, ATP production, complex III integrity, reactive oxygen species (ROS), redox balance, metal metabolism, glucose and energy metabolism, mitophagy, neuroinflammation, ferroptosis, apoptosis, and neuronal vulnerability.</p>
+      <p>AD-specific evidence supports UQCRC2 mainly as a <em>biomarker and mitochondrial pathway node</em> rather than a validated standalone therapeutic target. Key findings include its role in a four-gene metal-metabolism diagnostic signature (with GAD1, GFAP, and SYP; AUC = 0.861), as a mitochondrial complex hub gene in AD oxidative phosphorylation analyses, as a shared hub gene between AD and sleep disorder, as part of an early AD glucose-metabolism prediction model, as a tau-associated interactor in AD subtype mapping, and as a mitochondrial binding partner of the pathogenic apoE4(1-272) fragment associated with reduced complex III and IV activity in neuronal cells.</p>
+      <p>Across broader neurodegeneration and non-AD systems, reduced or dysregulated UQCRC2 tracks with impaired complex III activity, reduced respiratory capacity, ATP depletion, mitochondrial membrane-potential loss, abnormal morphology, increased oxidative stress, defective mitophagy, inflammatory signaling, ferroptosis, apoptosis, and cellular senescence — mechanisms that overlap strongly with AD pathogenesis.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A: Upstream Triggers -->
+        <rect x="10" y="10" width="210" height="476" rx="10" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A · UPSTREAM TRIGGERS</text>
+
+        <!-- Node A1: apoE4(1-272) Fragment -->
+        <rect x="28" y="44" width="174" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">apoE4(1-272)</text>
+        <text x="115" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#c8dff2">Fragment</text>
+
+        <!-- Node A2: Tau Aggregation -->
+        <rect x="28" y="108" width="174" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="126" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Tau Pathology</text>
+        <text x="115" y="140" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#c8dff2">AD subtype interactor</text>
+
+        <!-- Node A3: TDP-43 Loss -->
+        <rect x="28" y="172" width="174" height="44" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="115" y="190" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">TDP-43 Pathology</text>
+        <text x="115" y="204" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#c8dff2">UQCRC2 mis-splicing</text>
+
+        <!-- arrows A1->A2, A2->A3 -->
+        <line x1="115" y1="88" x2="115" y2="105" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <line x1="115" y1="152" x2="115" y2="169" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Biomarker Panel -->
+        <rect x="28" y="238" width="174" height="56" rx="7" fill="#1a3a5c" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="256" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#e0eaf4" font-weight="bold">Diagnostic Signature</text>
+        <text x="115" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#90b8d8">GAD1 · GFAP · SYP</text>
+        <text x="115" y="283" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#90b8d8">AUC = 0.861</text>
+
+        <line x1="115" y1="216" x2="115" y2="235" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- Panel B: Complex III Core -->
+        <rect x="232" y="10" width="218" height="300" rx="10" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="341" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#0a4740" letter-spacing="0.1em">B · COMPLEX III CORE</text>
+
+        <!-- Node B1: UQCRC2 -->
+        <rect x="255" y="44" width="172" height="50" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="341" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#fff" font-weight="bold">UQCRC2</text>
+        <text x="341" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">Complex III core subunit</text>
+
+        <!-- Node B2: Electron Transfer -->
+        <rect x="255" y="116" width="172" height="44" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="341" y="134" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Electron Transfer</text>
+        <text x="341" y="148" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">Ubiquinol → Cyt c</text>
+
+        <line x1="341" y1="94" x2="341" y2="113" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: Proton Gradient -->
+        <rect x="255" y="182" width="172" height="44" rx="7" fill="#14b8a6" stroke="#0f766e" stroke-width="1"/>
+        <text x="341" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Proton Gradient</text>
+        <text x="341" y="214" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">Membrane potential ΔΨm</text>
+
+        <line x1="341" y1="160" x2="341" y2="179" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: ATP Synthesis -->
+        <rect x="255" y="248" width="172" height="44" rx="7" fill="#065f46" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="341" y="266" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">ATP Synthesis</text>
+        <text x="341" y="280" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#99f6e4">Neuronal energy supply</text>
+
+        <line x1="341" y1="226" x2="341" y2="245" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Panel C: Downstream Branches -->
+        <rect x="462" y="10" width="448" height="476" rx="10" fill="#fdf0f0" fill-opacity="0.55" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="686" y="32" text-anchor="middle" font-family="Arial" font-size="9.5" font-weight="700" fill="#5a0f0f" letter-spacing="0.1em">C · DOWNSTREAM CONSEQUENCES</text>
+
+        <!-- Branch 1: ROS/Oxidative -->
+        <text x="556" y="54" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#8b1a1a" letter-spacing="0.08em">OXIDATIVE BRANCH</text>
+        <rect x="481" y="62" width="150" height="42" rx="7" fill="#8b1a1a" stroke="#5a0f0f" stroke-width="1"/>
+        <text x="556" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">ROS Elevation</text>
+        <text x="556" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">Oxidative stress ↑</text>
+
+        <rect x="481" y="130" width="150" height="42" rx="7" fill="#b91c1c" stroke="#8b1a1a" stroke-width="1"/>
+        <text x="556" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Ferroptosis / Apoptosis</text>
+        <text x="556" y="161" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">Lipid peroxidation</text>
+
+        <line x1="556" y1="104" x2="556" y2="127" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <rect x="481" y="198" width="150" height="42" rx="7" fill="#b91c1c" stroke="#8b1a1a" stroke-width="1"/>
+        <text x="556" y="215" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Neuroinflammation</text>
+        <text x="556" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">Inflammatory signaling</text>
+
+        <line x1="556" y1="172" x2="556" y2="195" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Branch 2: Mitophagy/Quality Control -->
+        <text x="800" y="54" text-anchor="middle" font-family="Arial" font-size="8.5" font-weight="700" fill="#b45309" letter-spacing="0.08em">QUALITY CONTROL BRANCH</text>
+        <rect x="720" y="62" width="150" height="42" rx="7" fill="#b45309" stroke="#78350f" stroke-width="1"/>
+        <text x="795" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Mitophagy Deficit</text>
+        <text x="795" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fef3c7">PINK1/Parkin impaired</text>
+
+        <rect x="720" y="130" width="150" height="42" rx="7" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+        <text x="795" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Mitochondrial Damage</text>
+        <text x="795" y="161" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fef3c7">Morphology · ΔΨm loss</text>
+
+        <line x1="795" y1="104" x2="795" y2="127" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <rect x="720" y="198" width="150" height="42" rx="7" fill="#92400e" stroke="#78350f" stroke-width="1"/>
+        <text x="795" y="215" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff" font-weight="bold">Senescence</text>
+        <text x="795" y="229" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fef3c7">Cellular aging ↑</text>
+
+        <line x1="795" y1="172" x2="795" y2="195" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Convergence node -->
+        <rect x="570" y="280" width="240" height="46" rx="7" fill="#5a0f0f" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="690" y="299" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#fff" font-weight="bold">Neuronal Vulnerability &amp; Death</text>
+        <text x="690" y="315" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#fecaca">Synaptic dysfunction · Cognitive decline</text>
+
+        <!-- lines from branches to convergence -->
+        <line x1="556" y1="240" x2="556" y2="268" stroke="#8b1a1a" stroke-width="1.4"/>
+        <line x1="556" y1="268" x2="572" y2="280" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+        <line x1="795" y1="240" x2="795" y2="268" stroke="#b45309" stroke-width="1.4"/>
+        <line x1="795" y1="268" x2="808" y2="280" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- Therapeutic node -->
+        <rect x="570" y="360" width="240" height="58" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="690" y="379" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#fff" font-weight="bold">Therapeutic Goal</text>
+        <text x="690" y="395" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">Preserve Complex III · ↓ ROS</text>
+        <text x="690" y="408" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">Restore PINK1/Parkin mitophagy</text>
+
+        <line x1="690" y1="326" x2="690" y2="357" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- CoQ10 / Resveratrol annotation badge -->
+        <rect x="570" y="432" width="240" height="36" rx="6" fill="#e0f2fe" stroke="#0369a1" stroke-width="1"/>
+        <text x="690" y="447" text-anchor="middle" font-family="Arial" font-size="9.5" fill="#0369a1" font-weight="700">CoQ10 · Resveratrol · AMPK/NRF2</text>
+        <text x="690" y="460" text-anchor="middle" font-family="Arial" font-size="9" fill="#0369a1">Supportive interventions (evidence)</text>
+
+        <line x1="690" y1="418" x2="690" y2="429" stroke="#0369a1" stroke-width="1.2" marker-end="url(#arr-teal)"/>
+
+        <!-- Cross-panel connector: Panel A → Panel B (apoE4 → UQCRC2) -->
+        <!-- A1 ends at x=202, y=66; B1 starts at x=255, y=69 — clear horizontal gap -->
+        <line x1="202" y1="66" x2="252" y2="66" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Panel A → Panel B (TDP-43 → UQCRC2 via routing through y=194 then up to 69) -->
+        <!-- Route: from A3 right edge (202,194) → elbow right to x=232 gutter → up to y=69 → UQCRC2 left edge (255,69) -->
+        <polyline points="202,194 228,194 228,69 252,69" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Panel B ATP node → Panel C ROS branch (B4 right=427, y=270; C-ROS starts at 481,83) -->
+        <!-- Route: from B4 right (427,270) → right to x=450 → up to y=83 → to 481,83 -->
+        <polyline points="427,270 450,270 450,83 478,83" fill="none" stroke="#8b1a1a" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- Panel B ATP → Panel C Mitophagy branch (via bottom gutter) -->
+        <polyline points="427,270 450,270 450,155 450,83" fill="none" stroke="none"/>
+        <!-- separate line for mitophagy -->
+        <polyline points="427,270 455,270 455,83 718,83" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel labels in bottom for A -->
+        <rect x="28" y="316" width="174" height="56" rx="7" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+        <text x="115" y="334" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#1d4ed8">OXPHOS Hub Roles</text>
+        <text x="115" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e40af">Sleep disorder overlap</text>
+        <text x="115" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#1e40af">Glucose metabolism model</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue, left):</strong> Upstream AD-relevant triggers feeding into or co-occurring with UQCRC2 biology: pathogenic apoE4(1-272) fragment (binds complex III, reducing activity), tau pathology (AD subtype interactor), TDP-43 loss (causes UQCRC2 mis-splicing), and a multi-marker diagnostic signature. Lower node summarizes OXPHOS hub roles across AD contexts.
+      <strong>Panel B (teal, center):</strong> The core complex III mechanism — UQCRC2 enables electron transfer from ubiquinol to cytochrome c, sustaining the proton gradient and ATP synthesis for neuronal survival.
+      <strong>Panel C (red/amber, right):</strong> Downstream consequences diverge into two parallel branches — an oxidative branch (ROS elevation → ferroptosis/apoptosis → neuroinflammation) and a quality-control branch (mitophagy deficit → mitochondrial damage → senescence) — both converging on neuronal vulnerability and death. The teal therapeutic node highlights the goal: preserving complex III, reducing ROS, and restoring PINK1/Parkin mitophagy, supported by CoQ10, resveratrol, and AMPK/NRF2-related strategies.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+      <div class="card card-accent">
+        <h3>Complex III as the Central Node</h3>
+        <p>UQCRC2 is most consistently linked to AD through mitochondrial complex III dysfunction. Complex III supports electron transfer from ubiquinol to cytochrome c and contributes to the proton gradient needed for ATP synthesis. Disruption can plausibly impair neuronal energy production and increase ROS, establishing a direct mitochondrial failure mechanism.</p>
+      </div>
+      <div class="card card-blue">
+        <h3>Biomarker Evidence: Panel-Based, Not Isolated</h3>
+        <p>UQCRC2 featured in a four-gene metal-metabolism AD diagnostic signature (with GAD1, GFAP, SYP) achieving AUC = 0.861, as well as in oxidative phosphorylation, glucose-metabolism, tau-interactome, and sleep-disorder-overlap AD analyses. These findings position UQCRC2 as part of broader mitochondrial/metabolic AD biology rather than an isolated causal marker.</p>
+      </div>
+      <div class="card card-accent">
+        <h3>APOE4 Fragment Mechanistic Link</h3>
+        <p>The pathogenic truncated apoE4(1-272) fragment binds mitochondrial respiratory proteins — including UQCRC2, cytochrome C1, and COX IV 1 — more strongly than full-length apoE4. Neuronal cells expressing apoE4(1-272) show reduced complex III and IV activities, directly implicating UQCRC2 in APOE4-fragment mitochondrial toxicity.</p>
+      </div>
+      <div class="card card-slate">
+        <h3>Tau-Related AD Subtype Biology</h3>
+        <p>UQCRC2 was identified among distinct tau-associated interactors differentiating classical versus rapidly progressive AD. Associated networks involved mitochondrial organization, mitophagy regulation, mitochondrial outer membrane permeabilization, necroptotic processes, oxidation-reduction processes, and metabolism.</p>
+      </div>
+      <div class="card card-warning">
+        <h3>TDP-43 Pathology &amp; RNA Mis-splicing</h3>
+        <p>TDP-43 knockdown caused reduced respiratory capacity, selective complex III disruption, reduced UQCRC2, and aberrant UQCRC2 alternative splicing in HEK293T and SH-SY5Y cells. Since TDP-43 pathology occurs in subsets of AD, UQCRC2 mis-splicing represents a plausible RNA-processing route to complex III impairment.</p>
+      </div>
+      <div class="card card-positive">
+        <h3>Therapeutic Direction: Preserve, Not Inhibit</h3>
+        <p>Resveratrol restored hippocampal UQCRC2 and other OXPHOS components in SAMP8 mice under high-fat diet stress, preventing cognitive impairment. CoQ10 stabilized a patient with UQCRC2-related complex III deficiency. These findings support preservation and normalization of complex III function as the therapeutic goal — direct UQCRC2 inhibition would worsen neuronal energy failure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <div><strong>Frame UQCRC2 as a vulnerability node, not a drug target.</strong> Treat UQCRC2 as a mitochondrial complex III vulnerability node in AD research. It lacks validation as a standalone AD therapeutic target and is essential for respiratory function and neuronal survival.</div>
+      </li>
+      <li>
+        <div><strong>Characterize UQCRC2 status in AD-vulnerable brain regions.</strong> Prioritize studies testing whether UQCRC2 expression, splicing, oxidation state, complex III assembly, or respiratory supercomplex incorporation is altered in hippocampus and cortex from AD patients versus controls.</div>
+      </li>
+      <li>
+        <div><strong>Evaluate UQCRC2 within multi-marker biomarker panels.</strong> Stronger diagnostic panels may combine UQCRC2 with other OXPHOS/metabolic markers (NDUFB8, NDUFS3, COX5A, ATP5A/ATP5B, UQCRC1, UQCRFS1, SOD1) and AD-relevant markers (GFAP, SYP, GAD1, tau, APOE genotype).</div>
+      </li>
+      <li>
+        <div><strong>Test UQCRC2 specifically in APOE4 models.</strong> Especially models expressing truncated apoE4 fragments — determine whether blocking apoE4(1-272) interaction with UQCRC2 or stabilizing complex III can rescue mitochondrial respiration and neuronal survival.</div>
+      </li>
+      <li>
+        <div><strong>Investigate UQCRC2 in tauopathy and TDP-43-positive AD contexts.</strong> Determine whether tau-associated mitochondrial stress or TDP-43-driven UQCRC2 mis-splicing contributes to complex III dysfunction in these AD subpopulations.</div>
+      </li>
+      <li>
+        <div><strong>Focus therapeutic exploration on restoring complex III function.</strong> Preserve complex III assembly, support CoQ-dependent electron transfer, improve respiratory supercomplex stability, maintain ATP production and membrane potential, reduce complex III-derived ROS, limit ferroptosis/lipid peroxidation, and enhance PINK1/Parkin-mediated mitophagy.</div>
+      </li>
+      <li>
+        <div><strong>Avoid direct UQCRC2 inhibition as an AD therapy.</strong> Because UQCRC2 is essential for electron transport and ATP generation, inhibition could worsen neuronal energy failure, oxidative stress, and cell death — the opposite of the therapeutic goal.</div>
+      </li>
+      <li>
+        <div><strong>Use UQCRC2 as a pharmacodynamic readout for mitochondrial-protective interventions.</strong> Candidate strategies include CoQ10-pathway support, antioxidants/redox modulators, AMPK/NRF2/SIRT1/PGC-1α-related mitochondrial biogenesis strategies, mitophagy enhancers, and compounds that stabilize complex III or respiratory supercomplexes.</div>
+      </li>
+      <li>
+        <div><strong>Validate therapeutic relevance directly in AD systems before clinical translation.</strong> Use AD patient brain tissue, iPSC-derived neurons/glia, brain organoids, and amyloid/tau/APOE4/TDP-43 animal models to determine whether UQCRC2 modulation improves respiration, ROS, synaptic integrity, amyloid/tau burden, neuroinflammation, cognition, and neuronal survival.</div>
+      </li>
+      <li>
+        <div><strong>Interpret UQCRC2 changes with cell-type and disease-stage specificity.</strong> Increased UQCRC2 may reflect compensation or pathogenic ROS-generating OXPHOS activity in some contexts; decreased UQCRC2 may indicate complex III failure in others. The goal should be normalization of efficient mitochondrial respiration and redox balance, not indiscriminate upregulation.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — UQCRC2 in Alzheimer's Disease</div>
+      <p>
+        UQCRC2 emerges from the available evidence as a <strong>biologically significant mitochondrial complex III node</strong> in Alzheimer's disease — one that is deeply embedded in the overlapping pathological mechanisms of <strong>energy failure, oxidative stress, apoptosis, neuroinflammation, and defective mitophagy</strong> that characterize AD neurodegeneration. Its value is most clearly established as a <strong>biomarker component</strong> within multi-gene AD signatures and as a <strong>mechanistic participant</strong> in APOE4-fragment toxicity and TDP-43-driven RNA mis-processing, rather than as a primary causal or independently actionable drug target. The therapeutic implication of all lines of evidence converges on a single principle: <strong>preserving and normalizing UQCRC2-containing complex III function is neuroprotective</strong>, while inhibiting it would likely accelerate neuronal energy failure. Interventions supporting CoQ10-mediated electron transfer, respiratory supercomplex stability, PINK1/Parkin mitophagy, and redox balance represent the most evidence-aligned strategies. <strong>Rigorous validation in AD-specific experimental systems</strong> — patient brain tissue, iPSC-derived neurons, and APOE4/tau/TDP-43 animal models — remains an essential prerequisite before any therapeutic translation.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  UQCRC2 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

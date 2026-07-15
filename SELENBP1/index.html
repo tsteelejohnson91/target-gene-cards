@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SELENBP1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2d6a9f;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,180,180,0.35);
+    color: #fecaca;
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    border-radius: 999px;
+    padding: 4px 14px;
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #cfe0f4;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* PROSE */
+  .prose p {
+    margin-bottom: 16px;
+    font-size: 0.975rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 13px;
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent  { background: var(--light);         border-left: 4px solid var(--mid);      }
+  .card-accent  h3 { color: var(--dark); }
+  .card-danger  { background: var(--danger-light);  border-left: 4px solid var(--danger);   }
+  .card-danger  h3 { color: var(--danger); }
+  .card-positive{ background: var(--positive-light);border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning);  }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral);  }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-blue    { background: #eff6ff;              border-left: 4px solid #3b82f6;         }
+  .card-blue    h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e33 100%);
+    border-radius: 12px;
+    padding: 36px 36px 34px;
+    color: #ffffff;
+    margin-bottom: 54px;
+  }
+
+  .verdict .lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #7dd3fc;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: #dbeafe;
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HEADER ═══════════════════════════════════════════ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: SELENBP1 &nbsp;|&nbsp; Selenium Binding Protein 1</span>
+    <span class="chip-danger">⚠ Bidirectional risk — direction unresolved</span>
+  </div>
+  <h1>SELENBP1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════════ MAIN ════════════════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Direction Unresolved:</strong> Both elevated and reduced SELENBP1 have been associated with pathological states across different tissues, disease contexts, and cell types. The correct therapeutic direction — activation versus inhibition — cannot currently be determined.
+    </div>
+
+    <div class="prose">
+      <p>SELENBP1 is best supported as an <em>emerging Alzheimer's disease–relevant molecular signature</em> rather than a validated therapeutic target. The strongest AD-specific evidence comes from the 5XFAD mouse model, where Selenbp1 showed age-dependent increases and spatially selective elevation in amyloid-vulnerable regions — especially the dentate gyrus, dorsal subiculum, and retrosplenial cortex. Expression was primarily detected in microglia and largely absent from neurons and astrocytes, linking SELENBP1 most directly to amyloid-associated microglial activation.</p>
+
+      <p>Bulk western blotting across whole hippocampus and prefrontal cortex showed robust age-related increases but no statistically significant genotype-dependent difference between non-transgenic and 5XFAD mice. Immunofluorescence, however, revealed region-specific changes in amyloid-vulnerable zones, suggesting that SELENBP1 signals may be diluted or masked in whole-region lysates — underscoring its potential value as a <em>spatially resolved microglial biomarker</em> of early amyloid pathology.</p>
+
+      <p>The broader literature connects SELENBP1 to AD-relevant mechanisms including oxidative stress, NRF2/KEAP1 signaling, mitochondrial dysfunction, mitophagy, selenium biology, GPX4-linked antioxidant defense, ferroptosis, sulfur and hydrogen sulfide metabolism, hypoxia, immune-cell activation, inflammatory polarization, and autophagy/lysosomal regulation. However, these mechanisms are mostly inferred from non-AD disease contexts, so therapeutic conclusions remain provisional.</p>
+    </div>
+  </section>
+
+  <!-- ── FIGURE ── -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL LAYOUT (4 panels, left-to-right):
+        Panel A: AD Context (upstream input)         x=10,  w=190
+        Panel B: Microglial Activation Axis          x=215, w=220
+        Panel C: Oxidative/Metabolic Effectors       x=450, w=220
+        Panel D: Downstream Outcomes                 x=685, w=195
+
+        Rows (center-y of each row slot):
+          Row1: y=90   Row2: y=175  Row3: y=260  Row4: y=345  Row5: y=415
+
+        NODE INVENTORY (counting carefully, max 16):
+         1. Amyloid Pathology          Panel A, row1
+         2. Aging / 5XFAD Model        Panel A, row2
+         3. Microglial Sensing         Panel B, row1
+         4. SELENBP1 ↑ (Microglia)     Panel B, row2  — central hub
+         5. NRF2/KEAP1 Signaling       Panel C, row1  — branch 1
+         6. GPX4 / Ferroptosis Axis    Panel C, row2  — branch 2
+         7. PINK1/Parkin Mitophagy     Panel C, row3  — branch 3
+         8. H₂S / Sulfur Metabolism    Panel C, row4  — branch 4
+         9. ROS Production             Panel D, row1
+        10. Lipid Peroxidation         Panel D, row2
+        11. Mitochondrial Recovery     Panel D, row3
+        12. Anti-inflam. M2 Polariz.   Panel D, row4
+        13. Spatial Biomarker Signal   Panel B, row4  (standalone note box)
+        14. Selenium Pathway Input     Panel A, row4
+
+        TOTAL: 14 nodes — within limit.
+
+        Arrow routing:
+          A→B (horizontal, row1): Amyloid → Microglial Sensing
+          A→B (horizontal, row2): Aging → SELENBP1↑
+          B→B (vertical): Microglial Sensing → SELENBP1↑
+          SELENBP1↑ → NRF2 (horizontal, row2→row1, elbow through gutter)
+          SELENBP1↑ → GPX4 (horizontal, same row2)
+          SELENBP1↑ → PINK1 (horizontal, row2→row3, elbow)
+          SELENBP1↑ → H₂S (horizontal, row2→row4, elbow)
+          NRF2 → ROS (horizontal row1)
+          GPX4 → Lipid Perox (horizontal row2)
+          PINK1 → Mito Recovery (horizontal row3)
+          H₂S → M2 Polar (horizontal row4)
+          Aging → SeleniumInput (vertical, within Panel A)
+          SELENBP1↑ → Biomarker (vertical, within Panel B)
+      -->
+      <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SELENBP1 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2d6a9f" />
+          </marker>
+          <marker id="arr-pos" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e" />
+          </marker>
+          <marker id="arr-warn" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309" />
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c" />
+          </marker>
+        </defs>
+
+        <!-- ════ PANEL A: AD Context ════ x=10, y=30, w=180, h=390 -->
+        <rect x="10" y="30" width="180" height="390" rx="10" fill="#e8f2fb" fill-opacity="0.55" stroke="#2d6a9f" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="100" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#1a3a5c" text-decoration="none">AD CONTEXT</text>
+
+        <!-- Node 1: Amyloid Pathology  cx=100, cy=95 -->
+        <rect x="28" y="70" width="144" height="50" rx="7" fill="#dbeafe" stroke="#2d6a9f" stroke-width="1.4"/>
+        <text x="100" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Amyloid Pathology</text>
+        <text x="100" y="107" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">(plaques, DG / SubI)</text>
+
+        <!-- Node 2: Aging / 5XFAD  cx=100, cy=178 -->
+        <rect x="28" y="153" width="144" height="50" rx="7" fill="#dbeafe" stroke="#2d6a9f" stroke-width="1.4"/>
+        <text x="100" y="174" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Aging / 5XFAD</text>
+        <text x="100" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">age-dep. Selenbp1 ↑</text>
+
+        <!-- Node 14: Selenium Pathway Input  cx=100, cy=340 -->
+        <rect x="28" y="315" width="144" height="50" rx="7" fill="#e0f2fe" stroke="#2d6a9f" stroke-width="1.4"/>
+        <text x="100" y="336" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#1a3a5c">Selenium Biology</text>
+        <text x="100" y="352" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">dose-sensitive pathway</text>
+
+        <!-- vertical arrow: Aging → Selenium Input -->
+        <line x1="100" y1="203" x2="100" y2="313" stroke="#2d6a9f" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ════ PANEL B: Microglial Axis ════ x=205, y=30, w=210, h=390 -->
+        <rect x="205" y="30" width="210" height="390" rx="10" fill="#f0fdf4" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="310" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#0f766e">MICROGLIAL AXIS</text>
+
+        <!-- Node 3: Microglial Sensing  cx=310, cy=95 -->
+        <rect x="223" y="70" width="174" height="50" rx="7" fill="#dcfce7" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="310" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#14532d">Microglial Sensing</text>
+        <text x="310" y="107" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">amyloid-reactive state</text>
+
+        <!-- Node 4: SELENBP1↑ (hub)  cx=310, cy=198 -->
+        <rect x="223" y="170" width="174" height="56" rx="7" fill="#bbf7d0" stroke="#0f766e" stroke-width="2"/>
+        <text x="310" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#14532d">SELENBP1 ↑</text>
+        <text x="310" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#166534">(microglia, hub node)</text>
+
+        <!-- Node 13: Spatial Biomarker  cx=310, cy=355 -->
+        <rect x="223" y="330" width="174" height="50" rx="7" fill="#f0fdf4" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="310" y="351" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0f766e">Spatial Biomarker</text>
+        <text x="310" y="367" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">region-specific IF signal</text>
+
+        <!-- vertical: Microglial Sensing → SELENBP1↑ -->
+        <line x1="310" y1="120" x2="310" y2="168" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- vertical: SELENBP1↑ → Spatial Biomarker -->
+        <line x1="310" y1="226" x2="310" y2="328" stroke="#0f766e" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-pos)"/>
+
+        <!-- ════ PANEL C: Oxidative/Metabolic ════ x=430, y=30, w=220, h=390 -->
+        <rect x="430" y="30" width="220" height="390" rx="10" fill="#fffbeb" fill-opacity="0.60" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="540" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#b45309">MOLECULAR EFFECTORS</text>
+
+        <!-- Node 5: NRF2/KEAP1  cx=540, cy=95 -->
+        <rect x="448" y="70" width="184" height="50" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+        <text x="540" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#92400e">NRF2 / KEAP1</text>
+        <text x="540" y="107" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">oxidative stress signaling</text>
+
+        <!-- Node 6: GPX4 / Ferroptosis  cx=540, cy=183 -->
+        <rect x="448" y="158" width="184" height="50" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="540" y="179" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#9b1c1c">GPX4 / Ferroptosis</text>
+        <text x="540" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">ACSL4, lipid perox. risk</text>
+
+        <!-- Node 7: PINK1/Parkin Mitophagy  cx=540, cy=271 -->
+        <rect x="448" y="246" width="184" height="50" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+        <text x="540" y="267" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#92400e">PINK1/Parkin</text>
+        <text x="540" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">mitophagy activation</text>
+
+        <!-- Node 8: H₂S / Sulfur  cx=540, cy=358 -->
+        <rect x="448" y="333" width="184" height="50" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+        <text x="540" y="354" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#92400e">H₂S / Sulfur Metabolism</text>
+        <text x="540" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">methanethiol oxidase activity</text>
+
+        <!-- ════ PANEL D: Downstream Outcomes ════ x=665, y=30, w=220, h=390 -->
+        <rect x="665" y="30" width="220" height="390" rx="10" fill="#f1f5f9" fill-opacity="0.55" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="775" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1" fill="#475569">DOWNSTREAM OUTCOMES</text>
+
+        <!-- Node 9: ROS Production  cx=775, cy=95 -->
+        <rect x="683" y="70" width="184" height="50" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="775" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#9b1c1c">ROS Production</text>
+        <text x="775" y="107" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">inflammatory macrophage state</text>
+
+        <!-- Node 10: Lipid Peroxidation  cx=775, cy=183 -->
+        <rect x="683" y="158" width="184" height="50" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.4"/>
+        <text x="775" y="179" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#9b1c1c">Lipid Peroxidation</text>
+        <text x="775" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">ferroptosis-like cell death</text>
+
+        <!-- Node 11: Mitochondrial Recovery  cx=775, cy=271 -->
+        <rect x="683" y="246" width="184" height="50" rx="7" fill="#dcfce7" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="775" y="267" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#14532d">Mitochondrial Recovery</text>
+        <text x="775" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">restored membrane potential</text>
+
+        <!-- Node 12: M2 Polarization  cx=775, cy=358 -->
+        <rect x="683" y="333" width="184" height="50" rx="7" fill="#dcfce7" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="775" y="354" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#14532d">Anti-inflam. M2 Shift</text>
+        <text x="775" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1e293b">macrophage/microglial repol.</text>
+
+        <!-- ════ CROSS-PANEL ARROWS ════ -->
+
+        <!-- Amyloid → Microglial Sensing (horizontal, row1, clear path) -->
+        <line x1="172" y1="95" x2="221" y2="95" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Aging → SELENBP1↑ (horizontal, row2, clear path) -->
+        <line x1="172" y1="178" x2="221" y2="196" stroke="#2d6a9f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- SELENBP1↑ → NRF2: elbow up through gutter (B right edge x=415, gutter center x=422) -->
+        <!-- From (397,192) right to gutter(422,192), up to (422,95), right to NRF2 (448,95) -->
+        <polyline points="397,192 422,192 422,95 446,95" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+        <!-- SELENBP1↑ → GPX4 (horizontal, row2, same y=198 → 183) -->
+        <!-- elbow: from (397,198) right to gutter, then down-to-row2 -->
+        <polyline points="397,198 422,198 422,183 446,183" fill="none" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- SELENBP1↑ → PINK1: elbow down through gutter -->
+        <!-- From (397,204) right to gutter(422,204), down to (422,271), right to PINK1 (448,271) -->
+        <polyline points="397,204 422,204 422,271 446,271" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+        <!-- SELENBP1↑ → H₂S: elbow down through gutter -->
+        <!-- From (397,210) right to gutter(422,210), down to (422,358), right to H₂S (448,358) -->
+        <polyline points="397,210 425,210 425,358 446,358" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-warn)"/>
+
+        <!-- NRF2 → ROS (horizontal row1) -->
+        <line x1="632" y1="95" x2="681" y2="95" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- GPX4 → Lipid Peroxidation (horizontal row2) -->
+        <line x1="632" y1="183" x2="681" y2="183" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- PINK1 → Mitochondrial Recovery (horizontal row3) -->
+        <line x1="632" y1="271" x2="681" y2="271" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- H₂S → M2 Polarization (horizontal row4) -->
+        <line x1="632" y1="358" x2="681" y2="358" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-pos)"/>
+
+        <!-- Selenium Input → SELENBP1↑: elbow right from panel A to panel B at row4→row2 -->
+        <!-- From (172,340) right to gutter(195,340) up to (195,198) right to (221,198) — but SELENBP1 box left=223 -->
+        <polyline points="172,340 196,340 196,215 221,215" fill="none" stroke="#2d6a9f" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (AD Context):</strong> Upstream drivers — amyloid pathology in vulnerable hippocampal regions and age-dependent gene induction in the 5XFAD model — converge on microglial activation; selenium biology provides an additional pathway input.
+        <strong>Panel B (Microglial Axis):</strong> SELENBP1 is the central hub, expressed in microglia sensing amyloid; a dashed arrow indicates its downstream value as a spatially resolved biomarker signal.
+        <strong>Panel C (Molecular Effectors):</strong> SELENBP1 fans out into four parallel branches — NRF2/KEAP1 oxidative stress signaling, GPX4/ferroptosis vulnerability, PINK1/Parkin-mediated mitophagy, and H₂S/sulfur metabolism — each operating semi-independently.
+        <strong>Panel D (Downstream Outcomes):</strong> Branches reconverge onto outcomes that can be harmful (ROS production, lipid peroxidation) or protective (mitochondrial recovery, M2-like microglial repolarization), reflecting the bidirectional, context-dependent nature of SELENBP1's role.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── KEY INSIGHTS ── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Microglial Specificity &amp; Spatial Selectivity</h3>
+        In 5XFAD mice, Selenbp1 elevations were confined to amyloid-vulnerable hippocampal and cortical subregions and localised primarily to microglia — not neurons or astrocytes — suggesting it marks early microglial responses to amyloid pathology rather than a pan-cellular stress response.
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Causal AD Evidence Yet</h3>
+        Available AD-specific data do not demonstrate that manipulating SELENBP1 changes amyloid burden, tau pathology, synaptic loss, neurodegeneration, or behavioral outcomes. Its causal role in AD remains entirely unestablished.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Bidirectional Oxidative Stress Role</h3>
+        In inflammatory macrophages, elevated SELENBP1 associates with ROS production; knockdown reduces ROS via NRF2 signaling. In injury models, preserved SELENBP1 supports GPX4 maintenance and reduced oxidative damage. The same gene may be protective in one context and pathogenic in another.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Ferroptosis &amp; Lipid Peroxidation Link</h3>
+        Non-AD studies connect SELENBP1 loss to reduced GPX4, elevated ACSL4, mitochondrial injury, and hypoxia/reoxygenation cell death — a plausible AD-relevant axis given growing evidence for iron accumulation and ferroptosis-like mechanisms in Alzheimer's neurodegeneration.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Mitophagy &amp; Mitochondrial Quality Control</h3>
+        Selenium nanoparticle delivery increased SELENBP1, activated PINK1/Parkin mitophagy, restored mitochondrial function, reduced inflammation, and promoted M2-like polarization — pathways that strongly overlap with AD mechanisms involving defective mitophagy and maladaptive microglial states.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Near-Term Biomarker &gt; Drug Target</h3>
+        Tissue-, disease-, and stage-dependent directionality (both increases and decreases reported across conditions) makes SELENBP1 a stronger candidate as a spatially resolved microglial biomarker of early amyloid-associated pathology than as an actionable therapeutic target in the near term.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── ACTIONABLE TAKEAWAYS ── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <div class="takeaways">
+      <ol>
+        <li><strong>Treat SELENBP1 as an exploratory biomarker and pathway node,</strong> not a validated therapeutic target. Findings warrant investigation but do not yet justify therapeutic prioritization.</li>
+
+        <li><strong>Prioritize spatial and cell-type-resolved studies.</strong> Measure SELENBP1 across hippocampal subfields, entorhinal cortex, subiculum, retrosplenial cortex, and frontal cortex, with clear distinction among microglia, astrocytes, neurons, and peripheral immune cells.</li>
+
+        <li><strong>Correlate with established AD markers.</strong> Test whether SELENBP1 levels track amyloid plaques, phosphorylated tau, Braak stage, synaptic markers, microglial activation states, oxidative lipid damage, iron accumulation, GPX4, ACSL4, mitochondrial dysfunction, and cognitive decline.</li>
+
+        <li><strong>Perform gain- and loss-of-function experiments</strong> in microglia exposed to Aβ, tau aggregates, inflammatory cytokines, iron/lipid peroxidation stress, hypoxia-like stress, or mitochondrial toxins, and extend to neuron–glia co-cultures and AD mouse models.</li>
+
+        <li><strong>Determine whether SELENBP1 is protective, maladaptive, or merely a marker.</strong> Experiments should assess amyloid clearance, cytokine output, ROS production, NRF2/KEAP1 signaling, phagocytosis, mitophagy, ferroptosis markers, synaptic preservation, and cognition.</li>
+
+        <li><strong>Investigate selenium-pathway interventions cautiously.</strong> Selenium modulation may influence SELENBP1-associated pathways but is dose-sensitive and not equivalent to targeted SELENBP1 therapy; conflate the two only with supporting evidence.</li>
+
+        <li><strong>Validate fluid biomarker applications compartment-by-compartment.</strong> Plasma, PBMCs, platelets, CSF, extracellular vesicles, and brain tissue may show divergent changes; AD biomarker studies must stratify by disease stage, amyloid/tau status, inflammation, selenium status, and oxidative-stress burden.</li>
+
+        <li><strong>Avoid assuming that increasing SELENBP1 is beneficial.</strong> Higher SELENBP1 supports mitochondrial recovery in some models yet associates with ROS-generating inflammatory states or NRF2 suppression in others. Therapeutic development will require precise cell-type-, region-, and disease-stage-specific modulation strategies.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── OVERALL ASSESSMENT ── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="lead">Overall Assessment — SELENBP1 in Alzheimer's Disease</div>
+      <p>
+        SELENBP1 is a <strong>plausible AD-relevant molecule</strong> sitting at the intersection of <strong>microglial activation</strong>, <strong>aging</strong>, <strong>amyloid-vulnerable neuroanatomy</strong>, <strong>oxidative stress</strong>, <strong>mitochondrial quality control</strong>, <strong>selenium/sulfur metabolism</strong>, <strong>ferroptosis</strong>, and <strong>immune regulation</strong>. Its strongest current value lies as a <strong>candidate spatial microglial biomarker of early amyloid-associated pathology</strong> — a role supported by consistent region-specific immunofluorescence data in the 5XFAD model. Therapeutic-target potential remains biologically plausible, particularly through the NRF2/KEAP1, GPX4/ferroptosis, and PINK1/Parkin mitophagy axes, but entirely <strong>unproven in AD-specific contexts</strong>. The correct therapeutic direction — activation versus inhibition — cannot yet be determined, and the bidirectional, context-dependent nature of SELENBP1's oxidative and immune roles demands caution. <strong>Rigorous cell-type-resolved, spatially informed, gain- and loss-of-function experiments in AD-relevant systems</strong> represent the critical next step before any therapeutic programme can be responsibly initiated.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════ FOOTER ══════════════════════════════════════════ -->
+<footer>
+  SELENBP1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

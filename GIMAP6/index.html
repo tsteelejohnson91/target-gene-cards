@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GIMAP6 — AD-Adjacent Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,160,160,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 14px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #f59e0b;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list {
+    list-style: none;
+    counter-reset: ta;
+  }
+
+  .takeaways-list li {
+    counter-increment: ta;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.97rem;
+    line-height: 1.7;
+  }
+
+  .takeaways-list li::before {
+    content: counter(ta);
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .takeaways-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.75;
+    font-size: 0.97rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict-banner p {
+    color: rgba(255,255,255,0.88);
+  }
+
+  .verdict-banner strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    border-top: 1px solid var(--neutral-border);
+    padding: 22px 24px;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HEADER ═══ -->
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: GIMAP6 &nbsp;|&nbsp; GTPase IMAP Family Member 6</span>
+    <span class="chip chip-danger">⚠ Caution: No direct AD evidence — inferential only</span>
+  </div>
+  <h1>GIMAP6 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<!-- ═══════════════════════════════════════════ MAIN ════ -->
+<main>
+
+  <!-- ─── SECTION 1: OVERVIEW ─── -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Epistemic Caveat</div>
+      GIMAP6 has <strong>no direct demonstrated link to Alzheimer's disease</strong> in the available evidence. No cited study connects it to amyloid-β, tau pathology, synaptic dysfunction, cognitive decline, neurons, microglia, astrocytes, AD brain tissue, CSF, or AD animal models. All AD relevance is mechanistic and inferential.
+    </div>
+
+    <div class="overview-text">
+      <p>GIMAP6 is an immune-regulatory GTPase principally characterised in T-cell biology, apoptosis regulation, NF-κB-linked survival signalling, autophagy-related processes, redox control, lipid homeostasis, endothelial integrity, and vascular protection. None of these roles have been validated in the context of Alzheimer's disease directly.</p>
+      <p>Relevance to AD is constructed inferentially: these pathways overlap with well-established AD-relevant mechanisms — particularly neuroinflammation, impaired autophagic flux and proteostasis, oxidative and lipid peroxidative stress, vascular cognitive impairment, blood-brain barrier disruption, ischaemic injury, and endothelial dysfunction.</p>
+      <p>As a therapeutic target, GIMAP6 is best characterised as a <em>plausible but unproven AD-adjacent target</em>. Current evidence supports investigating it as part of a protective immunovascular and autophagy-regulating axis, but it cannot yet be regarded as an established AD drug target.</p>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 2: MECHANISM FIGURE ─── -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          LAYOUT PLAN (counting nodes — max 16):
+          Panel A (GIMAP6 biology): GIMAP6 hub → branches to:
+            Branch 1: GABARAPL2 → Autophagosome → LC3-II / p62
+            Branch 2: NF-κB p65 → Survival Signalling
+          Panel B (Vascular/Redox): Endothelial Integrity → Vasculopathy risk
+                                     Redox Control → Lipid Peroxidation
+          Panel C (AD-adjacent overlap): Autophagy Deficit → Aβ/Tau burden
+                                         Vascular Dysfunction → Hypoperfusion
+          Nodes: GIMAP6(1) GABARAPL2(2) Autophagosome(3) LC3-II/p62(4)
+                 NF-κB p65(5) Survival Sig(6) Endothelial(7) Vasculopathy(8)
+                 Redox Ctrl(9) Lipid Perox(10) Autophagy Deficit(11) Aβ/Tau(12)
+                 Vasc Dysfunction(13) Hypoperfusion(14)
+          Total = 14 nodes. ✓ ≤16
+        -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 490" width="880" height="465" font-family="Arial, Helvetica, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+            </marker>
+          </defs>
+
+          <!-- ══════ PANEL A: GIMAP6 Core Biology ══════ -->
+          <!-- Panel background: x=14, y=14, w=380, h=460 -->
+          <rect x="14" y="14" width="380" height="460" rx="12" fill="#e8f2fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="30" y="36" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em" text-transform="uppercase">A — GIMAP6 CORE BIOLOGY</text>
+
+          <!-- Node 1: GIMAP6 (hub) — centre of panel A -->
+          <!-- x=130, y=58, w=140, h=44 -->
+          <rect x="130" y="58" width="140" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="200" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">GIMAP6</text>
+          <text x="200" y="91" text-anchor="middle" font-size="9.5" fill="#93c5fd">Immune GTPase</text>
+
+          <!-- Branch 1 label -->
+          <text x="88" y="136" text-anchor="middle" font-size="8.5" fill="#1a3a5c" font-style="italic">Autophagy branch</text>
+
+          <!-- Arrow GIMAP6 → GABARAPL2 (left branch) -->
+          <line x1="172" y1="102" x2="104" y2="148" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 2: GABARAPL2 — x=44, y=148, w=120, h=40 -->
+          <rect x="44" y="148" width="120" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="104" y="165" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">GABARAPL2</text>
+          <text x="104" y="181" text-anchor="middle" font-size="8.5" fill="#475569">(ATG8-family)</text>
+
+          <!-- Arrow GABARAPL2 → Autophagosome -->
+          <line x1="104" y1="188" x2="104" y2="232" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 3: Autophagosome — x=44, y=232, w=120, h=40 -->
+          <rect x="44" y="232" width="120" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="104" y="249" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">Autophagosome</text>
+          <text x="104" y="265" text-anchor="middle" font-size="8.5" fill="#475569">starvation puncta</text>
+
+          <!-- Arrow Autophagosome → LC3-II/p62 -->
+          <line x1="104" y1="272" x2="104" y2="316" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 4: LC3-II / p62 — x=44, y=316, w=120, h=44 -->
+          <rect x="44" y="316" width="120" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="104" y="334" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">LC3-II / p62</text>
+          <text x="104" y="350" text-anchor="middle" font-size="8.5" fill="#475569">TBK1 · SQSTM1</text>
+
+          <!-- Branch 2 label -->
+          <text x="312" y="136" text-anchor="middle" font-size="8.5" fill="#1a3a5c" font-style="italic">Survival branch</text>
+
+          <!-- Arrow GIMAP6 → NF-κB p65 (right branch) -->
+          <line x1="228" y1="102" x2="296" y2="148" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 5: NF-κB p65 — x=236, y=148, w=120, h=40 -->
+          <rect x="236" y="148" width="120" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="296" y="165" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">NF-κB p65</text>
+          <text x="296" y="181" text-anchor="middle" font-size="8.5" fill="#475569">phosphorylation</text>
+
+          <!-- Arrow NF-κB p65 → Survival Signalling -->
+          <line x1="296" y1="188" x2="296" y2="232" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node 6: Survival Signalling — x=236, y=232, w=120, h=40 -->
+          <rect x="236" y="232" width="120" height="40" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="296" y="249" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">Survival Signal</text>
+          <text x="296" y="265" text-anchor="middle" font-size="8.5" fill="#475569">anti-apoptosis</text>
+
+          <!-- Arrow NF-κB → T-cell apoptosis (downward, panel A bottom) -->
+          <line x1="296" y1="272" x2="296" y2="316" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+          <!-- Node: T-cell Homeostasis — x=236, y=316, w=120, h=44 -->
+          <rect x="236" y="316" width="120" height="44" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.4"/>
+          <text x="296" y="334" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="600">T-cell Immune</text>
+          <text x="296" y="350" text-anchor="middle" font-size="8.5" fill="#475569">homeostasis</text>
+
+          <!-- Converge arrows from both branches to AD-adjacent panel (cross-panel, via gutter) handled below -->
+
+          <!-- ══════ PANEL B: Vascular & Redox ══════ -->
+          <!-- x=410, y=14, w=240, h=230 -->
+          <rect x="410" y="14" width="240" height="230" rx="12" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="426" y="36" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="0.09em">B — VASCULAR &amp; REDOX</text>
+
+          <!-- Node 7: Endothelial Integrity — x=420, y=48, w=108, h=42 -->
+          <rect x="420" y="48" width="108" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="474" y="65" text-anchor="middle" font-size="10" fill="#9b1c1c" font-weight="600">Endothelial</text>
+          <text x="474" y="81" text-anchor="middle" font-size="8.5" fill="#475569">integrity ↓ loss</text>
+
+          <!-- Node 8: Vasculopathy — x=420, y=118, w=108, h=42 -->
+          <rect x="420" y="118" width="108" height="42" rx="7" fill="#ffffff" stroke="#9b1c1c" stroke-width="1.4"/>
+          <text x="474" y="135" text-anchor="middle" font-size="10" fill="#9b1c1c" font-weight="600">Vasculopathy</text>
+          <text x="474" y="151" text-anchor="middle" font-size="8.5" fill="#475569">atherosclerosis · MI</text>
+
+          <!-- Arrow Endothelial → Vasculopathy -->
+          <line x1="474" y1="90" x2="474" y2="118" stroke="#9b1c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+          <!-- Node 9: Redox Control — x=542, y=48, w=100, h=42 -->
+          <rect x="542" y="48" width="100" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="592" y="65" text-anchor="middle" font-size="10" fill="#b45309" font-weight="600">Redox Control</text>
+          <text x="592" y="81" text-anchor="middle" font-size="8.5" fill="#475569">ROS dysregulation</text>
+
+          <!-- Node 10: Lipid Peroxidation — x=542, y=118, w=100, h=42 -->
+          <rect x="542" y="118" width="100" height="42" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.4"/>
+          <text x="592" y="135" text-anchor="middle" font-size="10" fill="#b45309" font-weight="600">Lipid Perox.</text>
+          <text x="592" y="151" text-anchor="middle" font-size="8.5" fill="#475569">PUFA abnormalities</text>
+
+          <!-- Arrow Redox → Lipid Peroxidation -->
+          <line x1="592" y1="90" x2="592" y2="118" stroke="#b45309" stroke-width="1.6" marker-end="url(#arr-amber)"/>
+
+          <!-- Arrow Vasculopathy → AD Vasc (vertical in gutter, goes to panel C — routed via right edge) -->
+          <!-- routed: goes down from 474,160 to 474,186, then panel C handles -->
+          <line x1="474" y1="160" x2="474" y2="188" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+          <!-- Arrow Lipid Perox → AD Lipid -->
+          <line x1="592" y1="160" x2="592" y2="188" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+          <!-- ══════ PANEL C: AD-Adjacent Overlap ══════ -->
+          <!-- x=410, y=258, w=240, h=216 -->
+          <rect x="410" y="258" width="240" height="216" rx="12" fill="#f0fdfa" fill-opacity="0.65" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="426" y="278" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.09em">C — AD-ADJACENT OVERLAP</text>
+
+          <!-- Node 11: Autophagy Deficit — x=420, y=290, w=108, h=44 -->
+          <rect x="420" y="290" width="108" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="474" y="308" text-anchor="middle" font-size="10" fill="#0f766e" font-weight="600">Autophagy</text>
+          <text x="474" y="324" text-anchor="middle" font-size="8.5" fill="#475569">flux impairment</text>
+
+          <!-- Node 12: Aβ / Tau Burden — x=420, y=368, w=108, h=44 -->
+          <rect x="420" y="368" width="108" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="474" y="386" text-anchor="middle" font-size="10" fill="#0f766e" font-weight="600">Aβ / Tau load</text>
+          <text x="474" y="402" text-anchor="middle" font-size="8.5" fill="#475569">clearance failure</text>
+
+          <!-- Arrow Autophagy Deficit → Aβ/Tau -->
+          <line x1="474" y1="334" x2="474" y2="368" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 13: Vascular Dysfunction — x=542, y=290, w=100, h=44 -->
+          <rect x="542" y="290" width="100" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="592" y="308" text-anchor="middle" font-size="10" fill="#0f766e" font-weight="600">Vasc. Dysfun.</text>
+          <text x="592" y="324" text-anchor="middle" font-size="8.5" fill="#475569">BBB · microinfarcts</text>
+
+          <!-- Node 14: Hypoperfusion — x=542, y=368, w=100, h=44 -->
+          <rect x="542" y="368" width="100" height="44" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="1.4"/>
+          <text x="592" y="386" text-anchor="middle" font-size="10" fill="#0f766e" font-weight="600">Hypoperfusion</text>
+          <text x="592" y="402" text-anchor="middle" font-size="8.5" fill="#475569">cognitive decline</text>
+
+          <!-- Arrow Vascular Dysfunction → Hypoperfusion -->
+          <line x1="592" y1="334" x2="592" y2="368" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+          <!-- Cross-panel connectors from Panel A to Panel C -->
+          <!-- LC3-II/p62 node (x=44,y=316,w=120,h=44) → Autophagy Deficit in panel C -->
+          <!-- Route: right edge of LC3 node at (164,338), through gutter horizontally to x=410 gutter edge, then down to 474,290 top -->
+          <!-- We use an elbow: go right from 164,338 to 404,338, then down to 404,312, then right to 420,312 -->
+          <polyline points="164,338 400,338 400,312 420,312" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- T-cell Homeostasis (x=236,y=316,w=120,h=44) → Vascular Dysfunction (x=542,y=290) -->
+          <!-- Route: right from 356,338 horizontally through gutter, then to 542,312 -->
+          <!-- Check: passes through gutter between x=394 and x=410, no boxes in 394-410 range at y=338 -->
+          <polyline points="356,338 400,338 400,312 542,312" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+          <!-- Dashed lines from panel B into panel C already drawn above (474,188 and 592,188) -->
+          <!-- These land just above panel C top edge (258). Connect them downward into nodes -->
+          <!-- 474,188 → 474,290 (Autophagy Deficit top) via straight line through empty gutter area between B (ends y=244) and C (starts y=258) -->
+          <line x1="474" y1="188" x2="474" y2="290" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+          <!-- 592,188 → 592,290 -->
+          <line x1="592" y1="188" x2="592" y2="290" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+
+          <!-- Panel A label text at bottom -->
+          <text x="204" y="385" text-anchor="middle" font-size="8" fill="#1a3a5c" font-style="italic">↓ GIMAP6 → immune</text>
+          <text x="204" y="396" text-anchor="middle" font-size="8" fill="#1a3a5c" font-style="italic">deficiency / vasculitis</text>
+
+          <!-- Node count annotation (outside panels, bottom-right) -->
+          <text x="862" y="480" text-anchor="end" font-size="7.5" fill="#94a3b8" font-style="italic">14 nodes total</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> GIMAP6 core biology — the hub node fans into two parallel branches: an <em>autophagy branch</em> (GIMAP6 → GABARAPL2 → Autophagosome → LC3-II/p62·TBK1) and a <em>survival branch</em> (GIMAP6 → NF-κB p65 → Survival Signalling → T-cell Immune Homeostasis).
+        <strong>Panel B (red/amber, upper right):</strong> Vascular and redox consequences of GIMAP6 loss — endothelial integrity failure progressing to vasculopathy/atherosclerosis, and redox dysregulation driving lipid peroxidation of PUFAs.
+        <strong>Panel C (teal, lower right):</strong> AD-adjacent overlap — impaired autophagic flux leading to Aβ/tau clearance failure (left sub-branch), and vascular dysfunction driving blood-brain barrier disruption and hypoperfusion/cognitive decline (right sub-branch). Dashed arrows indicate inferential cross-panel connections; all AD relevance is mechanistic, not experimentally validated.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ─── SECTION 3: KEY INSIGHTS ─── -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-danger">
+        <h3>No Direct AD Evidence</h3>
+        <p>No available study demonstrates that GIMAP6 affects amyloid deposition, tau phosphorylation, synaptic loss, neurodegeneration, cognition, or AD progression. All connections to AD are inferential, assembled from overlapping pathway biology.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Autophagy Connection</h3>
+        <p>GIMAP6 interacts with the ATG8-family protein GABARAPL2 and localises to autophagosome-associated puncta under starvation. Gimap6 deletion alters LC3-II, phospho-SQSTM1/p62, TBK1, and autophagosome numbers — phenotypes relevant to AD's impaired autophagic flux and amyloid/tau proteostasis.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Vascular Relevance</h3>
+        <p>Loss of GIMAP6 is linked to endothelial dysfunction, inflammatory vasculopathy, microangiopathic disease, accelerated atherosclerosis, myocardial infarction, and premature cardiovascular disease — overlapping with AD's cerebrovascular dysfunction, hypoperfusion, and blood-brain barrier disruption.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Redox &amp; Lipid Stress</h3>
+        <p>GIMAP6 deficiency is associated with redox dysregulation and abnormalities in polyunsaturated fatty-acid-containing lipids, overlapping mechanistically with AD processes involving oxidative stress, lipid peroxidation, and ferroptosis-like vulnerability.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Therapeutic Direction: Restoration</h3>
+        <p>Evidence consistently points toward preserving or enhancing GIMAP6 function rather than inhibiting it. Loss-of-function states are repeatedly associated with immune deficiency, vasculitis, ischaemic disease, and autophagy disruption — all adverse outcomes.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Major Uncertainty: Cell-Type Context</h3>
+        <p>GIMAP6's effects may be highly cell-type and context dependent. It is not yet known whether it acts in brain endothelial cells, pericytes, microglia, astrocytes, neurons, border-associated macrophages, or infiltrating T cells in the AD brain.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── SECTION 4: ACTIONABLE TAKEAWAYS ─── -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li>
+        <strong>Treat as hypothesis-generating, not established:</strong> GIMAP6 should be positioned as a plausible AD-adjacent hypothesis target requiring foundational validation before entering a therapeutic programme.
+      </li>
+      <li>
+        <strong>Prioritise biomarker studies first:</strong> Measure GIMAP6 expression or genetic variation in AD cohorts, particularly those with vascular disease, ischaemic lesions, neuroinflammation, blood-brain barrier dysfunction, or mixed vascular/AD pathology.
+      </li>
+      <li>
+        <strong>Determine cell-type localisation in AD-relevant tissues:</strong> Key open questions include whether GIMAP6 is expressed or dysregulated in brain endothelial cells, microglia, astrocytes, neurons, pericytes, infiltrating T cells, CSF immune cells, or peripheral blood immune cells from AD patients.
+      </li>
+      <li>
+        <strong>Test mechanistic effects in AD models:</strong> Studies should assess whether GIMAP6 restoration or loss alters autophagic flux, mitophagy-like quality control, oxidative stress, lipid peroxidation, endothelial integrity, neuroinflammation, amyloid burden, tau pathology, synaptic markers, neurovascular coupling, and cognition.
+      </li>
+      <li>
+        <strong>Focus therapeutic hypotheses on functional restoration:</strong> Potential strategies include enhancing GIMAP6 expression or activity, stabilising GIMAP6–GABARAPL2/GIMAP7 complexes, or modulating downstream autophagy, redox, lipid, and endothelial-protective pathways.
+      </li>
+      <li>
+        <strong>Avoid premature inhibition strategies:</strong> Because GIMAP6 loss is linked to immune deficiency, vasculitis, endothelial injury, autophagy disruption, and ischaemic pathology, inhibiting GIMAP6 could plausibly worsen infection risk, vascular inflammation, or proteostasis defects.
+      </li>
+      <li>
+        <strong>Account for immune safety in any approach:</strong> Therapeutic programmes must monitor T-cell survival, activation thresholds, IFN-γ responses, antibacterial immunity, autoimmunity, and inflammatory toxicity as primary safety endpoints.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ─── SECTION 5: OVERALL VERDICT ─── -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-lead">Overall Assessment — Synthesis</div>
+      <p>
+        GIMAP6 is a <strong>protective immunovascular and autophagy-associated GTPase</strong> with biologically plausible — but as yet experimentally unvalidated — relevance to Alzheimer's disease mechanisms. Its strongest connections lie in <strong>vascular inflammation and endothelial integrity</strong>, <strong>impaired autophagic flux and proteostasis</strong>, and <strong>oxidative and lipid peroxidative stress</strong>: all pathways that contribute to AD progression, particularly in patients with significant cerebrovascular pathology. Critically, <strong>no direct AD evidence exists</strong> — no study links GIMAP6 to amyloid, tau, synaptic loss, neurodegeneration, or cognitive outcomes. The evidence consistently points toward <strong>loss of GIMAP6 as harmful</strong>, making enhancement or restoration the more rational therapeutic hypothesis. Before any intervention strategy is pursued, the field requires biomarker characterisation in AD cohorts, cell-type localisation in AD-relevant brain tissues, and mechanistic validation in appropriate disease models.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════ FOOTER ══ -->
+<footer>
+  GIMAP6 &amp; Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

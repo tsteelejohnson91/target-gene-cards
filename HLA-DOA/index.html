@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HLA-DOA — Neuroimmune Candidate Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --slate-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #ffffff;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.92);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px;
+  }
+
+  section {
+    margin-bottom: 60px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 28px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.97rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 18px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--slate-light);
+    border: 1.5px solid var(--slate-border);
+    border-radius: 12px;
+    padding: 24px 18px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 0.86rem;
+    color: var(--slate);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.94rem;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left-color: var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-slate {
+    background: var(--slate-light);
+    border-left-color: var(--slate);
+  }
+  .card-slate h3 { color: var(--slate); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    font-size: 0.97rem;
+    align-items: flex-start;
+  }
+
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .takeaways .lead {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 40px 44px;
+    line-height: 1.7;
+    font-size: 1.02rem;
+  }
+
+  .verdict .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .verdict p {
+    color: rgba(255,255,255,0.88);
+  }
+
+  .verdict strong {
+    color: #ffffff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--slate-border);
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 0.8rem;
+    color: var(--slate);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: HLA-DOA &nbsp;|&nbsp; HLA Class II Histocompatibility Antigen, DO Alpha Chain</span>
+    <span class="chip chip-danger">⚠ Evidence Gap: No direct Alzheimer's validation</span>
+  </div>
+  <h1>HLA-DOA &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Evidence Caveat:</span>
+      HLA-DOA is <em>not</em> directly validated as an Alzheimer's disease gene, biomarker, causal mechanism, or therapeutic target in the supplied evidence. No cited data links HLA-DOA expression to Alzheimer's brain tissue, CSF, microglia, amyloid, tau, or cognitive decline.
+    </div>
+
+    <div class="overview-text">
+      <p>HLA-DOA is a non-classical HLA/MHC class II gene whose primary function lies in antigen processing and presentation — specifically through regulation of HLA-DM-mediated peptide loading onto MHC class II molecules. This function places it within immune pathways that overlap conceptually with Alzheimer's neuroinflammation, including microglial activation, antigen presentation, adaptive immune engagement, peripheral immune crosstalk, complement-linked inflammation, and immune aging.</p>
+
+      <p>The strongest relevance to Alzheimer's disease is indirect and rooted in neuroimmune plausibility. HLA-DOA commonly appears as part of a coordinated antigen-processing module alongside HLA-DMA, HLA-DMB, HLA-DOB, HLA-DRA, HLA-DPA1, HLA-DPB1, HLA-DQA/DQB, CD74, TAP1/TAP2, interferon-response genes, and costimulatory molecules. Its links across the broader literature include autoimmune disease, infection outcomes, transplant rejection/tolerance, cancer immune microenvironments, age-related macular degeneration, and immune-cell infiltration signatures.</p>
+
+      <p>Based on the supplied evidence, HLA-DOA is best interpreted as a <strong>hypothesis-generating neuroimmune candidate</strong> rather than an established Alzheimer's therapeutic target. Its most plausible Alzheimer's-related role would be modulation of MHC class II antigen presentation and downstream CD4+ T-cell or antigen-presenting-cell responses — not direct regulation of amyloid-beta, tau, synaptic loss, neuronal death, or cognition.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Arial,Helvetica,sans-serif;">
+
+        <!-- Panel A background: Molecular Mechanism -->
+        <rect x="12" y="12" width="410" height="466" rx="12" ry="12"
+              fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="217" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#1a3a5c" letter-spacing="1.5" text-decoration="none">A — MOLECULAR MECHANISM</text>
+
+        <!-- Panel B background: Neuroimmune Plausibility -->
+        <rect x="436" y="12" width="452" height="466" rx="12" ry="12"
+              fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="662" y="32" text-anchor="middle" font-size="9" font-weight="700"
+              fill="#0f766e" letter-spacing="1.5">B — NEUROIMMUNE PLAUSIBILITY</text>
+
+        <!-- ======================== PANEL A ======================== -->
+
+        <!-- Node 1: HLA-DOA (alpha chain) -->
+        <rect x="122" y="50" width="190" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="217" y="68" text-anchor="middle" font-size="11" fill="white" font-weight="700">HLA-DOA</text>
+        <text x="217" y="84" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Alpha chain of HLA-DO</text>
+
+        <!-- Arrow 1→2 -->
+        <line x1="217" y1="94" x2="217" y2="114" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 2: HLA-DO complex -->
+        <rect x="122" y="114" width="190" height="44" rx="7" fill="#2e6da4" stroke="#2e6da4" stroke-width="1"/>
+        <text x="217" y="132" text-anchor="middle" font-size="11" fill="white" font-weight="700">HLA-DO Complex</text>
+        <text x="217" y="148" text-anchor="middle" font-size="9.5" fill="#bfdbfe">with HLA-DOB (beta chain)</text>
+
+        <!-- Arrow 2→ branch: left to HLA-DM Inhibition, right to Peptide Landscape -->
+        <line x1="170" y1="158" x2="100" y2="186" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="264" y1="158" x2="330" y2="186" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 3: HLA-DM Regulation (left branch) -->
+        <rect x="28" y="186" width="154" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+        <text x="105" y="204" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">HLA-DM Regulation</text>
+        <text x="105" y="218" text-anchor="middle" font-size="9" fill="#475569">Suppresses DM activity</text>
+
+        <!-- Node 4: Peptide Repertoire (right branch) -->
+        <rect x="254" y="186" width="150" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1"/>
+        <text x="329" y="204" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Peptide Repertoire</text>
+        <text x="329" y="218" text-anchor="middle" font-size="9" fill="#475569">Alters CLIP/peptide ratio</text>
+
+        <!-- Arrow 3→5 -->
+        <line x1="105" y1="230" x2="105" y2="258" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Arrow 4→6 -->
+        <line x1="329" y1="230" x2="329" y2="258" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 5: Reduced Antigen Presentation (left) -->
+        <rect x="28" y="258" width="154" height="44" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="105" y="275" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">↑ MHCII-CLIP</text>
+        <text x="105" y="290" text-anchor="middle" font-size="9" fill="#475569">Reduced mature complexes</text>
+
+        <!-- Node 6: Selective Presentation (right) -->
+        <rect x="254" y="258" width="150" height="44" rx="7" fill="#eff6ff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="329" y="275" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="700">Selective Loading</text>
+        <text x="329" y="290" text-anchor="middle" font-size="9" fill="#475569">Context-dependent antigens</text>
+
+        <!-- Converge arrows → Node 7 -->
+        <line x1="105" y1="302" x2="105" y2="332" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="329" y1="302" x2="329" y2="332" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <!-- Horizontal line joining both to center -->
+        <line x1="105" y1="354" x2="217" y2="354" stroke="#2e6da4" stroke-width="1.5"/>
+        <line x1="217" y1="354" x2="329" y2="354" stroke="#2e6da4" stroke-width="1.5"/>
+
+        <!-- Node 7: CD4+ T-cell Response (convergence) -->
+        <rect x="107" y="332" width="220" height="44" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="217" y="350" text-anchor="middle" font-size="11" fill="white" font-weight="700">CD4+ T-Cell Response</text>
+        <text x="217" y="366" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Shaped by DO/DM balance</text>
+
+        <!-- Arrow 7→8 -->
+        <line x1="217" y1="376" x2="217" y2="398" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 8: Immune Regulatory Outcome -->
+        <rect x="107" y="398" width="220" height="44" rx="7" fill="#2e6da4" stroke="#2e6da4" stroke-width="1"/>
+        <text x="217" y="416" text-anchor="middle" font-size="11" fill="white" font-weight="700">Immune Regulation</text>
+        <text x="217" y="431" text-anchor="middle" font-size="9.5" fill="#bfdbfe">Tolerance / activation balance</text>
+
+        <!-- ======================== PANEL B ======================== -->
+
+        <!-- Node 9: Neuroinflammation trigger (top) -->
+        <rect x="556" y="50" width="212" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1"/>
+        <text x="662" y="68" text-anchor="middle" font-size="11" fill="white" font-weight="700">CNS Neuroinflammation</text>
+        <text x="662" y="84" text-anchor="middle" font-size="9.5" fill="#99f6e4">Chronic Alzheimer's context</text>
+
+        <!-- Arrow 9→ branch to left (microglia) and right (peripheral) -->
+        <line x1="604" y1="94" x2="540" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="720" y1="94" x2="780" y2="122" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 10: Microglia / APC (left branch) -->
+        <rect x="454" y="122" width="168" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+        <text x="538" y="140" text-anchor="middle" font-size="10" fill="#134e4a" font-weight="700">Microglia / Brain APCs</text>
+        <text x="538" y="155" text-anchor="middle" font-size="9" fill="#475569">MHC II expression activated</text>
+
+        <!-- Node 11: Peripheral immune (right branch) -->
+        <rect x="740" y="122" width="140" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+        <text x="810" y="140" text-anchor="middle" font-size="10" fill="#134e4a" font-weight="700">Peripheral APCs</text>
+        <text x="810" y="155" text-anchor="middle" font-size="9" fill="#475569">B cells, DCs, macrophages</text>
+
+        <!-- Arrow 10→12 -->
+        <line x1="538" y1="166" x2="538" y2="194" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow 11→13 -->
+        <line x1="810" y1="166" x2="810" y2="194" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 12: HLA-DOA in microglia -->
+        <rect x="454" y="194" width="168" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+        <text x="538" y="212" text-anchor="middle" font-size="10" fill="#134e4a" font-weight="700">HLA-DOA Expression?</text>
+        <text x="538" y="227" text-anchor="middle" font-size="9" fill="#475569">Unvalidated in AD tissue</text>
+
+        <!-- Node 13: HLA-DOA peripheral -->
+        <rect x="740" y="194" width="140" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+        <text x="810" y="212" text-anchor="middle" font-size="10" fill="#134e4a" font-weight="700">Antigen Module</text>
+        <text x="810" y="227" text-anchor="middle" font-size="9" fill="#475569">DMA/DMB/DOB/CD74</text>
+
+        <!-- Arrow 12→14 -->
+        <line x1="538" y1="238" x2="538" y2="266" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow 13→14 elbow: down from 13, then left to node 14 center-right -->
+        <polyline points="810,238 810,280 630,280 630,266" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 14: Convergence — Antigen Presentation Output -->
+        <rect x="454" y="266" width="352" height="44" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1"/>
+        <text x="630" y="284" text-anchor="middle" font-size="11" fill="white" font-weight="700">Antigen Presentation Output</text>
+        <text x="630" y="299" text-anchor="middle" font-size="9.5" fill="#99f6e4">Peptide selection shapes immune response</text>
+
+        <!-- Arrow 14→15 -->
+        <line x1="630" y1="310" x2="630" y2="338" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node 15: Hypothesis-generating candidate -->
+        <rect x="454" y="338" width="352" height="52" rx="7" fill="#134e4a" stroke="#0f766e" stroke-width="1"/>
+        <text x="630" y="359" text-anchor="middle" font-size="11" fill="white" font-weight="700">Neuroimmune Hypothesis</text>
+        <text x="630" y="374" text-anchor="middle" font-size="9.5" fill="#99f6e4">Could modulate AD neuroinflammation</text>
+        <text x="630" y="388" text-anchor="middle" font-size="9" fill="#6ee7d0">Not yet AD-causally linked</text>
+
+        <!-- Arrow 15→16 -->
+        <line x1="630" y1="390" x2="630" y2="418" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-slate)"/>
+
+        <!-- Node 16: Research Priority -->
+        <rect x="454" y="418" width="352" height="44" rx="7" fill="#f8fafc" stroke="#475569" stroke-width="1"/>
+        <text x="630" y="436" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="700">Validation Required</text>
+        <text x="630" y="450" text-anchor="middle" font-size="9" fill="#475569">AD tissue · single-cell · genetic fine-mapping</text>
+
+        <!-- ARROW MARKERS -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#475569"/>
+          </marker>
+        </defs>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A — Molecular Mechanism:</strong> HLA-DOA (alpha chain) assembles with HLA-DOB to form the HLA-DO complex, which branches into two parallel effects: (left) suppression of HLA-DM activity, elevating MHCII-CLIP; (right) context-dependent alteration of the peptide repertoire. Both branches converge onto shaped CD4+ T-cell responses and downstream immune regulation.
+        <strong>Panel B — Neuroimmune Plausibility:</strong> Chronic CNS neuroinflammation (Alzheimer's context) activates two branches of antigen-presenting cells — brain microglia/APCs (left) and peripheral APCs including B cells and dendritic cells (right) — both potentially expressing HLA-DOA as part of a broader antigen-processing module. These converge onto antigen presentation output and a speculative neuroimmune hypothesis, with a dashed arrow to the validation research priority (node 16). HLA-DOA's role in this pathway is not yet empirically established in Alzheimer's disease.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>MHC Class II Antigen Presentation Biology</h3>
+        <p>HLA-DOA encodes the alpha chain of HLA-DO, regulating HLA-DM-dependent peptide loading onto MHC class II molecules. This can alter which peptides are presented to CD4+ T cells, with functional consequences for adaptive immune activation or tolerance.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Coordinated Antigen-Processing Module</h3>
+        <p>HLA-DOA typically appears co-expressed with HLA-DMA, HLA-DMB, HLA-DOB, HLA-DRA, HLA-DPA1, HLA-DPB1, HLA-DQA/DQB, CD74, TAP1/TAP2, interferon-response genes, and costimulatory molecules — suggesting a role as a component of coordinated immune activation rather than an isolated driver.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neuroimmune Plausibility Bridge</h3>
+        <p>If HLA-DOA regulates peptide selection in microglia, macrophages, dendritic cells, B cells, or CNS-border antigen-presenting cells, it could theoretically influence presentation of CNS-derived, pathogen-derived, or damage-associated antigens during chronic neuroinflammation — a plausible but unvalidated link to Alzheimer's.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Functional Brake on Antigen Presentation</h3>
+        <p>Outside Alzheimer's, HLA-DOA/HLA-DO can suppress or reshape antigen presentation. Reduced HLA-DOA activity may remove a brake on antigen presentation; increased activity may raise MHCII-CLIP and reduce mature MHC class II–peptide complexes for certain antigens, with context-dependent consequences.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Direct Alzheimer's Validation</h3>
+        <p>No evidence in the supplied text links HLA-DOA expression or function to Alzheimer's brain tissue, CSF, microglia, amyloid plaques, tau pathology, cognitive decline, or Alzheimer's patient cohorts. All Alzheimer's connections are inferential and based on pathway overlap, not direct experimental evidence.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>HLA-Region Complexity &amp; Confounding</h3>
+        <p>The HLA region is highly polymorphic and linkage-disequilibrium-rich. Any disease association near HLA-DOA could reflect neighboring HLA genes, extended haplotypes, ancestry-specific LD patterns, or broader MHC class II effects. Genetic regulation via CIITA/RFX, interferon-gamma signaling, and promoter methylation adds further complexity.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Broad Immune-Disease Associations</h3>
+        <p>HLA-DOA is linked across the literature to autoimmune disease, infection outcomes, transplant rejection and tolerance, cancer immune microenvironments, age-related macular degeneration, and immune-cell infiltration signatures — supporting a general role in immune regulation without establishing Alzheimer's-specific causality.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Therapeutic Risks of Broad Modulation</h3>
+        <p>Modulating HLA-DOA might alter antigen presentation and inflammatory immune activation, but broad manipulation could impair infection defense, tumor surveillance, immune tolerance, or beneficial clearance responses. Therapeutic strategies require cell-type-specific, context-dependent validation before pursuit.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div>
+          <span class="lead">Treat as exploratory candidate:</span> Handle HLA-DOA as a neuroimmune biomarker hypothesis rather than a validated Alzheimer's therapeutic target. No direct disease evidence currently supports target claims.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Prioritize Alzheimer's-specific validation:</span> Assess HLA-DOA expression in Alzheimer's brain tissue, single-cell and spatial transcriptomic datasets, CSF-associated immune cells, microglia, perivascular macrophages, meningeal immune cells, and peripheral leukocytes.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Correlate with disease-relevant phenotypes:</span> Test whether HLA-DOA correlates with microglial MHC class II activation, interferon signaling, complement activation, T-cell infiltration, amyloid burden, tau pathology, synaptic injury, cognitive decline, or disease progression.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Perform fine-mapped genetic analyses:</span> Determine whether any Alzheimer's association near HLA-DOA is independent of neighboring HLA-DRA, HLA-DPA1, HLA-DPB1, HLA-DQ, HLA-DM, and other MHC loci before attributing genetic signal to HLA-DOA specifically.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Evaluate allele-specific and eQTL effects:</span> Investigate HLA-DOA eQTLs in relevant immune cell types — particularly microglia-like cells, macrophages, dendritic cells, B cells, and activated peripheral antigen-presenting cells.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Deploy functional models for mechanism testing:</span> Use perturbation models to test whether changing HLA-DOA expression or HLA-DO/HLA-DM activity alters antigen presentation, CD4+ T-cell activation, inflammatory cytokines, amyloid/tau-associated immune responses, or neurodegeneration-relevant outcomes.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Gate therapeutic strategies on cell-type validation:</span> If pursued, modulation must be targeted and context-dependent. Increasing or decreasing HLA-DOA could have opposite effects depending on whether antigen presentation is harmful or protective in a given Alzheimer's immune phenotype.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Near-term best use — immune stratification:</span> The most defensible application is stratification of neuroinflammatory immune states, particularly as part of a broader MHC class II/antigen-presentation gene signature rather than as a standalone Alzheimer's marker or target.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — HLA-DOA in Alzheimer's Disease</span>
+      <p>
+        HLA-DOA is a <strong>biologically plausible but unvalidated neuroimmune candidate</strong> for Alzheimer's disease. Its established role in regulating <strong>HLA-DM-mediated MHC class II antigen presentation</strong> places it within immune pathways relevant to neuroinflammation — including microglial activation, antigen presentation, adaptive immune engagement, and peripheral immune crosstalk — yet <strong>no direct Alzheimer's evidence</strong> currently exists in the supplied literature. The gene's most plausible contribution would be modulation of the peptide-loading landscape in antigen-presenting cells operating in the chronic inflammatory CNS environment, potentially shaping CD4+ T-cell or APC responses relevant to disease progression. However, the <strong>complexity of the MHC region</strong>, the risk of confounding by neighboring HLA loci, and the absence of Alzheimer's-specific functional data mean that any target or biomarker claim is premature. The <strong>recommended posture</strong> is systematic validation through Alzheimer's tissue expression profiling, single-cell immune phenotyping, fine-mapped genetic analysis, and functional perturbation studies — with therapeutic consideration deferred until cell-type-specific, context-dependent evidence is in hand.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  HLA-DOA · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

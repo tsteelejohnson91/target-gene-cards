@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNC119B — Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #9b1c1c;
+    --danger-light: #fdf2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,120,120,0.35);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: #ffffff;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e2eaf4;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+    color: #78350f;
+  }
+
+  .callout strong {
+    color: var(--warning);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+    color: var(--slate);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.55rem; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  .card-slate {
+    background: #f1f5f9;
+    border-left: 4px solid #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaway-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0c1f33 100%);
+    border-radius: 14px;
+    padding: 36px 40px;
+    color: #e2eaf4;
+    margin-bottom: 56px;
+  }
+
+  .verdict p {
+    color: #e2eaf4;
+    font-size: 0.97rem;
+    margin-bottom: 0;
+    line-height: 1.8;
+  }
+
+  .verdict-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: UNC119B &nbsp;|&nbsp; Unc-119 Lipid Binding Chaperone B</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Broad modulation risks</span>
+  </div>
+  <h1>UNC119B &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Validation Caveat</strong>
+      UNC119B is <em>not</em> directly established as an Alzheimer's disease gene, biomarker, or therapeutic target. All Alzheimer's-related connections are indirect and hypothesis-generating. Evidence does not demonstrate that UNC119B affects amyloid-β, tau pathology, synaptic dysfunction, or cognitive decline.
+    </div>
+
+    <p>UNC119B is best characterised as a lipid-binding trafficking chaperone for N-myristoylated proteins, operating especially within ciliary and specialised membrane compartments. It binds lipidated cargo through a hydrophobic immunoglobulin-like β-sandwich pocket, shields lipid groups in the cytosol, and delivers cargo to defined membrane domains. Cargo release is regulated by ARL-family small GTPases — principally ARL3-GTP — with RP2 acting as an ARL3 GAP within the ciliary targeting cycle.</p>
+
+    <p>Its potential Alzheimer's relevance is entirely indirect. Broad pathway overlaps exist with disease-relevant biology including membrane trafficking, ciliary signalling, receptor localisation, insulin/metabolic signalling, Rac1-dependent cytoskeletal trafficking, calcium-sensitive kinase signalling, inflammation, and vascular/metabolic risk. However, none of these connections has been tested in Alzheimer's-specific models or endpoints.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+
+    <div class="figure-wrap">
+      <!-- SVG: 960 wide × 490 tall viewBox -->
+      <svg viewBox="0 0 960 490" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Georgia,serif" font-size="11.5">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- PANEL A: Cargo Binding & Trafficking  (x:10 y:30 w:300 h:430) -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <rect x="10" y="30" width="300" height="430" rx="12" fill="rgba(46,109,164,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="26" y="52" font-size="9" font-weight="700" fill="#2e6da4" letter-spacing="1" text-anchor="start">A · CARGO BINDING &amp; TRAFFICKING</text>
+
+        <!-- Node A1: N-Myristoylated Cargo -->
+        <rect x="75" y="65" width="150" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="150" y="83" text-anchor="middle" fill="#1a3a5c" font-weight="700">N-Myristoylated</text>
+        <text x="150" y="99" text-anchor="middle" fill="#1a3a5c">Cargo Protein</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="150" y1="109" x2="150" y2="138" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A2: UNC119B Binding -->
+        <rect x="60" y="138" width="180" height="44" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="150" y="156" text-anchor="middle" fill="#1a3a5c" font-weight="700">UNC119B</text>
+        <text x="150" y="172" text-anchor="middle" fill="#1a3a5c">Hydrophobic Pocket</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="150" y1="182" x2="150" y2="211" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A3: Soluble Cytosolic Complex -->
+        <rect x="55" y="211" width="190" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="150" y="229" text-anchor="middle" fill="#1a3a5c">Soluble Cytosolic</text>
+        <text x="150" y="245" text-anchor="middle" fill="#1a3a5c">Cargo–UNC119B Complex</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="150" y1="255" x2="150" y2="284" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A4: ARL3-GTP Release -->
+        <rect x="60" y="284" width="180" height="44" rx="7" fill="#bfdbfe" stroke="#1a3a5c" stroke-width="1.5"/>
+        <text x="150" y="302" text-anchor="middle" fill="#1a3a5c" font-weight="700">ARL3-GTP</text>
+        <text x="150" y="318" text-anchor="middle" fill="#1a3a5c">Triggers Cargo Release</text>
+
+        <!-- Arrow A4→A5 -->
+        <line x1="150" y1="328" x2="150" y2="357" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node A5: RP2 GAP -->
+        <rect x="70" y="357" width="160" height="44" rx="7" fill="#e8f2fb" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="150" y="375" text-anchor="middle" fill="#1a3a5c">RP2 (ARL3 GAP)</text>
+        <text x="150" y="391" text-anchor="middle" fill="#1a3a5c">Cycle Reset</text>
+
+        <!-- Arrow A5→A4 (feedback, right side) -->
+        <path d="M 230 379 Q 265 379 265 306 Q 265 284 240 284" fill="none" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- PANEL B: Ciliary Targeting (x:325 y:30 w:300 h:265) -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <rect x="325" y="30" width="300" height="265" rx="12" fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="341" y="52" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">B · CILIARY TARGETING</text>
+
+        <!-- Node B1: NPHP3 (Myristoylated) -->
+        <rect x="380" y="65" width="165" height="44" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="462" y="83" text-anchor="middle" fill="#134e4a" font-weight="700">NPHP3 (Myristoylated)</text>
+        <text x="462" y="99" text-anchor="middle" fill="#134e4a">UNC119B-specific cargo</text>
+
+        <!-- Arrow B1→B2 -->
+        <line x1="462" y1="109" x2="462" y2="138" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2: Primary Cilium Targeting -->
+        <rect x="370" y="138" width="185" height="44" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="462" y="156" text-anchor="middle" fill="#134e4a" font-weight="700">Primary Cilium</text>
+        <text x="462" y="172" text-anchor="middle" fill="#134e4a">UNC119B Required</text>
+
+        <!-- Arrow B2→B3 -->
+        <line x1="462" y1="182" x2="462" y2="211" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3: Compensation / CEP290 -->
+        <rect x="355" y="211" width="215" height="52" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+        <text x="462" y="230" text-anchor="middle" fill="#134e4a">CEP290 Mutant Rescue</text>
+        <text x="462" y="246" text-anchor="middle" fill="#134e4a" font-style="italic">arl3, arl13b, unc119b ↑</text>
+
+        <!-- Connector: A4 → B2 (horizontal, through gap) -->
+        <!-- A4 right edge: x=240, y=306; B2 left edge: x=370, y=160 -->
+        <!-- Route: elbow down from A4 right, then right in gutter, then up to B2 -->
+        <path d="M 240 306 Q 307 306 307 160 Q 307 160 370 160" fill="none" stroke="#2e6da4" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- PANEL C: Downstream Effectors (x:325 y:310 w:300 h:150) -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <rect x="325" y="310" width="300" height="150" rx="12" fill="rgba(180,83,9,0.05)" stroke="#b45309" stroke-width="1.2"/>
+        <text x="341" y="331" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1">C · METABOLIC &amp; KINASE OUTPUTS</text>
+
+        <!-- Node C1: Rac1 Inhibition -->
+        <rect x="335" y="342" width="130" height="44" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+        <text x="400" y="360" text-anchor="middle" fill="#78350f" font-weight="700">Rac1 Inhibition</text>
+        <text x="400" y="376" text-anchor="middle" fill="#78350f">↓ GLUT4 transloc.</text>
+
+        <!-- Node C2: PSKH1 Activation -->
+        <rect x="487" y="342" width="130" height="44" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+        <text x="552" y="360" text-anchor="middle" fill="#78350f" font-weight="700">PSKH1 Activation</text>
+        <text x="552" y="376" text-anchor="middle" fill="#78350f">Ca²⁺-kinase network</text>
+
+        <!-- Node C3: Shared outcome -->
+        <rect x="380" y="416" width="175" height="36" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>
+        <text x="467" y="434" text-anchor="middle" fill="#78350f" font-weight="700">Insulin Sensitivity /</text>
+        <text x="467" y="447" text-anchor="middle" fill="#78350f">Signalling Modulation</text>
+
+        <!-- Arrows C1/C2 → C3 -->
+        <line x1="400" y1="386" x2="430" y2="416" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+        <line x1="552" y1="386" x2="510" y2="416" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- PANEL D: AD Hypothesis (x:640 y:30 w:310 h:430) -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <rect x="640" y="30" width="310" height="430" rx="12" fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="656" y="52" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">D · AD-RELEVANCE HYPOTHESES</text>
+
+        <!-- Node D1: Membrane Trafficking -->
+        <rect x="660" y="65" width="175" height="44" rx="7" fill="#fdf2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="747" y="83" text-anchor="middle" fill="#7f1d1d" font-weight="700">Membrane Trafficking</text>
+        <text x="747" y="99" text-anchor="middle" fill="#7f1d1d">APP/endosomal overlap?</text>
+
+        <!-- Node D2: Neuroinflammation -->
+        <rect x="660" y="135" width="175" height="44" rx="7" fill="#fdf2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="747" y="153" text-anchor="middle" fill="#7f1d1d" font-weight="700">Neuroinflammation</text>
+        <text x="747" y="169" text-anchor="middle" fill="#7f1d1d">UNC119B/SPPL3 GWAS</text>
+
+        <!-- Node D3: Brain Insulin -->
+        <rect x="660" y="205" width="175" height="44" rx="7" fill="#fdf2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="747" y="223" text-anchor="middle" fill="#7f1d1d" font-weight="700">Brain Insulin Signalling</text>
+        <text x="747" y="239" text-anchor="middle" fill="#7f1d1d">Rac1 / GLUT4 link?</text>
+
+        <!-- Node D4: Calcium Dysregulation -->
+        <rect x="660" y="275" width="175" height="44" rx="7" fill="#fdf2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="747" y="293" text-anchor="middle" fill="#7f1d1d" font-weight="700">Calcium Dysregulation</text>
+        <text x="747" y="309" text-anchor="middle" fill="#7f1d1d">PSKH1 / Ca²⁺ link?</text>
+
+        <!-- Node D5: UNVALIDATED -->
+        <rect x="650" y="345" width="295" height="44" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="2"/>
+        <text x="797" y="363" text-anchor="middle" fill="#7f1d1d" font-weight="700">ALL HYPOTHETICAL —</text>
+        <text x="797" y="379" text-anchor="middle" fill="#7f1d1d">No AD endpoint validated</text>
+
+        <!-- Arrows D1..D4 → D5 -->
+        <line x1="747" y1="109" x2="747" y2="135" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="747" y1="179" x2="747" y2="205" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="747" y1="249" x2="747" y2="275" stroke="#9b1c1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="747" y1="319" x2="747" y2="345" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connectors: Panel A/C → Panel D -->
+        <!-- A3 (right x=245, y=233) → D1 (left x=660, y=87): route via gutter y=87 -->
+        <path d="M 245 233 Q 295 233 295 87 Q 295 87 660 87" fill="none" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,4" marker-end="url(#arr-red)"/>
+
+        <!-- C3 (right x=555, y=434) → D3 (left x=660, y=227): route right in gutter -->
+        <path d="M 555 434 Q 612 434 612 227 Q 612 227 660 227" fill="none" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,4" marker-end="url(#arr-red)"/>
+
+        <!-- PSKH1 label connecting C2 to D4: note PSKH1 node is at 487-617 y:342-386; D4 is 660-835 y:275-319 -->
+        <path d="M 617 364 Q 638 364 638 297 Q 638 297 660 297" fill="none" stroke="#9b1c1c" stroke-width="1" stroke-dasharray="3,4" marker-end="url(#arr-red)"/>
+
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Figure.</strong>
+        <strong>Panel A (blue, left):</strong> Core UNC119B trafficking cycle — N-myristoylated cargo binds the hydrophobic pocket of UNC119B, forming a soluble cytosolic complex; ARL3-GTP triggers cargo release to the target membrane; RP2 (ARL3 GAP) resets the cycle (dashed feedback arc).
+        <strong>Panel B (teal, centre-top):</strong> Ciliary targeting branch — UNC119B specifically delivers myristoylated NPHP3 to the primary cilium; compensatory upregulation of unc119b, arl3, and arl13b rescues defects in CEP290 mutant models.
+        <strong>Panel C (amber, centre-bottom):</strong> Metabolic and kinase effectors — UNC119B branches into two parallel outputs (Rac1/GLUT4 suppression; PSKH1/Ca²⁺ activation) that converge on insulin-signalling modulation.
+        <strong>Panel D (red, right):</strong> Alzheimer's-relevance hypotheses — four indirect mechanistic overlaps (trafficking, inflammation, brain insulin, calcium) converge on the finding that none are validated in AD endpoint studies (bold red box). Dashed cross-panel arrows indicate hypothesis-only connections from Panels A and C to Panel D.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Biochemical Function</h3>
+        <p>UNC119B binds N-myristoylated cargo through an immunoglobulin-like β-sandwich hydrophobic pocket, shielding lipid groups in the cytosol and enabling soluble inter-compartment transport. Cargo release is regulated by ARL3-GTP, with RP2 acting as an ARL3 GAP to reset the cycle.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Isoform-Specific Ciliary Role</h3>
+        <p>UNC119B — but not UNC119A — is required for trafficking myristoylated nephrocystin-3 (NPHP3) to the primary cilium in IMCD3 cells. In zebrafish CEP290 mutants, upregulation of unc119b, arl3, and arl13b rescues ciliary defects, implicating UNC119B in compensatory ciliary trafficking networks.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Metabolic Druggability Signal</h3>
+        <p>Unc119b inhibits insulin-induced Rac1 activation and reduces GLUT4 translocation. Small-molecule inhibition (e.g. compound C59) improves insulin sensitivity, GLUT4 translocation, and glucose tolerance in insulin-resistance models — the strongest current therapeutic evidence outside Alzheimer's disease.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Structural Druggability</h3>
+        <p>Crystal structures reveal a defined cargo-binding pocket and a regulated release-factor interaction site. UNC119B binds N-myristoylated peptides with cargo-dependent affinity, and structural differences from UNC119A suggest isoform-selective targeting may be feasible.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Inflammatory Locus Association</h3>
+        <p>In a Sardinian GWAS, rs11829037 at the UNC119B/SPPL3 locus associated with ESR and hsCRP, two systemic inflammatory markers. The causal gene is unresolved — SPPL3 or regulatory elements may drive the signal — but systemic inflammation is a recognised Alzheimer's disease risk pathway.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>No Direct AD Validation</h3>
+        <p>No cited study examines UNC119B in amyloid-β biology, tau pathology, synaptic dysfunction, microglial activation, or cognitive decline. All Alzheimer's-relevant connections are indirect pathway overlaps. Evidence does not support UNC119B as a validated Alzheimer's target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+
+      <li>
+        <span><b>Treat as a speculative lead, not a validated target.</b> Current evidence does not support claiming that UNC119B directly drives amyloid-β accumulation, tau pathology, synaptic loss, neurodegeneration, microglial activation, or cognitive decline.</span>
+      </li>
+
+      <li>
+        <span><b>Prioritise brain-specific validation first.</b> Key experiments should test whether UNC119B expression, methylation, protein abundance, or localisation is altered in Alzheimer's patient brain tissue, disease-stage datasets, neurons, astrocytes, microglia, or vascular cells.</span>
+      </li>
+
+      <li>
+        <span><b>Identify Alzheimer's-relevant cargoes.</b> The therapeutic rationale would strengthen if UNC119B were shown to traffic myristoylated proteins involved in APP processing, tau phosphorylation, synaptic receptor localisation, endosomal function, neuroinflammation, or neuronal survival.</span>
+      </li>
+
+      <li>
+        <span><b>Test modulation in disease models.</b> Inhibition or activation should be evaluated for effects on amyloid-β, tau, neuroinflammatory markers, synaptic integrity, neuronal viability, brain insulin signalling, and cognition before advancing therapeutic claims.</span>
+      </li>
+
+      <li>
+        <span><b>Separate UNC119B from UNC119A and UNC119.</b> Functions are nonredundant — UNC119B-specific ciliary targeting evidence should not be conflated with UNC119 interactor studies (e.g. RASSF6, MDM2, p53). Alzheimer's studies require isoform-specific tools.</span>
+      </li>
+
+      <li>
+        <span><b>Investigate the UNC119B/SPPL3 inflammatory locus rigorously.</b> Fine-mapping, eQTL analysis, and functional studies are needed to determine whether UNC119B itself — rather than SPPL3 or cis-regulatory elements — mediates the association with ESR and hsCRP.</span>
+      </li>
+
+      <li>
+        <span><b>Apply metabolic findings cautiously.</b> Peripheral insulin-sensitivity benefits from Unc119b inhibition should not be assumed to translate to neuronal or Alzheimer's disease contexts without direct testing in brain insulin-signalling models.</span>
+      </li>
+
+      <li>
+        <span><b>Consider safety risks of broad modulation.</b> Because UNC119B supports fundamental trafficking and ciliary functions, nonspecific inhibition could disrupt normal ciliary signalling, sensory biology, and membrane organisation across diverse tissues.</span>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <span class="verdict-lead">Overall Assessment — UNC119B in Alzheimer's Disease</span>
+    <p>
+      UNC119B is a <strong>mechanistically plausible but wholly unvalidated</strong> Alzheimer's disease research lead. Its established biology — <strong>lipidated protein trafficking via an ARL3-regulated chaperone cycle, isoform-specific ciliary targeting, Rac1/GLUT4 metabolic modulation, and PSKH1 calcium-kinase engagement</strong> — intersects conceptually with pathways implicated in neurodegeneration, but no study has tested these connections in Alzheimer's-specific cells, tissues, or models. The <strong>UNC119B/SPPL3 inflammatory GWAS signal</strong> is intriguing given the centrality of neuroinflammation to Alzheimer's disease, yet causal attribution remains unresolved. The most productive near-term path is systematic brain-expression profiling, isoform-selective cargo identification in neurons, and targeted modulation in amyloid and tau model systems — pursued with the explicit understanding that peripheral metabolic or ciliary findings cannot be extrapolated to Alzheimer's disease endpoints without direct experimental evidence.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  UNC119B / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

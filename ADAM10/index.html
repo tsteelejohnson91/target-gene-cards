@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADAM10 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --danger-mid: #dc2626;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #e2e8f0;
+    --text: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+    color: #e8f1f9;
+  }
+  .chip-danger {
+    background: rgba(155,28,28,0.38);
+    border: 1px solid rgba(220,38,38,0.5);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.98rem;
+    color: rgba(255,255,255,0.68);
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+  section {
+    margin-bottom: 54px;
+  }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--mid);
+    margin-bottom: 22px;
+  }
+  p {
+    margin-bottom: 1em;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-left: 5px solid var(--danger-mid);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger-mid); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .takeaway-lead {
+    font-weight: 700;
+    color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
+  }
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1f35 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+  .verdict p {
+    color: #e8f1f9;
+    font-size: 0.97rem;
+    margin-bottom: 0;
+  }
+  .verdict strong {
+    color: #ffffff;
+  }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 22px 16px 28px;
+    border-top: 1px solid var(--neutral-border);
+    color: var(--neutral);
+    font-size: 0.78rem;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ADAM10 &nbsp;|&nbsp; A Disintegrin and Metalloproteinase Domain-Containing Protein 10</span>
+    <span class="chip chip-danger">⚠ Safety: Off-target shedding risk</span>
+  </div>
+  <h1>ADAM10 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Safety Caveat</div>
+      ADAM10 is a broad-spectrum sheddase with substrates far beyond APP — including Notch, TREM2, RAGE, cadherins, and immune receptors. Systemic non-selective activation or inhibition carries significant risk of disrupting essential signaling, vascular, immune, and synaptic pathways. Substrate-selective, CNS-targeted strategies are strongly preferred.
+    </div>
+
+    <p>ADAM10 is the principal α-secretase for non-amyloidogenic amyloid precursor protein (APP) processing in the brain. Its cleavage of APP promotes sAPPα production and prevents APP from entering the BACE1/γ-secretase pathway that generates amyloid-β (Aβ), particularly Aβ42. Across the literature, increased ADAM10 expression, maturation, activity, or correct localization is generally associated with reduced Aβ production, lower plaque burden, improved synaptic and cognitive outcomes, and broader neuroprotective effects.</p>
+
+    <p>ADAM10 is also biologically complex — a broad transmembrane metalloprotease/sheddase with diverse substrates including Notch-related proteins, TREM2, RAGE, PrP, cadherins, Klotho-family proteins, chemokines, immune receptors, synaptic proteins, and extracellular vesicle-associated proteins. It is therefore best understood as a high-value but precision-dependent therapeutic target: enhancing its protective APP α-secretase function may be beneficial in AD, but non-specific global activation or inhibition could disrupt essential biological pathways.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanism &amp; Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- DEFS: arrowhead markers -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#dc2626"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- === PANEL A: Upstream Activators === -->
+        <rect x="14" y="12" width="248" height="476" rx="12" ry="12"
+              fill="#e8f1f9" fill-opacity="0.45" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="27" y="30" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.2" text-anchor="start">PANEL A — UPSTREAM ACTIVATORS</text>
+
+        <!-- Node A1: Exercise/Lactate -->
+        <rect x="30" y="42" width="132" height="40" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="57" text-anchor="middle" font-weight="700" fill="#1a3a5c">Exercise / Lactate</text>
+        <text x="96" y="71" text-anchor="middle" fill="#1e293b">IL-6 · PPARα</text>
+
+        <!-- Node A2: Small Molecules -->
+        <rect x="30" y="110" width="132" height="40" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="125" text-anchor="middle" font-weight="700" fill="#1a3a5c">Small Molecules</text>
+        <text x="96" y="139" text-anchor="middle" fill="#1e293b">Curcumin · Nobiletin</text>
+
+        <!-- Node A3: Epigenetic -->
+        <rect x="30" y="178" width="132" height="40" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="193" text-anchor="middle" font-weight="700" fill="#1a3a5c">Epigenetic / Chaperone</text>
+        <text x="96" y="207" text-anchor="middle" fill="#1e293b">HDAC inhib · XBP1s</text>
+
+        <!-- Node A4: Signaling pathways -->
+        <rect x="30" y="246" width="132" height="40" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="96" y="261" text-anchor="middle" font-weight="700" fill="#1a3a5c">Upstream Pathways</text>
+        <text x="96" y="275" text-anchor="middle" fill="#1e293b">PPARα · SIRT1 · AMPK</text>
+
+        <!-- Arrow A1 -> A2 -->
+        <line x1="96" y1="82" x2="96" y2="108" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <!-- Arrow A2 -> A3 -->
+        <line x1="96" y1="150" x2="96" y2="176" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <!-- Arrow A3 -> A4 -->
+        <line x1="96" y1="218" x2="96" y2="244" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Converge arrow from Panel A to ADAM10 (Panel B) -->
+        <!-- Arrow A4 right edge -> ADAM10 node -->
+        <line x1="162" y1="266" x2="292" y2="266" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+
+        <!-- === PANEL B: ADAM10 Core === -->
+        <rect x="278" y="12" width="210" height="476" rx="12" ry="12"
+              fill="#f0fdf4" fill-opacity="0.5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="293" y="30" font-size="9" font-weight="700" fill="#0a5c4a" letter-spacing="1.2">PANEL B — ADAM10 CORE</text>
+
+        <!-- Node B1: ADAM10 (central hub) -->
+        <rect x="300" y="242" width="150" height="46" rx="9" fill="#6ee7b7" stroke="#0f766e" stroke-width="2"/>
+        <text x="375" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">ADAM10</text>
+        <text x="375" y="277" text-anchor="middle" font-size="10" fill="#065f46">α-Secretase (active)</text>
+
+        <!-- Node B2: Maturation/trafficking -->
+        <rect x="300" y="150" width="150" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="375" y="165" text-anchor="middle" font-weight="700" fill="#065f46">Maturation &amp; Trafficking</text>
+        <text x="375" y="179" text-anchor="middle" fill="#1e293b">Tetraspanins · Lipids</text>
+
+        <!-- Node B3: Localization -->
+        <rect x="300" y="54" width="150" height="40" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="375" y="69" text-anchor="middle" font-weight="700" fill="#065f46">Cell-Surface Localization</text>
+        <text x="375" y="83" text-anchor="middle" fill="#1e293b">Colocalization with APP</text>
+
+        <!-- Arrow B3 -> B2 -->
+        <line x1="375" y1="94" x2="375" y2="148" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Arrow B2 -> B1 -->
+        <line x1="375" y1="190" x2="375" y2="240" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- Arrow from B1 right edge to Panel C -->
+        <line x1="450" y1="265" x2="510" y2="265" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- === PANEL C: Downstream Branches === -->
+        <rect x="498" y="12" width="390" height="476" rx="12" ry="12"
+              fill="#fff7ed" fill-opacity="0.45" stroke="#b45309" stroke-width="1.2"/>
+        <text x="513" y="30" font-size="9" font-weight="700" fill="#92400e" letter-spacing="1.2">PANEL C — DOWNSTREAM BRANCHES</text>
+
+        <!-- Branch 1: Non-amyloidogenic (left sub-column) -->
+        <!-- Node C1: APP cleavage -->
+        <rect x="514" y="44" width="148" height="40" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+        <text x="588" y="59" text-anchor="middle" font-weight="700" fill="#78350f">APP α-Cleavage</text>
+        <text x="588" y="73" text-anchor="middle" fill="#1e293b">Precedes sAPPα release</text>
+
+        <!-- Node C2: sAPPα -->
+        <rect x="514" y="122" width="148" height="40" rx="7" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+        <text x="588" y="137" text-anchor="middle" font-weight="700" fill="#78350f">sAPPα Production ↑</text>
+        <text x="588" y="151" text-anchor="middle" fill="#1e293b">Neuroprotective fragment</text>
+
+        <!-- Node C3: Aβ reduced -->
+        <rect x="514" y="200" width="148" height="40" rx="7" fill="#bbf7d0" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="588" y="215" text-anchor="middle" font-weight="700" fill="#065f46">Aβ40/Aβ42 ↓</text>
+        <text x="588" y="229" text-anchor="middle" fill="#1e293b">Reduced plaque burden</text>
+
+        <!-- Arrow C1 -> C2 -->
+        <line x1="588" y1="84" x2="588" y2="120" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Arrow C2 -> C3 -->
+        <line x1="588" y1="162" x2="588" y2="198" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Branch 2: Broad Substrate Shedding (right sub-column) -->
+        <!-- Node C4: TREM2 shedding -->
+        <rect x="726" y="44" width="148" height="40" rx="7" fill="#fee2e2" stroke="#dc2626" stroke-width="1.2"/>
+        <text x="800" y="59" text-anchor="middle" font-weight="700" fill="#991b1b">TREM2 Shedding</text>
+        <text x="800" y="73" text-anchor="middle" fill="#1e293b">Microglial Aβ uptake</text>
+
+        <!-- Node C5: RAGE / PrP -->
+        <rect x="726" y="122" width="148" height="40" rx="7" fill="#fee2e2" stroke="#dc2626" stroke-width="1.2"/>
+        <text x="800" y="137" text-anchor="middle" font-weight="700" fill="#991b1b">RAGE / PrP Shedding</text>
+        <text x="800" y="151" text-anchor="middle" fill="#1e293b">Aβ–RAGE signaling ↓</text>
+
+        <!-- Node C6: Other substrates -->
+        <rect x="726" y="200" width="148" height="40" rx="7" fill="#fee2e2" stroke="#dc2626" stroke-width="1.2"/>
+        <text x="800" y="215" text-anchor="middle" font-weight="700" fill="#991b1b">Cadherins · Klotho</text>
+        <text x="800" y="229" text-anchor="middle" fill="#1e293b">Synaptic / metabolic</text>
+
+        <!-- Arrow C4 -> C5 -->
+        <line x1="800" y1="84" x2="800" y2="120" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <!-- Arrow C5 -> C6 -->
+        <line x1="800" y1="162" x2="800" y2="198" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Shared outcome: Node C7: Cognitive / Synaptic Outcome -->
+        <rect x="590" y="306" width="256" height="44" rx="9" fill="#c7d2fe" stroke="#1e40af" stroke-width="1.8"/>
+        <text x="718" y="323" text-anchor="middle" font-size="12" font-weight="700" fill="#1e1b4b">Synaptic &amp; Cognitive Outcomes</text>
+        <text x="718" y="339" text-anchor="middle" font-size="10" fill="#1e293b">Neuroinflammation ↓ · Memory improvement</text>
+
+        <!-- Arrow C3 -> C7 (Branch 1 converges) -->
+        <!-- C3 bottom: x=588, y=240; C7 left: x=590, y=328 -->
+        <line x1="588" y1="240" x2="588" y2="304" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <line x1="588" y1="304" x2="592" y2="304" stroke="#0f766e" stroke-width="1.5"/>
+
+        <!-- Arrow C6 -> C7 (Branch 2 converges) -->
+        <!-- C6 bottom: x=800, y=240; C7 right: x=846, y=328 -->
+        <line x1="800" y1="240" x2="800" y2="304" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="800" y1="304" x2="846" y2="304" stroke="#dc2626" stroke-width="1.5"/>
+
+        <!-- Fan-out from ADAM10 to both branches -->
+        <!-- ADAM10 (B1) right -> Panel C entry point -->
+        <!-- Already have arrow to x=510; now from x=510 fan to C1 and C4 -->
+        <!-- Branch to C1 (top-left sub-column): entry x=510 -> C1 top center x=588, y=44 -->
+        <path d="M510,265 L510,64 L512,64" fill="none" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+        <!-- Branch to C4 (top-right sub-column): entry x=510 -> route up then right to C4 top -->
+        <path d="M510,265 L510,64 L724,64" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+        <!-- Safety annotation badge -->
+        <rect x="514" y="408" width="360" height="30" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+        <text x="694" y="427" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">⚠ Broad activation risk: Notch · immune · vascular off-targets</text>
+
+        <!-- Biomarker badge -->
+        <rect x="514" y="450" width="360" height="28" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1"/>
+        <text x="694" y="468" text-anchor="middle" font-size="10" fill="#1e40af">Biomarkers: platelet ADAM10 · sAPPα · Aβ42/40 · p-tau</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue) — Upstream Activators:</strong> Lifestyle (exercise, lactate, IL-6), pharmacological small molecules (curcumin, nobiletin), epigenetic/chaperone interventions (HDAC inhibition, XBP1s), and upstream signaling pathways (PPARα, SIRT1, AMPK) converge to promote ADAM10 maturation and activity.
+      <strong>Panel B (green) — ADAM10 Core:</strong> Correct cell-surface localization and tetraspanin/lipid-dependent maturation are required for active α-secretase function; total protein alone is insufficient.
+      <strong>Panel C (amber/red) — Downstream Branches:</strong> The left branch shows the non-amyloidogenic axis (APP α-cleavage → sAPPα ↑ → Aβ ↓); the right branch shows broad substrate shedding (TREM2, RAGE, PrP, cadherins, Klotho) with context-dependent effects. Both branches converge on synaptic and cognitive outcomes. Amber safety badge highlights off-target risks; blue badge lists key translational biomarkers.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>α-Secretase Shunt &amp; Amyloid Reduction</h3>
+        ADAM10 α-cleavage of APP increases sAPPα production and reduces substrate available for the BACE1/γ-secretase pathway, thereby lowering Aβ42 generation. Mature, surface-localized, and correctly trafficked ADAM10 — not total protein alone — is the functionally relevant form, as mature ADAM10 may be selectively depleted in AD brain despite stable mRNA levels.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: Off-Target Shedding Risk</h3>
+        ADAM10 is a broad-spectrum sheddase whose substrates include Notch, immune receptors, vascular permeability mediators, cadherins, and synaptic proteins. Non-selective systemic activation risks disrupting Notch signaling, epithelial/endothelial barriers, inflammation, and cancer biology. Equally, broad inhibition could impair protective APP α-cleavage and synaptic support functions.
+      </div>
+
+      <div class="card card-positive">
+        <h3>Convergent Therapeutic Activators</h3>
+        A wide range of interventions — exercise, lactate, IL-6, PPARα activation, HDAC inhibition, curcumin nanoliposomes, nobiletin, fucoxanthin, Huperzine A, Maresin1, cordycepin, neural stem cell exosomes, and others — are reported to increase ADAM10 or α-secretase activity while also reducing BACE1, Aβ, neuroinflammation, or cognitive impairment, suggesting multiple druggable upstream nodes.
+      </div>
+
+      <div class="card card-warning">
+        <h3>TREM2 Context-Dependence</h3>
+        ADAM10/17-mediated TREM2 shedding exemplifies ADAM10's context-dependency: preventing shedding may preserve membrane TREM2 and microglial phagocytosis, yet controlled soluble TREM2 generation can also support Aβ clearance via LRP1. This duality argues strongly for substrate-selective modulation rather than blanket ADAM10 activation or inhibition.
+      </div>
+
+      <div class="card card-blue">
+        <h3>Genetic &amp; Omics Evidence</h3>
+        ADAM10 appears in AD GWAS, rare variant burden analyses, eQTL colocalization studies, STR-associated loci, and brain/platelet omics signatures. However, it is not a common Mendelian AD gene and rare variants appear infrequent or incompletely penetrant — supporting ADAM10 as a modifier and therapeutic target rather than a primary causal locus.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Biomarker Complexity</h3>
+        Platelet ADAM10 is repeatedly reduced in AD and may reflect impaired peripheral α-secretase processing. Plasma soluble ADAM10 is sometimes elevated in AD/MCI, potentially indicating compensatory shedding or disease state rather than protective brain activity. CSF findings remain inconsistent. Assay standardization — distinguishing membrane-bound from soluble forms — is a critical translational gap.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div>
+          <span class="takeaway-lead">Enhance APP α-cleavage selectively.</span>
+          Prioritize strategies that increase ADAM10-mediated non-amyloidogenic processing (sAPPα ↑, Aβ ↓) rather than globally elevating ADAM10 activity across all substrates and compartments.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Measure form and function, not just total protein.</span>
+          Key readouts should include mature ADAM10, cell-surface localization, α-secretase activity, sAPPα/sAPPβ ratio, ADAM10/BACE1 balance, and Aβ40/Aβ42 — not only total ADAM10 immunoblot signal.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Target upstream nodes for brain-selective modulation.</span>
+          Approaches engaging PPARα, CREB, PI3K/Akt/GSK3β, AMPK/Rab14, SIRT1, SHMT2/5′UTR translation, or proteostasis/XBP1s may achieve more selective restoration of protective ADAM10 function than direct pan-ADAM10 activators.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Treat ADAM10/BACE1 balance as a core pharmacodynamic endpoint.</span>
+          Candidate therapies should ideally increase α-secretase activity while normalizing BACE1/PSEN1/γ-secretase-associated amyloidogenic processing; this balance should be explicitly measured in model systems and clinical trials.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Use multi-analyte biomarker panels.</span>
+          Platelet ADAM10, plasma/CSF soluble ADAM10, sAPPα, sAPPβ, Aβ42/40, p-tau, inflammatory markers, and EV-associated ADAM10 or ADAM10-cleaved tau fragments should be interpreted together, with attention to biological compartment and disease stage.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Account for disease stage and patient context.</span>
+          ADAM10 enhancement may be most effective before severe amyloid pathology is established; effects may differ by familial mutation status, APOEε4 genotype, sex, metabolic state, inflammation, vascular dysfunction, and cell type.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Avoid broad ADAM10 inhibition without substrate-specific rationale.</span>
+          Inhibiting ADAM10 globally risks impairing APP α-cleavage, sAPPα neuroprotection, synaptic support, and protective receptor shedding, even in contexts where reducing shedding of a specific substrate (e.g., TREM2) might seem locally desirable.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Advance precision therapeutic designs.</span>
+          CNS-targeted delivery, temporally controlled ADAM10 activation, tetraspanin-guided substrate selection, and substrate-conformation protection represent more rational approaches than systemic modulation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Standardize ADAM10 assays for clinical translation.</span>
+          Validated antibodies distinguishing mature from pro-ADAM10, isoform-consistent nomenclature, standardized sample-processing, and activity assays are prerequisites for reliable clinical biomarker development.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Position ADAM10 within multi-target AD strategies.</span>
+          Its strongest value is as part of combination approaches that integrate amyloid reduction with anti-inflammatory, antioxidant, synaptic, proteostatic, metabolic, vascular, and microglial-support mechanisms — not as a standalone target.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — ADAM10 in Alzheimer's Disease</div>
+      <p>
+        ADAM10 represents a <strong>high-value but precision-dependent therapeutic target</strong> in Alzheimer's disease. The evidence consistently positions enhanced ADAM10-mediated APP α-secretase activity as protective: it diverts APP from amyloidogenic processing, boosts sAPPα, reduces Aβ42, and associates with better synaptic and cognitive outcomes. <strong>Multiple upstream pharmacological, epigenetic, metabolic, and lifestyle interventions</strong> converge on ADAM10 activation, identifying a rich space for indirect modulation. However, ADAM10 is not simply an "AD gene" — it is a <strong>pleiotropic sheddase</strong> with essential roles in Notch signaling, immune regulation, vascular biology, and synaptic organization. Genetic evidence supports ADAM10 as a <strong>modifier rather than a Mendelian causal locus</strong>, and biomarker data, while promising, require standardization and compartment-aware interpretation. The central therapeutic imperative is <strong>substrate-selective, CNS-targeted restoration of α-secretase function</strong> — not non-specific global activation or inhibition. ADAM10 is most powerfully deployed as one node within <strong>multi-target AD strategies</strong> combining amyloid reduction with neuroinflammatory, synaptic, proteostatic, metabolic, and microglial interventions.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ADAM10 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; Not for clinical or diagnostic application
+</footer>
+
+</body>
+</html>

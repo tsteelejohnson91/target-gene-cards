@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPHA1 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f8;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(180,50,50,0.28);
+    border: 1px solid rgba(220,100,100,0.45);
+    color: #ffd6d6;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 0.97rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    text-align: center;
+    padding: 0 8px;
+    line-height: 1.55;
+  }
+
+  /* KEY INSIGHTS CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+    line-height: 1.65;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger-mid);
+  }
+  .card-danger h3 { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #f59e0b;
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral h3 { color: var(--neutral); }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    counter-increment: takeaway-counter;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .takeaway-list li:last-child { border-bottom: none; }
+
+  .takeaway-num {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--mid);
+    padding-top: 2px;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.75;
+  }
+
+  .verdict h2 {
+    color: #93c5fd;
+    border-bottom-color: #3b82f6;
+    margin-bottom: 18px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    opacity: 0.92;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+    font-style: normal;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--neutral);
+    font-family: Arial, sans-serif;
+    padding: 20px 24px;
+    border-top: 1px solid var(--neutral-border);
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: EPHA1 &nbsp;|&nbsp; Ephrin Type-A Receptor 1</span>
+    <span class="chip chip-danger">⚠ Therapeutic direction unresolved</span>
+  </div>
+  <h1>EPHA1 &amp; Late-Onset Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Caveat — Therapeutic Directionality Unresolved</span>
+      Different AD-associated EPHA1 variants produce distinct and sometimes opposing signaling states. A simple universal inhibitor or activator strategy is unlikely to be appropriate; drug development must await resolution of variant-specific functional effects.
+    </div>
+
+    <p>EPHA1 is a replicated late-onset Alzheimer's disease (LOAD) susceptibility locus encoding EphA1, a cell-surface receptor tyrosine kinase operating within the Eph/ephrin contact-dependent signaling system. Across GWAS, variant-level functional studies, eQTL/regulatory analyses, proteomics, Mendelian randomization, cerebral amyloid angiopathy associations, and neuroimaging phenotypes, EPHA1 emerges as a credible AD pathway node — particularly for neurovascular and neuroinflammatory mechanisms.</p>
+
+    <p>The most mechanistically developed variant, P460L, alters receptor trafficking, reduces membrane and soluble receptor abundance, impairs ligand-induced Y781 phosphorylation, disrupts forward signaling, and weakens soluble EphA1 reverse signaling to brain endothelial cells — implicating blood–brain barrier biology and T-cell recruitment. Additional variants (R492Q, R791H, R926C) each show distinct effects on phosphorylation, proteolytic cleavage, and fragment stability, arguing against a single uniform loss- or gain-of-function model.</p>
+
+    <p>EPHA1 is not a deterministic AD gene, and its therapeutic potential remains early-stage. The correct intervention direction — activation, inhibition, normalization, or pathway-specific modulation — is unresolved. Nevertheless, its genetic implica­tion, extracellular accessibility, and variant-level functional data make it a mechanistically credible candidate for neurovascular-immune AD research.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview Figure</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left):  EPHA1 Receptor Biology & Variant Effects   (~x=10 to x=430)
+        PANEL B (right): Downstream Signaling & AD-Relevant Outputs  (~x=450 to x=870)
+        Total nodes planned (count carefully):
+          Panel A: 1-EPHA1 Locus, 2-EphA1 Receptor, 3-Proteolytic Cleavage, 4-P460L variant, 5-R791H variant, 6-R926C variant → 6 nodes
+          Panel B: 7-Ligand Binding / Forward Sig, 8-Y781 Phosphorylation, 9-BBB Integrity, 10-T-cell Recruitment, 11-RhoA/ROCK, 12-CXCL12/CXCR4, 13-Neuroinflammation, 14-CAA/SVD → 8 nodes
+          Total = 14 nodes ✓ (≤16)
+      -->
+      <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-d" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A background -->
+        <rect x="10" y="10" width="415" height="478" rx="12" fill="#e8f1f8" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="26" y="32" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5" text-anchor="start">PANEL A — RECEPTOR BIOLOGY &amp; VARIANTS</text>
+
+        <!-- Panel B background -->
+        <rect x="445" y="10" width="445" height="478" rx="12" fill="#e8f1f8" fill-opacity="0.30" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="461" y="32" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1.5" text-anchor="start">PANEL B — DOWNSTREAM SIGNALING &amp; AD OUTPUTS</text>
+
+        <!-- ═══ PANEL A NODES ═══ -->
+
+        <!-- Node 1: EPHA1 Locus (GWAS) -->
+        <rect x="130" y="48" width="160" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="210" y="67" font-size="10" font-weight="700" fill="#1a3a5c" text-anchor="middle">EPHA1 Locus</text>
+        <text x="210" y="82" font-size="9" fill="#2e6da4" text-anchor="middle">GWAS · rs11767557</text>
+
+        <!-- Node 2: EphA1 Receptor -->
+        <rect x="130" y="132" width="160" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="210" y="151" font-size="10" font-weight="700" fill="#1a3a5c" text-anchor="middle">EphA1 Receptor</text>
+        <text x="210" y="166" font-size="9" fill="#2e6da4" text-anchor="middle">RTK · cell-surface</text>
+
+        <!-- Node 3: Proteolytic Cleavage -->
+        <rect x="130" y="216" width="160" height="46" rx="7" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+        <text x="210" y="234" font-size="10" font-weight="700" fill="#1e293b" text-anchor="middle">Proteolytic Cleavage</text>
+        <text x="210" y="249" font-size="9" fill="#64748b" text-anchor="middle">55 kDa + 60 kDa fragments</text>
+
+        <!-- Node 4: P460L Variant -->
+        <rect x="22" y="318" width="130" height="52" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="87" y="337" font-size="10" font-weight="700" fill="#8b1a1a" text-anchor="middle">P460L Variant</text>
+        <text x="87" y="351" font-size="8.5" fill="#c0392b" text-anchor="middle">↓ membrane receptor</text>
+        <text x="87" y="363" font-size="8.5" fill="#c0392b" text-anchor="middle">↓ soluble sEphA1</text>
+
+        <!-- Node 5: R791H Variant -->
+        <rect x="165" y="318" width="130" height="52" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="230" y="337" font-size="10" font-weight="700" fill="#8b1a1a" text-anchor="middle">R791H Variant</text>
+        <text x="230" y="351" font-size="8.5" fill="#c0392b" text-anchor="middle">abolishes Tyr phospho</text>
+        <text x="230" y="363" font-size="8.5" fill="#c0392b" text-anchor="middle">↓ S906 phospho</text>
+
+        <!-- Node 6: R926C / R492Q -->
+        <rect x="87" y="410" width="156" height="52" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1.5"/>
+        <text x="165" y="429" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">R926C / R492Q</text>
+        <text x="165" y="443" font-size="8.5" fill="#b45309" text-anchor="middle">R926C ↑ S906 phospho</text>
+        <text x="165" y="457" font-size="8.5" fill="#b45309" text-anchor="middle">R492Q mild FN2 effects</text>
+
+        <!-- ═══ PANEL A ARROWS ═══ -->
+        <!-- Node1 → Node2 -->
+        <line x1="210" y1="94" x2="210" y2="132" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Node2 → Node3 -->
+        <line x1="210" y1="178" x2="210" y2="216" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Node3 → P460L: elbow left -->
+        <polyline points="210,262 210,294 87,294 87,318" fill="none" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+        <!-- Node3 → R791H: elbow right -->
+        <polyline points="210,262 210,294 230,294 230,318" fill="none" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-r)"/>
+        <!-- P460L → R926C/R492Q: elbow down -->
+        <polyline points="87,370 87,392 165,392 165,410" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-d)"/>
+        <!-- R791H → R926C/R492Q -->
+        <polyline points="230,370 230,392 165,392 165,410" fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-d)"/>
+
+        <!-- ═══ PANEL B NODES ═══ -->
+
+        <!-- Node 7: Ligand Binding / Forward Signaling -->
+        <rect x="562" y="48" width="162" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="643" y="67" font-size="10" font-weight="700" fill="#1a3a5c" text-anchor="middle">Ligand Binding</text>
+        <text x="643" y="82" font-size="9" fill="#2e6da4" text-anchor="middle">Forward signaling</text>
+
+        <!-- Node 8: Y781 Phosphorylation -->
+        <rect x="562" y="138" width="162" height="46" rx="7" fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="643" y="157" font-size="10" font-weight="700" fill="#1a3a5c" text-anchor="middle">Y781 Phosphorylation</text>
+        <text x="643" y="172" font-size="9" fill="#2e6da4" text-anchor="middle">kinase activation signal</text>
+
+        <!-- Node 9: BBB Integrity -->
+        <rect x="457" y="240" width="148" height="46" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="531" y="259" font-size="10" font-weight="700" fill="#0f766e" text-anchor="middle">BBB Integrity</text>
+        <text x="531" y="274" font-size="9" fill="#0f766e" text-anchor="middle">endothelial junctions</text>
+
+        <!-- Node 10: T-cell Recruitment -->
+        <rect x="627" y="240" width="148" height="46" rx="7" fill="#fdf0f0" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="701" y="259" font-size="10" font-weight="700" fill="#8b1a1a" text-anchor="middle">T-cell Recruitment</text>
+        <text x="701" y="274" font-size="9" fill="#c0392b" text-anchor="middle">leukocyte-endothelial</text>
+
+        <!-- Node 11: RhoA/ROCK Pathway -->
+        <rect x="457" y="336" width="148" height="46" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="531" y="355" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">RhoA / ROCK</text>
+        <text x="531" y="370" font-size="9" fill="#3b82f6" text-anchor="middle">cytoskeletal remodeling</text>
+
+        <!-- Node 12: CXCL12/CXCR4 -->
+        <rect x="627" y="336" width="148" height="46" rx="7" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="701" y="355" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">CXCL12 / CXCR4</text>
+        <text x="701" y="370" font-size="9" fill="#3b82f6" text-anchor="middle">chemokine signaling</text>
+
+        <!-- Node 13: Neuroinflammation -->
+        <rect x="457" y="428" width="148" height="44" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1.5"/>
+        <text x="531" y="447" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">Neuroinflammation</text>
+        <text x="531" y="461" font-size="9" fill="#b45309" text-anchor="middle">microglial / immune</text>
+
+        <!-- Node 14: CAA / SVD -->
+        <rect x="627" y="428" width="148" height="44" rx="7" fill="#fff8e1" stroke="#b45309" stroke-width="1.5"/>
+        <text x="701" y="447" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">CAA / SVD Burden</text>
+        <text x="701" y="461" font-size="9" fill="#b45309" text-anchor="middle">vascular amyloid</text>
+
+        <!-- ═══ PANEL B ARROWS ═══ -->
+        <!-- Node7 → Node8 -->
+        <line x1="643" y1="94" x2="643" y2="138" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Node8 branches to Node9 and Node10 via elbow -->
+        <polyline points="643,184 643,216 531,216 531,240" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <polyline points="643,184 643,216 701,216 701,240" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Node9 → Node11 -->
+        <line x1="531" y1="286" x2="531" y2="336" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+        <!-- Node10 → Node12 -->
+        <line x1="701" y1="286" x2="701" y2="336" stroke="#c0392b" stroke-width="1.4" marker-end="url(#arr-r)"/>
+        <!-- Node11 → Node13 -->
+        <line x1="531" y1="382" x2="531" y2="428" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr)"/>
+        <!-- Node12 → Node14 -->
+        <line x1="701" y1="382" x2="701" y2="428" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- ═══ CROSS-PANEL CONNECTOR ═══ -->
+        <!-- EphA1 Receptor (Node2, right edge x=290, y=155) → Ligand Binding (Node7, left edge x=562, y=71) -->
+        <!-- Route: from right of Node2 at y=155 → elbow up to y=71 → into left of Node7 -->
+        <polyline points="290,155 430,155 430,71 562,71" fill="none" stroke="#2e6da4" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Receptor Biology &amp; Variants:</strong> EPHA1 GWAS locus encodes the EphA1 RTK, which undergoes constitutive proteolytic cleavage into 55 kDa and 60 kDa fragments. AD-associated variants P460L and R791H alter trafficking, phosphorylation, and fragment stability; R926C/R492Q show additional distinct phosphorylation effects.
+      <strong>Panel B — Downstream Signaling &amp; AD Outputs:</strong> Ligand binding drives Y781 phosphorylation, which branches into two parallel cascades — BBB integrity → RhoA/ROCK cytoskeletal remodeling (left branch) and T-cell recruitment → CXCL12/CXCR4 chemokine signaling (right branch) — converging on neuroinflammation and CAA/SVD burden as AD-relevant outputs. Dashed cross-panel connector shows EphA1 receptor feeding forward signaling in Panel B.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Robust LOAD-Associated Locus</h3>
+        <p>EPHA1 rs11767557 reached genome-wide significance in 2011 ADGC/GERAD+ studies and strengthened to approximately P&nbsp;=&nbsp;2.1&nbsp;×&nbsp;10<sup>−15</sup> in expanded meta-analyses, placing EPHA1 among established AD GWAS genes alongside APOE, BIN1, CLU, CR1, and TREM2. Effect sizes are modest and context-dependent, with some cohorts showing nominal or null replication.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>P460L — Most Mechanistically Developed Variant</h3>
+        <p>P460L reduces EphA1 membrane and soluble receptor abundance, impairs ligand-induced Y781 phosphorylation, disrupts forward signaling, and weakens soluble reverse signaling to brain endothelial cells. Functionally, it reduces endothelial barrier-integrity remodeling and alters T-cell recruitment — directly implicating BBB biology and neuroinflammation in EPHA1-linked AD risk.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Multiple Variants, No Uniform Mechanism</h3>
+        <p>R791H abolishes tyrosine phosphorylation; P460L drastically reduces surface localization while increasing phosphorylation of residual receptor; R926C increases S906 phosphorylation; R492Q has milder FN2-domain effects. This variant heterogeneity argues firmly against a single loss- or gain-of-function model and complicates any universal therapeutic strategy.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Neurovascular &amp; BBB Mechanisms Central</h3>
+        <p>EphA1 signaling regulates brain endothelial contacts, barrier integrity, and T-cell recruitment. EPHA1 rs11767557 is also associated with cerebral amyloid angiopathy (CAA) small-vessel disease burden, extending relevance to vascular amyloid injury and cerebrovascular contributions to dementia beyond parenchymal AD pathology.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Immune &amp; Regulatory Mechanisms</h3>
+        <p>EPHA1 clusters repeatedly with immune-related AD genes. rs11767557 regulates EPHA1 expression in whole blood (eQTL), suggesting a peripheral immune regulatory route. EPHA1-AS1 signals appear in immune-cell-specific AD risk analyses; increased EPHA1-AS1 expression is associated with reduced AD risk in some immune contexts. EphA1 biology intersects with CXCL12/CXCR4, RhoA/ROCK, and inflammatory mediator pathways.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Plausible but Early-Stage Therapeutic Target</h3>
+        <p>EphA1 is extracellularly accessible and theoretically druggable via antibodies, ligand-based tools, kinase modulators, soluble decoys, or transmembrane-domain modulators. Anti-EphA1 antibodies and engineered binding domains demonstrate technical targetability, but the correct therapeutic direction — activation, inhibition, or normalization — remains unresolved. Broad kinase inhibition would likely miss cleavage-dependent and reverse-signaling mechanisms.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <span class="takeaway-num">1</span>
+        <span><span class="takeaway-lead">Prioritize variant-specific functional validation.</span> P460L, R791H, R492Q, and R926C should be tested in AD-relevant human cell systems — brain endothelial cells, microglia, astrocytes, neurons, pericytes, and peripheral immune cells — to define effects on trafficking, cleavage, phosphorylation, ligand response, and downstream signaling.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">2</span>
+        <span><span class="takeaway-lead">Focus on neurovascular and immune endpoints.</span> The most actionable mechanistic hypotheses involve blood–brain barrier integrity, endothelial junction remodeling, T-cell recruitment, leukocyte-endothelial adhesion, CAA burden, neurovascular inflammation, and cerebral small-vessel disease.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">3</span>
+        <span><span class="takeaway-lead">Resolve directionality before drug development.</span> Studies must establish whether AD risk reflects reduced EphA1 signaling, excessive residual signaling, defective soluble/reverse signaling, altered noncanonical S906 signaling, or dysregulated cleavage/fragment stability — as these scenarios demand different therapeutic strategies.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">4</span>
+        <span><span class="takeaway-lead">Map cell-type and disease-stage specificity.</span> EPHA1 signaling should be characterized in single-cell and spatial transcriptomic/proteomic datasets across AD stages, especially in endothelial cells, microglia, infiltrating immune cells, astrocytes, neurons, and vascular/perivascular compartments.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">5</span>
+        <span><span class="takeaway-lead">Use EPHA1 as a candidate stratification marker.</span> EPHA1 variants, EPHA1-AS1 expression, blood EPHA1 eQTL effects, and proteomic EPHA1 levels may help stratify patients by vascular/immune AD subtype, CAA risk, APOE-ε4 resilience biology, or disease progression phenotype.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">6</span>
+        <span><span class="takeaway-lead">Test therapeutic modalities selectively.</span> Potential approaches include normalizing membrane localization, restoring ligand responsiveness, modulating soluble EphA1 reverse signaling, protecting endothelial barrier integrity, and targeting downstream CXCL12/CXCR4 or RhoA/ROCK pathways. Broad kinase inhibition alone will likely miss kinase-independent, cleavage-dependent, and reverse-signaling mechanisms.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">7</span>
+        <span><span class="takeaway-lead">Validate in mammalian AD and CAA models.</span> EPHA1 modulation should be tested for effects on amyloid deposition, vascular amyloid, tau toxicity, synaptic loss, sleep/circadian disruption, neuronal excitability, microglial activation, immune-cell infiltration, BBB function, cognition, and hemorrhage/small-vessel outcomes.</span>
+      </li>
+      <li>
+        <span class="takeaway-num">8</span>
+        <span><span class="takeaway-lead">Avoid overinterpreting non-AD EphA1 biology.</span> Cancer, angiogenesis, epithelial, pain, and developmental studies support druggability and biological plausibility but should be treated as mechanistic context, not as evidence that EPHA1 modulation will benefit AD.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <div class="verdict">
+      <h2>Overall Assessment</h2>
+      <p>
+        <strong>Overall Assessment —</strong> EPHA1 is a <strong>genetically robust, mechanistically credible</strong> AD susceptibility locus with its strongest evidence concentrated in <strong>neurovascular, blood–brain barrier, and neuroinflammatory pathways</strong>. The mechanistically best-characterized variant, <strong>P460L</strong>, disrupts receptor trafficking, impairs kinase signaling, and compromises soluble EphA1 reverse signaling to brain endothelial cells — directly connecting GWAS signal to BBB biology and T-cell recruitment. However, the existence of <strong>multiple variants with distinct and sometimes opposing functional consequences</strong> (P460L, R791H, R926C, R492Q) means that a simple, universal therapeutic strategy is premature. EPHA1 also intersects with <strong>CAA/small-vessel disease</strong>, peripheral immune regulation via blood eQTL effects, and possibly resilience biology in APOE-ε4 carriers. EphA1 is extracellularly accessible and <strong>technically druggable</strong>, but clinical translation requires resolution of therapeutic directionality, variant-stratified patient selection, and validation in mammalian AD and CAA models. <strong>Current evidence positions EPHA1 as a promising but immature therapeutic target</strong> — warranting sustained mechanistic investment rather than immediate drug development.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  EPHA1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

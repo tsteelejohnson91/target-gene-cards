@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNM1 — Alzheimer's Disease TEP Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f8fafc;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --blue-card: #eff6ff;
+    --blue-border: #1d4ed8;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e2eaf3;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border: 1px solid rgba(255,180,180,0.3);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cbd5e1;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 48px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  /* OVERVIEW TEXT */
+  .overview-text p {
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    margin-top: 14px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid;
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .card p { line-height: 1.65; }
+
+  .card-accent   { background: var(--light);          border-color: var(--mid);     }
+  .card-accent h3{ color: var(--dark); }
+
+  .card-danger   { background: var(--danger-light);   border-color: var(--danger);  }
+  .card-danger h3{ color: var(--danger); }
+
+  .card-positive { background: var(--positive-light); border-color: var(--positive);}
+  .card-positive h3{ color: var(--positive); }
+
+  .card-blue     { background: var(--blue-card);      border-color: var(--blue-border);}
+  .card-blue h3  { color: var(--blue-border); }
+
+  .card-slate    { background: #f1f5f9;               border-color: var(--neutral);  }
+  .card-slate h3 { color: var(--neutral); }
+
+  .card-warning  { background: var(--warning-light);  border-color: #d97706; }
+  .card-warning h3{ color: var(--warning); }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  .takeaway-list li {
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .takeaway-list li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #e2eaf3;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  .verdict p strong {
+    color: #93c5fd;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: DNM1 &nbsp;|&nbsp; Dynamin-1</span>
+    <span class="chip chip-danger">⚠ Therapeutic Safety Concern</span>
+  </div>
+  <h1>DNM1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Therapeutic Caution</div>
+      Human DNM1 mutations cause severe neurological disease including developmental and epileptic encephalopathy. DNM1 is essential for normal synaptic function, and broad inhibition risks worsening neurotransmission and cognition. Therapeutic direction remains unresolved.
+    </div>
+
+    <div class="overview-text">
+      <p>DNM1 encodes dynamin-1, a neuron-enriched GTPase central to synaptic vesicle endocytosis and recycling, membrane fission, clathrin-mediated trafficking, neurotransmitter release, and neuronal network stability. Across the available evidence, DNM1 is most consistently connected to Alzheimer's disease (AD) through synaptic dysfunction, vesicle transport, endocytic trafficking, hippocampal and cortical proteomic remodeling, cognitive impairment, and broader mitochondrial/oxidative-stress biology.</p>
+      <p>The AD-specific evidence is limited but supportive. DNM1 appears in AD-relevant proteomic or treatment-response contexts — including treadmill exercise in 3×Tg-AD mice, ellagic acid treatment in an Aβ(1–42)-induced AD model, altered protein turnover in the App<sup>NL-F</sup> mouse model, and neurodegeneration-related proteomic signatures. In these settings DNM1 is not an established primary AD driver, but part of synaptic/endocytic and mitochondrial-stress networks overlapping with core AD mechanisms.</p>
+      <p>Many mitochondrial studies reference yeast/fungal Dnm1 or mammalian DRP1/DNM1L rather than human neuronal DNM1, so those findings support dynamin-family pathway relevance more than direct DNM1-specific AD causality. Overall, DNM1 is best viewed as a plausible AD-relevant synaptic/endocytic pathway node and potential biomarker of synaptic resilience or treatment response, not yet a validated standalone therapeutic target for Alzheimer's disease.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <figure class="figure-wrap">
+      <!--
+        Layout plan (count: 14 nodes total — within 16 limit)
+        Panel A (Upstream / Presynaptic context): 3 nodes
+          A1 Synaptic Vesicle Release
+          A2 Membrane Fission (DNM1)
+          A3 Clathrin-Mediated Endocytosis
+        Panel B (Pathway branches — AD Contexts): 8 nodes arranged in 2 branches
+          Branch 1 (Exercise / Proteomics): B1a 3×Tg-AD Exercise → B1b Cortical Proteome Shift → B1c Synaptic Recovery
+          Branch 2 (Aβ / Ellagic Acid): B2a Aβ(1-42) Stress → B2b Ca²⁺/CDK5/GSK-3β → B2c CREB/Synaptophysin
+          Shared outcome: C1 LTP & Memory
+        Panel C (Risk / Safety): 3 nodes
+          D1 DNM1 Mutation → D2 Epileptic Encephalopathy → D3 E/I Imbalance
+      -->
+      <svg viewBox="0 0 920 480" width="880" height="456" xmlns="http://www.w3.org/2000/svg" aria-label="DNM1 mechanistic pathway diagram">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+          </marker>
+        </defs>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- PANEL A: Upstream / Presynaptic Function -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <rect x="10" y="10" width="210" height="460" rx="10" ry="10"
+              fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="115" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="1">PRESYNAPTIC FUNCTION</text>
+
+        <!-- A1: Synaptic Vesicle Release -->
+        <rect x="30" y="44" width="170" height="48" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="115" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Synaptic Vesicle</text>
+        <text x="115" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Release &amp; Fusion</text>
+
+        <!-- arrow A1→A2 -->
+        <line x1="115" y1="93" x2="115" y2="127" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A2: DNM1 Membrane Fission (key node) -->
+        <rect x="30" y="128" width="170" height="52" rx="7" fill="#1a3a5c" stroke="#0d1f33" stroke-width="1.5"/>
+        <text x="115" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#ffffff">DNM1</text>
+        <text x="115" y="168" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">GTPase · Membrane Fission</text>
+
+        <!-- arrow A2→A3 -->
+        <line x1="115" y1="181" x2="115" y2="215" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A3: Clathrin-Mediated Endocytosis -->
+        <rect x="30" y="216" width="170" height="48" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="115" y="235" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Clathrin-Mediated</text>
+        <text x="115" y="252" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Endocytosis (CLTC)</text>
+
+        <!-- arrow A3→A4 -->
+        <line x1="115" y1="265" x2="115" y2="299" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- A4: Vesicle Recycling & Proteostasis -->
+        <rect x="30" y="300" width="170" height="48" rx="7" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+        <text x="115" y="319" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Vesicle Recycling</text>
+        <text x="115" y="336" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">&amp; Proteostasis</text>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- PANEL B: AD-Relevant Branches -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <rect x="236" y="10" width="450" height="460" rx="10" ry="10"
+              fill="rgba(15,118,110,0.06)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="461" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#065f46" letter-spacing="1">AD-RELEVANT PATHWAY BRANCHES</text>
+
+        <!-- Branch 1 label -->
+        <text x="336" y="52" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="8" font-weight="700" fill="#2e6da4" letter-spacing="0.5">EXERCISE / PROTEOMICS</text>
+
+        <!-- B1a: 3×Tg-AD Exercise -->
+        <rect x="256" y="58" width="158" height="46" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="335" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">3×Tg-AD Treadmill</text>
+        <text x="335" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Exercise Model</text>
+
+        <!-- arrow B1a→B1b -->
+        <line x1="335" y1="105" x2="335" y2="137" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B1b: Cortical Proteome Shift -->
+        <rect x="256" y="138" width="158" height="46" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="335" y="157" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Cortical Proteome</text>
+        <text x="335" y="173" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Shift (DNM1 altered)</text>
+
+        <!-- arrow B1b→shared outcome -->
+        <line x1="335" y1="185" x2="335" y2="215" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Branch 2 label -->
+        <text x="561" y="52" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="8" font-weight="700" fill="#b45309" letter-spacing="0.5">Aβ STRESS / ELLAGIC ACID</text>
+
+        <!-- B2a: Aβ(1-42) Stress -->
+        <rect x="468" y="58" width="198" height="46" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="567" y="77" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Aβ(1–42) Early-Onset</text>
+        <text x="567" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">AD Model</text>
+
+        <!-- arrow B2a→B2b -->
+        <line x1="567" y1="105" x2="567" y2="137" stroke="#d97706" stroke-width="1.4" marker-end="url(#arr)"/>
+
+        <!-- B2b: Ca2+/CDK5/GSK-3β -->
+        <rect x="468" y="138" width="198" height="46" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+        <text x="567" y="157" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">Ca²⁺/Calpain/GSK-3β</text>
+        <text x="567" y="173" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">CDK5 Modulation</text>
+
+        <!-- arrow B2b→B2c -->
+        <line x1="567" y1="185" x2="567" y2="215" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- B2c: CREB/Synaptophysin -->
+        <rect x="468" y="216" width="198" height="46" rx="7" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="567" y="235" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">CREB / Synaptophysin</text>
+        <text x="567" y="251" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#1e293b">DNM1 (synaptic arm)</text>
+
+        <!-- arrow B2c→shared outcome -->
+        <!-- Route: right-angle: B2c bottom(567,263) → down to 293, → left to 461, → down to 299 -->
+        <polyline points="567,263 567,289 461,289 461,299"
+                  fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Shared Outcome: LTP & Memory -->
+        <rect x="372" y="300" width="178" height="46" rx="7" fill="#d1fae5" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="461" y="319" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#065f46">LTP &amp; Memory</text>
+        <text x="461" y="337" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">Improvement / Recovery</text>
+
+        <!-- arrow B1b bottom toward shared outcome via elbow -->
+        <!-- B1b bottom at (335,185) → straight down to 299 — clear path -->
+        <!-- already drawn above, remove duplicate; re-route:
+             335,215 → 335,289 → 372,289 → but 289 row has polyline at 567→461.
+             Use y=280 instead for branch1 elbow -->
+        <!-- Remove the B1b→shared arrow drawn above and replace with elbow -->
+
+        <!-- AppNL-F node -->
+        <rect x="256" y="216" width="158" height="58" rx="7" fill="#e8f1f9" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="335" y="237" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">App NL-F Model:</text>
+        <text x="335" y="252" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">DNM1/CLTC/RIMS1</text>
+        <text x="335" y="267" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1e293b">turnover altered</text>
+
+        <!-- arrow AppNL-F → shared outcome: right-angle elbow via y=290 -->
+        <polyline points="335,275 335,291 372,291 372,300"
+                  fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+        <!-- Re-draw B1b→AppNLF as continuation: arrow from B1b bottom(335,185) to AppNLF top(335,216) -->
+        <!-- Already sequenced by drawing AppNLF below B1b; need connector -->
+        <!-- They are vertically adjacent with 185→216 gap; line is clear -->
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- PANEL C: Risk / Safety -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <rect x="702" y="10" width="210" height="340" rx="10" ry="10"
+              fill="rgba(155,28,28,0.06)" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="807" y="32" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="1">RISK / SAFETY</text>
+
+        <!-- D1: DNM1 Mutation -->
+        <rect x="722" y="44" width="170" height="48" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="807" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">DNM1 Mutation /</text>
+        <text x="807" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Loss-of-Function</text>
+
+        <!-- arrow D1→D2 -->
+        <line x1="807" y1="93" x2="807" y2="127" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- D2: Epileptic Encephalopathy -->
+        <rect x="722" y="128" width="170" height="48" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="807" y="147" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Epileptic Encephalopathy</text>
+        <text x="807" y="163" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Seizures / Hypotonia</text>
+
+        <!-- arrow D2→D3 -->
+        <line x1="807" y1="177" x2="807" y2="211" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- D3: E/I Imbalance -->
+        <rect x="722" y="212" width="170" height="48" rx="7" fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="807" y="231" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">E/I Imbalance &amp;</text>
+        <text x="807" y="247" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">GABAergic Dysfunction</text>
+
+        <!-- arrow D3→D4 -->
+        <line x1="807" y1="261" x2="807" y2="291" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-red)"/>
+
+        <!-- D4: Network Hyperexcitability (AD relevance) -->
+        <rect x="722" y="292" width="170" height="48" rx="7" fill="#fef2f2" stroke="#b45309" stroke-width="1.3"/>
+        <text x="807" y="311" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#92400e">Network Hyperexcitability</text>
+        <text x="807" y="327" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" fill="#92400e">(AD-relevant)</text>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- PANEL D: Biomarker / Interactome (bottom strip) -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <rect x="10" y="380" width="900" height="88" rx="10" ry="10"
+              fill="rgba(100,116,139,0.07)" stroke="#94a3b8" stroke-width="1.2"/>
+        <text x="460" y="400" text-anchor="middle" font-family="Arial,sans-serif"
+              font-size="9" font-weight="700" fill="#475569" letter-spacing="1">BIOMARKER &amp; INTERACTOME CONTEXT</text>
+
+        <!-- Biomarker node 1 -->
+        <rect x="28" y="410" width="152" height="44" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+        <text x="104" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Exercise / Ellagic Acid</text>
+        <text x="104" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Treatment Response</text>
+
+        <!-- Biomarker node 2 -->
+        <rect x="196" y="410" width="152" height="44" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+        <text x="272" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">POAG–AD Shared</text>
+        <text x="272" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Network Gene</text>
+
+        <!-- Biomarker node 3 -->
+        <rect x="364" y="410" width="192" height="44" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+        <text x="460" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Interactors: CLTC, RIMS1,</text>
+        <text x="460" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">SYT1, SYP, SNAP25, FIS1</text>
+
+        <!-- Biomarker node 4 -->
+        <rect x="572" y="410" width="160" height="44" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+        <text x="652" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">DRP1/DNM1L Caveat:</text>
+        <text x="652" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Mito. fission distinct</text>
+
+        <!-- Biomarker node 5 -->
+        <rect x="748" y="410" width="150" height="44" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.1"/>
+        <text x="823" y="428" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Hippocampal Cognitive</text>
+        <text x="823" y="444" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#334155">Impairment Marker</text>
+
+        <!-- Cross-panel connector: Panel A (Vesicle Recycling A4) → Panel B shared outcome -->
+        <!-- A4 right edge at x=200, y=324. Shared outcome left edge at x=372, y=323 -->
+        <!-- Straight horizontal line at y=324 — check: no box in path between x=200 and x=372 at y=324 -->
+        <line x1="200" y1="324" x2="372" y2="324" stroke="#1a3a5c" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-dark)"/>
+
+      </svg>
+
+      <figcaption>
+        <strong>Panel A (Presynaptic Function):</strong> DNM1 GTPase mediates membrane fission during synaptic vesicle release, enabling clathrin-mediated endocytosis and vesicle recycling &amp; proteostasis.
+        &nbsp;<strong>Panel B (AD-Relevant Branches):</strong> Two parallel branches converge on LTP &amp; Memory Recovery — a treadmill-exercise / App<sup>NL-F</sup> proteomics arm (blue, left) and an Aβ(1–42) / ellagic-acid arm channelling through Ca²⁺/CDK5/GSK-3β modulation and CREB/synaptophysin (amber→teal, right).
+        &nbsp;<strong>Panel C (Risk / Safety):</strong> DNM1 loss-of-function mutations cascade to epileptic encephalopathy and E/I imbalance — highlighting therapeutic safety constraints relevant to AD.
+        &nbsp;<strong>Bottom strip (Biomarker &amp; Interactome):</strong> Key contextual nodes including treatment-response biomarker role, POAG–AD network overlap, major interactors, DRP1/DNM1L distinction, and hippocampal cognitive impairment associations.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Synaptic Mechanism</h3>
+        <p>DNM1's strongest AD-relevant role is synaptic vesicle recycling. It mediates membrane fission during endocytosis, sustaining neurotransmitter release cycles. Because synapse loss is an early, clinically important AD feature, altered DNM1 function could plausibly impair neurotransmission and memory.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Exercise &amp; Ellagic Acid Response</h3>
+        <p>In 3×Tg-AD treadmill exercise studies, DNM1 appeared among cortical proteins shifted toward wild-type-like profiles alongside synaptic and amyloid-pathway proteins. In an Aβ(1–42) model, ellagic acid recruited DNM1 alongside CREB and synaptophysin in the synaptic-plasticity arm, linking it to LTP and memory improvement under Aβ stress.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>App<sup>NL-F</sup> Protein Turnover</h3>
+        <p>In the App<sup>NL-F</sup> AD mouse model, disease-associated protein turnover changes converged on synaptic vesicle recycling proteins including Dnm1, Cltc, and Rims1, and mitochondrial proteins Fis1 and Ndufv1. This implicates DNM1 in AD-related synaptic proteostasis beyond simple expression change.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>POAG–AD Network Overlap</h3>
+        <p>DNM1 was identified among shared network genes associated with both Alzheimer's disease and primary open-angle glaucoma (POAG). This places it in a broader eye-brain neurodegeneration network involving synaptic, endocytic, and stress-response biology, though causality is not established.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Safety: DNM1 Mutation Risk</h3>
+        <p>Human DNM1 mutations cause severe developmental and epileptic encephalopathy, seizures, intellectual disability, hypotonia, cortical visual impairment, and ataxia. These data confirm DNM1 function is dosage- and activity-sensitive. Broad inhibition is unlikely to be safe in AD unless a specific pathological overactivity mechanism is proven.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Mitochondrial Caveat</h3>
+        <p>Many mitochondrial fission studies citing "Dnm1" describe yeast/fungal orthologs or mammalian DRP1/DNM1L, not human neuronal DNM1. These findings support dynamin-family pathway relevance to AD but do not establish DNM1 as the direct mitochondrial fission target. DRP1/DNM1L is likely the more appropriate mammalian mitochondrial target.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><strong>Treat DNM1 as a candidate node, not a validated AD-causal gene.</strong> The current evidence positions it as a plausible synaptic-resilience and endocytic-trafficking node relevant to AD, not as an established primary driver of amyloid, tau, or neuroinflammatory pathology.</li>
+      <li><strong>Prioritize AD-specific validation studies.</strong> Measure DNM1 abundance, phosphorylation, localization, isoform balance, and turnover in human AD brain, AD mouse models, and iPSC-derived neurons across disease stage and brain region.</li>
+      <li><strong>Determine therapeutic direction before any intervention.</strong> Current evidence does not establish whether DNM1 should be increased, decreased, or normalized in AD. Studies must distinguish whether DNM1 changes are compensatory, pathogenic, or secondary to synaptic degeneration.</li>
+      <li><strong>Focus on pathway normalization rather than blunt activation or inhibition.</strong> The most defensible concept is restoring appropriate DNM1-dependent synaptic vesicle recycling and endocytic trafficking while avoiding disruption of essential presynaptic function.</li>
+      <li><strong>Use synaptic endpoints in AD models.</strong> Relevant readouts include vesicle recycling kinetics, releasable vesicle pool size, synaptophysin/SYT/SNAP25/SYP markers, LTP, neurotransmitter release, excitation/inhibition balance, network hyperexcitability, and memory behavior.</li>
+      <li><strong>Separate DNM1 from DRP1/DNM1L in mitochondrial studies.</strong> If reducing mitochondrial fragmentation is the therapeutic goal in AD, DRP1/DNM1L is the more direct mammalian target; DNM1 should be evaluated primarily for neuronal endocytosis and synaptic effects unless AD-specific mitochondrial roles are demonstrated.</li>
+      <li><strong>Consider DNM1 as part of a broader presynaptic module.</strong> Relevant interacting or co-altered proteins include CLTC, RIMS1, NSF, DLG2, SYT1, SYP, SYN1/2, SNAP25, VAMP2, APP, APOE, MAP2, MAPT, DYNC1H1, FIS1, NDUFV1, OPA1, and synaptic/endocytic regulators.</li>
+      <li><strong>Explore DNM1 as a biomarker of synaptic treatment response.</strong> Exercise, ellagic acid, aging, and cognitive-impairment studies suggest DNM1 may track synaptic remodeling, plasticity, or cognitive vulnerability — making it a candidate pharmacodynamic marker.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — DNM1 in Alzheimer's Disease</div>
+      <p>DNM1 is a <strong>plausible, mechanistically motivated, but not yet validated</strong> node in Alzheimer's disease biology. Its most compelling relevance lies in <strong>presynaptic vesicle recycling and clathrin-mediated endocytosis</strong> — processes directly implicated in the earliest synaptic failure of AD. Proteomic evidence from 3×Tg-AD exercise studies, App<sup>NL-F</sup> protein turnover analyses, and Aβ-model treatment-response data position DNM1 as a <strong>marker of synaptic remodeling and treatment response</strong> rather than a primary disease driver. The intersection with POAG–AD networks and hippocampal cognitive impairment models adds contextual support. However, the mitochondrial-fission literature must be interpreted cautiously — most findings describe DRP1/DNM1L orthologs, not human neuronal DNM1 — and <strong>genetic DNM1 disruption causes severe neurological disease</strong>, imposing meaningful therapeutic safety constraints. The most defensible current hypothesis is that <strong>DNM1-associated synaptic vesicle recycling and endocytic pathways contribute to AD synaptic failure and may be modifiable by future precision interventions</strong>, but direct evidence linking DNM1 to amyloid production, tau pathology, neuroinflammation, or AD progression remains insufficient to justify it as a primary therapeutic target without further disease-specific validation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DNM1 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &middot; For research use only
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASPM — Alzheimer's Disease Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(155, 28, 28, 0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 32px;
+  }
+  section { margin-bottom: 56px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #78350f;
+  }
+  .callout strong { color: var(--warning); font-family: Arial, sans-serif; }
+  /* OVERVIEW TEXT */
+  .prose p { margin-bottom: 1.1em; }
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-size: 0.83rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger-dark); }
+  .card-danger h3 { color: var(--danger-dark); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: #f1f5f9; border-left: 4px solid #64748b; }
+  .card-neutral h3 { color: #334155; }
+  .card-blue { background: #eff6ff; border-left: 4px solid #1d4ed8; }
+  .card-blue h3 { color: #1e3a8a; }
+  /* TAKEAWAYS */
+  .takeaways ol { padding-left: 0; list-style: none; counter-reset: takeaway; }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways li .lead { color: var(--dark); font-weight: 700; }
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f33 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 36px;
+    line-height: 1.8;
+  }
+  .verdict .lead-in {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .verdict p { font-size: 1rem; }
+  .verdict strong { color: #bfdbfe; }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: ASPM &nbsp;|&nbsp; Abnormal Spindle Microtubule Assembly</span>
+    <span class="chip chip-danger">⚠ Safety concern: oncogenic &amp; proliferative risk</span>
+  </div>
+  <h1>ASPM — Alzheimer's Disease Mechanistic Candidate</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Safety &amp; Scope Caveat:</strong> ASPM is not an established Alzheimer's disease gene. The direct AD evidence is sparse and limited to one hippocampal CA1 RNA-seq/PPI hub-gene study. Most evidence derives from primary microcephaly, neural progenitor biology, and cancer. Therapeutic modulation carries oncogenic, proliferative, and genome-stability risks that require early profiling.
+    </div>
+
+    <div class="prose">
+      <p>ASPM is characterised primarily as a neurodevelopmental, centrosomal, mitotic-spindle, microtubule-associated, and cell-cycle/progenitor-cell gene. Its strongest established disease association is autosomal recessive primary microcephaly (MCPH5), where loss-of-function variants impair brain growth, neural progenitor expansion, cortical development, and cognition. In the Alzheimer's disease context, the only direct evidence is ASPM's identification as one of five novel hub genes in an AD hippocampal CA1 RNA-seq/protein–protein interaction network, alongside MRPS7, RPL5, GFM1, and RAD51.</p>
+      <p>Mechanistically, ASPM participates in spindle organisation, centrosome/spindle-pole biology, microtubule dynamics, chromosome segregation, cell-cycle progression, DNA damage and repair responses, Wnt/β-catenin signalling, Notch-related programmes, and progenitor/stemness states. These mechanisms overlap conceptually with proposed AD processes — tau-associated microtubule disruption, axonal transport impairment, aberrant neuronal cell-cycle re-entry, impaired neurogenesis, DNA damage, chromatin/nuclear architecture disruption, and Wnt/Notch dysregulation — but the supplied text does not demonstrate that ASPM causes AD, modifies amyloid-β or tau pathology, predicts cognitive decline, or improves AD phenotypes when targeted. ASPM should be viewed as a hypothesis-generating AD-relevant candidate, not a validated therapeutic target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block; min-width:640px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#9b1c1c"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Core ASPM Biology -->
+        <rect x="10" y="10" width="270" height="480" rx="12" fill="#e8f1f9" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="145" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A · CORE ASPM BIOLOGY</text>
+
+        <!-- Node 1: ASPM (central) -->
+        <rect x="62" y="44" width="166" height="40" rx="7" fill="#2e6da4" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="145" y="61" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="700" fill="#fff">ASPM</text>
+        <text x="145" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#bfdbfe">Centrosomal / Spindle</text>
+
+        <!-- Node 2: Spindle poles -->
+        <rect x="30" y="118" width="130" height="38" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="95" y="134" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Spindle-Pole</text>
+        <text x="95" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Organisation</text>
+
+        <!-- Node 3: Microtubule dynamics -->
+        <rect x="172" y="118" width="84" height="38" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="214" y="134" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Microtubule</text>
+        <text x="214" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Dynamics</text>
+
+        <!-- Node 4: Chrom segregation -->
+        <rect x="30" y="188" width="130" height="38" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="95" y="204" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Chromosome</text>
+        <text x="95" y="219" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Segregation</text>
+
+        <!-- Node 5: Neural progenitor -->
+        <rect x="172" y="188" width="84" height="38" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="214" y="204" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Neural</text>
+        <text x="214" y="219" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Progenitor</text>
+
+        <!-- Node 6: MCPH5 outcome -->
+        <rect x="62" y="268" width="166" height="38" rx="7" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1.2"/>
+        <text x="145" y="284" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#bfdbfe">MCPH5 / Primary</text>
+        <text x="145" y="299" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#bfdbfe">Microcephaly</text>
+
+        <!-- Node 7: AD hub gene -->
+        <rect x="62" y="338" width="166" height="38" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="145" y="354" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff">AD CA1 Hub Gene</text>
+        <text x="145" y="369" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#ccfbf1">(RNA-seq / PPI)</text>
+
+        <!-- Panel A arrows -->
+        <!-- ASPM -> Spindle-Pole: from bottom-left of ASPM box to top of Node2 -->
+        <line x1="120" y1="84" x2="95" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- ASPM -> Microtubule: from bottom-right of ASPM box to top of Node3 -->
+        <line x1="170" y1="84" x2="214" y2="118" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Spindle-Pole -> Chrom Seg -->
+        <line x1="95" y1="156" x2="95" y2="188" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Microtubule -> Neural Prog -->
+        <line x1="214" y1="156" x2="214" y2="188" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Chrom Seg -> MCPH5: elbow via left side -->
+        <polyline points="95,226 95,248 145,248 145,268" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Neural Prog -> MCPH5: elbow via right side -->
+        <polyline points="214,226 214,248 196,248 196,268" fill="none" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- MCPH5 -> AD hub -->
+        <line x1="145" y1="306" x2="145" y2="338" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <!-- PANEL B: Signalling Branches -->
+        <rect x="298" y="10" width="300" height="480" rx="12" fill="#fffbeb" fill-opacity="0.6" stroke="#b45309" stroke-width="1.2"/>
+        <text x="448" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#78350f" letter-spacing="0.1em">B · SIGNALLING BRANCHES</text>
+
+        <!-- Node 8: Cell-cycle cluster -->
+        <rect x="310" y="44" width="130" height="38" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="375" y="60" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">Cell-Cycle Genes</text>
+        <text x="375" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">CDK1, CCNB1/2, AURKA</text>
+
+        <!-- Node 9: DNA Damage / Repair -->
+        <rect x="458" y="44" width="128" height="38" rx="7" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="522" y="60" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f">DNA Damage</text>
+        <text x="522" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#92400e">BRCA1 / HR repair</text>
+
+        <!-- Node 10: Wnt branch -->
+        <rect x="310" y="122" width="130" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="375" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Wnt / β-Catenin</text>
+        <text x="375" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">DVL2/DVL3 stabilise</text>
+
+        <!-- Node 11: Notch branch -->
+        <rect x="458" y="122" width="128" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="522" y="138" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Notch Signalling</text>
+        <text x="522" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Neurodevelopment</text>
+
+        <!-- Node 12: Shared signalling output -->
+        <rect x="344" y="210" width="207" height="38" rx="7" fill="#b45309" stroke="#78350f" stroke-width="1.2"/>
+        <text x="447" y="226" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff">Progenitor / Stemness</text>
+        <text x="447" y="241" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff">State Regulation</text>
+
+        <!-- Panel B arrows -->
+        <line x1="375" y1="82" x2="375" y2="122" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <line x1="522" y1="82" x2="522" y2="122" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Wnt -> shared output -->
+        <polyline points="375,160 375,190 447,190 447,210" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <!-- Notch -> shared output -->
+        <polyline points="522,160 522,190 495,190 495,210" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 13: Nuclear / chromatin -->
+        <rect x="344" y="286" width="207" height="38" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.2"/>
+        <text x="447" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Nuclear / Chromatin</text>
+        <text x="447" y="317" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#475569">Lamin, HP1α, Heterochromatin</text>
+
+        <!-- Shared output -> Nuclear -->
+        <line x1="447" y1="248" x2="447" y2="286" stroke="#b45309" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+        <!-- PANEL C: AD-Relevance & Safety -->
+        <rect x="616" y="10" width="294" height="480" rx="12" fill="#fef2f2" fill-opacity="0.55" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="763" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#7f1d1d" letter-spacing="0.1em">C · AD RELEVANCE &amp; SAFETY</text>
+
+        <!-- Node 14: Conceptual AD bridges -->
+        <rect x="628" y="44" width="270" height="50" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="763" y="63" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e293b">Conceptual AD Bridges</text>
+        <text x="763" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#475569">Tau / MT instability · Axonal transport</text>
+        <text x="763" y="91" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#475569">Cell-cycle re-entry · DNA damage</text>
+
+        <!-- Node 15: Cancer / overexpression -->
+        <rect x="628" y="132" width="270" height="40" rx="7" fill="#fee2e2" stroke="#9b1c1c" stroke-width="1.2"/>
+        <text x="763" y="149" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7f1d1d">Cancer Overexpression</text>
+        <text x="763" y="164" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#991b1b">Proliferation · Stemness · Invasion</text>
+
+        <!-- Node 16: Safety concern -->
+        <rect x="628" y="210" width="270" height="40" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.2"/>
+        <text x="763" y="227" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fff">⚠ Oncogenic / Proliferative Risk</text>
+        <text x="763" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#fecaca">Early safety profiling essential</text>
+
+        <!-- Panel C arrows -->
+        <line x1="763" y1="94" x2="763" y2="132" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+        <line x1="763" y1="172" x2="763" y2="210" stroke="#9b1c1c" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Cross-panel connector: Progenitor/Stemness -> Conceptual AD bridges (elbow through gutter) -->
+        <polyline points="551,229 590,229 590,68 628,68" fill="none" stroke="#2e6da4" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        <!-- Cross-panel connector: AD hub gene -> Conceptual AD bridges (elbow through gutter) -->
+        <polyline points="228,357 266,357 266,420 590,420 590,350 628,68" fill="none" stroke="#0f766e" stroke-width="0" />
+        <!-- Simplified: just label AD CA1 as providing the direct link, no crossing line needed -->
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A — Core ASPM Biology:</strong> ASPM sits at the intersection of spindle-pole organisation and microtubule dynamics, both feeding into chromosome segregation and neural progenitor behaviour. Convergent loss-of-function leads to MCPH5/primary microcephaly. The only direct AD evidence is ASPM's role as a CA1 hub gene in an RNA-seq/PPI network (teal node).
+      <strong>Panel B — Signalling Branches:</strong> Two parallel upstream inputs (cell-cycle genes including CDK1/CCNB1/2/AURKA, and DNA-damage/BRCA1-linked repair) feed into two parallel signalling branches (Wnt/β-catenin via DVL2/3 stabilisation; Notch-related neurodevelopmental signalling). These reconverge at a shared progenitor/stemness output that links further to nuclear/chromatin architecture (Lamin, HP1α, heterochromatin). A dashed connector indicates the conceptual bridge from this panel into Panel C.
+      <strong>Panel C — AD Relevance &amp; Safety:</strong> Conceptual AD bridges include tau/microtubule instability, axonal transport disruption, aberrant cell-cycle re-entry, and DNA damage — none directly demonstrated for ASPM in AD. Cancer evidence shows ASPM overexpression driving proliferation and stemness, grounding the oncogenic/proliferative safety concern that mandates early profiling in any AD programme.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-positive">
+        <h3>Strongest Mechanistic Bridge: Microtubule Biology</h3>
+        <p>ASPM/Asp orthologs regulate spindle poles, microtubule minus ends, astral microtubules, katanin-linked severing, and neuronal polarity. This intersects conceptually with AD processes involving tau, microtubule destabilisation, impaired axonal transport, neuritic damage, and synaptic failure — though ASPM has not been shown to affect tau or neuronal microtubules in AD models.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Direct AD Evidence Is Sparse</h3>
+        <p>The only AD-specific finding is ASPM's identification as a novel hub gene in an AD hippocampal CA1 RNA-seq/PPI network, alongside MRPS7, RPL5, GFM1, and RAD51. This suggests systems-level relevance in a vulnerable AD brain region but does not establish causality, direction of expression change, cell-type specificity, or therapeutic tractability.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Validated Biology Is Neurodevelopmental</h3>
+        <p>Biallelic ASPM mutations are a major cause of MCPH5/autosomal recessive primary microcephaly, with reduced brain size, cortical developmental defects, intellectual disability, and altered neural progenitor dynamics. This supports a role in brain growth and progenitor maintenance rather than direct late-life neurodegeneration.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Cell-Cycle Regulation: Relevance and Risk</h3>
+        <p>ASPM clusters with mitotic genes (CDK1, CCNB1/2, CDC20, TOP2A, BUB1/BUB1B, AURKA, CENPF, KIF-family, TPX2, NUSAP1, MKI67). AD is associated with aberrant neuronal cell-cycle re-entry, but most ASPM evidence comes from dividing progenitors or tumours. Activating ASPM risks proliferative/oncogenic programmes; inhibiting it may impair progenitor function or genome stability.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>DNA Damage and Genome Stability</h3>
+        <p>ASPM is linked to homologous recombination repair, BRCA1 stabilisation, replication-stress checkpoint activation via RAD17/RAD9/TopBP1/ATR/CHK1, stalled-fork protection, and chromosomal stability. These overlap with aging and AD biology, where oxidative DNA damage and impaired repair are relevant, but ASPM-dependent repair has not been tested in AD neurons or glia.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Cancer Evidence: Targetability but Safety Concern</h3>
+        <p>ASPM is overexpressed in many cancers and correlates with proliferation, stemness, invasion, therapy resistance, and poor prognosis. Knockdown suppresses tumour growth in multiple models — confirming druggability in oncology — but raises serious concerns about oncogenic risk if ASPM is activated in AD, and questions CNS safety if inhibited in a neurodegenerative context.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li>
+        <div>
+          <span class="lead">Treat as exploratory, not validated:</span> The evidence supports mechanistic plausibility through cytoskeletal, cell-cycle, DNA repair, Wnt/Notch, neurogenesis, and nuclear-architecture pathways, but not direct AD causality. ASPM is a hypothesis-generating candidate only.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Prioritise validation in AD brain datasets:</span> ASPM mRNA/protein expression, isoform usage, and localisation should be tested in AD hippocampus, entorhinal cortex, and other vulnerable regions, stratified by Braak stage, amyloid burden, tau burden, and cognitive status.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Resolve cell-type specificity:</span> Single-cell and spatial transcriptomic/proteomic analyses should determine whether ASPM changes occur in neurons, neural progenitors, astrocytes, microglia, oligodendrocyte lineage cells, endothelial cells, pericytes, or immune/vascular-associated cells.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Test functional relevance in AD models:</span> ASPM perturbation should be studied in iPSC-derived neurons, organoids, and AD animal models, assessing effects on tau phosphorylation/aggregation, amyloid-β toxicity, axonal transport, microtubule stability, synaptic markers, neuronal survival, DNA damage, senescence, inflammation, and cognition.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Distinguish protective from maladaptive roles:</span> ASPM could be beneficial if it supports DNA repair, cytoskeletal stability, or neurogenic maintenance; harmful if it reflects aberrant cell-cycle re-entry or oncogenic-like programmes. Directionality must be determined experimentally before therapeutic prioritisation.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Do not transfer oncology logic directly:</span> ASPM inhibition may be rational in cancer, but AD may require preservation of repair and progenitor pathways. Broad inhibition could impair regeneration or genome stability; broad activation could raise oncogenic risk.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Consider pathway-level targeting first:</span> Safer approaches may involve modulating ASPM-associated networks — microtubule stability, Wnt/β-catenin balance, DNA damage response, chromatin integrity, or cell-cycle checkpoints — rather than directly targeting ASPM.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="lead">Require early safety profiling:</span> Any ASPM-directed AD strategy should assess proliferation, tumorigenicity, neural progenitor effects, glial activation, chromosomal instability, DNA repair capacity, and CNS/peripheral toxicity before advancing.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="lead-in">Overall Assessment — ASPM in Alzheimer's Disease</span>
+      <p>
+        ASPM is a <strong>biologically plausible AD-adjacent mechanistic node</strong>, most compelling for hypotheses involving <strong>microtubule/cytoskeletal disruption, cell-cycle dysregulation, DNA damage response, Wnt/Notch signalling, and neurogenesis</strong>. Its designation as a hub gene in an AD hippocampal CA1 network warrants follow-up, but this single systems-biology finding is insufficient to establish AD relevance, therapeutic benefit, or target safety. The extensive cancer literature confirms ASPM is druggable but simultaneously underscores <strong>oncogenic and proliferative safety risks</strong> that cannot be dismissed in a CNS programme. ASPM <strong>remains speculative and insufficiently validated</strong> as an Alzheimer's therapeutic target; substantial mechanistic, cell-type-resolved, and in-vivo AD work is required before any therapeutic prioritisation can be justified.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ASPM — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

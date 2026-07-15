@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDE10A — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --danger-mid: #c0392b;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(176,34,34,0.28);
+    border: 1px solid rgba(220,80,80,0.45);
+    color: #ffc9c9;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 28px 60px;
+  }
+
+  section {
+    margin-bottom: 54px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 7px;
+    margin-bottom: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 1.1em;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+    font-size: 0.95rem;
+  }
+
+  .callout-label {
+    font-weight: bold;
+    color: var(--warning);
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 22px 16px 14px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.93rem;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-left: 4px solid var(--mid);
+  }
+  .card-accent .card-heading { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-left: 4px solid var(--danger-mid);
+  }
+  .card-danger .card-heading { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-left: 4px solid var(--positive);
+  }
+  .card-positive .card-heading { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-left: 4px solid #f59e0b;
+  }
+  .card-warning .card-heading { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-left: 4px solid var(--neutral);
+  }
+  .card-neutral .card-heading { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .card-blue .card-heading { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway-counter);
+    min-width: 30px;
+    height: 30px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .takeaway-lead {
+    color: var(--dark);
+    font-weight: bold;
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 36px 38px;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .verdict-banner .verdict-lead {
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+  }
+
+  .verdict-banner b {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    color: var(--neutral);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PDE10A &nbsp;|&nbsp; Phosphodiesterase 10A</span>
+    <span class="chip chip-danger">⚠ Tolerability &amp; Translation Risk</span>
+  </div>
+  <h1>PDE10A &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Clinical Caution</span>
+      PDE10A inhibitor trials in schizophrenia have shown mixed or negative efficacy outcomes, and several compounds carry tolerability concerns including extrapyramidal effects, sedation, adverse-event-related discontinuation, and potential network hyperexcitability. These precedents signal meaningful translation risk for any AD program built on isolated PDE10A inhibition.
+    </div>
+
+    <p>PDE10A is a cyclic nucleotide phosphodiesterase that hydrolyzes both cAMP and cGMP, constraining intracellular signaling pathways relevant to neuronal plasticity, cognition, inflammation, and survival. In the Alzheimer's disease context, the most direct evidence comes from an AD-focused dual PDE4/10A inhibition study in which combined inhibition activated the cAMP–PKA–CREB pathway, restored CREB1 activity, reduced amyloid-beta and p-tau231, mitigated neuroinflammation, improved synaptic plasticity, and improved cognition in an APP/PS1 mouse model.</p>
+
+    <p>The broader literature presents PDE10A as a brain-relevant and druggable target, particularly enriched in striatal medium spiny neurons and basal ganglia circuitry. Non-AD evidence links PDE10A to dopamine/glutamate signaling, CREB activation, BDNF expression, synaptic remodeling, neuroinflammation, neuronal survival, and PET-measurable neurodegenerative changes — mechanisms that overlap with AD biology but remain largely indirect and hypothesis-generating outside the dual-inhibition study.</p>
+
+    <p>Overall, PDE10A is best characterized as a plausible Alzheimer's-relevant therapeutic target within a broader cyclic nucleotide/CREB-restoration strategy. The evidence is strongest for combined PDE4/10A inhibition and notably weaker for isolated PDE10A inhibition in AD.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview</h2>
+    <div class="figure-wrap">
+      <!--
+        PANEL A (left): Upstream Signaling — 4 nodes
+        PANEL B (middle): Dual Inhibition & CREB — 4 nodes (branching)
+        PANEL C (right): Downstream AD Endpoints — 4 nodes
+        Total nodes: 12 (well within limit)
+        All coordinates chosen so no box overlaps any line or other box.
+      -->
+      <svg viewBox="0 0 940 490" width="940" height="490" xmlns="http://www.w3.org/2000/svg" aria-label="PDE10A mechanism diagram">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#c0392b"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-dark" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#1e3a5f"/>
+          </marker>
+        </defs>
+
+        <!-- ═══ PANEL A: UPSTREAM SIGNALING ═══ -->
+        <rect x="16" y="20" width="240" height="450" rx="12" fill="rgba(30,58,95,0.06)" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="136" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#1e3a5f" letter-spacing="1.5">A · UPSTREAM SIGNALING</text>
+
+        <!-- Node A1: Dopamine / Glutamate -->
+        <rect x="44" y="58" width="184" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="136" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#1e293b">Dopamine /</text>
+        <text x="136" y="97" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#1e293b">Glutamate Input</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="136" y1="110" x2="136" y2="134" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A2: cAMP / cGMP elevated -->
+        <rect x="44" y="134" width="184" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="136" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e293b">cAMP / cGMP</text>
+        <text x="136" y="173" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e293b">Second Messengers</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="136" y1="186" x2="136" y2="210" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A3: PDE10A hydrolyzes cAMP/cGMP -->
+        <rect x="44" y="210" width="184" height="52" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.8"/>
+        <text x="136" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#92400e">PDE10A</text>
+        <text x="136" y="249" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#92400e">Hydrolyzes cAMP &amp; cGMP</text>
+
+        <!-- Arrow A3→A4 (inhibition reduces signaling) -->
+        <line x1="136" y1="262" x2="136" y2="286" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Striatal MSNs / Basal Ganglia -->
+        <rect x="44" y="286" width="184" height="52" rx="8" fill="#dbeafe" stroke="#2e6da4" stroke-width="1.4"/>
+        <text x="136" y="308" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e293b">Striatal MSNs &amp;</text>
+        <text x="136" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1e293b">Basal Ganglia Circuits</text>
+
+        <!-- ═══ PANEL B: DUAL INHIBITION & CREB RESTORATION ═══ -->
+        <rect x="280" y="20" width="380" height="450" rx="12" fill="rgba(15,118,110,0.05)" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="470" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#0f766e" letter-spacing="1.5">B · DUAL PDE4/10A INHIBITION &amp; CREB RESTORATION</text>
+
+        <!-- Node B1: Dual PDE4 + PDE10A Inhibition -->
+        <rect x="322" y="58" width="296" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="470" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#134e4a">Dual PDE4 + PDE10A</text>
+        <text x="470" y="97" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#134e4a">Inhibition</text>
+
+        <!-- Arrow B1→B2 -->
+        <line x1="470" y1="110" x2="470" y2="134" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B2: cAMP–PKA–CREB Pathway Activation -->
+        <rect x="322" y="134" width="296" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="470" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">cAMP – PKA – CREB</text>
+        <text x="470" y="173" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">Pathway Activation</text>
+
+        <!-- Arrow B2→B-branch split point (invisible, just lines diverge at y=210) -->
+        <!-- Left branch arrow -->
+        <line x1="420" y1="186" x2="370" y2="210" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <!-- Right branch arrow -->
+        <line x1="520" y1="186" x2="572" y2="210" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B3a: CREB1 Restored (left branch) -->
+        <rect x="306" y="210" width="148" height="52" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.4"/>
+        <text x="380" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#065f46">CREB1 Activity</text>
+        <text x="380" y="249" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#065f46">Restored</text>
+
+        <!-- Node B3b: BDNF / Synaptic Plasticity (right branch) -->
+        <rect x="482" y="210" width="152" height="52" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.4"/>
+        <text x="558" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#065f46">BDNF Expression &amp;</text>
+        <text x="558" y="249" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#065f46">Synaptic Plasticity</text>
+
+        <!-- Left branch arrow B3a → B4 -->
+        <line x1="380" y1="262" x2="420" y2="286" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+        <!-- Right branch arrow B3b → B4 -->
+        <line x1="540" y1="262" x2="522" y2="286" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arr-teal)"/>
+
+        <!-- Node B4: Neuroinflammation Reduced / Neuronal Survival -->
+        <rect x="322" y="286" width="296" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="470" y="308" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">Neuroinflammation Reduced /</text>
+        <text x="470" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#134e4a">Neuronal Survival Enhanced</text>
+
+        <!-- ═══ PANEL C: DOWNSTREAM AD ENDPOINTS ═══ -->
+        <rect x="684" y="20" width="240" height="450" rx="12" fill="rgba(139,26,26,0.05)" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="804" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#8b1a1a" letter-spacing="1.5">C · AD ENDPOINTS</text>
+
+        <!-- Node C1: Lower Amyloid-beta -->
+        <rect x="712" y="58" width="184" height="52" rx="8" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="804" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Amyloid-beta (Aβ)</text>
+        <text x="804" y="97" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Reduced ↓</text>
+
+        <!-- Arrow C1→C2 -->
+        <line x1="804" y1="110" x2="804" y2="134" stroke="#c0392b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Node C2: Lower p-tau231 -->
+        <rect x="712" y="134" width="184" height="52" rx="8" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="804" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">p-tau231</text>
+        <text x="804" y="173" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Reduced ↓</text>
+
+        <!-- Arrow C2→C3 -->
+        <line x1="804" y1="186" x2="804" y2="210" stroke="#c0392b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Node C3: Synaptic & Cognitive Improvement -->
+        <rect x="712" y="210" width="184" height="52" rx="8" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="804" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Synaptic &amp; Cognitive</text>
+        <text x="804" y="249" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Improvement ↑</text>
+
+        <!-- Arrow C3→C4 -->
+        <line x1="804" y1="262" x2="804" y2="286" stroke="#c0392b" stroke-width="1.8" marker-end="url(#arr-red)"/>
+
+        <!-- Node C4: APP/PS1 Model Rescue -->
+        <rect x="712" y="286" width="184" height="52" rx="8" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="804" y="308" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">APP/PS1 Mouse</text>
+        <text x="804" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#7f1d1d">Model Rescue</text>
+
+        <!-- CROSS-PANEL CONNECTORS -->
+        <!-- A3 (PDE10A, right edge x=228, y=236) → B1 (left edge x=322, y=84): 
+             Route: right from A3 at y=236 to x=265, then up to y=84, then right to B1
+             Checked: clear gutter between x=228 and x=280 -->
+        <polyline points="228,236 265,236 265,84 322,84" fill="none" stroke="#b45309" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+
+        <!-- B4 bottom (x=470, y=338) → C1: 
+             Route: right from B4 at y=338 to x=650, then up to y=84, then right to C1 (left edge x=712)
+             Gutter between panel B right edge (x=660) and panel C left edge (x=684) -->
+        <polyline points="618,338 650,338 650,84 712,84" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- ═══ BOTTOM ANNOTATION BADGES ═══ -->
+        <!-- Badge: "APP/PS1 model" under panel B, in clearly empty space -->
+        <rect x="358" y="378" width="224" height="28" rx="14" fill="rgba(15,118,110,0.12)" stroke="#0f766e" stroke-width="1"/>
+        <text x="470" y="397" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#134e4a" font-weight="bold">APP/PS1 mouse · dual inhibition</text>
+
+        <!-- Badge: "PET-measurable" under panel C -->
+        <rect x="726" y="378" width="156" height="28" rx="14" fill="rgba(139,26,26,0.10)" stroke="#c0392b" stroke-width="1"/>
+        <text x="804" y="397" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7f1d1d" font-weight="bold">PET-measurable in vivo</text>
+
+        <!-- Badge: "Striatal enrichment" under panel A -->
+        <rect x="44" y="378" width="184" height="28" rx="14" fill="rgba(30,58,95,0.10)" stroke="#2e6da4" stroke-width="1"/>
+        <text x="136" y="397" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" font-weight="bold">Striatal enrichment</text>
+
+        <!-- Panel labels re-drawn as readable text at bottom -->
+        <text x="136" y="450" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#2e6da4">Upstream biology</text>
+        <text x="470" y="450" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#0f766e">Pharmacological intervention</text>
+        <text x="804" y="450" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#c0392b">Translational AD readouts</text>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Figure.</strong>
+      <em>Panel A</em> (blue) traces the upstream biology: dopamine/glutamate inputs raise cAMP/cGMP, which PDE10A — enriched in striatal medium spiny neurons — enzymatically degrades to constrain signaling.
+      <em>Panel B</em> (teal) shows the pharmacological intervention: dual PDE4/10A inhibition (dashed connector from Panel A) elevates cyclic nucleotides, activates the cAMP–PKA–CREB axis, and fans into two parallel branches — CREB1 restoration and BDNF/synaptic plasticity — that reconverge onto reduced neuroinflammation and enhanced neuronal survival.
+      <em>Panel C</em> (red) shows the downstream AD readouts measured in APP/PS1 mice: reduced Aβ and p-tau231, improved synaptic and cognitive performance, and successful model rescue. A green connector from Panel B carries these effects into Panel C.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <div class="card-heading">cAMP/cGMP Signaling Hub</div>
+        <p>PDE10A hydrolyzes both cAMP and cGMP, placing it at the center of a pathway family critical for memory, synaptic plasticity, neuronal resilience, inflammatory regulation, and neuroprotection — making it a broad-spectrum neurobiological regulator.</p>
+      </div>
+
+      <div class="card card-accent">
+        <div class="card-heading">CREB1 as the AD-Specific Linchpin</div>
+        <p>The most AD-specific mechanism is restoration of impaired cAMP–PKA–CREB signaling. CREB1 — a memory-related transcription factor downregulated in AD — drives Aβ and p-tau231 production when deficient, as demonstrated in human iPSC-derived cortical neurons.</p>
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Dual PDE4/10A Inhibition: Strongest AD Evidence</div>
+        <p>Combined PDE4 and PDE10A inhibition in an APP/PS1 mouse model restored CREB1 activity and delivered multi-endpoint benefit: lower Aβ, lower p-tau231, reduced neuroinflammation, improved synaptic plasticity, and improved cognition.</p>
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Broad Biological Plausibility</div>
+        <p>Non-AD evidence links PDE10A inhibition to CREB activation, BDNF transcription, behavioral rescue, microglial and NLRP3/IL-1β modulation, neuronal survival, mitochondrial protection, and blood-brain barrier effects — all converging to support AD relevance.</p>
+      </div>
+
+      <div class="card card-danger">
+        <div class="card-heading">Translation Risk &amp; Tolerability</div>
+        <p>PDE10A inhibitor trials in schizophrenia have yielded mixed or negative outcomes. Tolerability concerns include extrapyramidal effects, sedation, adverse-event discontinuations, and potential network hyperexcitability. Older AD patients face additional frailty-related risks.</p>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-heading">Druggability &amp; Circuit Specificity</div>
+        <p>Multiple selective PDE10A inhibitors (TAK-063, MP-10/PF-2545920, TP-10, MK-8189, PDM-042) and PET ligands confirm chemical tractability and in vivo measurability. Strong striatal/basal ganglia enrichment may be particularly relevant to executive, motivational, and neuropsychiatric AD features.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li>
+        <div>
+          <span class="takeaway-lead">Validate PDE10A dysregulation in human AD tissue.</span>
+          Prioritize cell-type-specific datasets spanning hippocampus, cortex, striatum, and microglia to establish whether PDE10A expression or activity is meaningfully altered in human AD brain.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Treat dual PDE4/10A inhibition as the lead hypothesis.</span>
+          Do not assume isolated PDE10A inhibition is sufficient; the most compelling AD evidence in this text derives explicitly from combined PDE4 and PDE10A inhibition, likely because dual blockade more effectively restores CREB-dependent signaling.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Use AD-relevant endpoint panels in preclinical studies.</span>
+          Test PDE10A-targeted and dual PDE4/10A approaches with readouts that include CREB1 activity, cAMP–PKA signaling, Aβ, tau phosphorylation, synaptic markers, neuroinflammation, cognition, and tolerability profiling.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Confirm brain target engagement with PET or pharmacodynamic biomarkers.</span>
+          Leverage established PDE10A PET ligands to verify sufficient CNS exposure, characterize dose–response relationships, and assess regional PDE10A availability changes in aging and AD populations.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Define the therapeutic indication precisely.</span>
+          Evaluate whether PDE10A modulation is most useful for disease modification, symptomatic cognitive enhancement, or neuropsychiatric symptoms (apathy, psychosis, agitation, executive dysfunction) — these may require different designs and endpoints.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Build rigorous safety monitoring into any program.</span>
+          Monitor specifically for basal ganglia-mediated motor effects, sedation, psychiatric adverse events, seizure or hyperexcitability risk, cardiovascular effects, and frailty-related tolerability concerns in older AD patients.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Avoid over-extrapolating from non-AD disease models.</span>
+          Evidence from schizophrenia, Huntington's disease, Parkinson's disease, stroke, TBI, autoimmune neurology, fibrosis, cancer, and peripheral inflammation supports plausibility and druggability, but does not independently establish AD efficacy.
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="takeaway-lead">Advance toward human AD biomarker evidence.</span>
+          The current evidence positions PDE10A as a preclinical-stage target; clinical relevance will require controlled studies demonstrating cognitive or disease-modifying benefit with measurable human AD biomarker engagement.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-lead">Overall Assessment — PDE10A in Alzheimer's Disease</span>
+      PDE10A is a <b>plausible but still preclinical Alzheimer's-relevant target</b>, most compelling as a component of a <b>cyclic nucleotide/CREB restoration strategy through dual PDE4/10A inhibition</b>. The strongest evidence is a single AD animal study showing that combined PDE4 and PDE10A inhibition restores CREB1 activity and improves multiple disease-relevant endpoints in APP/PS1 mice. A broad base of non-AD literature supports biological plausibility — encompassing CREB activation, BDNF, synaptic plasticity, neuroinflammation, and neuronal survival — but this evidence is largely indirect. <b>Translation carries meaningful risk</b>: schizophrenia trial failures, tolerability concerns, and the need for adequate CNS exposure all present hurdles. <b>Isolated PDE10A inhibition is not yet validated for AD</b>; the combined PDE4/10A hypothesis requires further testing in human-relevant systems with AD biomarker endpoints before it can be advanced toward clinical development with confidence.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PDE10A · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

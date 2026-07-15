@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VSNL1 / VILIP-1 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate-dark: #1e293b;
+    --blue-light: #eff6ff;
+    --blue-mid: #1d4ed8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--slate-dark);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border-color: rgba(255,160,160,0.35);
+    color: #ffc8c8;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  header .subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+    color: #cfe1f5;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.88rem;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+    font-weight: bold;
+  }
+
+  p { margin-bottom: 1.1em; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--warning); }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 12px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card p { margin: 0; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-blue { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .card-blue h3 { color: var(--blue-mid); }
+  .card-slate { background: var(--neutral-bg); border-left: 4px solid var(--neutral-text); }
+  .card-slate h3 { color: #475569; }
+
+  /* TAKEAWAYS */
+  .takeaways ol {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+  .takeaways ol li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  .takeaways ol li::before {
+    content: counter(takeaway);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+  }
+  .takeaways ol li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0a1e30 100%);
+    color: #e2eaf4;
+    border-radius: 12px;
+    padding: 36px 40px;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .verdict strong { color: #90c8f0; }
+  .verdict .verdict-label {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: #90c8f0;
+    margin-bottom: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: VSNL1 &nbsp;|&nbsp; Visinin-Like Protein 1 (VILIP-1)</span>
+    <span class="chip chip-danger">⚠ Calcium stress may amplify toxicity</span>
+  </div>
+  <h1>VSNL1 / VILIP-1 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Mechanistic Caveat:</strong> VILIP-1 expression in PC12 cells enhanced calcium-mediated cytotoxicity and tau hyperphosphorylation. Under calcium-stress conditions, VSNL1 may amplify pathological signalling — calbindin-D28K rescued this toxicity. Therapeutic modulation should account for context-dependent harmful versus protective roles.
+    </div>
+
+    <p>VSNL1, also known as VILIP-1, is a neuron-enriched EF-hand calcium-sensor protein repeatedly linked to Alzheimer's disease (AD) through neuronal injury, calcium dysregulation, synaptic dysfunction, tau-associated neurodegeneration, cerebral hypometabolism, brain atrophy, and cognitive decline. The evidence most strongly supports VSNL1/VILIP-1 as a CSF and possibly blood-accessible <strong>biomarker of neuronal injury and synaptic degeneration</strong>, rather than as a validated AD therapeutic target.</p>
+
+    <p>A consistent compartment-specific pattern emerges: VSNL1 expression or protein levels are often <em>reduced</em> in AD-affected brain tissue — especially temporal, entorhinal, hippocampal, cortical, and limbic regions — while VILIP-1 is <em>elevated</em> in CSF, likely reflecting release from damaged or degenerating neurons. Elevated extracellular VILIP-1 appears to mark neuronal injury, whereas reduced intracellular/tissue VSNL1 may reflect loss of vulnerable neurons, impaired synaptic gene programs, or failure of calcium-dependent neuronal signalling.</p>
+
+    <p>Mechanistically, VSNL1 translates intracellular Ca²⁺ changes into downstream neuronal effects through calcium binding, myristoylation-dependent membrane association, receptor trafficking, cyclic nucleotide signalling, dendritic and synaptic plasticity, and possibly tau phosphorylation and apoptosis pathways. Its therapeutic potential is biologically plausible but unproven: no published AD study directly demonstrates that manipulating VSNL1 itself modifies amyloid deposition, tau pathology, synaptic loss, neuroinflammation, metabolism, or cognitive outcomes.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <!-- SVG: 4 panels, 16 nodes max -->
+      <svg viewBox="0 0 900 500" width="900" height="500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0, 8 3.5, 0 7" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ===== PANEL A: Upstream Calcium Trigger ===== -->
+        <rect x="10" y="10" width="200" height="480" rx="12" ry="12"
+              fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="110" y="32" text-anchor="middle" font-size="9" font-weight="bold"
+              fill="#1a3a5c" letter-spacing="1.2">A · Ca²⁺ TRIGGER</text>
+
+        <!-- Node A1: Ca2+ Dyshomoestasis -->
+        <rect x="28" y="44" width="164" height="44" rx="7"
+              fill="#2e6da4" stroke="#1a3a5c" stroke-width="1"/>
+        <text x="110" y="62" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Ca²⁺ Dyshomoestasis</text>
+        <text x="110" y="76" text-anchor="middle" font-size="9" fill="#cfe1f5">(AD hallmark)</text>
+
+        <!-- Arrow A1→A2 -->
+        <line x1="110" y1="88" x2="110" y2="112" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A2: nAChR / α7 Ca entry -->
+        <rect x="28" y="112" width="164" height="44" rx="7"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="110" y="130" text-anchor="middle" font-size="10" fill="#1a3a5c">α7 nAChR &amp; P2X2</text>
+        <text x="110" y="144" text-anchor="middle" font-size="9" fill="#64748b">Receptor Ca²⁺ entry</text>
+
+        <!-- Arrow A2→A3 -->
+        <line x1="110" y1="156" x2="110" y2="180" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A3: VILIP-1 Activation -->
+        <rect x="28" y="180" width="164" height="44" rx="7"
+              fill="#1a3a5c" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="110" y="198" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="bold">VSNL1 / VILIP-1</text>
+        <text x="110" y="212" text-anchor="middle" font-size="9" fill="#90c8f0">EF-hand Ca²⁺ binding</text>
+
+        <!-- Arrow A3→A4 -->
+        <line x1="110" y1="224" x2="110" y2="248" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node A4: Myristoyl switch / membrane -->
+        <rect x="28" y="248" width="164" height="44" rx="7"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="110" y="266" text-anchor="middle" font-size="10" fill="#1a3a5c">Ca²⁺-Myristoyl Switch</text>
+        <text x="110" y="280" text-anchor="middle" font-size="9" fill="#64748b">Membrane translocation</text>
+
+        <!-- ===== PANEL B: Signalling Branches ===== -->
+        <rect x="222" y="10" width="436" height="480" rx="12" ry="12"
+              fill="#f0fdfa" fill-opacity="0.55" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="440" y="32" text-anchor="middle" font-size="9" font-weight="bold"
+              fill="#0f766e" letter-spacing="1.2">B · DOWNSTREAM SIGNALLING BRANCHES</text>
+
+        <!-- Arrow A4 → Branch node (Panel A to B) via gutter -->
+        <!-- Route: from right edge of A4 (192,270) → across gutter → left of B entry node -->
+        <line x1="192" y1="270" x2="260" y2="270" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Branch hub node -->
+        <rect x="260" y="248" width="130" height="44" rx="7"
+              fill="#0f766e" stroke="#065f46" stroke-width="1"/>
+        <text x="325" y="266" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Activated VILIP-1</text>
+        <text x="325" y="280" text-anchor="middle" font-size="9" fill="#a7f3d0">(membrane-associated)</text>
+
+        <!-- Branch left: Cyclic Nucleotide Signalling -->
+        <!-- Arrow hub→cNMP -->
+        <line x1="325" y1="292" x2="280" y2="330" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <rect x="235" y="330" width="130" height="44" rx="7"
+              fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="300" y="348" text-anchor="middle" font-size="10" fill="#065f46">cAMP / cGMP</text>
+        <text x="300" y="362" text-anchor="middle" font-size="9" fill="#64748b">Adenylyl / Guanylyl Cy.</text>
+
+        <!-- Arrow cNMP → Plasticity -->
+        <line x1="300" y1="374" x2="300" y2="398" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <rect x="235" y="398" width="130" height="44" rx="7"
+              fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="300" y="416" text-anchor="middle" font-size="10" fill="#065f46">CREB / Plasticity</text>
+        <text x="300" y="430" text-anchor="middle" font-size="9" fill="#64748b">Dendrite branching</text>
+
+        <!-- Branch right: Receptor Trafficking -->
+        <!-- Arrow hub→recTraf -->
+        <line x1="325" y1="292" x2="370" y2="330" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <rect x="390" y="330" width="130" height="44" rx="7"
+              fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="455" y="348" text-anchor="middle" font-size="10" fill="#065f46">α4β2 nAChR</text>
+        <text x="455" y="362" text-anchor="middle" font-size="9" fill="#64748b">Surface trafficking ↑</text>
+
+        <!-- Arrow recTraf → Cholinergic -->
+        <line x1="455" y1="374" x2="455" y2="398" stroke="#0f766e" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+        <rect x="390" y="398" width="130" height="44" rx="7"
+              fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+        <text x="455" y="416" text-anchor="middle" font-size="10" fill="#065f46">Cholinergic / Glut.</text>
+        <text x="455" y="430" text-anchor="middle" font-size="9" fill="#64748b">Synaptic transmission</text>
+
+        <!-- Convergence arrow: both branch bottoms → Panel C -->
+        <!-- Plasticity bottom-right corner → C panel -->
+        <line x1="365" y1="420" x2="390" y2="420" stroke="#0f766e" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <!-- ===== PANEL C: Neurodegeneration Outcomes ===== -->
+        <rect x="670" y="10" width="220" height="480" rx="12" ry="12"
+              fill="#fdf0f0" fill-opacity="0.55" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="780" y="32" text-anchor="middle" font-size="9" font-weight="bold"
+              fill="#8b1a1a" letter-spacing="1.2">C · AD OUTCOMES</text>
+
+        <!-- Arrow from Branch hub to C via top gutter (clean horizontal) -->
+        <line x1="390" y1="262" x2="668" y2="262" stroke="#2e6da4" stroke-width="1.6" marker-end="url(#arr)"/>
+
+        <!-- Node C1: Synaptic Loss -->
+        <rect x="690" y="240" width="180" height="44" rx="7"
+              fill="#8b1a1a" stroke="#5f0f0f" stroke-width="1"/>
+        <text x="780" y="258" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Synaptic Loss</text>
+        <text x="780" y="272" text-anchor="middle" font-size="9" fill="#ffc8c8">SNAP25, SYT1, NPTX2…</text>
+
+        <!-- Arrow C1→C2 -->
+        <line x1="780" y1="284" x2="780" y2="308" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node C2: Tau pathology -->
+        <rect x="690" y="308" width="180" height="44" rx="7"
+              fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="780" y="326" text-anchor="middle" font-size="10" fill="#8b1a1a">Tau Hyperphosphorylation</text>
+        <text x="780" y="340" text-anchor="middle" font-size="9" fill="#64748b">Ca²⁺-driven (PC12 model)</text>
+
+        <!-- Arrow C2→C3 -->
+        <line x1="780" y1="352" x2="780" y2="376" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node C3: Neuronal Loss / CSF release -->
+        <rect x="690" y="376" width="180" height="44" rx="7"
+              fill="#ffffff" stroke="#8b1a1a" stroke-width="1.5"/>
+        <text x="780" y="394" text-anchor="middle" font-size="10" fill="#8b1a1a">Neuronal Loss &amp;</text>
+        <text x="780" y="408" text-anchor="middle" font-size="9" fill="#64748b">↑ CSF VILIP-1 release</text>
+
+        <!-- Arrow C3→C4 -->
+        <line x1="780" y1="420" x2="780" y2="444" stroke="#8b1a1a" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+        <!-- Node C4: Cognitive decline / atrophy -->
+        <rect x="690" y="444" width="180" height="40" rx="7"
+              fill="#8b1a1a" stroke="#5f0f0f" stroke-width="1"/>
+        <text x="780" y="459" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Cognitive Decline &amp;</text>
+        <text x="780" y="473" text-anchor="middle" font-size="9" fill="#ffc8c8">Brain Atrophy / Hypometab.</text>
+
+        <!-- Panel A to C top connector: arrow from A3 out to C top (routed above panels) -->
+        <!-- Route: right of A3 (192,202) → across top gutter (y=22) → C1 top -->
+        <!-- Actually we already have hub→C horizontal at y=262. Let's just add a note badge. -->
+
+        <!-- Badge: Biomarker -->
+        <rect x="693" y="174" width="90" height="22" rx="11"
+              fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1"/>
+        <text x="738" y="189" text-anchor="middle" font-size="9" fill="#8b1a1a" font-weight="bold">CSF biomarker ↑</text>
+
+        <!-- Badge in Panel B: protective context -->
+        <rect x="238" y="294" width="86" height="22" rx="11"
+              fill="#f0fdfa" stroke="#0f766e" stroke-width="1"/>
+        <text x="281" y="309" text-anchor="middle" font-size="9" fill="#065f46" font-weight="bold">5XFAD rescue ↑</text>
+
+        <!-- Panel A low label -->
+        <rect x="30" y="314" width="160" height="22" rx="6"
+              fill="#ffffff" stroke="#2e6da4" stroke-width="1"/>
+        <text x="110" y="329" text-anchor="middle" font-size="9" fill="#1a3a5c">↓ Tissue VSNL1 in AD</text>
+
+        <!-- Arrow A4 bottom label downward for context: note loss -->
+        <line x1="110" y1="292" x2="110" y2="312" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A (blue) — Ca²⁺ Trigger:</strong> Calcium dyshomoestasis activates VSNL1/VILIP-1 via receptor-mediated Ca²⁺ entry (α7 nAChR, P2X2), EF-hand binding, and the calcium-myristoyl switch driving membrane translocation. Reduced tissue VSNL1 is noted in AD. &nbsp;|&nbsp;
+      <strong>Panel B (teal) — Signalling Branches:</strong> Activated, membrane-associated VILIP-1 fans into two parallel cascades: (left) cyclic nucleotide signalling (cAMP/cGMP via adenylyl/guanylyl cyclase → CREB/plasticity) and (right) receptor trafficking (α4β2 nAChR surface expression → cholinergic/glutamatergic transmission). &nbsp;|&nbsp;
+      <strong>Panel C (red) — AD Outcomes:</strong> Downstream consequences converge on synaptic loss (alongside SNAP25, SYT1, NPTX2), tau hyperphosphorylation, neuronal death, and elevated CSF VILIP-1 release, ultimately producing cognitive decline, brain atrophy, and cerebral hypometabolism.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Biomarker Signal — CSF &amp; Blood</h3>
+        <p>Multiple CSF studies and meta-analyses report higher VILIP-1 in AD than controls, associating with cognitive decline, disease severity, and progression from MCI to AD. Serum VILIP-1 has also been linked to limbic atrophy including reduced amygdala volume.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Compartment-Specific Directionality</h3>
+        <p>Brain transcriptomic and proteomic studies report <em>reduced</em> VSNL1 in vulnerable regions with advancing Braak stage, while CSF VILIP-1 is <em>increased</em> — consistent with neuronal loss and release from injured neurons. These opposing directions are central to correct interpretation.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Tau-Linked Degeneration Module</h3>
+        <p>VSNL1 is more closely tied to downstream neurodegeneration and tau-linked pathology than to amyloid alone. CSF VILIP-1 correlates strongly with total tau and p-tau, and proteomics place VSNL1 within a synaptic/neuronal injury module tracking tau change. It clusters with SNAP25, SYT1/SYT5, NPTX2/NPTXR, NRGN, DLG4, VGLUT2, STXBP3, NEFL, and OPCML.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Progression &amp; Atrophy Prediction</h3>
+        <p>Higher CSF VILIP-1 predicts faster cognitive decline, faster whole-brain, hippocampal, and entorhinal atrophy, and longitudinal cerebral glucose hypometabolism on FDG-PET. VSNL1 is also identified among candidate genes distinguishing symptomatic from asymptomatic AD.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Context-Dependent Calcium Toxicity</h3>
+        <p>VILIP-1 expression in PC12 cells enhanced calcium-mediated cytotoxicity and tau hyperphosphorylation; calbindin-D28K rescued this toxicity. Under calcium stress, VSNL1 may amplify pathological signalling. Broad activation could be harmful in disease conditions.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Protective Roles &amp; Synaptic Rescue</h3>
+        <p>In non-AD injury models, VSNL1 overexpression reduced apoptosis, oxidative stress, mitochondrial dysfunction, and intracellular calcium accumulation. In 5XFAD mice, lactate treatment enhanced VSNL1 among synaptic integrity proteins while improving working memory — implying context-dependent protective capacity.</p>
+      </div>
+
+      <div class="card card-accent">
+        <h3>Calcium-Myristoyl Switch &amp; Receptor Trafficking</h3>
+        <p>VILIP-1 undergoes a calcium-myristoyl switch, translocates to membranes, regulates α4β2 nicotinic acetylcholine receptor surface expression and currents, and is activated downstream of α7 nAChR calcium entry. These functions intersect directly with cholinergic dysfunction in AD.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Genetic &amp; Specificity Limitations</h3>
+        <p>VSNL1 variants have been associated with AD with psychosis in one genome-wide study, but replication is lacking. VILIP-1 elevations also occur in TBI, stroke, encephalitis, ALS-related models, and broader dementia panels, limiting AD specificity. Therapeutic causality in AD models remains undemonstrated.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways" class="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol>
+      <li><strong>Prioritize as biomarker, not drug target.</strong> VSNL1/VILIP-1's strongest near-term utility is for prognosis, staging, patient stratification, and pharmacodynamic monitoring in AD trials — not as a validated therapeutic target.</li>
+      <li><strong>Interpret by compartment.</strong> Elevated CSF or serum VILIP-1 signals neuronal injury or release from damaged neurons; reduced brain/tissue VSNL1 signals neuronal or synaptic loss, impaired gene expression, or altered intracellular signalling.</li>
+      <li><strong>Deploy in multimarker panels.</strong> VSNL1 is most informative when combined with Aβ42/Aβ40, total tau, p-tau, neurogranin, SNAP25, NfL, FDG-PET, MRI atrophy measures, and synaptic proteomic signatures.</li>
+      <li><strong>Track tau-linked downstream degeneration.</strong> The repeated association of VSNL1 with tau, synaptic injury markers, hypometabolism, and atrophy makes it especially suited for identifying individuals with active neurodegenerative progression beyond amyloid positivity alone.</li>
+      <li><strong>Do not assume lowering VILIP-1 is therapeutic.</strong> CSF elevation likely reflects injury, but intracellular VSNL1 supports normal synaptic, receptor-trafficking, and cyclic nucleotide signalling. Therapeutic interpretation must distinguish injury-marker reduction from harmful suppression of neuronal function.</li>
+      <li><strong>Test causality in AD models directly.</strong> Essential experiments include neuron-specific VSNL1 knockdown/overexpression in amyloid and tau models, with readouts for synaptic density, calcium dynamics, mitochondrial function, tau phosphorylation, neuroinflammation, metabolism, and cognition.</li>
+      <li><strong>Define the direction of modulation before drug development.</strong> VSNL1 may need preservation, normalisation, or selective inhibition depending on disease stage, cell type, and calcium state. Broad activation or inhibition could be harmful given its roles in normal neuronal signalling.</li>
+      <li><strong>Explore pathway-specific targeting.</strong> Candidate approaches include modulating the calcium-myristoyl switch, receptor-trafficking interactions, nicotinic receptor regulation, guanylyl/adenylyl cyclase signalling, mitochondrial-calcium stress pathways, or maladaptive tau-phosphorylation signalling.</li>
+      <li><strong>Validate externally and longitudinally.</strong> Many findings are observational, preprint-based, or derived from non-AD systems. Future work should confirm VSNL1 behaviour across independent cohorts, disease stages, compartments, sex/genotype strata, and AD subtypes including AD with psychosis.</li>
+      <li><strong>Exercise caution in differential diagnosis.</strong> VILIP-1 is a neuronal injury marker across multiple neurological conditions; it is unlikely to be AD-specific without integration with core AD biomarkers and full clinical context.</li>
+    </ol>
+  </section>
+
+  <!-- OVERALL ASSESSMENT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-label">Overall Assessment — VSNL1 / VILIP-1 in Alzheimer's Disease</span>
+      <p>
+        The most defensible current conclusion is that <strong>VSNL1/VILIP-1 is an AD-relevant neuronal calcium-sensor and synaptic injury biomarker</strong> with plausible — but unproven — therapeutic relevance. Its value is clearest as a <strong>CSF and blood-accessible marker of neuronal injury and synaptic degeneration</strong>, particularly one that tracks tau-linked neurodegenerative progression, brain atrophy, and cerebral hypometabolism. The <strong>compartment-specific directional pattern</strong> — reduced in vulnerable brain tissue, elevated in CSF — is a defining interpretive principle. Mechanistic studies establish biologically credible connections to <strong>calcium homeostasis, myristoyl-switch membrane signalling, nicotinic receptor trafficking, cyclic nucleotide pathways, and mitochondrial resilience</strong>, all directly relevant to AD pathophysiology. However, <strong>no AD study has yet directly demonstrated that manipulating VSNL1 modifies disease-relevant outcomes</strong>, and context-dependent evidence shows it can be both protective and maladaptive under calcium stress. VSNL1 is best positioned today as a <strong>pharmacodynamic and prognostic biomarker within multimarker panels</strong> rather than a stand-alone therapeutic target, pending direct causal experiments in AD models.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  VSNL1 / VILIP-1 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

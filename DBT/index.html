@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBT — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #4a1942;
+    --mid: #7e3a75;
+    --light: #f5eef4;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0818 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(153,27,27,0.35);
+    border: 1px solid rgba(255,120,120,0.4);
+    color: #fecaca;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    opacity: 0.72;
+    font-size: 1rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 24px 60px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--danger-light);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.97rem;
+  }
+
+  .callout-label {
+    font-weight: 700;
+    color: var(--danger);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  /* BODY TEXT */
+  p {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 18px 16px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.95rem;
+    border-left: 4px solid;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-accent h3 { color: var(--dark); }
+  .card-danger h3 { color: var(--danger); }
+  .card-warning h3 { color: var(--warning); }
+  .card-positive h3 { color: var(--positive); }
+  .card-neutral h3 { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  .takeaways {
+    list-style: none;
+    counter-reset: takeaway-counter;
+  }
+
+  .takeaways li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    font-size: 0.98rem;
+  }
+
+  .takeaways li::before {
+    content: counter(takeaway-counter);
+    background: var(--dark);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a0818 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 38px 40px;
+    font-size: 1.02rem;
+    line-height: 1.8;
+  }
+
+  .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+
+  .verdict p strong {
+    color: #e9d5e7;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chips">
+    <span class="chip">Gene/Topic: DBT &nbsp;|&nbsp; Dibromobutane / Doubletime / Danggui Buxue Tang / Dialectical Behavior Therapy</span>
+    <span class="chip chip-danger">⚠ No validated AD target — Acronym collision risk</span>
+  </div>
+  <h1>DBT &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <div class="callout-label">⚠ Critical Caveat — Acronym Collision</div>
+      The acronym "DBT" resolves to at least eight distinct, unrelated entities in the supplied corpus. No single entity designated "DBT" is supported as an Alzheimer's disease mechanism, biomarker, or therapeutic target by the provided evidence. Any conclusions drawn by conflating these meanings would be unsupported.
+    </div>
+
+    <p>The supplied text provides no evidence that any entity referred to as "DBT" is involved in Alzheimer's disease (AD) mechanisms, nor that it constitutes a validated or emerging therapeutic target for AD. The acronym collides across entirely unrelated domains: <em>Dialectical Behavior Therapy</em>, <em>digital breast tomosynthesis</em>, <em>dibenzothiophene</em> and other chemicals, <em>Danggui Buxue Tang</em> (a traditional herbal formulation), the <em>DBT gene</em> in non-AD contexts, <em>Drosophila Doubletime kinase</em>, <em>Department of Biotechnology</em> funding references, and software/data tooling.</p>
+
+    <p>The AD-specific material in the corpus focuses on other topics entirely — cross-species expression of AD risk genes, speech and language biomarkers for neurodegeneration, and BDNF/APOE genetic variants — none of which identify DBT as a relevant entity. The defensible summary is therefore a <strong>negative finding</strong>: this text does not establish DBT as relevant to AD pathology.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Landscape Diagram</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 920 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:Arial,Helvetica,sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#7e3a75"/>
+            </marker>
+            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#94a3b8"/>
+            </marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#991b1b"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Acronym Collision Space -->
+          <rect x="12" y="12" width="280" height="476" rx="10" fill="#f5eef4" stroke="#7e3a75" stroke-width="1.5" opacity="0.5"/>
+          <text x="28" y="32" font-size="9" font-weight="700" fill="#4a1942" letter-spacing="1.2">A — ACRONYM COLLISION</text>
+
+          <!-- Node 1: DBT (ambiguous) -->
+          <rect x="86" y="44" width="128" height="44" rx="7" fill="#7e3a75" stroke="#4a1942" stroke-width="1.5"/>
+          <text x="150" y="61" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">DBT</text>
+          <text x="150" y="77" text-anchor="middle" font-size="9.5" fill="#f5eef4">(Ambiguous Acronym)</text>
+
+          <!-- Arrow down from DBT to branches: line to junction point y=126 -->
+          <line x1="150" y1="88" x2="150" y2="126" stroke="#7e3a75" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node 2: Doubletime kinase -->
+          <rect x="26" y="134" width="118" height="42" rx="7" fill="#fff" stroke="#7e3a75" stroke-width="1.3"/>
+          <text x="85" y="151" text-anchor="middle" font-size="10" fill="#4a1942" font-weight="600">Doubletime</text>
+          <text x="85" y="165" text-anchor="middle" font-size="9" fill="#475569">(Drosophila CK1)</text>
+
+          <!-- Node 3: Danggui Buxue Tang -->
+          <rect x="156" y="134" width="118" height="42" rx="7" fill="#fff" stroke="#7e3a75" stroke-width="1.3"/>
+          <text x="215" y="151" text-anchor="middle" font-size="10" fill="#4a1942" font-weight="600">Danggui Buxue</text>
+          <text x="215" y="165" text-anchor="middle" font-size="9" fill="#475569">Tang (Herbal)</text>
+
+          <!-- Lines from junction to Node 2 and Node 3 -->
+          <line x1="150" y1="126" x2="85" y2="134" stroke="#7e3a75" stroke-width="1.2"/>
+          <line x1="150" y1="126" x2="215" y2="134" stroke="#7e3a75" stroke-width="1.2"/>
+
+          <!-- Node 4: Dialectical Behavior Therapy -->
+          <rect x="26" y="204" width="118" height="42" rx="7" fill="#fff" stroke="#94a3b8" stroke-width="1.3"/>
+          <text x="85" y="221" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">Dialectical</text>
+          <text x="85" y="235" text-anchor="middle" font-size="9" fill="#475569">Behavior Therapy</text>
+
+          <!-- Node 5: Chemical / Dibenzothiophene -->
+          <rect x="156" y="204" width="118" height="42" rx="7" fill="#fff" stroke="#94a3b8" stroke-width="1.3"/>
+          <text x="215" y="221" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">Dibenzothiophene</text>
+          <text x="215" y="235" text-anchor="middle" font-size="9" fill="#475569">&amp; Chemicals</text>
+
+          <!-- Lines from prior nodes down -->
+          <line x1="85" y1="176" x2="85" y2="204" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+          <line x1="215" y1="176" x2="215" y2="204" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+          <!-- Node 6: Dig. Breast Tomosynthesis / Software -->
+          <rect x="56" y="276" width="188" height="42" rx="7" fill="#fff" stroke="#94a3b8" stroke-width="1.3"/>
+          <text x="150" y="293" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">Digital Tomosynthesis /</text>
+          <text x="150" y="307" text-anchor="middle" font-size="9" fill="#475569">Software / DBT gene (non-AD)</text>
+
+          <line x1="85" y1="246" x2="85" y2="276" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="215" y1="246" x2="215" y2="276" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="85" y1="276" x2="56" y2="276" stroke="#94a3b8" stroke-width="1"/>
+          <line x1="215" y1="276" x2="244" y2="276" stroke="#94a3b8" stroke-width="1"/>
+
+          <!-- "No AD link" badge -->
+          <rect x="72" y="344" width="156" height="26" rx="13" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.2"/>
+          <text x="150" y="362" text-anchor="middle" font-size="9.5" fill="#991b1b" font-weight="700">None link to AD pathology</text>
+
+          <line x1="150" y1="318" x2="150" y2="344" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-red)"/>
+
+          <!-- Panel B: Non-AD Contexts -->
+          <rect x="308" y="12" width="290" height="310" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="1.5" opacity="0.5"/>
+          <text x="324" y="32" font-size="9" font-weight="700" fill="#b45309" letter-spacing="1.2">B — NON-AD MOLECULAR CONTEXTS</text>
+
+          <!-- Node 7: Circadian / Doubletime CK1 -->
+          <rect x="328" y="44" width="126" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="391" y="61" text-anchor="middle" font-size="10" font-weight="600" fill="#1e293b">DBT/CK1 Kinase</text>
+          <text x="391" y="75" text-anchor="middle" font-size="9" fill="#475569">Circadian Rhythm</text>
+
+          <!-- Node 8: PERIOD phosphorylation -->
+          <rect x="328" y="116" width="126" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="391" y="133" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">PERIOD Protein</text>
+          <text x="391" y="147" text-anchor="middle" font-size="9" fill="#475569">Phosphorylation</text>
+
+          <line x1="391" y1="88" x2="391" y2="116" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node 9: Temp compensation -->
+          <rect x="328" y="188" width="126" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="391" y="205" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Temperature</text>
+          <text x="391" y="219" text-anchor="middle" font-size="9" fill="#475569">Compensation</text>
+
+          <line x1="391" y1="158" x2="391" y2="188" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- "No AD connect" note -->
+          <rect x="341" y="256" width="100" height="30" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="391" y="270" text-anchor="middle" font-size="9" fill="#b45309" font-weight="700">No AD Pathway</text>
+          <text x="391" y="282" text-anchor="middle" font-size="8.5" fill="#b45309">Connection Found</text>
+
+          <line x1="391" y1="230" x2="391" y2="256" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Right sub: Danggui / Ferroptosis -->
+          <rect x="472" y="44" width="116" height="44" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="530" y="61" text-anchor="middle" font-size="10" font-weight="600" fill="#1e293b">Danggui Buxue</text>
+          <text x="530" y="75" text-anchor="middle" font-size="9" fill="#475569">Tang (Cancer ctx.)</text>
+
+          <!-- Node 10: Nrf2/GPX4/SLC7A11 -->
+          <rect x="460" y="116" width="138" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="529" y="133" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Nrf2/GPX4/</text>
+          <text x="529" y="147" text-anchor="middle" font-size="9" fill="#475569">SLC7A11 axis</text>
+
+          <line x1="530" y1="88" x2="530" y2="116" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node 11: Ferroptosis / Oxidative stress -->
+          <rect x="460" y="188" width="138" height="42" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="529" y="205" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Ferroptosis / ROS /</text>
+          <text x="529" y="219" text-anchor="middle" font-size="9" fill="#475569">Lipid Peroxidation</text>
+
+          <line x1="529" y1="158" x2="529" y2="188" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <rect x="467" y="256" width="124" height="30" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+          <text x="529" y="270" text-anchor="middle" font-size="9" fill="#b45309" font-weight="700">Not Tested in AD</text>
+          <text x="529" y="282" text-anchor="middle" font-size="8.5" fill="#b45309">Models / Neurons</text>
+
+          <line x1="529" y1="230" x2="529" y2="256" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+          <!-- Panel C: AD-Relevant Evidence (non-DBT) -->
+          <rect x="614" y="12" width="292" height="476" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5" opacity="0.5"/>
+          <text x="630" y="32" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1.2">C — ACTUAL AD EVIDENCE (non-DBT)</text>
+
+          <!-- Node 12: AD-Relevant Genes -->
+          <rect x="636" y="44" width="248" height="44" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+          <text x="760" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">AD Risk Gene Evidence</text>
+          <text x="760" y="78" text-anchor="middle" font-size="9.5" fill="#d1fae5">BDNF · APOE · Cross-species</text>
+
+          <!-- Branch left: BDNF/APOE -->
+          <rect x="636" y="120" width="116" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="694" y="137" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">BDNF / APOE</text>
+          <text x="694" y="151" text-anchor="middle" font-size="9" fill="#475569">Genetic Variants</text>
+
+          <!-- Branch right: Cross-species expression -->
+          <rect x="768" y="120" width="116" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="826" y="137" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Cross-species</text>
+          <text x="826" y="151" text-anchor="middle" font-size="9" fill="#475569">Risk Gene Expr.</text>
+
+          <line x1="760" y1="88" x2="694" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="760" y1="88" x2="826" y2="120" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 13: Speech/Language biomarkers -->
+          <rect x="700" y="196" width="120" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="760" y="213" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Speech / Language</text>
+          <text x="760" y="227" text-anchor="middle" font-size="9" fill="#475569">Biomarkers for AD</text>
+
+          <line x1="694" y1="164" x2="694" y2="196" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <line x1="826" y1="164" x2="826" y2="196" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <line x1="694" y1="196" x2="700" y2="196" stroke="#0f766e" stroke-width="1.2"/>
+          <line x1="826" y1="196" x2="820" y2="196" stroke="#0f766e" stroke-width="1.2"/>
+
+          <!-- Node 14: Autophagy / Mitochondria (general AD) -->
+          <rect x="636" y="272" width="116" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="694" y="289" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Autophagy /</text>
+          <text x="694" y="303" text-anchor="middle" font-size="9" fill="#475569">Mitochondrial Dyn.</text>
+
+          <!-- Node 15: Neuroinflammation / Synapse -->
+          <rect x="768" y="272" width="116" height="44" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="826" y="289" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">Neuroinflammation /</text>
+          <text x="826" y="303" text-anchor="middle" font-size="9" fill="#475569">Synaptic Integrity</text>
+
+          <line x1="760" y1="240" x2="694" y2="272" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <line x1="760" y1="240" x2="826" y2="272" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- Node 16: DBT absent from all above -->
+          <rect x="664" y="346" width="192" height="42" rx="7" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+          <text x="760" y="363" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="700">DBT Absent from</text>
+          <text x="760" y="377" text-anchor="middle" font-size="9" fill="#991b1b">All AD Evidence Above</text>
+
+          <line x1="694" y1="316" x2="694" y2="346" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <line x1="826" y1="316" x2="826" y2="346" stroke="#991b1b" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <line x1="694" y1="346" x2="664" y2="346" stroke="#991b1b" stroke-width="1.2"/>
+          <line x1="826" y1="346" x2="856" y2="346" stroke="#991b1b" stroke-width="1.2"/>
+
+          <!-- Negative verdict at bottom Panel C -->
+          <rect x="664" y="416" width="192" height="44" rx="7" fill="#991b1b"/>
+          <text x="760" y="434" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">Negative Conclusion</text>
+          <text x="760" y="450" text-anchor="middle" font-size="9" fill="#fecaca">DBT not an AD target</text>
+          <line x1="760" y1="388" x2="760" y2="416" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (left, purple):</strong> The acronym "DBT" branches into eight unrelated entities — Doubletime kinase, Danggui Buxue Tang, Dialectical Behavior Therapy, dibenzothiophene, digital breast tomosynthesis, software tools, the DBT gene in non-AD contexts, and other uses — none connecting to AD pathology (red badge).
+        <strong>Panel B (center, amber):</strong> The two most biologically substantive DBT meanings (Drosophila CK1/Doubletime circadian pathway; Danggui Buxue Tang ferroptosis/Nrf2–GPX4–SLC7A11 axis) are explored in non-AD contexts only and are not tested in AD models.
+        <strong>Panel C (right, teal):</strong> Actual AD-relevant evidence in the corpus (BDNF/APOE variants, cross-species risk-gene expression, speech/language biomarkers, autophagy/mitochondrial dynamics, neuroinflammation/synaptic integrity) converges on a clear negative: DBT is absent from all AD evidence, yielding a negative conclusion.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="cards">
+
+      <div class="card card-danger">
+        <h3>No AD-Specific DBT Mechanism</h3>
+        The text does not link any DBT entity to amyloid-β production or clearance, tau phosphorylation or aggregation, synaptic dysfunction, neuroinflammation, mitochondrial injury, oxidative stress in AD, ferroptosis or cuproptosis in AD, autophagy-lysosomal dysfunction, neuronal loss, or cognitive decline.
+      </div>
+
+      <div class="card card-accent">
+        <h3>Acronym Collision — Disambiguation Required</h3>
+        "DBT" maps to at least eight distinct entities in the corpus. Conflating Dialectical Behavior Therapy with a cuproptosis gene or a Drosophila kinase would produce entirely false conclusions. Disambiguation is a prerequisite before any scientific interpretation.
+      </div>
+
+      <div class="card card-warning">
+        <h3>Circadian &amp; Ferroptosis Contexts — Non-AD Only</h3>
+        Drosophila DBT/Doubletime phosphorylates PERIOD in circadian rhythm regulation. Danggui Buxue Tang modulates the Nrf2/GPX4/SLC7A11 ferroptosis axis in cancer and cardiac models. Neither has been tested in AD models, neurons, glia, or cognition by the supplied text.
+      </div>
+
+      <div class="card card-neutral">
+        <h3>DBT Gene in Kidney/Cardiac Disease — Not AD</h3>
+        The only molecular DBT gene mentions place it as a cuproptosis candidate in end-stage renal disease or heart failure. These are kidney and cardiac disease contexts. In the heart-failure study, Atox1 — not DBT — was experimentally pursued as the key cuproptosis regulator.
+      </div>
+
+      <div class="card card-positive">
+        <h3>AD Evidence Exists — But for Other Genes</h3>
+        The corpus does contain AD-relevant biological evidence, concerning BDNF and APOE genetic variants, cross-species AD risk-gene expression profiling, and speech/language biomarkers for neurodegeneration. These findings do not involve DBT in any form.
+      </div>
+
+      <div class="card card-danger">
+        <h3>Defensible Conclusion Is Negative</h3>
+        Based strictly on the supplied text, DBT is not established as an AD mechanism, biomarker, or therapeutic target. No preclinical, clinical, mechanistic, or biomarker evidence supports DBT in any AD context. This is a firm negative finding, not an absence of data requiring filling — the data present simply do not point to DBT.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li>
+        <div><strong>Do not designate DBT as an AD therapeutic target</strong> on the basis of this corpus. It provides no direct Alzheimer's-specific mechanistic, preclinical, clinical, biomarker, or target-engagement evidence for any entity named DBT.</div>
+      </li>
+      <li>
+        <div><strong>Disambiguate "DBT" before any further analysis.</strong> The acronym refers to many unrelated entities, and conflating them will generate false or misleading conclusions. Specify precisely which DBT is intended.</div>
+      </li>
+      <li>
+        <div><strong>If DBT means a biological gene or protein,</strong> additional evidence is required directly linking it to AD pathways such as amyloid-β, tau, neuroinflammation, synaptic integrity, mitochondrial function, ferroptosis/cuproptosis, autophagy, neuronal survival, or cognition.</div>
+      </li>
+      <li>
+        <div><strong>If DBT means Danggui Buxue Tang,</strong> the most plausible research hypothesis derivable from the text is to test whether it modulates Nrf2, GPX4, SLC7A11, ROS, MDA, iron homeostasis, and lipid peroxidation in Alzheimer's-relevant neuronal or glial models — specifically examining whether it protects against rather than induces ferroptosis.</div>
+      </li>
+      <li>
+        <div><strong>If DBT means Dialectical Behavior Therapy,</strong> potential relevance would be limited strictly to supportive behavioral or caregiver-related outcomes. It should not be described as modifying AD pathology or biology unless Alzheimer's-specific clinical evidence is provided.</div>
+      </li>
+      <li>
+        <div><strong>The overall scientific conclusion is negative:</strong> based strictly on the supplied text, DBT does not meet criteria as an AD mechanism, biomarker, or therapeutic target, and this should be stated clearly rather than hedged.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <div class="verdict-label">Overall Assessment — Synthesized Verdict</div>
+      <p>
+        <strong>This corpus yields a clear negative finding.</strong> The acronym "DBT" is a severe disambiguation problem: it resolves to at least eight unrelated entities spanning behavioral therapy, medical imaging, chemistry, herbal medicine, a Drosophila kinase, a human metabolic gene in non-AD diseases, institutional names, and software. <strong>None of these entities is linked to Alzheimer's disease mechanisms or therapeutics by the supplied evidence.</strong> The AD-relevant biological content in the corpus — BDNF/APOE variants, cross-species risk-gene expression, speech/language biomarkers, and broader pathway discussions — consistently concerns non-DBT entities. <strong>The most biologically plausible "DBT" meanings (Drosophila CK1 in circadian biology; Danggui Buxue Tang in ferroptosis regulation) are studied only in non-AD contexts</strong> and cannot be extrapolated to AD without new experiments. Any claim that DBT is an Alzheimer's target, mechanism, or biomarker would be unsupported by this text and should be explicitly corrected. <strong>Disambiguation and targeted experimental validation in AD-relevant models are the necessary next steps</strong> before any DBT entity can be considered for further AD research prioritization.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DBT — Alzheimer's Disease TEP Evidence Summary &nbsp;·&nbsp; AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

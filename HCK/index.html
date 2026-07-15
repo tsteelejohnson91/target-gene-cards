@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCK — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f2fb;
+    --danger: #8b1a1a;
+    --danger-tint: #fdf0f0;
+    --danger-border: #e8a0a0;
+    --warning: #b45309;
+    --warning-tint: #fffbeb;
+    --positive: #0f766e;
+    --positive-tint: #f0fdfa;
+    --neutral-text: #64748b;
+    --neutral-border: #cbd5e1;
+    --neutral-card: #f8fafc;
+    --blue-tint: #eff6ff;
+    --blue-border: #93c5fd;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.92);
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(139,26,26,0.35);
+    border: 1px solid rgba(232,160,160,0.45);
+    color: #ffd5d5;
+  }
+
+  header h1 {
+    font-size: 2.35rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.97rem;
+    opacity: 0.72;
+    color: var(--white);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  section h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-tint);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .callout .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+  }
+
+  /* PARAGRAPHS */
+  .prose p {
+    margin-bottom: 1rem;
+    font-size: 0.97rem;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: #f3f6fa;
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .figure-caption {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--neutral-text);
+    line-height: 1.55;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  /* KEY INSIGHTS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    border-left: 4px solid var(--mid);
+    background: var(--light);
+  }
+
+  .card.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-tint);
+  }
+
+  .card.positive {
+    border-left-color: var(--positive);
+    background: var(--positive-tint);
+  }
+
+  .card.blue {
+    border-left-color: #3b82f6;
+    background: var(--blue-tint);
+  }
+
+  .card.slate {
+    border-left-color: #475569;
+    background: var(--neutral-card);
+  }
+
+  .card.warning {
+    border-left-color: var(--warning);
+    background: var(--warning-tint);
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 0.91rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  /* TAKEAWAYS */
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+    align-items: flex-start;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 26px;
+    background: var(--dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .takeaway-list li b {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f30 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    line-height: 1.8;
+  }
+
+  .verdict-banner .verdict-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+
+  .verdict-banner p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .verdict-banner b {
+    color: #7ec8f7;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: HCK &nbsp;|&nbsp; Hematopoietic Cell Kinase</span>
+    <span class="chip chip-danger">⚠ Inhibition may worsen AD pathology</span>
+  </div>
+  <h1>HCK &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">⚠ Key Caution:</span>
+      Direct AD amyloid-model evidence indicates that HCK <em>deficiency or inhibition</em> impairs beneficial microglial Aβ clearance, increases plaque burden, and worsens neuropathology — making indiscriminate HCK blockade a potentially harmful therapeutic strategy in Alzheimer's disease.
+    </div>
+
+    <div class="prose">
+      <p>HCK (hematopoietic cell kinase) is a myeloid-enriched Src-family tyrosine kinase with established roles in innate immune signaling, microglial and macrophage activation, neutrophil function, phagocytosis, cytokine production, NLRP3 inflammasome activity, cell migration, and inflammatory tissue injury. Its relationship to Alzheimer's disease is multifaceted: most evidence derives from non-AD inflammatory, vascular, cancer, brain-injury, or immune models, yet several entries supply AD-relevant or AD-specific signals.</p>
+      <p>The strongest direct AD evidence positions HCK as a <em>protective</em> microglial kinase during early amyloid pathology. In Tg2576 and J20 amyloid mouse models, HCK deficiency or inhibition impaired microglial Aβ phagocytosis, reduced plaque coverage and containment, increased Aβ levels and plaque burden, elevated inflammatory iNOS expression in plaque-associated microglia, reduced hippocampal synaptic markers (PSD95 and presynaptic proteins), and accelerated AD-like neuropathology and cognitive decline.</p>
+      <p>HCK also appears within an amyloid-associated neuroinflammatory gene-expression network alongside TREM2, TYROBP, APOE, CD33, PLCG2, INPP5D, FCER1G, ABI3, DOCK2, and LY86 — placing it squarely within a microglial immune-response module rather than a neuron-intrinsic or tau-driven mechanism. In peripheral inflammatory contexts, HCK inhibition (A-419259, iHCK-37, KIN-8194, bletinib, dasatinib-related agents) suppresses NLRP3 inflammasome activation, IL-1β release, NET formation, M1-like polarization, MAPK/ERK/p38 signaling, and inflammatory tissue injury across models of traumatic brain injury, ischemic stroke, gout, lung injury, and kidney fibrosis — mechanisms that overlap conceptually with AD neuroinflammation, but which do not establish benefit of HCK inhibition in AD specifically.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 900 490" width="900" height="490" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+        <!-- Panel backgrounds -->
+        <!-- Panel A: Upstream Receptors -->
+        <rect x="10" y="30" width="200" height="430" rx="10" fill="#e8f2fb" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.2"/>
+        <text x="110" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3a5c" letter-spacing="0.1em">A · UPSTREAM RECEPTORS</text>
+
+        <!-- Panel B: HCK Central Node + Branching -->
+        <rect x="222" y="30" width="218" height="430" rx="10" fill="#e0f2f1" fill-opacity="0.45" stroke="#0f766e" stroke-width="1.2"/>
+        <text x="331" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="0.1em">B · HCK SIGNALING HUB</text>
+
+        <!-- Panel C: Protective (Phagocytic) Branch -->
+        <rect x="452" y="30" width="200" height="210" rx="10" fill="#f0fdf4" fill-opacity="0.65" stroke="#16a34a" stroke-width="1.2"/>
+        <text x="552" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="#166534" letter-spacing="0.1em">C · PROTECTIVE BRANCH</text>
+
+        <!-- Panel D: Inflammatory Branch -->
+        <rect x="452" y="252" width="200" height="208" rx="10" fill="#fef9ec" fill-opacity="0.7" stroke="#b45309" stroke-width="1.2"/>
+        <text x="552" y="272" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e" letter-spacing="0.1em">D · INFLAMMATORY BRANCH</text>
+
+        <!-- Panel E: Outcomes -->
+        <rect x="664" y="30" width="224" height="430" rx="10" fill="#f8f0fc" fill-opacity="0.5" stroke="#7c3aed" stroke-width="1.2"/>
+        <text x="776" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="#5b21b6" letter-spacing="0.1em">E · AD OUTCOMES</text>
+
+        <!-- ============================================================ -->
+        <!-- PANEL A NODES -->
+        <!-- Node A1: TREM2/TYROBP -->
+        <rect x="25" y="68" width="170" height="40" rx="6" fill="#1a3a5c" stroke="none"/>
+        <text x="110" y="84" text-anchor="middle" fill="white" font-size="10" font-weight="700">TREM2 / TYROBP</text>
+        <text x="110" y="98" text-anchor="middle" fill="#b0c8e8" font-size="9">Immunoreceptor complex</text>
+
+        <!-- Node A2: CD33 / APOE -->
+        <rect x="25" y="132" width="170" height="40" rx="6" fill="#2e6da4" stroke="none"/>
+        <text x="110" y="148" text-anchor="middle" fill="white" font-size="10" font-weight="700">CD33 / APOE</text>
+        <text x="110" y="162" text-anchor="middle" fill="#cce0f5" font-size="9">Microglial modulators</text>
+
+        <!-- Node A3: PLCG2 / INPP5D -->
+        <rect x="25" y="196" width="170" height="40" rx="6" fill="#2e6da4" stroke="none"/>
+        <text x="110" y="212" text-anchor="middle" fill="white" font-size="10" font-weight="700">PLCG2 / INPP5D</text>
+        <text x="110" y="226" text-anchor="middle" fill="#cce0f5" font-size="9">Lipid signaling effectors</text>
+
+        <!-- Node A4: FcεRI / ABI3 -->
+        <rect x="25" y="260" width="170" height="40" rx="6" fill="#3b82f6" stroke="none"/>
+        <text x="110" y="276" text-anchor="middle" fill="white" font-size="10" font-weight="700">FCER1G / ABI3</text>
+        <text x="110" y="290" text-anchor="middle" fill="#dbeafe" font-size="9">Fc &amp; actin network</text>
+
+        <!-- ============================================================ -->
+        <!-- PANEL B NODES -->
+        <!-- Node B1: HCK (central) -->
+        <rect x="252" y="68" width="158" height="44" rx="8" fill="#0f766e" stroke="#065f46" stroke-width="1.5"/>
+        <text x="331" y="86" text-anchor="middle" fill="white" font-size="12" font-weight="700">HCK Kinase</text>
+        <text x="331" y="102" text-anchor="middle" fill="#a7f3d0" font-size="9">Src-family · myeloid-enriched</text>
+
+        <!-- Node B2: SYK / BTK -->
+        <rect x="252" y="148" width="158" height="38" rx="6" fill="#0d9488" stroke="none"/>
+        <text x="331" y="163" text-anchor="middle" fill="white" font-size="10" font-weight="700">SYK / BTK</text>
+        <text x="331" y="177" text-anchor="middle" fill="#ccfbf1" font-size="9">Co-kinase partners</text>
+
+        <!-- Node B3: PI3K / Vav / WASP -->
+        <rect x="252" y="220" width="158" height="38" rx="6" fill="#0d9488" stroke="none"/>
+        <text x="331" y="235" text-anchor="middle" fill="white" font-size="10" font-weight="700">PI3K / Vav / WASP</text>
+        <text x="331" y="249" text-anchor="middle" fill="#ccfbf1" font-size="9">Cytoskeletal remodeling</text>
+
+        <!-- Node B4: ERK / p38 / MAPK -->
+        <rect x="252" y="292" width="158" height="38" rx="6" fill="#0f766e" stroke="none"/>
+        <text x="331" y="307" text-anchor="middle" fill="white" font-size="10" font-weight="700">ERK / p38 / MAPK</text>
+        <text x="331" y="321" text-anchor="middle" fill="#a7f3d0" font-size="9">Inflammatory kinase cascade</text>
+
+        <!-- ============================================================ -->
+        <!-- PANEL C NODES (Protective) -->
+        <!-- Node C1: Aβ Phagocytosis -->
+        <rect x="467" y="68" width="170" height="40" rx="6" fill="#15803d" stroke="none"/>
+        <text x="552" y="84" text-anchor="middle" fill="white" font-size="10" font-weight="700">Aβ Phagocytosis</text>
+        <text x="552" y="98" text-anchor="middle" fill="#bbf7d0" font-size="9">Oligomer &amp; plaque uptake</text>
+
+        <!-- Node C2: Plaque Containment -->
+        <rect x="467" y="132" width="170" height="40" rx="6" fill="#16a34a" stroke="none"/>
+        <text x="552" y="148" text-anchor="middle" fill="white" font-size="10" font-weight="700">Plaque Containment</text>
+        <text x="552" y="162" text-anchor="middle" fill="#dcfce7" font-size="9">Microglial coverage</text>
+
+        <!-- Node C3: Synaptic Preservation -->
+        <rect x="467" y="196" width="170" height="40" rx="6" fill="#22c55e" stroke="none"/>
+        <text x="552" y="212" text-anchor="middle" fill="#052e16" font-size="10" font-weight="700">Synaptic Preservation</text>
+        <text x="552" y="226" text-anchor="middle" fill="#052e16" font-size="9">PSD95 · presynaptic markers</text>
+
+        <!-- ============================================================ -->
+        <!-- PANEL D NODES (Inflammatory) -->
+        <!-- Node D1: NLRP3 Inflammasome -->
+        <rect x="467" y="290" width="170" height="40" rx="6" fill="#b45309" stroke="none"/>
+        <text x="552" y="306" text-anchor="middle" fill="white" font-size="10" font-weight="700">NLRP3 Inflammasome</text>
+        <text x="552" y="320" text-anchor="middle" fill="#fde68a" font-size="9">ASC · Caspase-1 · IL-1β</text>
+
+        <!-- Node D2: Oxidative Burst / iNOS -->
+        <rect x="467" y="354" width="170" height="40" rx="6" fill="#d97706" stroke="none"/>
+        <text x="552" y="370" text-anchor="middle" fill="white" font-size="10" font-weight="700">Oxidative Burst / iNOS</text>
+        <text x="552" y="384" text-anchor="middle" fill="#fef3c7" font-size="9">ROS · NET formation</text>
+
+        <!-- Node D3: M1 Polarization -->
+        <rect x="467" y="418" width="170" height="38" rx="6" fill="#c2410c" stroke="none"/>
+        <text x="552" y="434" text-anchor="middle" fill="white" font-size="10" font-weight="700">M1-like Polarization</text>
+        <text x="552" y="448" text-anchor="middle" fill="#fed7aa" font-size="9">Pro-inflammatory cytokines</text>
+
+        <!-- ============================================================ -->
+        <!-- PANEL E NODES (Outcomes) -->
+        <!-- Node E1: Amyloid Burden -->
+        <rect x="678" y="68" width="196" height="40" rx="6" fill="#7c3aed" stroke="none"/>
+        <text x="776" y="84" text-anchor="middle" fill="white" font-size="10" font-weight="700">↓ Amyloid Burden</text>
+        <text x="776" y="98" text-anchor="middle" fill="#ddd6fe" font-size="9">When HCK active</text>
+
+        <!-- Node E2: Cognitive Function -->
+        <rect x="678" y="132" width="196" height="40" rx="6" fill="#6d28d9" stroke="none"/>
+        <text x="776" y="148" text-anchor="middle" fill="white" font-size="10" font-weight="700">Cognitive Function</text>
+        <text x="776" y="162" text-anchor="middle" fill="#ede9fe" font-size="9">Preserved in HCK-intact models</text>
+
+        <!-- Node E3: Neuropathology -->
+        <rect x="678" y="300" width="196" height="40" rx="6" fill="#8b1a1a" stroke="none"/>
+        <text x="776" y="316" text-anchor="middle" fill="white" font-size="10" font-weight="700">↑ Neuropathology</text>
+        <text x="776" y="330" text-anchor="middle" fill="#fecaca" font-size="9">HCK loss → worse AD</text>
+
+        <!-- Node E4: Neuroinflammation -->
+        <rect x="678" y="364" width="196" height="40" rx="6" fill="#b91c1c" stroke="none"/>
+        <text x="776" y="380" text-anchor="middle" fill="white" font-size="10" font-weight="700">Neuroinflammation</text>
+        <text x="776" y="394" text-anchor="middle" fill="#fecaca" font-size="9">IL-1β · TNF · NLRP3</text>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS -->
+        <defs>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0f766e"/>
+          </marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#15803d"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+          <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8b1a1a"/>
+          </marker>
+        </defs>
+
+        <!-- Panel A → Panel B: TREM2 → HCK -->
+        <line x1="195" y1="88" x2="250" y2="88" stroke="#2e6da4" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+        <!-- A2 → HCK (elbow down) -->
+        <polyline points="195,152 210,152 210,90 250,90" fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)" stroke-dasharray="4,3"/>
+        <!-- A3 → B3 (PI3K/Vav) -->
+        <line x1="195" y1="216" x2="250" y2="239" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr-blue)" stroke-dasharray="4,3"/>
+        <!-- A4 → B3 (elbow) -->
+        <polyline points="195,280 228,280 228,239 250,239" fill="none" stroke="#3b82f6" stroke-width="1.4" marker-end="url(#arr-blue)" stroke-dasharray="4,3"/>
+
+        <!-- Panel B internal: HCK → SYK -->
+        <line x1="331" y1="112" x2="331" y2="146" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+        <!-- SYK → PI3K/Vav -->
+        <line x1="331" y1="186" x2="331" y2="218" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+        <!-- PI3K/Vav → ERK/p38 -->
+        <line x1="331" y1="258" x2="331" y2="290" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+        <!-- HCK → Branch C (Protective): from B1 right side at top -->
+        <!-- HCK top-right to C1 -->
+        <line x1="410" y1="85" x2="465" y2="88" stroke="#0f766e" stroke-width="2" marker-end="url(#arr-green)"/>
+        <!-- PI3K/Vav → C2 -->
+        <line x1="410" y1="239" x2="467" y2="152" stroke="#15803d" stroke-width="1.6" marker-end="url(#arr-green)"/>
+
+        <!-- Panel C internal -->
+        <line x1="552" y1="108" x2="552" y2="130" stroke="#15803d" stroke-width="1.8" marker-end="url(#arr-green)"/>
+        <line x1="552" y1="172" x2="552" y2="194" stroke="#15803d" stroke-width="1.8" marker-end="url(#arr-green)"/>
+
+        <!-- HCK → Branch D (Inflammatory): ERK/p38 right side to D1 -->
+        <line x1="410" y1="311" x2="465" y2="310" stroke="#b45309" stroke-width="2" marker-end="url(#arr-amber)"/>
+
+        <!-- Panel D internal -->
+        <line x1="552" y1="330" x2="552" y2="352" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr-amber)"/>
+        <line x1="552" y1="394" x2="552" y2="416" stroke="#c2410c" stroke-width="1.8" marker-end="url(#arr-amber)"/>
+
+        <!-- C → E (Protective → good outcomes) -->
+        <!-- C1 → E1 -->
+        <line x1="637" y1="88" x2="676" y2="88" stroke="#15803d" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+        <!-- C3 → E2 (synaptic → cognitive) -->
+        <line x1="637" y1="216" x2="676" y2="152" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arr-purple)"/>
+
+        <!-- D → E (Inflammatory → bad outcomes) -->
+        <!-- D1 → E3 -->
+        <line x1="637" y1="310" x2="676" y2="320" stroke="#8b1a1a" stroke-width="1.8" marker-end="url(#arr-red)"/>
+        <!-- D3 → E4 -->
+        <line x1="637" y1="437" x2="676" y2="384" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arr-red)"/>
+
+      </svg>
+    </div>
+    <p class="figure-caption">
+      <strong>Panel A</strong> — Upstream microglial immunoreceptors and modulators (TREM2/TYROBP, CD33/APOE, PLCG2/INPP5D, FCER1G/ABI3) that engage HCK signaling in the amyloid-associated neuroinflammatory network.
+      <strong>Panel B</strong> — HCK as the central Src-family kinase hub, relaying signals through SYK/BTK co-kinase partners, PI3K/Vav/WASP cytoskeletal effectors, and ERK/p38/MAPK inflammatory cascades.
+      <strong>Panel C (green)</strong> — Protective branch: HCK-dependent phagocytosis → plaque containment → synaptic marker preservation; this branch is impaired by HCK loss.
+      <strong>Panel D (amber)</strong> — Inflammatory branch: NLRP3 inflammasome activation → oxidative burst/iNOS → M1-like macrophage polarization; potentially modulated by HCK inhibitors in non-AD models.
+      <strong>Panel E</strong> — AD-relevant outcomes: protective signaling (Panel C) converges on reduced amyloid burden and preserved cognition; inflammatory signaling (Panel D) converges on worsened neuropathology and amplified neuroinflammation.
+    </p>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Myeloid Identity &amp; AD Gene Network</h3>
+        <p>HCK is myeloid-enriched, not a neuronal kinase. It appears within the amyloid-associated neuroinflammatory module alongside TREM2, TYROBP, APOE, CD33, PLCG2, INPP5D, FCER1G, ABI3, DOCK2, and LY86 — placing it in a microglial immune-response program rather than a tau or neuron-intrinsic mechanism.</p>
+      </div>
+
+      <div class="card danger">
+        <h3>⚠ HCK Loss Worsens AD Mouse Models</h3>
+        <p>In Tg2576 and J20 amyloid models, HCK deficiency or inhibition impaired microglial Aβ phagocytosis, reduced plaque coverage, increased amyloid burden and inflammatory iNOS expression, reduced synaptic markers (PSD95), and accelerated cognitive decline — directly contradicting any simple "inhibit HCK to treat AD" hypothesis.</p>
+      </div>
+
+      <div class="card positive">
+        <h3>Protective Microglial Functions</h3>
+        <p>HCK supports Aβ oligomer and plaque phagocytosis, microglial plaque coverage and compaction, limitation of early amyloid accumulation, hippocampal synaptic marker preservation, and restraint of inflammatory iNOS-positive microglial states. Preserving these functions is a higher priority than broad kinase blockade.</p>
+      </div>
+
+      <div class="card warning">
+        <h3>NLRP3 Inflammasome Modulation</h3>
+        <p>HCK is repeatedly linked to NLRP3 inflammasome biology: silencing or inhibition with A419259 reduces IL-1β release, caspase-1 p20, and ASC oligomerization in macrophages and microglia. Since NLRP3 is implicated in AD neuroinflammation, HCK may be an upstream modulator — but inflammasome suppression must not come at the cost of phagocytic function.</p>
+      </div>
+
+      <div class="card blue">
+        <h3>Non-AD Inflammatory Rationale</h3>
+        <p>In traumatic brain injury, ischemic stroke, gout, COPD, lung injury, and kidney fibrosis, HCK inhibitors (A-419259, iHCK-37, KIN-8194, bletinib) suppress M1-like polarization, ERK/p38/IKK signaling, NET formation, and oxidative burst. These findings overlap with AD neuroinflammatory mechanisms but do not establish efficacy in AD specifically.</p>
+      </div>
+
+      <div class="card slate">
+        <h3>Druggability &amp; Therapeutic Risk</h3>
+        <p>HCK is pharmacologically accessible via ATP-site inhibitors, inactive-conformation targeting, SH3/allosteric modulation, and PROTAC-based degradation (HCK/BTK). However, therapeutic risk is substantial: HCK participates in host defense, phagocytosis, immune-cell migration, and myeloid survival. Broad or chronic inhibition risks impairing plaque clearance, immune defense, and tissue repair.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaway-list">
+      <li><b>Do not assume HCK inhibition is beneficial in AD.</b> Direct amyloid-model evidence shows HCK loss worsens early AD-like neuropathology; treat HCK as a plausible but not validated target requiring careful mechanistic dissection before clinical translation.</li>
+      <li><b>Prioritize restoration and tuning over blockade.</b> Therapeutic strategies should restore, tune, or cell-specifically modulate HCK-dependent microglial function rather than attempt indiscriminate systemic HCK inhibition.</li>
+      <li><b>Characterize HCK status in human AD tissue.</b> Determine whether HCK is upregulated, downregulated, phosphorylated, or functionally impaired in human AD microglia, plaque-associated microglia, border-associated macrophages, and AD-relevant peripheral myeloid cells.</li>
+      <li><b>Link HCK activity to disease stage and biomarkers.</b> Establish whether HCK activity correlates with amyloid burden, tau burden, synaptic loss, inflammatory markers, cognitive decline, or disease stage in human AD datasets.</li>
+      <li><b>Separate protective phagocytic functions from harmful inflammatory outputs.</b> Key mechanistic readouts must include Aβ uptake, plaque compaction/containment, synaptic markers, iNOS, IL-1β, IL-18, caspase-1 activation, ASC specks, NLRP3 activity, and cognition — assayed in parallel, not in isolation.</li>
+      <li><b>Evaluate timing carefully.</b> HCK enhancement or preservation is most plausibly useful in early amyloid stages when microglial plaque containment and Aβ clearance are still protective; late-stage strategies may differ.</li>
+      <li><b>Require CNS exposure and phagocytosis-preservation data for any inhibitor.</b> Inhibitors that reduce inflammasome activity but suppress phagocytosis could be harmful; CNS target engagement and Aβ clearance readouts are mandatory.</li>
+      <li><b>Pursue pathway-selective modulation.</b> Candidate intervention nodes include TREM2/HCK/SYK signaling, HCK-dependent cytoskeletal remodeling, PI3K/Abl1/WASP/F-actin phagocytic pathways, and HCK–NLRP3 inflammasome interactions — each of which can be targeted more selectively than pan-HCK inhibition.</li>
+      <li><b>Deploy pharmacodynamic tools to distinguish target engagement from immune suppression.</b> Use HCK activity assays, phosphorylation markers, and substrate-based tools to confirm target engagement without inadvertently measuring downstream immune collapse.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <div class="verdict-label">Overall Assessment — HCK in Alzheimer's Disease</div>
+      <p>
+        HCK is a <b>context-dependent, AD-relevant immune kinase</b> whose therapeutic significance in Alzheimer's disease is substantially more complex than that of a straightforward inflammatory target. The direct AD evidence in the supplied material <b>leans toward preserving or restoring HCK-dependent microglial protective activity</b> — Aβ phagocytosis, plaque containment, and synaptic preservation — rather than broadly inhibiting it. HCK is embedded within the <b>TREM2–TYROBP–APOE neuroinflammatory gene network</b>, is pharmacologically tractable, and participates in NLRP3 inflammasome regulation that is mechanistically relevant to AD. However, the most critical current evidence is a cautionary one: <b>HCK loss in amyloid mouse models worsens pathology</b>. The best current therapeutic hypothesis is therefore not "block HCK in AD," but rather <b>"define and modulate HCK-dependent microglial states so that Aβ clearance and plaque containment are preserved while excessive inflammasome and cytokine signaling is selectively limited."</b> Significant further mechanistic, biomarker, and stage-specific work is required before HCK can be advanced as a validated AD drug target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  HCK · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

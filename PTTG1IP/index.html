@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTTG1IP — Target Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1e3a5f;
+    --mid: #2e6da4;
+    --light: #e8f1fa;
+    --danger: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral: #64748b;
+    --neutral-light: #f1f5f9;
+    --neutral-border: #cbd5e1;
+    --text: #1e293b;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 44px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.35);
+    border-color: rgba(255,100,100,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.72;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-size: 0.96rem;
+  }
+
+  .callout-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--warning);
+    margin-right: 6px;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 14px;
+    padding: 22px 18px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--neutral);
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.93rem;
+    border-left: 4px solid;
+  }
+
+  .card-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent .card-heading { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .card-danger .card-heading { color: var(--danger); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive .card-heading { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: #f59e0b;
+  }
+  .card-warning .card-heading { color: var(--warning); }
+
+  .card-neutral {
+    background: var(--neutral-light);
+    border-color: var(--neutral);
+  }
+  .card-neutral .card-heading { color: var(--neutral); }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: none;
+    counter-reset: take;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  ol.takeaways li {
+    counter-increment: take;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  ol.takeaways li::before {
+    content: counter(take);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--white);
+    background: var(--mid);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1f35 100%);
+    color: var(--white);
+    border-radius: 14px;
+    padding: 36px 40px;
+    line-height: 1.8;
+  }
+
+  .verdict-lead {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #93c5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .verdict p {
+    font-size: 1.02rem;
+    opacity: 0.93;
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #bfdbfe;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--neutral-border);
+    padding: 20px 24px;
+    color: var(--neutral);
+    font-size: 0.8rem;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: PTTG1IP &nbsp;|&nbsp; Pituitary Tumor-Transforming Gene 1 Interacting Protein (PBF)</span>
+    <span class="chip chip-danger">⚠ Proto-oncogenic safety concern</span>
+  </div>
+  <h1>PTTG1IP &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <span class="callout-label">Safety Notice</span>
+      PTTG1IP carries proto-oncogenic, transforming, invasion-promoting, and growth-factor-regulating properties across multiple cancer contexts. Chronic activation or inhibition in Alzheimer's disease would require careful evaluation of oncogenic, vascular, and cell-type-specific risks before any therapeutic development.
+    </div>
+
+    <p>PTTG1IP (also known as PBF or PTTG-binding factor) is <strong>not established</strong> in the supplied evidence as a direct Alzheimer's disease gene or validated Alzheimer's therapeutic target. Its connections to Alzheimer's biology are largely indirect, spanning γ-secretase substrate biology, Down syndrome/chromosome 21 gene dosage, angiogenesis, membrane-protein trafficking, extracellular-vesicle loading, ER protein maturation, p53/DNA-damage signaling, and cancer biology.</p>
+
+    <p>The strongest Alzheimer's-relevant link is mechanistic: PTTG1IP is a single-pass type I membrane protein whose palmitoylated transmembrane domain resists γ-secretase cleavage, providing a model for understanding substrate selectivity. A second plausible connection is neurovascular — as a chromosome 21 gene, PTTG1IP overexpression can inhibit VEGF-driven angiogenesis, which may be relevant to cerebral microvascular repair and the vascular contributions to dementia seen in Down syndrome-associated Alzheimer's disease. Neither link is proven in disease-specific Alzheimer's models.</p>
+
+    <p>Overall, PTTG1IP should be treated as an <em>indirect mechanistic lead</em>, not a validated Alzheimer's disease target, pending brain- and disease-specific functional studies.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Overview — Evidence Map</h2>
+    <figure>
+      <div class="figure-wrap">
+        <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Arial,Helvetica,sans-serif;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0,8 3,0 6" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0,8 3,0 6" fill="#9b1c1c"/>
+            </marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0,8 3,0 6" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-n" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0,8 3,0 6" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <!-- Panel A: Membrane Biology & γ-secretase -->
+          <rect x="14" y="14" width="416" height="464" rx="14" fill="#e8f1fa" fill-opacity="0.55" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="28" y="36" font-size="9" font-weight="700" fill="#1e3a5f" letter-spacing="1">A · MEMBRANE BIOLOGY &amp; γ-SECRETASE</text>
+
+          <!-- Node: PTTG1IP protein (central) -->
+          <rect x="130" y="52" width="156" height="46" rx="8" fill="#2e6da4" stroke="#1e3a5f" stroke-width="1.5"/>
+          <text x="208" y="71" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">PTTG1IP / PBF</text>
+          <text x="208" y="86" text-anchor="middle" font-size="9.5" fill="#dbeafe">Type I membrane protein</text>
+
+          <!-- Node: N-glycosylation -->
+          <rect x="40" y="146" width="126" height="40" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="103" y="162" text-anchor="middle" font-size="10" fill="#1e3a5f">N-Glycosylation</text>
+          <text x="103" y="176" text-anchor="middle" font-size="9" fill="#64748b">ER maturation</text>
+
+          <!-- Node: Palmitoylation -->
+          <rect x="250" y="146" width="126" height="40" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="313" y="162" text-anchor="middle" font-size="10" fill="#1e3a5f">Palmitoylation</text>
+          <text x="313" y="176" text-anchor="middle" font-size="9" fill="#64748b">TM domain modified</text>
+
+          <!-- Arrows from PTTG1IP to glyco and palmitoyl -->
+          <line x1="175" y1="98" x2="125" y2="146" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="243" y1="98" x2="295" y2="146" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node: γ-secretase (substrate gate) -->
+          <rect x="130" y="240" width="156" height="46" rx="8" fill="#1e3a5f" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="208" y="259" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">γ-Secretase</text>
+          <text x="208" y="273" text-anchor="middle" font-size="9.5" fill="#93c5fd">Substrate selectivity</text>
+
+          <!-- Arrow: Palmitoylation BLOCKS γ-secretase cleavage (angled) -->
+          <line x1="313" y1="186" x2="313" y2="222" stroke="#9b1c1c" stroke-width="1.4" stroke-dasharray="5,3"/>
+          <line x1="313" y1="222" x2="278" y2="240" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-r)" stroke-dasharray="5,3"/>
+
+          <!-- Arrow: N-glyco supports to γ-secretase -->
+          <line x1="116" y1="186" x2="116" y2="222" stroke="#2e6da4" stroke-width="1.4"/>
+          <line x1="116" y1="222" x2="148" y2="240" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Node: APP processing -->
+          <rect x="44" y="342" width="126" height="40" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="107" y="358" text-anchor="middle" font-size="10" fill="#1e3a5f">APP Processing</text>
+          <text x="107" y="372" text-anchor="middle" font-size="9" fill="#64748b">Aβ production</text>
+
+          <!-- Node: Notch pathway -->
+          <rect x="250" y="342" width="126" height="40" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.3"/>
+          <text x="313" y="358" text-anchor="middle" font-size="10" fill="#1e3a5f">Notch Pathway</text>
+          <text x="313" y="372" text-anchor="middle" font-size="9" fill="#b45309">Toxicity risk</text>
+
+          <!-- Arrows from γ-secretase down to two nodes -->
+          <line x1="180" y1="286" x2="140" y2="342" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="238" y1="286" x2="283" y2="342" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+          <!-- Node: Selective GSM strategy -->
+          <rect x="110" y="432" width="196" height="38" rx="7" fill="#0f766e" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="208" y="449" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">Selective GSM Strategy</text>
+          <text x="208" y="463" text-anchor="middle" font-size="9" fill="#ccfbf1">Avoid Notch toxicity</text>
+
+          <!-- Arrows from APP and Notch converging to GSM -->
+          <line x1="145" y1="382" x2="175" y2="432" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+          <line x1="278" y1="382" x2="240" y2="432" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Panel B: Neurovascular & Downstream -->
+          <rect x="448" y="14" width="436" height="260" rx="14" fill="#f0fdfa" fill-opacity="0.7" stroke="#0f766e" stroke-width="1.5"/>
+          <text x="462" y="36" font-size="9" font-weight="700" fill="#0f766e" letter-spacing="1">B · NEUROVASCULAR &amp; DOWN SYNDROME</text>
+
+          <!-- Node: Chr 21 gene dosage -->
+          <rect x="560" y="50" width="148" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.4"/>
+          <text x="634" y="67" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">Chr 21 Gene Dosage</text>
+          <text x="634" y="81" text-anchor="middle" font-size="9" fill="#ccfbf1">Down syndrome model</text>
+
+          <!-- Node: VEGF signaling -->
+          <rect x="462" y="142" width="130" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="527" y="158" text-anchor="middle" font-size="10" fill="#1e293b">VEGF Signaling</text>
+          <text x="527" y="172" text-anchor="middle" font-size="9" fill="#0f766e">Inhibited by PTTG1IP ↓</text>
+
+          <!-- Node: Angiogenesis / BBB -->
+          <rect x="618" y="142" width="130" height="40" rx="7" fill="#fff" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="683" y="158" text-anchor="middle" font-size="10" fill="#1e293b">Angiogenesis / BBB</text>
+          <text x="683" y="172" text-anchor="middle" font-size="9" fill="#0f766e">Cerebral repair</text>
+
+          <!-- Arrows from Chr21 to VEGF and Angio -->
+          <line x1="606" y1="90" x2="558" y2="142" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+          <line x1="662" y1="90" x2="698" y2="142" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Node: Vascular dementia risk -->
+          <rect x="540" y="226" width="188" height="38" rx="7" fill="#e8f1fa" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="634" y="242" text-anchor="middle" font-size="10" fill="#1e3a5f">Vascular Dementia Risk</text>
+          <text x="634" y="256" text-anchor="middle" font-size="9" fill="#2e6da4">DS-associated AD modifier?</text>
+
+          <!-- Arrows from VEGF and Angio to Vascular dementia -->
+          <line x1="553" y1="182" x2="590" y2="226" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <line x1="715" y1="182" x2="677" y2="226" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Panel C: EV Platform & Oncology Risk -->
+          <rect x="448" y="292" width="436" height="186" rx="14" fill="#fef2f2" fill-opacity="0.6" stroke="#9b1c1c" stroke-width="1.5"/>
+          <text x="462" y="314" font-size="9" font-weight="700" fill="#9b1c1c" letter-spacing="1">C · EV DELIVERY PLATFORM &amp; ONCOLOGY RISK</text>
+
+          <!-- Node: EV sorting scaffold -->
+          <rect x="462" y="328" width="140" height="40" rx="7" fill="#fff" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="532" y="344" text-anchor="middle" font-size="10" fill="#1e293b">EV Sorting Scaffold</text>
+          <text x="532" y="358" text-anchor="middle" font-size="9" fill="#2e6da4">Glycan-dependent loading</text>
+
+          <!-- Node: Therapeutic cargo delivery -->
+          <rect x="462" y="418" width="140" height="40" rx="7" fill="#0f766e" stroke="#065f46" stroke-width="1.3"/>
+          <text x="532" y="434" text-anchor="middle" font-size="10" fill="#fff">Cargo Delivery</text>
+          <text x="532" y="448" text-anchor="middle" font-size="9" fill="#ccfbf1">Cre, Cas9-sgRNA tested</text>
+
+          <line x1="532" y1="368" x2="532" y2="418" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-g)"/>
+
+          <!-- Node: p53 / DNA damage -->
+          <rect x="636" y="328" width="132" height="40" rx="7" fill="#fff" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="702" y="344" text-anchor="middle" font-size="10" fill="#1e293b">p53 / DNA Damage</text>
+          <text x="702" y="358" text-anchor="middle" font-size="9" fill="#9b1c1c">Ubiquitination of p53</text>
+
+          <!-- Node: Oncogenic risk -->
+          <rect x="636" y="418" width="132" height="40" rx="7" fill="#9b1c1c" stroke="#7f1d1d" stroke-width="1.3"/>
+          <text x="702" y="434" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">Oncogenic Risk</text>
+          <text x="702" y="448" text-anchor="middle" font-size="9" fill="#fecaca">Proliferation, invasion</text>
+
+          <line x1="702" y1="368" x2="702" y2="418" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-r)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (blue, left):</strong> PTTG1IP membrane biology and γ-secretase substrate gate. The protein branches into N-glycosylation (ER maturation, supporting processing) and palmitoylation (blocking γ-secretase cleavage, dashed red). Both paths converge on APP processing and Notch toxicity risk, motivating selective γ-secretase modulator (GSM) strategies.
+        <strong>Panel B (teal, upper right):</strong> Neurovascular/Down syndrome axis. Chromosome 21 gene dosage fans into VEGF signaling inhibition and angiogenesis/BBB regulation, reconverging on a vascular dementia risk node relevant to DS-associated Alzheimer's disease.
+        <strong>Panel C (red, lower right):</strong> Two independent downstream implications — PTTG1IP as an EV delivery scaffold (teal branch, therapeutic opportunity) and its p53/DNA-damage interactions driving oncogenic risk (red branch, safety concern).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <div class="card-heading">γ-Secretase Substrate Selectivity</div>
+        A 2024 study identified PTTG1IP among type I membrane proteins with short ectodomains poorly cleaved by γ-secretase. Its transmembrane domain remained barely cleaved even within a known substrate backbone, and palmitoylation of that domain was shown to actively prevent cleavage — providing a mechanistic model for substrate-selective γ-secretase modulation.
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Neurovascular / Down Syndrome Link</div>
+        As a chromosome 21 gene, PTTG1IP overexpression can inhibit VEGF-driven angiogenic responses in a Tc1 Down syndrome mouse model. Because Down syndrome is associated with early Alzheimer-like pathology and Alzheimer's disease involves vascular dysfunction, PTTG1IP could be a candidate modifier of vascular contributions to dementia — particularly in DS-associated Alzheimer's.
+      </div>
+
+      <div class="card card-positive">
+        <div class="card-heading">Extracellular Vesicle Delivery Platform</div>
+        PTTG1IP's N-glycosylation supports efficient EV loading, and PTTG1IP fusion proteins enabled delivery of Cre recombinase and Cas9-sgRNA cargoes in experimental systems. This positions it as a possible EV-based delivery scaffold for Alzheimer's-relevant proteins, RNA, or gene-editing payloads — a therapeutic platform role rather than a disease-modifying target.
+      </div>
+
+      <div class="card card-warning">
+        <div class="card-heading">Membrane Biology &amp; Proteostasis Relevance</div>
+        PTTG1IP is N-glycosylated, palmitoylated, and dependent on ER/translocon-associated maturation machinery. These features place it within proteostasis and membrane-protein processing pathways that are important themes in Alzheimer's biology, even though no direct Alzheimer's disease connection has been demonstrated.
+      </div>
+
+      <div class="card card-neutral">
+        <div class="card-heading">p53, DNA Damage &amp; Neurodegeneration</div>
+        PTTG1IP binds p53, reduces p53 stability through ubiquitination, represses p53-responsive transcription, and alters DNA repair gene expression in cancer models. DNA damage, impaired repair, and p53 signaling are relevant to neurodegeneration, but no direct Alzheimer's evidence is provided and the direction of therapeutic benefit is uncertain.
+      </div>
+
+      <div class="card card-danger">
+        <div class="card-heading">Oncogenic Safety Concern</div>
+        Therapeutic targeting evidence is strongest in oncology, not Alzheimer's disease. PTTG1IP has proto-oncogenic, transforming, invasion-promoting, and growth-factor-regulating properties. Any chronic activation or inhibition strategy in Alzheimer's disease would require careful evaluation of oncogenic, vascular, and cell-type-specific risks before advancing.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat PTTG1IP as a hypothesis-generating candidate.</strong> It is not a validated Alzheimer's therapeutic target. All downstream work should be framed as exploratory until brain- and disease-specific functional evidence is obtained.</li>
+      <li><strong>Prioritize validation in Alzheimer's and DS-associated Alzheimer's datasets.</strong> Key questions include whether PTTG1IP expression, methylation, glycosylation, or palmitoylation changes in affected brain regions, and whether changes correlate with amyloid burden, tau pathology, vascular dysfunction, or cognitive decline.</li>
+      <li><strong>Map cell-type localization in human brain and disease models.</strong> Focus on neurons, astrocytes, microglia, oligodendrocytes, endothelial cells, pericytes, and blood–brain barrier-associated cells to determine where PTTG1IP is expressed and functionally relevant.</li>
+      <li><strong>Test whether PTTG1IP affects γ-secretase behavior beyond being a non-substrate.</strong> Experiments should examine whether PTTG1IP competes with, modulates, or alters substrate handling by γ-secretase — including APP processing and amyloid-β production.</li>
+      <li><strong>Use palmitoylation rules to guide selective γ-secretase modulation.</strong> The most concrete Alzheimer's-relevant application is not direct PTTG1IP targeting but using its palmitoylation-dependent cleavage resistance to inform how to tune γ-secretase selectivity and avoid Notch-pathway toxicity.</li>
+      <li><strong>Evaluate neurovascular hypotheses in Alzheimer's models.</strong> Test whether PTTG1IP alters VEGF signaling, angiogenesis, blood–brain barrier integrity, vascular density, cerebral perfusion, neurovascular coupling, and amyloid clearance in Alzheimer's and Down syndrome Alzheimer's model systems.</li>
+      <li><strong>Explore PTTG1IP as a delivery-enabling platform.</strong> Its glycosylation-dependent EV-loading function could be investigated for delivery of Alzheimer's-relevant therapeutic proteins, RNA, or gene-editing cargoes — provided brain targeting and oncogenic safety can be demonstrated.</li>
+      <li><strong>Define therapeutic direction before target development.</strong> It is currently unclear whether Alzheimer's-relevant intervention would require inhibiting PTTG1IP, enhancing it, modifying its post-translational state, or using it only as an EV-sorting scaffold. Direct functional studies in Alzheimer's-relevant models are required before target prioritization.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — PTTG1IP in Alzheimer's Disease</span>
+      <p>
+        PTTG1IP is an <strong>indirect mechanistic lead of uncertain Alzheimer's relevance</strong>, not a validated disease target. Its most scientifically grounded connections to Alzheimer's biology are twofold: its role as a <strong>γ-secretase non-substrate via palmitoylation</strong>, which could inform substrate-selective γ-secretase modulator design, and its potential as a <strong>neurovascular modifier</strong> in Down syndrome-associated Alzheimer's disease through VEGF/angiogenesis regulation. A third opportunity — as an <strong>EV-based therapeutic delivery scaffold</strong> — is technology-enabling rather than disease-modifying. Against these opportunities stands a significant safety concern: PTTG1IP is <strong>proto-oncogenic</strong> with transformation, invasion, p53 suppression, and growth-factor-regulatory activities across multiple cancer systems. Advancing PTTG1IP toward Alzheimer's drug discovery requires, at minimum, <strong>disease-specific expression profiling, cell-type mapping, functional studies in Alzheimer's-relevant models, and rigorous oncogenic risk assessment</strong> before any therapeutic strategy can be responsibly prioritized.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  PTTG1IP / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only
+</footer>
+
+</body>
+</html>

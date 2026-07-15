@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TLR5 — Alzheimer's Disease Target Enabling Package</title>
+<style>
+  :root {
+    --dark: #1a4731;
+    --mid: #2d7a54;
+    --light: #e8f5ee;
+    --danger: #8b1a1a;
+    --danger-light: #fdf0f0;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0e7490;
+    --positive-light: #e0f7fa;
+    --neutral: #475569;
+    --neutral-light: #f1f5f9;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: #ffffff;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b2318 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 40px;
+  }
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.30);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #e8f5ee;
+    letter-spacing: 0.04em;
+  }
+  .chip-danger {
+    background: rgba(139,26,26,0.40);
+    border-color: rgba(255,180,180,0.40);
+    color: #ffd6d6;
+  }
+  header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  header .subtitle {
+    font-style: italic;
+    font-size: 0.95rem;
+    opacity: 0.72;
+    color: #e8f5ee;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  section { margin-bottom: 54px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+  .callout strong { color: var(--warning); font-family: Arial, sans-serif; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+
+  /* OVERVIEW TEXT */
+  .overview-body p { margin-bottom: 14px; font-size: 0.97rem; }
+  .overview-body ul { padding-left: 22px; margin-bottom: 14px; }
+  .overview-body ul li { margin-bottom: 8px; font-size: 0.95rem; }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-light);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px 14px;
+    overflow-x: auto;
+  }
+  .figure-caption {
+    font-style: italic;
+    font-size: 0.83rem;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+    font-size: 0.92rem;
+  }
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 7px;
+  }
+  .card p { line-height: 1.65; }
+  .card-accent { background: var(--light); border-left: 4px solid var(--mid); }
+  .card-accent h3 { color: var(--dark); }
+  .card-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .card-danger h3 { color: var(--danger); }
+  .card-positive { background: var(--positive-light); border-left: 4px solid var(--positive); }
+  .card-positive h3 { color: var(--positive); }
+  .card-warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .card-warning h3 { color: var(--warning); }
+  .card-neutral { background: var(--neutral-light); border-left: 4px solid var(--neutral); }
+  .card-neutral h3 { color: var(--neutral); }
+  .card-blue { background: #eff6ff; border-left: 4px solid #2563eb; }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  .takeaways-list { list-style: none; counter-reset: takeaway-counter; padding: 0; }
+  .takeaways-list li {
+    counter-increment: takeaway-counter;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .takeaways-list li::before {
+    content: counter(takeaway-counter);
+    min-width: 28px;
+    height: 28px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .takeaways-list li strong { color: var(--dark); }
+
+  /* VERDICT */
+  .verdict-banner {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b2318 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+  }
+  .verdict-banner .verdict-label {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #86efb8;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .verdict-banner p {
+    font-size: 1.01rem;
+    line-height: 1.8;
+    color: #e8f5ee;
+  }
+  .verdict-banner strong { color: #a7f3d0; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.76rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: TLR5 &nbsp;|&nbsp; Toll-Like Receptor 5</span>
+    <span class="chip chip-danger">⚠ Safety Caveat: Context-Dependent Activation Risk</span>
+  </div>
+  <h1>TLR5 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>⚠ Therapeutic Safety Caveat</strong>
+      TLR5 activation can potently induce NF-κB, IL-6, TNF-α, IL-1β, inflammasome activity, and myeloid recruitment; systemic agonism risks worsening neuroinflammation. Conversely, broad inhibition may impair mucosal immunity and antimicrobial defense. Precision modulation with tightly controlled dosing and route is essential before clinical development.
+    </div>
+
+    <div class="overview-body">
+      <p>TLR5 is primarily characterized as a bacterial flagellin-sensing innate immune receptor that signals through MyD88, NF-κB, MAPK/JNK/ERK, inflammasome-related pathways, and cytokine networks. Most supplied evidence is not Alzheimer's disease-specific and derives from infection, mucosal immunity, gut barrier, microbiome, metabolic disease, cancer, vaccine, and systemic inflammation studies.</p>
+      <p>The strongest Alzheimer's-relevant evidence is limited but notable across three domains:</p>
+      <ul>
+        <li>A <strong>tauopathy mucosal vaccine study</strong> used flagellin B (FlaB) as a TLR5 agonist adjuvant with a tau repeat-domain antigen. TLR5-dependent immunization generated antibodies selective for aggregated TauRD, inhibited tau filament formation, promoted microglial phagocytic degradation of tau fragments, recognized pathological tau in human AD brain tissue, improved memory deficits, reduced tauopathy progression, and extended survival in P301S tauopathy mice.</li>
+        <li>A <strong>dementia-focused proteomics/genetics study</strong> linked infection history to dementia risk, brain volume loss, cognitive decline, and dementia biomarkers; genetic regulation of immune proteins including TLR5 predicted brain volume loss, positioning TLR5 as a candidate mediator of infection-associated neurodegeneration rather than a validated AD driver.</li>
+        <li>A <strong>neurogenesis study</strong> found TLR5 expressed in hippocampal neural stem/progenitor populations, promoting neural differentiation through NF-κB, IL-6/CREB, and JNK-related pathways; TLR5 deficiency impaired fear memory in mice — relevant to AD-associated hippocampal dysfunction but not an AD model.</li>
+      </ul>
+      <p>Overall, TLR5 is best viewed as a mechanistically plausible AD-adjacent immune, microbiome, and barrier-regulating node, not yet a broadly validated Alzheimer's therapeutic target.</p>
+    </div>
+  </section>
+
+  <!-- FIGURE -->
+  <section id="figure">
+    <h2>Mechanistic Pathway Diagram</h2>
+    <div class="figure-wrap">
+      <svg viewBox="0 0 920 500" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block; min-width:600px;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2d7a54"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8b1a1a"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#b45309"/>
+          </marker>
+        </defs>
+
+        <!-- PANEL A: Upstream Activation -->
+        <rect x="8" y="8" width="250" height="484" rx="10" fill="#e8f5ee" fill-opacity="0.6" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="20" y="26" font-family="Arial" font-size="8.5" font-weight="700" fill="#1a4731" text-anchor="start" letter-spacing="0.08em">UPSTREAM ACTIVATION</text>
+
+        <!-- Node 1: Flagellin/FlaB -->
+        <rect x="54" y="34" width="148" height="40" rx="7" fill="#1a4731" stroke="#0b2318" stroke-width="1.2"/>
+        <text x="128" y="52" font-family="Georgia" font-size="11" fill="#ffffff" text-anchor="middle">Flagellin / FlaB</text>
+        <text x="128" y="66" font-family="Georgia" font-size="9.5" fill="#a7f3d0" text-anchor="middle">(TLR5 ligand)</text>
+
+        <!-- Arrow down -->
+        <line x1="128" y1="74" x2="128" y2="102" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 2: TLR5 Receptor -->
+        <rect x="54" y="104" width="148" height="40" rx="7" fill="#2d7a54" stroke="#1a4731" stroke-width="1.2"/>
+        <text x="128" y="122" font-family="Georgia" font-size="11" fill="#ffffff" text-anchor="middle">TLR5 Receptor</text>
+        <text x="128" y="136" font-family="Georgia" font-size="9.5" fill="#e8f5ee" text-anchor="middle">MyD88 recruitment</text>
+
+        <!-- Arrow down -->
+        <line x1="128" y1="144" x2="128" y2="170" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 3: NF-κB Activation -->
+        <rect x="54" y="172" width="148" height="40" rx="7" fill="#2d7a54" stroke="#1a4731" stroke-width="1.2"/>
+        <text x="128" y="190" font-family="Georgia" font-size="11" fill="#ffffff" text-anchor="middle">NF-κB Activation</text>
+        <text x="128" y="204" font-family="Georgia" font-size="9.5" fill="#e8f5ee" text-anchor="middle">MAPK / ERK / JNK</text>
+
+        <!-- BRANCH: arrow left-down to cytokines, arrow right-down to inflammasome -->
+        <line x1="94" y1="212" x2="94" y2="245" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="162" y1="212" x2="162" y2="245" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node 4: Cytokine Output -->
+        <rect x="22" y="247" width="130" height="40" rx="7" fill="#e8f5ee" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="87" y="263" font-family="Georgia" font-size="10" fill="#1a4731" text-anchor="middle">IL-6, TNF-α</text>
+        <text x="87" y="277" font-family="Georgia" font-size="9.5" fill="#1a4731" text-anchor="middle">IL-1β, IL-8, IL-22</text>
+
+        <!-- Node 5: Inflammasome -->
+        <rect x="164" y="247" width="80" height="40" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="204" y="263" font-family="Georgia" font-size="10" fill="#8b1a1a" text-anchor="middle">Inflammasome</text>
+        <text x="204" y="277" font-family="Georgia" font-size="9.5" fill="#8b1a1a" text-anchor="middle">IL-18, ROS</text>
+
+        <!-- Node 6: Gut Barrier -->
+        <rect x="22" y="326" width="130" height="40" rx="7" fill="#e8f5ee" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="87" y="344" font-family="Georgia" font-size="10" fill="#1a4731" text-anchor="middle">Gut Barrier /</text>
+        <text x="87" y="358" font-family="Georgia" font-size="9.5" fill="#1a4731" text-anchor="middle">Mucosal Immunity</text>
+
+        <!-- Arrow cytokines → gut barrier -->
+        <line x1="87" y1="287" x2="87" y2="324" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Node 7: Systemic Inflammation -->
+        <rect x="28" y="408" width="196" height="40" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+        <text x="126" y="426" font-family="Georgia" font-size="10" fill="#92400e" text-anchor="middle">Systemic Inflammation</text>
+        <text x="126" y="440" font-family="Georgia" font-size="9.5" fill="#92400e" text-anchor="middle">Gut–Brain Axis</text>
+
+        <!-- Arrow gut barrier → systemic -->
+        <line x1="87" y1="366" x2="87" y2="394" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+        <!-- Elbow from inflammasome to systemic: go down to y=394 then left -->
+        <polyline points="204,287 204,394 134,394" fill="none" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+        <line x1="134" y1="394" x2="134" y2="406" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- PANEL B: AD-Relevant Mechanisms -->
+        <rect x="272" y="8" width="280" height="484" rx="10" fill="#eff6ff" fill-opacity="0.55" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="284" y="26" font-family="Arial" font-size="8.5" font-weight="700" fill="#1d4ed8" text-anchor="start" letter-spacing="0.08em">AD-RELEVANT MECHANISMS</text>
+
+        <!-- Node 8: Tau Vaccine Adjuvant -->
+        <rect x="286" y="34" width="248" height="40" rx="7" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.2"/>
+        <text x="410" y="52" font-family="Georgia" font-size="10.5" fill="#ffffff" text-anchor="middle">FlaB–TauRD Mucosal Vaccine</text>
+        <text x="410" y="66" font-family="Georgia" font-size="9.5" fill="#bfdbfe" text-anchor="middle">TLR5 agonist adjuvant strategy</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="74" x2="410" y2="102" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Branch from vaccine: left → antibody, right → microglia -->
+        <!-- Node 9: Anti-tau Antibodies -->
+        <rect x="286" y="104" width="118" height="44" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="345" y="122" font-family="Georgia" font-size="10" fill="#1d4ed8" text-anchor="middle">Anti-TauRD</text>
+        <text x="345" y="136" font-family="Georgia" font-size="9.5" fill="#1d4ed8" text-anchor="middle">Antibodies</text>
+
+        <!-- Node 10: Microglial Clearance -->
+        <rect x="416" y="104" width="118" height="44" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+        <text x="475" y="122" font-family="Georgia" font-size="10" fill="#1d4ed8" text-anchor="middle">Microglial</text>
+        <text x="475" y="136" font-family="Georgia" font-size="9.5" fill="#1d4ed8" text-anchor="middle">Tau Clearance</text>
+
+        <!-- Arrow from Node 8 left-down to Node 9 -->
+        <line x1="370" y1="74" x2="345" y2="102" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <!-- Arrow from Node 8 right-down to Node 10 -->
+        <line x1="450" y1="74" x2="475" y2="102" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Converge arrows down to Node 11 -->
+        <line x1="345" y1="148" x2="345" y2="168" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+        <line x1="475" y1="148" x2="475" y2="168" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 11: Reduced Tauopathy -->
+        <rect x="310" y="170" width="200" height="40" rx="7" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="1.2"/>
+        <text x="410" y="188" font-family="Georgia" font-size="10.5" fill="#ffffff" text-anchor="middle">↓ Tauopathy Progression</text>
+        <text x="410" y="202" font-family="Georgia" font-size="9.5" fill="#bfdbfe" text-anchor="middle">Improved memory · Extended survival</text>
+
+        <!-- Arrow down to Node 12 -->
+        <line x1="410" y1="210" x2="410" y2="246" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 12: Hippocampal Neurogenesis -->
+        <rect x="286" y="248" width="248" height="44" rx="7" fill="#e0f7fa" stroke="#0e7490" stroke-width="1.2"/>
+        <text x="410" y="266" font-family="Georgia" font-size="10.5" fill="#0e7490" text-anchor="middle">Hippocampal Neurogenesis</text>
+        <text x="410" y="280" font-family="Georgia" font-size="9.5" fill="#0e7490" text-anchor="middle">NF-κB · IL-6/CREB · JNK → NSC diff.</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="292" x2="410" y2="326" stroke="#0e7490" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+        <!-- Node 13: Infection → Dementia -->
+        <rect x="286" y="328" width="248" height="44" rx="7" fill="#fff7ed" stroke="#b45309" stroke-width="1.2"/>
+        <text x="410" y="346" font-family="Georgia" font-size="10.5" fill="#92400e" text-anchor="middle">Infection → Dementia Risk</text>
+        <text x="410" y="360" font-family="Georgia" font-size="9.5" fill="#92400e" text-anchor="middle">Brain volume loss · Cognitive decline</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="372" x2="410" y2="406" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-amber)"/>
+
+        <!-- Node 14: AD-Adjacent Output -->
+        <rect x="286" y="408" width="248" height="40" rx="7" fill="#e8f5ee" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="410" y="426" font-family="Georgia" font-size="10.5" fill="#1a4731" text-anchor="middle">Plausible AD-Adjacent Node</text>
+        <text x="410" y="440" font-family="Georgia" font-size="9.5" fill="#1a4731" text-anchor="middle">Requires direct AD validation</text>
+
+        <!-- PANEL C: Druggability -->
+        <rect x="566" y="8" width="346" height="484" rx="10" fill="#fdf0f0" fill-opacity="0.5" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="578" y="26" font-family="Arial" font-size="8.5" font-weight="700" fill="#8b1a1a" text-anchor="start" letter-spacing="0.08em">DRUGGABILITY &amp; SAFETY</text>
+
+        <!-- Node 15: Agonist Strategies -->
+        <rect x="578" y="34" width="154" height="56" rx="7" fill="#e8f5ee" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="655" y="52" font-family="Georgia" font-size="10.5" fill="#1a4731" text-anchor="middle">TLR5 Agonists</text>
+        <text x="655" y="66" font-family="Georgia" font-size="9" fill="#1a4731" text-anchor="middle">FlaB · FliC · CBLB502</text>
+        <text x="655" y="79" font-family="Georgia" font-size="9" fill="#1a4731" text-anchor="middle">Mucosal vaccine adjuvant</text>
+
+        <!-- Node 16: Antagonist Strategies -->
+        <rect x="744" y="34" width="154" height="56" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="821" y="52" font-family="Georgia" font-size="10.5" fill="#8b1a1a" text-anchor="middle">TLR5 Antagonists</text>
+        <text x="821" y="66" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">TH1020 · Decoy ligands</text>
+        <text x="821" y="79" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">Flagellin interception</text>
+
+        <!-- Arrows from agonist/antagonist down -->
+        <line x1="655" y1="90" x2="655" y2="128" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="821" y1="90" x2="821" y2="128" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Safety: Agonist benefit -->
+        <rect x="578" y="130" width="154" height="52" rx="7" fill="#e0f7fa" stroke="#0e7490" stroke-width="1.2"/>
+        <text x="655" y="148" font-family="Georgia" font-size="10" fill="#0e7490" text-anchor="middle">Benefit: Barrier</text>
+        <text x="655" y="161" font-family="Georgia" font-size="9" fill="#0e7490" text-anchor="middle">defense, neurogenesis,</text>
+        <text x="655" y="174" font-family="Georgia" font-size="9" fill="#0e7490" text-anchor="middle">tau clearance</text>
+
+        <!-- Safety: Agonist risk -->
+        <rect x="578" y="222" width="154" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="655" y="240" font-family="Georgia" font-size="10" fill="#8b1a1a" text-anchor="middle">Risk: NF-κB surge</text>
+        <text x="655" y="253" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">Systemic cytokines,</text>
+        <text x="655" y="266" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">neuroinflammation ↑</text>
+
+        <line x1="655" y1="182" x2="655" y2="220" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Antagonist benefit -->
+        <rect x="744" y="130" width="154" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+        <text x="821" y="148" font-family="Georgia" font-size="10" fill="#92400e" text-anchor="middle">Benefit: Reduce</text>
+        <text x="821" y="161" font-family="Georgia" font-size="9" fill="#92400e" text-anchor="middle">chronic flagellin-driven</text>
+        <text x="821" y="174" font-family="Georgia" font-size="9" fill="#92400e" text-anchor="middle">inflammation</text>
+
+        <!-- Antagonist risk -->
+        <rect x="744" y="222" width="154" height="52" rx="7" fill="#fdf0f0" stroke="#8b1a1a" stroke-width="1.2"/>
+        <text x="821" y="240" font-family="Georgia" font-size="10" fill="#8b1a1a" text-anchor="middle">Risk: Impaired host</text>
+        <text x="821" y="253" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">defense, mucosal</text>
+        <text x="821" y="266" font-family="Georgia" font-size="9" fill="#8b1a1a" text-anchor="middle">immunity impaired</text>
+
+        <line x1="821" y1="182" x2="821" y2="220" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+        <!-- Converge both columns to Microbiome node -->
+        <line x1="655" y1="274" x2="655" y2="316" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="821" y1="274" x2="821" y2="316" stroke="#8b1a1a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- Node: Microbiome Modulation -->
+        <rect x="578" y="318" width="320" height="44" rx="7" fill="#e8f5ee" stroke="#2d7a54" stroke-width="1.2"/>
+        <text x="738" y="336" font-family="Georgia" font-size="10.5" fill="#1a4731" text-anchor="middle">Microbiome Modulation</text>
+        <text x="738" y="350" font-family="Georgia" font-size="9.5" fill="#1a4731" text-anchor="middle">↓ Flagellin producers · Restore dysbiosis</text>
+
+        <!-- Arrow to final node -->
+        <line x1="738" y1="362" x2="738" y2="408" stroke="#2d7a54" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Final node: Precision Strategy -->
+        <rect x="578" y="410" width="320" height="40" rx="7" fill="#1a4731" stroke="#0b2318" stroke-width="1.2"/>
+        <text x="738" y="428" font-family="Georgia" font-size="10.5" fill="#ffffff" text-anchor="middle">Precision Modulation Strategy</text>
+        <text x="738" y="442" font-family="Georgia" font-size="9.5" fill="#a7f3d0" text-anchor="middle">Localized · Route-controlled · Patient-stratified</text>
+
+        <!-- Cross-panel connector: Systemic Inflammation (Panel A, node 7) → Infection/Dementia (Panel B, node 13) -->
+        <!-- Route: elbow from node7 right side (x=224, y=428) through gutter at x=260, y=349 to node13 left side (x=286, y=350) -->
+        <polyline points="224,428 260,428 260,350 284,350" fill="none" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+      </svg>
+
+      <p class="figure-caption">
+        <strong>Panel A (Upstream Activation):</strong> Bacterial flagellin/FlaB binds TLR5 → MyD88 recruitment → NF-κB and MAPK activation, branching into cytokine output (IL-6, TNF-α, IL-1β) and inflammasome/ROS induction; both converge on systemic gut–brain-axis inflammation.
+        <strong>Panel B (AD-Relevant Mechanisms):</strong> FlaB–TauRD mucosal vaccine engages TLR5, branching into anti-TauRD antibody generation and microglial tau clearance, converging on reduced tauopathy and improved memory; separately, TLR5 supports hippocampal neurogenesis (NF-κB/IL-6/CREB/JNK) and is genetically linked to infection-associated dementia risk — both feeding a plausible-but-unvalidated AD-adjacent node.
+        <strong>Panel C (Druggability &amp; Safety):</strong> TLR5 agonist and antagonist strategies each carry distinct benefit/risk profiles; both converge on microbiome modulation as a complementary approach, yielding a precision, route-controlled, patient-stratified intervention concept.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section id="insights">
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Core Mechanism: Flagellin Recognition</h3>
+        <p>Bacterial flagellin (FliC/FlaB) is the principal TLR5 ligand. TLR5 links motile bacteria, gut dysbiosis, and infection exposure to MyD88-dependent innate immune activation — the mechanistic foundation for all downstream AD-adjacent effects.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>Tau Vaccine Adjuvant — Strongest AD Signal</h3>
+        <p>FlaB-adjuvanted TauRD mucosal vaccination generated antibodies selective for aggregated tau, promoted microglial phagocytic clearance of tau fragments, improved memory deficits, reduced tauopathy progression, and extended survival in P301S mice. This is the clearest TLR5-specific AD/tauopathy-directed therapeutic evidence in the supplied data.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Gut–Brain Axis: Strongest Indirect AD Pathway</h3>
+        <p>TLR5 sits at the interface of intestinal microbiota, flagellated bacteria, epithelial permeability, tight-junction integrity, bacterial translocation, and systemic cytokine tone. Dysbiosis-derived flagellin activating peripheral TLR5 may feed AD neuroinflammation via systemic cytokine spillover — a plausible but indirect mechanism.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Context-Dependent Risk Profile</h3>
+        <p>Controlled mucosal TLR5 signaling supports antimicrobial peptide induction, IL-22-mediated barrier integrity, and microbiome homeostasis. Excessive or systemic activation amplifies NF-κB cytokine cascades, oxidative stress, inflammasome activation, barrier disruption, and chronic inflammation — directly relevant to neuroinflammatory risk in AD.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Hippocampal Neurogenesis Connection</h3>
+        <p>TLR5 is expressed in hippocampal neural stem/progenitor cells and promotes neural differentiation through NF-κB, IL-6/CREB, and JNK pathways. TLR5-deficient mice show impaired fear memory. While not an AD model, this raises a potential link to hippocampal resilience that merits AD-specific investigation.</p>
+      </div>
+
+      <div class="card card-neutral">
+        <h3>Infection–Dementia Genetic Link</h3>
+        <p>A proteomics/genetics study linked infection history to dementia risk, brain volume loss, and cognitive decline. Genetic regulation of immune proteins including TLR5 predicted brain volume loss, positioning TLR5 as a candidate mediator of infection-associated neurodegeneration — but without causal proof or validated AD biomarker status.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section id="takeaways">
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways-list">
+      <li><strong>Treat TLR5 as an exploratory, not validated, AD target.</strong> Current evidence supports mechanistic plausibility through tau immunotherapy, infection-associated neurodegeneration, gut–brain inflammation, and hippocampal neurogenesis, but direct AD biomarker and causal data remain limited.</li>
+      <li><strong>Prioritize AD-specific validation studies.</strong> Measure TLR5 expression and signaling in AD brain, microglia, astrocytes, neurons, endothelial cells, blood immune cells, gut tissue, and microbiome-linked samples to establish context-specific activity.</li>
+      <li><strong>Test gut flagellin burden as an AD-correlating variable.</strong> Determine whether gut-derived flagellin or flagellated bacterial burden correlates with AD severity, systemic cytokines, BBB markers, microglial activation, amyloid/tau biomarkers (pTau-181, NfL, GFAP, Aβ42/40), cognition, or brain atrophy.</li>
+      <li><strong>Evaluate TLR5 modulation in AD models with defined endpoints.</strong> Include amyloid burden, tau phosphorylation/aggregation, synaptic integrity, microglial phenotype, inflammasome activation, BBB permeability, neurodegeneration, and memory performance as readouts.</li>
+      <li><strong>Develop TLR5-adjuvanted tau immunotherapy cautiously.</strong> FlaB-TauRD mucosal vaccine data are promising, but dosing, route, duration, age-related safety, systemic cytokine induction, and neuroinflammatory risk require tightly controlled characterization before clinical translation.</li>
+      <li><strong>Stratify patients before any TLR5-directed AD approach.</strong> Most relevant subgroups include those with gut dysbiosis, elevated fecal/circulating flagellin, increased intestinal permeability, high IL-6/TNF-α/IL-1β signatures, recurrent infection history, metabolic syndrome, vascular inflammation, or peripheral myeloid activation.</li>
+      <li><strong>Favor precision modulation over blanket agonism or antagonism.</strong> Candidate strategies include localized mucosal TLR5 agonism to restore barrier defense, ligand interception or antagonism to reduce chronic flagellin signaling, microbiome modulation to reduce high-potency flagellin producers, and engineered low-inflammatory TLR5 ligands for vaccine applications.</li>
+      <li><strong>Monitor safety risks at every stage.</strong> TLR5 activation risks inducing NF-κB, IL-6, TNF-α, IL-1β, IL-8, inflammasome activity, ROS, and myeloid recruitment; TLR5 inhibition risks impairing antimicrobial defense, mucosal immunity, vaccine responsiveness, and potentially beneficial neurogenic or barrier-supportive signaling.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict">
+    <h2>Overall Assessment</h2>
+    <div class="verdict-banner">
+      <span class="verdict-label">Overall Assessment — TLR5 in Alzheimer's Disease</span>
+      <p>
+        TLR5 is a <strong>context-dependent innate immune and host–microbiome node</strong> with plausible but as-yet unvalidated relevance to Alzheimer's disease mechanisms. Its <strong>most concrete AD-specific role</strong> is as a tau-vaccine adjuvant target: FlaB-TauRD mucosal immunization demonstrates anti-aggregate antibody generation, microglial tau clearance, improved memory, and extended survival in a tauopathy mouse model. Beyond this, TLR5 engages gut–brain-axis pathways, infection-associated neurodegeneration genetics, and hippocampal neurogenesis circuits — all mechanistically plausible contributors to AD pathophysiology but none yet established by direct causal AD data. <strong>Therapeutic direction is genuinely bidirectional</strong>: agonism may be useful as a mucosal vaccine adjuvant or barrier-restorative agent, while antagonism may be useful where chronic flagellin-driven systemic inflammation dominates; both carry distinct safety liabilities. <strong>The field's highest-priority next step is AD-specific validation</strong> — measuring TLR5 activity across AD-relevant tissues, correlating gut flagellin burden with AD biomarkers, and evaluating TLR5 modulation in established AD models with rigorous endpoints before considering TLR5 a reliable disease-modifying therapeutic target.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TLR5 · Alzheimer's Disease TEP Evidence Summary — AI-generated analysis &nbsp;·&nbsp; For research use only &nbsp;·&nbsp; No clinical decisions should be based on this document
+</footer>
+
+</body>
+</html>

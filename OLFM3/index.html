@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLFM3 — Alzheimer's Disease Evidence Summary</title>
+<style>
+  :root {
+    --dark: #1a3a5c;
+    --mid: #2e6da4;
+    --light: #e8f1f9;
+    --danger-dark: #9b1c1c;
+    --danger-light: #fef2f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --positive: #0f766e;
+    --positive-light: #f0fdfa;
+    --neutral-text: #475569;
+    --neutral-border: #cbd5e1;
+    --neutral-bg: #f8fafc;
+    --slate: #1e293b;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--slate);
+    background: #ffffff;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 44px 24px 48px;
+  }
+
+  .chip-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .chip {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #e2eaf3;
+    border-radius: 999px;
+    padding: 4px 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .chip-danger {
+    background: rgba(155,28,28,0.28);
+    border: 1px solid rgba(220,80,80,0.4);
+    color: #fca5a5;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  header p.subtitle {
+    font-style: italic;
+    color: rgba(255,255,255,0.68);
+    font-size: 0.95rem;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 24px;
+  }
+
+  section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 2px solid var(--mid);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warning-light);
+    border: 1.5px solid #fcd34d;
+    border-left: 5px solid var(--warning);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.93rem;
+    color: var(--slate);
+  }
+
+  .callout strong {
+    color: var(--warning);
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: var(--neutral-bg);
+    border: 1.5px solid var(--neutral-border);
+    border-radius: 12px;
+    padding: 20px 16px 16px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .figure-wrap svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--neutral-text);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 620px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid;
+  }
+
+  .card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .card-accent {
+    background: var(--light);
+    border-color: var(--mid);
+  }
+  .card-accent h3 { color: var(--dark); }
+
+  .card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger-dark);
+  }
+  .card-danger h3 { color: var(--danger-dark); }
+
+  .card-positive {
+    background: var(--positive-light);
+    border-color: var(--positive);
+  }
+  .card-positive h3 { color: var(--positive); }
+
+  .card-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .card-warning h3 { color: var(--warning); }
+
+  .card-slate {
+    background: var(--neutral-bg);
+    border-color: #64748b;
+  }
+  .card-slate h3 { color: #334155; }
+
+  .card-blue {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  .card-blue h3 { color: #1d4ed8; }
+
+  /* TAKEAWAYS */
+  ol.takeaways {
+    list-style: decimal;
+    padding-left: 22px;
+  }
+
+  ol.takeaways li {
+    margin-bottom: 18px;
+    font-size: 0.93rem;
+    line-height: 1.75;
+  }
+
+  ol.takeaways li strong {
+    color: var(--dark);
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, var(--dark) 0%, #0b1e30 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+  }
+
+  .verdict p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+  }
+
+  .verdict strong {
+    color: #93c5fd;
+  }
+
+  .verdict-lead {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--neutral-border);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 0.78rem;
+    color: var(--neutral-text);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="chip-row">
+    <span class="chip">Gene: OLFM3 &nbsp;|&nbsp; Optimedin (Olfactomedin-3)</span>
+    <span class="chip chip-danger">⚠ Causal role in AD unvalidated</span>
+  </div>
+  <h1>OLFM3 &amp; Alzheimer's Disease</h1>
+  <p class="subtitle">Target Enabling Package — AI-Assisted Evidence Summary</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>Overview</h2>
+
+    <div class="callout">
+      <strong>Important Caveat:</strong> OLFM3 is a <em>hypothesis-generating</em> candidate only.
+      Its direction of change, cellular source, causal contribution, and therapeutic tractability
+      in Alzheimer's disease remain entirely undefined. Evidence is correlative, not mechanistic,
+      in the AD context.
+    </div>
+
+    <p>OLFM3 (optimedin) is a brain-enriched, secreted olfactomedin-family protein with indirect but
+    biologically plausible relevance to Alzheimer's disease (AD). The strongest direct AD link comes
+    from a 2020 integrated proteomics study of cortex, CSF, and serum, where OLFM3 appeared in an
+    AD-correlated cortex-serum protein panel alongside CTHRC1 and GFAP — supporting its status as
+    a <em>candidate biomarker component</em>, not a validated causal driver or therapeutic target.</p>
+
+    <p>Most mechanistic support derives from non-AD studies connecting OLFM3 to neural development,
+    extracellular matrix and cell-adhesion biology, cytoskeletal organization, AMPA receptor
+    regulation, neuronal excitability, hippocampal stress biology, and neuroimmune signaling.
+    These pathways overlap with major AD mechanisms — including synaptic dysfunction, network
+    hyperexcitability, neurite degeneration, neuroinflammation, stress-related hippocampal
+    vulnerability, and impaired plasticity — providing indirect biological plausibility.</p>
+  </section>
+
+  <!-- FIGURE -->
+  <section>
+    <h2>Mechanistic Overview</h2>
+    <figure>
+      <div class="figure-wrap">
+        <!--
+          PANELS:
+          A (left): Upstream Inputs & Regulation (3 nodes)
+          B (top-right): Synaptic / AMPAR Biology (4 nodes, branching)
+          C (bottom-right): Structural & Neuroimmune Biology (4 nodes)
+          D (far-right, shared): AD-Relevant Consequences (3 nodes)
+          Total nodes: 14
+        -->
+        <svg viewBox="0 0 940 500" width="900" height="480" xmlns="http://www.w3.org/2000/svg"
+             font-family="Arial, Helvetica, sans-serif" font-size="11">
+
+          <!-- DEFS -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#2e6da4"/>
+            </marker>
+            <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#0f766e"/>
+            </marker>
+            <marker id="arr-dark" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 8 3.5, 0 7" fill="#1a3a5c"/>
+            </marker>
+          </defs>
+
+          <!-- ─── PANEL A: Upstream Regulation (x 14..225, y 30..460) ─── -->
+          <rect x="14" y="30" width="210" height="440" rx="12"
+                fill="rgba(26,58,92,0.06)" stroke="#1a3a5c" stroke-width="1.2"/>
+          <text x="119" y="52" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#1a3a5c" letter-spacing="1.2">A · UPSTREAM REGULATION</text>
+
+          <!-- A1: Pax6 Transcription Factor -->
+          <rect x="34" y="64" width="170" height="48" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="119" y="84" text-anchor="middle" font-weight="700" fill="#1e293b">Pax6</text>
+          <text x="119" y="100" text-anchor="middle" fill="#1e293b">Transcription Factor</text>
+
+          <!-- A2: OLFM3 Gene / Promoter -->
+          <rect x="34" y="138" width="170" height="48" rx="7"
+                fill="#bfdbfe" stroke="#1a3a5c" stroke-width="1.8"/>
+          <text x="119" y="158" text-anchor="middle" font-weight="700" fill="#0c2340">OLFM3 Gene</text>
+          <text x="119" y="174" text-anchor="middle" fill="#0c2340">Promoter (Pax6-bound)</text>
+
+          <!-- A3: Secreted Protein / Golgi -->
+          <rect x="34" y="212" width="170" height="48" rx="7"
+                fill="#e0f2fe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="119" y="232" text-anchor="middle" font-weight="700" fill="#1e293b">OLFM3 Protein</text>
+          <text x="119" y="248" text-anchor="middle" fill="#1e293b">Secreted · Golgi · OLF domain</text>
+
+          <!-- A4: AD Proteomics Context -->
+          <rect x="34" y="346" width="170" height="64" rx="7"
+                fill="rgba(180,83,9,0.08)" stroke="#b45309" stroke-width="1.3"/>
+          <text x="119" y="368" text-anchor="middle" font-weight="700" fill="#92400e">AD Proteomics</text>
+          <text x="119" y="384" text-anchor="middle" fill="#1e293b">Cortex-Serum Panel</text>
+          <text x="119" y="400" text-anchor="middle" fill="#1e293b">w/ CTHRC1 &amp; GFAP</text>
+
+          <!-- Arrow A1 → A2 -->
+          <line x1="119" y1="112" x2="119" y2="133" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Arrow A2 → A3 -->
+          <line x1="119" y1="186" x2="119" y2="207" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arr)"/>
+
+
+          <!-- ─── PANEL B: Synaptic / AMPAR Biology (x 242..570, y 30..255) ─── -->
+          <rect x="242" y="30" width="326" height="225" rx="12"
+                fill="rgba(46,109,164,0.07)" stroke="#2e6da4" stroke-width="1.2"/>
+          <text x="405" y="52" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#2e6da4" letter-spacing="1.2">B · SYNAPTIC / AMPAR BIOLOGY</text>
+
+          <!-- B1: AMPAR Interaction (shared upstream of branch) -->
+          <rect x="302" y="62" width="205" height="48" rx="7"
+                fill="#dbeafe" stroke="#2e6da4" stroke-width="1.3"/>
+          <text x="404" y="82" text-anchor="middle" font-weight="700" fill="#1e293b">AMPAR Interaction</text>
+          <text x="404" y="98" text-anchor="middle" fill="#1e293b">GluA1 &amp; GluA2 Subunits</text>
+
+          <!-- B2 left branch: Membrane Expression -->
+          <rect x="256" y="138" width="160" height="48" rx="7"
+                fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+          <text x="336" y="158" text-anchor="middle" font-weight="700" fill="#1e293b">Membrane</text>
+          <text x="336" y="174" text-anchor="middle" fill="#1e293b">Expression Altered</text>
+
+          <!-- B3 right branch: AMPAR Currents / Seizure -->
+          <rect x="432" y="138" width="122" height="48" rx="7"
+                fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+          <text x="493" y="158" text-anchor="middle" font-weight="700" fill="#92400e">AMPAR Currents</text>
+          <text x="493" y="174" text-anchor="middle" fill="#92400e">Seizure Suscept.</text>
+
+          <!-- Arrow B1 → B2 (branch left) -->
+          <line x1="380" y1="110" x2="336" y2="133" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- Arrow B1 → B3 (branch right) -->
+          <line x1="430" y1="110" x2="470" y2="133" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+
+          <!-- ─── PANEL C: Structural & Neuroimmune (x 242..570, y 268..465) ─── -->
+          <rect x="242" y="268" width="326" height="197" rx="12"
+                fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.2"/>
+          <text x="405" y="289" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#0f766e" letter-spacing="1.2">C · STRUCTURAL &amp; NEUROIMMUNE</text>
+
+          <!-- C1: Neural Adhesion / ECM -->
+          <rect x="256" y="300" width="148" height="56" rx="7"
+                fill="#f0fdfa" stroke="#0f766e" stroke-width="1.3"/>
+          <text x="330" y="320" text-anchor="middle" font-weight="700" fill="#134e4a">Adhesion &amp; ECM</text>
+          <text x="330" y="336" text-anchor="middle" fill="#134e4a">N-cadherin · β-catenin</text>
+          <text x="330" y="352" text-anchor="middle" fill="#134e4a">Actin · Neurite Outgrowth</text>
+
+          <!-- C2: Hippocampal Stress / Methylation -->
+          <rect x="420" y="300" width="134" height="56" rx="7"
+                fill="#fef9c3" stroke="#b45309" stroke-width="1.3"/>
+          <text x="487" y="320" text-anchor="middle" font-weight="700" fill="#78350f">Hippocampal</text>
+          <text x="487" y="336" text-anchor="middle" fill="#78350f">Stress &amp; PTSD</text>
+          <text x="487" y="352" text-anchor="middle" fill="#78350f">Methylation / Volume</text>
+
+          <!-- C3: Neuroimmune Circuit -->
+          <rect x="256" y="384" width="298" height="64" rx="7"
+                fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="405" y="405" text-anchor="middle" font-weight="700" fill="#7f1d1d">Neuroimmune Circuit (2026)</text>
+          <text x="405" y="421" text-anchor="middle" fill="#7f1d1d">Piriform Ctx Glu neurons → Spleen</text>
+          <text x="405" y="437" text-anchor="middle" fill="#7f1d1d">Th17 expansion · Fear behavior</text>
+
+          <!-- Arrow A3 → C1 (elbow route, clear of other boxes) -->
+          <!-- Go right from A3 (204,236) through gutter to (242, 330), then to C1 left edge -->
+          <polyline points="204,236 228,236 228,328 251,328"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- Arrow A3 → B1: elbow up -->
+          <polyline points="204,210 228,210 228,86 297,86"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- C1 → C3 arrow -->
+          <line x1="330" y1="356" x2="368" y2="379" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+          <!-- C2 → C3 arrow -->
+          <line x1="470" y1="356" x2="440" y2="379" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+
+          <!-- ─── PANEL D: AD-Relevant Consequences (x 590..926, y 30..465) ─── -->
+          <rect x="590" y="30" width="336" height="440" rx="12"
+                fill="rgba(155,28,28,0.05)" stroke="#9b1c1c" stroke-width="1.2"/>
+          <text x="758" y="52" text-anchor="middle" font-size="9" font-weight="700"
+                fill="#9b1c1c" letter-spacing="1.2">D · AD-RELEVANT CONSEQUENCES</text>
+
+          <!-- D1: Synaptic Dysfunction / Hyperexcitability -->
+          <rect x="606" y="64" width="304" height="56" rx="7"
+                fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="758" y="86" text-anchor="middle" font-weight="700" fill="#7f1d1d">Synaptic Dysfunction</text>
+          <text x="758" y="102" text-anchor="middle" fill="#7f1d1d">E/I Imbalance · Network Hyperexcitability</text>
+
+          <!-- D2: Neurite Dystrophy / Structural Plasticity -->
+          <rect x="606" y="180" width="304" height="56" rx="7"
+                fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="758" y="200" text-anchor="middle" font-weight="700" fill="#7f1d1d">Neurite Dystrophy</text>
+          <text x="758" y="216" text-anchor="middle" fill="#7f1d1d">ECM Remodeling · Impaired Plasticity</text>
+
+          <!-- D3: Neuroimmune / Hippocampal Vulnerability -->
+          <rect x="606" y="340" width="304" height="56" rx="7"
+                fill="#fef2f2" stroke="#9b1c1c" stroke-width="1.3"/>
+          <text x="758" y="360" text-anchor="middle" font-weight="700" fill="#7f1d1d">Neuroimmune Dysregulation</text>
+          <text x="758" y="376" text-anchor="middle" fill="#7f1d1d">IL-17/Th17 · Hippocampal Vulnerability</text>
+
+          <!-- D4: Biomarker Context -->
+          <rect x="636" y="430" width="244" height="28" rx="7"
+                fill="rgba(180,83,9,0.1)" stroke="#b45309" stroke-width="1.2"/>
+          <text x="758" y="449" text-anchor="middle" font-size="10" fill="#78350f">Secondary AD Biomarker Candidate</text>
+
+          <!-- Arrows B branches → D1 -->
+          <!-- B2 right edge (416,162) → D1 left (606, 92): elbow through gutter -->
+          <polyline points="416,162 575,162 575,92 601,92"
+                    fill="none" stroke="#2e6da4" stroke-width="1.4" marker-end="url(#arr)"/>
+          <!-- B3 right edge (554,162) → straight across gutter → D1 (same row) -->
+          <line x1="554" y1="162" x2="601" y2="120" stroke="#b45309" stroke-width="1.4" marker-end="url(#arr)"/>
+
+          <!-- C1 → D2 -->
+          <polyline points="404,328 575,328 575,208 601,208"
+                    fill="none" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arr-teal)"/>
+
+          <!-- C3 → D3 -->
+          <line x1="554" y1="416" x2="601" y2="368" stroke="#9b1c1c" stroke-width="1.4" marker-end="url(#arr-dark)"/>
+
+          <!-- A4 → D label (dashed, exploratory) -->
+          <polyline points="204,378 228,378 228,462 632,462 632,458"
+                    fill="none" stroke="#b45309" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Panel A (Upstream Regulation):</strong> Pax6 directly binds the OLFM3 promoter driving expression; the resulting protein is secreted via the Golgi and contains an olfactomedin interaction domain. A 2020 multi-proteomics study identified OLFM3 in an AD-correlated cortex-serum panel (dashed arrow, exploratory).
+        <strong>Panel B (Synaptic / AMPAR Biology):</strong> OLFM3 interacts with AMPAR subunits GluA1/GluA2, branching into altered membrane expression and perturbed AMPAR currents with seizure susceptibility — both converging on AD-relevant synaptic dysfunction (Panel D).
+        <strong>Panel C (Structural &amp; Neuroimmune):</strong> OLFM3 influences adhesion molecules (N-cadherin, β-catenin, actin, neurite outgrowth) and hippocampal stress/methylation biology; a 2026 study places it in a piriform-cortex-to-spleen Th17 neuroimmune circuit.
+        <strong>Panel D (AD-Relevant Consequences):</strong> Downstream convergence on synaptic dysfunction/hyperexcitability, neurite dystrophy/ECM remodeling, and neuroimmune dysregulation — all established AD pathological themes. OLFM3 remains a secondary, exploratory biomarker candidate.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- KEY INSIGHTS -->
+  <section>
+    <h2>Key Insights</h2>
+    <div class="card-grid">
+
+      <div class="card card-accent">
+        <h3>Limited Direct AD Evidence</h3>
+        <p>OLFM3 appeared in an AD-correlated cortex-serum panel (with CTHRC1 and GFAP) in a 2020
+        Molecular Neurodegeneration multi-proteome study integrating human cortex, CSF, and serum
+        across AD, MCI, and controls — but was <em>not</em> among the top-prioritized proteins,
+        which included SMOC1, TAU, GFAP, SUCLG2, PRDX3, and NTN1.</p>
+      </div>
+
+      <div class="card card-blue">
+        <h3>AMPAR &amp; Synaptic Biology</h3>
+        <p>In epilepsy models, OLFM3 interacted with GluA1 and GluA2 AMPAR subunits, altered
+        their membrane expression, affected AMPAR currents, and influenced seizure susceptibility —
+        directly relevant to AD's excitatory/inhibitory imbalance, glutamatergic receptor
+        trafficking deficits, and network hyperexcitability.</p>
+      </div>
+
+      <div class="card card-positive">
+        <h3>Structural Plasticity &amp; ECM</h3>
+        <p>OLFM3 modulated cell adhesion, collagen ECM attachment, Ca²⁺-dependent aggregation,
+        N-cadherin / β-catenin / α-catenin / occludin levels, actin organization, and neurite
+        outgrowth — overlapping with AD processes of synaptic remodeling, neurite dystrophy, ECM
+        alteration, and impaired structural plasticity.</p>
+      </div>
+
+      <div class="card card-danger">
+        <h3>Neuroimmune Circuit Finding</h3>
+        <p>A 2026 <em>Neuron</em> study identified OLFM3-expressing glutamatergic piriform cortex
+        neurons in a circuit linking olfactory stress inputs to splenic Th17 expansion and fear
+        behavior. Conditional <em>Olfm3</em> knockdown blocked the immune effect — relevant to
+        AD's olfactory dysfunction, IL-17/Th17 pathways, and stress-accelerated pathology.</p>
+      </div>
+
+      <div class="card card-warning">
+        <h3>Hippocampal Stress &amp; Methylation</h3>
+        <p>Methylation differences in OLFM3 were associated with anterior hippocampal volume in
+        pediatric PTSD cohorts, connecting OLFM3 to stress response, neuroplasticity, and
+        hippocampal integrity — areas of established vulnerability in AD-related cognitive
+        decline.</p>
+      </div>
+
+      <div class="card card-slate">
+        <h3>Critical Nomenclature Warning</h3>
+        <p>OLFM3 must <em>not</em> be conflated with OLFML3, a related but distinct
+        olfactomedin-family protein identified as one of six CSF biomarkers recurring in at least
+        two independent AD datasets. These are separate genes with distinct expression profiles and
+        evidence bases.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONABLE TAKEAWAYS -->
+  <section>
+    <h2>Actionable Takeaways</h2>
+    <ol class="takeaways">
+      <li><strong>Treat as an exploratory candidate, not a target.</strong>
+      Current evidence positions OLFM3 as an emerging AD-associated biomarker candidate.
+      It is not a validated therapeutic target and should not be prioritized as such without
+      further validation.</li>
+
+      <li><strong>Prioritize biofluid and tissue validation in AD cohorts.</strong>
+      Determine whether OLFM3 levels change in cortex, hippocampus, CSF, serum, or plasma
+      across control, MCI, and AD disease stages in human samples.</li>
+
+      <li><strong>Define directionality and cellular source.</strong>
+      Establish whether OLFM3 is increased or decreased in AD, and identify whether it originates
+      from neurons, astrocytes, microglia, endothelial cells, peripheral tissues, or specific
+      glutamatergic circuits.</li>
+
+      <li><strong>Correlate with established AD markers.</strong>
+      Test whether OLFM3 tracks with amyloid burden, tau pathology, synaptic loss, GFAP,
+      inflammatory markers, cognitive decline, and disease progression in well-characterized
+      biobank samples.</li>
+
+      <li><strong>Investigate AMPAR and excitatory synapse mechanisms in AD models.</strong>
+      Test effects of OLFM3 modulation on GluA1/GluA2 trafficking, excitatory synaptic
+      transmission, network hyperexcitability, seizure susceptibility, and cognitive phenotypes
+      in AD-relevant model systems.</li>
+
+      <li><strong>Examine neuroimmune pathways.</strong>
+      Determine whether OLFM3 modulation affects microglial activation, astrocyte reactivity,
+      IL-17/Th17 signaling, peripheral immune communication, or stress-related acceleration of
+      AD-like pathology.</li>
+
+      <li><strong>Study structural and extracellular mechanisms.</strong>
+      Assess whether OLFM3 influences ECM remodeling, neurite dystrophy, synaptic maintenance,
+      axonal integrity, cytoskeletal organization, or maladaptive plasticity in AD-relevant
+      neurons.</li>
+
+      <li><strong>Evaluate therapeutic feasibility with caution.</strong>
+      While OLFM3 knockdown has functional effects in epilepsy and stress-neuroimmune models,
+      broad inhibition could disrupt neuronal development, adhesion, synaptic function, retinal
+      biology, or normal tissue remodeling. Safety profiling must precede any therapeutic
+      hypothesis.</li>
+
+      <li><strong>Avoid overclaiming the mechanistic connection.</strong>
+      Existing evidence does not show that OLFM3 directly regulates amyloid-β production, tau
+      aggregation or phosphorylation, mitochondrial dysfunction, microglial activation, or
+      cognitive decline in any AD model or human study.</li>
+    </ol>
+  </section>
+
+  <!-- VERDICT -->
+  <section>
+    <h2>Overall Assessment</h2>
+    <div class="verdict">
+      <span class="verdict-lead">Overall Assessment — OLFM3 in Alzheimer's Disease</span>
+      <p>
+        OLFM3 is a <strong>biologically plausible but unvalidated secondary signal</strong> in
+        the AD landscape. Its identification in an AD-correlated multi-proteome panel provides a
+        starting point, but this association is <strong>correlative and non-prioritized</strong>
+        relative to the study's top-ranked proteins. The most compelling mechanistic rationale
+        for AD relevance comes from orthogonal findings: <strong>AMPAR subunit interaction and
+        altered glutamatergic transmission</strong> in epilepsy models, <strong>adhesion, ECM,
+        and neurite biology</strong> in neural differentiation, <strong>hippocampal stress and
+        methylation associations</strong> in PTSD cohorts, and a <strong>neuroimmune
+        piriform-cortex-to-spleen Th17 circuit</strong> identified in 2026. None of these
+        were conducted in AD settings. The immediate research priority is <strong>targeted
+        validation in human AD biofluid and brain tissue</strong>, followed by mechanistic
+        testing in AD model systems — approached with appropriate epistemic humility given
+        the current absence of direct causal evidence.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  OLFM3 / Alzheimer's Disease TEP Evidence Summary — AI-generated analysis · For research use only
+</footer>
+
+</body>
+</html>
